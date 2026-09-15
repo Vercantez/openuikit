@@ -38,6 +38,26 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 17 | 4933 | 505 | 1130 | 0 | 18 | 5438 |
 | After wave 18 | 5240 | 198 | 1130 | 0 | 18 | 5438 |
 | After wave 19 | 5261 | 177 | 1130 | 0 | 18 | 5438 |
+| After wave 20 | 5267 | 171 | 1130 | 0 | 18 | 5438 |
+
+Wave 20 (this increment) converts 6 of the 177 declared rows: the five
+`Never` result aliases (`Value` / `Dialog` / `Snippet` / `OpensAppIntent` /
+`Intent`, each explicitly `= Never` exactly as Apple ships them) plus the
+`Never.value` nil payload, pinned by two synchronous tests in
+`tests/agent/AppIntentsWave20Tests.swift` (largest cites 4). New product
+source lives in `AppIntentsWave20.swift`. The aliases complete the
+`Never` surface wave 19 started (`PerformResult` / `SummaryContent`);
+`Never.init()` stays declared (uninhabited; calling it would trap) as
+does async `Never.perform()`. Also deliberately left declared:
+`AppIntentsExtension.configuration` (Apple's protocol refines
+ExtensionFoundation's dependency-owned `AppExtension`, which is not a
+declared dependency of this lane and is never substituted locally),
+`StartWorkoutIntent.init(style:)` (no init requirement to delegate a
+protocol-extension initializer to), the `IntentResultContainer`
+`result()` / `result(dialog:)` overloads (kept out so existing
+`IntentResultValue` inference stays unambiguous), `entityType`, macros,
+`_System` inits, async request/confirmation/donation,
+`EntityProperty.asyncGetter`, and Siri daemon behavior.
 
 Wave 19 (this increment) converts 21 of the 198 declared rows: 15 new
 synchronous pins across eight tests in
@@ -232,7 +252,7 @@ No test is cited by more than 293 rows (5.9% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
 Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
 each. Wave-17 overlay batches cite at most 293 rows each; depth tests cite
-at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each.
+at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each. Wave-20 tests cite at most 4 rows each.
 New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.

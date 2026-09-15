@@ -44,7 +44,16 @@ obtainable instance; both stay declared per the hardware fail-closed rule). Wave
 in CryptoKitSecureEnclave.swift and all 23 implemented tests pass in a manual
 marker-only runner; no SecureEnclave PrivateKey instance is obtainable in-process
 without inventing a non-Apple initializer, so the 12 non-throwing getters and 9
-throwing instance methods stay declared). Implemented ≥ 900. Nondeferred except
+throwing instance methods stay declared). Wave 11 recount: before
+1221/21/0, after 1221/21/0 (gain 0 — re-verified all 21 declared anchors still compile
+in CryptoKitSecureEnclave.swift, libCryptoKit.dylib still builds with
+-warnings-as-errors, and all 23 cited agent tests pass in a manual @main runner;
+converting the 12 non-throwing getters would require changing Apple's signatures
+and converting the 9 throwing methods would require inventing a synthetic
+succeeding initializer for hardware-backed keys, both of which would fabricate
+SecureEnclave success and violate the fail-closed rule; the 12 LAContext/SecAccessControl
+inits plus 11 Combine publishers stay unavailable and the 22 Foundation
+compare/formatted witnesses stay not-applicable). Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
 not-applicable: their generic constraints (`Element: SortComparator`,

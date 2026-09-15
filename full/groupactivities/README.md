@@ -56,6 +56,37 @@ discriminators, not observed Apple values.
 
 See `oracle-questions.tsv`.
 
+## Wave 11 2026-09-15
+
+Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /
+10 unavailable** of 313 (216 nondeferred). Before: identical counts.
+Implemented gain: **0**.
+
+Re-examined all 31 leftover rows for in-process conversion; none qualifies:
+
+- All 10 declared rows are `async` witnesses (`Attachment.loadMetadata`,
+  `Attachments.Iterator.next`, `Journal.remove`, two messenger `send`
+  overloads, `Messages.Iterator.next`, `Sessions.Iterator.next`, async
+  `metadata` getter, `prepareForActivation`, `activate`). Product sources
+  re-verified `async` via grep; calling one from a top-level synchronous
+  no-argument `test*()` is a compile error, and the sealed runner forbids
+  `await` / `DispatchQueue.main` / `RunLoop` / semaphore waits.
+- All 21 deferred rows require `Combine`, `CoreTransferable`, or
+  `CoreGraphics`, none a declared isolated-host dependency; AGENTS.md
+  forbids framework-local substitutes for dependency-owned types.
+- The 66 `not-applicable` rows are stdlib `AsyncSequence` /
+  `AsyncIteratorProtocol` witnesses the contract explicitly excludes from
+  conversion; the 10 `unavailable` rows are UIKit / `NSItemProvider` /
+  `AVFoundation` overlays. This slug has no SwiftUI identity View-modifier
+  rows, so the overlay override is not applicable.
+
+Validation on macOS: product sources compile under
+`swiftc -warnings-as-errors`, the dylib links, and a Darwin runner invoking
+all 61 cited `test*()` functions exits 0 with sole stdout
+`GROUPACTIVITIES_AGENT_RUNTIME_OK`. Evidence audit: 0 malformed citations,
+no banned constructs in test files, worst implemented-evidence share
+`testGroupSessionEventActions` at 8.7% (18/206), well under the 40% cap.
+
 ## Wave 10 2026-09-15
 
 Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /

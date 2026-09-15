@@ -45,6 +45,67 @@ enum VideoSubscriberAccountLinux {
     }
 }
 
+/// Linux host-test control. Hidden from ordinary `import VideoSubscriberAccount`
+/// clients and not part of Apple's public VideoSubscriberAccount surface.
+@_spi(OpenUIKitHost)
+public enum VideoSubscriberAccountHostControl {
+    /// Same fail-closed error the public query/update/auto-sign-in APIs surface.
+    public static var linuxUnsupportedError: VSError {
+        VSError(.unsupported)
+    }
+
+    /// Synchronous twin of `VSUserAccountManager.userAccounts(options:)`.
+    /// The async method never suspends; it always throws this error.
+    public static func userAccountsSync(
+        _ manager: VSUserAccountManager,
+        options: VSUserAccountManager.QueryOptions = []
+    ) throws -> [VSUserAccount] {
+        try manager.linuxUserAccounts(options: options)
+    }
+
+    /// Synchronous twin of `VSUserAccountManager.autoSignInToken`.
+    /// The async getter never suspends; it always throws this error and
+    /// never invents a token.
+    public static func autoSignInTokenSync(
+        _ manager: VSUserAccountManager
+    ) throws -> VSUserAccountManager.AutoSignInToken {
+        try manager.linuxAutoSignInToken()
+    }
+
+    /// Synchronous twin of `VSUserAccountManager.deleteAutoSignInToken()`.
+    public static func deleteAutoSignInTokenSync(
+        _ manager: VSUserAccountManager
+    ) throws {
+        try manager.linuxDeleteAutoSignInToken()
+    }
+
+    /// Synchronous twin of
+    /// `VSUserAccountManager.updateAutoSignInToken(_:updateContext:)`.
+    public static func updateAutoSignInTokenSync(
+        _ manager: VSUserAccountManager,
+        _ newToken: String,
+        updateContext: VSUserAccountManager.AutoSignInTokenUpdateContext
+    ) throws {
+        try manager.linuxUpdateAutoSignInToken(newToken, updateContext: updateContext)
+    }
+
+    /// Synchronous twin of
+    /// `VSUserAccountManager.requestAutoSignInAuthorization()`.
+    public static func requestAutoSignInAuthorizationSync(
+        _ manager: VSUserAccountManager
+    ) throws -> VSUserAccountManager.AutoSignInTokenUpdateContext {
+        try manager.linuxRequestAutoSignInAuthorization()
+    }
+
+    /// Synchronous twin of `VSUserAccountManager.update(_:)`.
+    public static func updateSync(
+        _ manager: VSUserAccountManager,
+        _ account: VSUserAccount
+    ) throws {
+        try manager.linuxUpdate(account)
+    }
+}
+
 /// Access the app has been granted to the user's TV-provider account.
 ///
 /// Raw values match pinned `dotnet/macios` `[Native]`:

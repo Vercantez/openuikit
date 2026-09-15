@@ -57,6 +57,12 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
   optimizer `bnnsOptimizerFunction`/`accumulatorCountMultiplier` getters (Apple always
   reports clipping-capable variants). `NearestNeighbors.apply` and both
   `MultidimensionalLookupTable.apply` overloads are fail-closed no-ops.
+- `BNNSGraph.Builder` factories (`argument`, three `constant` spellings) and all
+  55 `Builder.Tensor` math ops record symbolic construction nodes: each call
+  returns a handle whose `description` logs the op chain, whose
+  `shape`/`stride` are preserved from the input, and whose `dataType` is the
+  scalar's BNNS mapping. `tensorData` is `nil` (no device memory); graph
+  compilation and execution stay fail-closed.
 
 `libAccelerate.dylib` compiles with `-warnings-as-errors`.
 
@@ -598,3 +604,37 @@ Top evidence distribution for the 20 newly implemented rows:
 9. `testWave10ReductionMapping` — 1 (5.0%) — reduction mapping
 
 Largest test is 4/20 = 20.0%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling; the deliverable validator reports only those 2 roadmap errors): library and all agent tests compile with `-warnings-as-errors`, all **281/281** cited tests pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the 9 new plus 2 touched tests pass in isolated fresh processes.
+
+## Depth pass 2026-09-15 (wave 11 declared-remainder conversion)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Converts 63 portable declared rows to implemented with a real Linux construction path; no GPU/BNNS-runtime execution success is invented.
+
+- 55 `BNNSGraph.Builder.Tensor` math ops (elementwise abs/cos/…/hardSwish, elu/softplus/scaledTanh/hardSigmoid, defaulted-epsilon log/reciprocal/rsqrt/l2Norm, max/min/pow/linear/gather over `OperationParameter`, pad/clip/threshold/transpose/softmax/logSoftmax, sum/mean/product/minimum/maximum/logSumExp/sumOfSquares/l2Norm reductions, Int32 argMax/argMin): symbolic graph-node construction in the new `AccelerateGraphTensor.swift`. Each op returns a handle recording the op chain in `description` and preserving `shape`/`stride`; numeric execution is not claimed.
+- 3 `Tensor` properties: `tensorData` (`nil`: symbolic nodes own no device memory), `description` (the node log), `dataType` (`T.bnnsDataType`). The former `preconditionFailure` traps are gone; `rank` derives from `shape`, and `Tensor` now conforms to `BNNSGraph.TensorDescriptor` so handles can be returned from `makeContext` blocks.
+- 5 `Builder` factories: `argument(name:dataType:shape:intent:)`, `constant(name:value:)`, `constant(name:values:shape:)`, and the Float/Float16 `constant(values:rowMajor:)` 2D overloads (uniform-row precondition per Apple docs).
+
+Still declared (10; no honest Linux behavior to exercise): 2 `BNNSOptimizer` protocol witnesses (the Linux protocol carries no requirements; per-type getters stay implemented), `InitializableFromCGImage.bitCountPerComponent` (no conforming types in this lane), `vImage.BufferType.init(bufferTypeCode:model:)` (`CGColorSpaceModel` is not a declared dependency), 5 `BNNSGraph.Context` trap-on-read properties plus `tensor(forFunction:argument:fillKnownDynamicShapes:)` (no constructible instance: `makeContext` and both `compileFromPath` inits throw), and the `async` `Context.init(compileFromPath:functionName:options:)` (cited tests must be synchronous). The answered Tensor-construction oracle question is removed from `oracle-questions.tsv`.
+
+- Implemented before: **5335**
+- Implemented after: **5398**
+- Declared before: **73**
+- Declared after: **10**
+- Deferred before/after: **1445**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **63**
+
+Top evidence distribution for the 63 newly implemented rows:
+
+1. `testGraphTensorShapeOps` — 9 (14.3%) — softmax/logSoftmax/transpose/clip/threshold/pad/gather/argMax/argMin
+2. `testGraphTensorElementwiseD` — 8 (12.7%) — silu/sigmoid/softsign/hardSwish/elu/softplus/scaledTanh/hardSigmoid
+3. `testGraphTensorReductions` — 8 (12.7%) — sum/mean/product/minimum/maximum/logSumExp/sumOfSquares/l2Norm
+4. `testGraphTensorElementwiseA` — 7 (11.1%) — abs/cos/sin/tan/acos/asin/atan
+5. `testGraphTensorElementwiseB` — 7 (11.1%) — cosh/sinh/tanh/acosh/asinh/atanh/exp
+6. `testGraphTensorElementwiseC` — 7 (11.1%) — exp2/erf/sqrt/ceil/floor/round/relu
+7. `testGraphTensorFactories` — 5 (7.9%) — argument + 4 constant spellings
+8. `testGraphTensorBinaryOps` — 5 (7.9%) — max/min/pow/linear x2
+9. `testGraphTensorEpsilonOps` — 4 (6.3%) — log/reciprocal/rsqrt/l2Norm
+10. `testGraphTensorProperties` — 3 (4.8%) — tensorData/description/dataType
+
+Largest test is 9/63 = 14.3%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **301/301** cited tests pass together, and the new tests pass in an isolated fresh process.

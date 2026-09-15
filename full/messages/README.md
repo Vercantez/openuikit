@@ -82,6 +82,33 @@ product and test code uses the Foundation-visible `origin:size:` /
 `CGPoint(x:y:)` / `CGSize(width:height:)` spellings with no new imports and no
 behavior change.
 
+## Wave-11 recount 2026-09-15
+
+Recount: **174** implemented / **3** declared / **3** deferred of 180 —
+unchanged from wave 4 (gain +0). All 6 leftovers were re-examined and none
+is convertible in-process:
+
+- The 3 declared rows are the `async throws` Critical Messaging methods
+  (`requestAuthorization`, `checkAuthorizationStatus`, `send`). Their precise
+  IDs encode `async`; any test calling them requires `await`, which the
+  sealed gate forbids in cited tests (no `await`, semaphore waits, RunLoop,
+  or `DispatchQueue.main`), and they guard a daemon/entitlement path whose
+  success stays fail-closed. Removing `async` would diverge from the Apple
+  surface, so they remain `declared`.
+- The 3 deferred rows are UIKit-typed properties (`UIImage.image`,
+  `UIEdgeInsets.contentInset`, `UIColor.messageTintColor`). UIKit is not on
+  the isolated link line and a public framework-local substitute for a
+  dependency-owned type is forbidden, so they remain `deferred`.
+- The overlay override (SwiftUI identity View modifiers) does not apply:
+  this surface contains no SwiftUI View modifiers.
+
+Verification this wave: `libMessages.dylib` compiles clean under
+`-warnings-as-errors`; a sealed-gate-equivalent runner invoking all 64 cited
+`implemented` tests passes and emits the load-smoke marker. (The shared
+`test_host.sh` deliverable validator refuses before compiling because
+`full/framework-roadmap/framework-roadmap.json` is absent from this
+worktree — out of scope for this lane and pre-existing.)
+
 ## Tests
 
 `tests/agent/MessagesLoadSmoke.swift` is the schema-v2 load marker.

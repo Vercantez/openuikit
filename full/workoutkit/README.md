@@ -94,3 +94,25 @@ identity overlay (`testViewOverlayBatch01` renders `EmptyView`).
 
 `testAuthorizationStateRawValues` is the allowed table-driven enum /
 raw-value test. No non-enum test exceeds 40% of remaining implemented rows.
+
+## Wave 11 re-examination (2026-09-15)
+
+Before **271** / declared **8** / deferred **0** / unavailable **0** /
+not-applicable **0** (279 exact IDs); after **271** / **8** / **0** / **0** /
+**0**. Implemented gain **0**.
+
+All eight leftover rows are `async` (`Ya` in the precise mangling)
+Watch-daemon / HealthKit-store witnesses: scheduler `schedule` / `remove` /
+`markComplete` / `removeAllWorkouts` / `scheduledWorkouts` /
+`authorizationState` / `requestAuthorization`, and `HKWorkout.workoutPlan`
+(`async throws`). The sealed host runner calls every cited test
+synchronously from a generated `main.swift`, and the coverage contract
+forbids `await`, semaphore waits, `RunLoop`, and `DispatchQueue.main` in
+cited tests — calling an `async` API from a synchronous `func test*()`
+is a compile error, so these witnesses are structurally untestable here.
+Daemon success stays fail-closed per contract (scheduler returns
+`.denied` / `[]` / no-ops; `workoutPlan` throws
+`StateError.watchNotPaired`), and each row keeps compiling `declared`
+source evidence. The single SwiftUI overlay row (`workoutPreview`) is
+already `implemented` as an identity no-op; there are no `not-applicable`
+rows to convert.

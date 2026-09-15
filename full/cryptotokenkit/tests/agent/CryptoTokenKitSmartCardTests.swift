@@ -142,6 +142,17 @@ func testTKSmartCardSlotHasNoCard() {
     tkMust(slot.makeSmartCard() == nil, "no card")
 }
 
+func testTKSmartCardTransmitReplyFailsClosed() {
+    let card = TKSmartCard()
+    var called = false
+    card.transmit(Data([0x00, 0xA4, 0x04, 0x00])) { data, error in
+        called = true
+        tkMust(data == nil, "no data")
+        tkMust(TKError.Code.communicationError ~= (error ?? NSError(domain: "", code: 0)), "err")
+    }
+    tkMust(called, "sync reply")
+}
+
 func testTKSmartCardSlotManagerEmpty() {
     guard let manager = TKSmartCardSlotManager.default else {
         preconditionFailure("default manager")
@@ -149,6 +160,31 @@ func testTKSmartCardSlotManagerEmpty() {
     tkMust(manager.slotNames.isEmpty, "names")
     tkMust(manager.slotNamed("x") == nil, "named")
     tkMust(manager.isNFCSupported() == false, "nfc")
+}
+
+func testTKSmartCardSlotManagerGetSlotReplyIsNil() {
+    guard let manager = TKSmartCardSlotManager.default else {
+        preconditionFailure("default manager")
+    }
+    var called = false
+    manager.getSlot(withName: "reader-0") { slot in
+        called = true
+        tkMust(slot == nil, "no slot")
+    }
+    tkMust(called, "sync reply")
+}
+
+func testTKSmartCardSlotManagerCreateNFCSlotFailsClosed() {
+    guard let manager = TKSmartCardSlotManager.default else {
+        preconditionFailure("default manager")
+    }
+    var called = false
+    manager.createNFCSlot(message: "Hold card near reader") { session, error in
+        called = true
+        tkMust(session == nil, "no session")
+        tkMust(TKError.Code.notImplemented ~= (error ?? NSError(domain: "", code: 0)), "err")
+    }
+    tkMust(called, "sync completion")
 }
 
 func testTKSmartCardSlotNFCSessionFailClosed() {

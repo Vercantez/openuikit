@@ -14,6 +14,26 @@ This is a fresh seed: 511 exact public identifiers, floor 256 nondeferred.
 Coverage after this pass: **506 implemented / 5 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+## Wave 11 re-examination 2026-09-15
+
+Before: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511.
+After: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511
+(implemented gain 0). The 5 declared rows were rechecked against
+`reference/api-digester.json`: all five carry async mangling (`YaKF` —
+`BEDownloadMonitor.beginMonitoring()`, `resumeMonitoring(placeholderURL:)`,
+and the three process `init(bundleIdentifier:onInterruption:)`), so the
+sealed synchronous runner cannot cite them as implemented without `await`
+(contract forbids `await`/semaphores in cited tests), and success paths
+need a Live Activity daemon / helper appex + libxpc, so they stay
+fail-closed `declared`. Zero deferred, unavailable, or not-applicable rows,
+and no SwiftUI View-overlay rows, so the overlay OVERRIDE has nothing to
+apply. The sealed host gate was invoked but refuses before compiling: the
+shared deliverable validator requires
+`full/framework-roadmap/framework-roadmap.json`, which is absent from this
+isolated worktree (only `browserenginekit`, `familycontrols`, and
+`framework-fanout` are present) — a worktree-environment limitation, not a
+framework defect; product sources are unchanged.
+
 ## Wave 10 re-examination 2026-09-15
 
 Before: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511.

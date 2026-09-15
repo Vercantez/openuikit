@@ -1385,12 +1385,24 @@ public enum BNNSGraph {
         }
         public struct Tensor<T> where T : BNNSScalar {
             public typealias Element = T
-            public var tensorData: UnsafeMutableRawPointer? { preconditionFailure("Accelerate Linux: unread property") }
-            public var description: String { preconditionFailure("Accelerate Linux: unread property") }
-            public var rank: Int? { preconditionFailure("Accelerate Linux: unread property") }
-            public var shape: [Int]? { preconditionFailure("Accelerate Linux: unread property") }
-            public var stride: [Int]? { preconditionFailure("Accelerate Linux: unread property") }
-            public var dataType: BNNSDataType? { preconditionFailure("Accelerate Linux: unread property") }
+            /// Symbolic construction log for this graph node. Linux has no
+            /// BNNS graph compiler, so Builder/Tensor calls record the
+            /// operation chain instead of allocating device memory; graph
+            /// compilation and execution stay fail-closed (`makeContext`
+            /// throws `unableToCreateContext`).
+            var node: String
+            public var shape: [Int]?
+            public var stride: [Int]?
+            init(node: String, shape: [Int]? = nil, stride: [Int]? = nil) {
+                self.node = node
+                self.shape = shape
+                self.stride = stride
+            }
+            /// Symbolic nodes hold no device memory; always `nil` on Linux.
+            public var tensorData: UnsafeMutableRawPointer? { nil }
+            public var description: String { node }
+            public var rank: Int? { shape?.count }
+            public var dataType: BNNSDataType? { T.bnnsDataType }
         }
     }
     public struct CompileOptions: Equatable, Hashable, Sendable {

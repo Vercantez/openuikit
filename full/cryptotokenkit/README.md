@@ -41,9 +41,11 @@ Host-compiled sources import Foundation only. The identity probe
 
 ## Fail-closed boundaries
 
-- `TKSmartCard.beginSession`, `send`, `withSession`, and `transmit` return
-  `communicationError`. `makeSmartCard()` is nil. PIN user-interaction
-  factories return nil.
+- `TKSmartCard.beginSession`, `send`, `withSession`, `transmit(_:reply:)`, and
+  `getSlot(withName:reply:)` answer synchronously and fail closed
+  (`communicationError`, nil slot). `makeSmartCard()` is nil. PIN user-interaction
+  factories return nil. `createNFCSlot(message:completion:)` answers
+  synchronously with `notImplemented`.
 - `endSession()` still clears `context` when `isSensitive` is true.
 - `TKSmartCardSlotManager.default` has empty `slotNames`.
   `isNFCSupported()` is false. NFC session `update(message:)` throws
@@ -65,7 +67,8 @@ Host-compiled sources import Foundation only. The identity probe
 declared dependency. A public lookalike is forbidden.
 
 Async overlays `transmit(_:)`, `getSlot(withName:)`, and
-`createNFCSlot(message:)` are declared: the sealed runner cannot await.
+`createNFCSlot(message:)` remain alongside their completion-handler twins and
+share the same fail-closed behavior.
 
 Run the sealed host gate with:
 
@@ -75,9 +78,8 @@ bash full/cryptotokenkit/tests/acceptance/test_host.sh
 
 ## Depth pass 2026-09 (pi-wave6)
 
-Implemented **368** identifiers, declared **3** (async overlays the sealed
-runner cannot await), deferred **4**. Nondeferred total **371** of 375
-(lane floor 188). Previously 298 implemented / 73 declared; the +70 gain
+Implemented **371** identifiers, declared **0**, deferred **4**. Nondeferred total **371** of 375
+(lane floor 188). Previously 298 implemented / 73 declared; the +73 gain
 converts every compiler-synthesized Equatable/Hashable/SetAlgebra/OptionSet
 witness to `implemented` with behavioral tests that call each witness:
 `!=`/`hash(into:)`/`hashValue` via `tests/agent/CryptoTokenKitEqualityTests.swift`,

@@ -101,3 +101,44 @@ FRAMEWORK_FANOUT_HOST_OK module=Accessibility dylib=libAccessibility.dylib
 snapshot (`scratch/ladder-corpus/focus-ios` is missing). That campaign token
 is the host-inventory stamp; the sealed framework gate prints the four lines
 above.
+
+## Wave 11 recount 2026-09-15
+
+Before: **510 implemented / 10 declared / 0 deferred / 520 total**.
+After: **510 implemented / 10 declared / 0 deferred / 520 total** (no change).
+All 10 declared rows were re-examined against the sealed-runner rules and
+none can convert. `So21AccessibilitySettingsV0A0E04openB03forySo17AXSettingsFeatureV_tYaKFZ`
+is `static func openSettings(for:) async throws` (mangled `tYaKFZ`, confirmed
+in `reference/api-digester.json`), so no synchronous `func test*()` without
+`await` can call it. Each of the nine
+`s:10Foundation19AttributedStringKeyPAAE11descriptionSSvp::SYNTHESIZED` rows
+is the instance `description` getter of a caseless (uninhabited)
+attribute-key enum (`TextCustom/IPANotation/HeadingLevel/AdjustedPitch/
+TextualContext/QueueAnnouncement/IncludesPunctuation/AnnouncementPriority/
+SpellOut`); no value can be constructed in safe Swift, so no test can invoke
+the getter (forging one via `unsafeBitCast` would be UB, not behavioral
+evidence). The overlay override does not apply: this lane has no SwiftUI
+View-modifier or `not-applicable` rows. Deferred stays at 0; every
+unavailable behavior remains honestly fail-closed.
+
+Top-5 implemented evidence distribution (unchanged):
+
+| Citations | Evidence |
+| ---: | --- |
+| 19 | `AccessibilityOptionSetTests.swift#testFeatureOverrideOptionsAlgebra` |
+| 19 | `AccessibilityOptionSetTests.swift#testHearingEarAlgebra` |
+| 17 | `AccessibilitySettingsTests.swift#testSettingsFailClosedDefaults` |
+| 17 | `AccessibilityAttributeTests.swift#testAccessibilityAttributeScope` |
+| 17 | `AccessibilityEnumTests.swift#testTextualContextRawValues` |
+
+Product sources and all 62 cited test functions still compile clean with
+`swiftc -warnings-as-errors`; the 62-test runner emits only
+`ACCESSIBILITY_AGENT_RUNTIME_OK` (verified with a Darwin-adapted runner;
+the committed `test_host.sh` generates a Glibc runner for the Linux sealed
+host). The shared deliverable validator currently refuses inside this
+isolated worktree for an out-of-lane reason: it requires
+`full/framework-roadmap/framework-roadmap.json` at the repo root, which the
+worktree does not contain (present in the main checkout). No files outside
+`full/accessibility/` were touched.
+
+Local toolchain: Apple Swift 6.2.1 targeting `arm64-apple-macosx26.0`.

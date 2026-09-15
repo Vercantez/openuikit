@@ -932,3 +932,42 @@ Implemented gain: **+0**. Findings, re-verified:
   audit apart from this README record, so the last Linux-green ledger stands
   unaltered. This macOS host (Apple Swift 6.2.1, arm64-apple-macosx) has no
   Linux Swift toolchain to re-run the sealed Linux gate.
+
+## Depth pass 2026-09 (pi-wave11 re-audit, no gain)
+
+Campaign `pi-wave11`, framework `Vision` (3584 IDs). Work stays inside
+`full/vision/`. Recounted `coverage.tsv` from scratch, re-checked every
+non-implemented row for a convertible sync path, re-checked the overlay
+OVERRIDE trigger.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this pass | 3312 | 214 | 58 | 0 | 0 |
+| After this pass | **3312** | **214** | **58** | 0 | 0 |
+
+Implemented gain: **+0**. Findings, re-verified:
+
+- Overlay OVERRIDE inapplicable: **0** precise IDs mention `View` or
+  `SwiftUI`; product sources define no SwiftUI `View` modifiers (the only
+  `-> Self` hits are async overlay `perform(...) -> Self.Result`, not
+  identity view modifiers). No `not-applicable` protocol-witness
+  conversions apply.
+- All 214 `declared` rows contain the async marker `YaK`/`YaKF` (verified:
+  zero declared rows lack it; all are async `ImageProcessingRequest`
+  `perform(on:orientation:)` witnesses / synthesized conformer occurrences
+  plus async `ImageRequestHandler` / `TargetedImageRequestHandler` `perform`
+  overloads). No sync path exists for these exact mangled IDs, and the
+  sealed synchronous-test rule forbids `await`, semaphores, and run-loop
+  waits in cited tests, so they stay declared.
+- All 58 `deferred` rows are `VNVideoProcessor` / cadence /
+  processing-options (40) and `VNCoreMLFeatureValueObservation` (18): no
+  Linux AVFoundation video pipeline, no Apple Core ML runtime. Per-contract
+  they stay deferred.
+- Every `implemented` row cites a well-formed
+  `test:full/vision/tests/agent/<File>Tests.swift#testName` anchor (0
+  malformed; 118 distinct anchors; largest
+  `testOverlayRevisionComparableOperators` at 319 rows, 9.6%, below the 40%
+  limit). No product, coverage, manifest, or test file was changed by this
+  audit apart from this README record, so the last Linux-green ledger stands
+  unaltered. This macOS host (Apple Swift 6.2.1, arm64-apple-macosx) has no
+  Linux Swift toolchain to re-run the sealed Linux gate.

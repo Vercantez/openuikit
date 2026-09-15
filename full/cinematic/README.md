@@ -16,6 +16,8 @@ Coverage after this pass: **231 implemented / 6 declared / 0 deferred /
 
 Wave 10 recount (2026-09-15): before 231 implemented / 6 declared /
 0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
+Wave 11 recount (2026-09-15): before 231 implemented / 6 declared /
+0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
 All 6 declared rows are `async`/`async throws` loaders
 (`CNAssetInfo.init(asset:)` / `isCinematic`,
 `CNRenderingSession.Attributes.init(asset:)`,

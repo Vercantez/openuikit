@@ -94,3 +94,23 @@ is a host-inventory token: the toolchain is Swift 6.2.4 / linux and the
 sealed gate compiles with a clean product tree.
 
 Unresolved behavioral questions are listed in `oracle-questions.tsv`.
+
+## Wave 11 leftover review (2026-09-15)
+
+Before: **281 implemented / 7 declared / 0 deferred / 1 unavailable / 289 total**.
+After: **281 implemented / 7 declared / 0 deferred / 1 unavailable / 289 total**
+(implemented gain 0).
+
+All 7 `declared` rows are `async throws` daemon-gated methods
+(`ConversationManager.perform`, `reportNewIncomingConversation`,
+`reportNewIncomingVoIPPushPayload`, `ConversationHistoryManager.recentConversations`,
+`markConversationAsRead`, `markConversationsAsRead`,
+`TelephonyConversationManager.startCellularConversation`). A synchronous
+`func test*()` cannot call them: `swiftc` rejects the call with `'async' call
+in a function that does not support concurrency`, and the coverage contract
+forbids `await`, `DispatchQueue.main`, `RunLoop`, and semaphore waits in cited
+tests while hardware/daemon success must stay fail-closed. They remain
+`declared` (compiling, throwing `CocoaError.featureUnsupported`) with
+per-row oracle questions. No SwiftUI View-overlay rows exist in this
+framework, and the single `unavailable` row is a Foundation-owned
+`NotificationCenter.MessageIdentifier` witness that must not be stubbed.

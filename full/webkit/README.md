@@ -163,6 +163,66 @@ Validation on this Mac (the sealed Linux gate needs a Linux host):
 
 Only `full/webkit/` changes.
 
+### Leftover re-examination (pi-wave11 webkit)
+
+Re-examined all 36 declared and 26 deferred rows against the
+`reference/public-surface.tsv` Apple signatures and the current product
+sources for synchronous in-process conversion. Result: **no conversions**
+(2171 implemented / 36 declared / 26 deferred / 0 unavailable /
+0 not-applicable, total 2233 — unchanged). The deliverable validator
+reports no coverage/evidence errors (the only two errors are the
+pre-existing missing `full/framework-roadmap/framework-roadmap.json`,
+absent from this worktree); `tests/test_webkit_provenance.py`: 8 tests OK.
+
+- 24 of the 36 declared rows carry async (`Ya`) mangling and cannot be
+  invoked from top-level synchronous no-argument tests: `callJavaScript`,
+  the 8 `DialogPresenting` requirements + extension defaults, the 6
+  `NavigationDeciding` requirements + defaults, `mediaPlaybackState`,
+  `pauseAllMediaPlayback`, `setCameraCaptureState`,
+  `setMicrophoneCaptureState`, `closeAllMediaPresentations`,
+  `setAllMediaPlaybackSuspended`, `exported(as:)`, and the 2 async
+  `WKWebExtension` inits (`appExtensionBundle`, `resourceBaseURL`
+  overload). The contract forbids `await` in cited tests, and referencing
+  an async member without invoking it exercises no behavior. The 8
+  `WebPage` media/export/transfer rows (`mediaPlaybackState`,
+  `pauseAllMediaPlayback`, `setCameraCaptureState`,
+  `setMicrophoneCaptureState`, `closeAllMediaPresentations`,
+  `setAllMediaPlaybackSuspended`, `exported(as:)`,
+  `transferRepresentation`) plus `Representation` have no `WebPage`
+  product member at all (the same-named members in `WebKitWebView.swift`
+  are different precise IDs on a different class).
+- `navigations` is the only declared row with a synchronously readable
+  member, but it returns
+  `AsyncSequence<WebPage.NavigationEvent, any Error>` and draining it
+  needs `await`. It stays declared per its oracle question
+  (replay/cancellation semantics unobserved) rather than being promoted by
+  a trivial property touch that would verify none of the sequence
+  behavior — the same judgment as the wave-6/9/10 passes.
+- 11 rows have no product member at all (declared anchor is the enclosing
+  type): `WKNavigationAction.buttonNumber` (`UIEvent.ButtonMask`) /
+  `modifierFlags` (`UIKeyModifierFlags`), `WebPage.NavigationAction`
+  `.buttonNumber` (UIKit `UIEvent` type), `WKWebExtensionAction.menuItems`
+  (`[UIMenuElement]`), `WKWebExtensionCommand.keyCommand` (`UIKeyCommand?`)
+  / `menuItem` (`UIMenuElement`), three `WKUIDelegate`
+  edit-menu/input-suggestion methods (UIKit animator/suggestion types),
+  and `WebPage.Representation` / `transferRepresentation` (needs
+  `TransferRepresentation`/`UTType`). The isolated host has no UIKit /
+  UniformTypeIdentifiers module and framework-local substitutes for
+  dependency-owned types are forbidden, so no lookalike members are added.
+  (The product's `Command.modifierFlags: UInt` and `menuItems(for:)` are
+  host-visible members under different precise IDs, not these Apple IDs.)
+- Still deferred: NSAttributedString HTML import
+  (`DocumentReadingOptionKey` absent from Linux Foundation), `SecTrust`,
+  `ProxyConfiguration`, `UTType`/`Transferable` (including all
+  `CoreTransferable` synthesized witnesses), the two SwiftUI-typed `WebPage`
+  members, context-menu delegates, and the synthesized `Equatable.!=`
+  witness on SwiftUI `WebView.ActivatedElementInfo` (a stdlib witness, not
+  a SwiftUI overlay re-export, so the overlay override does not apply).
+- Overlay override does not trigger: all 813 SwiftUI overlay rows were
+  converted to `implemented` in pi-wave7; 0 `not-applicable` rows remain.
+
+Only this README changes in this pass.
+
 ### Leftover re-examination (pi-wave10 webkit)
 
 Re-examined all 36 declared and 26 deferred rows against the

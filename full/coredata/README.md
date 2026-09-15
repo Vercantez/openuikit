@@ -71,7 +71,33 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 implemented** / 3 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave → wave 11): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 → 1291 implemented** / 3 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+
+## Wave 11 (leftover sweep, 2026-09-15)
+
+Recounted `coverage.tsv`: 1291 implemented / 3 declared / 15 deferred / 10
+unavailable of 1319 public IDs — no convertible leftover. The three
+`declared` rows are all `async` overloads and cannot move to `implemented`
+because cited tests must be synchronous with no `await`, semaphore waits,
+`DispatchQueue.main`, or `RunLoop` blocking:
+
+- `NSPersistentContainer.performBackgroundTask<T>(_:)` generic `async throws`
+  overload (`NSPersistentStore.swift`; the synchronous `performBackgroundTask:`
+  selector is already implemented via
+  `CoreDataWave10Tests.swift#testPersistentContainerSurfaceAndBackgroundTask`).
+- `NSManagedObjectContext.perform(schedule:_:)` `async throws`
+  (`NSManagedObjectContext.swift`).
+- `NSPersistentStoreCoordinator.perform(_:)` `async rethrows`
+  (`NSPersistentStore.swift`; fixed its `declared` evidence anchor, which
+  pointed at the wrong product file).
+
+Deferred rows stay deferred: `NSExpression`/`UndoManager` members cannot be
+spelled on Linux Foundation under warnings-as-errors, Combine
+`objectWillChange` has no Combine import, the FRC snapshot callback needs
+UIKit's `NSDiffableDataSourceSnapshot`, `databaseScope` needs
+`CKDatabase.Scope`, and the class-var `defaultDirectoryURL` cannot coexist
+with the implemented class function. Ubiquity/Spotlight daemon rows stay
+`unavailable`. Implemented gain this wave: **+0**.
 
 ## Fail-closed boundaries
 

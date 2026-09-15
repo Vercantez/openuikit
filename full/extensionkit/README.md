@@ -9,21 +9,24 @@ ExtensionFoundation, or Foundation XPC.
 
 This is a fresh seed: 40 exact public identifiers, floor 32 nondeferred.
 
-Coverage after this pass: **36 implemented / 4 declared / 0 deferred /
+Coverage after this pass: **40 implemented / 0 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
-Top-5 evidence distribution (share of the 36 implemented rows):
+Top-5 evidence distribution (share of the 40 implemented rows):
 
-1. `ExtensionKitHostingTests.swift#testHostViewControllerConfigurationInit` — 2 (5.6%)
-2. `ExtensionKitSceneTests.swift#testAppExtensionSceneProtocolConformance` — 2 (5.6%)
-3. `ExtensionKitSceneTests.swift#testPrimitiveAppExtensionSceneInit` — 1 (2.8%)
-4. `ExtensionKitBuilderTests.swift#testSceneBuilderBuildBlockOne` — 1 (2.8%)
-5. `ExtensionKitHostingTests.swift#testHostViewControllerMakeXPCConnectionThrows` — 1 (2.8%)
+1. `ExtensionKitHostingTests.swift#testHostViewControllerConfigurationInit` — 2 (5.0%)
+2. `ExtensionKitSceneTests.swift#testAppExtensionSceneProtocolConformance` — 2 (5.0%)
+3. `ExtensionKitSceneTests.swift#testPrimitiveAppExtensionSceneInit` — 1 (2.5%)
+4. `ExtensionKitBuilderTests.swift#testSceneBuilderBuildBlockOne` — 1 (2.5%)
+5. `ExtensionKitHostingTests.swift#testHostViewControllerMakeXPCConnectionThrows` — 1 (2.5%)
 
-No non-enum test is cited by more than 40% of implemented rows. The four
+No non-enum test is cited by more than 40% of implemented rows. The three
 uninhabited `body` getters (`PrimitiveAppExtensionScene.body`, `Array.body`,
-`Never.body`, and the protocol `Body` associatedtype) stay `declared`
-because accessing a `Never` getter traps and the runner has no recovery.
+and `Never.body`) are exercised through child-process trap probes: the child
+calls the getter directly and the parent asserts death by uncaught signal,
+so the sealed runner never crashes. The `AppExtensionScene.Body`
+associatedtype is exercised by binding `SampleScene.Body` to
+`PrimitiveAppExtensionScene` and constructing through the metatype.
 
 ## What is real
 

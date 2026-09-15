@@ -59,6 +59,22 @@ This is a fresh seed: 81 exact public identifiers, floor 65 nondeferred.
 Coverage after this pass: **77 implemented / 4 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+Wave-11 recount (2026-09-15): before 77 implemented / 4 declared / 0 deferred,
+after 77 implemented / 4 declared / 0 deferred, implemented gain 0. The four
+`declared` rows remain `async` (`Monitor.addAppExtensionPoint`,
+`Monitor.init(appExtensionPoint:)`, `Monitor.removeAppExtensionPoint`,
+`AppExtensionProcess.init(configuration:)` async) and cannot be cited from the
+sealed runner's top-level synchronous no-argument tests: calling them needs
+`await`, and blocking waits (`DispatchQueue.main`, `RunLoop`, semaphores)
+are forbidden by the depth contract, so the rows stay `declared` with
+compiling source anchors. Product sources still compile clean under
+`swiftc -warnings-as-errors` (macOS host check; the sealed Linux gate also
+resolves the `NSXPCConnection` lookalike). The SwiftUI View-overlay override
+does not apply: this framework vends no View-modifier rows. Full local
+gate could not run: the shared deliverable validator in this isolated
+worktree rejects on a missing repo file outside this lane
+(`full/framework-roadmap/framework-roadmap.json`).
+
 Wave-4 recount (2026-09-14): before 77 implemented / 4 declared / 0 deferred,
 after 77 implemented / 4 declared / 0 deferred, implemented gain 0. The four
 `declared` rows are `async` (`Monitor.addAppExtensionPoint`,

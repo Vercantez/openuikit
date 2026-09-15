@@ -599,3 +599,47 @@ Environment: local `swiftc` is Apple Swift 6.2.1 targeting
 the 13 new protocol tests pass in-process on this Mac. The sealed gate runs
 in the `uikit-linux` container (Swift 6.2.4,
 `aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).
+
+## Depth pass 2026-09 (wave 11, isolated worktree)
+
+Converts the one leftover deferred row whose Linux spelling compiles, and
+documents why the remaining 15 leftovers stay. No fabric, daemon, radio,
+`await`, or success invention.
+
+**Coverage before:** 28406 implemented / 4 declared / 12 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+(+1 implemented; 28411 nondeferred; floor 150).
+
+**Added this pass**
+
+- `MTRAttributeCacheContainer.readAttribute(withEndpointId:clusterId:attributeId:clientQueue:completion:)`
+  (in `MTRControllers.swift`) fails closed with `MTRError.invalidState` on
+  the calling thread: no fabric primes this cache on Linux. This is the
+  completion-handler spelling of the deferred async overlay row, following
+  the established precedent (`MTRBaseDevice` async rows cite completion
+  spelling tests; `MTRClusterStateCacheContainer.readAttributes` already
+  fails closed the same way). New test
+  `tests/agent/MatterWave11CacheTests.swift#testAttributeCacheContainerReadWave11`
+  cites the single row, far below the 40% cap. No manifest change (existing
+  product file).
+
+**Leftover deferred (11) and declared (4) — unchanged by design**
+
+- `MTRSetMessageReliabilityParameters` (a no-op would invent radio timing).
+- 10 `NSCoding.initWithCoder` rows (NSCoder round-trips stay deferred by
+  design; Linux Foundation has no Apple daemon data to decode).
+- Declared rows are XPC surface that cannot compile without
+  NSXPCConnection/NSXPCInterface: `MTRDeviceController.sharedController`
+  x2 (needs `MTRXPCConnectBlock = () -> NSXPCConnection`, itself
+  unavailable) and `xpcInterfaceForServerProtocol` /
+  `xpcInterfaceForClientProtocol` (return NSXPCInterface). Framework-local
+  stand-ins for dependency-owned NSXPC types are forbidden, so these stay
+  declared rather than inventing signatures.
+
+Environment: local `swiftc` is Apple Swift 6.2.1 targeting
+`arm64-apple-macosx26.0` (this Mac). Product `libMatter.dylib` and the full
+`tests/agent/*Tests.swift` set (151 files) compile clean under
+`-warnings-as-errors`; the new cache test passes in-process on this Mac.
+The sealed gate runs in the `uikit-linux` container (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).

@@ -167,36 +167,74 @@ open class VSUserAccountManager: NSObject {
     open func userAccounts(
         options: VSUserAccountManager.QueryOptions = []
     ) async throws -> [VSUserAccount] {
-        _ = options
-        throw VideoSubscriberAccountLinux.unsupportedError()
+        try linuxUserAccounts(options: options)
     }
 
     open var autoSignInToken: VSUserAccountManager.AutoSignInToken {
         get async throws {
-            throw VideoSubscriberAccountLinux.unsupportedError()
+            try linuxAutoSignInToken()
         }
     }
 
     open func deleteAutoSignInToken() async throws {
-        throw VideoSubscriberAccountLinux.unsupportedError()
+        try linuxDeleteAutoSignInToken()
     }
 
     open func updateAutoSignInToken(
         _ newToken: String,
         updateContext: VSUserAccountManager.AutoSignInTokenUpdateContext
     ) async throws {
-        _ = newToken
-        _ = updateContext
-        throw VideoSubscriberAccountLinux.unsupportedError()
+        try linuxUpdateAutoSignInToken(newToken, updateContext: updateContext)
     }
 
     open func requestAutoSignInAuthorization() async throws
         -> VSUserAccountManager.AutoSignInTokenUpdateContext
     {
-        throw VideoSubscriberAccountLinux.unsupportedError()
+        try linuxRequestAutoSignInAuthorization()
     }
 
     open func update(_ account: VSUserAccount) async throws {
+        try linuxUpdate(account)
+    }
+
+    // MARK: - Synchronous fail-closed cores
+
+    /// Linux has no account-sync daemon: every core throws
+    /// `VSError.unsupported` and never invents accounts or tokens. The
+    /// public `async throws` APIs above delegate here so the isolated
+    /// synchronous host runner exercises the same path via
+    /// `VideoSubscriberAccountHostControl`.
+    func linuxUserAccounts(
+        options: VSUserAccountManager.QueryOptions = []
+    ) throws -> [VSUserAccount] {
+        _ = options
+        throw VideoSubscriberAccountLinux.unsupportedError()
+    }
+
+    func linuxAutoSignInToken() throws -> VSUserAccountManager.AutoSignInToken {
+        throw VideoSubscriberAccountLinux.unsupportedError()
+    }
+
+    func linuxDeleteAutoSignInToken() throws {
+        throw VideoSubscriberAccountLinux.unsupportedError()
+    }
+
+    func linuxUpdateAutoSignInToken(
+        _ newToken: String,
+        updateContext: VSUserAccountManager.AutoSignInTokenUpdateContext
+    ) throws {
+        _ = newToken
+        _ = updateContext
+        throw VideoSubscriberAccountLinux.unsupportedError()
+    }
+
+    func linuxRequestAutoSignInAuthorization() throws
+        -> VSUserAccountManager.AutoSignInTokenUpdateContext
+    {
+        throw VideoSubscriberAccountLinux.unsupportedError()
+    }
+
+    func linuxUpdate(_ account: VSUserAccount) throws {
         _ = account
         throw VideoSubscriberAccountLinux.unsupportedError()
     }

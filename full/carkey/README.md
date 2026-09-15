@@ -56,6 +56,32 @@ vehicle UWB/NFC/BLE radio, or paired digital key.
 Fresh seed: no prior implemented/declared split. After this pass:
 **110 implemented / 4 declared / 0 deferred**.
 
+## Wave 11 leftover re-examination (2026-09-15)
+
+Before: 110 implemented / 4 declared / 0 deferred / 114 total.
+After: 110 implemented / 4 declared / 0 deferred / 114 total (no change).
+
+All 4 leftover `declared` rows were re-examined and must stay `declared`:
+each mangling contains `Ya` (async) — `CarKeyRemoteControl.start` plus the
+three `ExecutionRequest.results()` variants. They compile (product builds
+clean under `-warnings-as-errors`) and fail closed (`FeatureNotSupported` /
+`RequestNotInProgress` without suspending), but no honest sync test can call
+them: the sealed runner only invokes top-level synchronous no-argument
+`func test*()`, and the coverage contract bans `await`, semaphores,
+`DispatchQueue.main`, and `RunLoop` in cited tests. The overlay OVERRIDE is
+not applicable: this surface contains zero SwiftUI View-modifier rows.
+
+Validation on this host: product `swiftc -warnings-as-errors` dylib build
+OK; all 30 distinct cited tests compiled and ran with marker-only
+`CARKEY_AGENT_RUNTIME_OK` output (runner generated from `implemented` rows
+exactly as `tests/acceptance/test_host.sh` does; `Glibc` shimmed to `Darwin`
+for this macOS host only — no repo file changed for that). The full
+host-gate script itself cannot pass in this isolated worktree for a
+pre-existing environmental reason: the shared deliverable validator requires
+`full/framework-roadmap/framework-roadmap.json`, which this worktree does not
+materialize (its sha256 matches the main-repo file byte-for-byte), and the
+contract forbids creating files outside `full/carkey/` to backfill it.
+
 Top-5 implemented evidence distribution:
 
 | Citations | Evidence |

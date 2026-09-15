@@ -6537,18 +6537,18 @@ s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10AppIntents0A
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10AppIntents0A17DependencyManagerC5ErrorO	deferred		Synthesized protocol witness has no host source anchor; stdlib/OptionSet/View/Hashable members are not redeclared.
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10AppIntents10IntentFileV0cD5ErrorO	deferred		Synthesized protocol witness has no host source anchor; stdlib/OptionSet/View/Hashable members are not redeclared.
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10AppIntents25SetFocusFilterIntentErrorO	deferred		Synthesized protocol witness has no host source anchor; stdlib/OptionSet/View/Hashable members are not redeclared.
-s:s5NeverO10AppIntentsE05OpensB6Intenta	declared	source:full/appintents/AppIntents.swift#OpensAppIntent	
+s:s5NeverO10AppIntentsE05OpensB6Intenta	implemented	test:full/appintents/tests/agent/AppIntentsWave20Tests.swift#testWave20NeverResultAliases	Never result associated-type pin; Linux holds no result payload
 s:s5NeverO10AppIntentsE13PerformResulta	implemented	test:full/appintents/tests/agent/AppIntentsWave19Tests.swift#testWave19NeverResultAliases	Never result associated-type pin; host perform returns IntentResultValue
 s:s5NeverO10AppIntentsE13Specificationa	deferred		Operator witness has no valid coverage identifier anchor ('Never.Specification'); not separately redeclared.
 s:s5NeverO10AppIntentsE13UnwrappedTypea	implemented	test:full/appintents/tests/agent/AppIntentsWave18Tests.swift#testWave18NeverStaticsAndAliases	Never static title and _IntentValue alias pins
 s:s5NeverO10AppIntentsE14SummaryContenta	implemented	test:full/appintents/tests/agent/AppIntentsWave19Tests.swift#testWave19NeverResultAliases	Never summary associated-type pin; host summary is IntentParameterSummary<Never>
 s:s5NeverO10AppIntentsE28defaultResolverSpecificationAC05EmptyeF0VyABGvpZ	deferred		Member is an overlay on a foreign or stdlib type and is not redeclared with a host source anchor.
-s:s5NeverO10AppIntentsE5Valuea	declared	source:full/appintents/AppIntents.swift#Value	
+s:s5NeverO10AppIntentsE5Valuea	implemented	test:full/appintents/tests/agent/AppIntentsWave20Tests.swift#testWave20NeverResultAliases	Never result associated-type pin; Linux holds no result payload
 s:s5NeverO10AppIntentsE5title10Foundation23LocalizedStringResourceVvpZ	implemented	test:full/appintents/tests/agent/AppIntentsWave18Tests.swift#testWave18NeverStaticsAndAliases	Never static title and _IntentValue alias pins
-s:s5NeverO10AppIntentsE5valueABSgvp	declared	source:full/appintents/AppIntents.swift#value	
-s:s5NeverO10AppIntentsE6Dialoga	declared	source:full/appintents/AppIntents.swift#Dialog	
-s:s5NeverO10AppIntentsE6Intenta	declared	source:full/appintents/AppIntents.swift#Intent	
-s:s5NeverO10AppIntentsE7Snippeta	declared	source:full/appintents/AppIntents.swift#Snippet	
+s:s5NeverO10AppIntentsE5valueABSgvp	implemented	test:full/appintents/tests/agent/AppIntentsWave20Tests.swift#testWave20NeverIntentAndValue	Never result value pin; no Never instance exists on this host
+s:s5NeverO10AppIntentsE6Dialoga	implemented	test:full/appintents/tests/agent/AppIntentsWave20Tests.swift#testWave20NeverResultAliases	Never result associated-type pin; Linux holds no result payload
+s:s5NeverO10AppIntentsE6Intenta	implemented	test:full/appintents/tests/agent/AppIntentsWave20Tests.swift#testWave20NeverIntentAndValue	Never result associated-type pin; Linux holds no result payload
+s:s5NeverO10AppIntentsE7Snippeta	implemented	test:full/appintents/tests/agent/AppIntentsWave20Tests.swift#testWave20NeverResultAliases	Never result associated-type pin; Linux holds no result payload
 s:s5NeverO10AppIntentsE7performAC21IntentResultContainerVyA4BGyYaKF	declared	source:full/appintents/AppIntents.swift#perform	
 s:s5NeverO10AppIntentsE9ValueTypea	implemented	test:full/appintents/tests/agent/AppIntentsWave18Tests.swift#testWave18NeverStaticsAndAliases	Never static title and _IntentValue alias pins
 s:s5NeverO10AppIntentsEABycfc	declared	source:full/appintents/AppIntents.swift#init	

@@ -248,12 +248,21 @@ open class TKSmartCardSlotManager: NSObject {
         return nil
     }
 
+    public func getSlot(withName name: String, reply: @escaping (TKSmartCardSlot?) -> Void) {
+        reply(slotNamed(name))
+    }
+
     public func getSlot(withName name: String) async -> TKSmartCardSlot? {
         slotNamed(name)
     }
 
     public func isNFCSupported() -> Bool {
         false
+    }
+
+    public func createNFCSlot(message: String?, completion: @escaping (TKSmartCardSlotNFCSession?, (any Error)?) -> Void) {
+        _ = message
+        completion(nil, tkMakeError(.notImplemented, reason: "NFC smart-card slot requires Apple NFC hardware"))
     }
 
     public func createNFCSlot(message: String?) async throws -> TKSmartCardSlotNFCSession {
@@ -317,6 +326,11 @@ open class TKSmartCard: NSObject {
         if isSensitive {
             context = nil
         }
+    }
+
+    public func transmit(_ request: Data, reply: @escaping (Data?, (any Error)?) -> Void) {
+        _ = request
+        reply(nil, tkMakeError(.communicationError, reason: "no smart-card reader on Linux"))
     }
 
     public func transmit(_ request: Data) async throws -> Data {

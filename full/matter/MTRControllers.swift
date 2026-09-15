@@ -972,7 +972,23 @@ open class MTRCertificates: NSObject {
     }
 }
 
-open class MTRAttributeCacheContainer: NSObject {}
+open class MTRAttributeCacheContainer: NSObject {
+    /// No fabric primes this cache on Linux, so the read always fails
+    /// closed with `invalidState` on the calling thread. This is the
+    /// completion-handler spelling of Apple's async overlay
+    /// `readAttribute(withEndpointId:clusterId:attributeId:clientQueue:)`,
+    /// which the sealed runner cannot await.
+    open func readAttribute(
+        withEndpointId endpointId: NSNumber?,
+        clusterId: NSNumber?,
+        attributeId: NSNumber?,
+        clientQueue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointId, clusterId, attributeId, clientQueue)
+        mtrInvokeFailClosed(completion)
+    }
+}
 open class MTRClusterStateCacheContainer: NSObject {
     open func readAttributes(
         withEndpointID endpointID: NSNumber?,

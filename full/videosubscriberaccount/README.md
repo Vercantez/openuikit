@@ -43,7 +43,13 @@ sync, and auto sign-in never report success.
   `VSError.unsupported`. The raw-graph completion overlay completes with
   `.notDetermined` plus the same error. Never `.granted`.
 - `VSUserAccountManager` query/update/auto-sign-in APIs throw
-  `VSError.unsupported`. They never invent accounts or tokens.
+  `VSError.unsupported`. They never invent accounts or tokens. Each `async`
+  API delegates to a shared synchronous fail-closed core, and the isolated
+  runner exercises that core through the `@_spi(OpenUIKitHost)`
+  `VideoSubscriberAccountHostControl` sync twins
+  (`tests/agent/VSUserAccountSyncTests.swift` binds every async method as a
+  typed function value; the `autoSignInToken` getter cannot be named from
+  synchronous code, so its twin covers the shared core).
 - Required `VSAccountManagerDelegate` present/dismiss methods take
   UIKit `UIViewController` and are deferred. This module does not publish a
   UIKit lookalike. The optional authentication gate defaults to `false`.
@@ -52,7 +58,7 @@ sync, and auto sign-in never report success.
 
 ## Depth pass 2026-09
 
-Implemented **202** of 210 exact IDs (6 `declared` async overlays, 2 UIKit
+Implemented **208** of 210 exact IDs (0 `declared`, 2 UIKit
 `deferred` delegate methods). Nondeferred count 208, above the medium-full
 floor of 105.
 

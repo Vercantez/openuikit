@@ -81,6 +81,23 @@ Top-5 `implemented` evidence distribution:
 No non-enum test is cited by more than 6 implemented rows (40% of the
 remaining 78 non-table rows would be 31).
 
+## Wave 11 re-examination 2026-09-15
+
+Before: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**.
+After: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**
+(implemented gain 0). Re-probed conversion with a scratch `swiftc` build:
+synchronous access to `IdentityDocumentProviderRegistrationStore.status`
+from a non-`async` function is a compile error (`'async' property access
+in a function that does not support concurrency`), and the sealed runner
+forbids `await`, semaphores, and run-loop waits in cited tests, so the
+four async members (`status`, `registrations`, `addRegistration`,
+`removeRegistration`) cannot be cited by synchronous no-argument tests.
+The three `Actor` isolation witnesses trap when called off the actor.
+No SwiftUI View-overlay rows exist in this module (no `View`/`SwiftUI`
+precise IDs in the public surface), so the overlay override does not
+apply. Fail-closed behavior unchanged: async store members report
+`.notSupported` without the Apple presentment daemon.
+
 ## Tests
 
 `tests/agent/IdentityDocumentServicesLoadSmoke.swift` is the schema-v2

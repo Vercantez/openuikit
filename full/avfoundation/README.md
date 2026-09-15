@@ -986,3 +986,62 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
+
+### Depth pass 2026-09-15 (wave 11 leftover sweep)
+
+Wave 11 converts the four synchronous `Element`-constrained (`Equatable`)
+`Sequence` witnesses on `AVCaptureSynchronizedDataCollection`
+(`contains`, `elementsEqual`, `starts(with:)`, `split(separator:)`).
+The collection is an empty `Sequence` of `AVCaptureSynchronizedData`
+(iterator returns nil immediately, `count` is 0), and the element inherits
+`Equatable` from `NSObject`, so the constraints hold with only
+Apple-mirroring product surface. One test in
+`tests/agent/AVDepthPass20Tests.swift` calls all four synchronously
+(false / false / false / single empty slice); no hardware, daemon,
+codec, or service success is claimed. No SwiftUI cross-import overlay
+rows exist in this seed, so the overlay playbook does not apply.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5291 | 5295 |
+| `declared` | 96 | 92 |
+| `deferred` | 245 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+the new test cites 4 rows, well under 40% of the 5,295 implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The remaining 92 `declared` rows are async witnesses (calling them needs
+`await`, which the sealed gate forbids: async `next()`, async terminal
+`AsyncSequence` consumers like `first`/`contains`/`allSatisfy`/`reduce`/
+`max`/`min`, async `load` / `seek` / `image` / receiver `append` methods),
+the three non-throwing `flatMap` overloads on Never-failure bases (all
+three where-clauses hold there, so no call shape can pin exactly one),
+the deprecated optional `flatMap` (calling it trips
+`-warnings-as-errors`), `Combine` publishers (no Combine on the isolated
+host), `FormatStyle` / `compare` / `SortComparator`-element witnesses
+(calling them needs an invented style/comparator; that would exercise
+stdlib, not product behavior), and `AVAsynchronousKeyValueLoading`
+`load` / `status(of:)` witnesses for types that do not adopt the protocol
+on this host (adding the conformance would invent Apple API). The 245
+`deferred` rows are unchanged (completion-handler service calls,
+Darwin-only types, `CALayer`/`URLSession` inheritance, opaque `some`
+returns, and bodies that cannot be written without guessing Apple
+behavior).
+
+Host-equivalent Linux check (same compile-and-run steps as
+`tests/acceptance/test_host.sh`, replicated under `swift:6.2-noble`
+because this isolated worktree lacks the shared
+`full/framework-roadmap/framework-roadmap.json` the checked-in validator
+requires): dylib builds `-warnings-as-errors`, all 201 cited tests across
+25 `*Tests.swift` files link and run, and the runner emits only
+`AVFOUNDATION_AGENT_RUNTIME_OK`.

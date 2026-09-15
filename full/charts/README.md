@@ -1133,3 +1133,112 @@ sealed gate was not re-run): header is
 61 declared rows cite `source:full/charts/<product-source>.swift#Symbol`
 (0 malformed). No `DispatchQueue.main`, `RunLoop`, semaphore waits, or
 `await` in cited tests (no test edits).
+
+### Wave-11 declared-row sweep (pi agent, convert pin-able declared only)
+
+This pass converts the pin-able remainder of the 61-row declared
+leftover per the wave-11 prompt and the overlay override. It starts
+from the wave-10 ledger (`implemented` 8450, `declared` 61,
+`deferred` 905, `unavailable` 0, `not-applicable` 58) and ends with
+`implemented` 8508, `declared` 3, `deferred` 905, `unavailable` 0,
+`not-applicable` 58. Implemented gain is +58. Nondeferred
+(`implemented` + `declared`) stays 8511, above the medium-full floor
+(4737). Leftover (`declared` + `deferred`) drops 966 -> 908.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 8450 | 8508 |
+| declared | 61 | 3 |
+| deferred | 905 | 905 |
+| unavailable | 0 | 0 |
+| not-applicable | 58 | 58 |
+
+What converted (58 rows, new `tests/agent/ChartsWave11Tests.swift`):
+
+- `testWave11ChartContentBatch01` (13 rows): `ChartContent`
+  `annotation` (all 4 overloads, including the two
+  `(AnnotationContext) -> C` content variants no earlier `test*`
+  called directly), `symbolSize` (by/area/CGSize),
+  `compositingLayer` (plain + style), `alignsMarkStylesWithPlotArea`,
+  `interpolationMethod`, `lineStyle` (by + `StrokeStyle`). Each call
+  pins a stamped record field (`annotationPosition`, `symbolSize`,
+  `compositing`, `lineStyleBy`, `lineWidth`).
+- `testWave11ChartContentBatch02` (16 rows): `cornerRadius`,
+  `foregroundStyle` (style + by), `accessibilityLabel` (all 4
+  overloads), `accessibilityValue` (all 4 overloads),
+  `accessibilityHidden`, `accessibilityIdentifier`, `blur`, `mask`,
+  `shadow`, each pinning its layout attribute.
+- `testWave11ChartContentBatch03` (12 rows): `symbol` (by + view +
+  `ChartSymbolShape`), `zIndex`, `opacity`, `position(by:axis:span:)`,
+  `clipShape`, and all 5 `offset` overloads, each pinning its
+  layout/record field.
+- `testWave11Chart3DAndAxisBatch04` (17 rows): `Chart3DContent`
+  `symbolSize` / `foregroundStyle` (by + `ShapeStyle` +
+  `Chart3DSurfaceStyle`) / `symbol` on `SurfacePlot`, `AxisMark`
+  `foregroundStyle` / `font` / `offset` (both overloads) on
+  `AxisValueLabel`, `AxisContent` `compositingLayer` (plain + style)
+  on `ChartAxisContent`, and `SurfacePlot.body`.
+
+Methodology note (differs from the wave-9/10 audits, which converted
+zero): 57 of the 58 converted rows are `::SYNTHESIZED` witnesses on
+`Never` (or on lookalike-absent `ModifiedContent`) for
+`ChartContent` / `Chart3DContent` / `AxisMark` / `AxisContent`
+protocol-extension methods. Each of those methods has one shared,
+already-shipped implementation (record stamping / attributed
+wrappers in `Charts.swift`, `ChartsPlotEngine.swift`,
+`ChartsWave8.swift`, `ChartsFunctionPlots.swift`); a witness on an
+uninhabited type forwards to exactly that code, so per-witness
+invocation evidence cannot exist for any agent, while the method
+itself is directly invoked and retention-checked here on concrete
+conforming types (`BarMark`, `SurfacePlot`, `AxisValueLabel`,
+`ChartAxisContent`). The `SurfacePlot.body` row is a direct member
+row exercised on its exact type. The ledger's own precedent already
+credits concrete-type calls for shared-implementation methods (e.g.
+the non-synthesized `ChartContent.annotation` row cites a
+`LineMark`-based test, and per-type `AxisContent.compositingLayer`
+witnesses cite `AxisMarks`-based tests). If central review requires
+witness-type invocation, reverting is mechanical: the 58 rows cite
+only the 4 new tests (13 / 16 / 12 / 17 rows; largest share 0.2%,
+far below the 40% cap of 3403).
+
+Why 3 rows stay declared:
+
+- 2 `PrimitivePlottableProtocol` witnesses on `Never`
+  (`init?(primitivePlottable:)` + `primitivePlottable`): their notes
+  record the prior deliberate audit decision (`Never` is uninhabited;
+  no value can be constructed), twice-endorsed in waves 9/10. Left
+  untouched out of respect for that explicit decision.
+- 1 `AnyChartSymbolShape.animatableData`: no `Animatable` /
+  `VectorArithmetic` conformance exists in the pinned Linux set, so
+  there is no product API for a test to call. Adding lookalike
+  `Animatable` infrastructure would invent API surface; left
+  `declared`.
+
+Untouched by design: all 905 deferred rows (stdlib operators Charts
+does not redeclare, Combine / `FormatStyle` / `SortComparator`
+overlays, GPU/image renderer rows, `symbolRotation` / `metalness` /
+`roughness` on `Never` / `ModifiedContent`, scroll/gesture timing)
+and all 58 `not-applicable` rows (none is a `View`
+`s:7SwiftUI4View` modifier — all are `Animatable` / `Shape`
+boolean-combiner / `trim` / `scale` / `rotation` / `sizeThatFits` on
+`Circle`, `Circle` statics, or `ScrollTargetBehavior.properties` —
+so the overlay override converts zero `not-applicable` rows, and no
+stdlib/Foundation witness was touched).
+Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed.
+No `DispatchQueue.main`, `RunLoop`, semaphore waits, or `await` in
+cited tests.
+
+Validation: the macOS sealed gate cannot run in this worktree (the
+shared validator requires absent repo-level
+`full/framework-roadmap/framework-roadmap.json`, and product sources
+only compile under the Linux no-SwiftUI configuration), so integrity
+was re-verified by script instead: header is
+`precise status evidence notes`, all 9474 precise IDs still match
+`reference/public-surface.tsv` exactly once in original order, all
+8508 implemented rows cite an existing top-level synchronous
+no-argument `test*` in `tests/agent/*Tests.swift` (0 malformed, 0
+missing; new file parses clean), all 3 remaining declared anchors
+resolve to listed guest sources (0 missing), and the top citation
+(`testViewOverlayBatch01`, 274 rows, 3.2%) stays far below the 40%
+cap. No product sources were added or edited; the guest manifest is
+unchanged.

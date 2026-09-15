@@ -90,6 +90,10 @@ No non-enum test is cited by more than 2 implemented rows.
 
 Before **90** implemented / 9 declared / 0 deferred / 0 not-applicable; after **90** implemented / 9 declared / 0 deferred / 0 not-applicable (gain +0). Re-examined all 9 leftover `declared` rows: every one is `async` (`ContactItemEnumerator.enumerateContent/enumerateChanges/invalidate`, `ContactProviderManager.enable/disable/signalEnumerator/invalidate/reset`, `ContactProviderExtension.invalidate`). The coverage contract requires each `implemented` row to cite a top-level synchronous no-argument `func test*()` that actually calls the identifier with no `await`/semaphore/RunLoop waits, so no sync test can invoke these async entry points and they stay honestly `declared`. No SwiftUI View-overlay rows exist in this 99-ID surface, so the overlay override does not apply. No product, test, manifest, or coverage changes needed.
 
+## Wave11 recount 2026-09-15
+
+Before **90** implemented / 9 declared / 0 deferred / 0 not-applicable; after **90** implemented / 9 declared / 0 deferred / 0 not-applicable (gain +0). Re-examined all 9 leftover `declared` rows: every one is `async` (`ContactItemEnumerator.enumerateContent/enumerateChanges/invalidate`, `ContactProviderManager.enable/disable/signalEnumerator/invalidate/reset`, `ContactProviderExtension.invalidate`). The coverage contract requires each `implemented` row to cite a top-level synchronous no-argument `func test*()` that actually calls the identifier with no `await`/semaphore/RunLoop waits, so no sync test can invoke these async entry points (calling an `async` function from a sync context without `await` is a compile error) and they stay honestly `declared`. Retargeting them as sync would misrepresent the Apple async surface pinned in the digester/graph. No SwiftUI View-overlay rows exist in this 99-ID surface, so the overlay override does not apply. Product compiles warning-free under host `swiftc` (exit 0); no product, test, manifest, or coverage changes needed.
+
 ## Tests
 
 `tests/agent/ContactProviderLoadSmoke.swift` is the schema-v2 load marker.

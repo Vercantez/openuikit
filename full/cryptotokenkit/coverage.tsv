@@ -61,7 +61,7 @@ c:objc(cs)TKSimpleTLVRecord(im)initWithTag:value:	implemented	test:full/cryptoto
 c:objc(cs)TKSmartCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
 c:objc(cs)TKSmartCard(im)beginSessionWithReply:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardBeginSessionFailsClosed	
 c:objc(cs)TKSmartCard(im)endSession	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardEndSessionClearsSensitiveContext	
-c:objc(cs)TKSmartCard(im)transmitRequest:reply:	declared	source:full/cryptotokenkit/TKSmartCard.swift#transmit	async overlay; host runner cannot await
+c:objc(cs)TKSmartCard(im)transmitRequest:reply:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardTransmitReplyFailsClosed	
 c:objc(cs)TKSmartCard(im)userInteractionForSecurePINChangeWithPINFormat:APDU:currentPINByteOffset:newPINByteOffset:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionForPINReturnsNil	
 c:objc(cs)TKSmartCard(im)userInteractionForSecurePINVerificationWithPINFormat:APDU:PINByteOffset:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionForPINReturnsNil	
 c:objc(cs)TKSmartCard(py)allowedProtocols	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
@@ -106,8 +106,8 @@ c:objc(cs)TKSmartCardSlot(py)name	implemented	test:full/cryptotokenkit/tests/age
 c:objc(cs)TKSmartCardSlot(py)state	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
 c:objc(cs)TKSmartCardSlotManager	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
 c:objc(cs)TKSmartCardSlotManager(cpy)defaultManager	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
-c:objc(cs)TKSmartCardSlotManager(im)createNFCSlotWithMessage:completion:	declared	source:full/cryptotokenkit/TKSmartCard.swift#createNFCSlot	async overlay; host runner cannot await
-c:objc(cs)TKSmartCardSlotManager(im)getSlotWithName:reply:	declared	source:full/cryptotokenkit/TKSmartCard.swift#getSlot	async overlay; host runner cannot await
+c:objc(cs)TKSmartCardSlotManager(im)createNFCSlotWithMessage:completion:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerCreateNFCSlotFailsClosed	
+c:objc(cs)TKSmartCardSlotManager(im)getSlotWithName:reply:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerGetSlotReplyIsNil	
 c:objc(cs)TKSmartCardSlotManager(im)isNFCSupported	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
 c:objc(cs)TKSmartCardSlotManager(im)slotNamed:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
 c:objc(cs)TKSmartCardSlotManager(py)slotNames	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	

@@ -862,3 +862,48 @@ Implemented gain: +0 (ceiling; 3255/3504 = 92.9% implemented). Top test
 still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
 180 (5.5%). No test owns more than 40% of implemented rows. No Apple
 service or hardware success was invented.
+
+## Wave 11 pass 2026-09-15 (declared sweep: +4)
+
+No SwiftUI/View overlay rows exist in this module's public surface, so the
+overlay-override clause has nothing to convert here. This pass re-audited
+all 29 declared rows and converted the 4 generic `CMTimebase`
+`DispatchSourceTimer` overloads (`addTimer`, `removeTimer`,
+`setTimerNextFireTime`, `setTimerToFireImmediately`) from declared to
+implemented. Each now cites a focused synchronous test in the new
+`CMDispatchTimerMethodTests.swift` that passes a real (resumed, then
+cancelled before release) timer source through the generic method — the
+same arm/disarm discipline as the long-passing
+`testCMTimebaseDispatchSourceTimersFailClosed` C-entry test — and asserts
+the fail-closed `kCMTimebaseError_TimerIntervalTooShort` throw. The throw
+path is genuine product behavior (`CMClock.swift` never registers the
+source), so this is behavioral evidence, not witness theater. The new file
+was compiled with `-warnings-as-errors` and executed 5/5 clean on
+aarch64 Linux (Swift 6.2.4) before the coverage flip.
+
+The remaining 25 declared rows stay declared, concurring with the wave-10
+audit: 4 two-comparator `sorted(using:)` witnesses name an overload that
+does not exist on Linux corelibs; 4 `compare` witnesses need an
+`Element: SortComparator` conformance (retroactive `UInt8` or impossible
+`AnyObject`) under Linux's signature; 4 `publisher` witnesses need
+Combine, absent on Linux; 4 single-comparator `sorted(using:)` / 4
+`formatted` witnesses would need throwaway test-only comparators/styles
+that exercise no product behavior beyond already-covered iteration; 2
+`indices` witnesses on `CMReadOnlyDataBlockBuffer` trap per the oracle
+note; 2 `CVBufferRef` attachment members have no host type; 1 deprecated
+optional-`flatMap` warns under `-warnings-as-errors`. All 220 deferred
+rows still need CoreAudioTypes/CoreVideo, `simd`, hardware/daemons, or
+unobserved overlay shapes. No Apple service or hardware success invented.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3255 | 3259 |
+| declared | 29 | 25 |
+| deferred | 220 | 220 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +4 (3259/3504 = 93.0% implemented). The new test file
+owns 4 rows (0.1%). Top test still
+`CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (5.5%). No test owns more than 40% of implemented rows.

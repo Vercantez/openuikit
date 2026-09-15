@@ -10,6 +10,48 @@ private final class ContentProbe: @unchecked Sendable {
     var count = 0
 }
 
+private let bodyTrapProbeVariable = "EXTENSIONKIT_BODY_TRAP_PROBE"
+
+/// Runs `probe` in a child process and asserts it traps instead of returning.
+///
+/// The three uninhabited `AppExtensionScene.body` getters return `Never`, so
+/// calling one in-process would crash the sealed runner. The child reaches
+/// the getter call directly; the parent only observes abnormal termination.
+/// When a sibling probe's token is already set (nested child), this returns
+/// immediately so probes never recurse.
+private func checkBodyTraps(token: String, probe: @escaping @Sendable () -> Never) {
+    let observed = ProcessInfo.processInfo.environment[bodyTrapProbeVariable]
+    if let observed {
+        guard observed == token else { return }
+        probe()
+    }
+    var environment = ProcessInfo.processInfo.environment
+    environment[bodyTrapProbeVariable] = token
+    let candidate = CommandLine.arguments[0]
+    let executablePath: String
+    if candidate.hasPrefix("/") {
+        executablePath = candidate
+    } else {
+        executablePath = FileManager.default.currentDirectoryPath + "/" + candidate
+    }
+    let child = Process()
+    child.executableURL = URL(fileURLWithPath: executablePath)
+    child.environment = environment
+    // Output handles stay inherited: children print nothing to stdout, so
+    // the sealed runner's marker-only stdout is unaffected, and trap
+    // diagnostics on stderr are ignored by the gate's stdout comparison.
+    do {
+        try child.run()
+    } catch {
+        fatalError("body trap probe failed to launch: \(error)")
+    }
+    child.waitUntilExit()
+    precondition(
+        child.terminationReason == .uncaughtSignal,
+        "\(token) body getter must trap instead of returning"
+    )
+}
+
 @MainActor
 private struct SampleScene: AppExtensionScene {
     var body: PrimitiveAppExtensionScene {
@@ -111,6 +153,51 @@ func testAppExtensionSceneProtocolConformance() {
         let configuration = AppExtensionSceneConfiguration(scene)
         precondition(configuration.accept(connection: NSXPCConnection()) == true)
         precondition(configuration.host_sceneIDs == ["sample"])
+    }
+}
+
+func testAppExtensionSceneBodyAssociatedType() {
+    onMain {
+        let bodyType = SampleScene.Body.self
+        precondition(bodyType == PrimitiveAppExtensionScene.self)
+        let primitive = bodyType.init(
+            id: "associated",
+            content: { EmptyView() },
+            onConnection: { _ in true }
+        )
+        precondition(primitive.host_sceneID == "associated")
+        precondition(PrimitiveAppExtensionScene.Body.self == Never.self)
+    }
+}
+
+func testPrimitiveAppExtensionSceneBodyTraps() {
+    checkBodyTraps(token: "primitive") {
+        MainActor.assumeIsolated {
+            let scene = PrimitiveAppExtensionScene(id: "trap", content: { EmptyView() })
+            _ = scene.body
+        }
+    }
+}
+
+func testArrayAppExtensionSceneBodyTraps() {
+    checkBodyTraps(token: "array") {
+        MainActor.assumeIsolated {
+            let scenes = [
+                PrimitiveAppExtensionScene(id: "trap", content: { EmptyView() })
+            ]
+            _ = scenes.body
+        }
+    }
+}
+
+func testNeverAppExtensionSceneBodyTraps() {
+    checkBodyTraps(token: "never") {
+        MainActor.assumeIsolated {
+            // Never has no values; bit-cast a zero-size placeholder so the
+            // getter itself (not an unwrap) is what traps in the child.
+            let impossible: Never = unsafeBitCast((), to: Never.self)
+            _ = impossible.body
+        }
     }
 }
 

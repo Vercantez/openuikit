@@ -59,6 +59,22 @@ not apply, and the stdlib-witness rows stay `declared` (not `not-applicable`)
 per the operator merge ruling. Implemented gain this wave: 0. No product,
 coverage, test, or manifest file was modified.
 
+Wave-11 audit (2026-09-15): recounted **284 implemented / 65 declared /
+0 deferred / 0 not-applicable / 349 total** — unchanged. Re-verified every
+declared precise ID carries the async marker (`Ya`): 18 DockKit-level async
+hardware/camera commands and iterator `next()` methods plus 47 synthesized
+stdlib `AsyncSequence`/`AsyncIteratorProtocol` witnesses. Verified with
+a `grep -v Ya` pass over declared rows returning zero non-async rows, and a
+`grep -c SwiftUI/View` pass over coverage returning zero overlay rows, so the
+overlay-conversion playbook does not apply and no declared row can gain a
+synchronous `test*` caller under the sealed-runner contract (no `await`,
+`DispatchQueue.main`, `RunLoop`, or semaphore waits allowed). Hardware/daemon/
+camera success stays fail-closed per the task brief. Implemented gain this
+wave: 0. Host gate refuses in this trimmed worktree (shared deliverable
+validator requires `full/framework-roadmap/framework-roadmap.json`, absent
+here — same as wave-9); no product, coverage, test, or manifest file was
+modified.
+
 ## What is real
 
 - `DockKitError` cases in API-digester order (`notSupported` …
