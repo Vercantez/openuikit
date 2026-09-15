@@ -16,8 +16,8 @@ lane and is not linked here.
 Unchanged application source continues to import `SwiftData`. Linux has no
 CoreData SQLite store, no CloudKit, and no Apple schema-migration engine.
 
-Coverage (884 public precise IDs): **634 implemented** / 11 declared /
-49 deferred / 2 unavailable / 188 not-applicable. The
+Coverage (884 public precise IDs): **635 implemented** / 11 declared /
+48 deferred / 2 unavailable / 188 not-applicable. The
 ModelContainer, ModelConfiguration, ModelContext, FetchDescriptor, and
 Schema families are nondeferred (implemented or declared).
 

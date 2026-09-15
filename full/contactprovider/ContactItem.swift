@@ -1,4 +1,7 @@
 import Foundation
+#if (os(iOS) || os(Linux)) && canImport(Contacts)
+import Contacts
+#endif
 
 /// An item in the contact database.
 ///

@@ -698,20 +698,20 @@ c:@F@BNNSTensorGetAllocationSize	implemented	test:full/accelerate/tests/agent/BN
 c:@F@BNNSTile	implemented	test:full/accelerate/tests/agent/BNNSTensorOpTests.swift#testBNNSTileFloat	
 c:@F@BNNSTileBackward	implemented	test:full/accelerate/tests/agent/BNNSApplyFailClosedTests.swift#testBNNSTensorFailClosed	
 c:@F@BNNSTranspose	implemented	test:full/accelerate/tests/agent/BNNSTensorOpTests.swift#testBNNSTransposeFloat	
-c:@F@SparseCleanup#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
-c:@F@SparseCleanup#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
+c:@F@SparseCleanup#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
+c:@F@SparseCleanup#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@F@SparseCleanup#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleVector	
 c:@F@SparseCleanup#$@SA@SparseMatrix_Float#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatVector	
-c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
-c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
+c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
+c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Double#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleVector	
 c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Float#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
-c:@F@SparseCleanup#$@SA@SparseOpaquePreconditioner_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
-c:@F@SparseCleanup#$@SA@SparseOpaquePreconditioner_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
+c:@F@SparseCleanup#$@SA@SparseOpaquePreconditioner_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
+c:@F@SparseCleanup#$@SA@SparseOpaquePreconditioner_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@F@SparseCleanup#$@SA@SparseOpaquePreconditioner_Double#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
 c:@F@SparseCleanup#$@SA@SparseOpaquePreconditioner_Float#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
-c:@F@SparseCleanup#$@SA@SparseOpaqueSubfactor_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
-c:@F@SparseCleanup#$@SA@SparseOpaqueSubfactor_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
+c:@F@SparseCleanup#$@SA@SparseOpaqueSubfactor_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
+c:@F@SparseCleanup#$@SA@SparseOpaqueSubfactor_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@F@SparseCleanup#$@SA@SparseOpaqueSubfactor_Double#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
 c:@F@SparseCleanup#$@SA@SparseOpaqueSubfactor_Float#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
 c:@F@SparseCleanup#$@SA@SparseOpaqueSymbolicFactorization#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
@@ -729,32 +729,32 @@ c:@F@SparseConvertFromOpaque#*$@S@sparse_m_double#	declared	source:full/accelera
 c:@F@SparseConvertFromOpaque#*$@S@sparse_m_double_complex#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromOpaque	
 c:@F@SparseConvertFromOpaque#*$@S@sparse_m_float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromOpaque	
 c:@F@SparseConvertFromOpaque#*$@S@sparse_m_float_complex#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromOpaque	
-c:@F@SparseCreatePreconditioner#$@EA@SparsePreconditioner_t#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCreatePreconditioner	
-c:@F@SparseCreatePreconditioner#$@EA@SparsePreconditioner_t#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCreatePreconditioner	
+c:@F@SparseCreatePreconditioner#$@EA@SparsePreconditioner_t#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseCreatePreconditioner#$@EA@SparsePreconditioner_t#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
 c:@F@SparseCreatePreconditioner#$@EA@SparsePreconditioner_t#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorPreconditionerLifecycle	
 c:@F@SparseCreatePreconditioner#$@EA@SparsePreconditioner_t#$@SA@SparseMatrix_Float#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorPreconditionerLifecycle	
-c:@F@SparseCreateSubfactor#$@EA@SparseSubfactor_t#$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCreateSubfactor	
-c:@F@SparseCreateSubfactor#$@EA@SparseSubfactor_t#$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCreateSubfactor	
+c:@F@SparseCreateSubfactor#$@EA@SparseSubfactor_t#$@SA@SparseOpaqueFactorization_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseCreateSubfactor#$@EA@SparseSubfactor_t#$@SA@SparseOpaqueFactorization_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
 c:@F@SparseCreateSubfactor#$@EA@SparseSubfactor_t#$@SA@SparseOpaqueFactorization_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorPreconditionerLifecycle	
 c:@F@SparseCreateSubfactor#$@EA@SparseSubfactor_t#$@SA@SparseOpaqueFactorization_Float#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorPreconditionerLifecycle	
 c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrixStructure#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSymbolicStateSize	
 c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrixStructure#$@SA@SparseSymbolicFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSymbolicStateSize	
-c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrixStructureComplex#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrixStructureComplex#$@SA@SparseSymbolicFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Double#$@SA@SparseSymbolicFactorOptions#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Float#$@SA@SparseSymbolicFactorOptions#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
+c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrixStructureComplex#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrixStructureComplex#$@SA@SparseSymbolicFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Double#$@SA@SparseSymbolicFactorOptions#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Complex_Float#$@SA@SparseSymbolicFactorOptions#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
 c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleVector	
 c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Double#$@SA@SparseSymbolicFactorOptions#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
 c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Float#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
 c:@F@SparseFactor#$@EA@SparseFactorization_t#$@SA@SparseMatrix_Float#$@SA@SparseSymbolicFactorOptions#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatMatrix	
-c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Double#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Double#$@SA@SparseNumericFactorOptions#*v#S3_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Float#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
-c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Float#$@SA@SparseNumericFactorOptions#*v#S3_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseFactor	
+c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Double#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Double#$@SA@SparseNumericFactorOptions#*v#S3_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Float#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
+c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Complex_Float#$@SA@SparseNumericFactorOptions#*v#S3_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
 c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
 c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Double#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
 c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Double#$@SA@SparseNumericFactorOptions#*v#S3_#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
@@ -763,30 +763,30 @@ c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Float
 c:@F@SparseFactor#$@SA@SparseOpaqueSymbolicFactorization#$@SA@SparseMatrix_Float#$@SA@SparseNumericFactorOptions#*v#S3_#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatMatrix	
 c:@F@SparseGMRES#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseGMRESAndLSMRMethods	
 c:@F@SparseGMRES#$@SA@SparseGMRESOptions#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseGMRESAndLSMRMethods	
-c:@F@SparseGetConjugateTranspose#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetConjugateTranspose	
-c:@F@SparseGetConjugateTranspose#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetConjugateTranspose	
-c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetConjugateTranspose	
-c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetConjugateTranspose	
-c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueSubfactor_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetConjugateTranspose	
-c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueSubfactor_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetConjugateTranspose	
+c:@F@SparseGetConjugateTranspose#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetConjugateTranspose#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueFactorization_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueFactorization_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueSubfactor_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetConjugateTranspose#$@SA@SparseOpaqueSubfactor_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseGetInertia#$@SA@SparseOpaqueFactorization_Complex_Double#*I#S1_#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetInertia	
 c:@F@SparseGetInertia#$@SA@SparseOpaqueFactorization_Complex_Float#*I#S1_#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetInertia	
 c:@F@SparseGetInertia#$@SA@SparseOpaqueFactorization_Double#*I#S1_#S1_#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseInertiaFloatDouble	
 c:@F@SparseGetInertia#$@SA@SparseOpaqueFactorization_Float#*I#S1_#S1_#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseInertiaFloatDouble	
-c:@F@SparseGetStateSize_Complex_Double#$@SA@SparseIterativeMethod#b#I#I#I#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetStateSize_Complex_Double	
-c:@F@SparseGetStateSize_Complex_Float#$@SA@SparseIterativeMethod#b#I#I#I#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetStateSize_Complex_Float	
+c:@F@SparseGetStateSize_Complex_Double#$@SA@SparseIterativeMethod#b#I#I#I#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetStateSize_Complex_Float#$@SA@SparseIterativeMethod#b#I#I#I#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseGetStateSize_Double#$@SA@SparseIterativeMethod#b#I#I#I#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSymbolicStateSize	
 c:@F@SparseGetStateSize_Float#$@SA@SparseIterativeMethod#b#I#I#I#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSymbolicStateSize	
-c:@F@SparseGetTranspose#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetTranspose	
-c:@F@SparseGetTranspose#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetTranspose	
+c:@F@SparseGetTranspose#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetTranspose#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseGetTranspose#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseGetTransposeFloatDouble	
 c:@F@SparseGetTranspose#$@SA@SparseMatrix_Float#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseGetTransposeFloatDouble	
-c:@F@SparseGetTranspose#$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetTranspose	
-c:@F@SparseGetTranspose#$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetTranspose	
+c:@F@SparseGetTranspose#$@SA@SparseOpaqueFactorization_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetTranspose#$@SA@SparseOpaqueFactorization_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseGetTranspose#$@SA@SparseOpaqueFactorization_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseGetTransposeFloatDouble	
 c:@F@SparseGetTranspose#$@SA@SparseOpaqueFactorization_Float#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseGetTransposeFloatDouble	
-c:@F@SparseGetTranspose#$@SA@SparseOpaqueSubfactor_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetTranspose	
-c:@F@SparseGetTranspose#$@SA@SparseOpaqueSubfactor_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseGetTranspose	
+c:@F@SparseGetTranspose#$@SA@SparseOpaqueSubfactor_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseGetTranspose#$@SA@SparseOpaqueSubfactor_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseGetTranspose#$@SA@SparseOpaqueSubfactor_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTransposeTests.swift#testSparseSubfactorTranspose	
 c:@F@SparseGetTranspose#$@SA@SparseOpaqueSubfactor_Float#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTransposeTests.swift#testSparseSubfactorTranspose	
 c:@F@SparseIterate#$@SA@SparseIterativeMethod#I#*1b#*v#BFv(#b#$@E@CBLAS_TRANSPOSE#$@SA@DenseMatrix_Complex_Double#S6_)#S6_#S6_#S6_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseIterate	
@@ -799,30 +799,30 @@ c:@F@SparseIterate#$@SA@SparseIterativeMethod#I#*1b#*v#BFv(#b#$@E@CBLAS_TRANSPOS
 c:@F@SparseIterate#$@SA@SparseIterativeMethod#I#*1b#*v#BFv(#b#$@E@CBLAS_TRANSPOSE#$@SA@DenseMatrix_Float#S6_)#S6_#S6_#S6_#$@SA@SparseOpaquePreconditioner_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseIterate	
 c:@F@SparseLSMR#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseGMRESAndLSMRMethods	
 c:@F@SparseLSMR#$@SA@SparseLSMROptions#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseGMRESAndLSMRMethods	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
+c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@F@SparseMultiply#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleMatrix	
 c:@F@SparseMultiply#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleVector	
 c:@F@SparseMultiply#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatMatrix	
 c:@F@SparseMultiply#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatVector	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Double#$@SA@DenseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorMultiplyDouble	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Double#$@SA@DenseMatrix_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorMultiplyDouble	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorMultiplyDouble	
@@ -843,10 +843,10 @@ c:@F@SparseMultiply#d#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	impl
 c:@F@SparseMultiply#d#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleVector	
 c:@F@SparseMultiply#f#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatMatrix	
 c:@F@SparseMultiply#f#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatVector	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleMatrix	
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleVector	
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatMatrix	
@@ -855,14 +855,14 @@ c:@F@SparseMultiplyAdd#d#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	i
 c:@F@SparseMultiplyAdd#d#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleVector	
 c:@F@SparseMultiplyAdd#f#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatMatrix	
 c:@F@SparseMultiplyAdd#f#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyFloatVector	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@SparseNumericFactorOptions#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@SparseNumericFactorOptions#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
-c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@SparseNumericFactorOptions#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@SparseNumericFactorOptions#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Float#*$@SA@SparseOpaqueFactorization_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseRefactor#$@SA@SparseMatrix_Double#*$@SA@SparseOpaqueFactorization_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Double#*$@SA@SparseOpaqueFactorization_Double#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Double#*$@SA@SparseOpaqueFactorization_Double#$@SA@SparseNumericFactorOptions#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
@@ -871,12 +871,12 @@ c:@F@SparseRefactor#$@SA@SparseMatrix_Float#*$@SA@SparseOpaqueFactorization_Floa
 c:@F@SparseRefactor#$@SA@SparseMatrix_Float#*$@SA@SparseOpaqueFactorization_Float#$@SA@SparseNumericFactorOptions#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Float#*$@SA@SparseOpaqueFactorization_Float#$@SA@SparseNumericFactorOptions#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Float#*$@SA@SparseOpaqueFactorization_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
-c:@F@SparseRetain#$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRetain	
-c:@F@SparseRetain#$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRetain	
+c:@F@SparseRetain#$@SA@SparseOpaqueFactorization_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
+c:@F@SparseRetain#$@SA@SparseOpaqueFactorization_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@F@SparseRetain#$@SA@SparseOpaqueFactorization_Double#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
 c:@F@SparseRetain#$@SA@SparseOpaqueFactorization_Float#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
-c:@F@SparseRetain#$@SA@SparseOpaqueSubfactor_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRetain	
-c:@F@SparseRetain#$@SA@SparseOpaqueSubfactor_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRetain	
+c:@F@SparseRetain#$@SA@SparseOpaqueSubfactor_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
+c:@F@SparseRetain#$@SA@SparseOpaqueSubfactor_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@F@SparseRetain#$@SA@SparseOpaqueSubfactor_Double#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
 c:@F@SparseRetain#$@SA@SparseOpaqueSubfactor_Float#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
 c:@F@SparseRetain#$@SA@SparseOpaqueSymbolicFactorization#	implemented	test:full/accelerate/tests/agent/SparseOpaqueLifecycleTests.swift#testSparseOpaqueCleanupRetain	
@@ -920,22 +920,22 @@ c:@F@SparseSolve#$@SA@SparseIterativeMethod#BFv(#b#$@E@CBLAS_TRANSPOSE#$@SA@Dens
 c:@F@SparseSolve#$@SA@SparseIterativeMethod#BFv(#b#$@E@CBLAS_TRANSPOSE#$@SA@DenseVector_Double#S4_)#S4_#S4_#$@SA@SparseOpaquePreconditioner_Double#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseSolveApplyOperatorDouble	
 c:@F@SparseSolve#$@SA@SparseIterativeMethod#BFv(#b#$@E@CBLAS_TRANSPOSE#$@SA@DenseVector_Float#S4_)#S4_#S4_#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseSolveApplyOperatorFloat	
 c:@F@SparseSolve#$@SA@SparseIterativeMethod#BFv(#b#$@E@CBLAS_TRANSPOSE#$@SA@DenseVector_Float#S4_)#S4_#S4_#$@SA@SparseOpaquePreconditioner_Float#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseSolveApplyOperatorFloat	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
 c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Double#$@SA@DenseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
 c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Double#$@SA@DenseMatrix_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
 c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveDoubleMatrix	
@@ -952,22 +952,22 @@ c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Float#$@SA@DenseVector_Float#	im
 c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Float#$@SA@DenseVector_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
 c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
 c:@F@SparseSolve#$@SA@SparseOpaqueFactorization_Float#$@SA@DenseVector_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
-c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseSolve	
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
+c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexSolve	Complex sparse solve stays an empty no-op on Linux; pinned by testSparseComplexSolve.
 c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Double#$@SA@DenseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorSolveDouble	
 c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Double#$@SA@DenseMatrix_Double#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorSolveDouble	
 c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorSolveDouble	
@@ -984,8 +984,8 @@ c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#	implem
 c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorSolveFloat	
 c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorSolveFloat	
 c:@F@SparseSolve#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#S1_#*v#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseSubfactorSolveFloat	
-c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Complex_Double#I#*1I#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseUpdateFactor	
-c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Complex_Float#I#*1I#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseUpdateFactor	
+c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Complex_Double#I#*1I#$@SA@SparseMatrix_Complex_Double#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
+c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Complex_Float#I#*1I#$@SA@SparseMatrix_Complex_Float#	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexRefactorTranspose	Complex sparse refactor/transpose stays fail-closed on Linux (empty no-op / default value / zero state size); pinned by testSparseComplexRefactorTranspose.
 c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Double#I#*1I#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
 c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Float#I#*1I#$@SA@SparseMatrix_Float#	implemented	test:full/accelerate/tests/agent/SparseSubfactorTests.swift#testSparseRefactorUpdateFloatDouble	
 c:@F@caxpy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex saxpy against hand-computed 2-vector.
@@ -1999,16 +1999,16 @@ c:@F@ztrmm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLA
 c:@F@ztrmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmvTrsv	Double-complex triangular MV 2x2.
 c:@F@ztrsm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmmTrsm	Double-complex triangular SM 2x2.
 c:@F@ztrsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmvTrsv	Double-complex triangular solve 2x2.
-c:@S@DSPComplex	declared	source:full/accelerate/AccelerateCTypes.swift#DSPComplex	
+c:@S@DSPComplex	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	DSP complex struct constructed and fields read by testCStructFields0.
 c:@S@DSPComplex@FI@imag	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
 c:@S@DSPComplex@FI@real	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
-c:@S@DSPDoubleComplex	declared	source:full/accelerate/AccelerateCTypes.swift#DSPDoubleComplex	
+c:@S@DSPDoubleComplex	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	DSP complex struct constructed and fields read by testCStructFields0.
 c:@S@DSPDoubleComplex@FI@imag	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
 c:@S@DSPDoubleComplex@FI@real	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
-c:@S@DSPDoubleSplitComplex	declared	source:full/accelerate/AccelerateCTypes.swift#DSPDoubleSplitComplex	
+c:@S@DSPDoubleSplitComplex	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	DSP complex struct constructed and fields read by testCStructFields0.
 c:@S@DSPDoubleSplitComplex@FI@imagp	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
 c:@S@DSPDoubleSplitComplex@FI@realp	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
-c:@S@DSPSplitComplex	declared	source:full/accelerate/AccelerateCTypes.swift#DSPSplitComplex	
+c:@S@DSPSplitComplex	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	DSP complex struct constructed and fields read by testCStructFields0.
 c:@S@DSPSplitComplex@FI@imagp	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
 c:@S@DSPSplitComplex@FI@realp	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
 c:@S@vImageChannelDescription	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields0	
@@ -2497,13 +2497,13 @@ c:@SA@BNNSVectorDescriptor@FI@data_bias	implemented	test:full/accelerate/tests/a
 c:@SA@BNNSVectorDescriptor@FI@data_scale	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields7	
 c:@SA@BNNSVectorDescriptor@FI@data_type	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields7	
 c:@SA@BNNSVectorDescriptor@FI@size	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields7	
-c:@SA@DenseMatrix_Complex_Double	declared	source:full/accelerate/AccelerateCTypes.swift#DenseMatrix_Complex_Double	
+c:@SA@DenseMatrix_Complex_Double	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@SA@DenseMatrix_Complex_Double@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Complex_Double@FI@columnCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Complex_Double@FI@columnStride	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Complex_Double@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Complex_Double@FI@rowCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
-c:@SA@DenseMatrix_Complex_Float	declared	source:full/accelerate/AccelerateCTypes.swift#DenseMatrix_Complex_Float	
+c:@SA@DenseMatrix_Complex_Float	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@SA@DenseMatrix_Complex_Float@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Complex_Float@FI@columnCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Complex_Float@FI@columnStride	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
@@ -2521,10 +2521,10 @@ c:@SA@DenseMatrix_Float@FI@columnCount	implemented	test:full/accelerate/tests/ag
 c:@SA@DenseMatrix_Float@FI@columnStride	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Float@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseMatrix_Float@FI@rowCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
-c:@SA@DenseVector_Complex_Double	declared	source:full/accelerate/AccelerateCTypes.swift#DenseVector_Complex_Double	
+c:@SA@DenseVector_Complex_Double	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@SA@DenseVector_Complex_Double@FI@count	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseVector_Complex_Double@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
-c:@SA@DenseVector_Complex_Float	declared	source:full/accelerate/AccelerateCTypes.swift#DenseVector_Complex_Float	
+c:@SA@DenseVector_Complex_Float	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexMultiply	Complex sparse multiply stays an empty no-op on Linux; pinned by testSparseComplexMultiply.
 c:@SA@DenseVector_Complex_Float@FI@count	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseVector_Complex_Float@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseVector_Double	declared	source:full/accelerate/AccelerateCTypes.swift#DenseVector_Double	
@@ -2533,7 +2533,7 @@ c:@SA@DenseVector_Double@FI@data	implemented	test:full/accelerate/tests/agent/CS
 c:@SA@DenseVector_Float	declared	source:full/accelerate/AccelerateCTypes.swift#DenseVector_Float	
 c:@SA@DenseVector_Float@FI@count	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
 c:@SA@DenseVector_Float@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields8	
-c:@SA@SparseAttributesComplex_t	declared	source:full/accelerate/AccelerateCTypes.swift#SparseAttributesComplex_t	
+c:@SA@SparseAttributesComplex_t	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
 c:@SA@SparseAttributesComplex_t@FI@conjugate_transpose	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseAttributesComplex_t@FI@kind	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseAttributesComplex_t@FI@transpose	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
@@ -2577,17 +2577,17 @@ c:@SA@SparseMatrixStructure@FI@columnCount	implemented	test:full/accelerate/test
 c:@SA@SparseMatrixStructure@FI@columnStarts	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructure@FI@rowCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructure@FI@rowIndices	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
-c:@SA@SparseMatrixStructureComplex	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrixStructureComplex	
+c:@SA@SparseMatrixStructureComplex	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexFactorCreate	Complex sparse factor/create stays fail-closed on Linux (empty default value); pinned by testSparseComplexFactorCreate.
 c:@SA@SparseMatrixStructureComplex@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructureComplex@FI@blockSize	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructureComplex@FI@columnCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructureComplex@FI@columnStarts	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructureComplex@FI@rowCount	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
 c:@SA@SparseMatrixStructureComplex@FI@rowIndices	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields9	
-c:@SA@SparseMatrix_Complex_Double	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrix_Complex_Double	
+c:@SA@SparseMatrix_Complex_Double	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseMatrix_Complex_Double@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseMatrix_Complex_Double@FI@structure	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
-c:@SA@SparseMatrix_Complex_Float	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrix_Complex_Float	
+c:@SA@SparseMatrix_Complex_Float	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseMatrix_Complex_Float@FI@data	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseMatrix_Complex_Float@FI@structure	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseMatrix_Double	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrix_Double	
@@ -2602,7 +2602,7 @@ c:@SA@SparseNumericFactorOptions@FI@pivotTolerance	implemented	test:full/acceler
 c:@SA@SparseNumericFactorOptions@FI@scaling	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseNumericFactorOptions@FI@scalingMethod	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseNumericFactorOptions@FI@zeroTolerance	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
-c:@SA@SparseOpaqueFactorization_Complex_Double	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueFactorization_Complex_Double	
+c:@SA@SparseOpaqueFactorization_Complex_Double	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseOpaqueFactorization_Complex_Double@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseOpaqueFactorization_Complex_Double@FI@numericFactorization	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseOpaqueFactorization_Complex_Double@FI@solveWorkspaceRequiredPerRHS	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
@@ -2610,7 +2610,7 @@ c:@SA@SparseOpaqueFactorization_Complex_Double@FI@solveWorkspaceRequiredStatic	i
 c:@SA@SparseOpaqueFactorization_Complex_Double@FI@status	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseOpaqueFactorization_Complex_Double@FI@symbolicFactorization	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseOpaqueFactorization_Complex_Double@FI@userFactorStorage	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
-c:@SA@SparseOpaqueFactorization_Complex_Float	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueFactorization_Complex_Float	
+c:@SA@SparseOpaqueFactorization_Complex_Float	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseOpaqueFactorization_Complex_Float@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseOpaqueFactorization_Complex_Float@FI@numericFactorization	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
 c:@SA@SparseOpaqueFactorization_Complex_Float@FI@solveWorkspaceRequiredPerRHS	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields10	
@@ -2634,11 +2634,11 @@ c:@SA@SparseOpaqueFactorization_Float@FI@solveWorkspaceRequiredStatic	implemente
 c:@SA@SparseOpaqueFactorization_Float@FI@status	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueFactorization_Float@FI@symbolicFactorization	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueFactorization_Float@FI@userFactorStorage	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
-c:@SA@SparseOpaquePreconditioner_Complex_Double	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaquePreconditioner_Complex_Double	
+c:@SA@SparseOpaquePreconditioner_Complex_Double	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseOpaquePreconditioner_Complex_Double@FI@apply	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaquePreconditioner_Complex_Double@FI@mem	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaquePreconditioner_Complex_Double@FI@type	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
-c:@SA@SparseOpaquePreconditioner_Complex_Float	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaquePreconditioner_Complex_Float	
+c:@SA@SparseOpaquePreconditioner_Complex_Float	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseOpaquePreconditioner_Complex_Float@FI@apply	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaquePreconditioner_Complex_Float@FI@mem	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaquePreconditioner_Complex_Float@FI@type	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
@@ -2650,13 +2650,13 @@ c:@SA@SparseOpaquePreconditioner_Float	declared	source:full/accelerate/Accelerat
 c:@SA@SparseOpaquePreconditioner_Float@FI@apply	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaquePreconditioner_Float@FI@mem	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaquePreconditioner_Float@FI@type	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
-c:@SA@SparseOpaqueSubfactor_Complex_Double	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Complex_Double	
+c:@SA@SparseOpaqueSubfactor_Complex_Double	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseOpaqueSubfactor_Complex_Double@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueSubfactor_Complex_Double@FI@contents	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueSubfactor_Complex_Double@FI@factor	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueSubfactor_Complex_Double@FI@workspaceRequiredPerRHS	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueSubfactor_Complex_Double@FI@workspaceRequiredStatic	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
-c:@SA@SparseOpaqueSubfactor_Complex_Float	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Complex_Float	
+c:@SA@SparseOpaqueSubfactor_Complex_Float	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexCleanupRetain	Complex sparse stays fail-closed on Linux (empty cleanup / default retain); pinned by testSparseComplexCleanupRetain.
 c:@SA@SparseOpaqueSubfactor_Complex_Float@FI@attributes	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueSubfactor_Complex_Float@FI@contents	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
 c:@SA@SparseOpaqueSubfactor_Complex_Float@FI@factor	implemented	test:full/accelerate/tests/agent/CStructFieldTests.swift#testCStructFields11	
@@ -2982,15 +2982,15 @@ s:10Accelerate21BNNSFlagsUseClientPtrSo0B0avp	declared	source:full/accelerate/Ac
 s:10Accelerate22BNNSPoolingFunctionMaxSo0bC0avp	declared	source:full/accelerate/AccelerateOverlay.swift#BNNSPoolingFunctionMax	
 s:10Accelerate22FusableLayerParametersP	declared	source:full/accelerate/Accelerate.swift#FusableLayerParameters	
 s:10Accelerate22SinglePlanePixelFormatP	declared	source:full/accelerate/Accelerate.swift#SinglePlanePixelFormat	
-s:10Accelerate22vDSP_SplitComplexFloatV	declared	source:full/accelerate/AccelerateOverlay.swift#vDSP_SplitComplexFloat	
-s:10Accelerate22vDSP_SplitComplexFloatV0cD0a	declared	source:full/accelerate/AccelerateOverlay.swift#SplitComplex	
+s:10Accelerate22vDSP_SplitComplexFloatV	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:10Accelerate22vDSP_SplitComplexFloatV0cD0a	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:10Accelerate22vDSP_SplitComplexFloatV11transform2D8fftSetup5width6height6source11destination9directionys13OpaquePointerV_S2iSPySo08DSPSplitD0VGSpyANGAA01vB0O25FourierTransformDirectionOtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate22vDSP_SplitComplexFloatV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate22vDSP_SplitComplexFloatV12makeFFTSetup5log2n5radixs13OpaquePointerVSgSu_AA01vB0O5RadixOtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate22vDSP_SplitComplexFloatV9transform8fftSetup5log2n6source11destination9directionys13OpaquePointerV_SuSPySo08DSPSplitD0VGSpyAMGAA01vB0O25FourierTransformDirectionOtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate23vDSP_IntegerConvertableP	declared	source:full/accelerate/Accelerate.swift#vDSP_IntegerConvertable	
-s:10Accelerate23vDSP_SplitComplexDoubleV	declared	source:full/accelerate/AccelerateOverlay.swift#vDSP_SplitComplexDouble	
-s:10Accelerate23vDSP_SplitComplexDoubleV0cD0a	declared	source:full/accelerate/AccelerateOverlay.swift#SplitComplex	
+s:10Accelerate23vDSP_SplitComplexDoubleV	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:10Accelerate23vDSP_SplitComplexDoubleV0cD0a	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:10Accelerate23vDSP_SplitComplexDoubleV11transform2D8fftSetup5width6height6source11destination9directionys13OpaquePointerV_S2iSPySo09DSPDoublecD0VGSpyANGAA01vB0O25FourierTransformDirectionOtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate23vDSP_SplitComplexDoubleV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate23vDSP_SplitComplexDoubleV12makeFFTSetup5log2n5radixs13OpaquePointerVSgSu_AA01vB0O5RadixOtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
@@ -3813,10 +3813,10 @@ s:10Accelerate4vDSPO38DFTDoublePrecisionInterleavedFunctionsV28makeDiscreteFouri
 s:10Accelerate4vDSPO38DFTSinglePrecisionInterleavedFunctionsV	declared	source:full/accelerate/AccelerateOverlay.swift#DFTSinglePrecisionInterleavedFunctions	
 s:10Accelerate4vDSPO38DFTSinglePrecisionInterleavedFunctionsV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO38DFTSinglePrecisionInterleavedFunctionsV28makeDiscreteFourierTransform8previous5count9direction13transformTypes13OpaquePointerVALSg_SiAC0iJ9DirectionOAC012DFTTransformO0OtKFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
-s:10Accelerate4vDSPO39DFTDoublePrecisionSplitComplexFunctionsV	declared	source:full/accelerate/AccelerateOverlay.swift#DFTDoublePrecisionSplitComplexFunctions	
+s:10Accelerate4vDSPO39DFTDoublePrecisionSplitComplexFunctionsV	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:10Accelerate4vDSPO39DFTDoublePrecisionSplitComplexFunctionsV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO39DFTDoublePrecisionSplitComplexFunctionsV28makeDiscreteFourierTransform8previous5count9direction13transformTypes13OpaquePointerVALSg_SiAC0jK9DirectionOAC012DFTTransformP0OtKFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
-s:10Accelerate4vDSPO39DFTSinglePrecisionSplitComplexFunctionsV	declared	source:full/accelerate/AccelerateOverlay.swift#DFTSinglePrecisionSplitComplexFunctions	
+s:10Accelerate4vDSPO39DFTSinglePrecisionSplitComplexFunctionsV	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:10Accelerate4vDSPO39DFTSinglePrecisionSplitComplexFunctionsV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO39DFTSinglePrecisionSplitComplexFunctionsV28makeDiscreteFourierTransform8previous5count9direction13transformTypes13OpaquePointerVALSg_SiAC0jK9DirectionOAC012DFTTransformP0OtKFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO3DCTC	declared	source:full/accelerate/AccelerateOverlay.swift#DCT	
@@ -5613,7 +5613,7 @@ s:So10CBLAS_SIDEVyABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCType
 s:So10CBLAS_UPLOV8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_UPLO	
 s:So10CBLAS_UPLOV8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_UPLO	
 s:So10CBLAS_UPLOVyABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_UPLO	
-s:So10DSPComplexV10AccelerateE33DiscreteFourierTransformFunctionsa	declared	source:full/accelerate/Accelerate.swift#DiscreteFourierTransformFunctions	
+s:So10DSPComplexV10AccelerateE33DiscreteFourierTransformFunctionsa	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So10DSPComplexV4real4imagABSf_Sftcfc	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:So10DSPComplexVABycfc	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:So10vDSP_int24a5bytesABs5UInt8V_A2Et_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_int24	
@@ -5705,8 +5705,8 @@ s:So15BNNSShuffleTypeayABs6UInt32Vcfc	declared	source:full/accelerate/Accelerate
 s:So15CBLAS_TRANSPOSEV8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_TRANSPOSE	
 s:So15CBLAS_TRANSPOSEV8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_TRANSPOSE	
 s:So15CBLAS_TRANSPOSEVyABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_TRANSPOSE	
-s:So15DSPSplitComplexV10AccelerateE12FFTFunctionsa	declared	source:full/accelerate/Accelerate.swift#FFTFunctions	
-s:So15DSPSplitComplexV10AccelerateE14fromInputArray9realParts09imaginaryH0ABSaySfG_AGzAGztcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DSPSplitComplex	
+s:So15DSPSplitComplexV10AccelerateE12FFTFunctionsa	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So15DSPSplitComplexV10AccelerateE14fromInputArray9realParts09imaginaryH0ABSaySfG_AGzAGztcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So15DSPSplitComplexV5realp5imagpABSpySfG_AEtcfc	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testFFTImpulseUnnormalizedRoundTrip	Split-complex init used by unnormalized FFT impulse.
 s:So15SparseCGOptionsa11reportError13maxIterations4atol4rtol0C6StatusABySPys4Int8VGXCSg_s5Int32VS2dAKtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So15SparseCGOptionsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseCGOptions	
@@ -5728,7 +5728,7 @@ s:So16BNNSSparsityTypeayABs6UInt32Vcfc	declared	source:full/accelerate/Accelerat
 s:So16BNNSTargetSystema8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSTargetSystem	
 s:So16BNNSTargetSystema8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSTargetSystem	
 s:So16BNNSTargetSystemayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSTargetSystem	
-s:So16DSPDoubleComplexV10AccelerateE33DiscreteFourierTransformFunctionsa	declared	source:full/accelerate/Accelerate.swift#DiscreteFourierTransformFunctions	
+s:So16DSPDoubleComplexV10AccelerateE33DiscreteFourierTransformFunctionsa	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So16DSPDoubleComplexV4real4imagABSd_Sdtcfc	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:So16DSPDoubleComplexVABycfc	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:So16SparseTriangle_ta8rawValueABs5UInt8V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseTriangle_t	
@@ -5858,9 +5858,9 @@ s:So21BNNSOptimizerFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/Acce
 s:So21BNNSQuantizerFunctiona8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantizerFunction	
 s:So21BNNSQuantizerFunctiona8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantizerFunction	
 s:So21BNNSQuantizerFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantizerFunction	
-s:So21DSPDoubleSplitComplexV10AccelerateE12FFTFunctionsa	declared	source:full/accelerate/Accelerate.swift#FFTFunctions	
-s:So21DSPDoubleSplitComplexV10AccelerateE14fromInputArray9realParts09imaginaryI0ABSaySdG_AGzAGztcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DSPDoubleSplitComplex	
-s:So21DSPDoubleSplitComplexV5realp5imagpABSpySdG_AEtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So21DSPDoubleSplitComplexV10AccelerateE12FFTFunctionsa	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So21DSPDoubleSplitComplexV10AccelerateE14fromInputArray9realParts09imaginaryI0ABSaySdG_AGzAGztcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So21DSPDoubleSplitComplexV5realp5imagpABSpySdG_AEtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So21SparseFactorization_ta8rawValueABs5UInt8V_tcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseFactorization_t raw-value init.
 s:So21SparseFactorization_ta8rawValues5UInt8Vvp	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseFactorization_t.rawValue.
 s:So21SparseFactorization_tayABs5UInt8Vcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseFactorization_t unlabeled raw-value init.
@@ -6037,9 +6037,9 @@ s:So25BNNSLossReductionFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/
 s:So25BNNSRandomGeneratorMethoda8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRandomGeneratorMethod	
 s:So25BNNSRandomGeneratorMethoda8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRandomGeneratorMethod	
 s:So25BNNSRandomGeneratorMethodayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRandomGeneratorMethod	
-s:So25DenseMatrix_Complex_Floata8rowCount06columnF00G6Stride10attributes4dataABs5Int32V_A2ISo016SparseAttributesC2_tas13OpaquePointerVtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DenseMatrix_Complex_Float	
-s:So25DenseVector_Complex_Floata5count4dataABs5Int32V_s13OpaquePointerVtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DenseVector_Complex_Float	
-s:So25SparseAttributesComplex_taABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseAttributesComplex_t	
+s:So25DenseMatrix_Complex_Floata8rowCount06columnF00G6Stride10attributes4dataABs5Int32V_A2ISo016SparseAttributesC2_tas13OpaquePointerVtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So25DenseVector_Complex_Floata5count4dataABs5Int32V_s13OpaquePointerVtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So25SparseAttributesComplex_taABycfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So25vImage_ARGBToYpCbCrMatrixV02R_C002G_C002B_C002R_D002G_D002B_d3_R_E002G_E002B_E0ABSf_S7ftcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_ARGBToYpCbCrMatrix	
 s:So25vImage_ARGBToYpCbCrMatrixV10AccelerateE11itu_R_601_4ABvpZ	deferred		Swift overlay on an imported Clang type is not declared on Linux; Apple runtime behavior is unobserved.
 s:So25vImage_ARGBToYpCbCrMatrixV10AccelerateE11itu_R_709_2ABvpZ	deferred		Swift overlay on an imported Clang type is not declared on Linux; Apple runtime behavior is unobserved.
@@ -6059,9 +6059,9 @@ s:So26BNNSOptimizerRMSPropFieldsaABycfc	declared	source:full/accelerate/Accelera
 s:So26BNNSPoolingLayerParametersa10AccelerateE8x_stride02y_E09x_padding02y_F07k_width8k_height11in_channels04out_J016pooling_functionABSi_S7iSo0A8Functionatcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingLayerParameters	
 s:So26BNNSPoolingLayerParametersa8x_stride02y_D09x_padding02y_E07k_width8k_height11in_channels04out_I016pooling_function4bias10activationABSi_S7iSo0A8FunctionaSo13BNNSLayerDataaSo14BNNSActivationatcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingLayerParameters	
 s:So26BNNSPoolingLayerParametersaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingLayerParameters	
-s:So26DenseMatrix_Complex_Doublea8rowCount06columnF00G6Stride10attributes4dataABs5Int32V_A2ISo016SparseAttributesC2_tas13OpaquePointerVtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DenseMatrix_Complex_Double	
-s:So26DenseVector_Complex_Doublea5count4dataABs5Int32V_s13OpaquePointerVtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DenseVector_Complex_Double	
-s:So26SparseMatrix_Complex_Floata9structure4dataABSo0ab9StructureC0a_s13OpaquePointerVtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrix_Complex_Float	
+s:So26DenseMatrix_Complex_Doublea8rowCount06columnF00G6Stride10attributes4dataABs5Int32V_A2ISo016SparseAttributesC2_tas13OpaquePointerVtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So26DenseVector_Complex_Doublea5count4dataABs5Int32V_s13OpaquePointerVtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So26SparseMatrix_Complex_Floata9structure4dataABSo0ab9StructureC0a_s13OpaquePointerVtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So26SparseNumericFactorOptionsa7control13scalingMethod0F014pivotTolerance04zeroI0ABSo0A9Control_ta_So0A9Scaling_taSvSgS2dtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseNumericFactorOptions	
 s:So26SparseNumericFactorOptionsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseNumericFactorOptions	
 s:So26vImage_InterpolationMethoda8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_InterpolationMethod	
@@ -6075,7 +6075,7 @@ s:So27BNNSMHAProjectionParametersaABycfc	declared	source:full/accelerate/Acceler
 s:So27SparseLSMRConvergenceTest_ta8rawValueABs5Int32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLSMRConvergenceTest_t	
 s:So27SparseLSMRConvergenceTest_ta8rawValues5Int32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLSMRConvergenceTest_t	
 s:So27SparseLSMRConvergenceTest_tayABs5Int32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLSMRConvergenceTest_t	
-s:So27SparseMatrix_Complex_Doublea9structure4dataABSo0ab9StructureC0a_s13OpaquePointerVtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrix_Complex_Double	
+s:So27SparseMatrix_Complex_Doublea9structure4dataABSo0ab9StructureC0a_s13OpaquePointerVtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So27SparseOpaqueSubfactor_Floata10attributes8contents6factor23workspaceRequiredStatic0hI6PerRHSABSo0A12Attributes_ta_So0aC2_taSo0ab14Factorization_D0aS2itcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Float	
 s:So27SparseOpaqueSubfactor_FloataABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Float	
 s:So27SparseSymbolicFactorOptionsa7control11orderMethod0F020ignoreRowsAndColumns6malloc4free11reportErrorABSo0A9Control_ta_So0A7Order_taSpys5Int32VGSgAQSvSgSiXCyARXCySPys4Int8VGXCSgtcfc	declared	source:full/accelerate/Accelerate.swift#init	
@@ -6096,7 +6096,7 @@ s:So28BNNSLayerParametersLossHubera8function6i_desc02o_F09reduction11huber_delta
 s:So28BNNSLayerParametersLossHuberaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersLossHuber	
 s:So28BNNSLayerParametersReductiona6i_desc02o_D002w_D011reduce_func7epsilonABSo21BNNSNDArrayDescriptora_A2ISo18BNNSReduceFunctionaSftcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersReduction	
 s:So28BNNSLayerParametersReductionaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersReduction	
-s:So28SparseMatrixStructureComplexa8rowCount06columnF00G6Starts0E7Indices10attributes9blockSizeABs5Int32V_AJSpySiGSpyAJGSo0a10AttributesD2_tas5UInt8Vtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So28SparseMatrixStructureComplexa8rowCount06columnF00G6Starts0E7Indices10attributes9blockSizeABs5Int32V_AJSpySiGSpyAJGSo0a10AttributesD2_tas5UInt8Vtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So28SparseOpaqueSubfactor_Doublea10attributes8contents6factor23workspaceRequiredStatic0hI6PerRHSABSo0A12Attributes_ta_So0aC2_taSo0ab14Factorization_D0aS2itcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Double	
 s:So28SparseOpaqueSubfactor_DoubleaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Double	
 s:So28bnns_graph_compile_options_ta4data4sizeABSvSg_Sitcfc	declared	source:full/accelerate/AccelerateCTypes.swift#bnns_graph_compile_options_t	
@@ -6152,21 +6152,21 @@ s:So35BNNSOptimizerAdamWithClippingFieldsaABycfc	declared	source:full/accelerate
 s:So35BNNSOptimizerRegularizationFunctiona8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationFunction	
 s:So35BNNSOptimizerRegularizationFunctiona8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationFunction	
 s:So35BNNSOptimizerRegularizationFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationFunction	
-s:So35SparseOpaqueSubfactor_Complex_Floata10attributes8contents6factor23workspaceRequiredStatic0iJ6PerRHSABSo0a10AttributesD2_ta_So0aC2_taSo0ab14Factorization_d1_E0aS2itcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Complex_Float	
-s:So35SparseOpaqueSubfactor_Complex_FloataABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Complex_Float	
+s:So35SparseOpaqueSubfactor_Complex_Floata10attributes8contents6factor23workspaceRequiredStatic0iJ6PerRHSABSo0a10AttributesD2_ta_So0aC2_taSo0ab14Factorization_d1_E0aS2itcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So35SparseOpaqueSubfactor_Complex_FloataABycfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So36BNNSLayerParametersTensorContractiona9operation5alpha4beta7iA_desc03iB_H002o_H0ABSPys4Int8VG_S2fSo21BNNSNDArrayDescriptoraA2Mtcfc	declared	source:full/accelerate/Accelerate.swift#init	
-s:So36SparseOpaqueSubfactor_Complex_Doublea10attributes8contents6factor23workspaceRequiredStatic0iJ6PerRHSABSo0a10AttributesD2_ta_So0aC2_taSo0ab14Factorization_d1_E0aS2itcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Complex_Double	
-s:So36SparseOpaqueSubfactor_Complex_DoubleaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueSubfactor_Complex_Double	
+s:So36SparseOpaqueSubfactor_Complex_Doublea10attributes8contents6factor23workspaceRequiredStatic0iJ6PerRHSABSo0a10AttributesD2_ta_So0aC2_taSo0ab14Factorization_d1_E0aS2itcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So36SparseOpaqueSubfactor_Complex_DoubleaABycfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So37BNNSLayerParametersMultiheadAttentiona5query3key5value13add_zero_attn0f1_J5_bias0g1_j1_K06output7dropout4seedABSo017BNNSMHAProjectionB0a_A2MSbSo21BNNSNDArrayDescriptoraAoMSfs6UInt32Vtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersMultiheadAttention	
 s:So37BNNSLayerParametersMultiheadAttentionaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersMultiheadAttention	
 s:So38BNNSOptimizerRMSPropWithClippingFieldsa13learning_rate5alpha7epsilon8centered8momentum14gradient_scale015regularization_M00N5_func09clipping_O018clip_gradients_min0q1_R4_max0q1_r1_T5_norm0q1_r5_use_U0ABSf_S2fSbS3fSo0A22RegularizationFunctionaSo0adX0aS4ftcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRMSPropWithClippingFields	
 s:So38BNNSOptimizerRMSPropWithClippingFieldsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRMSPropWithClippingFields	
-s:So39SparseOpaqueFactorization_Complex_Floata6status10attributes08symbolicC017userFactorStorage07numericC028solveWorkspaceRequiredStatic0mnO6PerRHSABSo0A8Status_ta_So0a10AttributesD2_taSo0ab8SymbolicC0aSbSvSgS2itcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueFactorization_Complex_Float	
-s:So39SparseOpaqueFactorization_Complex_FloataABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueFactorization_Complex_Float	
-s:So40SparseOpaqueFactorization_Complex_Doublea6status10attributes08symbolicC017userFactorStorage07numericC028solveWorkspaceRequiredStatic0mnO6PerRHSABSo0A8Status_ta_So0a10AttributesD2_taSo0ab8SymbolicC0aSbSvSgS2itcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueFactorization_Complex_Double	
-s:So40SparseOpaqueFactorization_Complex_DoubleaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaqueFactorization_Complex_Double	
-s:So40SparseOpaquePreconditioner_Complex_Floata4type3mem5applyABSo0aC2_ta_SvySv_So15CBLAS_TRANSPOSEVSo012DenseMatrix_d1_E0aAKtXCtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaquePreconditioner_Complex_Float	
-s:So41SparseOpaquePreconditioner_Complex_Doublea4type3mem5applyABSo0aC2_ta_SvySv_So15CBLAS_TRANSPOSEVSo012DenseMatrix_d1_E0aAKtXCtcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOpaquePreconditioner_Complex_Double	
+s:So39SparseOpaqueFactorization_Complex_Floata6status10attributes08symbolicC017userFactorStorage07numericC028solveWorkspaceRequiredStatic0mnO6PerRHSABSo0A8Status_ta_So0a10AttributesD2_taSo0ab8SymbolicC0aSbSvSgS2itcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So39SparseOpaqueFactorization_Complex_FloataABycfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So40SparseOpaqueFactorization_Complex_Doublea6status10attributes08symbolicC017userFactorStorage07numericC028solveWorkspaceRequiredStatic0mnO6PerRHSABSo0A8Status_ta_So0a10AttributesD2_taSo0ab8SymbolicC0aSbSvSgS2itcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So40SparseOpaqueFactorization_Complex_DoubleaABycfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So40SparseOpaquePreconditioner_Complex_Floata4type3mem5applyABSo0aC2_ta_SvySv_So15CBLAS_TRANSPOSEVSo012DenseMatrix_d1_E0aAKtXCtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
+s:So41SparseOpaquePreconditioner_Complex_Doublea4type3mem5applyABSo0aC2_ta_SvySv_So15CBLAS_TRANSPOSEVSo012DenseMatrix_d1_E0aAKtXCtcfc	implemented	test:full/accelerate/tests/agent/SparseComplexFailClosedTests.swift#testSparseComplexStructInits	Complex sparse / split-complex value construction exercised by testSparseComplexStructInits.
 s:So42BNNSLayerParametersLossSigmoidCrossEntropya8function6i_desc02o_H09reduction12label_smoothABSo16BNNSLossFunctiona_So21BNNSNDArrayDescriptoraAKSo0l9ReductionM0aSftcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersLossSigmoidCrossEntropy	
 s:So42BNNSLayerParametersLossSigmoidCrossEntropyaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersLossSigmoidCrossEntropy	
 s:So42BNNSLayerParametersLossSoftmaxCrossEntropya8function6i_desc02o_H09reduction12label_smoothABSo16BNNSLossFunctiona_So21BNNSNDArrayDescriptoraAKSo0l9ReductionM0aSftcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerParametersLossSoftmaxCrossEntropy	

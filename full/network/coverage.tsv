@@ -729,7 +729,7 @@ s:7Network04withA10Connection2to5using_yAA10NWEndpointO_AA19NWParametersBuilderV
 s:7Network04withA10Connection2to5using_yAA10NWEndpointO_AA19NWParametersBuilderVyxyQPGyAA0aC0CyxGYaKXEtYaKAA17MultiplexProtocolRzlF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network04withA10Connection2to5using_yAA10NWEndpointO_xyXEyAA0aC0CyxGYaKXEtYaKAA05OneToG8ProtocolRzlF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network04withA10Connection2to5using_yAA10NWEndpointO_xyXEyAA0aC0CyxGYaKXEtYaKAA17MultiplexProtocolRzlF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network05OneToB8ProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network05OneToB8ProtocolP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolHierarchy	-
 s:7Network0A10ConnectionC	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A10ConnectionC11currentPathAA6NWPathVSgvp	implemented	test:full/network/tests/agent/NetworkConnectionEndpointTests.swift#testConnectionLocalRemoteEndpointsFromLoopback	-
 s:7Network0A10ConnectionC13localEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkConnectionEndpointTests.swift#testConnectionLocalRemoteEndpointsFromLoopback	-
@@ -767,14 +767,14 @@ s:7Network0A15ProtocolOptionsP0B7StorageQa	implemented	test:full/network/tests/a
 s:7Network0A15ProtocolOptionsP7Messagea	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network0A15ProtocolOptionsP8MetadataQa	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network0A16MetadataProtocolP	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
-s:7Network0A17FixedWidthIntegerP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network0A17FixedWidthIntegerP9bigEndianxvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network0A17FixedWidthIntegerP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkFixedWidthIntegerOverlay	-
+s:7Network0A17FixedWidthIntegerP9bigEndianxvp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkFixedWidthIntegerOverlay	-
 s:7Network0A17FixedWidthIntegerP9bigEndianxx_tcfc	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testNetworkFixedWidthIntegerBigEndianInit	-
 s:7Network0A17PropertyListCoderV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A17PropertyListCoderV11makeDecoder10Foundation0bcF0CyF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A17PropertyListCoderV11makeEncoder10Foundation0bcF0CyF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network0A17PropertyListCoderV7Decodera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network0A17PropertyListCoderV7Encodera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A17PropertyListCoderV7Decodera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkCoderWitnesses	-
+s:7Network0A17PropertyListCoderV7Encodera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkCoderWitnesses	-
 s:7Network0A17PropertyListCoderVACycfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A5CoderP	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A5CoderP11makeDecoder0D0QzyF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
@@ -789,7 +789,7 @@ s:7Network0A5CoderPxycfc	implemented	test:full/network/tests/agent/NetworkTypedS
 s:7Network0A7BrowserC	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network0A7BrowserC13onStateUpdateyACyxGXDyAE_AC0D0Oyx_GtYbYAcF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network0A7BrowserC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
-s:7Network0A7BrowserC18StateUpdateHandlera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A7BrowserC18StateUpdateHandlera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkListenerBrowserHandlerAliases	-
 s:7Network0A7BrowserC3for5usingACyxGx_AA12NWParametersCSgtcfc	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network0A7BrowserC3runyqd__AC9RunResultOyx_qd__GSay8EndpointQzGYaYbKYAcYaKlF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network0A7BrowserC3runyyySay8EndpointQzGYaYbKYAcYaKF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
@@ -809,7 +809,7 @@ s:7Network0A7ChannelC16debugDescriptionSSvp	implemented	test:full/network/tests/
 s:7Network0A7ChannelC18dataTransferReportAA12NWConnectionC04DatadE0VyYaKF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network0A7ChannelC19establishmentReportAA12NWConnectionC013EstablishmentD0VyYaKF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network0A7ChannelC19maximumDatagramSizeSivp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
-s:7Network0A7ChannelC2IDa	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A7ChannelC2IDa	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkChannelIDAndTLVSend	-
 s:7Network0A7ChannelC2eeoiySbACyxG_AEtFZ	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A7ChannelC2idSSvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A7ChannelC4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
@@ -838,7 +838,7 @@ s:7Network0A7ChannelCA2A14StreamProtocolRzrlE7receive7exactly10Foundation4DataV7
 s:7Network0A7ChannelCA2A15MessageProtocolRzrlE8messagesScsy11ContentTypeQz7content_8MetadataQz8metadatats5Error_pGvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A7ChannelCA2A16DatagramProtocolRzrlE4send_8metadatayqd___SayAA18NWProtocolMetadataCGyXEtYaK10Foundation04DataD0Rd__lF	declared	source:full/network/NetworkTyped.swift#send	Async Apple overlay; Linux is non-blocking sendIdempotent or fail-closed ENOTCONN. Sealed tests cannot await.
 s:7Network0A7ChannelCA2A16DatagramProtocolRzrlE7receive10Foundation4DataV7content_8MetadataQz8metadatatyYaKF	declared	source:full/network/NetworkTyped.swift#receive	Async Apple overlay; Linux is non-blocking sendIdempotent or fail-closed ENOTCONN. Sealed tests cannot await.
-s:7Network0A7ChannelCA2A3TLVVRszrlE14sendIdempotent_4type11lastMessage8metadatayqd___SiSbSayAA18NWProtocolMetadataCGyXEt10Foundation12DataProtocolRd__lF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A7ChannelCA2A3TLVVRszrlE14sendIdempotent_4type11lastMessage8metadatayqd___SiSbSayAA18NWProtocolMetadataCGyXEt10Foundation12DataProtocolRd__lF	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkChannelIDAndTLVSend	-
 s:7Network0A7ChannelCA2A3TLVVRszrlE4send_4type11lastMessage8metadatayqd___SiSbSayAA18NWProtocolMetadataCGyXEtYaK10Foundation12DataProtocolRd__lF	declared	source:full/network/NetworkTyped.swift#send	Async Apple overlay; Linux is non-blocking sendIdempotent or fail-closed ENOTCONN. Sealed tests cannot await.
 s:7Network0A7ChannelCA2A3TLVVRszrlE7receive10Foundation4DataV7content_AE8MetadataV8metadatatyYaKF	declared	source:full/network/NetworkTyped.swift#receive	Async Apple overlay; Linux is non-blocking sendIdempotent or fail-closed ENOTCONN. Sealed tests cannot await.
 s:7Network0A7ChannelCA2A9WebSocketVRszrlE12startReceiveyyy10Foundation4DataV7content_AE8MetadataV8metadatatSi_SitYaKXEYaKXEYaKF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
@@ -854,19 +854,19 @@ s:7Network0A7ChannelCA2A9WebSocketVRszrlE9startSend_8metadata7handlerySS_SayAA18
 s:7Network0A7ChannelCA2A9WebSocketVRszrlE9startSend_8metadata7handleryqd___SayAA18NWProtocolMetadataCGyXEyyqd___SbtYaKXEYaKXEtYaK10Foundation12DataProtocolRd__lF	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network0A7DecoderP	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A7DecoderP6decode_4fromqd__qd__m_10Foundation4DataVtKSeRd__lF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network0A7EncoderP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network0A7EncoderP6encodey10Foundation4DataVqd__KSERd__lF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network0A7EncoderP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkCoderWitnesses	-
+s:7Network0A7EncoderP6encodey10Foundation4DataVqd__KSERd__lF	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkCoderWitnesses	-
 s:7Network0A8ListenerC	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A8ListenerC13onStateUpdateyACyxGXDyAE_AC0D0Oyx_GtYbYAcF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A8ListenerC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
-s:7Network0A8ListenerC18StateUpdateHandlera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A8ListenerC18StateUpdateHandlera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkListenerBrowserHandlerAliases	-
 s:7Network0A8ListenerC18newConnectionLimitSivp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A8ListenerC18newConnectionLimityACyxGXDSiF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A8ListenerC25ServiceRegistrationChangeO	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerStateCases	-
 s:7Network0A8ListenerC25ServiceRegistrationChangeO3addyAEyx_GAA10NWEndpointOcAGmAA0A15ProtocolOptionsRzlF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerStateCases	-
 s:7Network0A8ListenerC25ServiceRegistrationChangeO6removeyAEyx_GAA10NWEndpointOcAGmAA0A15ProtocolOptionsRzlF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerStateCases	-
 s:7Network0A8ListenerC27onServiceRegistrationUpdateyACyxGXDyAE_AC0dE6ChangeOyx_GtYbYAcF	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
-s:7Network0A8ListenerC32ServiceRegistrationUpdateHandlera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A8ListenerC32ServiceRegistrationUpdateHandlera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkListenerBrowserHandlerAliases	-
 s:7Network0A8ListenerC3for5usingACyxGAA0B8Provider_pSg_AA19NWParametersBuilderVyxyQPGtKcfc	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
 s:7Network0A8ListenerC3for5usingACyxGAA0B8Provider_pSg_xyXEtKcfc	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerBonjourProviderFailsClosed	-
 s:7Network0A8ListenerC4portAA10NWEndpointO4PortVSgvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedTCPLoopbackSendIdempotent	-
@@ -883,8 +883,8 @@ s:7Network0A8ListenerCA2A17MultiplexProtocolRzrlE3runyyyAA0A10ConnectionCyxGYaYb
 s:7Network0A9JSONCoderV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A9JSONCoderV11makeDecoder10Foundation11JSONDecoderCyF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network0A9JSONCoderV11makeEncoder10Foundation11JSONEncoderCyF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network0A9JSONCoderV7Decodera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network0A9JSONCoderV7Encodera	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network0A9JSONCoderV7Decodera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkCoderWitnesses	-
+s:7Network0A9JSONCoderV7Encodera	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkCoderWitnesses	-
 s:7Network0A9JSONCoderVACycfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network10NWEndpointO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
@@ -971,14 +971,14 @@ s:7Network10NWListenerC7service5usingA2C7ServiceV_AA12NWParametersCtKcfc	impleme
 s:7Network10NWListenerC7serviceAC7ServiceVSgvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testListenerServiceAdvertisementFailsClosed	-
 s:7Network10NWProtocolC	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testNWProtocolBaseClasses	-
 s:7Network10QUICStreamV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
-s:7Network10QUICStreamV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network10QUICStreamV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network10QUICStreamV14DirectionalityO	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV14DirectionalityO13bidirectionalyA2EmF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV14DirectionalityO14unidirectionalyA2EmF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV14DirectionalityO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV14DirectionalityO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV14DirectionalityO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
-s:7Network10QUICStreamV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network10QUICStreamV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network10QUICStreamV8MetadataV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV8MetadataV11endOfStreamSbvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV8MetadataV5otherSayAA010NWProtocolC0CGvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
@@ -988,7 +988,7 @@ s:7Network10QUICStreamV9InitiatorO4hash4intoys6HasherVz_tF	implemented	test:full
 s:7Network10QUICStreamV9InitiatorO6clientyA2EmF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV9InitiatorO6serveryA2EmF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network10QUICStreamV9InitiatorO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
-s:7Network11ConnectableP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network11ConnectableP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolHierarchy	-
 s:7Network11IPv4AddressV	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv4AddressParsing	-
 s:7Network11IPv4AddressV10isLoopbackSbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testAppleAddressClassificationTable	-
 s:7Network11IPv4AddressV11isLinkLocalSbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testAppleAddressClassificationTable	-
@@ -1068,7 +1068,7 @@ s:7Network11NWInterfaceV9RadioTypeO4WiFiO2acyA2GmF	implemented	test:full/network
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO2axyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO2eeoiySbAG_AGtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testInterfaceRadioHashable	-
-s:7Network11NWInterfaceV9RadioTypeO4WiFiO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network11NWInterfaceV9RadioTypeO4WiFiO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network11NWInterfaceV9RadioTypeO4cellyA2E8CellularOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO4wifiyA2E4WiFiOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -1078,7 +1078,7 @@ s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO2eeoiySbAI_AItF
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testInterfaceRadioHashable	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO6mmWaveyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO7sub6GHzyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
-s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO18dualConnectivity5GyA2G17NewRadio5GVariantOcAGmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO3gsmyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO3lteyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -1089,7 +1089,7 @@ s:7Network11NWInterfaceV9hashValueSivp	implemented	test:full/network/tests/agent
 s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
 s:7Network11NWTXTRecordV10dictionarySDyS2SGvp	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
 s:7Network11NWTXTRecordV10startIndexAC0D0Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
-s:7Network11NWTXTRecordV11SubSequencea	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network11NWTXTRecordV11SubSequencea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNWTXTRecordSubSequenceAndBonjourID	-
 s:7Network11NWTXTRecordV11removeEntry3keySbSS_tF	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRemoveAndEntryNone	-
 s:7Network11NWTXTRecordV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
 s:7Network11NWTXTRecordV2eeoiySbAC_ACtFZ	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
@@ -1172,7 +1172,7 @@ s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO3udpyA
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO5httpsyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO7unknownyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11dnsProtocolAG11DNSProtocolOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV13endpointCountSivp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV17preferredEndpointAA10NWEndpointOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
@@ -1183,7 +1183,7 @@ s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO2eeoiySbAI_A
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO5cacheyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO5queryyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6sourceAG6SourceOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV8durationSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10handshakesSayAE9HandshakeVGvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
@@ -1240,7 +1240,7 @@ s:7Network12NWParametersC11AttributionO2eeoiySbAE_AEtFZ	implemented	test:full/ne
 s:7Network12NWParametersC11AttributionO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
 s:7Network12NWParametersC11AttributionO4useryA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC11AttributionO9developeryA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
-s:7Network12NWParametersC11AttributionO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWParametersC11AttributionO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWParametersC11attributionAC11AttributionOvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC12ServiceClassO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO10backgroundyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1250,7 +1250,7 @@ s:7Network12NWParametersC12ServiceClassO16interactiveVideoyA2EmF	implemented	tes
 s:7Network12NWParametersC12ServiceClassO16interactiveVoiceyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
-s:7Network12NWParametersC12ServiceClassO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWParametersC12ServiceClassO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWParametersC12ServiceClassO9signalingyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12quicDatagram4alpnACSaySSG_tFZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICConnectionFailsClosed	-
 s:7Network12NWParametersC12serviceClassAC07ServiceD0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1283,7 +1283,7 @@ s:7Network12NWParametersC18ExpiredDNSBehaviorO2eeoiySbAE_AEtFZ	implemented	test:
 s:7Network12NWParametersC18ExpiredDNSBehaviorO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO5allowyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO8prohibityA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC18ExpiredDNSBehaviorO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWParametersC18ExpiredDNSBehaviorO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWParametersC18applicationServiceACvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC18expiredDNSBehaviorAC07ExpiredD0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20MultipathServiceTypeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1293,7 +1293,7 @@ s:7Network12NWParametersC20MultipathServiceTypeO4hash4intoys6HasherVz_tF	impleme
 s:7Network12NWParametersC20MultipathServiceTypeO8disabledyA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWParametersC20MultipathServiceTypeO8handoveryA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20MultipathServiceTypeO9aggregateyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC20MultipathServiceTypeO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWParametersC20MultipathServiceTypeO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWParametersC20defaultProtocolStackAC0dE0Cvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20multipathServiceTypeAC09MultipathdE0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20prohibitedInterfacesSayAA11NWInterfaceVGSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1324,7 +1324,7 @@ s:7Network12NWProtocolIPC3ECNO4ect0yA2EmF	implemented	test:full/network/tests/ag
 s:7Network12NWProtocolIPC3ECNO4ect1yA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC3ECNO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network12NWProtocolIPC3ECNO6nonECTyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
-s:7Network12NWProtocolIPC3ECNO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWProtocolIPC3ECNO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWProtocolIPC7OptionsC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC13useMinimumMTUSbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
@@ -1332,7 +1332,7 @@ s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO2eeoiySbAG_AGtFZ	implement
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO6stableyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO7defaultyA2GmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
-s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO9temporaryyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC20disableFragmentationSbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC22localAddressPreferenceAE0fG0Ovp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
@@ -1344,7 +1344,7 @@ s:7Network12NWProtocolIPC7OptionsC7VersionO2v4yA2GmF	implemented	test:full/netwo
 s:7Network12NWProtocolIPC7OptionsC7VersionO2v6yA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC7VersionO3anyyA2GmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC7VersionO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
-s:7Network12NWProtocolIPC7OptionsC7VersionO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network12NWProtocolIPC7OptionsC7VersionO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network12NWProtocolIPC7OptionsC7versionAE7VersionOvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC8hopLimits5UInt8Vvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC8MetadataC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
@@ -1355,10 +1355,10 @@ s:7Network12NWProtocolIPC8MetadataC3ecnAC3ECNOvp	implemented	test:full/network/t
 s:7Network12NWProtocolIPC8MetadataC3ecnyAEXDAC3ECNOF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC8MetadataCAEycfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12QUICDatagramV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
-s:7Network12QUICDatagramV11ContentTypea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network12QUICDatagramV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network12QUICDatagramV13LegacyMessagea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network12QUICDatagramV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network12QUICDatagramV11ContentTypea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network12QUICDatagramV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network12QUICDatagramV13LegacyMessagea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network12QUICDatagramV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network12QUICDatagramV8MetadataV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network12QUICDatagramV8MetadataV5otherSayAA010NWProtocolC0CGvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network13NWPathMonitorC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -1462,15 +1462,15 @@ s:7Network14NWProtocolQUICC8MetadataC29localMaxStreamsUnidirectionalSivp	impleme
 s:7Network14NWProtocolQUICC8MetadataC29remoteMaxStreamsBidirectionalSivp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC8MetadataC30remoteMaxStreamsUnidirectionalSivp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC8MetadataC9keepAliveAE04KeepF8BehaviorOvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
-s:7Network14StreamProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network14StreamProtocolP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolHierarchy	-
 s:7Network15BrowserProviderP	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
-s:7Network15BrowserProviderP8EndpointQa	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network15BrowserProviderP8EndpointQa	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedMessageAndBrowserAssociatedTypes	-
 s:7Network15BrowserProviderPA2A7BonjourVRszrlE7bonjour_6domain16includeTxtRecordAESS_SSSgSbtFZ	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network15BrowserProviderPA2A7BonjourVRszrlE7bonjour_6domain16includeTxtRecordAESS_SSSgSbtFZ::SYNTHESIZED::s:7Network7BonjourV	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
-s:7Network15MessageProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network15MessageProtocolP06LegacyB0Qa	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network15MessageProtocolP11ContentTypeQa	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network16DatagramProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network15MessageProtocolP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolHierarchy	-
+s:7Network15MessageProtocolP06LegacyB0Qa	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedMessageAndBrowserAssociatedTypes	-
+s:7Network15MessageProtocolP11ContentTypeQa	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedMessageAndBrowserAssociatedTypes	-
+s:7Network16DatagramProtocolP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolHierarchy	-
 s:7Network16ListenerProviderP	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerBonjourProviderFailsClosed	-
 s:7Network16ListenerProviderP7serviceAA10NWListenerC7ServiceVvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerBonjourProviderFailsClosed	-
 s:7Network16ListenerProviderPA2A07BonjourbC0VRszrlE7bonjour4name4type6domain9txtRecordAESSSg_SSAkA11NWTXTRecordVSgtFZ	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testTypedListenerBonjourProviderFailsClosed	-
@@ -1482,7 +1482,7 @@ s:7Network16NWMulticastGroupC3for4from14disableUnicastACSayAA10NWEndpointOG_AHSg
 s:7Network16NWMulticastGroupC7membersSayAA10NWEndpointOGvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network16NWMultiplexGroupC	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testMulticastGroupInitFailsClosed	-
 s:7Network16NWMultiplexGroupC2toAcA10NWEndpointO_tcfc	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testMulticastGroupInitFailsClosed	-
-s:7Network16NWMultiplexGroupC7membersSayAA10NWEndpointOGvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network16NWMultiplexGroupC7membersSayAA10NWEndpointOGvp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testGroupDescriptorMembers	-
 s:7Network16NWProtocolFramerC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC10DefinitionC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC10DefinitionC14implementationAeA0bC14Implementation_pXp_tcfc	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerDefinitionAndOptionsInits	-
@@ -1491,7 +1491,7 @@ s:7Network16NWProtocolFramerC11StartResultO13willMarkReadyyA2EmF	implemented	tes
 s:7Network16NWProtocolFramerC11StartResultO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC11StartResultO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testFramerStartResultHashable	-
 s:7Network16NWProtocolFramerC11StartResultO5readyyA2EmF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerHostDriverParseInputWriteOutput	-
-s:7Network16NWProtocolFramerC11StartResultO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:7Network16NWProtocolFramerC11StartResultO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNetworkHashValueWitnesses	-
 s:7Network16NWProtocolFramerC7MessageC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC7MessageC10definitionAeC10DefinitionC_tcfc	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerHostDriverParseInputWriteOutput	-
 s:7Network16NWProtocolFramerC7MessageC8instanceAeC8InstanceC_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
@@ -1527,7 +1527,7 @@ s:7Network16TXTRecordDecoderV6decode_4fromxxm_AA11NWTXTRecordVtKSeRzlF	implement
 s:7Network16TXTRecordDecoderVACycfc	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testUnexpectedEndpointAndTXTDecoder	-
 s:7Network17ConnectionStorageP	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network17ConnectionStoragePxycfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
-s:7Network17MultiplexProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network17MultiplexProtocolP	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolHierarchy	-
 s:7Network17NWConnectionGroupC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
 s:7Network17NWConnectionGroupC10descriptorAA17NWGroupDescriptor_pvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC10parametersAA12NWParametersCvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
@@ -1562,7 +1562,7 @@ s:7Network17NWConnectionGroupC7extract12connectionTo5usingAA0B0CSgAA10NWEndpoint
 s:7Network17NWConnectionGroupC8metadata10definitionAA18NWProtocolMetadataCSgAA0F10DefinitionC_tF	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC8reinsert10connectionSbAA0B0C_tF	implemented	test:full/network/tests/agent/NetworkStorageModelTests.swift#testConnectionGroupReceiveHandlerAndReinsert	-
 s:7Network17NWGroupDescriptorP	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testMulticastGroupInitFailsClosed	-
-s:7Network17NWGroupDescriptorP7membersSayAA10NWEndpointOGvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
+s:7Network17NWGroupDescriptorP7membersSayAA10NWEndpointOGvp	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testGroupDescriptorMembers	-
 s:7Network17NWProtocolOptionsC	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testNWProtocolBaseClasses	-
 s:7Network18NWProtocolMetadataC	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testNWProtocolBaseClasses	-
 s:7Network18ProxyConfigurationV	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
@@ -1603,7 +1603,7 @@ s:7Network19NWProtocolWebSocketC7OptionsC13skipHandshakeSbvp	implemented	test:fu
 s:7Network19NWProtocolWebSocketC7OptionsC15setSubprotocolsyySaySSGF	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC7OptionsC18maximumMessageSizeSivp	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC7OptionsC20setAdditionalHeadersyySaySS4name_SS5valuetGF	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
-s:7Network19NWProtocolWebSocketC7OptionsC23setClientRequestHandler_7handlerySo17OS_dispatch_queueC_AC8ResponseVSaySSG_SaySS4name_SS5valuetGtctF	deferred		DispatchQueue-typed member is present via Foundation on this host only when declared; callback timing is unobserved.
+s:7Network19NWProtocolWebSocketC7OptionsC23setClientRequestHandler_7handlerySo17OS_dispatch_queueC_AC8ResponseVSaySSG_SaySS4name_SS5valuetGtctF	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testWebSocketHandlerSetters	-
 s:7Network19NWProtocolWebSocketC7OptionsCyAeC7VersionOcfc	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC7VersionO	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC7VersionO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
@@ -1611,7 +1611,7 @@ s:7Network19NWProtocolWebSocketC7VersionO4hash4intoys6HasherVz_tF	implemented	te
 s:7Network19NWProtocolWebSocketC7VersionO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC7VersionO9version13yA2EmF	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC8MetadataC	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
-s:7Network19NWProtocolWebSocketC8MetadataC14setPongHandler_7handlerySo17OS_dispatch_queueC_yAA7NWErrorOSgctF	deferred		DispatchQueue-typed member is present via Foundation on this host only when declared; callback timing is unobserved.
+s:7Network19NWProtocolWebSocketC8MetadataC14setPongHandler_7handlerySo17OS_dispatch_queueC_yAA7NWErrorOSgctF	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testWebSocketHandlerSetters	-
 s:7Network19NWProtocolWebSocketC8MetadataC19selectedSubprotocolSSSgvp	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC8MetadataC23additionalServerHeadersSaySS_SStGSgvp	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
 s:7Network19NWProtocolWebSocketC8MetadataC6opcodeAC6OpcodeOvp	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
@@ -1741,8 +1741,8 @@ s:7Network23ProtocolMetadataBuilderV	implemented	test:full/network/tests/agent/N
 s:7Network23ProtocolMetadataBuilderV10buildBlockySayAA010NWProtocolC0CGAFd_tFZ	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNWParametersProviderFluentBuildersOnTCP	-
 s:7Network2IPV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
 s:7Network2IPV10minimumMTUyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
-s:7Network2IPV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network2IPV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network2IPV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network2IPV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network2IPV21fragmentationDisabledyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
 s:7Network2IPV21receiveTimeCalculatedyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
 s:7Network2IPV22localAddressPreferenceyAcA010NWProtocolB0C7OptionsC0dE0OF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
@@ -1763,9 +1763,9 @@ s:7Network30NWProtocolFramerImplementationP6wakeup6frameryAA0bC0C8InstanceC_tF	i
 s:7Network30NWProtocolFramerImplementationP7cleanup6frameryAA0bC0C8InstanceC_tF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerHostDriverParseInputWriteOutput	-
 s:7Network3TCPV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network3TCPV11ecnDisabledyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
-s:7Network3TCPV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network3TCPV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network3TCPV14persistTimeoutyACs6UInt32VF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
-s:7Network3TCPV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network3TCPV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network3TCPV15fastOpenAllowedyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network3TCPV17connectionTimeoutyACs6UInt32VF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network3TCPV17retransmitFinDropyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
@@ -1783,10 +1783,10 @@ s:7Network3TCPVACycfc	implemented	test:full/network/tests/agent/NetworkTypedStac
 s:7Network3TCPVyAcA2IPVyXEcfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTCPProtocolStackOptionsAndDefaults	-
 s:7Network3TLSV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV12cipherSuitesyACSaySo17tls_ciphersuite_tVGF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
-s:7Network3TLSV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network3TLSV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network3TLSV13localIdentityyACSo15OS_sec_identity_pF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV14ticketsEnabledyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
-s:7Network3TLSV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network3TLSV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network3TLSV16earlyDataEnabledyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV17cipherSuiteGroupsyACSaySo23tls_ciphersuite_group_tVGF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV18PeerAuthenticationO	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
@@ -1798,7 +1798,7 @@ s:7Network3TLSV18PeerAuthenticationO8requiredyA2EmF	implemented	test:full/networ
 s:7Network3TLSV18PeerAuthenticationO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV18peerAuthenticationyA2C04PeerD0OF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV20applicationProtocolsyACSaySSGF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
-s:7Network3TLSV20certificateValidatoryACSbSo24OS_sec_protocol_metadata_p_So0e1_F6_trust_ptYaYbYAcF	deferred		Requires Security.framework sec_protocol types; isolated host cannot import Security.
+s:7Network3TLSV20certificateValidatoryACSbSo24OS_sec_protocol_metadata_p_So0e1_F6_trust_ptYaYbYAcF	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTLSCertificateValidatorBuilders	-
 s:7Network3TLSV7version3min3maxACSo013tls_protocol_C2_tVSg_AItF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV8MetadataV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:7Network3TLSV8MetadataV11endOfStreamSbvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
@@ -1821,10 +1821,10 @@ s:7Network3TLVV8MetadataV6lengthSivp	implemented	test:full/network/tests/agent/N
 s:7Network3TLVVyACxyXEcAA14StreamProtocolRzlufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLVInProcessEncodeDecode	-
 s:7Network3TLVVyACxyXEcAA15MessageProtocolRzlufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLVInProcessEncodeDecode	-
 s:7Network3UDPV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
-s:7Network3UDPV11ContentTypea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network3UDPV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network3UDPV13LegacyMessagea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network3UDPV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network3UDPV11ContentTypea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network3UDPV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network3UDPV13LegacyMessagea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network3UDPV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network3UDPV19noChecksumPreferredyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
 s:7Network3UDPV8MetadataV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
 s:7Network3UDPV8MetadataV5otherSayAA010NWProtocolC0CGvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
@@ -1832,7 +1832,7 @@ s:7Network3UDPVACycfc	implemented	test:full/network/tests/agent/NetworkTypedStac
 s:7Network3UDPVyAcA2IPVyXEcfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testUDPAndIPProtocolStackOptions	-
 s:7Network4QUICV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV11idleTimeoutyACSiF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
-s:7Network4QUICV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network4QUICV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network4QUICV14initialMaxDatayACSiF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV15ProtocolStorageV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV15ProtocolStorageVAEycfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
@@ -1848,7 +1848,7 @@ s:7Network4QUICV3TLSV12cipherSuitesyACSaySo17tls_ciphersuite_tVGF	implemented	te
 s:7Network4QUICV3TLSV13localIdentityyACSo15OS_sec_identity_pF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV3TLSV17ciphersuiteGroupsyACSaySo04tls_D8_group_tVGF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV3TLSV18peerAuthenticationyAcaDV04PeerE0OF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
-s:7Network4QUICV3TLSV20certificateValidatoryACSbSo24OS_sec_protocol_metadata_p_So0f1_G6_trust_ptYaYbYAcF	deferred		Requires Security.framework sec_protocol types; isolated host cannot import Security.
+s:7Network4QUICV3TLSV20certificateValidatoryACSbSo24OS_sec_protocol_metadata_p_So0f1_G6_trust_ptYaYbYAcF	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTLSCertificateValidatorBuilders	-
 s:7Network4QUICV3tlsAC3TLSVvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV4alpnACSaySSG_tcfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV4alpn_ACSaySSG_AA3UDPVyXEtcfc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
@@ -1862,10 +1862,10 @@ s:7Network4QUICV8MetadataV	implemented	test:full/network/tests/agent/NetworkType
 s:7Network4QUICV9DatagramsC	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network4QUICV9DatagramsC6parentAA0A10ConnectionCyACGvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testQUICProtocolStackDataModelAndFailClosedStart	-
 s:7Network5CoderV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network5CoderV11ContentTypea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network5CoderV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network5CoderV13LegacyMessagea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network5CoderV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network5CoderV11ContentTypea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network5CoderV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network5CoderV13LegacyMessagea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network5CoderV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network5CoderV7sending9receiving5using_ACyxq_q0_Gxm_q_mq0_qd__yXEtcAA14StreamProtocolRd__lufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network5CoderV7sending9receiving5using_ACyxq_q0_Gxm_q_mq0_qd__yXEtcAA16DatagramProtocolRd__lufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network5CoderV8MetadataV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
@@ -1877,10 +1877,10 @@ s:7Network5CoderV9receiving7sending5using_ACyxq_q0_Gq_m_xmq0_qd__yXEtcAA16Datagr
 s:7Network5CoderVAASeRzq_RszrlE_5using_ACyxxq0_Gxm_q0_qd__yXEtcAA14StreamProtocolRd__lufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network5CoderVAASeRzq_RszrlE_5using_ACyxxq0_Gxm_q0_qd__yXEtcAA16DatagramProtocolRd__lufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network6FramerV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network6FramerV11ContentTypea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network6FramerV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network6FramerV13LegacyMessagea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network6FramerV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network6FramerV11ContentTypea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network6FramerV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network6FramerV13LegacyMessagea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network6FramerV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network6FramerV5using_ACyxGxm_qd__yXEtcAA14StreamProtocolRd__lufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network6FramerV5using_ACyxGxm_qd__yXEtcAA15MessageProtocolRd__lufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network6FramerV7optionsAA010NWProtocolB0C7OptionsCvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
@@ -1937,7 +1937,7 @@ s:7Network7BonjourV	implemented	test:full/network/tests/agent/NetworkTypedTransp
 s:7Network7BonjourV8EndpointV	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network7BonjourV8EndpointV02nwC0AA10NWEndpointOvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network7BonjourV8EndpointV11descriptionSSvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
-s:7Network7BonjourV8EndpointV2IDa	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network7BonjourV8EndpointV2IDa	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNWTXTRecordSubSequenceAndBonjourID	-
 s:7Network7BonjourV8EndpointV2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network7BonjourV8EndpointV2idSSvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
 s:7Network7BonjourV8EndpointV4nameSSvp	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testNetworkBrowserFailClosedWithoutMDNS	-
@@ -2017,13 +2017,13 @@ s:7Network9NWBrowserC6ResultV8metadataAE8MetadataOvp	implemented	test:full/netwo
 s:7Network9NWBrowserC6ResultV9hashValueSivp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError	-
 s:7Network9NWBrowserC6cancelyyF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError	-
 s:7Network9WebSocketV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network9WebSocketV11ContentTypea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network9WebSocketV11ContentTypea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network9WebSocketV12subprotocolsyACSaySSGF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network9WebSocketV13BelowProtocola	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
-s:7Network9WebSocketV13LegacyMessagea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network9WebSocketV13BelowProtocola	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
+s:7Network9WebSocketV13LegacyMessagea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network9WebSocketV13autoReplyPingyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network9WebSocketV13skipHandshakeyACSbF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:7Network9WebSocketV15ProtocolStoragea	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
+s:7Network9WebSocketV15ProtocolStoragea	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testTypedProtocolAssociatedTypes	-
 s:7Network9WebSocketV17additionalHeadersyACSaySS4name_SS5valuetGF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network9WebSocketV18maximumMessageSizeyACSiF	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network9WebSocketV8MetadataV	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
@@ -2034,7 +2034,7 @@ s:7Network9WebSocketV8MetadataV6opcodeAA010NWProtocolbC0C6OpcodeOvp	implemented	
 s:7Network9WebSocketV8MetadataV9closeCodeAA010NWProtocolbC0C05CloseF0OSgvp	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network9WebSocketVyACxyXEcAA14StreamProtocolRzlufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
 s:7Network9WebSocketVyACxyXEcAA15MessageProtocolRzlufc	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testWebSocketFramerAndCoderProtocolStacks	-
-s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	deferred		NWTXTRecord.Index synthesized collection witness lacks focused identifier-level runtime evidence.
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordIndexComparable	-
 s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
@@ -2043,7 +2043,7 @@ s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests
 s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
-s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	deferred		NWTXTRecord.Index synthesized collection witness lacks focused identifier-level runtime evidence.
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordIndexComparable	-
 s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
@@ -2052,7 +2052,7 @@ s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/test
 s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
-s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	deferred		NWTXTRecord.Index synthesized collection witness lacks focused identifier-level runtime evidence.
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordIndexComparable	-
 s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
@@ -2079,7 +2079,7 @@ s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:s5UInt8V	implemented	tes
 s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
-s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	deferred		NWTXTRecord.Index synthesized collection witness lacks focused identifier-level runtime evidence.
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordIndexComparable	-
 s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
@@ -2088,7 +2088,7 @@ s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s5UInt8V	implemented	tes
 s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
-s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	deferred		NWTXTRecord.Index synthesized collection witness lacks focused identifier-level runtime evidence.
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordIndexComparable	-
 s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
@@ -2097,7 +2097,7 @@ s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/
 s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
-s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	deferred		NWTXTRecord.Index synthesized collection witness lacks focused identifier-level runtime evidence.
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordIndexComparable	-
 s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
 s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testFixedWidthIntegerRangeExpressionWitnesses	Concrete standard-library integer witness attributed to Network; exercised for every pinned integer width.
@@ -2174,7 +2174,7 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network19NWProtocolWebSocketC7VersionO	imp
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network19NWProtocolWebSocketC8ResponseV6StatusO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network19NWProtocolWebSocketC9CloseCodeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network19NWProtocolWebSocketC9CloseCodeO7DefinedO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network20NWProtocolDefinitionC	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network20NWProtocolDefinitionC	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testProtocolDefinitionInequality	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network3TLSV18PeerAuthenticationO	implemented	test:full/network/tests/agent/NetworkTypedStackTests.swift#testTLSProtocolStackStoresOptionsAndFailsClosed	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network6NWPathV	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network6NWPathV11LinkQualityO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -2185,37 +2185,37 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network7NWErrorO	implemented	test:full/net
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network9NWBrowserC5StateO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWBrowserFailClosedNoBonjour	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network9NWBrowserC6ResultV	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWBrowserFailClosedNoBonjour	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWBrowserFailClosedNoBonjour	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7Network9NWBrowserC6ResultV8MetadataO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWBrowserFailClosedNoBonjour	-
 s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
 s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
 s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Deprecated Sequence.flatMap(optional) witness; calling it trips warnings-as-errors deprecation diagnostics.
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
 s:SUsE8isSignedSbvpZ::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:SUsE8isSignedSbvpZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:SUsE8isSignedSbvpZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
@@ -2273,7 +2273,7 @@ s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:7Network10NWEndpointO4P
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:7Network11IPv6AddressV5ScopeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:7Network19NWProtocolWebSocketC6OpcodeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:7Network19NWProtocolWebSocketC9CloseCodeO7DefinedO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@nw_parameters_attribution_t	implemented	test:full/network/tests/agent/NetworkCStructInitTests.swift#testCEnumHashableAndEquatableWitnesses	-
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@nw_browser_state_t	implemented	test:full/network/tests/agent/NetworkCStructInitTests.swift#testCEnumHashableAndEquatableWitnesses	-
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@nw_connection_group_state_t	implemented	test:full/network/tests/agent/NetworkCStructInitTests.swift#testCEnumHashableAndEquatableWitnesses	-
@@ -2307,7 +2307,7 @@ s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:7Network10N
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:7Network11IPv6AddressV5ScopeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:7Network19NWProtocolWebSocketC6OpcodeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:7Network19NWProtocolWebSocketC9CloseCodeO7DefinedO	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
 s:SZsE8isSignedSbvpZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:SZsE8isSignedSbvpZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:SZsE8isSignedSbvpZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
@@ -2358,35 +2358,35 @@ s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSci
 s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:7Network13NWPathMonitorC	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:7Network13NWPathMonitorC	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:7Network13NWPathMonitorC	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
+s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
 s:SlsE5countSivp::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
-s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE7isEmptySbvp::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
-s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:7Network11NWTXTRecordV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point.
+s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE7isEmptySbvp::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordSequenceWitnessBatch	-
+s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:7Network11NWTXTRecordV	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
 s:So14nw_ws_opcode_ta8rawValueABs5Int32V_tcfc	implemented	test:full/network/tests/agent/NetworkCStructInitTests.swift#testCStructRawValueInitializers	-
 s:So14nw_ws_opcode_ta8rawValues5Int32Vvp	implemented	test:full/network/tests/agent/NetworkCStructInitTests.swift#testCStructRawValueInitializers	-
 s:So14nw_ws_opcode_tayABs5Int32Vcfc	implemented	test:full/network/tests/agent/NetworkCStructInitTests.swift#testCStructRawValueInitializers	-
@@ -2497,62 +2497,62 @@ s:Sz10FoundationE9formattedSSyF::SYNTHESIZED::s:s5UInt8V	implemented	test:full/n
 s:Sz10FoundationE9formattedSSyF::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFoundationDefaultFormattingWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:Sz10FoundationE9formattedSSyF::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFoundationDefaultFormattingWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:Sz10FoundationE9formattedSSyF::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFoundationDefaultFormattingWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s4Int8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5Int16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5Int32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5Int64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib integer protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE9formattedy12FormatOutputQyd__qd__AA0C5StyleRd__Sz0C5InputRpd__lF::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV7PercentVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleV8CurrencyVyx_GSbtKcfc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_6format7lenientxSS_AA18IntegerFormatStyleVyxGSbtKcfc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKc0C6OutputQyd__RszAA0C8StrategyRd__lufc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5Int64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
+s:Sz10FoundationE_8strategyx10ParseInputQyd___qd__tKcAA0C8StrategyRd__Sz0C6OutputRpd__lufc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerFormatStyleParseWitnesses	-
 s:SzsE10isMultiple2ofSbx_tF::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:SzsE10isMultiple2ofSbx_tF::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:SzsE10isMultiple2ofSbx_tF::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
@@ -2717,16 +2717,16 @@ s:SzsExycfc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/network/tests/agent/N
 s:SzsExycfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:SzsExycfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:SzsExycfc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
 s:s13SignedNumericPsE1sopyxxFZ::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:s13SignedNumericPsE1sopyxxFZ::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:s13SignedNumericPsE1sopyxxFZ::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testSignedIntegerWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
@@ -3023,7 +3023,7 @@ s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZ
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
 s:s18AdditiveArithmeticPss27ExpressibleByIntegerLiteralRzrlE4zeroxvpZ::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses	Focused table-driven runtime exercise of this concrete fixed-width integer witness.
-s:s26ExpressibleByStringLiteralPs0cD4TypeQz023ExtendedGraphemeClusterdE0RtzrlE08extendedghD0xAF_tcfc::SYNTHESIZED::s:7Network10NWEndpointO4HostO	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:s26ExpressibleByStringLiteralPs0cD4TypeQz023ExtendedGraphemeClusterdE0RtzrlE08extendedghD0xAF_tcfc::SYNTHESIZED::s:7Network10NWEndpointO4HostO	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNWEndpointHostLiteralWitnesses	-
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s4Int8V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s5Int16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s5Int32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
@@ -3032,17 +3032,17 @@ s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNT
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/network/tests/agent/NetworkIntegerWitnessTests.swift#testIntegerBoundsMultiplicityAndLiteralWitnesses	Focused table-driven runtime exercise of this concrete integer witness.
-s:s43ExpressibleByExtendedGraphemeClusterLiteralPs013UnicodeScalarF4TypeQz0cdefI0RtzrlE07unicodehF0xAF_tcfc::SYNTHESIZED::s:7Network10NWEndpointO4HostO	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
+s:s43ExpressibleByExtendedGraphemeClusterLiteralPs013UnicodeScalarF4TypeQz0cdefI0RtzrlE07unicodehF0xAF_tcfc::SYNTHESIZED::s:7Network10NWEndpointO4HostO	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testNWEndpointHostLiteralWitnesses	-
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:7Network22UnexpectedEndpointTypeV	implemented	test:full/network/tests/agent/NetworkTypedTransportTests.swift#testUnexpectedEndpointAndTXTDecoder	-
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:7Network7NWErrorO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWErrorFailClosedCases	-
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	deferred		Synthesized protocol witness whose parent type is not declared in this Linux starting point; behavior is unobserved.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:7Network9NWBrowserC6ResultV6ChangeO5FlagsV	implemented	test:full/network/tests/agent/NetworkDeferredWitnessTests.swift#testBrowserFlagsSetAlgebraWitnesses	-

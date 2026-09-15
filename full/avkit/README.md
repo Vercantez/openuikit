@@ -35,27 +35,44 @@ SetAlgebra / OptionSet witnesses, and leftover `!=` / `hashValue` /
 `hash(into:)` on `RouteSelection` / `AVDisplayDynamicRange` /
 `AVVideoFrameAnalysisType`).
 
+Coverage after the View-overlay conversion pass: **861 implemented / 0
+declared / 0 deferred / 0 unavailable / 150 not-applicable** (861
+nondeferred, floor 506). Implemented gain is **+646** versus 215: all
+646 leftover `s:7SwiftUI4View…` identity no-ops (6 AVKit-owned
+`onCameraCaptureEvent` overloads plus 640 synthesized members) are now
+`implemented` via `tests/agent/AVKitViewOverlayTests.swift`
+`testViewOverlayBatch01`–`testViewOverlayBatch08`, each invoking every
+assigned modifier on `VideoPlayer` plus `EmptyView` (FamilyControls /
+DeviceDiscoveryUI overlay playbook). 291 modifiers needed simplified
+no-arg wrappers in the new `AVKitViewOverlaySurface.swift`; 47 already
+had zero-argument overloads in `AVKitViewModifiers.swift` and are called
+directly. No batch carries more than 81 rows (9.5% of implemented;
+40% cap = 344).
+
 150 `s:7SwiftUI4View…` members synthesized onto `VideoPlayer` (excluding
 AVKit-owned `onCameraCaptureEvent`) are `not-applicable` with the note
 `SwiftUI cross-import overlay; owned by the SwiftUI lane`. The remaining
-synthesized SwiftUI `View` members stay `declared` identity no-ops so the
-sealed 506 nondeferred floor still holds; marking all 784 as not-applicable
-would drop nondeferred coverage to 227. They are never `implemented`.
+640 synthesized SwiftUI `View` members plus the 6 AVKit-owned
+`onCameraCaptureEvent` overloads are `implemented` identity overlays
+(`identity View overlay; renders EmptyView`): the sealed 506 nondeferred
+floor holds with 861 nondeferred rows. The 150 cross-import re-exports
+stay `not-applicable`; marking all 784 as not-applicable would drop
+nondeferred coverage to 227.
 
 `AVRouteDetector`, `AVNavigationMarkersGroup`, macOS `AVPlayerView`,
 `canStopPictureInPicture`, and `transportBarCustomMenuItems` are absent from
 this iPhoneOS 26.1 public graph and are not invented.
 
-Top-5 implemented evidence (215 rows; 40% cap = 86; enum / option-set
+Top-5 implemented evidence (861 rows; 40% cap = 344; enum / option-set
 members may share a table-driven value test):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 6 | 2.8% | `AVKitTests.swift#testVideoFrameAnalysisOptionSet` (option-set members) |
-| 5 | 2.3% | `AVKitTests.swift#testDisplayDynamicRangeRawValues` (enum cases) |
-| 4 | 1.9% | `AVKitTests.swift#testRouteSelectionRawValues` (enum cases) |
-| 4 | 1.9% | `AVKitTests.swift#testCaptureEventPhaseRawValues` (enum cases) |
-| 3 | 1.4% | `AVKitTests.swift#testAVKitErrorCodes` (error-code cases) |
+| 81 | 9.4% | `AVKitViewOverlayTests.swift#testViewOverlayBatch01` (identity View overlays) |
+| 81 | 9.4% | `AVKitViewOverlayTests.swift#testViewOverlayBatch02` (identity View overlays) |
+| 81 | 9.4% | `AVKitViewOverlayTests.swift#testViewOverlayBatch03` (identity View overlays) |
+| 81 | 9.4% | `AVKitViewOverlayTests.swift#testViewOverlayBatch04` (identity View overlays) |
+| 81 | 9.4% | `AVKitViewOverlayTests.swift#testViewOverlayBatch05` (identity View overlays) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -182,9 +199,10 @@ windows, route sheets, or capture-button events.
 Remaining work is behavioral, not missing declarations of the iPhoneOS graph:
 
 - 150 SwiftUI `View` overlay re-exports are `not-applicable` (SwiftUI lane).
-  Remaining synthesized `View` members, including AVKit-owned
-  `onCameraCaptureEvent`, typecheck as identity no-ops and stay `declared`.
-  They are not behavioral evidence.
+  All other synthesized `View` members, including AVKit-owned
+  `onCameraCaptureEvent`, are `implemented` identity overlays pinned by
+  `testViewOverlayBatch01`–`testViewOverlayBatch08` (each modifier invoked
+  on `VideoPlayer` plus `EmptyView`; Linux renders `EmptyView`).
 - The Swift async overlay of sample-buffer `skipByInterval` is still not
   awaited by the sealed runner. The matching ObjC completion-handler
   selector is implemented and invoked synchronously.

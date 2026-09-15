@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(LocalAuthentication)
+import LocalAuthentication
+#endif
 import MarketplaceKit
 
 func testMarketplaceKitURIScheme() {

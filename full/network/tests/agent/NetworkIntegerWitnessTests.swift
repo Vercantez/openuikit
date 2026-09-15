@@ -1,3 +1,4 @@
+import Foundation
 import Network
 
 private func requireIntegerWitness(_ condition: Bool, _ message: String) {
@@ -287,4 +288,88 @@ func testIntegerFoundationDefaultFormattingWitnesses() {
     requireIntegerWitness(UInt32(42).formatted() == "42", "UInt32 formatting")
     requireIntegerWitness(Int64(42).formatted() == "42", "Int64 formatting")
     requireIntegerWitness(UInt64(42).formatted() == "42", "UInt64 formatting")
+}
+
+
+/// Second batch: the Foundation `BinaryInteger` extension witnesses the
+/// Network graph attributes to the eight fixed-width integer types.
+/// `formatted(_:)` with an exactly-typed style and with a cross-width style
+/// hit the two `formatted` overloads; the three throwing
+/// `init(_:format:lenient:)` shapes round-trip a styled string back to the
+/// value; the two throwing `init(_:strategy:)` shapes parse with an
+/// exactly-typed and a cross-width parse strategy. All synchronous,
+/// in-process, no `await`.
+func testIntegerFormatStyleParseWitnesses() {
+    requireIntegerWitness(Int8(42).formatted(IntegerFormatStyle<Int8>()) == "42", "exact style Int8")
+    requireIntegerWitness(Int8(42).formatted(IntegerFormatStyle<Int16>()) == "42", "cross style Int8")
+    requireIntegerWitness(!Int8(42).formatted(.percent).isEmpty, "percent style Int8")
+    requireIntegerWitness(!Int8(42).formatted(.currency(code: "USD")).isEmpty, "currency style Int8")
+    requireIntegerWitness((try? Int8("42", format: IntegerFormatStyle<Int8>(), lenient: true)) == Int8(42), "number parse Int8")
+    requireIntegerWitness((try? Int8(Int8(42).formatted(.percent), format: .percent, lenient: true)) == Int8(42), "percent parse Int8")
+    requireIntegerWitness((try? Int8(Int8(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == Int8(42), "currency parse Int8")
+    requireIntegerWitness((try? Int8("42", strategy: IntegerFormatStyle<Int8>().parseStrategy)) == Int8(42), "exact strategy Int8")
+    requireIntegerWitness((try? Int8("42", strategy: IntegerFormatStyle<Int16>().parseStrategy)) == Int8(42), "cross strategy Int8")
+    requireIntegerWitness(UInt8(42).formatted(IntegerFormatStyle<UInt8>()) == "42", "exact style UInt8")
+    requireIntegerWitness(UInt8(42).formatted(IntegerFormatStyle<UInt16>()) == "42", "cross style UInt8")
+    requireIntegerWitness(!UInt8(42).formatted(.percent).isEmpty, "percent style UInt8")
+    requireIntegerWitness(!UInt8(42).formatted(.currency(code: "USD")).isEmpty, "currency style UInt8")
+    requireIntegerWitness((try? UInt8("42", format: IntegerFormatStyle<UInt8>(), lenient: true)) == UInt8(42), "number parse UInt8")
+    requireIntegerWitness((try? UInt8(UInt8(42).formatted(.percent), format: .percent, lenient: true)) == UInt8(42), "percent parse UInt8")
+    requireIntegerWitness((try? UInt8(UInt8(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == UInt8(42), "currency parse UInt8")
+    requireIntegerWitness((try? UInt8("42", strategy: IntegerFormatStyle<UInt8>().parseStrategy)) == UInt8(42), "exact strategy UInt8")
+    requireIntegerWitness((try? UInt8("42", strategy: IntegerFormatStyle<UInt16>().parseStrategy)) == UInt8(42), "cross strategy UInt8")
+    requireIntegerWitness(Int16(42).formatted(IntegerFormatStyle<Int16>()) == "42", "exact style Int16")
+    requireIntegerWitness(Int16(42).formatted(IntegerFormatStyle<Int32>()) == "42", "cross style Int16")
+    requireIntegerWitness(!Int16(42).formatted(.percent).isEmpty, "percent style Int16")
+    requireIntegerWitness(!Int16(42).formatted(.currency(code: "USD")).isEmpty, "currency style Int16")
+    requireIntegerWitness((try? Int16("42", format: IntegerFormatStyle<Int16>(), lenient: true)) == Int16(42), "number parse Int16")
+    requireIntegerWitness((try? Int16(Int16(42).formatted(.percent), format: .percent, lenient: true)) == Int16(42), "percent parse Int16")
+    requireIntegerWitness((try? Int16(Int16(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == Int16(42), "currency parse Int16")
+    requireIntegerWitness((try? Int16("42", strategy: IntegerFormatStyle<Int16>().parseStrategy)) == Int16(42), "exact strategy Int16")
+    requireIntegerWitness((try? Int16("42", strategy: IntegerFormatStyle<Int32>().parseStrategy)) == Int16(42), "cross strategy Int16")
+    requireIntegerWitness(UInt16(42).formatted(IntegerFormatStyle<UInt16>()) == "42", "exact style UInt16")
+    requireIntegerWitness(UInt16(42).formatted(IntegerFormatStyle<UInt32>()) == "42", "cross style UInt16")
+    requireIntegerWitness(!UInt16(42).formatted(.percent).isEmpty, "percent style UInt16")
+    requireIntegerWitness(!UInt16(42).formatted(.currency(code: "USD")).isEmpty, "currency style UInt16")
+    requireIntegerWitness((try? UInt16("42", format: IntegerFormatStyle<UInt16>(), lenient: true)) == UInt16(42), "number parse UInt16")
+    requireIntegerWitness((try? UInt16(UInt16(42).formatted(.percent), format: .percent, lenient: true)) == UInt16(42), "percent parse UInt16")
+    requireIntegerWitness((try? UInt16(UInt16(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == UInt16(42), "currency parse UInt16")
+    requireIntegerWitness((try? UInt16("42", strategy: IntegerFormatStyle<UInt16>().parseStrategy)) == UInt16(42), "exact strategy UInt16")
+    requireIntegerWitness((try? UInt16("42", strategy: IntegerFormatStyle<UInt32>().parseStrategy)) == UInt16(42), "cross strategy UInt16")
+    requireIntegerWitness(Int32(42).formatted(IntegerFormatStyle<Int32>()) == "42", "exact style Int32")
+    requireIntegerWitness(Int32(42).formatted(IntegerFormatStyle<Int64>()) == "42", "cross style Int32")
+    requireIntegerWitness(!Int32(42).formatted(.percent).isEmpty, "percent style Int32")
+    requireIntegerWitness(!Int32(42).formatted(.currency(code: "USD")).isEmpty, "currency style Int32")
+    requireIntegerWitness((try? Int32("42", format: IntegerFormatStyle<Int32>(), lenient: true)) == Int32(42), "number parse Int32")
+    requireIntegerWitness((try? Int32(Int32(42).formatted(.percent), format: .percent, lenient: true)) == Int32(42), "percent parse Int32")
+    requireIntegerWitness((try? Int32(Int32(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == Int32(42), "currency parse Int32")
+    requireIntegerWitness((try? Int32("42", strategy: IntegerFormatStyle<Int32>().parseStrategy)) == Int32(42), "exact strategy Int32")
+    requireIntegerWitness((try? Int32("42", strategy: IntegerFormatStyle<Int64>().parseStrategy)) == Int32(42), "cross strategy Int32")
+    requireIntegerWitness(UInt32(42).formatted(IntegerFormatStyle<UInt32>()) == "42", "exact style UInt32")
+    requireIntegerWitness(UInt32(42).formatted(IntegerFormatStyle<UInt64>()) == "42", "cross style UInt32")
+    requireIntegerWitness(!UInt32(42).formatted(.percent).isEmpty, "percent style UInt32")
+    requireIntegerWitness(!UInt32(42).formatted(.currency(code: "USD")).isEmpty, "currency style UInt32")
+    requireIntegerWitness((try? UInt32("42", format: IntegerFormatStyle<UInt32>(), lenient: true)) == UInt32(42), "number parse UInt32")
+    requireIntegerWitness((try? UInt32(UInt32(42).formatted(.percent), format: .percent, lenient: true)) == UInt32(42), "percent parse UInt32")
+    requireIntegerWitness((try? UInt32(UInt32(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == UInt32(42), "currency parse UInt32")
+    requireIntegerWitness((try? UInt32("42", strategy: IntegerFormatStyle<UInt32>().parseStrategy)) == UInt32(42), "exact strategy UInt32")
+    requireIntegerWitness((try? UInt32("42", strategy: IntegerFormatStyle<UInt64>().parseStrategy)) == UInt32(42), "cross strategy UInt32")
+    requireIntegerWitness(Int64(42).formatted(IntegerFormatStyle<Int64>()) == "42", "exact style Int64")
+    requireIntegerWitness(Int64(42).formatted(IntegerFormatStyle<Int32>()) == "42", "cross style Int64")
+    requireIntegerWitness(!Int64(42).formatted(.percent).isEmpty, "percent style Int64")
+    requireIntegerWitness(!Int64(42).formatted(.currency(code: "USD")).isEmpty, "currency style Int64")
+    requireIntegerWitness((try? Int64("42", format: IntegerFormatStyle<Int64>(), lenient: true)) == Int64(42), "number parse Int64")
+    requireIntegerWitness((try? Int64(Int64(42).formatted(.percent), format: .percent, lenient: true)) == Int64(42), "percent parse Int64")
+    requireIntegerWitness((try? Int64(Int64(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == Int64(42), "currency parse Int64")
+    requireIntegerWitness((try? Int64("42", strategy: IntegerFormatStyle<Int64>().parseStrategy)) == Int64(42), "exact strategy Int64")
+    requireIntegerWitness((try? Int64("42", strategy: IntegerFormatStyle<Int32>().parseStrategy)) == Int64(42), "cross strategy Int64")
+    requireIntegerWitness(UInt64(42).formatted(IntegerFormatStyle<UInt64>()) == "42", "exact style UInt64")
+    requireIntegerWitness(UInt64(42).formatted(IntegerFormatStyle<UInt32>()) == "42", "cross style UInt64")
+    requireIntegerWitness(!UInt64(42).formatted(.percent).isEmpty, "percent style UInt64")
+    requireIntegerWitness(!UInt64(42).formatted(.currency(code: "USD")).isEmpty, "currency style UInt64")
+    requireIntegerWitness((try? UInt64("42", format: IntegerFormatStyle<UInt64>(), lenient: true)) == UInt64(42), "number parse UInt64")
+    requireIntegerWitness((try? UInt64(UInt64(42).formatted(.percent), format: .percent, lenient: true)) == UInt64(42), "percent parse UInt64")
+    requireIntegerWitness((try? UInt64(UInt64(42).formatted(.currency(code: "USD")), format: .currency(code: "USD"), lenient: true)) == UInt64(42), "currency parse UInt64")
+    requireIntegerWitness((try? UInt64("42", strategy: IntegerFormatStyle<UInt64>().parseStrategy)) == UInt64(42), "exact strategy UInt64")
+    requireIntegerWitness((try? UInt64("42", strategy: IntegerFormatStyle<UInt32>().parseStrategy)) == UInt64(42), "cross strategy UInt64")
 }

@@ -69,6 +69,21 @@ func testSoundAssetTypeOnHost() {
     expect(PHASEAsset.AssetType.resident != .streamed, "types")
 }
 
+func testAssetRegistryUnregisterCompletion() {
+    let engine = PHASEEngine(updateMode: .manual)
+    let pipeline = PHASESpatialPipeline(flags: .directPathTransmission)!
+    let mixer = PHASESpatialMixerDefinition(spatialPipeline: pipeline)
+    let sampler = PHASESamplerNodeDefinition(soundAssetIdentifier: "tone", mixerDefinition: mixer)
+    _ = try! engine.assetRegistry.registerSoundEventAsset(rootNode: sampler, identifier: "bye")
+    var first: Bool?
+    engine.assetRegistry.unregisterAsset(identifier: "bye") { first = $0 }
+    expect(first == true, "removed")
+    expect(engine.assetRegistry.asset(forIdentifier: "bye") == nil, "missing")
+    var second: Bool?
+    engine.assetRegistry.unregisterAsset(identifier: "bye") { second = $0 }
+    expect(second == false, "second reports false")
+}
+
 func testStringGlobalMetaParameter() {
     let engine = PHASEEngine(updateMode: .manual)
     let definition = PHASEStringMetaParameterDefinition(value: "hello", identifier: "tag")

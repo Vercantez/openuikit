@@ -2030,6 +2030,21 @@ public struct SparseMatrixStructureComplex {
         self.rowCount = 0
         self.rowIndices = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
     }
+    public init(
+        rowCount: Int32,
+        columnCount: Int32,
+        columnStarts: UnsafeMutablePointer<Int>,
+        rowIndices: UnsafeMutablePointer<Int32>,
+        attributes: SparseAttributesComplex_t,
+        blockSize: UInt8
+    ) {
+        self.rowCount = rowCount
+        self.columnCount = columnCount
+        self.columnStarts = columnStarts
+        self.rowIndices = rowIndices
+        self.attributes = attributes
+        self.blockSize = blockSize
+    }
 }
 
 public struct SparseMatrix_Complex_Double {

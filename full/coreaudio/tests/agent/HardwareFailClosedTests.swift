@@ -18,7 +18,7 @@ func testAudioObjectPropertyQueriesFailClosed() {
         mScope: kAudioObjectPropertyScopeOutput,
         mElement: kAudioObjectPropertyElementMain
     )
-    var settable = DarwinBoolean(true)
+    var settable = CoreAudio.DarwinBoolean(true)
     coreAudioExpect(
         AudioObjectIsPropertySettable(kAudioObjectSystemObject, &address, &settable)
             == kAudioHardwareUnsupportedOperationError,

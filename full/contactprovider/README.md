@@ -55,6 +55,27 @@ invalidation never report success.
 Implemented **90** of 99 exact IDs (9 `declared` async methods). Nondeferred
 count 99, above the leaf-full floor of 80.
 
+## Wave6 recount 2026-09-15
+
+Before **90** implemented / 9 declared / 0 deferred; after **90**
+implemented / 9 declared / 0 deferred (gain +0). The 9 leftover rows are
+all `async` (`ContactItemEnumerator` content/changes/invalidate,
+`ContactProviderManager` enable/disable/signalEnumerator/invalidate/reset,
+`ContactProviderExtension.invalidate`): the coverage contract forbids
+`await` (and semaphore/RunLoop waits) in cited tests, so no synchronous
+`test*()` can call those identifiers and they stay honestly `declared`.
+This slug has no SwiftUI View overlays, so the overlay override does not
+apply. Host-compat fix only: `ContactProviderLookalikes.swift` now gates
+the real Contacts/ExtensionFoundation imports on
+`(os(iOS) || os(Linux)) && canImport(...)` (NetworkExtension precedent) so
+the macOS Apple-SDK host type-checks against the isolation stand-ins;
+`ContactItem.swift` and `ContactProviderExtension.swift` carry the same
+gated imports for device-SDK builds. Linux semantics are unchanged. The
+sealed `tests/acceptance/test_host.sh` runner is Linux-only (`import
+Glibc`); on this Mac the product dylib plus all 73 cited `test*()`
+functions were compiled with the host `swiftc` and executed to the exact
+`CONTACTPROVIDER_AGENT_RUNTIME_OK` marker instead.
+
 Top-5 `implemented` evidence distribution:
 
 1. `testContactProviderErrorCases` — 11 rows (enum table)

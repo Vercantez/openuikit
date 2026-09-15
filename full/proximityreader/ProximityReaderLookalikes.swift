@@ -12,7 +12,13 @@ open class UIViewController: NSObject, @unchecked Sendable {
 }
 #endif
 
-#if !canImport(Contacts)
+#if canImport(Contacts)
+import Contacts
+// Agent tests construct and mutate postal addresses, so alias the mutable
+// Contacts subclass on Apple hosts. Linux (including the EC2 integration
+// build) has no Contacts module and uses the stand-in below.
+public typealias CNPostalAddress = CNMutablePostalAddress
+#else
 open class CNPostalAddress: NSObject, @unchecked Sendable {
     public var street: String = ""
     public var city: String = ""

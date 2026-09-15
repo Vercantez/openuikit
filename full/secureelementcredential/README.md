@@ -54,6 +54,10 @@ sheet, or presentment authorization UI.
   `preconditionIsolated`) are `declared`: they trap off-actor, and the
   sealed runner has no isolation hop.
 
+## Wave6 pass 2026-09-15
+
+Re-examined all 25 `declared` rows for sync conversion (before: 123 implemented / 25 declared / 7 unavailable / 0 not-applicable; after: unchanged, gain +0). All 22 non-isolation declared rows are `async`/`async throws` daemon, provisioning, wired, transceive, presentment, or `AsyncStream` APIs: the sealed runner forbids `await`, and hardware/daemon success stays fail-closed, so they remain `declared`. The 3 isolation witnesses trap off-actor with no isolation hop, so they remain `declared`. Overlay override checked: the sole SwiftUI `View.transactionTask` returns `some View` (not an identity `Self` no-op) and requires SwiftUI, and the three UIKit scene overlays require `UIScene`; with this Foundation-only seed they correctly stay `unavailable`. No product, coverage, or test changes.
+
 ## Depth pass 2026-09
 
 Fresh seed started at 0 implemented/declared. First host pass:

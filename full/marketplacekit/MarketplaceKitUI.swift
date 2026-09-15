@@ -1,4 +1,10 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(LocalAuthentication)
+import LocalAuthentication
+#endif
 
 /// System action button used by marketplace product pages.
 ///

@@ -653,3 +653,42 @@ func testSecureEnclaveMLKEMSurface() {
         preconditionFailure("SecureEnclave ML-KEM-1024 generate must fail closed")
     }
 }
+
+private struct CKUInt8AscendingComparator: SortComparator {
+    typealias Compared = UInt8
+    var order: SortOrder = .forward
+    func compare(_ lhs: UInt8, _ rhs: UInt8) -> ComparisonResult {
+        if lhs < rhs { return .orderedAscending }
+        if lhs > rhs { return .orderedDescending }
+        return .orderedSame
+    }
+}
+
+private func ckCheckSortedUsing<S: Sequence>(_ values: S) where S.Element == UInt8 {
+    let expected = values.sorted()
+    let single = values.sorted(using: CKUInt8AscendingComparator())
+    let multiple = values.sorted(using: [CKUInt8AscendingComparator()])
+    precondition(single == expected)
+    precondition(multiple == expected)
+}
+
+func testDigestSortedUsingComparator() {
+    ckCheckSortedUsing(SHA256.hash(data: Data("abc".utf8)))
+    ckCheckSortedUsing(SHA384.hash(data: Data("abc".utf8)))
+    ckCheckSortedUsing(SHA512.hash(data: Data("abc".utf8)))
+    ckCheckSortedUsing(SHA3_256.hash(data: Data("abc".utf8)))
+    ckCheckSortedUsing(SHA3_384.hash(data: Data("abc".utf8)))
+    ckCheckSortedUsing(SHA3_512.hash(data: Data("abc".utf8)))
+}
+
+func testAuthCodeNonceSortedUsingComparator() {
+    let mac = HMAC<SHA256>.authenticationCode(
+        for: Data("abc".utf8),
+        using: SymmetricKey(data: Data(count: 32))
+    )
+    ckCheckSortedUsing(mac)
+    ckCheckSortedUsing(try! AES.GCM.Nonce(data: ckData("030102000000000000000000")))
+    ckCheckSortedUsing(try! ChaChaPoly.Nonce(data: ckData("030102000000000000000000")))
+    ckCheckSortedUsing(Insecure.SHA1.hash(data: Data("abc".utf8)))
+    ckCheckSortedUsing(Insecure.MD5.hash(data: Data("abc".utf8)))
+}

@@ -524,6 +524,71 @@ on this Mac; its final stage is Linux-only (`import Glibc` in the generated
 runner). No product Swift or test files changed in this pass; the guest
 sources manifest is unchanged.
 
+## Depth pass 2026-09-15 (coremedia prompt: sync overlays / trampolines / recovered deferred)
+
+No SwiftUI/View overlay rows exist in this module's public surface (verified:
+zero `coverage.tsv` IDs mention SwiftUI or View), so the overlay-override clause
+has nothing to convert here. This pass converts the remaining honestly
+testable declared rows and recovers deferred rows that are pure in-process
+values, constants, or callbacks:
+
+- `CMSyncProtocol` (protocol + all 5 witnesses) exercised through a generic
+  `S: CMSyncProtocol` probe over `CMClock` and `CMTimebase`; `CMSync` +
+  `Error` statics; all 12 `CMClock` overlay members (`time`, `anchorTime()`,
+  `invalidate()`, both `mightDrift` overloads, `convertTime`, `rate`,
+  `rateAndAnchorTime`, `Error` + 3 statics); and the two Apple-labeled free
+  functions `CMTimebaseSetAnchorTime(_:timebaseTime:immediateMasterTime:)` /
+  `CMTimebaseSetRateAndAnchorTime(_:rate:anchorTime:immediateMasterTime:)`
+  (new same-behavior overloads; the port's primary spelling keeps
+  `immediateSourceTime:`). Synchronous, no run loop, no dispatch.
+- Init trampolines: all 4 `CMTimebase` inits, `CMBufferQueue(capacity:handlers:)`,
+  `CMSimpleQueue(capacity:)`, the 3 `init(referencing:)` C-bridged inits, and 8
+  new throwing `CMBlockBuffer` overlay inits (`capacity`, `buffer:allocator:` /
+  `buffer:deallocator:` over pointer and slice, `length:allocator:range:`,
+  `length:allocator:deallocator:range:`, generic `bufferReference:`). Linux
+  copies into one contiguous buffer; capacity only reserves; the custom
+  deallocator runs after copy-in, mirroring the custom-block-source flow.
+- `CMBlockBufferCustomBlockSource` fields + both inits, exercised through
+  `CMBlockBufferCreateWithMemoryBlock` (copy-in then free).
+- 24 remaining `c:@T@` host-type rows named, annotated, and equated;
+  `CMBufferQueue.T` / `TriggerToken` / `CMSimpleQueue.T` aliases.
+- `CMBufferQueue.Buffers` Sequence algorithms (31 witnesses: search, transform,
+  fold, prefix/suffix/drop, sort/min/max, equality/prefix/lexicographic
+  predicates, split, lazy, estimated count, contiguous-storage default,
+  deterministic shuffle-shape checks). Foundation `sorted(using:)` / `compare` /
+  `formatted`, Combine `publisher`, and the deprecated optional-`flatMap`
+  (warning under `-warnings-as-errors`) stay declared.
+- Deferred recoveries with Apple oracle values (Xcode macOS SDK 26.1 probe
+  2026-09-15): `kCMMediaType_AuxiliaryPicture` (`'auxv'`), 8 image/sound
+  description-flavor family statics, `kCMTagProjectionTypeHalfEquirectangular`
+  (category `'proj'`, value `'hequ'`), `CMBufferValidationCallback/Handler`
+  (accept/reject validator round-trip on a live queue), pure value type
+  `CMSampleDataReference` (URL + byte offset, Hashable), and overlay
+  `CMSampleBuffer.setDataBuffer(_:)` over the existing free function.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3003 | 3129 |
+| declared | 237 | 131 |
+| deferred | 264 | 244 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +126 (106 declared, 20 deferred). Top test still
+`CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (5.8%). No test owns more than 40% of implemented rows. New tests own
+26 + 36 + 31 + 13 + 20 rows respectively. Verified on this Mac:
+`FRAMEWORK_FANOUT_DELIVERABLE_OK` via the shared validator, product plus all
+30 test files compile warnings-clean, and a macOS runner over the 5 new tests
+prints marker-only stdout (`COREMEDIA_MACOS_PROBE_OK`, ObjC duplicate-class
+notes on stderr from the system `libswiftCoreMedia.dylib`, as in prior passes).
+The sealed gate's final stage remains Linux-only (`import Glibc` in the
+generated runner). Leftover deferred rows still need CoreAudioTypes/CoreVideo
+(audio/image sample paths, tagged-dynamic pixel content, parameter-set and
+single-sample collections), `simd`, DispatchSource timers (aborts libdispatch
+in the sealed gate), or hardware/daemons. No Apple service or hardware success
+was invented.
+
 ## Depth pass 2026-09-15 (coremedia prompt: witnesses / block-buffer / keep-list)
 
 Audit result: no declared Hashable/Equatable/OptionSet/NewtypeWrapper witnesses

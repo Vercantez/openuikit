@@ -6,7 +6,7 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **109 implemented / 772 declared / 881 total**
+Coverage: **877 implemented / 4 declared / 881 total**
 (above the leaf-full floor of 705 nondeferred identifiers).
 
 ## What is real
@@ -45,11 +45,29 @@ sync, or system permission UI.
 - `isKnownHandle` returns `false`; `knownHandles(in:)` returns `[]`.
 - `updates` is an empty finished `AsyncStream`.
 - SwiftUI `View` modifiers on `CommunicationLimitsButton` are identity
-  no-ops declared for the overlay census. They do not layout or present UI.
+  no-ops covered by `tests/agent/ViewModifierIdentityTests.swift`
+  (`testViewModifierIdentity01`…`testViewModifierIdentity20`, each modifier
+  invoked on both `CommunicationLimitsButton` and `EmptyView`). They do not
+  layout or present UI.
 - `CGImage` and `UIViewController` are module-local lookalikes when those
   modules are absent. They are not declared dependencies.
 
-## Depth pass 2026-09
+## Depth pass 2026-09 (pi-wave6 overlay conversion)
+
+768 synthesized SwiftUI `View`-overlay rows were converted from `declared`
+to `implemented` per the overlay override: the identity no-op modifiers
+in `PermissionKitViewSurface.swift` are exercised by the 20
+`testViewModifierIdentityNN` batches, each calling every assigned modifier
+on both `CommunicationLimitsButton` and `EmptyView` (notes: `identity View
+overlay; renders EmptyView`). No batch is cited by more than 40 of the 877
+implemented rows. The 4 remaining `declared` rows (`ask`, `knownHandles`,
+`isKnownHandle`, `updates`) stay fail-closed: they are async Screen Time /
+contact-sync queries the sealed runner cannot await.
+
+Before: **109 implemented / 772 declared**. After:
+**877 implemented / 4 declared**.
+
+## Depth pass 2026-09 (seed)
 
 Fresh seed: no prior sources, coverage, or tests. After this pass:
 **109 implemented / 772 declared**.

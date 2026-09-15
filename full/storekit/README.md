@@ -547,3 +547,50 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 STOREKIT_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=StoreKit dylib=libStoreKit.dylib
 ```
+
+## Depth pass 12 (pi wave-6 storekit overlay conversion)
+
+Overlay conversion over the depth-pass-11 tree. All 6,347 leftover
+`s:7SwiftUI4View…` synthesized modifier specializations (215 base
+names × ~17 `_StoreKit_SwiftUI` view types) are now `implemented`
+via the FamilyControls/DeviceDiscoveryUI identity-overlay playbook:
+
+- New product file `StoreKitViewOverlayIdentity.swift` (listed in
+  `storekit_guest_sources.txt`) adds one public no-op identity
+  overload per base name,
+  `public func <name>(_ p0: Any? = nil) -> Self { self }`,
+  compiled only when SwiftUI is absent. Existing specific-signature
+  overloads in `StoreKitViewSurface.swift` are untouched, so all
+  prior `declared` anchors keep resolving and no existing call site
+  changes meaning.
+- New `tests/agent/StoreKitViewOverlayTests.swift` defines 16
+  top-level synchronous no-argument `testViewOverlayBatchNN`
+  functions. Each batch calls its ~13-15 assigned base names on
+  `ProductView<EmptyView, EmptyView>`, `StoreView<EmptyView,
+  EmptyView>`, `SubscriptionStoreButton`, and `EmptyView` (4 calls
+  per modifier, no `await` / `DispatchQueue.main` / `RunLoop` /
+  semaphores). Zero-argument calls resolve to the new safe identity
+  overloads, never to the `fatalError` `ModifiedContent` legacy
+  overloads that require arguments.
+- Every converted row cites its batch test with note `identity View
+  overlay; renders EmptyView`.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before overlay conversion | 1830 | 6399 | 165 | 0 | 7301 |
+| after overlay conversion | 8177 | 52 | 165 | 0 | 7301 |
+
+Nondeferred stays **8229** (floor 7848): every converted row stays
+nondeferred. Unique `implemented` evidence tests: 168. Largest new
+evidence cites 408 rows (5.0% of 8177); no cited test covers more
+than 40% of implemented rows. Leftover `declared` (52) is non-overlay:
+StoreKit-owned async Apple-service entry points the synchronous
+harness cannot execute, async-sequence witnesses,
+dependency-owned `StoreDownloaderExtension`, and CryptoKit `P256`
+JWS `signature` fields. Leftover `deferred` (165) is unchanged:
+Optional/Never `StoreContent` witnesses, `SwiftUI.Transaction`
+collisions, Foundation `FormatStyle` synthesis, async
+`EntitlementTaskState.map`/`flatMap`, and `PurchaseAction`
+`callAsFunction` overloads. Apple Pay / purchase success stays
+fail-closed. The sealed host gate is
+`bash full/storekit/tests/acceptance/test_host.sh`.

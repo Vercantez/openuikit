@@ -8,6 +8,17 @@ that integration is a separate central review step.
 Coverage: **284 implemented / 65 declared / 0 not-applicable / 349 total**
 (349 nondeferred, above the medium-full floor of 175).
 
+Wave-6 audit (2026-09-15): recounted **284 implemented / 65 declared /
+0 deferred / 0 not-applicable / 349 total** — unchanged. All 65 declared
+rows are `async` (18 DockKit hardware/camera commands and iterator `next()`
+methods plus 47 synthesized stdlib `AsyncSequence`/`AsyncIteratorProtocol`
+witnesses such as `next`, `allSatisfy`, `max`, `min`, `first`, `reduce`, and
+`contains`). They cannot move to `implemented`: the sealed runner is
+synchronous with no `await`, `DispatchQueue.main`, `RunLoop`, or semaphore
+waits allowed in cited tests, and hardware/daemon success stays fail-closed.
+No SwiftUI View overlay rows exist in this surface, so the overlay-conversion
+playbook does not apply. Implemented gain this wave: 0.
+
 ## What is real
 
 - `DockKitError` cases in API-digester order (`notSupported` …

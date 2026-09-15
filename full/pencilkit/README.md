@@ -46,7 +46,7 @@ Apple drawing bytes stay fail-closed.
 
 ## Coverage
 
-443 public precise identifiers: 424 `implemented`, 17 `declared`, 2
+443 public precise identifiers: 432 `implemented`, 9 `declared`, 2
 `unavailable`. The leaf-full floor is 355 nondeferred.
 
 A future EC2 run must build guest Foundation and UIKit first and run
@@ -57,7 +57,7 @@ run.
 ## Depth pass 2026-09
 
 Fresh seed: sources, `coverage.tsv`, and `tests/agent` were created in this
-run. Implemented count: **424**.
+run. Implemented count: **432**.
 
 Top-5 evidence distribution (424 implemented rows):
 

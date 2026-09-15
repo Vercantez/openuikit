@@ -7,6 +7,8 @@ public var kCMMediaType_Subtitle: CMMediaType { cmFourCC("sbtl") }
 public var kCMMediaType_TimeCode: CMMediaType { cmFourCC("tmcd") }
 public var kCMMediaType_Metadata: CMMediaType { cmFourCC("meta") }
 public var kCMMediaType_TaggedBufferGroup: CMMediaType { cmFourCC("tbgr") }
+/// Apple oracle 2026-09-15 (Xcode macOS SDK 26.1): 'auxv' (0x61757876).
+public var kCMMediaType_AuxiliaryPicture: CMMediaType { cmFourCC("auxv") }
 
 public var kCMVideoCodecType_422YpCbCr8: CMVideoCodecType { cmFourCC("2vuy") }
 public var kCMVideoCodecType_Animation: CMVideoCodecType { cmFourCC("rle ") }

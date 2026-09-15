@@ -7,7 +7,7 @@ tiles, directions, local search, Look Around, and snapshotter **success**
 fail closed with `MKError`.
 
 Before: **411 implemented / 73 declared / 669 deferred**.
-After: **1111 implemented / 38 declared / 4 deferred**.
+After: **1145 implemented / 4 declared / 4 deferred**.
 
 ## What is real on the isolated Linux host
 
@@ -43,8 +43,11 @@ After: **1111 implemented / 38 declared / 4 deferred**.
 - Completer: nonempty `queryFragment` → `completer(_:didFailWithError:)`.
 - Map tiles: blank `MKMapView` background; `MKTileOverlay.loadTile(at:)`
   is **declared** (async, no tile bytes).
-- Unused `MKMapViewDelegate` / Look Around delegate defaults are **declared**.
-- Async `openInMaps(from:)` / snapshot `start(with:)` are **declared**.
+- `MKMapViewDelegate` / Look Around / completer / map-item-detail delegate
+  defaults are **implemented** (synchronous default no-op/spy tests in
+  `tests/agent/MapKitDelegateTests.swift`).
+- Async `openInMaps(from:)` / snapshot `start(with:)` / tile `loadTile(at:)`
+  are **declared** (async; isolated host tests are synchronous).
 
 ## Deferred (4)
 

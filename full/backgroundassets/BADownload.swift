@@ -37,7 +37,7 @@ extension BADownload {
 /// A scheduled or in-flight background download. Linux never starts Apple's
 /// download daemon; instances are local values.
 open class BADownload: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-    public static var supportsSecureCoding: Bool { true }
+    public class var supportsSecureCoding: Bool { true }
 
     public fileprivate(set) var identifier: String
     public fileprivate(set) var uniqueIdentifier: String
@@ -217,6 +217,8 @@ open class BAURLDownload: BADownload, @unchecked Sendable {
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+
+    public override class var supportsSecureCoding: Bool { true }
 
     open override func removingEssential() -> Self {
         guard let request else {

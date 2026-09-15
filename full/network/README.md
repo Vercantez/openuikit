@@ -403,3 +403,94 @@ Top-5 `implemented` evidence distribution (of 2763):
 5. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (3.1%)
 
 No non-exempt test is cited by more than 40% of implemented rows.
+
+## Depth pass 2026-09-15 (deferred witness sweep)
+
+Before: **2763 implemented / 20 declared / 264 deferred / 0 unavailable /
+0 not-applicable** (2783 nondeferred).
+
+Zero `View` overlay rows exist in this framework, so the overlay override
+does not apply. All 20 `declared` rows are `async` (`NetworkChannel`
+send/receive/ping/pong/close plus `NWPathMonitor.Iterator.next()`) and
+cannot be cited by a synchronous sealed test, so they stay declared.
+
+This pass converts the deferred rows a synchronous in-process test can
+actually call, demangling each precise ID first so every citation names a
+call the test really performs:
+
+- 12 `Hashable.hashValue` witnesses now cite the existing
+  `testNetworkHashValueWitnesses`, which hashes each of those values.
+- 29 typed-overlay associated types (`BelowProtocol` / `ProtocolStorage` /
+  `ContentType` / `LegacyMessage` across `TCP`/`UDP`/`IP`/`TLS`/`QUIC`/
+  `QUICStream`/`QUICDatagram`/`WebSocket`/`Framer`/`Coder`) cite the
+  existing `testTypedProtocolAssociatedTypes`, which names each one and
+  was previously cited by zero rows. The 6 overlay protocols
+  (`OneToOne`/`Stream`/`Message`/`Datagram`/`Multiplex`/`Connectable`)
+  cite `testTypedProtocolHierarchy` the same way.
+- `NWTXTRecord.SubSequence`, `Bonjour.Endpoint.ID`, `NetworkChannel.ID`,
+  the listener/browser `StateUpdateHandler` aliases,
+  `NetworkFixedWidthInteger` + `bigEndian`, the JSON/property-list
+  coder witnesses, `NetworkEncoder.encode`, and the sync TLV
+  `sendIdempotent` cite their matching existing tests.
+- `NWTXTRecord.Index` comparison and range operators (`>`, `>=`, `<=`,
+  postfix/prefix/infix `...`) cite the extended
+  `testNWTXTRecordIndexComparable`, which now also slices with
+  `...`/`..<` ranges.
+- 21 already-exercised `Sequence`/`Collection` witnesses plus
+  `makeIterator` cite the collection and dictionary round-trip tests;
+  30 more cite the new `testNWTXTRecordSequenceWitnessBatch`
+  (compactMap, elementsEqual, lexicographicallyPrecedes, contiguous
+  storage, min/max, lazy, count(where:), filter, reduce, starts(with:),
+  flatMap-sequence, forEach, reversed, shuffled, randomElement,
+  underestimatedCount, drop(while:)/dropLast, formIndex variants,
+  indices, RangeSet removal, trimmingPrefix).
+- 25 `NWBrowser.Result.Change.Flags` witnesses cite the new
+  `testBrowserFlagsSetAlgebraWitnesses`.
+- 2 `NWEndpoint.Host` literal witnesses cite the new
+  `testNWEndpointHostLiteralWitnesses`, which calls both initializers
+  directly.
+- 56 Foundation `BinaryInteger` format/parse witnesses cite the new
+  `testIntegerFormatStyleParseWitnesses` (exact- and cross-width
+  `formatted(_:)`, three `init(_:format:lenient:)` shapes, two
+  `init(_:strategy:)` shapes, round-tripped for all eight widths).
+- `TLS.certificateValidator` / `QUIC.TLS.certificateValidator` are
+  synchronous builder stores (the async closure value is never invoked
+  on Linux) and cite the new `testTLSCertificateValidatorBuilders`.
+- `NWGroupDescriptor.members` / `NWMultiplexGroup.members` are new
+  fail-closed product API (multiplex reports its wrapped endpoint) cited
+  by `testGroupDescriptorMembers`. `NWProtocolWebSocket.Options`
+  `setClientRequestHandler` and `Metadata.setPongHandler` are new
+  store-only product API cited by `testWebSocketHandlerSetters`.
+  `NWProtocolDefinition.!=` cites `testProtocolDefinitionInequality`.
+
+One investigated row stays deferred: the deprecated optional-returning
+`Sequence.flatMap` witness cannot be called under warnings-as-errors.
+The deprecated call was removed from the batch test.
+
+After: **2974 implemented / 20 declared / 53 deferred / 0 unavailable /
+0 not-applicable** (2994 nondeferred). Implemented gain **+211**.
+
+Top-5 `implemented` evidence distribution (of 2974):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (6.4%)
+2. `NetworkCAPITests.swift#testCObjectTypealiasesAndOSProtocols` — 113 (3.8%)
+3. `NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses` — 96 (3.2%)
+4. `NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses` — 88 (3.0%)
+5. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (2.9%)
+
+No non-exempt test is cited by more than 40% of implemented rows
+(largest share 191/2974 = 6.4%).
+
+Verification on this Mac (Xcode 26.1): the shared deliverable and
+reference phases pass (`FRAMEWORK_FANOUT_DELIVERABLE_OK`,
+`FRAMEWORK_FANOUT_REFERENCE_OK`), the product compiles warning-clean,
+and all 21 new or re-cited tests run green with the runtime marker.
+The sealed `test_host.sh` runner itself imports `Glibc` and targets
+Linux, so the full gate must run on Linux; on macOS the pre-existing
+`testIPv6AddressParsing` zone assertion fails identically with and
+without this change (macOS names loopback `lo0`, the test fixtures
+Linux `lo`), and the host runner links the system Network framework.
+Remaining deferred rows are async-only APIs, unconstructible multicast
+state, declarations with no source-compatible form, stdlib/Combine/
+Foundation witnesses with no in-process behavior, and one deprecated
+witness.

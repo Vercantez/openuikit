@@ -462,3 +462,32 @@ Top-5 evidence distribution for the 113 newly implemented rows:
 5. `testLAOracleHintAttributeValues` — 11 (9.7%) — LA hint/attribute raw values
 
 Largest test is 16/113 = 14.2%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. All 208 agent tests pass together and the 11 touched tests pass in isolation on macOS. Complex sparse, `SparseIterate`, `SparseConvertFromOpaque`, BNNS graph execute, and vImage CG/CV paths stay declared/deferred/fail-closed.
+
+## Depth pass 2026-09-15 (complex sparse fail-closed, split-complex structs)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Promotes the remaining portable complex sparse C entry points from declared stubs to fail-closed implemented behavior, plus split-complex/DSP value construction already present in the sources:
+
+- 108 complex `Sparse*` overloads: 32 void `SparseSolve`, 20 `SparseMultiply` + 4 `SparseMultiplyAdd` (empty no-ops), 12 `SparseFactor` + 2 `SparseCreatePreconditioner` + 2 `SparseCreateSubfactor` (empty defaults), 8 `SparseCleanup` + 4 `SparseRetain`, 8 `SparseRefactor`, 6 `SparseGetTranspose` + 6 `SparseGetConjugateTranspose`, 2 `SparseUpdateFactor`, 2 `SparseGetStateSize_*` (zero, matching the documented no-iterate-state divergence). Status-returning complex solve/iterate overloads were already implemented as `SparseIterativeParameterError`.
+- 18 complex struct types (`DSPComplex`, `DSPDoubleComplex`, `DSPSplitComplex`, `DSPDoubleSplitComplex`, dense/sparse complex matrices and vectors, complex attributes/structure/factorization/subfactor/preconditioner).
+- 31 value-construction rows: complex memberwise/default inits, `DSPSplitComplex`/`DSPDoubleSplitComplex` `fromInputArray` deinterleave, `DSPDoubleSplitComplex(realp:imagp:)`, `vDSP_SplitComplexFloat/Double` structs and `SplitComplex` aliases, split-complex DFT marker structs, and the `DiscreteFourierTransformFunctions`/`FFTFunctions` typealiases.
+- Product changes: `SparseMatrixStructureComplex` gains the memberwise `init(rowCount:columnCount:columnStarts:rowIndices:attributes:blockSize:)` mirroring real `SparseMatrixStructure` (its precise ID was declared but had no declaration); the empty public marker structs `vDSP_SplitComplexFloat`, `vDSP_SplitComplexDouble`, `vDSP.DFTSinglePrecisionSplitComplexFunctions`, and `vDSP.DFTDoublePrecisionSplitComplexFunctions` gain `public init()`.
+- Overlay note: this slug contains no SwiftUI `View` types and no `SwiftUI` references in coverage, so the View-overlay batch clause is vacuous here; the FamilyControls/DeviceDiscoveryUI overlay playbook was reviewed and there is nothing to convert.
+
+- Implemented before: **4404**
+- Implemented after: **4561**
+- Declared before: **1197**
+- Declared after: **1040**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **157**
+
+Top-5 evidence distribution for the 157 newly implemented rows:
+
+1. `testSparseComplexSolve` — 32 (20.4%) — void complex factor/subfactor solve arities
+2. `testSparseComplexStructInits` — 31 (19.7%) — complex memberwise/default inits and split-complex helpers
+3. `testSparseComplexMultiply` — 28 (17.8%) — complex multiply/multiply-add plus dense complex structs
+4. `testSparseComplexRefactorTranspose` — 24 (15.3%) — complex refactor/transpose/conjugate-transpose/update/state-size
+5. `testSparseComplexCleanupRetain` — 20 (12.7%) — complex cleanup/retain plus opaque complex structs
+
+Largest test is 32/157 = 20.4%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. All 224 agent tests pass together and the 7 touched tests pass in isolation on macOS. Complex `SparseIterate`, `SparseConvertFromOpaque`, complex `SparseConvertFromCoordinate`, and complex `SparseGetInertia` stay declared; `SparseIterate` (any precision), BNNS graph execute, and vImage CG/CV paths stay declared/deferred/fail-closed.

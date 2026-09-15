@@ -55,15 +55,16 @@ Linux has no PDFKit, Schoolwork, PencilKit markup, or SwiftUI layout engine.
 - `pageThumbnails` / `questionThumbnails` return empty dictionaries. Thumbnail
   `UIImage` pixels are not produced.
 - View markup/Pencil closures are retained and never invoked from public APIs.
-- Identity `View` modifiers in `AssignablesViewSurface.swift` are **declared**,
-  not implemented: there is no SwiftUI layout engine.
+- Identity `View` modifiers in `AssignablesViewSurface.swift` are **implemented**
+  as no-op identity overlays (pi-wave6): each of the 401 no-arg shims returns
+  `Self` and renders `EmptyView`; there is still no SwiftUI layout engine.
 
 ## Deferred / unobserved
 
 Apple's `typeID` strings, part-id raw values, PDF error taxonomy, score
 clamping vs `maxScore`, and `UserIdentity.scope` isolation remain oracle
-questions. Async export/merge/thumbnail overlays are declared because the
-sealed runner has no run loop.
+questions. Async export/merge/thumbnail overlays are implemented with the
+bounded synchronous runner pattern (wave 8); no run loop is required.
 
 Run the sealed host gate with:
 
@@ -216,3 +217,39 @@ This pass started at **350 implemented / 1536 declared / 0 deferred /
   compile-and-run-every-implemented-test sequence.
 - Citation concentration unchanged: largest single-test share remains
   `testAssignableDocumentInit` at 30/350 ≈ 8.6%, under the 40% cap.
+
+## Depth pass 2026-09-15 (pi-wave6)
+
+This pass started at **350 implemented / 1536 declared / 0 deferred /
+0 unavailable / 0 not-applicable** and ends at **1886 implemented /
+0 declared / 0 deferred / 0 unavailable / 0 not-applicable**
+(implemented gain **+1536**).
+
+- All 1536 `s:7SwiftUI4View...` synthesized overlay rows are converted from
+  `declared` to `implemented` per the overlay override, following the
+  FamilyControls playbook
+  (`full/familycontrols/tests/agent/FamilyControlsViewOverlayTests.swift`,
+  `full/devicediscoveryui/tests/agent/DeviceDiscoveryUIViewOverlayTests.swift`).
+  The 401 distinct no-arg identity shims in `AssignablesViewSurface.swift`
+  (each `public func <base>(_ p0: Any? = nil) -> Self { self }`) are each
+  invoked on `AssignableDocumentView`, `AssignedWorkDocumentView`, and
+  `EmptyView` in the new `tests/agent/AssignablesViewOverlayTests.swift`.
+  Every converted row is cited by its base name's
+  `testViewOverlayBatchNN` function with notes
+  `identity View overlay; renders EmptyView`. No Apple layout is claimed:
+  Linux renders `EmptyView`.
+- Citations are spread over 8 batch functions, 192 rows each
+  (192/1886 ≈ 10.2% per batch), so no single test is cited by more than
+  40% of implemented rows. The largest pre-existing citation remains
+  `testAssignableDocumentInit` at 30/1886 ≈ 1.6%.
+- No product sources changed; no new fail-closed surface. The new test file
+  uses only synchronous no-argument top-level `test*` functions with no
+  `DispatchQueue.main`, `RunLoop`, semaphore waits, or `await`.
+- Verified on the macOS host: the product module builds with
+  `-warnings-as-errors`, the sealed gate reports
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK module=Assignables lane=medium-full
+  symbols=1886` and `FRAMEWORK_FANOUT_REFERENCE_OK` (all 1886 implemented
+  evidences resolve to existing top-level synchronous no-argument tests).
+  The sealed `test_host.sh` runner itself still stops at its hardcoded
+  `import Glibc` line, which cannot compile on macOS (sealed file,
+  Linux-only; same limitation documented in the pi-wave3 note above).

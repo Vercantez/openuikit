@@ -9,7 +9,9 @@ split, not as an extra Apple framework. `ExtensionFoundation.AppExtension`,
 UIKit, and LocalAuthentication are not imported: this module does not publish
 those foreign types as if they were Darwin's. When UIKit / CoreGraphics /
 LocalAuthentication cannot be imported, module-local stand-ins let the
-`_MarketplaceKit_UIKit` overlay compile.
+`_MarketplaceKit_UIKit` overlay compile. On hosts where CoreGraphics /
+LocalAuthentication exist (macOS), the overlay imports them conditionally so
+`CGSize.zero` and the real `LAContext` resolve; Linux behavior is unchanged.
 
 Linux has no alternative-distribution install daemon, no Core Technology
 Commission token service, no marketplace entitlement, and no age-exception

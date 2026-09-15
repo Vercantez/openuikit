@@ -102,8 +102,11 @@ public final class PHASESoundEvent: NSObject {
     }
 
     public func seek(to time: Double) async -> SeekHandlerReason {
-        _ = time
-        return .failure
+        hostSeekFailure(to: time)
+    }
+
+    public func seek(to time: Double, completion handler: ((SeekHandlerReason) -> Void)? = nil) {
+        handler?(hostSeekFailure(to: time))
     }
 
 #if canImport(AVFAudio)

@@ -146,7 +146,7 @@ open class AVVideoCompositionCoreAnimationTool: NSObject, @unchecked Sendable {
   public struct Configuration: Sendable {
     public init() {}
   }
-  convenience init(configuration: sending AVVideoCompositionCoreAnimationTool.Configuration) { self.init() }
+  public convenience init(configuration: sending AVVideoCompositionCoreAnimationTool.Configuration) { self.init() }
 }
 
 open class AVVideoCompositionInstruction: NSObject, AVVideoCompositionInstructionProtocol, @unchecked Sendable {
@@ -166,7 +166,7 @@ open class AVVideoCompositionInstruction: NSObject, AVVideoCompositionInstructio
       self.timeRange = timeRange
     }
   }
-  convenience init(configuration: AVVideoCompositionInstruction.Configuration) {
+  public convenience init(configuration: AVVideoCompositionInstruction.Configuration) {
     self.init()
     timeRange = configuration.timeRange
     backgroundColor = configuration.backgroundColor

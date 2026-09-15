@@ -132,7 +132,7 @@ c:objc(cs)PHASEAssetRegistry(im)registerGlobalMetaParameter:error:	implemented	t
 c:objc(cs)PHASEAssetRegistry(im)registerSoundAssetAtURL:identifier:assetType:channelLayout:normalizationMode:error:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
 c:objc(cs)PHASEAssetRegistry(im)registerSoundAssetWithData:identifier:format:normalizationMode:error:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
 c:objc(cs)PHASEAssetRegistry(im)registerSoundEventAssetWithRootNode:identifier:error:	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistrySoundEventAsset	linux behaviour
-c:objc(cs)PHASEAssetRegistry(im)unregisterAssetWithIdentifier:completion:	declared	source:full/phase/PHASEAssets.swift#PHASEAssetRegistry	Async-only API; isolated host tests cannot await (no run loop).
+c:objc(cs)PHASEAssetRegistry(im)unregisterAssetWithIdentifier:completion:	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryUnregisterCompletion	sync completion-handler spelling shares the ObjC selector; async spelling retained and delegates to the same host core
 c:objc(cs)PHASEAssetRegistry(py)globalMetaParameters	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
 c:objc(cs)PHASEBlendNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
 c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesAbove:fullGainAtValue:fadeCurveType:subtree:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
@@ -378,7 +378,7 @@ c:objc(cs)PHASESoundEvent(im)pause	implemented	test:full/phase/tests/agent/PHASE
 c:objc(cs)PHASESoundEvent(im)prepareWithCompletion:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
 c:objc(cs)PHASESoundEvent(im)resume	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPauseResumeStop	linux behaviour
 c:objc(cs)PHASESoundEvent(im)resumeAtTime:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
-c:objc(cs)PHASESoundEvent(im)seekToTime:completion:	declared	source:full/phase/PHASESoundEvent.swift#PHASESoundEvent	Async-only API; isolated host tests cannot await (no run loop).
+c:objc(cs)PHASESoundEvent(im)seekToTime:completion:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventSeekCompletion	sync completion-handler spelling shares the ObjC selector; async spelling retained and delegates to the same fail-closed core
 c:objc(cs)PHASESoundEvent(im)seekToTime:resumeAtEngineTime:completion:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
 c:objc(cs)PHASESoundEvent(im)startAtTime:completion:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
 c:objc(cs)PHASESoundEvent(im)startWithCompletion:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour

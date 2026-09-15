@@ -1388,6 +1388,7 @@ public enum vDSP {
     public struct DFTDoublePrecisionInterleavedFunctions {
     }
     public struct DFTDoublePrecisionSplitComplexFunctions {
+        public init() {}
     }
     public enum DFTError: Swift.Error, Equatable, Hashable {
         case invalidInterleavedCount(count: Int)
@@ -1404,6 +1405,7 @@ public enum vDSP {
     public struct DFTSinglePrecisionInterleavedFunctions {
     }
     public struct DFTSinglePrecisionSplitComplexFunctions {
+        public init() {}
     }
     public enum DFTTransformType: Equatable, Hashable {
         case complexReal
@@ -1483,10 +1485,12 @@ public enum vDSP {
 }
 
 public struct vDSP_SplitComplexDouble {
+    public init() {}
     public typealias SplitComplex = DSPDoubleSplitComplex
 }
 
 public struct vDSP_SplitComplexFloat {
+    public init() {}
     public typealias SplitComplex = DSPSplitComplex
 }
 

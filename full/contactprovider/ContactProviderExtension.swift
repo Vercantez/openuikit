@@ -1,4 +1,7 @@
 import Foundation
+#if (os(iOS) || os(Linux)) && canImport(ExtensionFoundation)
+import ExtensionFoundation
+#endif
 
 /// The extension `@main` class implements this protocol.
 ///

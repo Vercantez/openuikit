@@ -77,10 +77,12 @@ real; presentation, provisioning, and PKCS#7 verification fail closed.
   does not request documents (async path throws / returns `false`).
 - **SwiftUI overlay.** `PayWithApplePayButton`, `AddPassToWalletButton`,
   `PayLaterView`, and related labels/styles construct as inert `View`
-  values. Synthesized `s:7SwiftUI4View…` members stay `declared` (identity
-  no-ops) with note `SwiftUI cross-import overlay; owned by the SwiftUI lane`;
-  they are never `implemented`. Relabeling all 3904 of those rows
-  `not-applicable` would drop nondeferred coverage below the sealed 2637 floor.
+  values. All 3904 synthesized `s:7SwiftUI4View…` members are `implemented`
+  as identity no-ops (note `identity View overlay; renders EmptyView`):
+  `PassKitViewSurface.swift` exposes one `(_ p0: Any? = nil) -> Self` member
+  per modifier base name, and `tests/agent/PassKitViewOverlayTests.swift`
+  (`testViewOverlayBatch01`–`testViewOverlayBatch10`, ~390 rows / ~7.4% each)
+  invokes each modifier on all five overlay views plus `EmptyView`.
 
 ## Fail-closed / not observed here
 
@@ -147,6 +149,31 @@ Top-5 evidence distribution (1320 implemented rows):
 No non-enum/option-set test is cited by more than 40% of the remaining
 implemented rows. The focused nested-payment-request test now supports 25 rows
 (1.7%).
+
+## Depth pass 2026-09 (pi wave 6)
+
+Coverage **before** this continuation: 1369 implemented / 3904 declared / 0
+deferred / 0 unavailable / 0 not-applicable.
+
+Coverage **after**: 5273 implemented / 0 declared / 0 deferred / 0 unavailable /
+0 not-applicable (implemented gain +3904).
+
+This continuation converts all 3904 `s:7SwiftUI4View…` cross-import overlay
+synthetics from `declared` to `implemented` per the wave 6 overlay OVERRIDE,
+using the FamilyControls/DeviceDiscoveryUI playbook. `PassKitViewSurface.swift`
+is rewritten from 589 generic multi-argument overloads to 411 single-optional
+`(_ p0: Any? = nil) -> Self` identity members (one per modifier base name),
+so zero-argument identity calls compile. The new
+`tests/agent/PassKitViewOverlayTests.swift` defines `testViewOverlayBatch01`
+through `testViewOverlayBatch10`, each invoking its assigned modifiers on all
+five overlay views (`PayWithApplePayButton`, `AsyncShareablePassConfiguration`,
+`AddPassToWalletButton`, `VerifyIdentityWithWalletButton`, `PayLaterView`)
+plus `EmptyView` (notes `identity View overlay; renders EmptyView`). Rows are
+balanced greedily across the ten batches (387–391 rows each, ~7.4% max share,
+far below the 40% ceiling). New tests are purely synchronous with no
+`DispatchQueue.main`, `RunLoop`, semaphore, or `await` use. Apple Pay
+presentation, eligibility, provisioning, secure-element, identity-document,
+and remote Wallet operations remain fail-closed. No leftover `deferred` rows.
 
 ## Depth pass 2026-09 (pi wave 3)
 

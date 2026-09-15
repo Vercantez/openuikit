@@ -87,6 +87,19 @@ func testSoundEventIndefiniteLoop() {
     expect(event.isIndefinite, "looping is indefinite")
 }
 
+func testSoundEventSeekCompletion() {
+    let engine = PHASEEngine(updateMode: .manual)
+    let pipeline = PHASESpatialPipeline(flags: .directPathTransmission)!
+    let mixer = PHASESpatialMixerDefinition(spatialPipeline: pipeline)
+    let sampler = PHASESamplerNodeDefinition(soundAssetIdentifier: "tone", mixerDefinition: mixer)
+    _ = try! engine.assetRegistry.registerSoundEventAsset(rootNode: sampler, identifier: "seekcb")
+    let event = try! PHASESoundEvent(engine: engine, assetIdentifier: "seekcb")
+    var reason: PHASESoundEvent.SeekHandlerReason?
+    event.seek(to: 0.5) { reason = $0 }
+    expect(reason == .failure, "seek fail-closed")
+    expect(event.renderingState == .stopped, "still stopped")
+}
+
 func testSoundEventHostSeekFailure() {
     let engine = PHASEEngine(updateMode: .manual)
     let pipeline = PHASESpatialPipeline(flags: .directPathTransmission)!

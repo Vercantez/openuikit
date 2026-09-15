@@ -76,3 +76,13 @@ func testEventStreamThrowingFlatMap() {
     let flat: AsyncThrowingFlatMapSequence<CardSession.EventStream, CardSession.EventStream> = stream.flatMap { (_: CardSession.Event) throws -> CardSession.EventStream in CardSession.EventStream() }
     _ = flat
 }
+
+func testEventStreamFlatMapNeverFailureSegment() {
+    let stream = CardSession.EventStream()
+    // SegmentOfResult.Failure == Never selects the Never-constrained flatMap
+    // overload (SIL: $sScisE7flatMap...s5NeverO7FailureRtd__lF). Construction
+    // stays synchronous; the @Sendable async transform never runs here because
+    // iteration would require suspension and live NFC hardware.
+    let flat: AsyncFlatMapSequence<CardSession.EventStream, AsyncStream<CardSession.Event>> = stream.flatMap { _ in AsyncStream<CardSession.Event> { _ in } }
+    _ = flat
+}

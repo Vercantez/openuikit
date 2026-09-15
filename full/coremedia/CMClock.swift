@@ -541,6 +541,31 @@ public func CMTimebaseSetRateAndAnchorTime(
     return 0
 }
 
+/// Apple-labeled aliases for the two overlay entry points above. The exact
+/// graph records `immediateMasterTime:` labels; the port's primary spelling
+/// uses `immediateSourceTime:`. Both forward to the same mapping.
+public func CMTimebaseSetAnchorTime(
+    _ timebase: CMTimebase,
+    timebaseTime: CMTime,
+    immediateMasterTime: CMTime
+) -> OSStatus {
+    CMTimebaseSetAnchorTime(timebase, timebaseTime: timebaseTime, immediateSourceTime: immediateMasterTime)
+}
+
+public func CMTimebaseSetRateAndAnchorTime(
+    _ timebase: CMTimebase,
+    rate: Float64,
+    anchorTime: CMTime,
+    immediateMasterTime: CMTime
+) -> OSStatus {
+    CMTimebaseSetRateAndAnchorTime(
+        timebase,
+        rate: rate,
+        timebaseTime: anchorTime,
+        immediateSourceTime: immediateMasterTime
+    )
+}
+
 public func CMTimebaseCopySourceClock(_ timebase: CMTimebase) -> CMClock? {
     timebase.masterClock
 }

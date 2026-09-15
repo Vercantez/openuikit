@@ -699,3 +699,79 @@ pre-existing lookalike-guarded lines (e.g. `CMFormatDescription()`,
 `CMTimebase()`, `CALayer` in `AVAssetSurface`/`AVPlayerLayerSurface`/
 `AVCaptureSurface`); that is a host-SDK condition, not a product regression,
 and the Linux-container run above is the authoritative sealed result.
+
+### Depth pass 2026-09-15 (wave 6 declared conversion)
+
+Wave 6 converts leftover declared rows that already compile (plus minimal
+Apple-mirroring product shims) into focused synchronous tests. No SwiftUI
+cross-import overlay rows exist in this seed, so the overlay playbook does
+not apply; the 181 `SYNTHESIZED` rows are `Sequence`/Concurrency members on
+`AVCaptureSynchronizedDataCollection` (plus `NSCoding`, `NSCoding`-adjacent
+`CoreAnimationTool`, and key-value-loading witnesses).
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 4833 | 5213 |
+| `declared` | 554 | 174 |
+| `deferred` | 245 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest new citation group is 32 rows for the compositing/validation
+witnesses, well under 40% of the 5,213 implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+This pass added 380 `implemented` rows (27 tests in
+`tests/agent/AVDepthPass15Tests.swift` and
+`tests/agent/AVDepthPass16Tests.swift`). Product shims in
+`AVDepthPass15.swift` (listed in `avfoundation_guest_sources.txt`):
+`Sequence` conformance for `AVCaptureSynchronizedDataCollection` (Apple
+declares `NSFastEnumeration`, which Swift imports as `Sequence`),
+`AVCaptureReactionType.systemImageName` (Swift spelling of
+`AVCaptureReactionSystemImageNameForType`; values pinned by an Xcode 26.1
+`import AVFoundation` probe: thumbsUp=hand.thumbsup.fill,
+thumbsDown=hand.thumbsdown.fill, balloons=balloon.2.fill, heart=heart.fill,
+fireworks=fireworks, rain=cloud.rain.fill, confetti=party.popper.fill,
+lasers=laser.burst), six synchronous completion-handler twins of the
+`AVCaptureDevice` setters (block shapes pinned from the iPhoneOS 26.1
+headers; handlers run synchronously with the same `.zero` timestamp the
+async twins return), top-level typealiases restoring Apple's spellings
+(`AVPlayerHDRMode`, `AVPlayerRateDidChangeReason`,
+`AVPlayerWaitingReason`, `AVCaptureSystemPressureLevel`,
+`AVCaptureSystemPressureFactors`,
+`AVCapturePrimaryConstituentDeviceRestrictedSwitchingBehaviorConditions`),
+`AVPlayerItem: AVMetricEventStreamPublisher` returning empty metrics, and
+`IteratorProtocol` on the synchronized-data iterator. Thirteen existing
+`convenience init` declarations needed only an access-level fix
+(`AVCaptureIndexPicker`/`AVCaptureSlider`/system sliders,
+`AVCaptureMetadataInput`, `AVCapturePhotoBracketSettings`,
+`AVVideoCompositionCoreAnimationTool`/`AVVideoCompositionInstruction`
+configuration inits, `AVPlayerVideoOutput.init(specification:)`).
+
+Fail-closed on this pass: metadata-input `append` throws
+`mediaServiceUnavailable`; photo/smart-framing/video-request attach paths
+throw or return nil/empty; `AVPlayerPlaybackCoordinator.coordinate(using:)`
+throws; completion handlers never touch hardware. The remaining 174
+`declared` rows are async `AsyncSequence`/`next()` witnesses, `NSCoding`
+`init(coder:)` witnesses, `Combine` publishers, `FormatStyle`, and
+`Element`-constrained or `SortComparator`-element witnesses that cannot be
+exercised synchronously without inventing Apple API. The 245 `deferred`
+rows are unchanged (hardware/daemon/URLSession/`CALayer`/async-service).
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`,
+run under `swift:6.2-noble`, Swift 6.2.4, aarch64) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```

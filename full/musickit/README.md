@@ -233,6 +233,47 @@ sync-testable surface is fully converted; the declared remainder is the
 async/network/hardware floor. Files changed: `MusicKitLookalikes.swift`
 (3 guard lines + comments), `README.md` (this section).
 
+## Depth pass 2026-09 (pi-wave6, overlay + declared re-audit)
+
+Re-ran the wave-10 ceiling audit under the pi-wave6 contract (overlay
+OVERRIDE + convert remaining declared):
+
+- Overlay OVERRIDE checked: zero `declared` rows are SwiftUI `View`
+  modifiers/overlays (all 80 are `s:8MusicKit…` async APIs; the 779
+  SwiftUI-surface rows, including ArtworkImage `View` synthesis and
+  `musicSubscriptionOffer`, are already `implemented` or
+  `not-applicable`). The FamilyControls/DeviceDiscoveryUI overlay
+  playbook (`testViewOverlayBatchNN` calling each leftover modifier on
+  View types plus EmptyView) has no target rows here, so nothing was
+  converted or relabeled.
+- All 80 `declared` rows re-verified as `async`/`async throws` call
+  sites (78 carry the `Ya` async mangling; `currentCountryCode` and
+  `Subscription.current` are `get async throws` in product sources
+  despite the sync-looking `vpZ` mangling). A sealed-gate `implemented`
+  citation requires a top-level synchronous no-argument `func test*()`
+  that actually calls the identifier with no `await`/semaphore waits,
+  so none can move without inventing network/hardware/service success.
+- Coverage integrity re-scripted: 1344 `implemented` rows cite 45
+  existing sync tests (zero missing, zero `await` in cited bodies);
+  all 80 `declared` rows cite existing `source:` anchors in the guest
+  manifest; largest test `testPlaylistAndVideo` 169 rows and enum table
+  `testEnumRawValues` 158 rows, under the 40% cap (537.6).
+- Deferred re-examined: none convertible in-process (would need
+  hardware/daemon/network). No product, test, coverage, oracle, or
+  manifest edits required.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 1344 | 1344 |
+| declared | 80 | 80 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 1110 | 1110 |
+
+Nondeferred: **1424** (floor 1267). Gain is **+0 implemented**:
+declared floor is the async/network/hardware remainder. Files changed:
+`README.md` (this section only).
+
 ## Public surface implemented
 
 - **MusicItemID** string wrapper: `init(_:)`, `init(rawValue:)`, string

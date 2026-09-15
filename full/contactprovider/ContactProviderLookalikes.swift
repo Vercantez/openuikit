@@ -2,14 +2,23 @@ import Foundation
 
 // MARK: - Isolation stand-ins
 //
-// The isolated host gate compiles ContactProvider with Foundation only.
+// The isolated Linux gate compiles ContactProvider with Foundation only.
 // `CNMutableContact` is Contacts-owned. `AppExtension` and
 // `AppExtensionConfiguration` are ExtensionFoundation-owned. These stand-ins
 // exist so ContactProvider-owned signatures type-check. They are not Linux
-// ports of those modules and must be deleted when the real modules are on
-// the link line.
+// ports of those modules.
+//
+// The real modules bind only on device SDK builds (`os(iOS)` with the
+// module importable). `canImport` alone is insufficient: macOS can see
+// Contacts and ExtensionFoundation, but the macOS ExtensionFoundation
+// `AppExtension` carries `@MainActor init()` / `@MainActor configuration`
+// requirements (and a 26.0-gated `accept(connection:)` configuration
+// protocol) that the portable Linux surface does not vouch for, so the
+// macOS host gate type-checks against these stand-ins. This mirrors the
+// `os(iOS) || os(Linux)` gating precedent in NetworkExtension. The clean
+// Linux EC2 build never sees the real modules and always uses stand-ins.
 
-#if canImport(Contacts)
+#if (os(iOS) || os(Linux)) && canImport(Contacts)
 import Contacts
 #else
 /// Contacts-owned mutable contact. Isolation stand-in only.
@@ -33,7 +42,7 @@ open class CNMutableContact: NSObject, @unchecked Sendable {
 }
 #endif
 
-#if canImport(ExtensionFoundation)
+#if (os(iOS) || os(Linux)) && canImport(ExtensionFoundation)
 import ExtensionFoundation
 #else
 /// ExtensionFoundation-owned configuration protocol. Isolation stand-in only.

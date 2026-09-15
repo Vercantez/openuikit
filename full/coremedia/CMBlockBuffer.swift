@@ -711,6 +711,130 @@ extension CMBlockBuffer {
     }
 }
 
+/// Apple Swift-overlay convenience initializers. Linux storage is always a
+/// single contiguous copy: `capacity` only reserves, `allocator` only
+/// selects the zero-fill path, and the custom `deallocator` runs after the
+/// bytes are copied in (matching the documented custom-block-source flow).
+extension CMBlockBuffer {
+    public convenience init(capacity: Int, flags: Flags = []) throws {
+        if capacity < 0 { throw Error.badLengthParameter }
+        self.init()
+        _ = flags
+        storage.reserveCapacity(capacity)
+    }
+
+    public convenience init(
+        buffer: UnsafeMutableRawBufferPointer,
+        allocator: CFAllocator? = nil,
+        flags: Flags = []
+    ) throws {
+        _ = (allocator, flags)
+        if buffer.count == 0 {
+            self.init()
+            return
+        }
+        guard let base = buffer.baseAddress else { throw Error.badPointerParameter }
+        self.init(copying: UnsafeRawBufferPointer(start: base, count: buffer.count))
+    }
+
+    public convenience init(
+        buffer: Swift.Slice<UnsafeMutableRawBufferPointer>,
+        allocator: CFAllocator? = nil,
+        flags: Flags = []
+    ) throws {
+        try self.init(
+            buffer: UnsafeMutableRawBufferPointer(rebasing: buffer),
+            allocator: allocator,
+            flags: flags
+        )
+    }
+
+    public convenience init(
+        buffer: UnsafeMutableRawBufferPointer,
+        deallocator: @escaping CustomBlockDeallocator,
+        flags: Flags = []
+    ) throws {
+        if buffer.count == 0 {
+            self.init()
+            _ = flags
+            return
+        }
+        guard let base = buffer.baseAddress else { throw Error.badPointerParameter }
+        self.init(copying: UnsafeRawBufferPointer(start: base, count: buffer.count))
+        _ = flags
+        deallocator(base, buffer.count)
+    }
+
+    public convenience init(
+        buffer: Swift.Slice<UnsafeMutableRawBufferPointer>,
+        deallocator: @escaping CustomBlockDeallocator,
+        flags: Flags = []
+    ) throws {
+        try self.init(
+            buffer: UnsafeMutableRawBufferPointer(rebasing: buffer),
+            deallocator: deallocator,
+            flags: flags
+        )
+    }
+
+    public convenience init(
+        length: Int,
+        allocator: CFAllocator? = nil,
+        range: Range<Int>? = nil,
+        flags: Flags = []
+    ) throws {
+        _ = (allocator, flags)
+        if length < 0 { throw Error.badLengthParameter }
+        if let range {
+            guard range.lowerBound >= 0, range.upperBound <= length else {
+                throw Error.badOffsetParameter
+            }
+            self.init(length: range.count)
+        } else {
+            self.init(length: length)
+        }
+    }
+
+    public convenience init(
+        length: Int,
+        allocator: @escaping CustomBlockAllocator,
+        deallocator: @escaping CustomBlockDeallocator,
+        range: Range<Int>? = nil,
+        flags: Flags = []
+    ) throws {
+        _ = flags
+        if length < 0 { throw Error.badLengthParameter }
+        if let range {
+            guard range.lowerBound >= 0, range.upperBound <= length else {
+                throw Error.badOffsetParameter
+            }
+        }
+        let count = range?.count ?? length
+        if count == 0 {
+            self.init()
+            return
+        }
+        guard let scratch = allocator(count) else { throw Error.blockAllocationFailed }
+        defer { deallocator(scratch, count) }
+        scratch.initializeMemory(as: UInt8.self, repeating: 0, count: count)
+        self.init(copying: UnsafeRawBufferPointer(start: scratch, count: count))
+    }
+
+    public convenience init<T: CMBlockBufferProtocol>(bufferReference: T, flags: Flags = []) throws {
+        var out: CMBlockBuffer?
+        let status = CMBlockBufferCreateWithBufferReference(
+            allocator: nil,
+            referenceBuffer: bufferReference.owner,
+            offsetToData: bufferReference.startIndex,
+            dataLength: bufferReference.dataLength,
+            flags: flags.rawValue,
+            blockBufferOut: &out
+        )
+        guard status == 0, let out else { throw cmNSError(code: Int(status)) }
+        self.init(referencing: out)
+    }
+}
+
 internal func CMBlockBufferIsRangeValid(
     _ theBuffer: CMBlockBuffer,
     atOffset offsetToData: Int,

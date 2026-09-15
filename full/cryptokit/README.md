@@ -30,11 +30,14 @@ Portable Swift implementations that match published test vectors:
 
 `libCryptoKit.dylib` compiles with `-warnings-as-errors`.
 
-Coverage after this round: **1199 implemented / 21 declared / 44 deferred /
-23 unavailable** of 1287 IDs. Implemented ≥ 900. Nondeferred except
+Coverage after this round: **1221 implemented / 21 declared / 0 deferred / 22
+not-applicable / 23 unavailable** of 1287 IDs. Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
-(unavailable on Linux). 44 Foundation `SortComparator`/`formatted` Sequence
-overlays stay deferred: Darwin comparator defaults are unobserved.
+(unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
+not-applicable: their generic constraints (`Element: SortComparator`,
+`Element == String`) are unsatisfiable for `UInt8`-element digest/nonce types.
+`sorted(using:)` single- and array-comparator overloads are implemented with a
+`UInt8` test comparator.
 
 ## Fail-closed boundaries
 
@@ -53,9 +56,11 @@ overlays stay deferred: Darwin comparator defaults are unobserved.
 
 ## Deferred
 
-Swift.Sequence + Foundation `SortComparator` / `FormatStyle` overlays on digest
-and nonce types, and `Error.localizedDescription` wording on Darwin, remain
-unrestated. Native post-quantum behavior stays fail-closed until a provider plus
+Swift.Sequence + Foundation `SortComparator` single/array `sorted(using:)` overlays
+on digest, MAC, and nonce types are implemented via `testDigestSortedUsingComparator` /
+`testAuthCodeNonceSortedUsingComparator`. `Sequence.compare` / `formatted` are
+not-applicable (constraints uncallable for `UInt8` elements). `Error.localizedDescription`
+wording on Darwin remains unrestated. Native post-quantum behavior stays fail-closed until a provider plus
 an Apple-runtime oracle exist. Insecure.RSA is not in this SDK snapshot.
 
 ## Tests

@@ -377,6 +377,27 @@ public func CMSampleBufferGetDataBuffer(_ sbuf: CMSampleBuffer) -> CMBlockBuffer
     sbuf.dataBuffer
 }
 
+/// Pure in-process sample-data reference: the media container URL plus the
+/// byte offset of the sample inside it. No I/O is performed.
+public struct CMSampleDataReference: Hashable, Sendable {
+    public var containerLocation: URL
+    public var byteOffset: Int
+
+    public init(containerLocation: URL, byteOffset: Int) {
+        self.containerLocation = containerLocation
+        self.byteOffset = byteOffset
+    }
+}
+
+extension CMSampleBuffer {
+    /// Swift overlay for `CMSampleBufferSetDataBuffer`. The free function
+    /// reports `kCMSampleBufferError_Invalidated` / `AlreadyHasDataBuffer`;
+    /// the overlay keeps Apple's `Void` signature.
+    public func setDataBuffer(_ dataBuffer: CMBlockBuffer) {
+        _ = CMSampleBufferSetDataBuffer(self, dataBuffer: dataBuffer)
+    }
+}
+
 public func CMSampleBufferGetFormatDescription(_ sbuf: CMSampleBuffer) -> CMFormatDescription? {
     sbuf.formatDescription
 }

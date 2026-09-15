@@ -6,5 +6,6 @@ full/charts/ChartsMarkLayout.swift
 full/charts/ChartsModifiers.swift
 full/charts/ChartsPlotEngine.swift
 full/charts/ChartsSurface.swift
+full/charts/ChartsViewOverlay.swift
 full/charts/ChartsViewSurface.swift
 full/charts/ChartsWave8.swift

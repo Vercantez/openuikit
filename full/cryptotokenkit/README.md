@@ -73,11 +73,21 @@ Run the sealed host gate with:
 bash full/cryptotokenkit/tests/acceptance/test_host.sh
 ```
 
-## Depth pass 2026-09
+## Depth pass 2026-09 (pi-wave6)
 
-Implemented **298** identifiers, declared **73** (compiler-synthesized
-OptionSet/Equatable/Hashable witnesses plus async overlays), deferred **4**.
-Nondeferred total **371** of 375 (lane floor 188).
+Implemented **368** identifiers, declared **3** (async overlays the sealed
+runner cannot await), deferred **4**. Nondeferred total **371** of 375
+(lane floor 188). Previously 298 implemented / 73 declared; the +70 gain
+converts every compiler-synthesized Equatable/Hashable/SetAlgebra/OptionSet
+witness to `implemented` with behavioral tests that call each witness:
+`!=`/`hash(into:)`/`hashValue` via `tests/agent/CryptoTokenKitEqualityTests.swift`,
+and the full OptionSet algebra (`arrayLiteral`, `isDisjoint`, `isSuperset`,
+`subtracting`, `isStrictSubset`, `isStrictSuperset`, `isSubset`, `subtract`,
+sequence `init`, `insert`, `remove`, `update`, `intersection`,
+`symmetricDifference`, `union`, `formIntersection`, `formSymmetricDifference`,
+`formUnion`, `init(rawValue:)`, `isEmpty`) via six
+`testTK*WitnessBatch*` functions in
+`tests/agent/CryptoTokenKitWitnessTests.swift` (spread 8–10 citations each).
 
 Top-5 implemented evidence distribution:
 
@@ -88,5 +98,6 @@ Top-5 implemented evidence distribution:
 5. `testTKSmartCardPINFormatProperties` / `testTKTokenInitAndConfiguration` — 10 each
 
 Enum/option-set members and C constants share table-driven value tests.
-No other single test is cited by more than 40% of the remaining
-implemented rows (`testTKTokenConfigurationKeyLookup` is 15/247 ≈ 6%).
+No single test is cited by more than 40% of the implemented rows
+(`testTKTokenConfigurationKeyLookup` and `testTKErrorStaticCodeAliases`
+are 15/368 ≈ 4% each; the largest witness batch is 10/368 ≈ 3%).

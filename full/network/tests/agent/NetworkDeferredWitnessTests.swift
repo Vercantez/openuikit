@@ -218,3 +218,128 @@ func testNWTXTRecordSubSequenceAndBonjourID() {
     let bonjourID: Bonjour.Endpoint.ID = "example._http._tcp.local"
     precondition(!bonjourID.isEmpty, "bonjour id")
 }
+
+/// `NWBrowser.Result.Change.Flags` is a real `OptionSet` in this starting
+/// point. This batch exercises every stdlib `Equatable` / `Hashable` /
+/// `SetAlgebra` / `OptionSet` witness the Network graph attributes to it.
+/// All synchronous and in-process; no browse daemon runs here.
+func testBrowserFlagsSetAlgebraWitnesses() {
+    typealias Flags = NWBrowser.Result.Change.Flags
+    let added: Flags = [.interfaceAdded, .metadataChanged]
+    let removed: Flags = [.interfaceRemoved]
+    precondition((added != removed) && !(added != added), "flags !=")
+    precondition(added.hashValue == added.hashValue, "flags hashValue")
+    var hasher = Hasher()
+    added.hash(into: &hasher)
+    _ = hasher.finalize()
+    let empty = Flags()
+    precondition(empty.isEmpty, "flags empty init")
+    let literal: Flags = [.identical, .interfaceAdded]
+    precondition(literal.contains(.identical), "array literal contains")
+    let fromSequence = Flags([.identical, .metadataChanged])
+    precondition(fromSequence.contains(.metadataChanged), "sequence init")
+    precondition(added.isDisjoint(with: removed), "isDisjoint")
+    precondition(added.isSuperset(of: [.interfaceAdded]), "isSuperset")
+    precondition(added.isSubset(of: [.interfaceAdded, .metadataChanged, .identical]), "isSubset")
+    precondition(added.isStrictSubset(of: [.interfaceAdded, .metadataChanged, .identical]), "strict subset")
+    let superset: Flags = [.interfaceAdded, .metadataChanged, .identical]
+    precondition(superset.isStrictSuperset(of: added), "strict superset")
+    precondition((added.subtracting(.interfaceAdded) == [.metadataChanged]), "subtracting")
+    precondition(
+        added.intersection(.interfaceAdded) == [.interfaceAdded],
+        "intersection"
+    )
+    precondition(
+        added.symmetricDifference(removed).contains(.interfaceRemoved),
+        "symmetricDifference"
+    )
+    precondition(added.union(removed).contains(.interfaceAdded), "union")
+    var mutable = added
+    let inserted = mutable.insert(.interfaceRemoved)
+    precondition(inserted.inserted && mutable.contains(.interfaceRemoved), "insert")
+    let taken = mutable.remove(.interfaceRemoved)
+    precondition(taken == .interfaceRemoved && !mutable.contains(.interfaceRemoved), "remove")
+    let previous = mutable.update(with: .identical)
+    precondition(previous == nil && mutable.contains(.identical), "update")
+    mutable.formIntersection(.interfaceAdded)
+    precondition(mutable == [.interfaceAdded], "formIntersection")
+    mutable.formSymmetricDifference([.interfaceAdded, .identical])
+    precondition(mutable == [.identical], "formSymmetricDifference")
+    mutable.formUnion(.metadataChanged)
+    precondition(mutable.contains(.metadataChanged), "formUnion")
+    var subtracted = added
+    subtracted.subtract(.interfaceAdded)
+    precondition(subtracted == [.metadataChanged], "subtract")
+    let raw = Flags(rawValue: 0b1010)
+    precondition(raw.rawValue == 0b1010, "rawValue init")
+}
+
+/// `NWEndpoint.Host` declares all three string-literal initializers locally.
+/// Calling each one directly exercises the stdlib default witnesses the
+/// graph attributes to `Host`.
+func testNWEndpointHostLiteralWitnesses() {
+    let fromString: NWEndpoint.Host = "example.com"
+    let fromGrapheme = NWEndpoint.Host(extendedGraphemeClusterLiteral: "example.com")
+    let fromScalar = NWEndpoint.Host(unicodeScalarLiteral: "example.com")
+    precondition(fromString == fromGrapheme && fromGrapheme == fromScalar, "host literals agree")
+}
+
+/// Generic-context references to the `MessageProtocol` and `BrowserProvider`
+/// associated types. Conformance itself is compiled in; these lines name the
+/// exact associated-type identifiers from the graph.
+func testTypedMessageAndBrowserAssociatedTypes() {
+    func contentTypes<M: MessageProtocol>(_ type: M.Type) -> (M.ContentType.Type, M.LegacyMessage.Type) {
+        (M.ContentType.self, M.LegacyMessage.self)
+    }
+    let (udpContent, udpLegacy) = contentTypes(UDP.self)
+    _ = (udpContent, udpLegacy)
+    func browserEndpoint<B: BrowserProvider>(_ type: B.Type) -> B.Endpoint.Type {
+        B.Endpoint.self
+    }
+    let endpointType = browserEndpoint(Bonjour.self)
+    precondition("\(endpointType)".contains("Endpoint"), "browser endpoint")
+}
+
+/// Both `certificateValidator` builders are synchronous local stores: they
+/// take an (async-typed) closure value and return the protocol value without
+/// performing any TLS handshake. Passing a non-async closure value is a
+/// synchronous call; the closure never runs on Linux.
+func testTLSCertificateValidatorBuilders() {
+    let tls = TLS().certificateValidator { _, _ in true }
+    _ = tls.parameters
+    let quic = QUIC(alpn: []).tls.certificateValidator { _, _ in true }
+    _ = quic.parameters
+}
+
+/// Group membership without a daemon: a multiplex group always reports the
+/// single endpoint it wraps, reachable through the `NWGroupDescriptor`
+/// requirement as well.
+func testGroupDescriptorMembers() {
+    let endpoint = NWEndpoint.hostPort(host: "127.0.0.1", port: 443)
+    let group = NWMultiplexGroup(with: endpoint)
+    precondition(group.members == [endpoint], "multiplex members")
+    let descriptor: any NWGroupDescriptor = group
+    precondition(descriptor.members == [endpoint], "descriptor members")
+}
+
+/// WebSocket handler setters store the queue and handler locally. Linux
+/// performs no handshake, so the handlers never fire; retention is the
+/// whole behavior under test.
+func testWebSocketHandlerSetters() {
+    let options = NWProtocolWebSocket.Options()
+    let queue = DispatchQueue(label: "websocket-probe")
+    options.setClientRequestHandler(queue) { _, _ in
+        NWProtocolWebSocket.Response(status: .accept)
+    }
+    precondition(options.clientRequestHandler != nil, "request handler stored")
+    let metadata = NWProtocolWebSocket.Metadata(opcode: .binary)
+    metadata.setPongHandler(queue) { _ in }
+    precondition(metadata.pongHandler != nil, "pong handler stored")
+}
+
+/// `NWProtocolDefinition` equality is identifier-based; inequality is the
+/// stdlib `Equatable.!=` default witness the graph attributes to it.
+func testProtocolDefinitionInequality() {
+    precondition(NWProtocolTCP.definition != NWProtocolUDP.definition, "definitions differ")
+    precondition(!(NWProtocolTCP.definition != NWProtocolTCP.definition), "definitions equal")
+}

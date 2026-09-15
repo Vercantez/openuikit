@@ -330,6 +330,19 @@ public class NWProtocolWebSocket: NWProtocol {
         public func setAdditionalHeaders(_ headers: [(name: String, value: String)]) {
             additionalHeaders = headers
         }
+
+        /// Stored locally only. Linux performs no WebSocket handshake, so the
+        /// handler is never invoked; it is retained for API compatibility.
+        public private(set) var clientRequestQueue: DispatchQueue?
+        public private(set) var clientRequestHandler: (([String], [(name: String, value: String)]) -> Response)?
+
+        public func setClientRequestHandler(
+            _ queue: DispatchQueue,
+            handler: @escaping ([String], [(name: String, value: String)]) -> Response
+        ) {
+            clientRequestQueue = queue
+            clientRequestHandler = handler
+        }
     }
 
     public class Metadata: NWProtocolMetadata {
@@ -347,6 +360,19 @@ public class NWProtocolWebSocket: NWProtocol {
             self.opcode = opcode
             self.closeCode = .protocolCode(.normalClosure)
             super.init()
+        }
+
+        /// Stored locally only. Linux performs no WebSocket handshake, so the
+        /// handler is never invoked; it is retained for API compatibility.
+        public private(set) var pongQueue: DispatchQueue?
+        public private(set) var pongHandler: ((NWError?) -> Void)?
+
+        public func setPongHandler(
+            _ queue: DispatchQueue,
+            handler: @escaping (NWError?) -> Void
+        ) {
+            pongQueue = queue
+            pongHandler = handler
         }
     }
 

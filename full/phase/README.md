@@ -5,7 +5,7 @@ Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift surface
 from the sealed symbol graph. It is not wired into the shared guest package;
 that integration is a separate central review step.
 
-Coverage: **609 implemented / 2 declared / 28 deferred / 639 total**
+Coverage: **611 implemented / 0 declared / 28 deferred / 639 total**
 (above the large-partitioned floor of 64).
 
 Declared dependency: `Foundation` only. AVFAudio, ModelIO, and CoreAudio are
@@ -60,9 +60,13 @@ or PHASE daemon.
 - `PHASEDucker.activate()` is a local boolean. It does not duck other groups.
 - Head-tracking flags are stored only. `PHASEObject.forward` is `(0, 0, -1)`
   as a local convention, not a tracked pose.
-- Async `unregisterAsset(identifier:)` and `seek(to:)` compile and fail
-  closed but are **declared**, not implemented: the sealed runner has no run
-  loop and cannot `await`.
+- The `unregisterAssetWithIdentifier:completion:` and `seekToTime:completion:`
+  selectors are exercised through their synchronous completion-handler
+  spellings, which share the selectors with the `async` spellings (both
+  spellings appear in the Apple symbol graphs). The `async` spellings are
+  retained and delegate to the same fail-closed cores; the sealed runner
+  has no run loop and cannot `await`, so the sync spellings carry the
+  behavioral evidence.
 
 ## Tests
 
@@ -81,7 +85,7 @@ bash full/phase/tests/acceptance/test_host.sh
 
 Fresh seed: `full/phase/` had `AGENTS.md`, `FANOUT_TASK.md`, and `reference/`
 but no sources, `coverage.tsv`, or agent tests. After this pass:
-**609 implemented / 2 declared / 28 deferred**.
+**611 implemented / 0 declared / 28 deferred**.
 
 Top-5 implemented evidence distribution:
 

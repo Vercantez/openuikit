@@ -1333,5 +1333,5 @@ open class AVPlayerVideoOutput: NSObject, @unchecked Sendable {
     public var activeConfiguration: AVPlayerVideoOutput.Configuration = AVPlayerVideoOutput.Configuration()
   }
   public func sample(forHostTime hostTime: CMTime) -> AVPlayerVideoOutput.Sample? { nil }
-  convenience init(specification: AVVideoOutputSpecification) { self.init() }
+  public convenience init(specification: AVVideoOutputSpecification) { self.init() }
 }

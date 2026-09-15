@@ -312,3 +312,9 @@ extension Sequence where Element == CMTag {
         return result
     }
 }
+
+/// Apple oracle 2026-09-15 (Xcode macOS SDK 26.1): category 'proj', value
+/// 1751478645 ('hequ'), matching CMProjectionType.halfEquirectangular.
+public var kCMTagProjectionTypeHalfEquirectangular: CMTag {
+    CMTag.projectionType(.halfEquirectangular)
+}

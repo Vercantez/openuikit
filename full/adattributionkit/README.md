@@ -24,6 +24,14 @@ The public Swift surface that does not require StoreKit compiles to
   the query parameter name in Apple's "Receiving ad attributions and postbacks"
   documentation.
 - `AppImpression.isSupported` and `Postback.isSupported` are `false`.
+- `AppImpression` storage getters (`id`, `publisherItemID`,
+  `advertisedItemID`, `sourceID`, `keyID`, `adNetworkID`, `timestamp`,
+  `eligibleForReengagement`, `compactJWSRepresentation`) plus `Hashable` /
+  `Equatable` are exercised through the underscored test-support factory
+  `AppImpression._unverifiedForTesting(...)` (not Apple API). The factory
+  never verifies a JWS; the public `init(compactJWS:)` still always throws,
+  and the `async` view/tap methods (`beginView`, `endView`, `handleTap`)
+  stay declared: they cannot be invoked from a synchronous agent test.
 - `AppImpression.init(compactJWS:)` never succeeds. Compact JWS strings are
   classified structurally, then rejected:
   - not exactly three `.`-separated components → `invalidImpressionJWSComponents`
@@ -41,8 +49,9 @@ product page, or `UIEventAttributionView`.
 
 - A compact JWS that merely parses as JSON with a nonempty signature is **not**
   a verified impression. There is no cryptographic success path.
-- Instance properties and view/tap methods on `AppImpression` are unreachable
-  because no verified object is produced. If they were invoked they throw
+- `AppImpression` storage getters are reachable only through the underscored
+  `_unverifiedForTesting` factory; view/tap methods are unreachable because
+  no verified object is produced. If they were invoked they throw
   (`unknown` for begin/end view; `missingAttributionView` for tap).
 - StoreKit overlay APIs (`SKOverlay.AppConfiguration`,
   `SKStoreProductViewController`) are not declared. StoreKit is not a declared
@@ -61,7 +70,22 @@ clean EC2 run that builds guest Foundation first.
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
 
-## Depth pass 2026-09
+## Depth pass 2026-09 (storage getters)
+
+Implemented **55 → 68**. Declared 17 → 4. Deferred 4 (StoreKit overlay) unchanged.
+Unavailable / not-applicable remain 0.
+
+The 13 converted rows are the synchronous `AppImpression` storage getters
+plus `==`, `!=`, `hash(into:)`, and `hashValue`, pinned by four new
+synchronous tests in `tests/agent/AdAttributionKitImpressionStorageTests.swift`
+(`testAppImpressionStorageIDs` ×4, `testAppImpressionStorageStrings` ×3,
+`testAppImpressionStorageFlags` ×2, `testAppImpressionStorageHashable` ×4).
+No new test is cited by more than 4 of 68 implemented rows. The 4 remaining
+declared rows are the `async` view/tap methods, which cannot be called from
+a synchronous no-`await` agent test. This slug has no SwiftUI View
+modifiers, so the FamilyControls overlay playbook does not apply.
+
+## Depth pass 2026-09 (earlier)
 
 Implemented **53 → 55**. Declared 19 → 17. Deferred 4 (StoreKit overlay) unchanged.
 Unavailable / not-applicable remain 0.

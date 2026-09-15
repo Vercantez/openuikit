@@ -5,11 +5,15 @@ OpenUIKit Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS
 Swift surface from the sealed symbol graph. It is not wired into the shared
 guest package; that integration is a separate central review step.
 
-Coverage: **460 implemented / 14 declared / 474 total** (fully nondeferred).
-The 14 remaining `declared` rows are Apple `_BridgedStoredNSError`
-synthesized members. Linux implements the observable `CustomNSError` /
-`Hashable` overlay instead; a freshly constructed
-`NSError(domain:code:)` does not become `CBError` / `CBATTError`.
+Coverage: **474 implemented / 0 declared / 474 total** (fully nondeferred, zero leftover).
+The 14 former `declared` rows were Apple `_BridgedStoredNSError`
+synthesized members (`code`, `userInfo`, `errorUserInfo`, `errorCode`,
+`hash(into:)`, `hashValue`, `init(_:userInfo:)` for `CBError` / `CBATTError`).
+Linux implements those exact members via the observable `CustomNSError` /
+`Hashable` overlay and `testCBErrorOverlay` / `testCBATTErrorOverlay` call
+each one; a freshly constructed
+`NSError(domain:code:)` still does not become `CBError` / `CBATTError`
+(by design, not Apple `_BridgedStoredNSError` bridging).
 
 ## What is real
 
@@ -37,7 +41,26 @@ synthesized members. Linux implements the observable `CustomNSError` /
   never-connected peripheral. State callbacks hop asynchronously onto the
   supplied queue, once per current delegate.
 
-## Depth pass 2026-09
+## Depth pass 2026-09-15 (declared → implemented)
+
+Coverage before: **460 implemented / 14 declared / 474 total**.
+Coverage after: **474 implemented / 0 declared / 474 total** (+14).
+The 14 `_BridgedStoredNSError` synthesized members resolve (via
+`reference/public-surface.tsv` declarations) to `code`, `userInfo`,
+`errorUserInfo`, `errorCode`, `hash(into:)`, `hashValue`, and
+`init(_:userInfo:)` — the same members the `CustomNSError` overlay
+implements in `CoreBluetooth.swift`. `testCBErrorOverlay` calls each
+`CBError` member and `testCBATTErrorOverlay` calls each `CBATTError`
+member (both top-level synchronous no-argument `func test*()`, no
+`DispatchQueue.main` / `await`), so all 14 now cite those tests as
+`test:full/corebluetooth/tests/agent/CoreBluetoothErrorTests.swift#…`
+with `Linux runtime evidence`. No hardware/daemon behavior was invented:
+a freshly constructed `NSError(domain:code:)` still fails `as?`
+`CBError` / `CBATTError` by design (rehydration is via domain/code).
+No SwiftUI overlay rows exist in this framework, so the overlay
+conversion playbook does not apply.
+
+## Depth pass 2026-09 (earlier evidence repair)
 
 Coverage before this evidence repair: **460 implemented / 14 declared / 474
 total**, but every implemented row cited `tests/agent/CoreBluetoothRuntime.swift`

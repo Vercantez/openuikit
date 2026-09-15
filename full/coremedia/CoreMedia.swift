@@ -112,6 +112,28 @@ public struct CMTimeCodeDescriptionFlavor: RawRepresentable, Hashable {
 }
 
 public typealias CMAttachmentMode = UInt32
+
+// Description-flavor family statics. CFString payloads pinned by Apple
+// oracle 2026-09-15 (Xcode macOS SDK 26.1): image and sound families use
+// "3GPFamily", "ISOFamily", "QuickTimeMovie"; image adds
+// "ISOFamilyWithAppleExtensions", sound adds "QuickTimeMovieV2".
+extension CMImageDescriptionFlavor {
+    public static let mobile3GPFamily = CMImageDescriptionFlavor(rawValue: cmMakeCFString("3GPFamily"))
+    public static let isoFamily = CMImageDescriptionFlavor(rawValue: cmMakeCFString("ISOFamily"))
+    public static let isoFamilyWithAppleExtensions = CMImageDescriptionFlavor(
+        rawValue: cmMakeCFString("ISOFamilyWithAppleExtensions")
+    )
+    public static let quickTimeMovie = CMImageDescriptionFlavor(rawValue: cmMakeCFString("QuickTimeMovie"))
+}
+
+extension CMSoundDescriptionFlavor {
+    public static let mobile3GPFamily = CMSoundDescriptionFlavor(rawValue: cmMakeCFString("3GPFamily"))
+    public static let isoFamily = CMSoundDescriptionFlavor(rawValue: cmMakeCFString("ISOFamily"))
+    public static let quickTimeMovie = CMSoundDescriptionFlavor(rawValue: cmMakeCFString("QuickTimeMovie"))
+    public static let quickTimeMovieV2 = CMSoundDescriptionFlavor(
+        rawValue: cmMakeCFString("QuickTimeMovieV2")
+    )
+}
 public typealias CMBlockBufferFlags = UInt32
 public typealias CMPersistentTrackID = Int32
 public typealias CMAudioFormatDescriptionMask = UInt32

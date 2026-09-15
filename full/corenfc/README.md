@@ -62,7 +62,10 @@ SDK depth against the sealed 587-ID public surface. Coverage before this pass:
 **167 implemented / 396 declared / 24 deferred**. After the first depth sweep:
 **542 implemented / 21 declared / 24 deferred**. After the EventStream sweep
 (sync lazy `AsyncSequence` construction probes, Xcode 26.1 SIL-confirmed
-overload resolution): **553 implemented / 10 declared / 24 deferred**.
+overload resolution): **553 implemented / 10 declared / 24 deferred**. After the
+Never-segment `flatMap` probe (a `SegmentOfResult.Failure == Never`-constrained
+overload selected with an `AsyncStream` segment, SIL-confirmed):
+**554 implemented / 9 declared / 24 deferred**.
 
 The pinned 20-app corpus summary names only home-assistant-ios
 (`NFCReader` / `NFCWriter` / `NFCNDEFPayload+Additions` / `iOSTagManager`).
@@ -84,16 +87,18 @@ Still deferred (24): UIKit scene overlay, `NSUserActivity.ndefMessagePayload`,
 Darwin `_BridgedStoredNSError` bridging, and the return-type-overloaded
 ISO 7816 `sendCommand` / `sendMiFareISO7816Command` overlays.
 
-The 10 remaining `declared` rows are stdlib `AsyncSequence` members on
+The 9 remaining `declared` rows are stdlib `AsyncSequence` members on
 `CardSession.EventStream` that cannot be exercised synchronously under the
 no-`await` Linux gate: the async-terminal operators (`allSatisfy`,
 `contains(where:)`, `first(where:)`, `min(by:)`, `max(by:)`, both `reduce`
-overloads), `Iterator.next(isolation:)` (async throws), and the two
-`Failure == Never`-constrained `flatMap` overloads that overload resolution
-does not select for `EventStream` (SIL confirms the `Failure == Failure`
-family). The 11 lazy (non-suspending) combinators (`map`, `compactMap`,
+overloads), `Iterator.next(isolation:)` (async throws), and the remaining
+`Failure == Never`-constrained `flatMap` overload, which additionally requires
+`Self.Failure == Never` while `EventStream.Failure` is `any Error`
+(`Iterator.next()` throws), so no call expression on `EventStream` can resolve
+to it. The 12 lazy (non-suspending) combinators (`map`, `compactMap`,
 `filter`, `prefix`, `prefix(while:)`, `drop(while:)`, `dropFirst`, both
-`flatMap` overloads in the selected families) are implemented via sync
+`flatMap` overloads in the selected families, plus the Never-segment `flatMap`)
+are implemented via sync
 construction probes in `tests/agent/NFCEventStreamTests.swift`.
 
 Top-5 implemented evidence distribution:

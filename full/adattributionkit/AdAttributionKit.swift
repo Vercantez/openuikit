@@ -152,6 +152,61 @@ public struct AppImpression: Hashable, Identifiable, Sendable {
     }
 }
 
+// MARK: - AppImpression test support (not Apple API)
+
+extension AppImpression {
+    fileprivate init(
+        testingID id: UUID,
+        publisherItemID: UInt64,
+        advertisedItemID: UInt64,
+        sourceID: Int,
+        keyID: String,
+        adNetworkID: String,
+        timestamp: Date,
+        eligibleForReengagement: Bool,
+        compactJWSRepresentation: String
+    ) {
+        self.storedID = id
+        self.storedPublisherItemID = publisherItemID
+        self.storedAdvertisedItemID = advertisedItemID
+        self.storedSourceID = sourceID
+        self.storedKeyID = keyID
+        self.storedAdNetworkID = adNetworkID
+        self.storedTimestamp = timestamp
+        self.storedEligibleForReengagement = eligibleForReengagement
+        self.storedCompactJWSRepresentation = compactJWSRepresentation
+    }
+
+    /// Test-support factory (not Apple API): builds an impression holding the
+    /// supplied field values so synchronous storage getters (`id`,
+    /// `adNetworkID`, …) and `Hashable`/`Equatable` can be exercised
+    /// in-process. It never verifies a JWS and is not an attribution success
+    /// path; the public `init(compactJWS:)` still always throws.
+    public static func _unverifiedForTesting(
+        id: UUID = UUID(),
+        publisherItemID: UInt64 = 0,
+        advertisedItemID: UInt64 = 0,
+        sourceID: Int = 0,
+        keyID: String = "",
+        adNetworkID: String = "",
+        timestamp: Date = Date(timeIntervalSince1970: 0),
+        eligibleForReengagement: Bool = false,
+        compactJWSRepresentation: String = ""
+    ) -> AppImpression {
+        AppImpression(
+            testingID: id,
+            publisherItemID: publisherItemID,
+            advertisedItemID: advertisedItemID,
+            sourceID: sourceID,
+            keyID: keyID,
+            adNetworkID: adNetworkID,
+            timestamp: timestamp,
+            eligibleForReengagement: eligibleForReengagement,
+            compactJWSRepresentation: compactJWSRepresentation
+        )
+    }
+}
+
 // MARK: - Coarse conversion value
 
 /// Developer-defined relative conversion value. Apple's public documentation

@@ -56,21 +56,30 @@ read / present / store-and-forward sessions fail closed.
   boolean defaults, `readerIdentifier` format, and discovery content payloads
   are unobserved (see `oracle-questions.tsv`).
 - UIKit presentation (`presentContent(_:from:)`) uses a module-local
-  `UIViewController` stand-in on this Foundation host. Contacts
-  `CNPostalAddress` is likewise a stand-in; Foundation types are never
-  substituted.
+  `UIViewController` stand-in on hosts without UIKit. Contacts
+  `CNPostalAddress` is a module-local stand-in on hosts without Contacts;
+  on Apple hosts it aliases the mutable `CNMutablePostalAddress` subclass so
+  the agent-constructed address values stay writable. Foundation types are
+  never substituted.
 
 ## Depth pass 2026-09
 
-Coverage: **955 implemented** / **31 declared** / 0 deferred / 0 unavailable / 0 not-applicable
-(986 nondeferred of 986; floor 493).
+Coverage: **960 implemented** / **26 declared** / 0 deferred / 0 unavailable / 0 not-applicable
+(986 nondeferred of 986; floor 493). Wave-6 delta: +5 implemented (the five
+`MobileDocumentRequest` / `MobileDocumentDataRequest` /
+`MobileDocumentDataResponse` / `MobileDocumentRawDataRequest` protocol and
+`Response` associated-type rows, evidenced by the existing synchronous
+`testMobileDocumentRequestIdentity` / `testMobileDocumentDataProtocols` host
+checks). The remaining 26 declared rows are all async NFC / Secure Element /
+merchant-service entry points the sealed runner cannot `await`, so they stay
+fail-closed `declared`.
 
-Top-5 evidence distribution (955 implemented rows):
+Top-5 evidence distribution (960 implemented rows):
 
 | Citations | Share | Test |
 | --- | --- | --- |
 | 86 | 9.0% | `testDriversLicenseResponseFields` |
-| 83 | 8.7% | `testNationalIDRawAndDisplay` |
+| 83 | 8.6% | `testNationalIDRawAndDisplay` |
 | 49 | 5.1% | `testDocumentDisplayRequest` |
 | 49 | 5.1% | `testDriversLicenseResponseEnums` |
 | 48 | 5.0% | `testDriversLicenseDisplayRequest` |

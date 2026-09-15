@@ -837,9 +837,9 @@ open class AVCaptureFraming: NSObject, @unchecked Sendable {
 
 open class AVCaptureIndexPicker: AVCaptureControl, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int) { self.init() }
-  convenience init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int, localizedTitleTransform: (Int) -> String) { self.init() }
-  convenience init(_ localizedTitle: String, symbolName: String, localizedIndexTitles: [String]) { self.init() }
+  public convenience init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int) { self.init() }
+  public convenience init(_ localizedTitle: String, symbolName: String, numberOfIndexes: Int, localizedTitleTransform: (Int) -> String) { self.init() }
+  public convenience init(_ localizedTitle: String, symbolName: String, localizedIndexTitles: [String]) { self.init() }
   public var selectedIndex: Int {
       get { 0 }
       set { _ = newValue }
@@ -881,7 +881,7 @@ open class AVCaptureManualExposureBracketedStillImageSettings: AVCaptureBrackete
 
 open class AVCaptureMetadataInput: AVCaptureInput, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(formatDescription desc: CMMetadataFormatDescription, clock: CMClock) { self.init() }
+  public convenience init(formatDescription desc: CMMetadataFormatDescription, clock: CMClock) { self.init() }
   public func append(_ metadata: AVTimedMetadataGroup) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
 }
 
@@ -1020,8 +1020,8 @@ open class AVCapturePhoto: NSObject, @unchecked Sendable {
 
 open class AVCapturePhotoBracketSettings: AVCapturePhotoSettings, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(rawPixelFormatType: OSType, processedFormat: [String : Any]?, bracketedSettings: [AVCaptureBracketedStillImageSettings]) { self.init() }
-  convenience init(rawPixelFormatType: OSType, rawFileType: AVFileType?, processedFormat: [String : Any]?, processedFileType: AVFileType?, bracketedSettings: [AVCaptureBracketedStillImageSettings]) { self.init() }
+  public convenience init(rawPixelFormatType: OSType, processedFormat: [String : Any]?, bracketedSettings: [AVCaptureBracketedStillImageSettings]) { self.init() }
+  public convenience init(rawPixelFormatType: OSType, rawFileType: AVFileType?, processedFormat: [String : Any]?, processedFileType: AVFileType?, bracketedSettings: [AVCaptureBracketedStillImageSettings]) { self.init() }
   public var bracketedSettings: [AVCaptureBracketedStillImageSettings] { [] }
   public var isLensStabilizationEnabled: Bool {
       get { false }
@@ -1771,9 +1771,9 @@ open class AVCaptureSlider: AVCaptureControl, @unchecked Sendable {
       get { [] }
       set { _ = newValue }
     }
-  convenience init(_ localizedTitle: String, symbolName: String, in range: ClosedRange<Float>) { self.init() }
-  convenience init(_ localizedTitle: String, symbolName: String, in range: ClosedRange<Float>, step: Float) { self.init() }
-  convenience init(_ localizedTitle: String, symbolName: String, values: [Float]) { self.init() }
+  public convenience init(_ localizedTitle: String, symbolName: String, in range: ClosedRange<Float>) { self.init() }
+  public convenience init(_ localizedTitle: String, symbolName: String, in range: ClosedRange<Float>, step: Float) { self.init() }
+  public convenience init(_ localizedTitle: String, symbolName: String, values: [Float]) { self.init() }
   public var value: Float {
       get { 0 }
       set { _ = newValue }
@@ -1881,7 +1881,7 @@ open class AVCaptureSynchronizedData: NSObject, @unchecked Sendable {
 
 open class AVCaptureSynchronizedDataCollection: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public struct Iterator: Sendable {
+  public struct Iterator: Sendable, IteratorProtocol {
     public init() {}
     public mutating func next() -> AVCaptureSynchronizedData? { nil }
     public typealias Element = AVCaptureSynchronizedData
@@ -1914,14 +1914,14 @@ open class AVCaptureSynchronizedSampleBufferData: AVCaptureSynchronizedData, @un
 
 open class AVCaptureSystemExposureBiasSlider: AVCaptureControl, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(device: AVCaptureDevice) { self.init() }
-  convenience init(device: AVCaptureDevice, action: @escaping (Float) -> Void) { self.init() }
+  public convenience init(device: AVCaptureDevice) { self.init() }
+  public convenience init(device: AVCaptureDevice, action: @escaping (Float) -> Void) { self.init() }
 }
 
 open class AVCaptureSystemZoomSlider: AVCaptureControl, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(device: AVCaptureDevice) { self.init() }
-  convenience init(device: AVCaptureDevice, action: @escaping (CGFloat) -> Void) { self.init() }
+  public convenience init(device: AVCaptureDevice) { self.init() }
+  public convenience init(device: AVCaptureDevice, action: @escaping (CGFloat) -> Void) { self.init() }
 }
 
 public struct AVCaptureTimecode: Sendable {

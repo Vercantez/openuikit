@@ -798,3 +798,42 @@ Classify / recognize / faces / humans / poses / Core ML stay fail-closed
 async overlay `perform(on:orientation:)` stays declared. New open questions
 (warp convention, trajectory coefficient units, foreground mask policy) are
 recorded in `oracle-questions.tsv`.
+
+## Depth pass 2026-09 (pi-wave6 audit, no gain)
+
+Campaign `pi-wave6`, lane `mixed UI + non-UI`, framework `Vision` (3584 IDs).
+Work stays inside `full/vision/`. Starting ledger: 3312 implemented / 214
+declared / 58 deferred / 0 not-applicable.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this pass | 3312 | 214 | 58 | 0 | 0 |
+| After this pass | **3312** | **214** | **58** | **0** | **0** |
+
+Implemented gain: **+0**. The ledger is at its honest ceiling, verified row by
+row this pass:
+
+- Overlay OVERRIDE inapplicable: the coverage surface contains **0** precise
+  IDs mentioning `View` or `SwiftUI`, and product sources define no SwiftUI
+  `View` modifiers. There are no identity `Self`-returning overlays to convert
+  with the FamilyControls playbook.
+- All 214 `declared` rows contain the async marker `YaK`/`YaKF`: six
+  `ImageProcessingRequest.perform(on:orientation:)` protocol witnesses, their
+  34×6 synthesized conformer occurrences, plus async
+  `ImageRequestHandler.perform` / `TargetedImageRequestHandler.perform`
+  overloads. The sealed synchronous-test rule forbids `await`, semaphores, and
+  run-loop waits in cited tests, so async scheduling stays declared rather
+  than receiving invented synchronous evidence.
+- All 58 `deferred` rows require a missing daemon/runtime: 40
+  `VNVideoProcessor` / cadence / processing-options rows (no Linux
+  AVFoundation video pipeline) and 18 `VNCoreMLFeatureValueObservation` rows
+  (no Apple Core ML runtime). Per-contract fail-closed/deferred policy they
+  stay deferred.
+
+Environment note: this audit ran on a macOS host (Apple Swift 6.2.1,
+arm64-apple-macosx). The sealed Linux gate is RED at baseline here because the
+`#if !canImport(...)` Linux lookalikes (`CGImagePropertyOrientation`,
+`CVPixelBuffer`, `CMTime`, `MLComputeDevice`, …) are skipped where the real
+Apple frameworks are importable but never imported by the Linux-first sources.
+That is a host/SDK mismatch, not a coverage regression: no product, coverage,
+manifest, or test file was changed by this audit.

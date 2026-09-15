@@ -90,7 +90,8 @@ This coverage repair keeps the registry and rewrites the ledger:
 | | implemented | declared | deferred | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Before (`fe1738b`) | 298 | 0 | 17 | 5 | 298 |
-| After | 244 | 54 | 17 | 5 | 298 |
+| After (repair) | 244 | 54 | 17 | 5 | 298 |
+| After (pi-wave6) | 280 | 18 | 17 | 5 | 298 |
 
 `implemented` rows now cite a real top-level `func test*()` that exercises
 that identifier. Enum members share table-driven value tests
@@ -101,16 +102,36 @@ this host does not call) are `declared` with
 `source:full/activitykit/ActivityKit.swift#<SequenceType>`.
 `AlertConfiguration` stays deferred on guest Foundation.
 
-Top-5 implemented evidence (244 rows). No non-enum test exceeds 3.3%
-(40% cap would be 98 rows):
+Top-5 implemented evidence (280 rows). No test exceeds 2.9%
+(40% cap would be 112 rows):
 
 | rows | share | evidence |
 | ---: | ---: | --- |
-| 8 | 3.3% | `ActivitySequenceTests.swift#testActivityStateUpdatesIteration` |
-| 8 | 3.3% | `ActivitySequenceTests.swift#testActivityUpdatesIteration` |
-| 8 | 3.3% | `ActivitySequenceTests.swift#testContentUpdatesIteration` |
-| 8 | 3.3% | `ActivitySequenceTests.swift#testPushTokenUpdatesIteration` |
-| 8 | 3.3% | `ActivitySequenceTests.swift#testContentStateUpdatesIteration` |
+| 8 | 2.9% | `ActivitySequenceTests.swift#testActivityStateUpdatesIteration` |
+| 8 | 2.9% | `ActivitySequenceTests.swift#testActivityUpdatesIteration` |
+| 8 | 2.9% | `ActivitySequenceTests.swift#testContentUpdatesIteration` |
+| 8 | 2.9% | `ActivitySequenceTests.swift#testPushTokenUpdatesIteration` |
+| 8 | 2.9% | `ActivitySequenceTests.swift#testContentStateUpdatesIteration` |
+
+This slug has no SwiftUI `View` overlay rows, so the overlay-conversion
+playbook does not apply; every leftover `declared` row is a synthesized
+`AsyncSequence` member. The pi-wave6 pass converts 36 of the 54:
+`next(isolation:)` witnesses (7, cited by the 1:1
+`ActivityNextIsolationTests`), `next()` witnesses (2, cited by
+`ActivityNextWitnessTests` via existential dispatch), throwing `flatMap`
+(7, cited by `ActivityThrowingFlatMapTests`; the throwing closure selects
+that overload unambiguously), and `max(by:)` / `min(by:)` / `reduce` /
+`reduce(into:)` (20, cited by the new `ActivityTerminalOperatorTests`:
+throwing predicates/closures complete deterministically over the `.log`
+replay buffers instead of hanging on the infinite stream). All 36 cited
+tests were executed against the isolated build (`ALL_36_OK`).
+
+Still `declared` (18): `max(by:)` / `min(by:)` on the two enablement
+sequences (`.latest` replay keeps a single value, so the two-argument
+predicate never fires and the call would hang), and the 14 non-throwing
+`flatMap` overloads (a call-site test cannot prove which of the two
+remaining same-name overloads the compiler selected, so the ledger keeps
+the honest `declared` note rather than guessing).
 
 The isolated host cannot compile `AlertConfiguration`, so 300
 `implemented` and a fully nondeferred table remain blocked on guest

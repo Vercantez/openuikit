@@ -275,26 +275,26 @@ s:SC11TKErrorCodeLeV18communicationErrorSoAAVvpZ	implemented	test:full/cryptotok
 s:SC11TKErrorCodeLeV20authenticationFailedSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
 s:SC11TKErrorCodeLeV20authenticationNeededSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCharset	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Charset	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Encoding	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINJustification	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Justification	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardSlotState	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#State	compiler-synthesized witness
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKTokenOperation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKTokenOperation	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKErrorCode	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKError	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINCharset	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Charset	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Encoding	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINJustification	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Justification	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardSlotState	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#State	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKTokenOperation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKTokenOperation	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKErrorCode	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKError	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINCharset	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Charset	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Encoding	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINJustification	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Justification	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardSlotState	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#State	compiler-synthesized witness
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKTokenOperation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKTokenOperation	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCharset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINCharsetEqualityHash	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINCompletionEquality	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINConfirmationEquality	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINEncodingEqualityHash	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINJustification	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINJustificationEqualityHash	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKSmartCardProtocolEquality	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardSlotState	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKSlotStateEqualityHash	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKTokenOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKTokenOperationEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKErrorCodeHashWitnesses	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINCharset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINCharsetEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINEncodingEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINJustification	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINJustificationEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardSlotState	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKSlotStateEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKTokenOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKTokenOperationEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKErrorCodeHashWitnesses	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINCharset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINCharsetEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINEncodingEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINJustification	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKPINJustificationEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardSlotState	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKSlotStateEqualityHash	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKTokenOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEqualityTests.swift#testTKTokenOperationEqualityHash	
 s:So11TKErrorCodeV0A13TokenNotFoundABvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
 s:So11TKErrorCodeV0A14ObjectNotFoundABvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
 s:So11TKErrorCodeV0A20AuthenticationFailedABvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
@@ -310,67 +310,67 @@ s:So22TKSmartCardPINEncodingV8rawValueABSgSi_tcfc	implemented	test:full/cryptoto
 s:So24TKSmartCardPINCompletionV8rawValueABSu_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCompletionRawValues	
 s:So26TKSmartCardPINConfirmationV8rawValueABSu_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINConfirmationRawValues	
 s:So27TKSmartCardPINJustificationV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINJustificationRawValues	
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
 s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINConfirmationAlgebra	
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
 s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
 s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINConfirmationAlgebra	
 s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
 s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
 s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchA	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCompletionWitnessBatchB	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchB	
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchB	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKCardProtocolWitnessBatchA	
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitWitnessTests.swift#testTKConfirmationWitnessBatchA	
 s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	

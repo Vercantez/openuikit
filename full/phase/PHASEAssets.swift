@@ -105,11 +105,12 @@ public final class PHASEAssetRegistry: NSObject {
     var registeredRoots: [String: PHASESoundEventNodeDefinition] = [:]
 
     public func unregisterAsset(identifier: String) async -> Bool {
-        guard assets[identifier] != nil else { return false }
-        assets.removeValue(forKey: identifier)
-        globalMetaParameters.removeValue(forKey: identifier)
-        registeredRoots.removeValue(forKey: identifier)
-        return true
+        hostUnregisterAsset(identifier: identifier)
+    }
+
+    public func unregisterAsset(identifier: String, completion handler: ((Bool) -> Void)? = nil) {
+        let removed = hostUnregisterAsset(identifier: identifier)
+        handler?(removed)
     }
 
     @_spi(OpenUIKitHost)

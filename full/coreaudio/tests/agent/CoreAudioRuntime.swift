@@ -161,7 +161,7 @@ CoreAudioRuntimeProbe.expect(
     AudioObjectHasProperty(kAudioObjectSystemObject, &address) == false,
     "AudioObjectHasProperty is false on Linux"
 )
-var settable = DarwinBoolean(true)
+var settable = CoreAudio.DarwinBoolean(true)
 let settableStatus = AudioObjectIsPropertySettable(kAudioObjectSystemObject, &address, &settable)
 CoreAudioRuntimeProbe.expect(settableStatus == kAudioHardwareUnsupportedOperationError, "settable fail-closed")
 CoreAudioRuntimeProbe.expect(settable.boolValue == false, "settable out-parameter")

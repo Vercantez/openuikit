@@ -58,13 +58,13 @@ See `oracle-questions.tsv` for questions that need a central Apple-oracle probe.
 
 Coverage of the 347 exact overlay IDs:
 
-| status | depth start | depth pass | wave-4 |
-| --- | --- | --- | --- |
-| implemented | 102 | 317 | 335 |
-| declared | 241 | 26 | 8 |
-| unavailable | 4 | 4 | 4 |
-| deferred | 0 | 0 | 0 |
-| not-applicable | 0 | 0 | 0 |
+| status | depth start | depth pass | wave-4 | wave-6 |
+| --- | --- | --- | --- | --- |
+| implemented | 102 | 317 | 335 | 335 |
+| declared | 241 | 26 | 8 | 8 |
+| unavailable | 4 | 4 | 4 | 4 |
+| deferred | 0 | 0 | 0 | 0 |
+| not-applicable | 0 | 0 | 0 | 0 |
 
 Raised `implemented` first for the overlay types the Home Assistant corpus
 reaches through `AudioBuffer` / channel-layout helpers, then for documented
@@ -89,6 +89,26 @@ Wave-4 (2026-09-14): converted 18 `declared` rows (6 `sort(using:)`,
 Leftover `declared`: 4 `compare(_:_:)` (unsatisfiable without inventing a
 `SortComparator` conformance on Apple's C structs) and 4 `flatMap`
 (deprecated overload, `compactMap` covers the documented replacement).
+
+Wave-6 (2026-09-15): recounted 335 implemented / 8 declared /
+4 unavailable / 0 deferred / 0 not-applicable of 347 — no change.
+This slug has no SwiftUI View types, so the pi-wave6 overlay-override
+playbook does not apply. Re-probed both leftover groups against the
+local Xcode 26.1 toolchain instead of converting them: a test-only
+`extension AudioBuffer: SortComparator` fails under warnings-as-errors
+(retroactive conformance of an imported type, plus a `Sendable`
+violation on the raw-pointer `mData` field), so `compare(_:_:)` would
+need an invented product-level conformance Apple does not declare;
+the optional-returning `flatMap` closure is a hard
+`#DeprecatedDeclaration` error under warnings-as-errors on both
+platforms, and citing the sequence-overload `flatMap` test for the
+optional-overload precise IDs would miscite the overload. Both groups
+stay honestly `declared`. Also fixed a pre-existing gate breakage:
+Xcode 26.1's `Darwin` module now exposes `DarwinBoolean`, which made
+bare `DarwinBoolean(true)` ambiguous in `tests/agent/CoreAudioRuntime.swift`
+and `tests/agent/HardwareFailClosedTests.swift`; both call sites now
+use `CoreAudio.DarwinBoolean`. `bash tests/acceptance/test_host.sh`
+is green (`FRAMEWORK_FANOUT_HOST_OK`).
 
 Top-5 implemented evidence distribution (of 335 implemented rows; no test
 exceeds 4%):

@@ -902,3 +902,15 @@ func testHashValueSurface() {
     precondition(laneAttribute.hashValue == laneAttributeCopy.hashValue)
     precondition(Schema().hashValue == Schema().hashValue)
 }
+
+func testModelContextDebugDescription() {
+    let container = try! ModelContainer(
+        for: AgentNote.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let context = ModelContext(container)
+    precondition(context.debugDescription == "ModelContext(hasChanges: false)")
+    context.insert(AgentNote(title: "debug", count: 1))
+    precondition(context.debugDescription == "ModelContext(hasChanges: true)")
+    precondition(String(reflecting: context).contains("ModelContext"))
+}

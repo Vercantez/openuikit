@@ -86,6 +86,41 @@ overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
 
+### Leftover re-examination (pi-wave6 webkit)
+
+Re-examined all 68 declared and 26 deferred rows for synchronous
+in-process conversion. Result: **no conversions** (1326 implemented /
+68 declared / 26 deferred / 0 unavailable / 813 not-applicable, total
+2233 — unchanged). The deliverable validator still reports
+`FRAMEWORK_FANOUT_DELIVERABLE_OK module=WebKit lane=medium-full
+symbols=2233`.
+
+- Overlay override does not trigger: the product defines no SwiftUI View
+  types, so there are no declared identity `Self`-returning View modifiers
+  to convert with the FamilyControls playbook. The 813 not-applicable
+  rows are Apple `_WebKit_SwiftUI` / `SwiftUI.View`-constrained overlay IDs
+  owned by the SwiftUI lane; the isolated host has no SwiftUI module and
+  framework-local lookalikes are forbidden.
+- Declared ObjC `completionHandler:` / `replyHandler:` overlays (~30 rows)
+  are Swift-async in disguise with no Apple extension process; the
+  contract forbids `await` in cited tests.
+- Declared WebPage async members (`callJavaScript`, dialog/policy handlers,
+  media capture/playback setters, `exported(as:)`, `navigations`,
+  `mediaPlaybackState`, `appBundle` / `resourceBaseURL`) cannot be invoked
+  from top-level synchronous no-argument tests. The `navigations`
+  placeholder stays declared per the existing oracle question rather than
+  being promoted by a trivial property touch.
+- UIKit-typed members (`buttonNumber`, `modifierFlags`, `menuItems`,
+  `keyCommand`, `menuItem`, edit-menu/input-suggestion delegate methods)
+  have no formable parameter types on the isolated host; several have no
+  Linux product member at all (declared anchor is the enclosing type).
+- Deferred rows (NSAttributedString HTML import, `SecTrust`,
+  `ProxyConfiguration`, `UTType`/`Transferable`, SwiftUI `themeColor` /
+  `modifierFlags`, `serverTrust`, synthesized `Equatable.!=`) still need
+  modules or Apple services this host does not have.
+
+Only this README changes in this pass.
+
 ### Export/sensor/protocol declared conversion (pi-wave3 webkit)
 
 This pass converts **11 declared rows to implemented** (1315 → 1326

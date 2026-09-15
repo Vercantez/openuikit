@@ -29,8 +29,9 @@ Apple widget daemon:
 - process-local `WidgetPushHandler` token delivery into `WidgetCenter`.
 
 Coverage of the 2876 iPhoneOS 26.1 public identifiers after the wave-8 depth
-pass: **456 implemented**, 1626 declared, 17 deferred, 777 not-applicable
-(SwiftUI `View` overlay re-exports on `ControlWidgetToggleDefaultLabel`).
+pass: **2074 implemented**, 8 declared, 17 deferred, 777 not-applicable
+(SwiftUI `View` overlay re-exports converted to identity-overlaid tests;
+8 `Body`/`body` witnesses stay declared as fail-closed).
 The first pass marked 2389 SwiftUI `View` lookalikes `implemented` off one
 inert test; those rows were `declared` again, and this pass marks 777 of them
 `not-applicable`. A single test covers at most 40 identifiers
@@ -191,3 +192,49 @@ Top-5 implemented evidence distribution after this continuation:
 3. `testConfigurationPushAndSession` — 28 rows (6.0%)
 4. `testViewWidgetModifiers` — 20 rows (4.3%)
 5. `testWidgetLocationAndMounting` / `testActivityFamilyAndLevelOfDetail` — 17 rows each (3.6%)
+
+### Overlay pass 2026-09 (pi wave-6)
+
+This pass started from 467 implemented, 1615 declared, 17 deferred,
+0 unavailable, and 777 not-applicable identifiers. It ends at 2074 implemented,
+8 declared, 17 deferred, 0 unavailable, and 777 not-applicable identifiers.
+
+All 1607 synthesized SwiftUI `View` overlay rows (412 distinct modifier base
+names on `ControlWidgetToggleDefaultLabel`,
+`ControlWidgetButtonDefaultActionLabel`, and `AccessoryWidgetBackground`) are
+converted from `declared` to `implemented` following the FamilyControls
+identity-overlay playbook. `tests/agent/WidgetKitViewOverlayTests.swift` adds
+`testViewOverlayBatch01`–`testViewOverlayBatch08`; each batch invokes its
+modifiers on all three WidgetKit `View` types plus `EmptyView` and pins the
+no-op `Self` pass-through (notes: `identity View overlay; renders EmptyView`).
+Two WidgetKit-specific overloads (`controlWidgetActionHint`,
+`controlWidgetStatus`) are called with an `Int` token so overload resolution
+selects the inert stub rather than the real `StringProtocol` chrome method;
+every other modifier is called with a `"d"` token its generic stub accepts
+while the concretely-typed real method rejects. No `DispatchQueue.main`,
+`RunLoop`, semaphore wait, or `await` appears in the batches.
+
+Citation spread (1607 overlay rows over 8 batches of 200–202 rows each; no
+batch cites more than 9.8% of the 2074 implemented rows):
+
+| batch | rows |
+| --- | --- |
+| testViewOverlayBatch01 | 201 |
+| testViewOverlayBatch02 | 202 |
+| testViewOverlayBatch03 | 202 |
+| testViewOverlayBatch04 | 202 |
+| testViewOverlayBatch05 | 200 |
+| testViewOverlayBatch06 | 200 |
+| testViewOverlayBatch07 | 200 |
+| testViewOverlayBatch08 | 200 |
+
+The 8 remaining `declared` rows are the `Body == Never` aliases and `body`
+witnesses of `ControlWidgetButton`, `ControlWidgetToggle`,
+`StaticControlConfiguration`, and `AppIntentControlConfiguration`; their
+getters stay fatal because Linux has no Control Center presentation host.
+Timeline/reload daemon success, `#Preview` macros,
+DeveloperToolsSupport preview inits, and the `NSUserActivityTypeLiveActivity`
+payload stay deferred/fail-closed. The Linux host gate
+(`bash tests/acceptance/test_host.sh`, also verified under Docker
+`swift:6.0-jammy`) compiles the dylib warnings-as-errors, runs every cited
+test, and emits only `WIDGETKIT_AGENT_RUNTIME_OK`.

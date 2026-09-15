@@ -20,23 +20,39 @@ file path `tests/agent/GameControllerRuntime.swift` (not
 After splitting the runtime probe into focused `*Tests.swift` functions and
 reclassifying compile-only rows:
 
-**1043 implemented** / **58 declared** / **10 deferred** / **11 unavailable** /
+**1101 implemented** / **0 declared** / **10 deferred** / **11 unavailable** /
 **146 not-applicable** (1268 IDs). Nondeferred 1101 remains well above the
 large-partitioned floor of 127.
 
+Wave-6 pass: the remaining 58 compile-only rows were promoted to `implemented`
+(1043 → 1101, declared → 0) by citing the focused tests that already exercise
+them — `GCDeviceElementsTests#testDeviceElementAliases` (5 device aliases),
+`GCHandlerTypeTests#testHandlerTypealiases` (11 handler typealiases),
+`GCSwitchSourceTests#testPhysicalInputSourceAndSwitch` (16 switch/source
+protocol rows), `GCTypedNameTests#testPhysicalInputTypedNames` (12 typed-name
+associated types), `GCCollectionTypeTests#testElementCollectionAssociatedTypes`
+(4 collection associated types), and
+`GCMessageSubjectTests#testNotificationMessageSubjects` (10 message `Subject`
+typealiases). Each cited test was compile- and run-verified against the Linux
+module sources; none uses `DispatchQueue.main`, `RunLoop`, semaphores, or
+`await`. No leftover row is a SwiftUI `View` overlay, so the overlay playbook
+did not apply.
+
 Top-5 implemented evidence (by row count):
 
-1. `GCKeyCodeTests.swift#testHIDKeyCodeValues` — 138 (13.2%) — table-driven HID constants
-2. `GCKeyNameTests.swift#testHIDKeyNameStrings` — 134 (12.8%) — table-driven `GCKey*` strings
-3. `GCLiveInputTests.swift#testLiveInputAndPhysicalElementProtocols` — 99 (9.5%)
-4. `GCSnapshotTests.swift#testSnapshotRoundTrip` — 98 (9.4%)
-5. `GCEnumTests.swift#testEnumAndOptionSetMembers` — 86 (8.2%) — table-driven enums/option-sets
+1. `GCKeyCodeTests.swift#testHIDKeyCodeValues` — 138 (12.5%) — table-driven HID constants
+2. `GCKeyNameTests.swift#testHIDKeyNameStrings` — 134 (12.2%) — table-driven `GCKey*` strings
+3. `GCLiveInputTests.swift#testLiveInputAndPhysicalElementProtocols` — 99 (9.0%)
+4. `GCSnapshotTests.swift#testSnapshotRoundTrip` — 98 (8.9%)
+5. `GCEnumTests.swift#testEnumAndOptionSetMembers` — 86 (7.8%) — table-driven enums/option-sets
 
-No non-enum / non-constant test exceeds 9.5% of implemented rows (40% cap would
-be 417). `UIScene.ConnectionOptions.gameControllerActivationContext` moved from
-a false `implemented` to **deferred** (UIKit overlay). Protocol witnesses with
-no public instance (`GCSwitchElement`, `GCPhysicalInputSource`) and typealiases
-are **declared**.
+No non-enum / non-constant test exceeds 9.0% of implemented rows (40% cap would
+be 440). `UIScene.ConnectionOptions.gameControllerActivationContext` moved from
+a false `implemented` to **deferred** (UIKit overlay). Formerly `declared`
+protocol witnesses with no public instance (`GCSwitchElement`,
+`GCPhysicalInputSource`), handler/type aliases, typed-name associated types,
+collection associated types, and message `Subject` aliases are now
+**implemented** via the focused tests above.
 
 The input model is a **simulated device source**. This container has no
 `/dev/input` (no `js*` joystick nodes), so Linux evdev/joystick reading is a

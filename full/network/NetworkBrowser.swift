@@ -100,9 +100,15 @@ public final class NWBrowser: @unchecked Sendable, CustomDebugStringConvertible 
     public var debugDescription: String { "NWBrowser(\(state))" }
 }
 
-public protocol NWGroupDescriptor: AnyObject, Sendable {}
+public protocol NWGroupDescriptor: AnyObject, Sendable {
+    var members: [NWEndpoint] { get }
+}
 
 public class NWMulticastGroup: NWGroupDescriptor, @unchecked Sendable {
+    /// Fail-closed: construction never succeeds on Linux, so the group is
+    /// always empty. Stored only to satisfy the descriptor requirement.
+    public var members: [NWEndpoint] { [] }
+
     public init?(with endpoint: NWEndpoint) { return nil }
 
     /// Linux has no multicast group membership daemon. Construction fails
@@ -116,7 +122,9 @@ public class NWMulticastGroup: NWGroupDescriptor, @unchecked Sendable {
 }
 
 public class NWMultiplexGroup: NWGroupDescriptor, @unchecked Sendable {
-    public init(with endpoint: NWEndpoint) { _ = endpoint }
+    private let endpoint: NWEndpoint
+    public var members: [NWEndpoint] { [endpoint] }
+    public init(with endpoint: NWEndpoint) { self.endpoint = endpoint }
     public convenience init(to endpoint: NWEndpoint) { self.init(with: endpoint) }
 }
 
