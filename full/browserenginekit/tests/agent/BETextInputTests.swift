@@ -37,6 +37,15 @@ private final class HostTextInput: NSObject, BETextInput {
     var selectedWord = false
     var storedText = "hello"
     var lastGesture: BEGestureType?
+    var adjustedRange: BEDirectionalTextRange?
+    var insertedPlaceholder: UITextPlaceholder?
+    var movedSelection: (UITextGranularity, UITextStorageDirection)?
+    var removedPlaceholder: (UITextPlaceholder, Bool)?
+    var replacedText: (String, String, BETextReplacementOptions)?
+    var requestedRectsInput: String?
+    var selectedPoint: CGPoint?
+    var selectedGranularity: (UITextGranularity, CGPoint)?
+    var updatedSelection: (CGPoint, UITextGranularity)?
 
     func insertText(_ text: String) { storedText += text }
     func deleteBackward() {
@@ -184,68 +193,111 @@ private final class HostTextInput: NSObject, BETextInput {
         _ = granularity
     }
 
-    func adjustSelection(by range: BEDirectionalTextRange) async { _ = range }
-    func handleKeyEntry(_ entry: BEKeyEntry) async -> (BEKeyEntry, Bool) { (entry, false) }
-    func insertTextPlaceholder(size: CGSize) async -> UITextPlaceholder {
+    func adjustSelection(
+        by range: BEDirectionalTextRange,
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = range
+        adjustedRange = range
+        completionHandler()
+    }
+    func handleKeyEntry(
+        _ entry: BEKeyEntry,
+        completionHandler: @escaping (BEKeyEntry, Bool) -> Void
+    ) {
+        completionHandler(entry, true)
+    }
+    func insertTextPlaceholder(
+        size: CGSize,
+        completionHandler: @escaping (UITextPlaceholder) -> Void
+    ) {
         _ = size
-        return UITextPlaceholder()
+        let placeholder = UITextPlaceholder()
+        insertedPlaceholder = placeholder
+        completionHandler(placeholder)
     }
-    func moveSelection(atBoundary granularity: UITextGranularity, in direction: UITextStorageDirection) async {
-        _ = granularity
-        _ = direction
+    func moveSelection(
+        atBoundary granularity: UITextGranularity,
+        in direction: UITextStorageDirection,
+        completionHandler: @escaping () -> Void
+    ) {
+        movedSelection = (granularity, direction)
+        completionHandler()
     }
-    func remove(_ placeholder: UITextPlaceholder, willInsertText: Bool) async {
-        _ = placeholder
-        _ = willInsertText
+    func remove(
+        _ placeholder: UITextPlaceholder,
+        willInsertText: Bool,
+        completionHandler: @escaping () -> Void
+    ) {
+        removedPlaceholder = (placeholder, willInsertText)
+        completionHandler()
     }
     func replaceText(
         _ originalText: String,
         withText replacementText: String,
-        options: BETextReplacementOptions
-    ) async -> [UITextSelectionRect] {
-        _ = originalText
-        _ = replacementText
-        _ = options
-        return []
+        options: BETextReplacementOptions,
+        completionHandler: @escaping ([UITextSelectionRect]) -> Void
+    ) {
+        replacedText = (originalText, replacementText, options)
+        let rects = [UITextSelectionRect(rect: CGRect(x: 0, y: 0, width: 8, height: 8))]
+        completionHandler(rects)
     }
-    func requestDocumentContext(_ request: BETextDocumentRequest) async -> BETextDocumentContext {
+    func requestDocumentContext(
+        _ request: BETextDocumentRequest,
+        completionHandler: @escaping (BETextDocumentContext) -> Void
+    ) {
         _ = request
-        return BETextDocumentContext(
+        let context = BETextDocumentContext(
             selectedText: selectedText,
             contextBefore: nil,
             contextAfter: nil,
             markedText: nil,
             selectedRangeInMarkedText: NSRange(location: 0, length: 0)
         )
+        completionHandler(context)
     }
-    func requestTextRects(for input: String) async -> [UITextSelectionRect] {
-        _ = input
-        return []
+    func requestTextRects(
+        for input: String,
+        withCompletionHandler completionHandler: @escaping ([UITextSelectionRect]) -> Void
+    ) {
+        requestedRectsInput = input
+        completionHandler([])
     }
-    func selectPosition(at point: CGPoint) async { _ = point }
-    func selectPosition(at point: CGPoint, for request: BETextDocumentRequest) async -> BETextDocumentContext {
-        _ = point
+    func selectPosition(at point: CGPoint, completionHandler: @escaping () -> Void) {
+        selectedPoint = point
+        completionHandler()
+    }
+    func selectPosition(
+        at point: CGPoint,
+        for request: BETextDocumentRequest,
+        completionHandler: @escaping (BETextDocumentContext) -> Void
+    ) {
         _ = request
-        return BETextDocumentContext(
-            selectedText: selectedText,
-            contextBefore: nil,
-            contextAfter: nil,
-            markedText: nil,
-            selectedRangeInMarkedText: NSRange(location: 0, length: 0)
-        )
+        selectedPoint = point
+        completionHandler(BETextDocumentContext.host_empty)
     }
-    func selectTextForEditMenuWithLocation(inView locationInView: CGPoint) async -> (Bool, String?, NSRange) {
+    func selectTextForEditMenuWithLocation(
+        inView locationInView: CGPoint,
+        completionHandler: @escaping (Bool, String?, NSRange) -> Void
+    ) {
+        completionHandler(true, selectedText, NSRange(location: 0, length: selectedText?.count ?? 0))
         _ = locationInView
-        return (false, nil, NSRange(location: 0, length: 0))
     }
-    func selectText(in granularity: UITextGranularity, at point: CGPoint) async {
-        _ = granularity
-        _ = point
+    func selectText(
+        in granularity: UITextGranularity,
+        at point: CGPoint,
+        completionHandler: @escaping () -> Void
+    ) {
+        selectedGranularity = (granularity, point)
+        completionHandler()
     }
-    func updateSelection(extent point: CGPoint, boundary granularity: UITextGranularity) async -> Bool {
-        _ = point
-        _ = granularity
-        return false
+    func updateSelection(
+        extent point: CGPoint,
+        boundary granularity: UITextGranularity,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        updatedSelection = (point, granularity)
+        completionHandler(true)
     }
 }
 
@@ -469,4 +521,141 @@ func testBEDragInteractionDelegateDefaults() {
         return false
     }
     precondition(prepared)
+}
+
+func testBETextInputAdjustSelectionByRangeCompletion() {
+    let input = HostTextInput()
+    var completed = false
+    input.adjustSelection(by: BEDirectionalTextRange(offset: 1, length: 2)) {
+        completed = true
+    }
+    precondition(completed)
+    precondition(input.adjustedRange == BEDirectionalTextRange(offset: 1, length: 2))
+}
+
+func testBETextInputHandleKeyEntryCompletion() {
+    let input = HostTextInput()
+    let entry = BEKeyEntry.host_make(key: UIKey(characters: "a"), state: .down, isKeyRepeating: false, timestamp: 0)
+    var result: (BEKeyEntry, Bool)?
+    input.handleKeyEntry(entry) { result = ($0, $1) }
+    precondition(result?.0 === entry)
+    precondition(result?.1 == true)
+}
+
+func testBETextInputInsertTextPlaceholderCompletion() {
+    let input = HostTextInput()
+    var placeholder: UITextPlaceholder?
+    input.insertTextPlaceholder(size: CGSize(width: 10, height: 20)) {
+        placeholder = $0
+    }
+    precondition(placeholder != nil)
+    precondition(placeholder === input.insertedPlaceholder)
+}
+
+func testBETextInputMoveSelectionAtBoundaryCompletion() {
+    let input = HostTextInput()
+    var completed = false
+    input.moveSelection(atBoundary: .word, in: .forward) {
+        completed = true
+    }
+    precondition(completed)
+    precondition(input.movedSelection?.0 == .word)
+    precondition(input.movedSelection?.1 == .forward)
+}
+
+func testBETextInputRemoveTextPlaceholderCompletion() {
+    let input = HostTextInput()
+    let placeholder = UITextPlaceholder()
+    var completed = false
+    input.remove(placeholder, willInsertText: true) {
+        completed = true
+    }
+    precondition(completed)
+    precondition(input.removedPlaceholder?.0 === placeholder)
+    precondition(input.removedPlaceholder?.1 == true)
+}
+
+func testBETextInputReplaceTextCompletion() {
+    let input = HostTextInput()
+    var rects: [UITextSelectionRect]?
+    input.replaceText("old", withText: "new", options: .addUnderline) {
+        rects = $0
+    }
+    precondition(rects?.count == 1)
+    precondition(input.replacedText?.0 == "old")
+    precondition(input.replacedText?.1 == "new")
+    precondition(input.replacedText?.2 == .addUnderline)
+}
+
+func testBETextInputRequestDocumentContextCompletion() {
+    let input = HostTextInput()
+    var context: BETextDocumentContext?
+    input.requestDocumentContext(BETextDocumentRequest.host_make()) {
+        context = $0
+    }
+    precondition(context?.selectedText == "sel")
+}
+
+func testBETextInputRequestTextRectsCompletion() {
+    let input = HostTextInput()
+    var rects: [UITextSelectionRect]?
+    input.requestTextRects(for: "hi", withCompletionHandler: {
+        rects = $0
+    })
+    precondition(rects?.isEmpty == true)
+    precondition(input.requestedRectsInput == "hi")
+}
+
+func testBETextInputSelectPositionCompletion() {
+    let input = HostTextInput()
+    var completed = false
+    input.selectPosition(at: CGPoint(x: 4, y: 5)) {
+        completed = true
+    }
+    precondition(completed)
+    precondition(input.selectedPoint == CGPoint(x: 4, y: 5))
+}
+
+func testBETextInputSelectPositionForRequestCompletion() {
+    let input = HostTextInput()
+    var context: BETextDocumentContext?
+    input.selectPosition(at: CGPoint(x: 1, y: 2), for: BETextDocumentRequest.host_make()) {
+        context = $0
+    }
+    precondition(context != nil)
+    precondition(context?.selectedText == nil)
+    precondition(input.selectedPoint == CGPoint(x: 1, y: 2))
+}
+
+func testBETextInputSelectTextForEditMenuCompletion() {
+    let input = HostTextInput()
+    var result: (Bool, String?, NSRange)?
+    input.selectTextForEditMenuWithLocation(inView: CGPoint(x: 3, y: 3)) {
+        result = ($0, $1, $2)
+    }
+    precondition(result?.0 == true)
+    precondition(result?.1 == "sel")
+    precondition(result?.2 == NSRange(location: 0, length: 3))
+}
+
+func testBETextInputSelectTextInGranularityCompletion() {
+    let input = HostTextInput()
+    var completed = false
+    input.selectText(in: .sentence, at: CGPoint(x: 7, y: 8)) {
+        completed = true
+    }
+    precondition(completed)
+    precondition(input.selectedGranularity?.0 == .sentence)
+    precondition(input.selectedGranularity?.1 == CGPoint(x: 7, y: 8))
+}
+
+func testBETextInputUpdateSelectionCompletion() {
+    let input = HostTextInput()
+    var updated: Bool?
+    input.updateSelection(extent: CGPoint(x: 2, y: 2), boundary: .paragraph) {
+        updated = $0
+    }
+    precondition(updated == true)
+    precondition(input.updatedSelection?.0 == CGPoint(x: 2, y: 2))
+    precondition(input.updatedSelection?.1 == .paragraph)
 }

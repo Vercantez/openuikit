@@ -110,6 +110,13 @@ func testGKErrorBehavior() {
     let other = GKError(.notAuthenticated, userInfo: [NSLocalizedDescriptionKey: "offline"])
     precondition(error == other)
     precondition(!(error == GKError(.cancelled)))
+    precondition(error != GKError(.cancelled))
+    precondition(!(error != other))
+    _ = GKError.init(.cancelled)
+    _ = GKError.init(.cancelled, userInfo: [:])
+    _ = error.hashValue
+    _ = error.errorCode
+    _ = error.errorUserInfo
     var hasher = Hasher()
     error.hash(into: &hasher)
     _ = hasher.finalize()

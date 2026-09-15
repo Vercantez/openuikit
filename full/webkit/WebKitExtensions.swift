@@ -918,6 +918,7 @@ public protocol WKWebExtensionTab: AnyObject {
     func isPinned(for context: WKWebExtensionContext) -> Bool
     func setPinned(_ pinned: Bool, for context: WKWebExtensionContext) async throws
     func isReaderModeActive(for context: WKWebExtensionContext) -> Bool
+    func isReaderModeAvailable(for context: WKWebExtensionContext) -> Bool
     func isPlayingAudio(for context: WKWebExtensionContext) -> Bool
     func isMuted(for context: WKWebExtensionContext) -> Bool
     func setMuted(_ muted: Bool, for context: WKWebExtensionContext) async throws
@@ -971,6 +972,10 @@ public extension WKWebExtensionTab {
         throw WKPortableUnknown("WKWebExtensionTab.setPinned")
     }
     func isReaderModeActive(for context: WKWebExtensionContext) -> Bool {
+        _ = context
+        return false
+    }
+    func isReaderModeAvailable(for context: WKWebExtensionContext) -> Bool {
         _ = context
         return false
     }
@@ -1360,6 +1365,19 @@ public protocol WKWebExtensionControllerDelegate: AnyObject {
         for extensionContext: WKWebExtensionContext
     ) async throws
     func webExtensionControllerDidUpdateExtensions(_ controller: WKWebExtensionController)
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        didUpdate action: WKWebExtension.Action,
+        forExtensionContext context: WKWebExtensionContext
+    )
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        focusedWindowFor extensionContext: WKWebExtensionContext
+    ) -> (any WKWebExtensionWindow)?
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        openWindowsFor extensionContext: WKWebExtensionContext
+    ) -> [any WKWebExtensionWindow]
 }
 
 @MainActor
@@ -1441,5 +1459,26 @@ public extension WKWebExtensionControllerDelegate {
     }
     func webExtensionControllerDidUpdateExtensions(_ controller: WKWebExtensionController) {
         _ = controller
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        didUpdate action: WKWebExtension.Action,
+        forExtensionContext context: WKWebExtensionContext
+    ) {
+        _ = (controller, action.label, context)
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        focusedWindowFor extensionContext: WKWebExtensionContext
+    ) -> (any WKWebExtensionWindow)? {
+        _ = (controller, extensionContext)
+        return nil
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        openWindowsFor extensionContext: WKWebExtensionContext
+    ) -> [any WKWebExtensionWindow] {
+        _ = (controller, extensionContext)
+        return []
     }
 }

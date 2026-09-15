@@ -168,7 +168,7 @@ public struct AssignableDocument: Assignable, MergeableDocument, Hashable, Senda
                 public var image: UIImage
                 public var pageID: AssignableDocument.Page.ID
 
-                init(box: AssignableDocument.QuestionBox, image: UIImage, pageID: AssignableDocument.Page.ID) {
+                public init(box: AssignableDocument.QuestionBox, image: UIImage, pageID: AssignableDocument.Page.ID) {
                     self.box = box
                     self.image = image
                     self.pageID = pageID
@@ -178,7 +178,7 @@ public struct AssignableDocument: Assignable, MergeableDocument, Hashable, Senda
             public var questionID: AssignableDocument.Question.ID
             public var data: AssignableDocument.Question.Thumbnail.Data?
 
-            init(questionID: AssignableDocument.Question.ID, data: AssignableDocument.Question.Thumbnail.Data? = nil) {
+            public init(questionID: AssignableDocument.Question.ID, data: AssignableDocument.Question.Thumbnail.Data? = nil) {
                 self.questionID = questionID
                 self.data = data
             }

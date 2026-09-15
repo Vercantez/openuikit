@@ -326,38 +326,77 @@ private func traceContours(
     height: Int,
     maximum: Int
 ) -> [[CGPoint]] {
-    var seen = [Bool](repeating: false, count: binary.count)
-    var contours: [[CGPoint]] = []
+    guard width > 0, height > 0, binary.count >= width * height else { return [] }
+    // Clockwise in y-down image coordinates: E SE S SW W NW N NE.
     let neighbors = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
-    for y in 1..<(height - 1) {
-        for x in 1..<(width - 1) {
-            let index = y * width + x
-            if binary[index] == 0 || seen[index] { continue }
-            if binary[index - 1] == 1 { continue }
-            var contour: [CGPoint] = []
-            var cx = x
-            var cy = y
-            var dir = 0
-            repeat {
-                contour.append(CGPoint(x: cx, y: cy))
-                seen[cy * width + cx] = true
-                var found = false
-                for offset in 0..<8 {
-                    let n = neighbors[(dir + offset) % 8]
-                    let nx = cx + n.0
-                    let ny = cy + n.1
-                    if nx >= 0, ny >= 0, nx < width, ny < height, binary[ny * width + nx] == 1 {
-                        cx = nx
-                        cy = ny
-                        dir = (dir + offset + 6) % 8
-                        found = true
-                        break
+    // 8-connectivity component labelling: each foreground blob is traced exactly
+    // once from its topmost-leftmost pixel, whose west neighbor is background or
+    // out of bounds by scan-order construction.
+    var labels = [Int](repeating: -1, count: width * height)
+    var contours: [[CGPoint]] = []
+    var blobTag = 0
+    var stack: [Int] = []
+    for seedY in 0..<height {
+        for seedX in 0..<width {
+            let seed = seedY * width + seedX
+            if binary[seed] == 0 || labels[seed] != -1 { continue }
+            stack.removeAll(keepingCapacity: true)
+            stack.append(seed)
+            labels[seed] = blobTag
+            while let index = stack.popLast() {
+                let x = index % width
+                let y = index / width
+                for offset in neighbors {
+                    let nx = x + offset.0
+                    let ny = y + offset.1
+                    if nx < 0 || ny < 0 || nx >= width || ny >= height { continue }
+                    let neighbor = ny * width + nx
+                    if binary[neighbor] == 1 && labels[neighbor] == -1 {
+                        labels[neighbor] = blobTag
+                        stack.append(neighbor)
                     }
                 }
-                if !found { break }
-                if contour.count > width * height { break }
-            } while !(cx == x && cy == y) || contour.count < 4
-            if contour.count >= 8 {
+            }
+            blobTag += 1
+            // Moore-neighbor boundary following with an explicit backtrack
+            // direction: neighbors are examined clockwise from behind the entry
+            // direction, and (pixel, backtrack) state tracking stops repeats
+            // instead of lapping. The seed's initial backtrack is west.
+            var contour = [CGPoint(x: seedX, y: seedY)]
+            var cx = seedX
+            var cy = seedY
+            var backDir = 4
+            var visited: Set<Int> = [(seedY * width + seedX) * 8 + backDir]
+            let stepCap = width * height + 8
+            var steps = 0
+            var closed = false
+            while steps < stepCap {
+                steps += 1
+                var moved = false
+                for k in 0..<8 {
+                    let nextDir = (backDir + 1 + k) % 8
+                    let nx = cx + neighbors[nextDir].0
+                    let ny = cy + neighbors[nextDir].1
+                    if nx < 0 || ny < 0 || nx >= width || ny >= height { continue }
+                    if binary[ny * width + nx] == 0 { continue }
+                    let nextBackDir = (nextDir + 4) % 8
+                    let state = (ny * width + nx) * 8 + nextBackDir
+                    if visited.contains(state) {
+                        closed = contour.count >= 8
+                        break
+                    }
+                    visited.insert(state)
+                    cx = nx
+                    cy = ny
+                    backDir = nextBackDir
+                    contour.append(CGPoint(x: cx, y: cy))
+                    moved = true
+                    break
+                }
+                if !moved { break }
+                if closed { break }
+            }
+            if closed {
                 contours.append(contour)
                 if contours.count >= maximum { return contours }
             }
@@ -858,4 +897,105 @@ func visionAestheticsScores(in raster: VisionRaster) -> VNImageAestheticsScoresO
         isUtility: overall < 0.2,
         confidence: 1
     )
+}
+
+/// Classical dense block-matching optical flow. This is a documented Linux-local
+/// stand-in, not Apple's flow model.
+///
+/// Apple oracle (macOS Vision, Xcode 26.1, 2026-09-14): `VNGenerateOpticalFlowRequest`
+/// returns one `VNPixelBufferObservation` sized to the reference image in
+/// `kCVPixelFormatType_TwoComponent32Float` (two Float32 (dx, dy) per pixel).
+/// The sign convention matches the CG shift direction (x-right, y-down), and
+/// identical frames read ~0. Magnitudes on random noise read ~1.3x the true shift,
+/// so only the layout, sign convention, size, and zero-motion behavior are pinned;
+/// Linux magnitudes are the block-matcher's own and are asserted with tolerance.
+///
+/// `reference` is the handler image; `target` is the targeted image resampled to the
+/// reference size when they differ. Matching runs on a <=40px working grid with a 5x5
+/// SAD block and integer displacements, then nearest-neighbour upsampling scaled back
+/// to full-resolution pixels. `searchRadius` is in full-resolution pixels.
+func visionOpticalFlowVectors(
+    from reference: VisionRaster,
+    to target: VisionRaster,
+    searchRadius: Int
+) -> (width: Int, height: Int, vectors: [SIMD2<Float>], confidence: Float) {
+    let width = reference.width
+    let height = reference.height
+    guard width >= 8, height >= 8 else {
+        return (width, height, [SIMD2<Float>](repeating: SIMD2<Float>(0, 0), count: max(0, width * height)), 1)
+    }
+    let resampled = (target.width == width && target.height == height)
+        ? target : target.resized(width: width, height: height)
+    let maxDim = max(width, height)
+    let scale = min(1, 40 / Double(maxDim))
+    let gridWidth = max(8, Int((Double(width) * scale).rounded()))
+    let gridHeight = max(8, Int((Double(height) * scale).rounded()))
+    let smallRef = reference.resized(width: gridWidth, height: gridHeight).grayscale()
+    let smallTarget = resampled.resized(width: gridWidth, height: gridHeight).grayscale()
+    let workingRadius = max(2, Int((Double(max(1, searchRadius)) * scale).rounded()))
+    let half = 2
+    var grid = [SIMD2<Float>](repeating: SIMD2<Float>(0, 0), count: gridWidth * gridHeight)
+    var totalSAD: Double = 0
+    smallRef.withUnsafeBufferPointer { refPointer in
+        smallTarget.withUnsafeBufferPointer { targetPointer in
+            guard let refBase = refPointer.baseAddress, let targetBase = targetPointer.baseAddress else { return }
+            for gy in 0..<gridHeight {
+                for gx in 0..<gridWidth {
+                    var bestDX = 0
+                    var bestDY = 0
+                    var bestSAD = Int.max
+                    for dy in -workingRadius...workingRadius {
+                        for dx in -workingRadius...workingRadius {
+                            var sad = 0
+                            for by in -half...half {
+                                let ry = min(gridHeight - 1, max(0, gy + by))
+                                let ty = min(gridHeight - 1, max(0, gy + by + dy))
+                                for bx in -half...half {
+                                    let rx = min(gridWidth - 1, max(0, gx + bx))
+                                    let tx = min(gridWidth - 1, max(0, gx + bx + dx))
+                                    sad += abs(Int(refBase[ry * gridWidth + rx]) - Int(targetBase[ty * gridWidth + tx]))
+                                }
+                            }
+                            if sad < bestSAD {
+                                bestSAD = sad
+                                bestDX = dx
+                                bestDY = dy
+                            }
+                        }
+                    }
+                    totalSAD += Double(bestSAD)
+                    grid[gy * gridWidth + gx] = SIMD2<Float>(Float(bestDX), Float(bestDY))
+                }
+            }
+        }
+    }
+    let invScale = Float(1 / scale)
+    var vectors = [SIMD2<Float>](repeating: SIMD2<Float>(0, 0), count: width * height)
+    for y in 0..<height {
+        let gy = min(gridHeight - 1, Int(Double(y) * scale))
+        for x in 0..<width {
+            let gx = min(gridWidth - 1, Int(Double(x) * scale))
+            vectors[y * width + x] = grid[gy * gridWidth + gx] * invScale
+        }
+    }
+    let meanSAD = totalSAD / Double(max(1, gridWidth * gridHeight * (2 * half + 1) * (2 * half + 1)))
+    let confidence = Float(max(0, min(1, 1 - meanSAD / 96)))
+    return (width, height, vectors, confidence)
+}
+
+/// All-zero flow field at `width` x `height` with identity confidence, matching the
+/// port's stateful-tracker first-frame precedent (identity alignment, confidence 1).
+func visionZeroFlowVectors(width: Int, height: Int) -> (vectors: [SIMD2<Float>], confidence: Float) {
+    ([SIMD2<Float>](repeating: SIMD2<Float>(0, 0), count: max(0, width * height)), 1)
+}
+
+/// Search radius in full-resolution pixels for an optical-flow accuracy level.
+/// Documented Linux-local schedule; Apple exposes only the four named levels.
+func visionOpticalFlowSearchRadius(accuracy: Int) -> Int {
+    switch accuracy {
+    case 0: return 4
+    case 1: return 8
+    case 2: return 12
+    default: return 16
+    }
 }

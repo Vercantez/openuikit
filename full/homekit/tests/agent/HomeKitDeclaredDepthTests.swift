@@ -328,6 +328,9 @@ func testDeclaredMediaOrderProfile() {
     declaredDepthRequire(profile.delegate === stub, "order delegate stored")
     profile.delegate?.mediaSourceDisplayOrderProfileDidUpdateOrder(profile)
     declaredDepthRequire(stub.updates == 1, "order delegate dispatched")
+    var orderError: (any Error)?
+    profile.writeOrder([0, 1]) { orderError = $0 }
+    declaredDepthRequire(orderError != nil, "order write fail closed")
     var blockError: (any Error)?
     let block: HMErrorBlock = { blockError = $0 }
     block(nil)

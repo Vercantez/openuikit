@@ -439,3 +439,87 @@ still the CoreAudioTypes/CoreVideo family (`CMAudioFormatDescriptionCreate`
 and ASBD/channel-layout/format-list getters, audio packet-description sample
 buffers, `AudioBufferList` copy/set, image-buffer sample-buffer create/get,
 and `CMVideoFormatDescriptionCreateForImageBuffer` / `MatchesImageBuffer`).
+
+## Depth pass 2026-09-15 (CMBlockBufferProtocol remainder / CMTime witnesses)
+
+No declared Hashable/Equatable/OptionSet/NewtypeWrapper witnesses remain: the
+prior passes already converted every one (verified by exact-match audit of all
+257 declared rows). The remaining `CMBlockBufferProtocol` extension methods
+that exist in the Apple surface (`makeContiguous(allocator:deallocator:flags:)`,
+`makeContiguous(allocator:flags:)`, `withContiguousStorage(_:)`, pinned by
+`reference/public-surface.tsv` and `reference/api-digester.json`) were missing
+from the port, so they are now honest extension defaults: Linux storage is
+always a single contiguous copy, so compacting copies the bytes (custom
+allocator path copies in, then hands the scratch block back, mirroring
+`CMBlockBufferCreateWithMemoryBlock`), and `withContiguousStorage` yields the
+copied bytes. `CMBlockBufferContiguousTests.swift#testCMBlockBufferMakeContiguousAndContiguousStorage`
+calls all three through the concrete buffer, `Slice`, and a generic
+protocol-constrained helper. The eight remaining `CMTime` Comparable witnesses
+are now cited: `>` / `>=` / `<=` were already called by
+`testCMTimeComparableOperators`, and the five range-expression witnesses
+(`..<`, `...`, `PartialRangeFrom/UpTo/Through`) are formed over `CMTime` by the
+new `testCMTimeRangeExpressionOperators`. `DataProtocol.copyBytes`,
+`sorted(using: SortComparator)`, `CMAudioFormatDescription*`, and image-buffer
+sample APIs stay declared/deferred as instructed. Also fixed a latent
+Apple-toolchain-only build break: `Calibration.init` used `CGSize.zero` in a
+default argument, which Swift 6 rejects without a direct CoreGraphics import
+(absent on Linux); the default now names a same-module constant.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2980 | 2997 |
+| declared | 257 | 243 |
+| deferred | 267 | 264 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +17 (9 block-buffer protocol rows: 3 deferred base + 6
+declared host witnesses; 8 CMTime comparison/range witnesses).
+
+Top test still
+`CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (6.0%). No test owns more than 40% of implemented rows. The sealed gate
+reaches `FRAMEWORK_FANOUT_DELIVERABLE_OK` and `FRAMEWORK_FANOUT_REFERENCE_OK`
+on this Mac; its final stage is Linux-only (`import Glibc` in the generated
+runner), so runtime proof here is a macOS runner over the same 181 cited
+tests: the module and all test files compile warnings-clean and the three
+tests behind the 17 promoted rows pass. (`testCMBlockBufferProtocolMethods`
+traps on macOS identically with and without this change because the system
+`libswiftCoreMedia.dylib` registers colliding classes; Linux has no system
+CoreMedia.)
+
+## Depth pass 2026-09-15 (equated host-type aliases)
+
+This pass audits the 243 declared rows against the prompt's two convertible
+categories. No declared Hashable/Equatable/OptionSet/NewtypeWrapper witnesses
+remain (exact-match audit finds no `2eeoiy` / `4hash` / `9hashValue` /
+`Newtype` / `rawValue` synthesized rows), and every `CMBlockBufferProtocol`
+extension method plus its `CMBlockBuffer` / `Slice` host witnesses is already
+implemented, so neither category has unconverted witnesses. The six remaining
+conversions are the `c:@T@` host-type rows whose values a focused test both
+names and equates — the same type-annotation-plus-use rule that already
+carries `c:@T@CMBlockBufferRef` and friends: `CMAttachmentMode` (attachment
+round-trip equates the mode), `CMAudioFormatDescriptionMask` (equality-mask
+intersection and inequality), `CMVideoCodecType` (table-driven FourCC
+equality), `CMTextDisplayFlags` / `CMTextJustificationValue` (text getters
+equate the out-values), and `CMItemCount` (timing-array out-count equated with
+the produced count). `CMAudioFormatDescription*`, image-buffer sample APIs,
+Foundation `DataProtocol.copyBytes` / `sorted(using: SortComparator)`,
+DispatchSource timer overloads, `CMSyncProtocol` / clock-extension overlays,
+and custom-block-source fields stay declared/deferred as instructed.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2997 | 3003 |
+| declared | 243 | 237 |
+| deferred | 264 | 264 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +6. Top test still
+`CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (6.0%). No test owns more than 40% of implemented rows. The sealed gate
+reaches `FRAMEWORK_FANOUT_DELIVERABLE_OK` and `FRAMEWORK_FANOUT_REFERENCE_OK`
+on this Mac; its final stage is Linux-only (`import Glibc` in the generated
+runner). No product Swift or test files changed in this pass; the guest
+sources manifest is unchanged.

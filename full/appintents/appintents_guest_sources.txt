@@ -15,3 +15,5 @@ full/appintents/AppIntentsProtocols.swift
 full/appintents/AppIntentsRemainingParameters.swift
 full/appintents/AppIntentsStructs.swift
 full/appintents/AppIntentsViewStubs.swift
+full/appintents/AppIntentsWave15.swift
+full/appintents/AppIntentsWave16.swift

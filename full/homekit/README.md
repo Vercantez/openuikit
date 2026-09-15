@@ -198,3 +198,46 @@ fabricated; those boundaries remain as documented above.
 | 253 | 17.6% | `HomeKitConstantTests.swift#testCStringConstants` |
 | 107 | 7.4% | `HomeKitEnumTests.swift#testErrorCodeStatics` |
 | 50 | 3.5% | `HomeKitAccessoryDepthTests.swift#testAccessoryGraphAndDelegate` |
+
+## Depth pass 2026-09 (wave 10)
+
+This pass converts the 74 leftover `declared` rows. The committed
+`tests/agent/HomeKitDeclaredDepthTests.swift` did not compile against the
+product sources (it called completion-handler overloads, `aspectRatio`, and
+`setAudioStreamSetting` that did not exist), so the sealed Linux gate could
+not have exercised it. This pass adds the missing fail-closed product APIs
+and repairs the tests; no Apple daemon, pairing, RTP, or entitlement success
+is fabricated.
+
+Coverage moved from **1437 implemented / 74 declared / 0 deferred / 8
+unavailable / 776 not-applicable** to **1508 implemented / 3 declared / 0
+deferred / 8 unavailable / 776 not-applicable**. The implemented gain is
+**+71**.
+
+Product additions (all fail-closed or local stored state):
+
+- `HMCameraSource.aspectRatio` stored property plus `host_setAspectRatio`.
+- `HMCameraStream.setAudioStreamSetting` (local store) and
+  `updateAudioStreamSetting(_:completionHandler:)` (`.operationNotSupported`).
+- `HMAccessorySetupManager.performAccessorySetup(using:completionHandler:)`
+  (`.missingEntitlement`).
+- `HMHomeManager` completion-handler overloads for `addHome`, `removeHome`,
+  `updatePrimaryHome` (`.homeAccessNotAuthorized`) and
+  `findVendorAccessory` (`.accessoryDiscoveryFailed`).
+- `HMTimerTrigger` completion-handler overloads for `updateFireDate`,
+  `updateRecurrence`, `updateTimeZone` (fail-closed, mirroring the async
+  throws versions).
+- `HMMediaSourceDisplayOrderProfile.writeOrder(_:completionHandler:)`
+  (`.operationNotSupported`).
+
+The 3 remaining `declared` rows are `HMCameraView`, its `init`, and its
+`cameraSource`: the class is `@MainActor`, so no synchronous nonisolated
+agent test can construct it or touch its members. The largest new test cites
+15 rows, far under the 40% bulk-relabel cap.
+
+Environment: `swiftc` on this Mac reports Swift 6.2.4. The sealed
+`tests/acceptance/test_host.sh` runner phase generates `import Glibc`, which
+cannot compile on macOS; instead the product dylib plus all `*Tests.swift`
+were compiled with `-warnings-as-errors` and a local runner invoked all 45
+unique cited tests, exited 0, and printed only
+`HOMEKIT_AGENT_RUNTIME_OK`.

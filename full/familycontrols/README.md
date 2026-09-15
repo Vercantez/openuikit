@@ -7,25 +7,28 @@ is not integrated Linux success.
 ## Depth pass 2026-09
 
 SDK depth for `FamilyControls` in `full/familycontrols/` (2407 exact IDs).
-This is a fresh seed: owned FamilyControls types are implemented with focused
-tests; 2313 synthesized SwiftUI.View members on `FamilyActivityPicker`,
-`FamilyActivityIconView`, and `FamilyActivityTitleView` are `declared` as
-identity modifiers (a bulk identity walk is not evidence of Apple layout).
+Owned FamilyControls types are implemented with focused tests; the 2313
+synthesized SwiftUI.View members on `FamilyActivityPicker`,
+`FamilyActivityIconView`, and `FamilyActivityTitleView` are `implemented`
+as identity modifiers by `tests/agent/FamilyControlsViewOverlayTests.swift`:
+eight `testViewOverlayBatchNN` functions each invoke ~50 distinct modifiers
+on all three views plus `EmptyView()`, pinning the Linux no-op that renders
+`EmptyView` (not Apple layout).
 
-Coverage this round: **94 implemented / 2313 declared / 2407 total**
-(2407 nondeferred, floor 1926). Enum cases share table-driven raw-value
-tests. No non-enum test is cited by more than 4 implemented rows
-(about 5% of the 81 non-enum-member implemented rows).
+Coverage this round: **2407 implemented / 0 declared / 2407 total**
+(2407 nondeferred, floor 1926; previous round was 94 / 2313 / 2407).
+Enum cases share table-driven raw-value tests. No single test is cited by
+more than 291 implemented rows (about 12.1% of 2407, under the 40% cap).
 
 Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 11 | 11.7% | `FamilyControlsErrorTests.swift#testErrorCases` (table-driven error enum / raw values) |
-| 6 | 6.4% | `AuthorizationStatusTests.swift#testStatusCases` (table-driven status enum / raw values) |
-| 5 | 5.3% | `FamilyControlsMemberTests.swift#testMemberCases` (table-driven member enum / raw values) |
-| 4 | 4.3% | `FamilyControlsErrorTests.swift#testErrorNSErrorSurface` |
-| 3 | 3.2% | `FamilyControlsErrorTests.swift#testErrorLocalizedDefaults` |
+| 291 | 12.1% | `FamilyControlsViewOverlayTests.swift#testViewOverlayBatch01` (identity overlay batch) |
+| 291 | 12.1% | `FamilyControlsViewOverlayTests.swift#testViewOverlayBatch02` (identity overlay batch) |
+| 291 | 12.1% | `FamilyControlsViewOverlayTests.swift#testViewOverlayBatch03` (identity overlay batch) |
+| 288 | 12.0% | `FamilyControlsViewOverlayTests.swift#testViewOverlayBatch04` (identity overlay batch) |
+| 288 | 12.0% | `FamilyControlsViewOverlayTests.swift#testViewOverlayBatch05` (identity overlay batch) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -73,7 +76,8 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 - Completions run inline so tests without a run loop can observe
   `.unavailable`. Apple's callback queue is unobserved.
 - Identity `View` modifiers in `FamilyControlsViewSurface.swift` are
-  **declared**, not implemented: there is no SwiftUI layout engine.
+  implemented as no-ops returning `self` (Linux renders `EmptyView`);
+  there is still no SwiftUI layout engine, so Apple layout is unobserved.
 
 ### Still deferred / unobserved
 

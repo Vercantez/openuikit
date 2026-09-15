@@ -834,3 +834,71 @@ func testIncludePendingChangesWithBatchSizeError() {
         preconditionFailure("unexpected error \(error)")
     }
 }
+
+func testHashValueSurface() {
+    // Each statement below reads that type's Hashable.hashValue witness.
+    // Equal values must hash equally within a process.
+    precondition(DataStoreError.invalidPredicate.hashValue == DataStoreError.invalidPredicate.hashValue)
+    precondition(
+        SwiftDataError.unknownSchema.hashValue
+            == SwiftDataError.unknownSchema.hashValue
+    )
+    precondition(
+        ModelConfiguration(isStoredInMemoryOnly: true).hashValue
+            == ModelConfiguration(isStoredInMemoryOnly: true).hashValue
+    )
+    precondition(
+        DefaultHistoryToken(id: 3, tokenValue: ["s": 1]).hashValue
+            == DefaultHistoryToken(id: 3, tokenValue: ["s": 1]).hashValue
+    )
+    precondition(
+        PersistentIdentifier.ID(rawValue: 3).hashValue
+            == PersistentIdentifier.ID(rawValue: 3).hashValue
+    )
+    precondition(
+        PersistentIdentifier(rawValue: 7).hashValue
+            == PersistentIdentifier(rawValue: 7).hashValue
+    )
+    let laneTransaction = DefaultHistoryTransaction(
+        storeIdentifier: "mem",
+        transactionIdentifier: 9
+    )
+    let laneTransactionCopy = DefaultHistoryTransaction(
+        storeIdentifier: "mem",
+        transactionIdentifier: 9
+    )
+    precondition(laneTransaction.hashValue == laneTransactionCopy.hashValue)
+    precondition(
+        Schema.Relationship.Option.unique.hashValue
+            == Schema.Relationship.Option.unique.hashValue
+    )
+    let laneRelationship = Schema.Relationship(deleteRule: .deny, originalName: "author")
+    let laneRelationshipCopy = Schema.Relationship(deleteRule: .deny, originalName: "author")
+    precondition(laneRelationship.hashValue == laneRelationshipCopy.hashValue)
+    precondition(
+        Schema.Index<AgentNote>.CodingKeys.indices.hashValue
+            == Schema.Index<AgentNote>.CodingKeys.indices.hashValue
+    )
+    precondition(
+        Schema.Index<AgentNote>([\AgentNote.title]).hashValue
+            == Schema.Index<AgentNote>([\AgentNote.title]).hashValue
+    )
+    precondition(Schema.Entity("Note").hashValue == Schema.Entity("Note").hashValue)
+    precondition(
+        Schema.Unique<AgentNote>.CodingKeys.constraints.hashValue
+            == Schema.Unique<AgentNote>.CodingKeys.constraints.hashValue
+    )
+    precondition(
+        Schema.Unique<AgentNote>([\AgentNote.title]).hashValue
+            == Schema.Unique<AgentNote>([\AgentNote.title]).hashValue
+    )
+    precondition(Schema.Version(1, 0, 0).hashValue == Schema.Version(1, 0, 0).hashValue)
+    precondition(
+        Schema.Attribute.Option.unique.hashValue
+            == Schema.Attribute.Option.unique.hashValue
+    )
+    let laneAttribute = Schema.Attribute(name: "title", options: [.unique], valueType: String.self)
+    let laneAttributeCopy = Schema.Attribute(name: "title", options: [.unique], valueType: String.self)
+    precondition(laneAttribute.hashValue == laneAttributeCopy.hashValue)
+    precondition(Schema().hashValue == Schema().hashValue)
+}

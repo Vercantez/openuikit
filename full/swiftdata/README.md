@@ -16,7 +16,7 @@ lane and is not linked here.
 Unchanged application source continues to import `SwiftData`. Linux has no
 CoreData SQLite store, no CloudKit, and no Apple schema-migration engine.
 
-Coverage (884 public precise IDs): **616 implemented** / 29 declared /
+Coverage (884 public precise IDs): **634 implemented** / 11 declared /
 49 deferred / 2 unavailable / 188 not-applicable. The
 ModelContainer, ModelConfiguration, ModelContext, FetchDescriptor, and
 Schema families are nondeferred (implemented or declared).
@@ -75,8 +75,9 @@ sketch and is not in `swiftdata_guest_sources.txt`.
 - Foundation `#Predicate` over class KeyPath traps on this Linux
   Foundation revision; focused tests do not use `#Predicate`.
 - `PersistentModel.init(backingData:)` still fatalErrors without `@Model`
-  generated storage. `Hashable.hashValue` is not redeclared (deprecated
-  under `-warnings-as-errors`); coverage cites the internal helper name.
+  generated storage (declared). `Hashable.hashValue` is not redeclared;
+  reads do not warn on this toolchain, so all 18 per-type `hashValue`
+  witnesses are exercised by `testHashValueSurface`.
 
 ## Existing Darwin host gate
 

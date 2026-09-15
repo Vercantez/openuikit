@@ -252,8 +252,8 @@ func testTrackOpticalFlowRequestConfig() {
     visionExpectEqual(request.computationAccuracy, .medium, "accuracy default")
     request.computationAccuracy = .high
     visionExpectEqual(request.computationAccuracy, .high, "accuracy set")
-    visionExpectEqual(request.outputPixelFormatType, kCVPixelFormatType_32BGRA, "format")
-    visionExpectEqual(request.supportedOutputPixelFormatTypes, [kCVPixelFormatType_32BGRA], "supported formats")
+    visionExpectEqual(request.outputPixelFormatType, kCVPixelFormatType_TwoComponent32Float, "format")
+    visionExpectEqual(request.supportedOutputPixelFormatTypes, [kCVPixelFormatType_TwoComponent32Float], "supported formats")
     visionExpectEqual(request.descriptor, .trackOpticalFlowRequest(.revision1), "descriptor")
     visionExpect(request.description.contains("trackOpticalFlow"), "description")
     visionExpect(request.supportedComputeStageDevices[.main]?.contains(.cpu) == true, "cpu")
@@ -286,19 +286,17 @@ func testTrackOpticalFlowRequestConfig() {
     visionExpect(TrackOpticalFlowRequest.Revision.revision1 >= .revision1, ">=")
     visionExpect(!(TrackOpticalFlowRequest.Revision.revision1 > .revision1), ">")
 
-    let image = visionRectangleImage()
-    do {
-        _ = try request.performOnHandler(VNImageRequestHandler(cgImage: image))
-        visionExpect(false, "optical flow should fail closed")
-    } catch let error as VisionError {
-        if case .invalidModel = error {
-            visionExpect(true, "optical flow invalidModel")
-        } else {
-            visionExpect(false, "unexpected \(error)")
-        }
-    } catch {
-        visionExpect(false, "wrong error type \(error)")
+    let image = visionNoiseTextureImage()
+    guard let first = try! request.performOnHandler(VNImageRequestHandler(cgImage: image)) else {
+        visionExpect(false, "overlay optical flow produces a first-frame observation")
+        return
     }
+    guard let firstBuffer = first.pixelBuffer else {
+        visionExpect(false, "overlay first frame carries a flow buffer")
+        return
+    }
+    visionExpectEqual(firstBuffer.pixelFormat, kCVPixelFormatType_TwoComponent32Float, "overlay flow format")
+    visionExpect(visionMaxFlowMagnitude(firstBuffer) < 0.5, "overlay first frame is zero flow")
 }
 
 func testOverlayRequestProtocolSurface() {
@@ -438,7 +436,7 @@ func testVNTrackOpticalFlowRequestConfig() {
     visionExpectEqual(request.keepNetworkOutput, false, "keep default")
     request.keepNetworkOutput = true
     visionExpectEqual(request.keepNetworkOutput, true, "keep set")
-    visionExpectEqual(request.outputPixelFormat, kCVPixelFormatType_32BGRA, "pixel format")
+    visionExpectEqual(request.outputPixelFormat, kCVPixelFormatType_TwoComponent32Float, "pixel format")
     request.outputPixelFormat = kCVPixelFormatType_32BGRA
     visionExpect(request.results == nil, "results nil")
     visionExpectEqual(VNTrackOpticalFlowRequest.currentRevision, VNTrackOpticalFlowRequestRevision1, "current")
@@ -446,15 +444,14 @@ func testVNTrackOpticalFlowRequestConfig() {
     visionExpect(VNTrackOpticalFlowRequest.supportedRevisions.contains(VNTrackOpticalFlowRequestRevision1), "supported")
     let withHandler = VNTrackOpticalFlowRequest(completionHandler: { _, _ in })
     visionExpect(withHandler.completionHandler != nil, "completion")
-    let image = visionRectangleImage()
-    let handler = VNImageRequestHandler(cgImage: image)
-    do {
-        try handler.perform([request])
-        visionExpect(false, "vn optical flow should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
-        visionExpect(request.results == nil, "results stay nil")
+    let image = visionNoiseTextureImage()
+    try! VNImageRequestHandler(cgImage: image).perform([request])
+    guard let observation = request.results?.first as? VNPixelBufferObservation else {
+        visionExpect(false, "vn optical flow produces a pixel-buffer observation")
+        return
     }
+    visionExpectEqual(observation.pixelBuffer.width, image.width, "flow width")
+    visionExpectEqual(observation.pixelBuffer.pixelFormat, kCVPixelFormatType_TwoComponent32Float, "flow format")
 }
 
 func testImageRequestHandlerOverlayPerformNow() {

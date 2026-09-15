@@ -559,3 +559,67 @@ This pass added 71 `implemented` rows (11 tests in
 `tests/agent/AVDepthPass11Tests.swift`). Largest new test is 14 citations
 (mutable-caption attribute editors), well under 40% of the remaining
 implemented rows.
+
+### Depth pass 2026-09-15 (metrics / coordination / external-device models)
+
+Non-UI depth on remaining declared data models that already compile (or
+needed only an access-level fix to an existing declaration):
+`AVMetric*` event classes (base, error, content-key, download-summary, HLS
+segment/playlist, media-resource, rendition, likely-to-keep-up, playback
+summary, rate-change, seek, stall, variant-switch families),
+`AVCoordinatedPlaybackParticipant` / `AVCoordinatedPlaybackSuspension` /
+`AVDelegatingPlaybackCoordinator` plus all five command classes,
+`AVPlaybackCoordinationMedium` / `AVPlaybackCoordinator`,
+`AVExternalStorageDevice` (+ discovery session) / `AVExternalSyncDevice`
+(+ discovery session), `AVMediaDataStorage`, `AVFrameRateRange`,
+`AVPortraitEffectsMatte` / `AVSemanticSegmentationMatte` (+ matte-type
+raw-value witness), `AVRouteDetector`, `AVVideoOutputSpecification`
+(including tag-collection setters and preferred collections),
+`AVSampleBufferAttachContentKey` plus fail-closed
+`CMReadySampleBuffer.attach(contentKey:)` (throws
+`mediaServiceUnavailable`; no content-key service on Linux), the
+`CMTag` monoscopic/stereoscopic video-output helpers, and table-driven
+`init(rawValue:)` witnesses for `AVVideoRange`, `AVVariantPreferences`,
+and the delegating-coordinator option sets. Delegate protocols
+`AVExternalSyncDeviceDelegate` and
+`AVPlaybackCoordinatorPlaybackControlDelegate` (synchronous
+completion-handler methods only) are exercised through recording test
+doubles. AVCapture*, AVPlayer UI outputs, async `load(...)` (YaKF),
+FairPlay/content-key service paths, PiP, AirPlay, and CIImage filtering
+stay deferred or fail-closed. Six existing declarations needed only an
+access-level fix (`AVMediaDataStorage.init(url:options:)`,
+`AVPortraitEffectsMatte.init(fromDictionaryRepresentation:)`,
+`AVVideoOutputSpecification.init(tagCollections:)`,
+`AVDelegatingPlaybackCoordinator.init(playbackControlDelegate:)`,
+`AVMutableAudioMixInputParameters.init(track:)`,
+`AVSampleBufferGenerator.init(asset:timebase:)`); the `CMTag` helpers were
+constrained to `Array where Element == CMTag`.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 4594 | 4785 |
+| `declared` | 794 | 603 |
+| `deferred` | 244 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+This pass added 191 `implemented` rows (15 tests in
+`tests/agent/AVDepthPass13Tests.swift`). Largest new test is 26 citations
+(delegating playback coordinator model), well under 40% of the remaining
+implemented rows.
+
+Note: `tests/agent/AVDepthPass12Tests.swift` (a concurrent pass's 11 tests)
+is present but uncited by coverage; two one-word compile fixes were applied
+so the shared gate builds it (`@unchecked Sendable` on its writer witness,
+matching the delegate protocol's `Sendable` bound). Its rows are untouched
+and remain that pass's to cite.

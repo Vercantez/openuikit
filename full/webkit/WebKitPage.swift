@@ -82,6 +82,11 @@ public final class WebPage {
         set { storedCustomUserAgent = newValue ?? "" }
     }
     public var mediaType: CSSMediaType?
+    public private(set) var fullscreenState = FullscreenState.notInFullscreen
+    public private(set) var isWritingToolsActive = false
+    public private(set) var isBlockedByScreenTime = false
+    public private(set) var cameraCaptureState: WKMediaCaptureState = .none
+    public private(set) var microphoneCaptureState: WKMediaCaptureState = .none
     public private(set) var isLoading = false
     public private(set) var title: String = ""
     public private(set) var url: URL?

@@ -84,7 +84,7 @@
   "schema": 1,
   "source_manifest": {
     "path": "full/webkit/webkit_guest_sources.txt",
-    "sha256": "e08ae40665123ce2273daa7c20dabc43dfa8332bc278a24909446a0e682389e9"
+    "sha256": "b7f34f83bd678866d99a1a17040a46231cc912c17bfb842ad20a64080f11f84f"
   },
   "sources": [
     {
@@ -109,7 +109,7 @@
     },
     {
       "path": "full/webkit/WebKitExtensions.swift",
-      "sha256": "2e086dc68ff686ccbd5e2d44c1fb5304493e90f873c5358fc2c0f5257b2d60e1"
+      "sha256": "0d22160dc768ccc470cd60906e86f9436e67f97617e13ea4af9c786a086530ec"
     },
     {
       "path": "full/webkit/WebKitNavigation.swift",
@@ -121,11 +121,15 @@
     },
     {
       "path": "full/webkit/WebKitPage.swift",
-      "sha256": "0b3200104920548d0540b09de2036fca46b240485e27f6fec9f88e3d21ab6fbe"
+      "sha256": "6ab5a63078125f802ed1a15185ee8ae76bae852f80c63c88bb5d7ad1f4de7c6e"
     },
     {
       "path": "full/webkit/WebKitPageHistory.swift",
       "sha256": "b0b19d6e51827623cd59f41c7a133ee68b5e9659b522f34ef150ccbe86151dee"
+    },
+    {
+      "path": "full/webkit/WebKitPageNavigation.swift",
+      "sha256": "37363f41df30f768f10c4ec97da65a4136cfb74e3ada61cbdeaddc651953a6fc"
     },
     {
       "path": "full/webkit/WebKitPageValues.swift",

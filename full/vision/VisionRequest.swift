@@ -700,13 +700,35 @@ open class VNGenerateOpticalFlowRequest: VNTargetedImageRequest {
         case veryHigh = 3
     }
 
+    /// Oracle-pinned (macOS Vision, Xcode 26.1, 2026-09-14): supported [1, 2],
+    /// current 2, default 2.
+    public override class var currentRevision: Int { VNGenerateOpticalFlowRequestRevision2 }
+    public override class var defaultRevision: Int { VNGenerateOpticalFlowRequestRevision2 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integersIn: VNGenerateOpticalFlowRequestRevision1...VNGenerateOpticalFlowRequestRevision2)
+    }
+
     public var computationAccuracy: ComputationAccuracy = .medium
-    public var outputPixelFormat: OSType = kCVPixelFormatType_32BGRA
+    /// Oracle-pinned default (macOS Vision, Xcode 26.1, 2026-09-14).
+    public var outputPixelFormat: OSType = kCVPixelFormatType_TwoComponent32Float
     public var keepNetworkOutput: Bool = false
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNGenerateOpticalFlowRequest")
+        guard let targetedRaster else {
+            throw vnMakeError(.missingOption, description: "targeted image is required")
+        }
+        let reference = context.rasterForROI(regionOfInterest)
+        let flow = visionOpticalFlowVectors(
+            from: reference,
+            to: targetedRaster,
+            searchRadius: visionOpticalFlowSearchRadius(accuracy: Int(computationAccuracy.rawValue))
+        )
+        return [
+            VNPixelBufferObservation(
+                pixelBuffer: CVPixelBuffer(flowWidth: flow.width, flowHeight: flow.height, vectors: flow.vectors),
+                confidence: flow.confidence
+            )
+        ]
     }
 }
 
@@ -896,11 +918,34 @@ open class VNTrackOpticalFlowRequest: VNTrackingRequest {
 
     public var computationAccuracy: ComputationAccuracy = .medium
     public var keepNetworkOutput: Bool = false
-    public var outputPixelFormat: OSType = kCVPixelFormatType_32BGRA
+    /// Oracle-pinned default (macOS Vision, Xcode 26.1, 2026-09-14).
+    public var outputPixelFormat: OSType = kCVPixelFormatType_TwoComponent32Float
+
+    var previousRaster: VisionRaster?
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNTrackOpticalFlowRequest")
+        let current = context.rasterForROI(regionOfInterest)
+        defer { previousRaster = current }
+        guard let previous = previousRaster else {
+            let zero = visionZeroFlowVectors(width: current.width, height: current.height)
+            return [
+                VNPixelBufferObservation(
+                    pixelBuffer: CVPixelBuffer(flowWidth: current.width, flowHeight: current.height, vectors: zero.vectors),
+                    confidence: zero.confidence
+                )
+            ]
+        }
+        let flow = visionOpticalFlowVectors(
+            from: previous,
+            to: current,
+            searchRadius: visionOpticalFlowSearchRadius(accuracy: Int(computationAccuracy.rawValue))
+        )
+        return [
+            VNPixelBufferObservation(
+                pixelBuffer: CVPixelBuffer(flowWidth: flow.width, flowHeight: flow.height, vectors: flow.vectors),
+                confidence: flow.confidence
+            )
+        ]
     }
 }
 

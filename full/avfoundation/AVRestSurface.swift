@@ -259,7 +259,7 @@ public struct AVPixelAspectRatio: Sendable {
 
 open class AVPortraitEffectsMatte: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(fromDictionaryRepresentation imageSourceAuxDataInfoDictionary: [AnyHashable : Any]) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public convenience init(fromDictionaryRepresentation imageSourceAuxDataInfoDictionary: [AnyHashable : Any]) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public func replacingPortraitEffectsMatte(with pixelBuffer: CVPixelBuffer) throws -> Self { throw AVFoundationPortableError.mediaServiceUnavailable }
   public var mattingImage: CVPixelBuffer { CVPixelBuffer() }
 }
@@ -369,11 +369,20 @@ public struct AVSpatialVideoConfiguration: Sendable {
 }
 
 open class AVTextStyleRule: NSObject, @unchecked Sendable {
+  private var storedAttributes: [String: Any] = [:]
   public override init() { super.init() }
-  public class func propertyList(for textStyleRules: [AVTextStyleRule]) -> Any { 0 }
-  public class func textStyleRules(fromPropertyList plist: Any) -> [AVTextStyleRule]? { nil }
-  convenience init?(textMarkupAttributes: [String : Any] = [:]) { return nil }
-  public var textMarkupAttributes: [String : Any] { [:] }
+  public class func propertyList(for textStyleRules: [AVTextStyleRule]) -> Any {
+    textStyleRules.map { $0.storedAttributes }
+  }
+  public class func textStyleRules(fromPropertyList plist: Any) -> [AVTextStyleRule]? {
+    guard let array = plist as? [[String: Any]] else { return nil }
+    return array.map { AVTextStyleRule(textMarkupAttributes: $0) ?? AVTextStyleRule() }
+  }
+  public convenience init?(textMarkupAttributes attributes: [String: Any] = [:]) {
+    self.init()
+    storedAttributes = attributes
+  }
+  public var textMarkupAttributes: [String: Any] { storedAttributes }
 }
 
 open class AVTimedMetadataGroup: AVMetadataGroup, @unchecked Sendable {

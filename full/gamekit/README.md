@@ -8,21 +8,25 @@ The isolated host gate (`bash tests/acceptance/test_host.sh`) compiles
 against toolchain Foundation only. It is not evidence of an integrated
 Linux guest stack with UIKit.
 
-## Depth pass 2026-09
+## Depth pass 2026-09 (wave 2)
 
-**829 implemented** / **69 declared** / **21 deferred** (919 IDs).
-Nondeferred 898 is above the medium-full floor of 460.
+**896 implemented** / **2 declared** / **21 deferred** (919 IDs).
+Nondeferred 898 is above the medium-full floor of 460. Wave 2 converted
+67 declared rows: 51 sync fail-closed completion-handler companions in
+`GKFailClosedCompletions.swift`, 13 `GKError` NSError-bridging members,
+2 duplicate `GKAccessPoint` trigger selectors, and 1
+`GKGameActivityPlayStyle.asynchronous` enum member (was 829 / 69 / 21).
 
 Top-5 implemented evidence (by row count):
 
-1. `GKEnumTests.swift#testGKEnumRawValues` — 204 (24.6%) — table-driven enum raw values
-2. `GKErrorTests.swift#testGKErrorRawValues` — 91 (11.0%) — table-driven `GKError.Code`
-3. `GKTurnBasedTests.swift#testGKTurnBasedLocalState` — 57 (6.9%)
-4. `GKErrorTests.swift#testGKGameSessionErrorRawValues` — 53 (6.4%) — table-driven session errors
-5. `GKAchievementTests.swift#testGKLeaderboardLocalState` — 46 (5.5%)
+1. `GKEnumTests.swift#testGKEnumRawValues` — 205 (22.9%) — table-driven enum raw values
+2. `GKErrorTests.swift#testGKErrorRawValues` — 91 (10.2%) — table-driven `GKError.Code`
+3. `GKTurnBasedTests.swift#testGKTurnBasedLocalState` — 57 (6.4%)
+4. `GKErrorTests.swift#testGKGameSessionErrorRawValues` — 53 (5.9%) — table-driven session errors
+5. `GKAchievementTests.swift#testGKLeaderboardLocalState` — 46 (5.1%)
 
-No non-enum / non-constant test exceeds 6.9% of implemented rows (40% cap
-of the remaining non-table rows would be 182).
+No non-enum / non-constant test exceeds 6.4% of implemented rows (40% cap
+of the remaining non-table rows would be 208).
 
 ### What is real
 
@@ -40,6 +44,21 @@ of the remaining non-table rows would be 182).
 - Friend-request compose recipient cap of 8.
 - Fail-closed completions for Game Center loads, reports, matchmaking,
   identity signatures, iCloud saved games, and game sessions.
+- Sync completion-handler companions (`GKFailClosedCompletions.swift`)
+  for every `async` overlay except the two `async`-only listener
+  callbacks: achievement/score reports, leaderboard loads and entries,
+  saved-game CRUD, matchmaking, game sessions, turn-based
+  exchanges/matches, cloud-player sign-in, activity-definition loads,
+  banner shows, and `GKAccessPoint` challenge-definition triggers.
+  Each companion invokes its handler synchronously with
+  `GKError.notAuthenticated` (or the specific `GKGameSessionError` /
+  turn-based / iCloud code) and is covered by a focused test in
+  `GKFailClosedCompletionsTests.swift`.
+- `GKError` NSError bridging (`errorDomain`, `errorCode`,
+  `errorUserInfo`, `userInfo`, `code`, `hash`/`hashValue`, `==`/`!=`,
+  `init`, `localizedDescription`) exercised by `testGKErrorBehavior`.
+- `GKNotificationBanner.show` companions record `portableShowCount`
+  and invoke the completion with no error (local presentation only).
 
 ### Fail-closed boundaries
 
@@ -53,8 +72,12 @@ of the remaining non-table rows would be 182).
 - UIKit dashboard types that name `UIImage` / `UIWindow` /
   `UIViewController` are omitted (`deferred`). View-controller classes
   exist as `NSObject` holders of local state and never present.
-- Async `async throws` overlays are declared; the isolated runner has no
-  run loop and cannot await them.
+- Async `async throws` overlays are kept alongside the sync
+  fail-closed companions; the two `async`-only listener callbacks
+  (`GKGameActivityListener.player:wantsToPlay:completionHandler:` and
+  `GKMatchmakerViewControllerDelegate.matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:`)
+  stay `declared` because the isolated runner has no run loop and
+  cannot await them.
 
 ## Gates and markers
 

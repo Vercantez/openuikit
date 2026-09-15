@@ -4,8 +4,9 @@ public protocol BEScrollViewDelegate: UIScrollViewDelegate {
     func parentScrollView(for scrollView: BEScrollView) -> BEScrollView?
     func scrollView(
         _ scrollView: BEScrollView,
-        handle scrollUpdate: BEScrollViewScrollUpdate
-    ) async -> Bool
+        handle scrollUpdate: BEScrollViewScrollUpdate,
+        completion: @escaping (Bool) -> Void
+    )
 }
 
 extension BEScrollViewDelegate {
@@ -14,14 +15,16 @@ extension BEScrollViewDelegate {
         return nil
     }
 
-    /// Linux has no compositor-driven nested scroll handoff. Always `false`.
+    /// Linux has no compositor-driven nested scroll handoff. Completes
+    /// synchronously on the caller's thread with `false`.
     public func scrollView(
         _ scrollView: BEScrollView,
-        handle scrollUpdate: BEScrollViewScrollUpdate
-    ) async -> Bool {
+        handle scrollUpdate: BEScrollViewScrollUpdate,
+        completion: @escaping (Bool) -> Void
+    ) {
         _ = scrollView
         _ = scrollUpdate
-        return false
+        completion(false)
     }
 }
 

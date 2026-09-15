@@ -41,7 +41,7 @@ open class AVSampleBufferAudioRenderer: NSObject, @unchecked Sendable {
 
 open class AVSampleBufferGenerator: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(asset: AVAsset, timebase: CMTimebase?) { self.init() }
+  public convenience init(asset: AVAsset, timebase: CMTimebase?) { self.init() }
   public func makeSampleBuffer(for request: AVSampleBufferRequest) throws -> sending CMSampleBuffer { throw AVFoundationPortableError.mediaServiceUnavailable }
   public func makeBatch() -> AVSampleBufferGeneratorBatch { AVSampleBufferGeneratorBatch() }
   public func makeSampleBuffer(for request: AVSampleBufferRequest, addTo batch: AVSampleBufferGeneratorBatch) throws -> CMSampleBuffer { return CMSampleBuffer() }

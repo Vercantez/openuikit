@@ -119,6 +119,17 @@ public final class BETextDocumentContext: NSObject, @unchecked Sendable {
     public private(set) var textRects: [(CGRect, NSRange)] = []
     public var autocorrectedRanges: [NSValue] = []
 
+    /// Fail-closed empty snapshot used by default `BETextInput` completions.
+    public static var host_empty: BETextDocumentContext {
+        BETextDocumentContext(
+            selectedText: nil,
+            contextBefore: nil,
+            contextAfter: nil,
+            markedText: nil,
+            selectedRangeInMarkedText: NSRange(location: 0, length: 0)
+        )
+    }
+
     public init(
         selectedText: String?,
         contextBefore: String?,
@@ -290,7 +301,10 @@ public protocol BETextInput: BEResponderEditActions, BETextSelectionDirectionNav
         baseIsStart boundaryIsStart: Bool,
         flags: BESelectionFlags
     )
-    func adjustSelection(by range: BEDirectionalTextRange) async
+    func adjustSelection(
+        by range: BEDirectionalTextRange,
+        completionHandler: @escaping () -> Void
+    )
     func alternativesForSelectedText() -> [BETextAlternatives]?
     func autoscroll(to point: CGPoint)
     func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool
@@ -298,41 +312,68 @@ public protocol BETextInput: BEResponderEditActions, BETextSelectionDirectionNav
     func caretRect(for position: UITextPosition) -> CGRect
     func delete(in direction: UITextStorageDirection, to granularity: UITextGranularity)
     func didInsertFinalDictationResult()
-    func handleKeyEntry(_ entry: BEKeyEntry) async -> (BEKeyEntry, Bool)
+    func handleKeyEntry(
+        _ entry: BEKeyEntry,
+        completionHandler: @escaping (BEKeyEntry, Bool) -> Void
+    )
     func insert(_ alternatives: BETextAlternatives)
-    func insertTextPlaceholder(size: CGSize) async -> UITextPlaceholder
+    func insertTextPlaceholder(
+        size: CGSize,
+        completionHandler: @escaping (UITextPlaceholder) -> Void
+    )
     func insert(_ textSuggestion: BETextSuggestion)
     func isPointNearMarkedText(_ point: CGPoint) -> Bool
     func keyboardWillDismiss()
     func move(byOffset offset: Int)
     func moveSelection(
         atBoundary granularity: UITextGranularity,
-        in direction: UITextStorageDirection
-    ) async
+        in direction: UITextStorageDirection,
+        completionHandler: @escaping () -> Void
+    )
     func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int
     func removeTextAlternatives()
-    func remove(_ placeholder: UITextPlaceholder, willInsertText: Bool) async
+    func remove(
+        _ placeholder: UITextPlaceholder,
+        willInsertText: Bool,
+        completionHandler: @escaping () -> Void
+    )
     func replaceDictatedText(_ oldText: String, withText newText: String)
     func replaceSelectedText(_ text: String, withText replacementText: String)
     func replaceText(
         _ originalText: String,
         withText replacementText: String,
-        options: BETextReplacementOptions
-    ) async -> [UITextSelectionRect]
-    func requestDocumentContext(_ request: BETextDocumentRequest) async -> BETextDocumentContext
+        options: BETextReplacementOptions,
+        completionHandler: @escaping ([UITextSelectionRect]) -> Void
+    )
+    func requestDocumentContext(
+        _ request: BETextDocumentRequest,
+        completionHandler: @escaping (BETextDocumentContext) -> Void
+    )
     func requestPreferredArrowDirectionForEditMenu(
         completionHandler: @escaping (UIEditMenuArrowDirection) -> Void
     )
     func requestTextContextForAutocorrection(
         completionHandler: @escaping (BETextDocumentContext) -> Void
     )
-    func requestTextRects(for input: String) async -> [UITextSelectionRect]
-    func selectPosition(at point: CGPoint) async
-    func selectPosition(at point: CGPoint, for request: BETextDocumentRequest) async -> BETextDocumentContext
+    func requestTextRects(
+        for input: String,
+        withCompletionHandler completionHandler: @escaping ([UITextSelectionRect]) -> Void
+    )
+    func selectPosition(at point: CGPoint, completionHandler: @escaping () -> Void)
+    func selectPosition(
+        at point: CGPoint,
+        for request: BETextDocumentRequest,
+        completionHandler: @escaping (BETextDocumentContext) -> Void
+    )
     func selectTextForEditMenuWithLocation(
-        inView locationInView: CGPoint
-    ) async -> (Bool, String?, NSRange)
-    func selectText(in granularity: UITextGranularity, at point: CGPoint) async
+        inView locationInView: CGPoint,
+        completionHandler: @escaping (Bool, String?, NSRange) -> Void
+    )
+    func selectText(
+        in granularity: UITextGranularity,
+        at point: CGPoint,
+        completionHandler: @escaping () -> Void
+    )
     func selectWordForReplacement()
     func selectionRects(for range: UITextRange) -> [UITextSelectionRect]
     func setAttributedMarkedText(_ markedText: NSAttributedString?, selectedRange: NSRange)
@@ -362,8 +403,9 @@ public protocol BETextInput: BEResponderEditActions, BETextSelectionDirectionNav
     )
     func updateSelection(
         extent point: CGPoint,
-        boundary granularity: UITextGranularity
-    ) async -> Bool
+        boundary granularity: UITextGranularity,
+        completionHandler: @escaping (Bool) -> Void
+    )
     func willInsertFinalDictationResult()
 }
 
@@ -372,6 +414,122 @@ extension BETextInput {
     public var selectionContainerViewBelowText: UIView? { nil }
     public func keyboardWillDismiss() {}
     public func removeTextAlternatives() {}
+
+    /// Linux has no backing web process. Every default below completes
+    /// synchronously on the caller's thread with a fail-closed value.
+    public func adjustSelection(
+        by range: BEDirectionalTextRange,
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = range
+        completionHandler()
+    }
+
+    public func handleKeyEntry(
+        _ entry: BEKeyEntry,
+        completionHandler: @escaping (BEKeyEntry, Bool) -> Void
+    ) {
+        completionHandler(entry, false)
+    }
+
+    public func insertTextPlaceholder(
+        size: CGSize,
+        completionHandler: @escaping (UITextPlaceholder) -> Void
+    ) {
+        _ = size
+        completionHandler(UITextPlaceholder())
+    }
+
+    public func moveSelection(
+        atBoundary granularity: UITextGranularity,
+        in direction: UITextStorageDirection,
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = granularity
+        _ = direction
+        completionHandler()
+    }
+
+    public func remove(
+        _ placeholder: UITextPlaceholder,
+        willInsertText: Bool,
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = placeholder
+        _ = willInsertText
+        completionHandler()
+    }
+
+    public func replaceText(
+        _ originalText: String,
+        withText replacementText: String,
+        options: BETextReplacementOptions,
+        completionHandler: @escaping ([UITextSelectionRect]) -> Void
+    ) {
+        _ = originalText
+        _ = replacementText
+        _ = options
+        completionHandler([])
+    }
+
+    public func requestDocumentContext(
+        _ request: BETextDocumentRequest,
+        completionHandler: @escaping (BETextDocumentContext) -> Void
+    ) {
+        _ = request
+        completionHandler(BETextDocumentContext.host_empty)
+    }
+
+    public func requestTextRects(
+        for input: String,
+        withCompletionHandler completionHandler: @escaping ([UITextSelectionRect]) -> Void
+    ) {
+        _ = input
+        completionHandler([])
+    }
+
+    public func selectPosition(at point: CGPoint, completionHandler: @escaping () -> Void) {
+        _ = point
+        completionHandler()
+    }
+
+    public func selectPosition(
+        at point: CGPoint,
+        for request: BETextDocumentRequest,
+        completionHandler: @escaping (BETextDocumentContext) -> Void
+    ) {
+        _ = point
+        _ = request
+        completionHandler(BETextDocumentContext.host_empty)
+    }
+
+    public func selectTextForEditMenuWithLocation(
+        inView locationInView: CGPoint,
+        completionHandler: @escaping (Bool, String?, NSRange) -> Void
+    ) {
+        _ = locationInView
+        completionHandler(false, nil, NSRange(location: NSNotFound, length: 0))
+    }
+
+    public func selectText(
+        in granularity: UITextGranularity,
+        at point: CGPoint,
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = granularity
+        _ = point
+        completionHandler()
+    }
+
+    public func updateSelection(
+        extent point: CGPoint,
+        boundary granularity: UITextGranularity,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        _ = point
+        _ = granularity
+        completionHandler(false)
+    }
 }
 
 public protocol BETextInteractionDelegate: AnyObject {

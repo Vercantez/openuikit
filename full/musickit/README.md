@@ -122,6 +122,59 @@ Enum / option-set members share `testEnumRawValues`. No other single test
 is cited by more than 40% of the remaining implemented rows
 (40% cap after the enum table = 436.0; largest non-enum is 169).
 
+## Depth pass 2026-09 (wave 9, declared filter/model sweep)
+
+Four focused tests already existed in `tests/agent/` but were cited by
+zero coverage rows; the protocols they probe were still `declared`, and
+two response types lacked the `Codable` members the tests round-trip.
+This pass wires them up with no new test files:
+
+- Expanded five under-declared protocols to the graph shape
+  (`MusicVideoFilter.isrc`, `LibraryGenreFilter.name`,
+  `LibraryPlaylistFilter.name`, all seven `LibraryTrackFilter` members,
+  `LibraryGenreSortProperties.libraryAddedDate`,
+  `LibraryPlaylistSortProperties.libraryAddedDate`); all digester
+  optionality matches. `Track` now witnesses the full
+  `LibraryTrackFilter` (`artists` / `genres` added, `artistName`
+  widened to `String?`; existing `track.artistName == "Art"` checks
+  still pass via Optional comparison).
+- Added conditional `Codable` (`where MusicItemType: Codable`) to
+  `MusicCatalogResourceResponse` and `MusicRecentlyPlayedResponse`,
+  delegating to the `MusicItemCollection` coding already in the repo.
+- Re-pointed 96 `declared` rows at their exercising tests; readout of
+  `MusicAuthorization.currentStatus` joins the existing
+  `testAuthorizationStatus`.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 1248 | 1344 |
+| declared | 176 | 80 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 1110 | 1110 |
+
+Nondeferred: **1424** (floor 1267), unchanged in total. Gain is
+**+96 implemented** with zero new tests: `testLibraryFilterProtocols`
+(47), `testCatalogFilterProtocols` (25), `testMusicItemCoreProtocols`
+(15), `testRecentlyPlayedRequestAndResponses` (8), plus `currentStatus`
+joining `testAuthorizationStatus`.
+
+Top-5 evidence distribution (1344 implemented rows):
+
+1. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testPlaylistAndVideo` — 169 (12.6%)
+2. `test:full/musickit/tests/agent/MusicKitEnumTests.swift#testEnumRawValues` — 158 (11.8%)
+3. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testSupportingTypes` — 99 (7.4%)
+4. `test:full/musickit/tests/agent/MusicKitBehaviorTests.swift#testPlayerQueue` — 75 (5.6%)
+5. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testArtistGenreStation` — 72 (5.4%)
+
+Enum / option-set members share `testEnumRawValues`. No other single test
+is cited by more than 40% of the remaining implemented rows
+(40% cap after the enum table = 474.4; largest non-enum is 169).
+
+All 45 agent test functions (including the four newly cited ones) were
+compiled with `-warnings-as-errors` and executed green locally against
+the edited sources.
+
 ## Public surface implemented
 
 - **MusicItemID** string wrapper: `init(_:)`, `init(rawValue:)`, string

@@ -349,7 +349,7 @@ public protocol AVVideoCompositionValidationHandling : AnyObject {
 
 open class AVVideoOutputSpecification: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(tagCollections: [[CMTag]]) { self.init() }
+  public convenience init(tagCollections: [[CMTag]]) { self.init() }
   public func setOutputPixelBufferAttributes(_ pixelBufferAttributes: [String : Any]?, for tagCollection: [CMTag]) {}
   public func setOutputSettings(_ outputSettings: [String : any Sendable]?, for tagCollection: [CMTag]) {}
   public var preferredTagCollections: [[CMTag]] { [] }

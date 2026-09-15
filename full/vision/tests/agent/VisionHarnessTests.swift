@@ -56,6 +56,28 @@ func visionTextLinesImage() -> CGImage {
     return raster.makeCGImage()
 }
 
+/// Deterministic pseudo-random grayscale texture (LCG, fixed seed) with an integer
+/// wrap-around shift. Gives block-matching optical flow trackable texture everywhere.
+func visionNoiseTextureImage(shiftX: Int = 0, shiftY: Int = 0, size: Int = 80) -> CGImage {
+    let dimension = max(8, size)
+    var seed: UInt64 = 0x1234_5678_9ABC_DEF1
+    var base = [UInt8](repeating: 0, count: dimension * dimension)
+    for index in 0..<base.count {
+        seed = seed &* 6364136223846793005 &+ 1442695040888963407
+        base[index] = UInt8((seed >> 33) & 0xFF)
+    }
+    var raster = VisionRaster(width: dimension, height: dimension, filled: (0, 0, 0, 255))
+    for y in 0..<dimension {
+        for x in 0..<dimension {
+            let sx = ((x - shiftX) % dimension + dimension) % dimension
+            let sy = ((y - shiftY) % dimension + dimension) % dimension
+            let value = base[sy * dimension + sx]
+            raster[x, y] = (value, value, value, 255)
+        }
+    }
+    return raster.makeCGImage()
+}
+
 func visionExpectOverlayInvalidModel<T>(_ work: () throws -> T, _ message: String) {
     do {
         _ = try work()

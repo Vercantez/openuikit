@@ -1416,7 +1416,7 @@ open class AVFragmentedMovie: AVMovie, @unchecked Sendable {
 
 open class AVFragmentedMovieMinder: AVFragmentedAssetMinder, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(movie: AVFragmentedMovie, mindingInterval: TimeInterval) { self.init() }
+  public convenience init(movie: AVFragmentedMovie, mindingInterval: TimeInterval) { self.init() }
   public var movies: [AVFragmentedMovie] { [] }
   public func add(_ movie: AVFragmentedMovie) {}
   public func remove(_ movie: AVFragmentedMovie) {}
@@ -1444,7 +1444,7 @@ open class AVMutableAudioMix: AVAudioMix, @unchecked Sendable {
 
 open class AVMutableAudioMixInputParameters: AVAudioMixInputParameters, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(track: AVAssetTrack?) {
+  public convenience init(track: AVAssetTrack?) {
     self.init()
     if let track {
       self.trackID = track.trackID
@@ -2188,7 +2188,7 @@ open class AVMutableVideoCompositionLayerInstruction: AVVideoCompositionLayerIns
     self.init()
     portableTrackID = track.trackID
   }
-  public func setTransformRamp(fromStart startTransform: CGAffineTransform, toEnd endTransform: CGAffineTransform, timeRange: CMTimeRange) {
+  public func setTransformRamp(fromStartTransform startTransform: CGAffineTransform, toEndTransform endTransform: CGAffineTransform, timeRange: CMTimeRange) {
     storedTransform = TransformRamp(timeRange: timeRange, start: startTransform, end: endTransform)
   }
   public func setTransform(_ transform: CGAffineTransform, at time: CMTime) {

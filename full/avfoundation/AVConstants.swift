@@ -166,9 +166,9 @@ extension Notification.Name {
   public static let AVSampleBufferDisplayLayerReadyForDisplayDidChange = Notification.Name("AVSampleBufferDisplayLayerReadyForDisplayDidChange")
 }
 
-extension Array {
-  static func monoscopicForVideoOutput() -> [CMTag] { [] }
+extension Array where Element == CMTag {
+  public static func monoscopicForVideoOutput() -> [CMTag] { [] }
 }
-extension Array {
-  static func stereoscopicForVideoOutput() -> [CMTag] { [] }
+extension Array where Element == CMTag {
+  public static func stereoscopicForVideoOutput() -> [CMTag] { [] }
 }

@@ -882,6 +882,14 @@ open class HMAccessorySetupManager: NSObject {
         super.init()
     }
 
+    public func performAccessorySetup(
+        using request: HMAccessorySetupRequest,
+        completionHandler completion: @escaping (HMAccessorySetupResult?, (any Error)?) -> Void
+    ) {
+        _ = request
+        completion(nil, HMFailClosed(.missingEntitlement))
+    }
+
     public func performAccessorySetup(using request: HMAccessorySetupRequest) async throws -> HMAccessorySetupResult {
         _ = request
         throw HMFailClosed(.missingEntitlement)
@@ -1480,9 +1488,22 @@ open class HMHomeManager: NSObject {
         super.init()
     }
 
+    public func addHome(
+        named homeName: String,
+        completionHandler completion: @escaping (HMHome?, (any Error)?) -> Void
+    ) {
+        _ = homeName
+        completion(nil, HMFailClosed(.homeAccessNotAuthorized))
+    }
+
     public func addHome(named homeName: String) async throws -> HMHome {
         _ = homeName
         throw HMFailClosed(.homeAccessNotAuthorized)
+    }
+
+    public func removeHome(_ home: HMHome, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        _ = home
+        completion(HMFailClosed(.homeAccessNotAuthorized))
     }
 
     public func removeHome(_ home: HMHome) async throws {
@@ -1490,9 +1511,22 @@ open class HMHomeManager: NSObject {
         throw HMFailClosed(.homeAccessNotAuthorized)
     }
 
+    public func updatePrimaryHome(_ home: HMHome, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        _ = home
+        completion(HMFailClosed(.homeAccessNotAuthorized))
+    }
+
     public func updatePrimaryHome(_ home: HMHome) async throws {
         _ = home
         throw HMFailClosed(.homeAccessNotAuthorized)
+    }
+
+    public func findVendorAccessory(
+        hapPublicKey: Data,
+        completionHandler completion: @escaping (HMAccessory?, (any Error)?) -> Void
+    ) {
+        _ = hapPublicKey
+        completion(nil, HMFailClosed(.accessoryDiscoveryFailed))
     }
 
     public func findVendorAccessory(hapPublicKey: Data) async throws -> HMAccessory? {
@@ -1509,6 +1543,11 @@ open class HMMediaSourceDisplayOrderProfile: NSObject {
     public weak var delegate: (any HMMediaSourceDisplayOrderProfile.Delegate)?
     public let canModifyOrder: Bool = false
     public private(set) var order: [Int] = []
+
+    public func writeOrder(_ order: [Int], completionHandler completion: @escaping ((any Error)?) -> Void) {
+        _ = order
+        completion(HMFailClosed(.operationNotSupported))
+    }
 
     public func writeOrder(_ order: [Int]) async throws {
         _ = order

@@ -343,14 +343,35 @@ open class HMTimerTrigger: HMTrigger {
         self.name = name
     }
 
+    public func updateFireDate(_ fireDate: Date, completionHandler completion: @escaping ((any Error)?) -> Void) {
+        _ = fireDate
+        completion(HMFailClosed())
+    }
+
     public func updateFireDate(_ fireDate: Date) async throws {
         _ = fireDate
         throw HMFailClosed()
     }
 
+    public func updateRecurrence(
+        _ recurrence: DateComponents?,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        _ = recurrence
+        completion(HMFailClosed())
+    }
+
     public func updateRecurrence(_ recurrence: DateComponents?) async throws {
         _ = recurrence
         throw HMFailClosed()
+    }
+
+    public func updateTimeZone(
+        _ timeZone: TimeZone?,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        _ = timeZone
+        completion(HMFailClosed())
     }
 
     public func updateTimeZone(_ timeZone: TimeZone?) async throws {

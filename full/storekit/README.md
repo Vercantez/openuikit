@@ -450,3 +450,45 @@ implemented rows):
 
 No cited test covers more than 40% of implemented rows. The sealed host gate is
 `bash full/storekit/tests/acceptance/test_host.sh`.
+
+## Depth pass 10 (pi wave-2 storekit)
+
+Model-level pass over the remaining StoreKit-owned `_StoreKit_SwiftUI`
+surface. The seven subscription-store control styles (Picker, Buttons,
+Automatic, PagedPicker, CompactPicker, ProminentPicker,
+PagedProminentPicker) now have focused tests for `init`, `Placement`
+(`automatic` / `init(rawValue:)` / `rawValue` round trip), `makeBody`, and
+the `Body` witness. Product/offer view styles exercise `makeBody` against
+default configurations. New model-level members added for this pass:
+`ProductIconPhase.errors`, `EntitlementTaskState.value`,
+`SubscriptionOfferViewStyleConfiguration` (`icon` / `state` / `subscribe`),
+`StoreContentBuilder.buildEither` / `buildExpression`, plus `StoreView` /
+`SubscriptionOfferView` `ids`/`products` overloads and
+`SubscriptionStoreView` `groupID` / `subscriptions` overloads mirroring the
+existing `ProductView` precedent. All views are still model holders, never
+rendered. Six synthesized `!=` witnesses now share one table-driven
+inequality test. New tests live in
+`tests/agent/StoreKitDepthPass10Tests.swift` (24 tests, one family each, no
+`await` / `DispatchQueue.main` / `RunLoop` / semaphores).
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before depth pass 10 | 1563 | 6655 | 176 | 0 | 7301 |
+| after depth pass 10 | 1819 | 6399 | 176 | 0 | 7301 |
+
+Nondeferred is **8218** (floor 7848), unchanged: every converted row stays
+nondeferred. Top-5 evidence distribution (of 1819 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (6.3%)
+2. `testAdvancedCommerceTypes` — 111 (6.1%)
+3. `testJWSUnverifiedFields` — 67 (3.7%)
+4. `testHashableRawRepresentableMixing` — 48 (2.6%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (2.3%)
+
+No cited test covers more than 40% of implemented rows. Leftover `declared`
+is `s:7SwiftUI4View…` synthesized modifier specializations (kept for the
+7848 floor, never `implemented`), async Apple-service entry points, and
+async-sequence witnesses the synchronous harness cannot execute. The sealed
+host gate is `bash full/storekit/tests/acceptance/test_host.sh`; this pass
+was verified with Swift 6.2.4 for Linux (module + runner compile
+warnings-as-errors, all cited tests run, marker-only stdout).

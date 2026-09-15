@@ -11,10 +11,20 @@ Live Activity download monitoring.
 
 This is a fresh seed: 511 exact public identifiers, floor 256 nondeferred.
 
-Coverage after this pass: **492 implemented / 19 declared / 0 deferred /
+Coverage after this pass: **506 implemented / 5 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
-Top-5 evidence distribution (share of the 492 implemented rows):
+The 14 completion-handler rows (`BETextInput` selection/editing methods and
+`BEScrollViewDelegate.scrollView(_:handle:completion:)`) moved from declared
+to implemented: the Apple symbol graph declares them with completion
+closures, not Swift `async`, so the port now matches that shape and each
+completion runs synchronously fail-closed on the caller's thread. The 5
+remaining declared rows are genuinely `async throws` on Apple
+(`BEDownloadMonitor.beginMonitoring()`, `resumeMonitoring(placeholderURL:)`,
+and the three process `init(bundleIdentifier:onInterruption:)`), which the
+sealed synchronous test runner cannot invoke.
+
+Top-5 evidence distribution (share of the 506 implemented rows):
 
 1. `BEOptionSetTests.swift#testBEAccessibilityContainerTypeAlgebra` — 21 (4.3%, option-set algebra)
 2. `BEOptionSetTests.swift#testBESelectionFlagsAlgebra` — 21 (4.3%, option-set algebra)
@@ -54,6 +64,13 @@ implemented rows.
   delete text at the cursor, selected range, pressed state, and container
   type round-trip. Line-position queries return `NSNotFound`.
 - `BETextInteraction` records host actions without presenting UI.
+- `BETextInput` completion-handler methods (`adjustSelection`,
+  `handleKeyEntry`, `insertTextPlaceholder`, `moveSelection`, `remove`,
+  `replaceText`, `requestDocumentContext`, `requestTextRects`,
+  `selectPosition`, `selectText`, `updateSelection`) and
+  `BEScrollViewDelegate.scrollView(_:handle:completion:)` invoke their
+  completion synchronously with fail-closed values (`false`, `[]`, empty
+  context, or the passed-through entry).
 
 ## Fail-closed boundaries
 
@@ -63,7 +80,9 @@ hierarchy, `AVCaptureSession` sandbox, or Live Activity download daemon.
 - `WebContentProcess` / `NetworkingProcess` / `RenderingProcess`
   `makeLibXPCConnection` and `grantCapability` throw
   `BrowserEngineKitHostError.processUnavailable` or `.xpcUnavailable`.
-  Async process inits are declared, not run.
+  Async process inits and download-monitor async methods are declared,
+  not run: they are `async throws` on Apple and the sealed runner has
+  no run loop.
 - `LayerHierarchy.init()` and handle/coordinator port/XPC inits throw
   `.layerHierarchyUnavailable`. `encode(_:)` does not invent a mach port.
 - `MediaEnvironment.activate` / `suspend` / `makeCaptureSession` throw

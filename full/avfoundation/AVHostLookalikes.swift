@@ -163,6 +163,14 @@ extension CMSampleBuffer {
 }
 #endif
 
+extension CMReadySampleBuffer {
+    /// Linux has no content-key attachment service; fail closed.
+    public func attach(contentKey: AVContentKey) throws {
+        _ = contentKey
+        throw AVFoundationPortableError.mediaServiceUnavailable
+    }
+}
+
 #if !canImport(CoreVideo)
 open class CVPixelBuffer: NSObject, @unchecked Sendable {}
 open class CVMutablePixelBuffer: CVPixelBuffer, @unchecked Sendable {

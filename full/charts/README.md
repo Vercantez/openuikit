@@ -692,3 +692,55 @@ Top-five implemented evidence distribution (2353 implemented rows; 40% cap =
 | 41 | 1.7% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
 | 41 | 1.7% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
 | 41 | 1.7% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |
+
+### Wave-6 View-modifier depth pass (Charts-owned `chart*` modifiers)
+
+This pass starts from the wave-8 continuation ledger (`implemented` 2353,
+`declared` 2558, `deferred` 909, `unavailable` 0, `not-applicable` 3654)
+and ends at `implemented` 3009, `declared` 1902, `deferred` 909,
+`unavailable` 0, `not-applicable` 3654: an implemented gain of 656, with
+nondeferred coverage at 4911, above the medium-full floor.
+
+The converted rows are exactly the Charts-owned `chart*` `View` modifiers
+(`chartXAxis` / `chartYAxis` / `chartZAxis` content and visibility,
+axis labels and styles, legend, X/Y/Z scales, X/Y/Z/angle selection,
+scroll position / scrollable axes / visible domain / scroll-target
+behavior, foreground-style / symbol / symbol-size / line-style scales,
+overlay, background, plot style, gesture, 3D pose, camera projection):
+each has a real product stub in `Charts.swift` / `ChartsModifiers.swift`,
+and each overload is now exercised by one of 27 focused tests in
+`tests/agent/ChartsViewModifiersTests.swift` on `EmptyView`, `Chart`,
+`Chart3D`, `ChartPlotContent`, `ChartAxisContent`, `AnyChartSymbolShape`,
+`BasicChartSymbolShape`, and `Circle`. `Chart`-specific overloads with
+real storage (`chartXAxis(_:)` / `chartYAxis(_:)` / `chartLegend(_:)` /
+`chartXScale(domain:)` / `chartYScale(domain:)` /
+`chartForegroundStyleScale(domain:type:)` / `chartScrollableAxes(_:)`)
+assert the stored state; identity stubs assert the call round-trips over
+every base view. Overloads that share a name between the `Chart` and
+`View` extensions are exercised on non-`Chart` bases to avoid inventing
+Apple overload ranking.
+
+Not converted, deliberately: the ~1902 remaining declared rows are
+generic SwiftUI modifiers (`.alert`, `.padding`, `.badge`, accessibility,
+file dialogs, drag/drop, toolbars, …) synthesized for Chart types, plus
+uninhabited `Never` witnesses. Charts does not own that behavior, so it
+is not claimed. SwiftUI cross-import overlays stay `not-applicable`;
+stdlib operator overlays stay `deferred`.
+
+Top-five implemented evidence distribution (3009 implemented rows; 40% cap =
+1203):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 88 | 2.9% | `ChartsViewModifiersTests.swift#testChartViewAxisLabels` |
+| 72 | 2.4% | `ChartsViewModifiersTests.swift#testChartViewSymbolScale` |
+| 56 | 1.9% | `ChartsViewModifiersTests.swift#testChartViewSymbolSizeScale` |
+| 54 | 1.8% | `ChartsViewModifiersTests.swift#testChartViewForegroundStyleScale` |
+| 48 | 1.6% | `ChartsViewModifiersTests.swift#testChartViewLineStyleScale` |
+
+No single test exceeds 40% of implemented rows.
+
+Fail-closed (unchanged): the converted modifiers are identity stubs or
+Chart-local storage; they do not perform layout, hit-testing, scrolling,
+gesture delivery, or 3D rendering. `Chart3D` / `SurfacePlot` still do not
+render.

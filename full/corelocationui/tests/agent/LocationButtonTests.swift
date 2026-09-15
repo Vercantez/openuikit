@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
 @_spi(OpenUIKitHost) import CoreLocationUI
 
 func testSwiftLocationButtonConstruct() {

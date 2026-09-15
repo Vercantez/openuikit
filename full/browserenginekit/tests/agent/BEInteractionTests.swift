@@ -133,3 +133,20 @@ func testBETextInteractionDelegateCallbacks() {
     precondition(delegate.will == 1)
     precondition(delegate.did == 1)
 }
+
+func testBEScrollViewHandleScrollUpdateCompletionFalse() {
+    final class HostDelegate: NSObject, BEScrollViewDelegate {}
+    let delegate = HostDelegate()
+    let scrollView = BEScrollView()
+    let update = BEScrollViewScrollUpdate.host_make(
+        timestamp: 1.0,
+        phase: .began,
+        location: .zero,
+        translation: .zero
+    )
+    var handled: Bool?
+    delegate.scrollView(scrollView, handle: update) {
+        handled = $0
+    }
+    precondition(handled == false)
+}

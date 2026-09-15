@@ -32,9 +32,74 @@ Coverage this round (ledger at start of this increment, then after):
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Before | 2906 | 896 | 1196 | 0 | 1588 | 3802 |
-| After | 3125 | 677 | 1196 | 0 | 1588 | 3802 |
+| After wave 14 | 3125 | 677 | 1196 | 0 | 1588 | 3802 |
+| After wave 15 | 3231 | 571 | 1196 | 0 | 1588 | 3802 |
+| After wave 16 | 3331 | 537 | 1130 | 0 | 1588 | 3868 |
 
-Wave 14 (this increment) implements portable shortcut-presentation and
+Wave 16 (this increment) implements remaining portable data-model
+surface with nine synchronous tests in
+`tests/agent/AppIntentsWave16Tests.swift` (100 rows, largest test cites 22):
+compiler-synthesized `allCases` / `hashValue` / `hash(into:)` across all 22
+`IntentParameter` measurement `ValueType` unit families (Volume, Length,
+InformationStorage, Mass, Area, Power, Pressure, Frequency, Duration,
+Angle, ElectricCharge, Energy, ElectricCurrent, ElectricResistance,
+ElectricPotentialDifference, Speed, Temperature, FuelEfficiency,
+Acceleration, ConcentrationMass, Dispersion, Illuminance; hashing stays
+host-local), `EntityPropertyQuery` `properties` / `sortingOptions` /
+`findIntentDescription` defaults plus the `ComparatorMappingType` /
+`QueryProperties` / `ComparatorMode` / `SortingOptions` / `Sort` aliases,
+`AssistantSchema` with its `EnumSchema` / `EntitySchema` / `IntentSchema`
+nesting and three `init(_:)` overloads, the `AssistantEnum` /
+`AssistantEntity` / `AssistantIntent` / `AssistantSchemaEnum` and
+`AssistantSchemas.Model` / `Enum` / `Entity` / `Intent` protocol
+identities plus `SearchCriteria`, and nine `ParameterSummaryWhenCondition`
+overloads (six `identifier` key-path arities, two `widgetFamily` arities,
+`hasValue`) that record operator/values metadata and evaluate to the
+`otherwise` branch: Linux has no running intent to evaluate a key path
+against and never claims a Siri match. `when` / `otherwise` take plain
+closures, the same documented deviation wave 15 took, because the host
+toolchain rejects result-builder attributes whose generic arguments
+mention enclosing generic parameters; the `identifier` overloads
+constrain `Parameter: AnyIntentValue` only, since the host
+`AnyIntentValue` carries no `Value` associated type. Macros
+(`AppEnum(schema:)` / `AppEntity(schema:)` / `AppIntent(schema:)`),
+async `requestValue` / `requestConfirmation` / `requestChoice`, Siri
+daemon behavior, `EntityProperty.asyncGetter`, `IntentPrediction`
+parameter arities, value-based `WhenCondition` overloads needing
+`Parameter.Value`, and SwiftUI overlays stay fail-closed, declared, or
+not-applicable.
+
+Wave 15 (previous increment) implements portable entity-query comparison and
+container models with fourteen synchronous tests in
+`tests/agent/AppIntentsWave15Tests.swift` (106 rows, largest test cites 20):
+`EqualTo` / `NotEqualTo` / `LessThan` / `GreaterThan` /
+`LessThanOrEqualTo` / `GreaterThanOrEqualTo` / `IsBetween` mapping-transform
+and resolver-attaching inits, the `EntityProperty<String>` /
+`EntityProperty<AttributedString>` `Contains` / `HasPrefix` / `HasSuffix`
+overloads, `EntityQueryComparatorsBuilder` concatenation plus its four
+`buildExpression` wrappings, `EntityQueryPropertiesBuilder` /
+`EntityQuerySortingOptionsBuilder` / `ParameterSummaryBuilder` methods,
+`EntityQueryProperties` / `EntityQuerySortingOptions` index subscripts and
+`content` inits, `EntityQuerySortableByProperty` key-path storage,
+`EntityQueryProperty` key-path/comparator/entity-provider inits,
+`ResultsCollection` prompt/collation/empty/items on `Array`, `_IntentValue`
+`ValueType` / `UnwrappedType` alias pins for scalars, `Optional`, and `Set`
+(`Array.UnwrappedType` corrected to `Array<Element>` per the oracle),
+`FileEntityIdentifier` / `IntentDonationIdentifier` coding plus `fileURL`,
+`DisplayRepresentation.Image` coding round-trip, and a
+`RangeComparableProperty` sample. `withResolvers` and the properties/content
+closures take plain closures: the host toolchain rejects result-builder
+attributes whose generic arguments mention enclosing generic parameters, so
+the builder spelling is elided while resolver specs are still stored as
+metadata. Sequence and `ExpressibleByNilLiteral` comparator overloads stay
+declared (`_SequenceIntentValue` has no host source). Async `requestValue` /
+`requestConfirmation` / `requestChoice`, Siri daemon behavior,
+`EntityProperty.asyncGetter`, and SwiftUI overlays stay fail-closed,
+declared, or not-applicable. (This pass also re-applied wave 15's ledger
+edits verbatim after an unrelated stash reverted them, and lists
+`AppIntentsWave15.swift` in the guest sources manifest.)
+
+Wave 14 (earlier increment) implements portable shortcut-presentation and
 template models with twenty synchronous tests in
 `tests/agent/AppIntentsWave14Tests.swift` (219 rows, largest test cites 20):
 `NegativeAppShortcutPhrase` / `NegativeAppShortcutPhrases` templates,
@@ -71,8 +136,10 @@ Top-5 implemented evidence:
 | 153 | 5.6% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
 | 147 | 5.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
 
-No test is cited by more than 176 rows (5.7% of implemented rows, well
+No test is cited by more than 176 rows (5.3% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
+Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
+each.
 New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.

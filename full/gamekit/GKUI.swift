@@ -138,6 +138,8 @@ open class GKFriendRequestComposeViewController: NSObject {
 open class GKNotificationBanner: NSObject {
     public private(set) static var portableShowCount = 0
 
+    static func notePortableShow() { portableShowCount += 1 }
+
     public class func show(withTitle title: String?, message: String?) async {
         _ = (title, message)
         portableShowCount += 1

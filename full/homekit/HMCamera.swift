@@ -7,13 +7,31 @@ open class HMCameraControl: NSObject {
 }
 
 open class HMCameraSource: NSObject {
+    public private(set) var aspectRatio: Double = 0
+
     public override init() {
         super.init()
+    }
+
+    public func host_setAspectRatio(_ aspectRatio: Double) {
+        self.aspectRatio = aspectRatio
     }
 }
 
 open class HMCameraStream: HMCameraSource {
     public private(set) var audioStreamSetting: HMCameraAudioStreamSetting = .muted
+
+    public func setAudioStreamSetting(_ audioStreamSetting: HMCameraAudioStreamSetting) {
+        self.audioStreamSetting = audioStreamSetting
+    }
+
+    public func updateAudioStreamSetting(
+        _ audioStreamSetting: HMCameraAudioStreamSetting,
+        completionHandler completion: @escaping ((any Error)?) -> Void
+    ) {
+        _ = audioStreamSetting
+        completion(HMFailClosed(.operationNotSupported))
+    }
 
     public func updateAudioStreamSetting(_ audioStreamSetting: HMCameraAudioStreamSetting) async throws {
         _ = audioStreamSetting

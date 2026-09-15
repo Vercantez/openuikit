@@ -86,6 +86,67 @@ overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
 
+### Policy/data declared conversion (pi-wave2 webkit)
+
+This pass converts **36 declared rows to implemented** (1279 → 1315
+implemented, 115 → 79 declared; deferred 26, not-applicable 813
+unchanged, total 2233). The behavior is WebPage/WebView navigation-policy
+data plus synchronous extension-delegate/tab surface, exercised by **eleven
+synchronous, self-contained tests** in
+`tests/agent/WebKitPagePolicyTests.swift`; none awaits, waits on a queue or
+semaphore, or touches `DispatchQueue.main`/`RunLoop`. The largest new
+evidence group is 7/36 rows (19.44%). No existing evidence was relabeled.
+
+- `WebPage.FrameInfo` / `NavigationAction` / `NavigationResponse` value
+  semantics live in the new product source
+  `full/webkit/WebKitPageNavigation.swift` (added to
+  `webkit_guest_sources.txt`; now 15 product sources). `buttonNumber`
+  (`UIEvent.ButtonMask`) stays declared: the isolated host has no UIKit
+  module and framework-local substitutes for dependency-owned types are
+  forbidden.
+- `WebPage` gains the idle presentation/capture state the policy tests
+  read: `fullscreenState` (`.notInFullscreen`), `isWritingToolsActive`
+  / `isBlockedByScreenTime` (false), `cameraCaptureState` /
+  `microphoneCaptureState` (`.none`). Media-engine success, snapshots,
+  PDF, and web archives stay fail-closed.
+- `WKWebExtensionTab.isReaderModeAvailable(for:)` (default false) and the
+  synchronous `WKWebExtensionControllerDelegate` methods
+  `didUpdateAction` / `focusedWindowFor` (nil) / `openWindowsFor` (empty)
+  follow the exact Apple declarations in `reference/public-surface.tsv`.
+  Async completion-handler overlays stay declared: they cannot be awaited
+  on the sealed synchronous runner.
+- `WKWebView.isFindInteractionEnabled` round-trips false → true →
+  false; `WKPreviewActionItem` protocol + `identifier` are exercised via a
+  test-local conformer.
+- `webkit-provenance.json` now attests the 15 product sources (digests for
+  the edited `WebKitPage.swift` / `WebKitExtensions.swift` refreshed) and
+  `tests/test_webkit_provenance.py` asserts the 15-source contract.
+
+Top-5 implemented evidence distribution after this pass (1315 rows):
+
+| Test | Rows | Share |
+| --- | ---: | ---: |
+| testOptionSetRawValues | 155 | 11.79% |
+| testContextPermissionGrantDenyAndURLAccess | 98 | 7.45% |
+| testControllerTabAndWindowRegistry | 89 | 6.77% |
+| testActionCommandDataRecordAndMessagePort | 76 | 5.78% |
+| testHTMLStringLoadCommitsAndParsesTitle | 67 | 5.10% |
+
+Validation on this Mac (the sealed Linux gate needs a Linux host):
+
+- `python3 -B full/framework-fanout/validate_seed.py --framework
+  full/webkit --phase deliverable`:
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK module=WebKit lane=medium-full
+  symbols=2233`.
+- Product (15 sources) compiles warnings-as-errors; all
+  `tests/agent/*Tests.swift` compile warnings-as-errors; the eleven new
+  tests run green (`WEBKIT_POLICY_TESTS_OK`). macOS verification uses a
+  `/tmp` overlay shim (repo untouched) because this Mac's SDK requires an
+  explicit CoreGraphics import the Linux gate does not.
+- `python3 -B full/webkit/tests/test_webkit_provenance.py`: 8 tests OK.
+
+Only `full/webkit/` changes.
+
 ### Next pass: measured WebPage local history (agent/fw-webkit-c)
 
 Baseline `89291fae` already contained the prior 111-identifier continuation.

@@ -1,5 +1,9 @@
 @_exported import Foundation
 
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+
 // Isolated-host stand-ins for UIKit and SwiftUI types named by the public
 // CoreLocationUI surface. The sealed host gate compiles this module alone.
 // When a real `UIKit` / `SwiftUI` module is on the link line, these blocks

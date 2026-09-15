@@ -144,6 +144,35 @@ No non-enum/option-set test is cited by more than 40% of the remaining
 implemented rows. The focused nested-payment-request test now supports 25 rows
 (1.7%).
 
+## Depth pass 2026-09 (pi wave 2)
+
+Coverage **before** this continuation: 1320 implemented / 3904 declared / 49
+deferred / 0 unavailable / 0 not-applicable.
+
+Coverage **after**: 1369 implemented / 3904 declared / 0 deferred / 0 unavailable /
+0 not-applicable.
+
+This continuation converts all 49 remaining `deferred` rows to `implemented`:
+every one is a synthesized `Hashable.hashValue` witness (`BridgedStoredNSError`,
+`RawRepresentable`, and newtype-wrapper families) for a type the Linux port
+declares. The new `tests/agent/PassKitHashValueTests.swift` reads `.hashValue`
+directly on each underlying value (`testSynthesizedHashValueEnums` × 35,
+`testSynthesizedHashValueErrorBridging` × 6, `testSynthesizedHashValueNewtypes`
+× 8), asserting equal values hash equally and the hashes work as `Set` keys.
+Direct `.hashValue` reads compile warning-free under `-warnings-as-errors` on
+this host (precedent: `testPaymentRequestApplePayLaterAndMCC`), so the old
+"deprecated access" deferral reason no longer applies. New tests are purely
+synchronous with no `DispatchQueue.main`, `RunLoop`, semaphore, or `await` use.
+The largest new-test share is 35 / 1369 (2.6%), far below the 40% bulk-relabel
+ceiling. All earlier behavior and tests are intact; Apple Pay presentation,
+eligibility, provisioning, secure-element, identity-document, and remote Wallet
+operations remain fail-closed.
+
+The 3904 `s:7SwiftUI4View…` synthesized members remain **declared** (see wave 8
+note above): they are SwiftUI-lane cross-import overlay surface, and the sealed
+medium-full gate counts only `implemented` plus `declared` rows toward its 2637
+floor.
+
 Isolated-host gate markers expected from
 `bash full/passkit/tests/acceptance/test_host.sh`:
 

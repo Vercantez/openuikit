@@ -54,7 +54,13 @@ rather than awaited.
 ## Depth pass 2026-09
 
 Coverage: **183 implemented** / 28 declared / 6 deferred / 0 unavailable /
-2 not-applicable (211 nondeferred, floor 176).
+2 not-applicable (211 nondeferred, floor 176). Wave 2026-09-15 recount: counts
+unchanged (183/28/6/2 of 219). All 28 declared rows are `async` product APIs
+(`fetch`, library `add`/`addItems`/`removeItems`, `prepare`/`result`,
+`SHSession.result(from:)`, both `Iterator.next` variants) or `async`
+`AsyncSequence` consumers, so none converts to implemented under the
+no-`await` sealed gate. The 6 deferred rows need AVFoundation / MusicKit /
+UniformTypeIdentifiers outside this seed's Foundation-only dependencies.
 
 Top-5 evidence distribution (implemented rows):
 

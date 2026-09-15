@@ -63,10 +63,11 @@ test constructs `DeviceActivityData` by hand.
 Token-typed `DeviceActivityEvent` / `DeviceActivityFilter` members that require
 `ApplicationToken`, `ActivityCategoryToken`, and `WebDomainToken` stay deferred
 until ManagedSettings is a real module dependency. SwiftUI `View` modifiers
-synthesized onto `DeviceActivityReport` are declared as inert identifier stubs
-so the isolated Foundation compile can name them; they are not SwiftUI
+synthesized onto `DeviceActivityReport` are covered as inert identity stubs
+(each stub returns `self` and preserves `context`/`filter`, pinned by one
+test per stub in `DeviceActivityViewStubsTests.swift`); they are not SwiftUI
 behavior. Three Foundation `AsyncSequence` overlays (`characters`, `lines`, and
-`unicodeScalars`) are conditionally declared for `DeviceActivityResults<UInt8>`;
+`unicodeScalars`) are implemented for `DeviceActivityResults<UInt8>`;
 ordinary report-record element types do not meet that constraint.
 
 See `oracle-questions.tsv`.
@@ -112,3 +113,17 @@ Top-5 implemented evidence distribution:
 | 10 | `testDeviceActivityMonitoringErrorSurface` |
 
 No test supplies more than 40% of implemented evidence. Async probes use a detached cooperative-executor task plus a bounded lock-protected poll; they do not depend on `DispatchQueue.main`, a semaphore, or a run loop.
+
+## Depth pass 2026-09 (second pass)
+
+Coverage before: **240 implemented / 783 declared / 13 deferred / 0 unavailable / 0 not-applicable**.
+
+Coverage after: **1022 implemented / 1 declared / 13 deferred / 0 unavailable / 0 not-applicable** (1023 nondeferred, floor 829).
+
+Converted 782 declared rows with real synchronous tests:
+
+- 769 SwiftUI `View`-modifier rows via 401 one-test-per-stub checks in `tests/agent/DeviceActivityViewStubsTests.swift`. Every inert stub (`DeviceActivityViewStubs.swift`) is actually called and must return itself while preserving `context` and `filter`. Largest single-test share is 35/1022 (~3.4%), under the 40% cap.
+- 10 `DeviceActivityReportScene` / `DeviceActivityReportExtension` rows via two sync surface tests (context, content closure, `body` default, `Body`/`Configuration`/`Content` witnesses, `configuration` passthrough). The `async makeConfiguration` requirement stays `declared`: it cannot be called without `await`, which cited tests must not use.
+- 3 `DeviceActivityResults<UInt8>` overlays (`characters`, `lines`, `unicodeScalars`) via synchronous property-access checks; a macOS probe confirmed these Foundation overlays exist for byte sequences.
+
+Leftover `declared` (1): `makeConfiguration(representing:)` (async, fail-closed to declaration). Leftover `deferred` (13): ManagedSettings-token members (`ApplicationToken` / `ActivityCategoryToken` / `WebDomainToken`); this lane must not ship local substitutes. Monitor/daemon behavior stays fail-closed (`isAuthorized == false`, inert extension callbacks, empty results unless constructed by hand).

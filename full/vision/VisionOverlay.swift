@@ -2351,13 +2351,15 @@ public final class TrackOpticalFlowRequest: ImageProcessingRequest, StatefulRequ
     public var regionOfInterest: NormalizedRect = .fullImage
     public var minimumLatencyFrameCount: Int { 1 }
     public var computationAccuracy: ComputationAccuracy = .medium
-    public var outputPixelFormatType: OSType = kCVPixelFormatType_32BGRA
-    public var supportedOutputPixelFormatTypes: [OSType] { [kCVPixelFormatType_32BGRA] }
+    /// Linux-local default aligned with the oracle-pinned VN default ('2C0f').
+    public var outputPixelFormatType: OSType = kCVPixelFormatType_TwoComponent32Float
+    public var supportedOutputPixelFormatTypes: [OSType] { [kCVPixelFormatType_TwoComponent32Float] }
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .trackOpticalFlowRequest(revision) }
     public var description: String { String(describing: descriptor) }
     public var hashValue: Int { descriptor.hashValue }
     private var devices: [ComputeStage: MLComputeDevice] = [:]
+    private var inner = VNTrackOpticalFlowRequest()
 
     public init(_ revision: Revision? = nil, frameAnalysisSpacing: CMTime? = nil) {
         self.revision = revision ?? .revision1
@@ -2405,7 +2407,18 @@ public final class TrackOpticalFlowRequest: ImageProcessingRequest, StatefulRequ
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        inner.regionOfInterest = regionOfInterest.cgRect
+        inner.computationAccuracy = VNTrackOpticalFlowRequest.ComputationAccuracy(
+            rawValue: computationAccuracy == .low ? 0 : computationAccuracy == .high ? 2 : computationAccuracy == .veryHigh ? 3 : 1
+        ) ?? .medium
+        try handler.perform([inner])
+        guard let flow = inner.results?.first as? VNPixelBufferObservation,
+            let observation = OpticalFlowObservation(flow)
+        else {
+            throw VisionError.operationFailed("missing optical flow")
+        }
+        return observation
     }
 }
 public final class TrackHomographicImageRegistrationRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {

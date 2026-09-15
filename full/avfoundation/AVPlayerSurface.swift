@@ -29,7 +29,7 @@ open class AVCoordinatedPlaybackSuspension: NSObject, @unchecked Sendable {
 
 open class AVDelegatingPlaybackCoordinator: AVPlaybackCoordinator, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(playbackControlDelegate: any AVPlaybackCoordinatorPlaybackControlDelegate) { self.init() }
+  public convenience init(playbackControlDelegate: any AVPlaybackCoordinatorPlaybackControlDelegate) { self.init() }
   public var playbackControlDelegate: (any AVPlaybackCoordinatorPlaybackControlDelegate)? { nil }
   public func coordinateRateChange(to rate: Float, options: AVDelegatingPlaybackCoordinatorRateChangeOptions = []) {}
   public func coordinateSeek(to time: CMTime, options: AVDelegatingPlaybackCoordinatorSeekOptions = []) {}

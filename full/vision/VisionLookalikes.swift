@@ -14,6 +14,11 @@ public typealias simd_float4 = SIMD4<Float>
 public typealias OSType = UInt32
 /// FourCC 'BGRA'. Linux lookalike; not an Apple CoreVideo oracle.
 public let kCVPixelFormatType_32BGRA: OSType = 0x42475241
+/// FourCC '2C0f': 32-bit two-component IEEE float, 32-bit little-endian samples.
+/// Apple oracle (macOS Vision, Xcode 26.1, 2026-09-14): this is both the default
+/// `outputPixelFormat` of `VNGenerateOpticalFlowRequest` / `VNTrackOpticalFlowRequest`
+/// and the format of the produced flow pixel buffer (two Float32 (dx, dy) per pixel).
+public let kCVPixelFormatType_TwoComponent32Float: OSType = 0x32433066
 #endif
 
 public struct simd_float3x3: Equatable, Hashable, Sendable {
@@ -221,15 +226,58 @@ public final class CVPixelBuffer: @unchecked Sendable {
     public let width: Int
     public let height: Int
     public var pixels: [UInt8]
+    /// Pixel-format tag for the bytes in `pixels`. RGBA buffers use
+    /// `kCVPixelFormatType_32BGRA` (4 bytes/pixel); optical-flow buffers use
+    /// `kCVPixelFormatType_TwoComponent32Float` (8 bytes/pixel: two little-endian
+    /// Float32 (dx, dy) per pixel, x-right/y-down in reference-image pixels).
+    public let pixelFormat: OSType
 
     public init(width: Int, height: Int, pixels: [UInt8]? = nil) {
         self.width = max(0, width)
         self.height = max(0, height)
+        self.pixelFormat = kCVPixelFormatType_32BGRA
         let count = self.width * self.height * 4
         if let pixels, pixels.count >= count {
             self.pixels = Array(pixels.prefix(count))
         } else {
             self.pixels = [UInt8](repeating: 0, count: count)
+        }
+    }
+
+    /// Optical-flow buffer: stores `vectors` (row-major, `flowWidth` x `flowHeight`)
+    /// as little-endian Float32 pairs. A documented Linux-local stand-in for Apple's
+    /// '2C0f' flow buffer; only the (dx, dy)-per-pixel layout and sign convention are
+    /// oracle-pinned (macOS Vision, Xcode 26.1, 2026-09-14), not Apple's magnitudes.
+    public init(flowWidth: Int, flowHeight: Int, vectors: [SIMD2<Float>]) {
+        let flowWidth = max(0, flowWidth)
+        let flowHeight = max(0, flowHeight)
+        self.width = flowWidth
+        self.height = flowHeight
+        self.pixelFormat = kCVPixelFormatType_TwoComponent32Float
+        var bytes = [UInt8](repeating: 0, count: flowWidth * flowHeight * 8)
+        bytes.withUnsafeMutableBytes { raw in
+            let floats = raw.bindMemory(to: Float.self)
+            for index in 0..<(flowWidth * flowHeight) {
+                let vector = index < vectors.count ? vectors[index] : SIMD2<Float>(0, 0)
+                floats[2 * index] = vector.x
+                floats[2 * index + 1] = vector.y
+            }
+        }
+        self.pixels = bytes
+    }
+
+    /// Reads the (dx, dy) flow vector at (`x`, `y`), or nil when this buffer is not
+    /// a `kCVPixelFormatType_TwoComponent32Float` flow buffer.
+    public func flowVector(x: Int, y: Int) -> SIMD2<Float>? {
+        guard pixelFormat == kCVPixelFormatType_TwoComponent32Float,
+            x >= 0, y >= 0, x < width, y < height
+        else { return nil }
+        let base = (y * width + x) * 8
+        guard base + 8 <= pixels.count else { return nil }
+        return pixels.withUnsafeBytes { raw -> SIMD2<Float> in
+            let floats = raw.bindMemory(to: Float.self)
+            let index = base / MemoryLayout<Float>.size
+            return SIMD2<Float>(floats[index], floats[index + 1])
         }
     }
 }

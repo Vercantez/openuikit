@@ -63,7 +63,7 @@ c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusDenied	implemented
 c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusNotDetermined	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 c:@E@GKFriendsAuthorizationStatus@GKFriendsAuthorizationStatusRestricted	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 c:@E@GKGameActivityPlayStyle	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
-c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleAsynchronous	declared	source:full/gamekit/GKEnums.swift#asynchronous	declared on the Linux host; behavior not exercised by a focused test
+c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleAsynchronous	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleSynchronous	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 c:@E@GKGameActivityPlayStyle@GKGameActivityPlayStyleUnspecified	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 c:@E@GKGameActivityState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
@@ -200,9 +200,9 @@ c:objc(cs)GKAccessPoint(im)triggerAccessPointForChallengesWithHandler:	implement
 c:objc(cs)GKAccessPoint(im)triggerAccessPointForFriendingWithHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
 c:objc(cs)GKAccessPoint(im)triggerAccessPointForPlayTogetherWithHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
 c:objc(cs)GKAccessPoint(im)triggerAccessPointWithAchievementID:handler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
-c:objc(cs)GKAccessPoint(im)triggerAccessPointWithChallengeDefinitionID:handler:	declared	source:full/gamekit/GKGameActivity.swift#trigger	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivity:handler:	declared	source:full/gamekit/GKGameActivity.swift#trigger	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivityDefinitionID:handler:	declared	source:full/gamekit/GKGameActivity.swift#trigger	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithChallengeDefinitionID:handler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKCloudActivityBannerFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivity:handler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
+c:objc(cs)GKAccessPoint(im)triggerAccessPointWithGameActivityDefinitionID:handler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
 c:objc(cs)GKAccessPoint(im)triggerAccessPointWithHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
 c:objc(cs)GKAccessPoint(im)triggerAccessPointWithLeaderboardID:playerScope:timeScope:handler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
 c:objc(cs)GKAccessPoint(im)triggerAccessPointWithLeaderboardSetID:handler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
@@ -217,8 +217,8 @@ c:objc(cs)GKAccessPoint(py)showHighlights	implemented	test:full/gamekit/tests/ag
 c:objc(cs)GKAccessPoint(py)visible	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKAccessPointLocalState	family behavioral test
 c:objc(cs)GKAchievement	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
 c:objc(cs)GKAchievement(cm)loadAchievementsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
-c:objc(cs)GKAchievement(cm)reportAchievements:withCompletionHandler:	declared	source:full/gamekit/GKAchievements.swift#report	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKAchievement(cm)reportAchievements:withEligibleChallenges:withCompletionHandler:	declared	source:full/gamekit/GKAchievements.swift#report	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKAchievement(cm)reportAchievements:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKReportFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKAchievement(cm)reportAchievements:withEligibleChallenges:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKReportFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKAchievement(cm)resetAchievementsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
 c:objc(cs)GKAchievement(im)challengeComposeControllerWithMessage:players:completion:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
 c:objc(cs)GKAchievement(im)challengeComposeControllerWithMessage:players:completionHandler:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
@@ -227,7 +227,7 @@ c:objc(cs)GKAchievement(im)initWithIdentifier:	implemented	test:full/gamekit/tes
 c:objc(cs)GKAchievement(im)initWithIdentifier:forPlayer:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
 c:objc(cs)GKAchievement(im)initWithIdentifier:player:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
 c:objc(cs)GKAchievement(im)selectChallengeablePlayerIDs:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
-c:objc(cs)GKAchievement(im)selectChallengeablePlayers:withCompletionHandler:	declared	source:full/gamekit/GKAchievements.swift#selectChallengeablePlayers	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKAchievement(im)selectChallengeablePlayers:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKReportFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKAchievement(py)completed	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
 c:objc(cs)GKAchievement(py)identifier	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
 c:objc(cs)GKAchievement(py)lastReportedDate	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKAchievementLocalState	family behavioral test
@@ -280,7 +280,7 @@ c:objc(cs)GKChallengeDefinition(py)leaderboard	implemented	test:full/gamekit/tes
 c:objc(cs)GKChallengeDefinition(py)releaseState	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKChallengeLocalState	family behavioral test
 c:objc(cs)GKChallengeDefinition(py)title	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKChallengeLocalState	family behavioral test
 c:objc(cs)GKCloudPlayer	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKPlayerIdentity	family behavioral test
-c:objc(cs)GKCloudPlayer(cm)getCurrentSignedInPlayerForContainer:completionHandler:	declared	source:full/gamekit/GKPlayers.swift#currentSignedInPlayer	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKCloudPlayer(cm)getCurrentSignedInPlayerForContainer:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKCloudActivityBannerFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKFriendRequestComposeViewController	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKViewControllerLocalState	family behavioral test
 c:objc(cs)GKFriendRequestComposeViewController(cm)maxNumberOfRecipients	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKViewControllerLocalState	family behavioral test
 c:objc(cs)GKFriendRequestComposeViewController(im)addRecipientPlayers:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKViewControllerLocalState	family behavioral test
@@ -325,7 +325,7 @@ c:objc(cs)GKGameActivity(py)startDate	implemented	test:full/gamekit/tests/agent/
 c:objc(cs)GKGameActivity(py)state	implemented	test:full/gamekit/tests/agent/GKGameActivityTests.swift#testGKGameActivityStateMachine	family behavioral test
 c:objc(cs)GKGameActivityDefinition	implemented	test:full/gamekit/tests/agent/GKGameActivityTests.swift#testGKGameActivityDefinitionFailClosed	family behavioral test
 c:objc(cs)GKGameActivityDefinition(cm)loadGameActivityDefinitionsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKGameActivityTests.swift#testGKGameActivityDefinitionFailClosed	family behavioral test
-c:objc(cs)GKGameActivityDefinition(cm)loadGameActivityDefinitionsWithIDs:completionHandler:	declared	source:full/gamekit/GKGameActivity.swift#loadGameActivityDefinitions	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKGameActivityDefinition(cm)loadGameActivityDefinitionsWithIDs:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKCloudActivityBannerFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKGameActivityDefinition(im)loadAchievementDescriptionsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKGameActivityTests.swift#testGKGameActivityDefinitionFailClosed	family behavioral test
 c:objc(cs)GKGameActivityDefinition(im)loadImageWithCompletionHandler:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
 c:objc(cs)GKGameActivityDefinition(im)loadLeaderboardsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKGameActivityTests.swift#testGKGameActivityDefinitionFailClosed	family behavioral test
@@ -352,19 +352,19 @@ c:objc(cs)GKGameCenterViewController(py)leaderboardTimeScope	implemented	test:fu
 c:objc(cs)GKGameCenterViewController(py)viewState	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKViewControllerLocalState	family behavioral test
 c:objc(cs)GKGameSession	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
 c:objc(cs)GKGameSession(cm)addEventListener:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
-c:objc(cs)GKGameSession(cm)createSessionInContainer:withTitle:maxConnectedPlayers:completionHandler:	declared	source:full/gamekit/GKSessions.swift#createSession	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKGameSession(cm)loadSessionWithIdentifier:completionHandler:	declared	source:full/gamekit/GKSessions.swift#load	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKGameSession(cm)loadSessionsInContainer:completionHandler:	declared	source:full/gamekit/GKSessions.swift#loadSessions	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKGameSession(cm)createSessionInContainer:withTitle:maxConnectedPlayers:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKGameSession(cm)loadSessionWithIdentifier:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKGameSession(cm)loadSessionsInContainer:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKGameSession(cm)removeEventListener:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
-c:objc(cs)GKGameSession(cm)removeSessionWithIdentifier:completionHandler:	declared	source:full/gamekit/GKSessions.swift#remove	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKGameSession(im)clearBadgeForPlayers:completionHandler:	declared	source:full/gamekit/GKSessions.swift#clearBadge	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKGameSession(cm)removeSessionWithIdentifier:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKGameSession(im)clearBadgeForPlayers:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKGameSession(im)getShareURLWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
 c:objc(cs)GKGameSession(im)loadDataWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
 c:objc(cs)GKGameSession(im)playersWithConnectionState:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
 c:objc(cs)GKGameSession(im)saveData:completionHandler:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
-c:objc(cs)GKGameSession(im)sendData:withTransportType:completionHandler:	declared	source:full/gamekit/GKSessions.swift#send	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKGameSession(im)sendMessageWithLocalizedFormatKey:arguments:data:toPlayers:badgePlayers:completionHandler:	declared	source:full/gamekit/GKSessions.swift#sendMessage	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKGameSession(im)setConnectionState:completionHandler:	declared	source:full/gamekit/GKSessions.swift#setConnectionState	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKGameSession(im)sendData:withTransportType:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKGameSession(im)sendMessageWithLocalizedFormatKey:arguments:data:toPlayers:badgePlayers:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKGameSession(im)setConnectionState:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKGameSessionCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKGameSession(py)badgedPlayers	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
 c:objc(cs)GKGameSession(py)identifier	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
 c:objc(cs)GKGameSession(py)lastModifiedDate	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
@@ -381,16 +381,16 @@ c:objc(cs)GKInvite(py)playerGroup	implemented	test:full/gamekit/tests/agent/GKMa
 c:objc(cs)GKInvite(py)sender	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKInviteAndMatchedPlayers	family behavioral test
 c:objc(cs)GKLeaderboard	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
 c:objc(cs)GKLeaderboard(cm)loadLeaderboardsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
-c:objc(cs)GKLeaderboard(cm)loadLeaderboardsWithIDs:completionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#loadLeaderboards	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKLeaderboard(cm)submitScore:context:player:leaderboardIDs:completionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#submitScore	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKLeaderboard(cm)loadLeaderboardsWithIDs:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLeaderboardCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKLeaderboard(cm)submitScore:context:player:leaderboardIDs:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLeaderboardCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKLeaderboard(im)initWithPlayerIDs:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
 c:objc(cs)GKLeaderboard(im)initWithPlayers:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
-c:objc(cs)GKLeaderboard(im)loadEntriesForPlayerScope:timeScope:range:completionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#loadEntries	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKLeaderboard(im)loadEntriesForPlayers:timeScope:completionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#loadEntries	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKLeaderboard(im)loadEntriesForPlayerScope:timeScope:range:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLeaderboardCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKLeaderboard(im)loadEntriesForPlayers:timeScope:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLeaderboardCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKLeaderboard(im)loadImageWithCompletionHandler:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
 c:objc(cs)GKLeaderboard(im)loadPreviousOccurrenceWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
 c:objc(cs)GKLeaderboard(im)loadScoresWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
-c:objc(cs)GKLeaderboard(im)submitScore:context:player:completionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#submitScore	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKLeaderboard(im)submitScore:context:player:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLeaderboardCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKLeaderboard(py)activityIdentifier	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
 c:objc(cs)GKLeaderboard(py)activityProperties	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
 c:objc(cs)GKLeaderboard(py)baseLeaderboardID	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
@@ -435,7 +435,7 @@ c:objc(cs)GKLeaderboardSet(py)identifier	implemented	test:full/gamekit/tests/age
 c:objc(cs)GKLeaderboardSet(py)title	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKLeaderboardLocalState	family behavioral test
 c:objc(cs)GKLocalPlayer	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(cpy)localPlayer	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
-c:objc(cs)GKLocalPlayer(im)deleteSavedGamesWithName:completionHandler:	declared	source:full/gamekit/GKPlayers.swift#deleteSavedGames	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKLocalPlayer(im)deleteSavedGamesWithName:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLocalPlayerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKLocalPlayer(im)fetchItemsForIdentityVerificationSignature:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(im)fetchSavedGamesWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(im)generateIdentityVerificationSignatureWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
@@ -445,13 +445,13 @@ c:objc(cs)GKLocalPlayer(im)loadFriendPlayersWithCompletionHandler:	implemented	t
 c:objc(cs)GKLocalPlayer(im)loadFriends:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(im)loadFriendsAuthorizationStatus:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(im)loadFriendsWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
-c:objc(cs)GKLocalPlayer(im)loadFriendsWithIdentifiers:completionHandler:	declared	source:full/gamekit/GKPlayers.swift#loadFriends	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKLocalPlayer(im)loadFriendsWithIdentifiers:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLocalPlayerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKLocalPlayer(im)loadRecentPlayersWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(im)presentFriendRequestCreatorFromViewController:error:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
 c:objc(cs)GKLocalPlayer(im)registerListener:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
-c:objc(cs)GKLocalPlayer(im)resolveConflictingSavedGames:withData:completionHandler:	declared	source:full/gamekit/GKPlayers.swift#resolveConflictingSavedGames	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKLocalPlayer(im)saveGameData:withName:completionHandler:	declared	source:full/gamekit/GKPlayers.swift#saveGameData	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKLocalPlayer(im)setDefaultLeaderboardIdentifier:completionHandler:	declared	source:full/gamekit/GKPlayers.swift#setDefaultLeaderboardIdentifier	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKLocalPlayer(im)resolveConflictingSavedGames:withData:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLocalPlayerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKLocalPlayer(im)saveGameData:withName:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLocalPlayerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKLocalPlayer(im)setDefaultLeaderboardIdentifier:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKLocalPlayerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKLocalPlayer(im)unregisterAllListeners	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(im)unregisterListener:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKLocalPlayerUnauthenticated	family behavioral test
 c:objc(cs)GKLocalPlayer(py)authenticateHandler	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
@@ -498,19 +498,19 @@ c:objc(cs)GKMatchedPlayers(py)players	implemented	test:full/gamekit/tests/agent/
 c:objc(cs)GKMatchedPlayers(py)properties	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchFailClosed	family behavioral test
 c:objc(cs)GKMatchmaker	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmaker(cm)sharedMatchmaker	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(cs)GKMatchmaker(im)addPlayersToMatch:matchRequest:completionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#addPlayers	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKMatchmaker(im)addPlayersToMatch:matchRequest:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKMatchmaker(im)cancel	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmaker(im)cancelInviteToPlayer:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmaker(im)cancelPendingInviteToPlayer:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(cs)GKMatchmaker(im)findMatchForRequest:withCompletionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#findMatch	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKMatchmaker(im)findMatchedPlayers:withCompletionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#findMatchedPlayers	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKMatchmaker(im)findMatchForRequest:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKMatchmaker(im)findMatchedPlayers:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKMatchmaker(im)findPlayersForHostedMatchRequest:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(cs)GKMatchmaker(im)findPlayersForHostedRequest:withCompletionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#findPlayers	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKMatchmaker(im)findPlayersForHostedRequest:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKMatchmaker(im)finishMatchmakingForMatch:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(cs)GKMatchmaker(im)matchForInvite:completionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#match	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKMatchmaker(im)matchForInvite:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKMatchmaker(im)queryActivityWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(cs)GKMatchmaker(im)queryPlayerGroupActivity:withCompletionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#queryPlayerGroupActivity	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKMatchmaker(im)queryQueueActivity:withCompletionHandler:	declared	source:full/gamekit/GKMatchmaking.swift#queryQueueActivity	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKMatchmaker(im)queryPlayerGroupActivity:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKMatchmaker(im)queryQueueActivity:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKMatchmakerCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKMatchmaker(im)startBrowsingForNearbyPlayersWithHandler:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmaker(im)startBrowsingForNearbyPlayersWithReachableHandler:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmaker(im)startGroupActivityWithPlayerHandler:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
@@ -527,9 +527,9 @@ c:objc(cs)GKMatchmakerViewController(py)hosted	implemented	test:full/gamekit/tes
 c:objc(cs)GKMatchmakerViewController(py)matchRequest	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmakerViewController(py)matchmakerDelegate	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(cs)GKMatchmakerViewController(py)matchmakingMode	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(cs)GKNotificationBanner	declared	source:full/gamekit/GKUI.swift#GKNotificationBanner	declared on the Linux host; behavior not exercised by a focused test
-c:objc(cs)GKNotificationBanner(cm)showBannerWithTitle:message:completionHandler:	declared	source:full/gamekit/GKUI.swift#show	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKNotificationBanner(cm)showBannerWithTitle:message:duration:completionHandler:	declared	source:full/gamekit/GKUI.swift#show	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKNotificationBanner	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKCloudActivityBannerFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKNotificationBanner(cm)showBannerWithTitle:message:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKCloudActivityBannerFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKNotificationBanner(cm)showBannerWithTitle:message:duration:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKCloudActivityBannerFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKPlayer	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKPlayerIdentity	family behavioral test
 c:objc(cs)GKPlayer(cm)anonymousGuestPlayerWithIdentifier:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKPlayerIdentity	family behavioral test
 c:objc(cs)GKPlayer(cm)loadPlayersForIdentifiers:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKPlayerTests.swift#testGKPlayerIdentity	family behavioral test
@@ -549,9 +549,9 @@ c:objc(cs)GKSavedGame(py)deviceName	implemented	test:full/gamekit/tests/agent/GK
 c:objc(cs)GKSavedGame(py)modificationDate	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKSavedGameFailClosed	family behavioral test
 c:objc(cs)GKSavedGame(py)name	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKSavedGameFailClosed	family behavioral test
 c:objc(cs)GKScore	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKScoreLocalState	family behavioral test
-c:objc(cs)GKScore(cm)reportLeaderboardScores:withEligibleChallenges:withCompletionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#report	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKScore(cm)reportScores:withCompletionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#report	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKScore(cm)reportScores:withEligibleChallenges:withCompletionHandler:	declared	source:full/gamekit/GKLeaderboards.swift#report	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKScore(cm)reportLeaderboardScores:withEligibleChallenges:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKReportFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKScore(cm)reportScores:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKReportFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKScore(cm)reportScores:withEligibleChallenges:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKReportFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKScore(im)challengeComposeControllerWithMessage:players:completion:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
 c:objc(cs)GKScore(im)challengeComposeControllerWithMessage:players:completionHandler:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
 c:objc(cs)GKScore(im)challengeComposeControllerWithPlayers:message:completionHandler:	deferred		requires UIKit UIImage/UIWindow/UIViewController; omitted from the isolated Linux host
@@ -571,8 +571,8 @@ c:objc(cs)GKScoreChallenge	implemented	test:full/gamekit/tests/agent/GKAchieveme
 c:objc(cs)GKScoreChallenge(py)leaderboardEntry	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKScoreLocalState	family behavioral test
 c:objc(cs)GKScoreChallenge(py)score	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKScoreLocalState	family behavioral test
 c:objc(cs)GKTurnBasedExchange	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
-c:objc(cs)GKTurnBasedExchange(im)cancelWithLocalizableMessageKey:arguments:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#cancel	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedExchange(im)replyWithLocalizableMessageKey:arguments:data:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#reply	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKTurnBasedExchange(im)cancelWithLocalizableMessageKey:arguments:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedExchangeCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedExchange(im)replyWithLocalizableMessageKey:arguments:data:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedExchangeCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKTurnBasedExchange(py)completionDate	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
 c:objc(cs)GKTurnBasedExchange(py)data	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
 c:objc(cs)GKTurnBasedExchange(py)exchangeID	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
@@ -589,24 +589,24 @@ c:objc(cs)GKTurnBasedExchangeReply(py)message	implemented	test:full/gamekit/test
 c:objc(cs)GKTurnBasedExchangeReply(py)recipient	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
 c:objc(cs)GKTurnBasedExchangeReply(py)replyDate	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
 c:objc(cs)GKTurnBasedMatch	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
-c:objc(cs)GKTurnBasedMatch(cm)findMatchForRequest:withCompletionHandler:	declared	source:full/gamekit/GKTurnBased.swift#find	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(cm)loadMatchWithID:withCompletionHandler:	declared	source:full/gamekit/GKTurnBased.swift#load	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKTurnBasedMatch(cm)findMatchForRequest:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(cm)loadMatchWithID:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKTurnBasedMatch(cm)loadMatchesWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedFailClosed	family behavioral test
 c:objc(cs)GKTurnBasedMatch(im)acceptInviteWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedFailClosed	family behavioral test
 c:objc(cs)GKTurnBasedMatch(im)declineInviteWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedFailClosed	family behavioral test
-c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#endMatchInTurn	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:leaderboardScores:achievements:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#endMatchInTurn	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:scores:achievements:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#endMatchInTurn	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)endTurnWithNextParticipants:turnTimeout:matchData:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#endTurn	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:leaderboardScores:achievements:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)endMatchInTurnWithMatchData:scores:achievements:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)endTurnWithNextParticipants:turnTimeout:matchData:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKTurnBasedMatch(im)loadMatchDataWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedFailClosed	family behavioral test
-c:objc(cs)GKTurnBasedMatch(im)participantQuitInTurnWithOutcome:nextParticipants:turnTimeout:matchData:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#participantQuitInTurn	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)participantQuitOutOfTurnWithOutcome:withCompletionHandler:	declared	source:full/gamekit/GKTurnBased.swift#participantQuitOutOfTurn	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKTurnBasedMatch(im)participantQuitInTurnWithOutcome:nextParticipants:turnTimeout:matchData:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)participantQuitOutOfTurnWithOutcome:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKTurnBasedMatch(im)rematchWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedFailClosed	family behavioral test
 c:objc(cs)GKTurnBasedMatch(im)removeWithCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedFailClosed	family behavioral test
-c:objc(cs)GKTurnBasedMatch(im)saveCurrentTurnWithMatchData:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#saveCurrentTurn	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)saveMergedMatchData:withResolvedExchanges:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#saveMergedMatch	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)sendExchangeToParticipants:data:localizableMessageKey:arguments:timeout:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#sendExchange	async Game Center API is declared; isolated tests cannot await
-c:objc(cs)GKTurnBasedMatch(im)sendReminderToParticipants:localizableMessageKey:arguments:completionHandler:	declared	source:full/gamekit/GKTurnBased.swift#sendReminder	async Game Center API is declared; isolated tests cannot await
+c:objc(cs)GKTurnBasedMatch(im)saveCurrentTurnWithMatchData:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)saveMergedMatchData:withResolvedExchanges:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)sendExchangeToParticipants:data:localizableMessageKey:arguments:timeout:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
+c:objc(cs)GKTurnBasedMatch(im)sendReminderToParticipants:localizableMessageKey:arguments:completionHandler:	implemented	test:full/gamekit/tests/agent/GKFailClosedCompletionsTests.swift#testGKTurnBasedMatchCompletionsFailClosed	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(cs)GKTurnBasedMatch(im)setLocalizableMessageWithKey:arguments:	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
 c:objc(cs)GKTurnBasedMatch(py)activeExchanges	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
 c:objc(cs)GKTurnBasedMatch(py)completedExchanges	implemented	test:full/gamekit/tests/agent/GKTurnBasedTests.swift#testGKTurnBasedLocalState	family behavioral test
@@ -711,29 +711,29 @@ c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKLeaderboardSet	im
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKScore	implemented	test:full/gamekit/tests/agent/GKAchievementTests.swift#testGKScoreLocalState	family behavioral test
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorRawValues	table-driven GKError.Code raw values
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#errorUserInfo	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#errorCode	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	error struct behavior
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#errorUserInfo	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#GKError	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#code	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#hash	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#userInfo	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#errorCode	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#hashValue	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#init	declared on the Linux host; behavior not exercised by a focused test
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
-s:SC11GKErrorCodeLeV	declared	source:full/gamekit/GKError.swift#GKError	declared on the Linux host; behavior not exercised by a focused test
+s:SC11GKErrorCodeLeV	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:SC11GKErrorCodeLeV10userDeniedSoAAVvpZ	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorRawValues	table-driven GKError.Code raw values
 s:SC11GKErrorCodeLeV11apiObsoleteSoAAVvpZ	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorRawValues	table-driven GKError.Code raw values
 s:SC11GKErrorCodeLeV11appUnlistedSoAAVvpZ	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorRawValues	table-driven GKError.Code raw values
@@ -798,7 +798,7 @@ s:SC22GKGameSessionErrorCodeLeV7unknownSoAAVvpZ	implemented	test:full/gamekit/te
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKAccessPointLocation	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKChallengeState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKConnectionState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#GKError	declared on the Linux host; behavior not exercised by a focused test
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKFriendsAuthorizationStatus	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameActivityPlayStyle	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKGameActivityState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKEnumRawValues	table-driven enum raw values
@@ -905,7 +905,7 @@ s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GKReleaseState	implemented	tes
 s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKReleaseState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKReleaseStateOptionSet	option-set members and operations
 s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GKReleaseState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKReleaseStateOptionSet	option-set members and operations
 s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GKReleaseState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKReleaseStateOptionSet	option-set members and operations
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GKErrorCode	declared	source:full/gamekit/GKError.swift#localizedDescription	declared on the Linux host; behavior not exercised by a focused test
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GKErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKErrorBehavior	NSError-bridging member exercised by GKError behavior test
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GKGameSessionErrorCode	implemented	test:full/gamekit/tests/agent/GKErrorTests.swift#testGKGameSessionErrorRawValues	table-driven GKGameSessionError codes and wrapping
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GKReleaseState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKReleaseStateOptionSet	option-set members and operations
 s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GKReleaseState	implemented	test:full/gamekit/tests/agent/GKEnumTests.swift#testGKReleaseStateOptionSet	option-set members and operations

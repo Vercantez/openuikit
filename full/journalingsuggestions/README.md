@@ -10,20 +10,20 @@ not Apple Journaling Suggestions behavior.
 
 This is a fresh seed: 931 exact public identifiers, floor 745 nondeferred.
 
-Coverage after this pass: **141 implemented** / 790 declared / 0 deferred
+Coverage after this pass: **143 implemented** / 788 declared / 0 deferred
 (floor 745 nondeferred). Implemented rows are the Foundation value types,
 notification-schedule enum, presentation token, picker inits, and fail-closed
 host recorder. Declared rows are the synthesized SwiftUI `View` modifiers on
 `JournalingSuggestionsPicker` plus the two async asset-load overlays (the
 sealed runner has no run loop).
 
-Top-5 evidence distribution among 141 implemented rows:
+Top-5 evidence distribution among 143 implemented rows:
 
-- `JournalingSuggestionActivityTests.swift#testLocationFields` — 8 (5.7%)
-- `JournalingSuggestionActivityTests.swift#testWorkoutDetailsFields` — 8 (5.7%)
-- `JournalingSuggestionTests.swift#testEventPosterFields` — 8 (5.7%)
-- `JournalingSuggestionActivityTests.swift#testWorkoutGroupFields` — 7 (5.0%)
-- `JournalingSuggestionTests.swift#testGenericMediaFields` — 7 (5.0%)
+- `JournalingSuggestionActivityTests.swift#testLocationFields` — 8 (5.6%)
+- `JournalingSuggestionActivityTests.swift#testWorkoutDetailsFields` — 8 (5.6%)
+- `JournalingSuggestionTests.swift#testEventPosterFields` — 8 (5.6%)
+- `JournalingSuggestionActivityTests.swift#testWorkoutGroupFields` — 7 (4.9%)
+- `JournalingSuggestionTests.swift#testGenericMediaFields` — 7 (4.9%)
 
 
 ## What is real
@@ -118,3 +118,36 @@ The Linux boundary remains fail-closed: these APIs only expose payloads already
 installed in host-created `ItemContent` values. They do not contact, emulate, or
 report success from Apple's entitlement-protected Journaling Suggestions,
 Photos, or Health services.
+
+## Second pass 2026-09-15 (pi-wave2)
+
+Recount before: **143 implemented / 788 declared / 0 deferred /
+0 unavailable / 0 not-applicable** (931 rows). Recount after: identical.
+Implemented gain: **0**.
+
+There was nothing convertible. All 141 non-`View` identifiers (every genuine
+`JournalingSuggestions` type, member, enum case, and `Equatable` synthesis) plus
+the two real `View.journalingSuggestionsPicker` modifiers are already
+`implemented` (143 total). All 788 remaining `declared` rows are
+`s:7SwiftUI4ViewP*::SYNTHESIZED::*` cross-import overlay re-exports onto
+`JournalingSuggestionsPicker` (anchors such as `searchable`, `alert`,
+`background` — erased `Any?` no-ops in `JournalingSuggestionsViewSurface.swift`
+with no Linux layout engine). Converting them would violate the depth contract:
+SwiftUI `View` overlays stay out of `implemented`, bulk-relabeling is banned,
+no single test may cite >40% of implemented rows (max today is 8/143 = 5.6%),
+and calling an erased no-op exercises none of Apple's behavior. Reclassifying
+them `not-applicable` is gate-invalid: the leaf-full floor requires 745
+`implemented`-or-`declared` rows and only 143 genuine identifiers exist, so they
+remain non-behavioral declarations pending SwiftUI-lane alignment.
+
+Validation this pass (no repo files touched): a shadow build forcing the
+`*Lookalikes.swift` `canImport` guards on — byte-identical to what the sealed
+Linux gate compiles — builds the dylib warning-clean, compiles all
+`tests/agent/*Tests.swift`, and runs every one of the 34 cited tests to the
+exact `JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK` marker. Note: the stock
+`tests/acceptance/test_host.sh` does not compile on this macOS host because
+`canImport(SwiftUI)` is true here (real SwiftUI available, but never imported
+by this Foundation-only module), so the lookalikes are excluded; on the sealed
+Linux target they compile as designed. The conditional guards were deliberately
+left intact so Apple-platform builds can still resolve these names against the
+real frameworks instead of colliding with unconditional local substitutes.

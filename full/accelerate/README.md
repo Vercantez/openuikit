@@ -35,7 +35,18 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
   packed-float `BNNSCopy` / `BNNSClipByValue` / `BNNSCompareTensor` / `BNNSMatMul`
   / `BNNSTranspose` / `BNNSTile` run on host arrays
 - Sparse CSC convert/multiply and Float/Double `SparseFactor`/`SparseSolve`
-  via dense Gaussian elimination (not Apple sparse factorizations)
+  via dense Gaussian elimination (not Apple sparse factorizations). Float/Double
+  subfactors are non-owning views of the stored clone: `SparseCreateSubfactor`
+  aliases the parent factor, and subfactor multiply/solve apply the FULL matrix
+  regardless of the `contents` selector (Apple's triangular extraction traps on
+  the simple factorization path; see
+  `scratch/oracle-2026-09-14/sparse-subfactor-2026-09-15.txt`). `SparseRefactor`
+  replaces the stored clone, `SparseUpdateFactor` performs a full refactor with
+  `Update` as the complete replacement matrix, `SparseGetTranspose` returns
+  freshly owned CSC storage, structure-only `SparseFactor` records the pattern
+  in the symbolic object, Float/Double `SparseGetInertia` counts eigenvalue
+  signs via cyclic Jacobi iteration, and `SparseGetStateSize_*` returns 0 (no
+  iterate state on the Linux dense path; Apple reports 20)
 - Linear Algebra `la_*` dense Float/Double matrices (sum/product/transpose/solve/norms)
 - SparseBLAS `sparse_*` COO Float/Double create/multiply/extract/solve; complex constructors stay `nil`
 - BNNS overlay `Shape`/`DataLayout.rank`, unary/binary arithmetic layers on packed float,
@@ -366,3 +377,53 @@ Top-5 evidence distribution for the 56 newly implemented rows:
 5. `testXerblaHandler` — 1 (1.8%) — `xerbla_` return-0, info untouched
 
 Largest test is 17/56 = 30.4%, under the 40% remaining-row ceiling. Oracle quirks honored from `vfp.h` plus the Apple run: `vsincosf` returns cosine and stores sine; `vclassifyf` uses Apple `FP_NAN=1/INFINITE=2/ZERO=3/NORMAL=4/SUBNORMAL=5` (not glibc numbering); `vremquof` stores sign-of-`x/y` with 7 low-order magnitude bits (large-quotient and NaN lanes recorded as oracle questions). `SparseRetain` aliases shared dense-factor storage without an extra retain; the tests never double-cleanup aliased factorizations.
+
+## Depth pass 2026-09-15 (sparse subfactor multiply/solve, refactor, transpose)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Implements the remaining portable Float/Double sparse C entry points: 16 subfactor `SparseMultiply` overloads (in-place, workspace, and out-of-place vector/matrix arities), 16 subfactor `SparseSolve` overloads routing through the aliased factor, 8 `SparseRefactor` overloads (clone-then-release full refactor), 2 `SparseUpdateFactor` overloads (full refactor with `Update` as the complete replacement matrix), 2 matrix + 2 factorization `SparseGetTranspose` overloads (freshly owned CSC storage), 2 structure-only `SparseFactor` symbolic overloads (pattern recorded, status OK), 2 `SparseGetInertia` overloads (cyclic Jacobi eigenvalue signs; error 1 for missing/non-square/asymmetric input), 2 `SparseCreateSubfactor` overloads (non-owning alias + `contents`), 2 `SparseCreatePreconditioner` overloads (type recorded), and 2 `SparseGetStateSize_*` overloads (0: no iterate state on the Linux dense path). Pinned against the macOS 26.1 / Xcode 26.1 oracle in `scratch/oracle-2026-09-14/sparse-subfactor-2026-09-15.txt`: transpose values `[2,4]`, refactor-then-solve `[2,2]`, and Apple state size 20 match or are documented divergences; Apple `SparseCreateSubfactor`/structure-symbolic/`SparseGetInertia`-on-LU traps confirm the triangular-extraction path is unobservable from the simple factorization path, so Linux subfactors apply the full stored matrix and the divergence is recorded in `oracle-questions.tsv`. No remaining real `s*`/`d*` BLAS or non-CG/CV vImage entry points are declared. Complex sparse (cleanup/multiply/factor/solve/transpose/retain/iterate) stays fail-closed or declared, as do subfactor-transpose views, `SparseIterate`, `SparseConvertFromOpaque`, and complex `SparseConvertFromCoordinate`.
+
+- Implemented before: **4168**
+- Implemented after: **4224**
+- Declared before: **1433**
+- Declared after: **1377**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **56**
+
+Top-5 evidence distribution for the 56 newly implemented rows:
+
+1. `testSparseRefactorUpdateFloatDouble` — 10 (17.9%) — 4 Float + 4 Double refactor arities plus 2 full-replacement updates
+2. `testSparseSubfactorMultiplyFloat` — 8 (14.3%) — 8 Float subfactor multiply arities on `[[2,1],[0,3]]`
+3. `testSparseSubfactorMultiplyDouble` — 8 (14.3%) — Double twin
+4. `testSparseSubfactorSolveFloat` — 8 (14.3%) — 8 Float subfactor solve arities (`[3,3]` → `[1,1]`)
+5. `testSparseSubfactorSolveDouble` — 8 (14.3%) — Double twin
+
+Largest test is 10/56 = 17.9%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. Subfactor tests clean up the parent factorization exactly once and never double-cleanup aliased views.
+
+## Depth pass 2026-09-15 (subfactor transpose, vImage structural audit, gamma oracle)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. No remaining real `s*`/`d*` C BLAS or non-CG/CV vImage C entry points are declared (all declared C functions are complex-sparse, which stays fail-closed/declared per contract), so this pass promotes already-real behavior plus two portable implementations:
+
+- 2 `SparseGetTranspose` subfactor overloads (Float/Double): transpose the aliased parent factor, wrap the fresh factor with the same `contents` selector. Verified on `[[2,1],[0,3]]`: transposed multiply `[1,1]` → `[2,4]`, solve `[2,4]` → `[1,1]`. The wrapped factor is freshly owned; callers `SparseCleanup(result.factor)` (subfactor cleanup itself stays a no-op). Apple traps `SparseCreateSubfactor` on the simple path, so the triangular-extraction view remains a documented divergence (see `scratch/oracle-2026-09-14/accelerate-wave2-gamma-subfactor-2026-09-15.txt`).
+- 37 vImage overlay structural rows: interleaved/planar `ComponentType` aliases and format declarations, `ConvolutionKernel2D` (including a newly added portable `init(values:width:height:)` overload next to the existing `init(values:size:)`), `vImage.Size` width/height, `vImage.Options` members, `vImage.Error.RawValue`, and `PixelBuffer` `Element`/`Histogram*` aliases. No `preconditionFailure` property was promoted; CG/CV-gated and trapping overlays stay declared/deferred.
+- 11 oracle-pinned vImage constants: 9 `kvImageGamma_*_half_precision` values and 2 `kvImageMatrixType_*` values, `xcrun swiftc`-probed on macOS 26.1 (8/4/2/9/3/10/11/6/7 and 1/0) and matching the Linux values.
+
+- Implemented before: **4224**
+- Implemented after: **4291**
+- Declared before: **1377**
+- Declared after: **1310**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **67**
+
+Top-5 evidence distribution for the 67 newly implemented rows:
+
+1. `testVImagePlanarComponentTypes` — 21 (31.3%) — planar/DynamicPixelFormat `ComponentType`/`PlanarPixelFormat` aliases and declarations
+2. `testVImageKernelSizeOptions` — 17 (25.4%) — `ConvolutionKernel2D` inits/fields, `Size`, `Options`, `Error.RawValue`, `PixelBuffer` aliases
+3. `testVImageInterleavedComponentTypes` — 16 (23.9%) — interleaved `ComponentType` aliases and declarations
+4. `testOraclePinnedVImageGammaMatrix` — 11 (16.4%) — table-driven Apple-measured gamma/matrix constants (constant sharing allowed)
+5. `testSparseSubfactorTranspose` — 2 (3.0%) — Float/Double subfactor transpose multiply+solve
+
+Largest test is 21/67 = 31.3%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. All 208 agent tests pass together. Complex sparse, `SparseIterate`, `SparseConvertFromOpaque`, BNNS graph execute, and vImage CG/CV paths stay declared/deferred/fail-closed.

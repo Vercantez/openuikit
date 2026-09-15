@@ -140,6 +140,7 @@ public protocol RecordLabelFilter {
 
 public protocol MusicVideoFilter {
     var id: MusicItemID { get }
+    var isrc: String? { get }
 }
 
 public protocol LibrarySongFilter {
@@ -164,10 +165,17 @@ public protocol LibraryAlbumFilter {
 
 public protocol LibraryGenreFilter {
     var id: MusicItemID { get }
+    var name: String { get }
 }
 
 public protocol LibraryTrackFilter {
     var id: MusicItemID { get }
+    var albums: MusicItemCollection<Album>? { get }
+    var artists: MusicItemCollection<Artist>? { get }
+    var genres: MusicItemCollection<Genre>? { get }
+    var albumTitle: String? { get }
+    var artistName: String? { get }
+    var title: String { get }
 }
 
 public protocol LibraryArtistFilter {
@@ -179,6 +187,7 @@ public protocol LibraryArtistFilter {
 
 public protocol LibraryPlaylistFilter {
     var id: MusicItemID { get }
+    var name: String { get }
 }
 
 public protocol LibraryPlaylistEntryFilter {
@@ -219,6 +228,7 @@ public protocol LibraryAlbumSortProperties {
 
 public protocol LibraryGenreSortProperties {
     var name: String { get }
+    var libraryAddedDate: Date? { get }
 }
 
 public protocol LibraryTrackSortProperties {
@@ -242,6 +252,7 @@ public protocol LibraryArtistSortProperties {
 public protocol LibraryPlaylistSortProperties {
     var name: String { get }
     var lastPlayedDate: Date? { get }
+    var libraryAddedDate: Date? { get }
 }
 
 public protocol LibraryPlaylistEntrySortProperties {

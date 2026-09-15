@@ -146,3 +146,32 @@ Top-5 implemented evidence distribution (343 rows):
 
 Wave 8 was run with the verified campaign environment marker
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
+
+## Depth pass 2026-09 (pi-wave2)
+
+This pass started at **343 implemented / 1543 declared / 0 deferred /
+0 unavailable / 0 not-applicable** and ends at **350 implemented /
+1536 declared / 0 deferred / 0 unavailable / 0 not-applicable**
+(implemented gain **+7**).
+
+- The seven `AssignableDocument.Question.Thumbnail` / `Thumbnail.Data` value
+  rows (type, `questionID`, `data`, `box`, `image`, `pageID`) are now
+  implemented, cited by the synchronous runner tests
+  `AssignablesThumbnailTests.swift#testQuestionThumbnail` (3 rows) and
+  `#testQuestionThumbnailData` (4 rows). Each test actually constructs and
+  reads the cited member; no pixels are fabricated (the `UIImage` lookalike
+  stays empty) and no banned runner API (`await`, semaphores, main queue) is
+  used. This required widening the two `Thumbnail` initializers from
+  internal to `public`; Apple's graph exposes no public initializer there,
+  so the widening is a minimal Linux-testability extension recorded here.
+- The 1536 `s:7SwiftUI4View...` synthesized overlay rows stay `declared`.
+  The wave contract says View overlays stay `not-applicable`, but the
+  immutable sealed gate still requires 943 `implemented`-or-`declared` rows
+  and only 350 framework-owned rows exist without the overlays, so
+  relabeling them would fail the gate before compilation (same contradiction
+  documented in the wave-8 note above; left for central review). No dummy
+  chained-modifier bulk citation was applied: the no-arg lookalike shims do
+  not call Apple's specific overloads, so citing them would violate the
+  per-identifier evidence rule.
+- No other single test exceeds 40% of implemented rows (largest citation
+  remains `testAssignableDocumentInit` at 30/350 ≈ 8.6%).

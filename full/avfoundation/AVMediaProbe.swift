@@ -533,28 +533,20 @@ private func metadataItem(fourCC: String, string: String, keySpace: AVMetadataKe
     item.value = string as NSString
     switch fourCC {
     case "©nam", "name", "INAM":
-        item.commonKey = .commonKeyTitle
         item.identifier = .commonIdentifierTitle
     case "©ART", "ART ", "IART":
-        item.commonKey = .commonKeyArtist
         item.identifier = .commonIdentifierArtist
     case "©alb", "alb ", "©Alb":
-        item.commonKey = .commonKeyAlbumName
         item.identifier = .commonIdentifierAlbumName
     case "©cmt", "cmt ", "©des", "ICMT":
-        item.commonKey = .commonKeyDescription
         item.identifier = .commonIdentifierDescription
     case "©too", "too ", "ISFT":
-        item.commonKey = .commonKeySoftware
         item.identifier = .commonIdentifierSoftware
     case "©day", "day ", "©xyz", "ICRD":
-        item.commonKey = .commonKeyCreationDate
         item.identifier = .commonIdentifierCreationDate
     case "©cpy", "cprt":
-        item.commonKey = .commonKeyCopyrights
         item.identifier = .commonIdentifierCopyrights
     case "©aut", "AUTH":
-        item.commonKey = .commonKeyAuthor
         item.identifier = .commonIdentifierAuthor
     default:
         item.identifier = AVMetadataItem.identifier(forKey: fourCC, keySpace: keySpace)

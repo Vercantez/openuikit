@@ -48,6 +48,54 @@ public struct ProductView<Icon: View, PlaceholderIcon: View>: View {
 public struct StoreView<Icon: View, PlaceholderIcon: View>: View {
     public var body: some View { EmptyView() }
     public init() {}
+    public init(ids: some Collection<String>, prefersPromotionalIcon: Bool = false) {
+        _ = Array(ids)
+        _ = prefersPromotionalIcon
+    }
+    public init(products: some Collection<Product>, prefersPromotionalIcon: Bool = false) {
+        _ = Array(products)
+        _ = prefersPromotionalIcon
+    }
+    public init(
+        ids: some Collection<String>,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: () -> Icon
+    ) {
+        _ = Array(ids)
+        _ = prefersPromotionalIcon
+        _ = icon
+    }
+    public init(
+        products: some Collection<Product>,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: () -> Icon
+    ) {
+        _ = Array(products)
+        _ = prefersPromotionalIcon
+        _ = icon
+    }
+    public init(
+        ids: some Collection<String>,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: @escaping (ProductIconPhase) -> Icon,
+        @ViewBuilder placeholderIcon: () -> PlaceholderIcon
+    ) {
+        _ = Array(ids)
+        _ = prefersPromotionalIcon
+        _ = icon
+        _ = placeholderIcon
+    }
+    public init(
+        products: some Collection<Product>,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: @escaping (ProductIconPhase) -> Icon,
+        @ViewBuilder placeholderIcon: () -> PlaceholderIcon
+    ) {
+        _ = Array(products)
+        _ = prefersPromotionalIcon
+        _ = icon
+        _ = placeholderIcon
+    }
 }
 
 public struct SubscriptionStoreView<Content: View>: View {
@@ -55,6 +103,14 @@ public struct SubscriptionStoreView<Content: View>: View {
     public init() {}
     public init(productIDs: some Collection<String>, @ViewBuilder content: () -> Content) {
         _ = productIDs
+        _ = content
+    }
+    public init(groupID: String, @ViewBuilder content: () -> Content) {
+        _ = groupID
+        _ = content
+    }
+    public init(subscriptions: some Collection<Product>, @ViewBuilder content: () -> Content) {
+        _ = Array(subscriptions)
         _ = content
     }
 }
@@ -82,6 +138,63 @@ public struct SubscriptionStoreContentView<Content: StoreContent>: View {
 public struct SubscriptionOfferView<Icon: View, PlaceholderIcon: View>: View {
     public var body: some View { EmptyView() }
     public init() {}
+    public init(_ product: Product, prefersPromotionalIcon: Bool = false) {
+        _ = product
+        _ = prefersPromotionalIcon
+    }
+    public init(id productID: Product.ID, prefersPromotionalIcon: Bool = false) {
+        _ = productID
+        _ = prefersPromotionalIcon
+    }
+    public init(
+        _ product: Product,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: () -> Icon
+    ) {
+        _ = product
+        _ = prefersPromotionalIcon
+        _ = icon
+    }
+    public init(
+        id productID: Product.ID,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: () -> Icon
+    ) {
+        _ = productID
+        _ = prefersPromotionalIcon
+        _ = icon
+    }
+    public init(
+        _ product: Product,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: @escaping (ProductIconPhase) -> Icon,
+        @ViewBuilder placeholderIcon: () -> PlaceholderIcon
+    ) {
+        _ = product
+        _ = prefersPromotionalIcon
+        _ = icon
+        _ = placeholderIcon
+    }
+    public init(
+        id productID: Product.ID,
+        prefersPromotionalIcon: Bool = false,
+        @ViewBuilder icon: @escaping (ProductIconPhase) -> Icon,
+        @ViewBuilder placeholderIcon: () -> PlaceholderIcon
+    ) {
+        _ = productID
+        _ = prefersPromotionalIcon
+        _ = icon
+        _ = placeholderIcon
+    }
+    public init(
+        groupID: String,
+        visibleRelationship: Product.SubscriptionRelationship,
+        useAppIcon: Bool = false
+    ) {
+        _ = groupID
+        _ = visibleRelationship
+        _ = useAppIcon
+    }
 }
 
 public struct AutomaticSubscriptionStoreMarketingContent: View {
@@ -109,6 +222,13 @@ public enum ProductIconPhase {
     case success(Image)
     case failure(any Error)
     case unavailable
+}
+
+extension ProductIconPhase {
+    public var errors: (any Error)? {
+        if case .failure(let error) = self { return error }
+        return nil
+    }
 }
 
 public protocol StoreContent {
@@ -238,6 +358,15 @@ public struct StoreContentBuilder {
     public static func buildBlock() -> EmptyStoreContent { EmptyStoreContent() }
     public static func buildBlock<Content: StoreContent>(_ content: Content) -> Content { content }
     public static func buildIf<Content: StoreContent>(_ section: Content?) -> Content? { section }
+    public static func buildEither<TrueContent: StoreContent>(first: TrueContent) -> TrueContent {
+        first
+    }
+    public static func buildEither<FalseContent: StoreContent>(second: FalseContent) -> FalseContent {
+        second
+    }
+    public static func buildExpression<Content: StoreContent>(_ content: Content) -> Content {
+        content
+    }
     public static func buildLimitedAvailability(_ content: any StoreContent) -> some StoreContent {
         _ = content
         return EmptyStoreContent()
@@ -395,7 +524,20 @@ public struct ProductViewStyleConfiguration {
 }
 
 public struct SubscriptionOfferViewStyleConfiguration {
-    public struct Icon: View { public var body: some View { EmptyView() } }
+    public struct Icon: View {
+        public var body: some View { EmptyView() }
+        public init() {}
+    }
+    public var icon: Icon
+    public var state: Product.CollectionTaskState
+    public func subscribe() {}
+    public init(
+        icon: Icon = Icon(),
+        state: Product.CollectionTaskState = .loading
+    ) {
+        self.icon = icon
+        self.state = state
+    }
 }
 
 public struct LargeProductViewStyle: ProductViewStyle {
@@ -506,6 +648,13 @@ public enum EntitlementTaskState<Value> {
     case loading
     case success(Value)
     case failure(any Error)
+}
+
+extension EntitlementTaskState {
+    public var value: Value? {
+        if case .success(let value) = self { return value }
+        return nil
+    }
 }
 
 public struct SubscriptionOptionGroup<Content: View, Label: View, MarketingContent: View>: StoreContent {

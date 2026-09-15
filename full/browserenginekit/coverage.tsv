@@ -226,11 +226,11 @@ c:objc(pl)BEResponderEditActions(im)translate:	implemented	test:full/browserengi
 c:objc(pl)BEResponderEditActions(im)transliterateChinese:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputResponderEditActions	
 c:objc(pl)BEScrollViewDelegate	implemented	test:full/browserenginekit/tests/agent/BEInteractionTests.swift#testBEScrollViewDelegateRoundTrip	
 c:objc(pl)BEScrollViewDelegate(im)parentScrollViewForScrollView:	implemented	test:full/browserenginekit/tests/agent/BEInteractionTests.swift#testBEScrollViewDelegateParentDefaultNil	
-c:objc(pl)BEScrollViewDelegate(im)scrollView:handleScrollUpdate:completion:	declared	source:full/browserenginekit/BEScroll.swift#scrollView	Swift async; isolated runner has no run loop.
+c:objc(pl)BEScrollViewDelegate(im)scrollView:handleScrollUpdate:completion:	implemented	test:full/browserenginekit/tests/agent/BEInteractionTests.swift#testBEScrollViewHandleScrollUpdateCompletionFalse	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputEditableAndSelectedText	
 c:objc(pl)BETextInput(im)addTextAlternatives:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputAlternatives	
 c:objc(pl)BETextInput(im)adjustSelectionBoundaryToPoint:touchPhase:baseIsStart:flags:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputGesturesAndAutoscroll	
-c:objc(pl)BETextInput(im)adjustSelectionByRange:completionHandler:	declared	source:full/browserenginekit/BEText.swift#adjustSelection	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)adjustSelectionByRange:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputAdjustSelectionByRangeCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)alternativesForSelectedText	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputAlternatives	
 c:objc(pl)BETextInput(im)autoscrollToPoint:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputGesturesAndAutoscroll	
 c:objc(pl)BETextInput(im)canPerformAction:withSender:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputCanPerformActionAndViews	
@@ -238,28 +238,28 @@ c:objc(pl)BETextInput(im)cancelAutoscroll	implemented	test:full/browserenginekit
 c:objc(pl)BETextInput(im)caretRectForPosition:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputRectsAndStyling	
 c:objc(pl)BETextInput(im)deleteInDirection:toGranularity:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputShiftAndMove	
 c:objc(pl)BETextInput(im)didInsertFinalDictationResult	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputDictationAndEditMenu	
-c:objc(pl)BETextInput(im)handleKeyEntry:withCompletionHandler:	declared	source:full/browserenginekit/BEText.swift#handleKeyEntry	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)handleKeyEntry:withCompletionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputHandleKeyEntryCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)insertTextAlternatives:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputAlternatives	
-c:objc(pl)BETextInput(im)insertTextPlaceholderWithSize:completionHandler:	declared	source:full/browserenginekit/BEText.swift#insertTextPlaceholder	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)insertTextPlaceholderWithSize:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputInsertTextPlaceholderCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)insertTextSuggestion:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputAlternatives	
 c:objc(pl)BETextInput(im)isPointNearMarkedText:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputCanPerformActionAndViews	
 c:objc(pl)BETextInput(im)keyboardWillDismiss	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputOptionalDefaults	
 c:objc(pl)BETextInput(im)moveByOffset:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputShiftAndMove	
-c:objc(pl)BETextInput(im)moveSelectionAtBoundary:inStorageDirection:completionHandler:	declared	source:full/browserenginekit/BEText.swift#moveSelection	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)moveSelectionAtBoundary:inStorageDirection:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputMoveSelectionAtBoundaryCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)offsetFromPosition:toPosition:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputRectsAndStyling	
 c:objc(pl)BETextInput(im)removeTextAlternatives	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputOptionalDefaults	
-c:objc(pl)BETextInput(im)removeTextPlaceholder:willInsertText:completionHandler:	declared	source:full/browserenginekit/BEText.swift#remove	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)removeTextPlaceholder:willInsertText:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputRemoveTextPlaceholderCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)replaceDictatedText:withText:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputDictationAndEditMenu	
 c:objc(pl)BETextInput(im)replaceSelectedText:withText:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputSuggestionAndReplace	
-c:objc(pl)BETextInput(im)replaceText:withText:options:completionHandler:	declared	source:full/browserenginekit/BEText.swift#replaceText	Swift async; isolated runner has no run loop.
-c:objc(pl)BETextInput(im)requestDocumentContext:completionHandler:	declared	source:full/browserenginekit/BEText.swift#requestDocumentContext	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)replaceText:withText:options:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputReplaceTextCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
+c:objc(pl)BETextInput(im)requestDocumentContext:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputRequestDocumentContextCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)requestPreferredArrowDirectionForEditMenuWithCompletionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputDictationAndEditMenu	
 c:objc(pl)BETextInput(im)requestTextContextForAutocorrectionWithCompletionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputDictationAndEditMenu	
-c:objc(pl)BETextInput(im)requestTextRectsForString:withCompletionHandler:	declared	source:full/browserenginekit/BEText.swift#requestTextRects	Swift async; isolated runner has no run loop.
-c:objc(pl)BETextInput(im)selectPositionAtPoint:completionHandler:	declared	source:full/browserenginekit/BEText.swift#selectPosition	Swift async; isolated runner has no run loop.
-c:objc(pl)BETextInput(im)selectPositionAtPoint:withContextRequest:completionHandler:	declared	source:full/browserenginekit/BEText.swift#selectPosition	Swift async; isolated runner has no run loop.
-c:objc(pl)BETextInput(im)selectTextForEditMenuWithLocationInView:completionHandler:	declared	source:full/browserenginekit/BEText.swift#selectTextForEditMenuWithLocation	Swift async; isolated runner has no run loop.
-c:objc(pl)BETextInput(im)selectTextInGranularity:atPoint:completionHandler:	declared	source:full/browserenginekit/BEText.swift#selectText	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)requestTextRectsForString:withCompletionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputRequestTextRectsCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
+c:objc(pl)BETextInput(im)selectPositionAtPoint:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputSelectPositionCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
+c:objc(pl)BETextInput(im)selectPositionAtPoint:withContextRequest:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputSelectPositionForRequestCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
+c:objc(pl)BETextInput(im)selectTextForEditMenuWithLocationInView:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputSelectTextForEditMenuCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
+c:objc(pl)BETextInput(im)selectTextInGranularity:atPoint:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputSelectTextInGranularityCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)selectWordForReplacement	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputGesturesAndAutoscroll	
 c:objc(pl)BETextInput(im)selectionRectsForRange:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputRectsAndStyling	
 c:objc(pl)BETextInput(im)setAttributedMarkedText:selectedRange:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputMarkedText	
@@ -275,7 +275,7 @@ c:objc(pl)BETextInput(im)textStylingAtPosition:inDirection:	implemented	test:ful
 c:objc(pl)BETextInput(im)transposeCharactersAroundSelection	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputGesturesAndAutoscroll	
 c:objc(pl)BETextInput(im)unmarkText	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputMarkedText	
 c:objc(pl)BETextInput(im)updateCurrentSelectionTo:fromGesture:inState:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputGesturesAndAutoscroll	
-c:objc(pl)BETextInput(im)updateSelectionWithExtentPoint:boundary:completionHandler:	declared	source:full/browserenginekit/BEText.swift#updateSelection	Swift async; isolated runner has no run loop.
+c:objc(pl)BETextInput(im)updateSelectionWithExtentPoint:boundary:completionHandler:	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputUpdateSelectionCompletion	Completion-handler form per Apple symbol graph; completes synchronously fail-closed on Linux.
 c:objc(pl)BETextInput(im)willInsertFinalDictationResult	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputDictationAndEditMenu	
 c:objc(pl)BETextInput(py)asyncInputDelegate	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputDelegateMethods	
 c:objc(pl)BETextInput(py)attributedMarkedText	implemented	test:full/browserenginekit/tests/agent/BETextInputTests.swift#testBETextInputMarkedText	

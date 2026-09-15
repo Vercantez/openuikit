@@ -398,7 +398,7 @@ public enum Track: MusicItem, PlayableMusicItem, MusicLibraryRequestable,
         case .song(let item): return item.albumTitle
         }
     }
-    public var artistName: String {
+    public var artistName: String? {
         switch self {
         case .musicVideo(let item): return item.artistName
         case .song(let item): return item.artistName
@@ -488,6 +488,18 @@ public enum Track: MusicItem, PlayableMusicItem, MusicLibraryRequestable,
         switch self {
         case .musicVideo(let item): return item.albums
         case .song(let item): return item.albums
+        }
+    }
+    public var artists: MusicItemCollection<Artist>? {
+        switch self {
+        case .musicVideo(let item): return item.artists
+        case .song(let item): return item.artists
+        }
+    }
+    public var genres: MusicItemCollection<Genre>? {
+        switch self {
+        case .musicVideo(let item): return item.genres
+        case .song(let item): return item.genres
         }
     }
     public var artwork: Artwork? {

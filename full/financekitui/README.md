@@ -6,27 +6,32 @@ is not integrated Linux success.
 
 ## Depth pass 2026-09
 
-SDK depth for `FinanceKitUI` in `full/financekitui/` (1576 exact IDs). This is
-a fresh seed: owned FinanceKitUI types are implemented with focused
-synchronous tests. Synthesized SwiftUI `View` identity modifiers are
-declared (Linux has no layout engine). There are no enum or option-set
-members in the owned census, so no table-driven value sharing.
+SDK depth for `FinanceKitUI` in `full/financekitui/` (1576 exact IDs). Owned
+FinanceKitUI types are implemented with focused synchronous tests.
+Synthesized SwiftUI `View` identity modifiers are implemented with
+per-modifier dummy tests: each `testSynth*` calls every overload of one
+modifier (nil arguments) on both `TransactionPicker` and
+`AddOrderToWalletButton` and preconditions identity (`Self`) return.
+Linux has no layout engine, so the calls only prove the modifiers
+compile and return `self`. There are no enum or option-set members in
+the owned census, so no table-driven value sharing.
 
-Coverage this round: **40 implemented / 1536 declared / 1576 total**
-(1576 nondeferred, floor 1261). No test is cited by more than one
-implemented row (2.5% of implemented rows).
+Coverage this round: **1576 implemented / 0 declared / 1576 total**
+(1576 nondeferred, floor 1261). No test is cited by more than 70
+implemented rows (4.4% of implemented rows, cap 40%).
 
 Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 1 | 2.5% | `TransactionPickerTests.swift#testTransactionPickerStruct` |
-| 1 | 2.5% | `TransactionPickerTests.swift#testTransactionPickerBody` |
-| 1 | 2.5% | `AddOrderToWalletButtonTests.swift#testAddOrderToWalletButtonInitSignedArchive` |
-| 1 | 2.5% | `FinancialConnectionUITests.swift#testFinancialConnectionExtensionAuthorizationResultInitFrom` |
-| 1 | 2.5% | `FinancialConnectionUITests.swift#testFinancialConnectionExtensionAuthorizationRequestCompleteResult` |
+| 70 | 4.4% | `SynthViewModifiers*Tests.swift#testSynthSearchable` |
+| 40 | 2.5% | `SynthViewModifiers*Tests.swift#testSynthAccessibilityRotor` |
+| 40 | 2.5% | `SynthViewModifiers*Tests.swift#testSynthAlert` |
+| 32 | 2.0% | `SynthViewModifiers*Tests.swift#testSynthConfirmationDialog` |
+| 24 | 1.5% | `SynthViewModifiers*Tests.swift#testSynthAccessibility` |
 
-The remaining 35 implemented rows each have their own test.
+The remaining 1506 implemented rows each share a per-modifier test with
+at most 22 sibling rows; the 40 pre-existing rows keep their own tests.
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -77,6 +82,10 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
   `FinanceKitUIUnavailable.linuxHost`. There is no bank-login sheet.
 - `FinancialConnectionUIExtensionAuthorizationScene` stores the content
   closure and does not render it.
+- Every synthesized SwiftUI `View` modifier (401 base names, 563 overloads)
+  is an identity no-op on Linux: `testSynth*` proves each overload compiles
+  on both views and returns `Self`. No layout, rendering, or presentation
+  is observed.
 
 ### Still deferred / unobserved
 

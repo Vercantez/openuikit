@@ -455,6 +455,16 @@ public struct MusicCatalogResourceResponse<MusicItemType: MusicItem & Hashable>:
     public var debugDescription: String { description }
 }
 
+extension MusicCatalogResourceResponse: Codable where MusicItemType: Codable {
+    public init(from decoder: any Decoder) throws {
+        items = try MusicItemCollection<MusicItemType>(from: decoder)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        try items.encode(to: encoder)
+    }
+}
+
 public struct MusicRecentlyPlayedRequest<MusicItemType: MusicRecentlyPlayedRequestable & Hashable> {
     public var limit: Int?
     public var offset: Int?
@@ -473,6 +483,16 @@ public struct MusicRecentlyPlayedResponse<MusicItemType: MusicRecentlyPlayedRequ
     }
     public var description: String { "MusicRecentlyPlayedResponse(\(items.count))" }
     public var debugDescription: String { description }
+}
+
+extension MusicRecentlyPlayedResponse: Codable where MusicItemType: Codable {
+    public init(from decoder: any Decoder) throws {
+        items = try MusicItemCollection<MusicItemType>(from: decoder)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        try items.encode(to: encoder)
+    }
 }
 
 public typealias MusicRecentlyPlayedContainerRequest = MusicRecentlyPlayedRequest<RecentlyPlayedMusicItem>

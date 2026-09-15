@@ -251,6 +251,9 @@ open class AVCaptionRegion: NSObject, @unchecked Sendable {
       && storedDisplayAlignment == other.storedDisplayAlignment
       && storedWritingMode == other.storedWritingMode
   }
+  public override func mutableCopy() -> Any {
+    mutableCopy(with: nil)
+  }
   public func mutableCopy(with zone: NSZone? = nil) -> Any {
     _ = zone
     let copy = AVMutableCaptionRegion()

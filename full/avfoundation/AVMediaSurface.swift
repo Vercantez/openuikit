@@ -35,7 +35,7 @@ public struct AVMediaCharacteristic: RawRepresentable, Hashable, Sendable, Expre
 
 open class AVMediaDataStorage: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(url URL: URL, options: [String : Any]? = nil) { self.init() }
+  public convenience init(url URL: URL, options: [String : Any]? = nil) { self.init() }
   public func url() -> URL? { nil }
 }
 

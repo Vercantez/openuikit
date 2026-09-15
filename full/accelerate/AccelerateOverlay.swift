@@ -1553,6 +1553,11 @@ public enum vImage {
             self.width = vImagePixelCount(size.width)
             self.height = vImagePixelCount(size.height)
         }
+        public init(values: [ComponentType], width: vImagePixelCount, height: vImagePixelCount) {
+            self.values = values
+            self.width = width
+            self.height = height
+        }
     }
     public struct DynamicPixelFormat {
         public typealias ComponentType = Never

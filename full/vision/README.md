@@ -49,6 +49,13 @@ and a true minimum enclosing circle.
   box), `VNCalculateImageAestheticsScoresRequest` (Laplacian-variance
   sharpness + Hasler-Susstrunk colorfulness →
   `VNImageAestheticsScoresObservation`; flat gray scores 0 with `isUtility`).
+- Classical dense optical flow (`visionOpticalFlowVectors` block matching,
+  documented non-Apple): `VNGenerateOpticalFlowRequest` (targeted vs
+  reference → `VNPixelBufferObservation` in `TwoComponent32Float` sized to the
+  reference) and `VNTrackOpticalFlowRequest` / overlay `TrackOpticalFlowRequest`
+  (stateful previous-frame flow; first frame zero flow). Layout, size, format,
+  sign, and zero-motion are Apple-oracle pinned (macOS Vision, Xcode 26.1);
+  magnitudes are the block-matcher's own.
 - Observations: `VNObservation` / `VNDetectedObjectObservation` /
   `VNRectangleObservation` / `VNTextObservation` value semantics (`uuid`,
   `confidence`, normalized `boundingBox` with lower-left origin).
@@ -645,11 +652,87 @@ stay fail-closed (`invalidModel`); homography stays `unsupportedRequest`;
 video-processor and Core ML feature values stay deferred; async overlay
 `perform(on:orientation:)` stays declared.
 
-Known pre-existing failure (not introduced here, reproduced on the pristine
-HEAD in the same container): `testImageRequestHandlerPerformAll` /
-`testImageRequestHandlerOverlayPerformNow` fail at `performAll contours`
-because the greedy tracer in `traceContours` collapses into a sub-8-point
-cycle on the inverted (light-on-dark with `detectsDarkOnLight == true`) mask
-and reports 0 top-level contours. Repairing the tracer would change existing
-passing contour assertions, so it is left untouched and recorded here plus in
-`oracle-questions.tsv`.
+Repair note (pi-wave pass below): the Moore component tracer described above
+was absent from the tree on arrival (the greedy `(dir + offset + 6) % 8` tracer
+was still in `VisionDetectors.swift#traceContours`, and
+`VisionDetectorTests.swift#testContourDetectorInvertedPolarity` did not exist),
+and the sealed gate was RED at baseline in the validation container
+(`VISION_AGENT_RUNTIME_FAIL performAll contours`, reproduced on pristine HEAD).
+The repair was implemented in the pi-wave pass below; the record above is kept
+for audit continuity.
+
+## Depth pass 2026-09 (pi-wave classical optical flow + contour-tracer repair)
+
+Campaign `ios26.1-fwdepth-r3`, lane `large-partitioned`, framework `Vision`
+(3584 IDs). Work stays inside `full/vision/`. Starting ledger: 3312
+implemented / 214 declared / 58 deferred.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this pass | 3312 | 214 | 58 | 0 | 0 |
+| After this pass | **3312** | **214** | **58** | **0** | **0** |
+
+Implemented gain: **+0 by count, +2 request families by behaviour, sealed gate
+FAIL → PASS**. The ledger is at its honest ceiling: all 214 remaining `declared` rows are async
+`ImageProcessingRequest.perform(on:orientation:)` / `ImageRequestHandler.perform`
+/ targeted-`perform` overloads (`YaKF` / `YaK`) that the sealed Linux gate
+cannot cite without `await`, and all 58 `deferred` rows are `VNVideoProcessor` /
+`VNCoreMLFeatureValueObservation` (no video daemon / no Core ML runtime). This
+pass converts the two fail-closed synchronous optical-flow families to
+documented classical behaviour, keeping their `implemented` status with updated
+`test:…#testName` evidence and notes (5 rows re-pointed to the new focused
+test, 62 rows re-noted, none relabelled).
+
+Apple oracle (macOS Vision, Xcode 26.1, run 2026-09-14; transcript in
+`scratch/oracle-2026-09-14/vision-optical-flow.txt`, removed before the gate):
+
+- `VNGenerateOpticalFlowRequest` returns one `VNPixelBufferObservation` sized
+  to the reference image, format `kCVPixelFormatType_TwoComponent32Float`
+  (`0x32433066`, two Float32 (dx, dy) per pixel).
+- Sign convention matches the CG shift direction (x-right, y-down); identical
+  frames read ~0. Magnitudes on random noise read ~1.1–1.4x the true shift, so
+  only layout, size, format, sign, and zero-motion are pinned.
+- Revisions: generate supported [1, 2], current 2, default 2; track supported
+  [1], current 1, default 1. Default `outputPixelFormat` is `2C0f` (not
+  `32BGRA`), default accuracy medium, `keepNetworkOutput` false — for both.
+
+Added Linux behaviour this pass (all documented non-Apple heuristics):
+
+- `visionOpticalFlowVectors(from:to:searchRadius:)` (`VisionDetectors.swift`):
+  dense block matching on a ≤40px working grid (5×5 SAD, integer
+  displacements, accuracy → radius low 4 / medium 8 / high 12 / veryHigh 16
+  full-res px), nearest-neighbour upsample scaled to full-resolution pixels,
+  match-quality confidence. Targeted image resampled to the reference size.
+- `VNGenerateOpticalFlowRequest.perform`: targeted vs handler-ROI rasters →
+  one `VNPixelBufferObservation` (`2C0f`); missing targeted image throws
+  `missingOption` with `results == nil`. Revision overrides added
+  (current/default 2, supported 1...2, oracle-pinned).
+- `VNTrackOpticalFlowRequest.perform`: stateful previous-frame flow (first
+  frame zero flow, confidence 1, matching the translational tracker's
+  identity-first precedent); default `outputPixelFormat` corrected to `2C0f`.
+- Overlay `TrackOpticalFlowRequest.performOnHandler`: delegates to an inner
+  stateful `VNTrackOpticalFlowRequest` (single source of truth) and maps to
+  `OpticalFlowObservation`; Linux-local default/format list aligned to `2C0f`.
+- `CVPixelBuffer` lookalike: `pixelFormat` tag plus `init(flowWidth:flowHeight:vectors:)`
+  / `flowVector(x:y:)` for `2C0f` buffers; RGBA path unchanged.
+- New `visionNoiseTextureImage()` LCG fixture and `VisionOpticalFlowTests.swift`
+  (7 focused tests: shift recovery ±2px, identical-frame ~0, missing-target
+  error, revisions, sequential track, overlay sequential, buffer round trip),
+  mirrored into the sealed `VisionRuntime.swift`.
+- Contour-tracer repair (`VisionDetectors.swift#traceContours`, implementing the
+  design recorded above): 8-connectivity component labelling traces each
+  foreground blob once from its topmost-leftmost pixel; Moore boundary
+  following with explicit backtrack direction and (pixel, backtrack) state
+  tracking. The inverted rectangle fixture now yields the region-border loop
+  instead of zero contours, and all pre-existing rectangle/contour assertions
+  pass unchanged (verified: full evidence ledger green, sealed gate green).
+  New focused test `VisionDetectorTests.swift#testContourDetectorInvertedPolarity`
+  pins the inverted path (default `detectsDarkOnLight` on the rectangle
+  fixture → ≥1 contour, top level ≥1, non-nil path); mirrored into the sealed
+  `VisionRuntime.swift`. No rows relabelled.
+
+Classify / recognize / faces / humans / poses / Core ML stay fail-closed
+(`invalidModel`); homography stays `unsupportedRequest`; video-processor and
+Core ML feature values stay deferred; async overlay `perform(on:orientation:)`
+stays declared. New open questions (flow magnitude gain, first-frame tracking
+semantics, size-mismatch policy) are recorded in `oracle-questions.tsv`.

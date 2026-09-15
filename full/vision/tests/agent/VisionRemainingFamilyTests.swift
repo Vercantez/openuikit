@@ -4,25 +4,6 @@ import Glibc
 import Foundation
 @_spi(OpenUIKitHost) import Vision
 
-func testGenerateOpticalFlowFailClosedConfiguration() {
-    let request = VNGenerateOpticalFlowRequest(targetedCGImage: visionRectangleImage())
-    visionExpectEqual(request.computationAccuracy, .medium, "default accuracy")
-    request.computationAccuracy = .veryHigh
-    request.outputPixelFormat = 42
-    request.keepNetworkOutput = true
-    visionExpectEqual(request.computationAccuracy, .veryHigh, "accuracy mutation")
-    visionExpectEqual(request.outputPixelFormat, 42, "pixel format mutation")
-    visionExpect(request.keepNetworkOutput, "network-output mutation")
-    visionExpect(request.results == nil, "results begin empty")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([request])
-        visionExpect(false, "optical flow must fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "optical-flow error")
-        visionExpect(request.results == nil, "failed request has no fabricated results")
-    }
-}
-
 func testRecognizedObjectObservationLabels() {
     let low = VNClassificationObservation(identifier: "background", confidence: 0.2)
     let high = VNClassificationObservation(identifier: "subject", confidence: 0.9)

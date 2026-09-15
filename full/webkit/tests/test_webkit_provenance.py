@@ -67,7 +67,7 @@ class WebKitProvenanceTests(unittest.TestCase):
         run_production(self.root)
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\twebkit-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 14)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 15)
         self.assertEqual(
             [line.split("\t")[2] for line in lines if line.startswith("source\t")],
             (WEBKIT / "webkit_guest_sources.txt").read_text().splitlines(),

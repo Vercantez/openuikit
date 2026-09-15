@@ -18,6 +18,7 @@ full/accelerate/AcceleratePixelStorage.swift
 full/accelerate/AccelerateSparseLegacy.swift
 full/accelerate/AccelerateSparseMultiply.swift
 full/accelerate/AccelerateSparseSolve.swift
+full/accelerate/AccelerateSparseSubfactor.swift
 full/accelerate/AccelerateVDSPMore.swift
 full/accelerate/AccelerateVDSPOps.swift
 full/accelerate/AccelerateVForceOps.swift

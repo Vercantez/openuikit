@@ -46,6 +46,19 @@ func testContourDetector() {
     }
 }
 
+func testContourDetectorInvertedPolarity() {
+    // Default detectsDarkOnLight on the light-on-dark rectangle fixture traces
+    // the background blob's region border instead of collapsing.
+    let image = visionRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    let contours = VNDetectContoursRequest()
+    try! handler.perform([contours])
+    let contourObs = contours.results?.first as? VNContoursObservation
+    visionExpect((contourObs?.contourCount ?? 0) >= 1, "inverted contour count")
+    visionExpect((contourObs?.topLevelContourCount ?? 0) >= 1, "inverted top level")
+    visionExpect(contourObs?.normalizedPath != nil, "inverted normalized path")
+}
+
 func testHorizonDetector() {
     let tilted = VNDetectHorizonRequest()
     try! VNImageRequestHandler(cgImage: visionHorizonImage(slope: 0.25)).perform([tilted])

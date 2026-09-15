@@ -183,3 +183,22 @@ func testDeviceActivityViewStubIdentity() {
     deviceActivityRequire(report.padding(0).context == report.context, "padding")
     deviceActivityRequire(report.navigationViewStyle(0).context == report.context, "nav")
 }
+
+func testDeviceActivityResultsUInt8Overlays() {
+    let bytes = DeviceActivityResults<UInt8>([65, 66])
+    let characters = bytes.characters
+    let lines = bytes.lines
+    let unicodeScalars = bytes.unicodeScalars
+    deviceActivityRequire(
+        String(describing: type(of: characters)).contains("AsyncCharacterSequence"),
+        "characters overlay"
+    )
+    deviceActivityRequire(
+        String(describing: type(of: lines)).contains("AsyncLineSequence"),
+        "lines overlay"
+    )
+    deviceActivityRequire(
+        String(describing: type(of: unicodeScalars)).contains("AsyncUnicodeScalarSequence"),
+        "unicodeScalars overlay"
+    )
+}

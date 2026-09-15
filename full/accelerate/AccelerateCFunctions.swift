@@ -398,21 +398,21 @@ public func SparseCreatePreconditioner(_ type: SparsePreconditioner_t, _ A: Spar
 @discardableResult
 public func SparseCreatePreconditioner(_ type: SparsePreconditioner_t, _ A: SparseMatrix_Complex_Float) -> SparseOpaquePreconditioner_Complex_Float { return SparseOpaquePreconditioner_Complex_Float() }
 @discardableResult
-public func SparseCreatePreconditioner(_ type: SparsePreconditioner_t, _ A: SparseMatrix_Double) -> SparseOpaquePreconditioner_Double { return SparseOpaquePreconditioner_Double() }
+public func SparseCreatePreconditioner(_ type: SparsePreconditioner_t, _ A: SparseMatrix_Double) -> SparseOpaquePreconditioner_Double { _ = A; var p = SparseOpaquePreconditioner_Double(); p.type = type; return p }
 @discardableResult
-public func SparseCreatePreconditioner(_ type: SparsePreconditioner_t, _ A: SparseMatrix_Float) -> SparseOpaquePreconditioner_Float { return SparseOpaquePreconditioner_Float() }
+public func SparseCreatePreconditioner(_ type: SparsePreconditioner_t, _ A: SparseMatrix_Float) -> SparseOpaquePreconditioner_Float { _ = A; var p = SparseOpaquePreconditioner_Float(); p.type = type; return p }
 @discardableResult
 public func SparseCreateSubfactor(_ subfactor: SparseSubfactor_t, _ Factor: SparseOpaqueFactorization_Complex_Double) -> SparseOpaqueSubfactor_Complex_Double { return SparseOpaqueSubfactor_Complex_Double() }
 @discardableResult
 public func SparseCreateSubfactor(_ subfactor: SparseSubfactor_t, _ Factor: SparseOpaqueFactorization_Complex_Float) -> SparseOpaqueSubfactor_Complex_Float { return SparseOpaqueSubfactor_Complex_Float() }
 @discardableResult
-public func SparseCreateSubfactor(_ subfactor: SparseSubfactor_t, _ Factor: SparseOpaqueFactorization_Double) -> SparseOpaqueSubfactor_Double { return SparseOpaqueSubfactor_Double() }
+public func SparseCreateSubfactor(_ subfactor: SparseSubfactor_t, _ Factor: SparseOpaqueFactorization_Double) -> SparseOpaqueSubfactor_Double { return _sparseCreateSubfactorDouble(subfactor, Factor) }
 @discardableResult
-public func SparseCreateSubfactor(_ subfactor: SparseSubfactor_t, _ Factor: SparseOpaqueFactorization_Float) -> SparseOpaqueSubfactor_Float { return SparseOpaqueSubfactor_Float() }
+public func SparseCreateSubfactor(_ subfactor: SparseSubfactor_t, _ Factor: SparseOpaqueFactorization_Float) -> SparseOpaqueSubfactor_Float { return _sparseCreateSubfactorFloat(subfactor, Factor) }
 @discardableResult
-public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrixStructure) -> SparseOpaqueSymbolicFactorization { return SparseOpaqueSymbolicFactorization() }
+public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrixStructure) -> SparseOpaqueSymbolicFactorization { return _sparseSymbolicFromStructure(type, Matrix) }
 @discardableResult
-public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrixStructure, _ options: SparseSymbolicFactorOptions) -> SparseOpaqueSymbolicFactorization { return SparseOpaqueSymbolicFactorization() }
+public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrixStructure, _ options: SparseSymbolicFactorOptions) -> SparseOpaqueSymbolicFactorization { _ = options; return _sparseSymbolicFromStructure(type, Matrix) }
 @discardableResult
 public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrixStructureComplex) -> SparseOpaqueSymbolicFactorization { return SparseOpaqueSymbolicFactorization() }
 @discardableResult
@@ -478,41 +478,41 @@ public func SparseGetInertia(_ Factored: SparseOpaqueFactorization_Complex_Doubl
 @discardableResult
 public func SparseGetInertia(_ Factored: SparseOpaqueFactorization_Complex_Float, _ num_positive: UnsafeMutablePointer<Int32>, _ num_zero: UnsafeMutablePointer<Int32>, _ num_negative: UnsafeMutablePointer<Int32>) -> Int32 { return 0 }
 @discardableResult
-public func SparseGetInertia(_ Factored: SparseOpaqueFactorization_Double, _ num_positive: UnsafeMutablePointer<Int32>, _ num_zero: UnsafeMutablePointer<Int32>, _ num_negative: UnsafeMutablePointer<Int32>) -> Int32 { return 0 }
+public func SparseGetInertia(_ Factored: SparseOpaqueFactorization_Double, _ num_positive: UnsafeMutablePointer<Int32>, _ num_zero: UnsafeMutablePointer<Int32>, _ num_negative: UnsafeMutablePointer<Int32>) -> Int32 { return _sparseInertiaDouble(Factored, num_positive, num_zero, num_negative) }
 @discardableResult
-public func SparseGetInertia(_ Factored: SparseOpaqueFactorization_Float, _ num_positive: UnsafeMutablePointer<Int32>, _ num_zero: UnsafeMutablePointer<Int32>, _ num_negative: UnsafeMutablePointer<Int32>) -> Int32 { return 0 }
+public func SparseGetInertia(_ Factored: SparseOpaqueFactorization_Float, _ num_positive: UnsafeMutablePointer<Int32>, _ num_zero: UnsafeMutablePointer<Int32>, _ num_negative: UnsafeMutablePointer<Int32>) -> Int32 { return _sparseInertiaFloat(Factored, num_positive, num_zero, num_negative) }
 @discardableResult
 public func SparseGetStateSize_Complex_Double(_ method: SparseIterativeMethod, _ preconditioner: Bool, _ m: Int32, _ n: Int32, _ nrhs: Int32) -> Int { return 0 }
 @discardableResult
 public func SparseGetStateSize_Complex_Float(_ method: SparseIterativeMethod, _ preconditioner: Bool, _ m: Int32, _ n: Int32, _ nrhs: Int32) -> Int { return 0 }
 @discardableResult
-public func SparseGetStateSize_Double(_ method: SparseIterativeMethod, _ preconditioner: Bool, _ m: Int32, _ n: Int32, _ nrhs: Int32) -> Int { return 0 }
+public func SparseGetStateSize_Double(_ method: SparseIterativeMethod, _ preconditioner: Bool, _ m: Int32, _ n: Int32, _ nrhs: Int32) -> Int { _ = method; _ = preconditioner; _ = m; _ = n; _ = nrhs; return 0 }
 @discardableResult
-public func SparseGetStateSize_Float(_ method: SparseIterativeMethod, _ preconditioner: Bool, _ m: Int32, _ n: Int32, _ nrhs: Int32) -> Int { return 0 }
+public func SparseGetStateSize_Float(_ method: SparseIterativeMethod, _ preconditioner: Bool, _ m: Int32, _ n: Int32, _ nrhs: Int32) -> Int { _ = method; _ = preconditioner; _ = m; _ = n; _ = nrhs; return 0 }
 @discardableResult
 public func SparseGetTranspose(_ Matrix: SparseMatrix_Complex_Double) -> SparseMatrix_Complex_Double { return SparseMatrix_Complex_Double() }
 @discardableResult
 public func SparseGetTranspose(_ Matrix: SparseMatrix_Complex_Float) -> SparseMatrix_Complex_Float { return SparseMatrix_Complex_Float() }
 @discardableResult
-public func SparseGetTranspose(_ Matrix: SparseMatrix_Double) -> SparseMatrix_Double { return SparseMatrix_Double() }
+public func SparseGetTranspose(_ Matrix: SparseMatrix_Double) -> SparseMatrix_Double { return _sparseTransposeMatrixDouble(Matrix) }
 @discardableResult
-public func SparseGetTranspose(_ Matrix: SparseMatrix_Float) -> SparseMatrix_Float { return SparseMatrix_Float() }
+public func SparseGetTranspose(_ Matrix: SparseMatrix_Float) -> SparseMatrix_Float { return _sparseTransposeMatrixFloat(Matrix) }
 @discardableResult
 public func SparseGetTranspose(_ Factor: SparseOpaqueFactorization_Complex_Double) -> SparseOpaqueFactorization_Complex_Double { return SparseOpaqueFactorization_Complex_Double() }
 @discardableResult
 public func SparseGetTranspose(_ Factor: SparseOpaqueFactorization_Complex_Float) -> SparseOpaqueFactorization_Complex_Float { return SparseOpaqueFactorization_Complex_Float() }
 @discardableResult
-public func SparseGetTranspose(_ Factor: SparseOpaqueFactorization_Double) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseGetTranspose(_ Factor: SparseOpaqueFactorization_Double) -> SparseOpaqueFactorization_Double { return _sparseTransposeFactorDouble(Factor) }
 @discardableResult
-public func SparseGetTranspose(_ Factor: SparseOpaqueFactorization_Float) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseGetTranspose(_ Factor: SparseOpaqueFactorization_Float) -> SparseOpaqueFactorization_Float { return _sparseTransposeFactorFloat(Factor) }
 @discardableResult
 public func SparseGetTranspose(_ Subfactor: SparseOpaqueSubfactor_Complex_Double) -> SparseOpaqueSubfactor_Complex_Double { return SparseOpaqueSubfactor_Complex_Double() }
 @discardableResult
 public func SparseGetTranspose(_ Subfactor: SparseOpaqueSubfactor_Complex_Float) -> SparseOpaqueSubfactor_Complex_Float { return SparseOpaqueSubfactor_Complex_Float() }
 @discardableResult
-public func SparseGetTranspose(_ Subfactor: SparseOpaqueSubfactor_Double) -> SparseOpaqueSubfactor_Double { return SparseOpaqueSubfactor_Double() }
+public func SparseGetTranspose(_ Subfactor: SparseOpaqueSubfactor_Double) -> SparseOpaqueSubfactor_Double { return _sparseTransposeSubfactorDouble(Subfactor) }
 @discardableResult
-public func SparseGetTranspose(_ Subfactor: SparseOpaqueSubfactor_Float) -> SparseOpaqueSubfactor_Float { return SparseOpaqueSubfactor_Float() }
+public func SparseGetTranspose(_ Subfactor: SparseOpaqueSubfactor_Float) -> SparseOpaqueSubfactor_Float { return _sparseTransposeSubfactorFloat(Subfactor) }
 public func SparseIterate(_ method: SparseIterativeMethod, _ iteration: Int32, _ converged: UnsafePointer<Bool>, _ state: UnsafeMutableRawPointer, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Double, DenseMatrix_Complex_Double) -> Void, _ B: DenseMatrix_Complex_Double, _ R: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) { }
 public func SparseIterate(_ method: SparseIterativeMethod, _ iteration: Int32, _ converged: UnsafePointer<Bool>, _ state: UnsafeMutableRawPointer, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Double, DenseMatrix_Complex_Double) -> Void, _ B: DenseMatrix_Complex_Double, _ R: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) { }
 public func SparseIterate(_ method: SparseIterativeMethod, _ iteration: Int32, _ converged: UnsafePointer<Bool>, _ state: UnsafeMutableRawPointer, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Float, DenseMatrix_Complex_Float) -> Void, _ B: DenseMatrix_Complex_Float, _ R: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float) { }
@@ -557,22 +557,22 @@ public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ X
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ XY: DenseVector_Complex_Float, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ X: DenseVector_Complex_Float, _ Y: DenseVector_Complex_Float) { }
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ X: DenseVector_Complex_Float, _ Y: DenseVector_Complex_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseMatrix_Double) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseVector_Double) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseVector_Double, _ Y: DenseVector_Double) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseVector_Double, _ Y: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseMatrix_Float) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseVector_Float) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseVector_Float, _ Y: DenseVector_Float) { }
-public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseVector_Float, _ Y: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseMatrix_Double) { _sparseSubfactorMultiplyInPlaceMatrixDouble(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyInPlaceMatrixDouble(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) { _sparseSubfactorMultiplyMatrixDouble(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyMatrixDouble(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseVector_Double) { _sparseSubfactorMultiplyInPlaceVectorDouble(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ XY: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyInPlaceVectorDouble(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseVector_Double, _ Y: DenseVector_Double) { _sparseSubfactorMultiplyVectorDouble(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Double, _ X: DenseVector_Double, _ Y: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyVectorDouble(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseMatrix_Float) { _sparseSubfactorMultiplyInPlaceMatrixFloat(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyInPlaceMatrixFloat(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) { _sparseSubfactorMultiplyMatrixFloat(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyMatrixFloat(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseVector_Float) { _sparseSubfactorMultiplyInPlaceVectorFloat(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyInPlaceVectorFloat(Subfactor, XY) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseVector_Float, _ Y: DenseVector_Float) { _sparseSubfactorMultiplyVectorFloat(Subfactor, X, Y) }
+public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseVector_Float, _ Y: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSubfactorMultiplyVectorFloat(Subfactor, X, Y) }
 public func SparseMultiply(_ alpha: Double, _ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) {
     _sparseCSCMultiplyMatrixD(structure: A.structure, data: A.data, x: X, y: Y, alpha: alpha, add: false)
 }
@@ -621,14 +621,14 @@ public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Float, _ Factorization
 public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Float, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Float>, _ nfoptions: SparseNumericFactorOptions) { }
 public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Float, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Float>, _ nfoptions: SparseNumericFactorOptions, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Float, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Float>, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ nfoptions: SparseNumericFactorOptions) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ nfoptions: SparseNumericFactorOptions, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ nfoptions: SparseNumericFactorOptions) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ nfoptions: SparseNumericFactorOptions, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ workspace: UnsafeMutableRawPointer) { }
+public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>) { _sparseRefactorDouble(Matrix, Factorization) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ nfoptions: SparseNumericFactorOptions) { _ = nfoptions; _sparseRefactorDouble(Matrix, Factorization) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ nfoptions: SparseNumericFactorOptions, _ workspace: UnsafeMutableRawPointer) { _ = nfoptions; _ = workspace; _sparseRefactorDouble(Matrix, Factored) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Double, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseRefactorDouble(Matrix, Factored) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>) { _sparseRefactorFloat(Matrix, Factorization) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ nfoptions: SparseNumericFactorOptions) { _ = nfoptions; _sparseRefactorFloat(Matrix, Factorization) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ nfoptions: SparseNumericFactorOptions, _ workspace: UnsafeMutableRawPointer) { _ = nfoptions; _ = workspace; _sparseRefactorFloat(Matrix, Factored) }
+public func SparseRefactor(_ Matrix: SparseMatrix_Float, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseRefactorFloat(Matrix, Factored) }
 @discardableResult
 public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Complex_Double) -> SparseOpaqueFactorization_Complex_Double { return SparseOpaqueFactorization_Complex_Double() }
 @discardableResult
@@ -775,26 +775,26 @@ public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ XB: 
 public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ XB: DenseVector_Complex_Float, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ B: DenseVector_Complex_Float, _ X: DenseVector_Complex_Float) { }
 public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Float, _ B: DenseVector_Complex_Float, _ X: DenseVector_Complex_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseMatrix_Double) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseVector_Double) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseVector_Double, _ X: DenseVector_Double) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseVector_Double, _ X: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseMatrix_Float) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseVector_Float) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseVector_Float, _ X: DenseVector_Float) { }
-public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseVector_Float, _ X: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseMatrix_Double) { _sparseSolveFactoredInPlaceMatrixDouble(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceMatrixDouble(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) { _ = _sparseSolveFactoredMatrixDouble(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredMatrixDouble(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseVector_Double) { _sparseSolveFactoredInPlaceVectorDouble(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ XB: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceVectorDouble(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseVector_Double, _ X: DenseVector_Double) { _ = _sparseSolveFactoredVectorDouble(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Double, _ B: DenseVector_Double, _ X: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredVectorDouble(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseMatrix_Float) { _sparseSolveFactoredInPlaceMatrixFloat(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceMatrixFloat(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) { _ = _sparseSolveFactoredMatrixFloat(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredMatrixFloat(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseVector_Float) { _sparseSolveFactoredInPlaceVectorFloat(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ XB: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceVectorFloat(Subfactor.factor, XB) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseVector_Float, _ X: DenseVector_Float) { _ = _sparseSolveFactoredVectorFloat(Subfactor.factor, B, X) }
+public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Float, _ B: DenseVector_Float, _ X: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredVectorFloat(Subfactor.factor, B, X) }
 public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Double>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Complex_Double) { }
 public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Float>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Complex_Float) { }
-public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Double) { }
-public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Float) { }
+public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Double) { _ = updateAlgorithm; _ = updateCount; _ = updatedIndices; _sparseRefactorDouble(Update, Factorization) }
+public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Float) { _ = updateAlgorithm; _ = updateCount; _ = updatedIndices; _sparseRefactorFloat(Update, Factorization) }
 @discardableResult
 public func dgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let trans, let m, let n, let kl, let ku, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
