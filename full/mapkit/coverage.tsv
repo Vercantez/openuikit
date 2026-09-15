@@ -517,11 +517,11 @@ c:objc(cs)MKMapFeatureAnnotation(py)pointOfInterestCategory	implemented	test:ful
 c:objc(cs)MKMapItem	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapItem(cm)mapItemForCurrentLocation	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapItem(cm)openMapsWithItems:launchOptions:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
-c:objc(cs)MKMapItem(cm)openMapsWithItems:launchOptions:fromScene:completionHandler:	declared	source:full/mapkit/MKMapItem.swift#openMaps	Async entry is declared; isolated host tests are synchronous.
+c:objc(cs)MKMapItem(cm)openMapsWithItems:launchOptions:fromScene:completionHandler:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemOpenMapsSceneHandler	Sync completion-handler overload fail-closes (false) inline; no Maps app on Linux.
 c:objc(cs)MKMapItem(im)initWithLocation:address:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapItem(im)initWithPlacemark:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapItem(im)openInMapsWithLaunchOptions:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
-c:objc(cs)MKMapItem(im)openInMapsWithLaunchOptions:fromScene:completionHandler:	declared	source:full/mapkit/MKMapItem.swift#openInMaps	Async entry is declared; isolated host tests are synchronous.
+c:objc(cs)MKMapItem(im)openInMapsWithLaunchOptions:fromScene:completionHandler:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemOpenInMapsSceneHandler	Sync completion-handler overload fail-closes (false) inline; no Maps app on Linux.
 c:objc(cs)MKMapItem(py)address	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapItem(py)addressRepresentations	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapItem(py)alternateIdentifiers	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapItemAndPlacemark	Focused Linux host evidence; not Apple-runtime parity.
@@ -580,7 +580,7 @@ c:objc(cs)MKMapSnapshotter	implemented	test:full/mapkit/tests/agent/MapKitServic
 c:objc(cs)MKMapSnapshotter(im)cancel	implemented	test:full/mapkit/tests/agent/MapKitServicesTests.swift#testSnapshotterAndLookAroundFailClosed	Fail-closed on Linux: no Apple Maps tile/search/directions/snapshot service.
 c:objc(cs)MKMapSnapshotter(im)initWithOptions:	implemented	test:full/mapkit/tests/agent/MapKitServicesTests.swift#testSnapshotterAndLookAroundFailClosed	Fail-closed on Linux: no Apple Maps tile/search/directions/snapshot service.
 c:objc(cs)MKMapSnapshotter(im)startWithCompletionHandler:	implemented	test:full/mapkit/tests/agent/MapKitServicesTests.swift#testSnapshotterAndLookAroundFailClosed	Fail-closed on Linux: no Apple Maps tile/search/directions/snapshot service.
-c:objc(cs)MKMapSnapshotter(im)startWithQueue:completionHandler:	declared	source:full/mapkit/MKSnapshotter.swift#start	Async entry is declared; isolated host tests are synchronous.
+c:objc(cs)MKMapSnapshotter(im)startWithQueue:completionHandler:	implemented	test:full/mapkit/tests/agent/MapKitServicesTests.swift#testSnapshotterQueueCompletionHandler	Sync with-queue overload fail-closes with MKError.serverFailure inline; no snapshot service on Linux.
 c:objc(cs)MKMapSnapshotter(py)loading	implemented	test:full/mapkit/tests/agent/MapKitServicesTests.swift#testSnapshotterAndLookAroundFailClosed	Fail-closed on Linux: no Apple Maps tile/search/directions/snapshot service.
 c:objc(cs)MKMapView	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapViewStores	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKMapView(im)addAnnotation:	implemented	test:full/mapkit/tests/agent/MapKitMapViewTests.swift#testMapViewAnnotations	Focused Linux host evidence; not Apple-runtime parity.
@@ -810,7 +810,7 @@ c:objc(cs)MKTileOverlay	implemented	test:full/mapkit/tests/agent/MapKitOverlayTe
 c:objc(cs)MKTileOverlay(im)URLForTilePath:	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testOverlayRenderers	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKTileOverlay(im)initWithURLTemplate:	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testOverlayRenderers	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKTileOverlay(im)initWithURLTemplate:::SYNTHESIZED::c:objc(cs)MKTileOverlay	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testOverlayRenderers	Focused Linux host evidence; not Apple-runtime parity.
-c:objc(cs)MKTileOverlay(im)loadTileAtPath:result:	declared	source:full/mapkit/MKOverlay.swift#loadTile	Async entry is declared; isolated host tests are synchronous.
+c:objc(cs)MKTileOverlay(im)loadTileAtPath:result:	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testTileOverlayResultHandler	Sync result-handler overload fail-closes with MKError.serverFailure inline; no tile server on Linux.
 c:objc(cs)MKTileOverlay(py)URLTemplate	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testOverlayRenderers	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKTileOverlay(py)canReplaceMapContent	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testOverlayRenderers	Focused Linux host evidence; not Apple-runtime parity.
 c:objc(cs)MKTileOverlay(py)geometryFlipped	implemented	test:full/mapkit/tests/agent/MapKitOverlayTests.swift#testOverlayRenderers	Focused Linux host evidence; not Apple-runtime parity.

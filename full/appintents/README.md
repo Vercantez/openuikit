@@ -37,6 +37,32 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 16 | 3331 | 537 | 1130 | 0 | 1588 | 3868 |
 | After wave 17 | 4933 | 505 | 1130 | 0 | 18 | 5438 |
 | After wave 18 | 5240 | 198 | 1130 | 0 | 18 | 5438 |
+| After wave 19 | 5261 | 177 | 1130 | 0 | 18 | 5438 |
+
+Wave 19 (this increment) converts 21 of the 198 declared rows: 15 new
+synchronous pins across eight tests in
+`tests/agent/AppIntentsWave19Tests.swift` (largest cites 3) plus 6
+declared-synthesized witnesses repointed at the already-tested base
+spelling (`requestConfirmation()` / `continueInForeground` copies cite
+`testConfirmationAndForegroundStayFailClosed`, the same treatment wave 18
+gave 61 rows). New product source lives in `AppIntentsWave19.swift`
+(`AssistantSchemaEnum` / `AssistantSchemaEntity`
+`typeDisplayRepresentation` host-local type-name defaults plus five
+`ParameterSummaryWhenCondition` overloads: two entity-identifier arities
+and three value-based arities that record operator/values metadata and
+evaluate to the `otherwise` branch). Other new pins cover `Never`
+`PerformResult` / `SummaryContent` aliases, the fail-closed
+`needsToContinueInForegroundError`, `PlayVideoIntent` /
+`StartWorkoutIntent` `openAppWhenRun` inheritance, `OpenURLIntent`
+`init(urlRepresentable:)` (the enum overload; the async entity overload
+stays declared), `CaseDisplayRepresentable` `localizedStringResource`, and
+`FileEntity` `supportedContentTypes`. The `ExpressibleByNilLiteral`
+value-based condition overloads stay declared (indistinguishable from the
+plain overloads without inventing labels), as do `entityType` (host stores
+only the type-name string, never the metatype), the `schema()` free
+functions, `_System` parameter inits, async `requestValue` /
+`requestConfirmation` / `donate`, `EntityProperty.asyncGetter`, View
+snippet execution, macros, Siri daemon behavior, and service success.
 
 Wave 18 (this increment) converts 307 of the 505 declared rows: 61
 declared-synthesized witnesses repointed at the already-tested base
@@ -206,7 +232,7 @@ No test is cited by more than 293 rows (5.9% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
 Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
 each. Wave-17 overlay batches cite at most 293 rows each; depth tests cite
-at most 12 rows each. Wave-18 tests cite at most 22 rows each.
+at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each.
 New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.

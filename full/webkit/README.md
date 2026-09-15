@@ -163,6 +163,52 @@ Validation on this Mac (the sealed Linux gate needs a Linux host):
 
 Only `full/webkit/` changes.
 
+### Leftover re-examination (pi-wave10 webkit)
+
+Re-examined all 36 declared and 26 deferred rows against the
+`reference/public-surface.tsv` Apple signatures for synchronous in-process
+conversion. Result: **no conversions** (2171 implemented / 36 declared /
+26 deferred / 0 unavailable / 0 not-applicable, total 2233 — unchanged).
+The deliverable validator reports no coverage/evidence errors (the only two
+errors are the pre-existing missing
+`full/framework-roadmap/framework-roadmap.json`, absent from this worktree);
+`tests/test_webkit_provenance.py`: 8 tests OK.
+
+- 8 `WebPage` async methods (`callJavaScript`, `mediaPlaybackState`,
+  `pauseAllMediaPlayback`, `setCameraCaptureState`,
+  `setMicrophoneCaptureState`, `closeAllMediaPresentations`,
+  `setAllMediaPlaybackSuspended`, `exported(as:)`, all with `Ya` async
+  mangling), 8 `DialogPresenting` requirements + extension defaults, 6
+  `NavigationDeciding` requirements + defaults, and the 2 async
+  `WKWebExtension` inits (`appExtensionBundle`, `resourceBaseURL` overload)
+  cannot be invoked from top-level synchronous no-argument tests: the
+  contract forbids `await` in cited tests. Referencing an async member
+  without invoking it exercises no behavior, so no promotion by reference.
+- `navigations` has a synchronous getter but returns an
+  `AsyncSequence<WebPage.NavigationEvent, any Error>`; draining it needs
+  `await`. It stays declared per its oracle question (replay/cancellation
+  semantics unobserved) rather than being promoted by a trivial property
+  touch that would verify none of the sequence behavior.
+- 11 rows have no product member at all (declared anchor is the enclosing
+  type): `WKNavigationAction.buttonNumber` (`UIEvent.ButtonMask`) /
+  `modifierFlags` (`UIKeyModifierFlags`), `WebPage.NavigationAction`
+  `.buttonNumber` (UIKit `UIEvent` type), `WKWebExtensionAction.menuItems`
+  (`[UIMenuElement]`), `WKWebExtensionCommand.keyCommand` (`UIKeyCommand?`)
+  / `menuItem` (`UIMenuElement`), three `WKUIDelegate`
+  edit-menu/input-suggestion methods (UIKit animator/suggestion types), and
+  `WebPage.Representation` / `transferRepresentation` (needs
+  `TransferRepresentation`/`UTType`). The isolated host has no UIKit /
+  UniformTypeIdentifiers module and framework-local substitutes for
+  dependency-owned types are forbidden, so no lookalike members are added.
+- Still deferred: NSAttributedString HTML import
+  (`DocumentReadingOptionKey` absent from Linux Foundation), `SecTrust`,
+  `ProxyConfiguration`, `UTType`/`Transferable` (including all
+  `CoreTransferable` synthesized witnesses), the two SwiftUI-typed `WebPage`
+  members, context-menu delegates, and the synthesized `Equatable.!=`
+  witness on SwiftUI `WebView.ActivatedElementInfo`.
+
+Only this README changes in this pass.
+
 ### Leftover re-examination (pi-wave9 webkit)
 
 Re-examined all 36 declared rows for synchronous in-process conversion.

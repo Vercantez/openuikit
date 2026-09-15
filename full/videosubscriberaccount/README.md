@@ -52,7 +52,7 @@ sync, and auto sign-in never report success.
 
 ## Depth pass 2026-09
 
-Implemented **201** of 210 exact IDs (7 `declared` async overlays, 2 UIKit
+Implemented **202** of 210 exact IDs (6 `declared` async overlays, 2 UIKit
 `deferred` delegate methods). Nondeferred count 208, above the medium-full
 floor of 105.
 

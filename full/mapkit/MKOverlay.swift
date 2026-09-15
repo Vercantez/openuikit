@@ -260,6 +260,12 @@ open class MKTileOverlay: NSObject, MKOverlay {
         _ = path
         throw MKError(.serverFailure)
     }
+
+    /// No Apple tile server on Linux: fail closed, result runs inline.
+    open func loadTile(at path: MKTileOverlayPath, result: @escaping (Data?, (any Error)?) -> Void) {
+        _ = path
+        result(nil, MKError(.serverFailure))
+    }
 }
 
 private func boundingRect(of points: [MKMapPoint]) -> MKMapRect {

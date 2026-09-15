@@ -572,3 +572,30 @@ After: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
 
 No non-exempt test is cited by more than 40% of implemented rows
 (largest share 191/2978 = 6.4%).
+
+## Depth pass 2026-09-15 (wave 10 leftover sweep)
+
+Before: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Leftover = 69.
+
+Zero `View` overlay rows exist in this framework, so the overlay override
+does not apply. All 20 `declared` rows are `async` (19 `NetworkChannel`
+send/receive/ping/pong/close overloads plus async
+`NWPathMonitor.Iterator.next()`); a synchronous sealed test cannot call
+them without `await`, which the gate forbids, and zero `async` rows are
+`implemented` anywhere in this coverage, so they stay `declared` at
+their maximum honest status — every anchor still compiles in
+`NetworkTyped.swift` / `Network.swift`. The 49 `deferred` rows stay
+deferred: 4 `withNetworkConnection` overloads with no source-compatible
+declaration, async-only typed-overlay APIs (QUIC `openStream`/
+`inboundStreams`, `Browser`/`Listener` `run`, channel reports, WebSocket
+`startSend`/`startReceive`), one deprecated `flatMap` witness
+(warnings-as-errors), and stdlib/Combine/Foundation/Concurrency
+witnesses that are not Network-owned declarations. Hardware/daemon
+(TLS handshake, QUIC transport, mDNS/Bonjour) stays fail-closed.
+
+After: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Implemented gain **+0**.
+
+No non-exempt test is cited by more than 40% of implemented rows
+(largest share 191/2978 = 6.4%).

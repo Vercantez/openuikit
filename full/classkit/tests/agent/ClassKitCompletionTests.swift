@@ -8,7 +8,7 @@ import ClassKit
 /// `contextsMatchingPredicate:completion:`, `fetchActivityForURL:completion:`,
 /// and `updateDescendantsOfContext:completion:` arrive as `async` Swift
 /// projections. Each completion below runs before its method returns, so
-/// these tests stay synchronous with no suspension, semaphores, or run loops.
+/// these tests stay synchronous straight-line code.
 
 func testDescendantMatchingIdentifierPathCompletion() {
     classKitResetStore()

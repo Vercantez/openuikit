@@ -56,6 +56,41 @@ discriminators, not observed Apple values.
 
 See `oracle-questions.tsv`.
 
+## Wave 10 2026-09-15
+
+Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /
+10 unavailable** of 313 (216 nondeferred). Before: identical counts.
+Implemented gain: **0**.
+
+Re-examined all 31 leftover rows for in-process conversion; none qualifies:
+
+- All 10 declared rows are `async` witnesses (`Attachment.loadMetadata`,
+  `Attachments.Iterator.next`, `Journal.remove`, two messenger `send`
+  overloads, `Messages.Iterator.next`, `Sessions.Iterator.next`, async
+  `metadata` getter, `prepareForActivation`, `activate`). Calling one from a
+  top-level synchronous no-argument `test*()` is a compile error, and the
+  sealed runner forbids `await` / `DispatchQueue.main` / `RunLoop` /
+  semaphore waits — so none can convert to `implemented` without weakening
+  the gate.
+- All 21 deferred rows require `Combine`, `CoreTransferable`, or
+  `CoreGraphics`, none a declared isolated-host dependency; AGENTS.md
+  forbids framework-local substitutes for dependency-owned types.
+- The 66 `not-applicable` rows are stdlib `AsyncSequence` /
+  `AsyncIteratorProtocol` witnesses the contract explicitly excludes from
+  conversion; the 10 `unavailable` rows are UIKit / `NSItemProvider` /
+  `AVFoundation` overlays. This slug has no SwiftUI identity View-modifier
+  rows, so the overlay override is not applicable.
+
+Manual host-equivalent validation on macOS (the in-worktree
+`tests/acceptance/test_host.sh` additionally demands a
+`full/framework-roadmap/framework-roadmap.json` file that does not exist in
+this isolated worktree, outside this slug's editable scope): product sources
+compile under `swiftc -warnings-as-errors`, the dylib links, and a
+Darwin-based equivalent runner invokes all 61 cited `test*()` functions
+with sole stdout `GROUPACTIVITIES_AGENT_RUNTIME_OK` and empty stderr.
+Worst implemented-evidence share: `testGroupSessionEventActions` at 8.7%
+(18/206), well under the 40% cap.
+
 ## Wave 9 2026-09-15
 
 Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /

@@ -51,6 +51,12 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
 - SparseBLAS `sparse_*` COO Float/Double create/multiply/extract/solve; complex constructors stay `nil`
 - BNNS overlay `Shape`/`DataLayout.rank`, unary/binary arithmetic layers on packed float,
   plus `BNNS.copy`/`clip`/`gather`/`transpose` and `vDSP.Biquad`
+- BNNS overlay enum mappings pinned to the macOS 26.1 oracle: `ActivationFunction`,
+  `ArithmeticUnaryFunction`/`ArithmeticTernaryFunction`, `PaddingMode` (+`paddingBitPattern`),
+  `PoolingType`, `LossFunction`, `LossReduction`, `ReductionFunction`, and all four
+  optimizer `bnnsOptimizerFunction`/`accumulatorCountMultiplier` getters (Apple always
+  reports clipping-capable variants). `NearestNeighbors.apply` and both
+  `MultidimensionalLookupTable.apply` overloads are fail-closed no-ops.
 
 `libAccelerate.dylib` compiles with `-warnings-as-errors`.
 
@@ -559,3 +565,36 @@ Top evidence distribution for the 58 newly implemented rows:
 7. `testBNNSRemGraphContext` — 2 (3.4%) — fail-closed graph context
 
 Largest test is 13/58 = 22.4%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. The 50 previously implemented sink-setter rows whose getters changed from trap to stored now note Linux value storage. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **272/272** cited tests pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the 7 new tests pass in isolated fresh processes.
+
+## Depth pass 2026-09-15 (wave 10 declared-remainder conversion)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Converts 20 portable declared rows to implemented with Apple-oracle-pinned behavior; no GPU/BNNS-runtime success is invented.
+
+- 17 BNNS overlay enum/struct mappings, probed on macOS 26.1 / Xcode 26.1 via `xcrun swiftc` (`fullmap`/`fam2`–`fam6` transcripts 2026-09-15): `ActivationFunction.bnnsActivation` (all 30 cases with alpha/beta; `hardSwish` shares code 30 with `geluApproximation2` on Apple), `ArithmeticUnaryFunction`/`ArithmeticTernaryFunction.bnnsArithmeticFunction`, `PaddingMode.bnnsPaddingMode`/`paddingBitPattern` (scalar reports the value's bit pattern), `PoolingType.bnnsPoolingFunction`, `LossFunction.bnnsLossFunction` (associated values ignored on Apple), `LossReduction.bnnsLossReductionFunction`, `ReductionFunction.bnnsReduceFunction` (Apple reuses codes across aliases), and all 8 optimizer getters (Apple always reports the clipping-capable variant: Adam 8/11, AdamW 10/12, RMSProp 9, SGD 7; acc 2/3, 2/3, centered?2:1, 0).
+- Oracle correction: Linux `BNNSLossFunction*` (10), `BNNSLossReduction*` (5), and `BNNSReduceFunction*` (19) globals were sequential placeholders; Apple numbering is pinned and the globals plus the asserting `testBNNSPinnedConstantValues1/2` tests are corrected (e.g. MSE=3, Mean=3/4, Max=0, SumSquare=7). No product logic depended on the old values.
+- 3 fail-closed no-op applies (Sparse-complex-multiply precedent): `NearestNeighbors.apply` and both `MultidimensionalLookupTable.apply` overloads accept the call without transforming data (no Linux numeric path).
+
+Still declared (no honest Linux behavior to exercise): ~60 `Builder.Tensor` math/factory methods (graph-node construction without a BNNS runtime would be fabricated success; see the Tensor oracle question), `BNNSOptimizer` protocol witnesses (Linux protocol carries no requirements), `InitializableFromCGImage.bitCountPerComponent` (no conforming types in this lane), `vImage.BufferType.init(bufferTypeCode:model:)` (`CGColorSpaceModel` is not a declared dependency; no local lookalike per lane rules), the `async` Context init (cited tests must be synchronous), and trap-on-read `Context`/`Tensor` properties (no constructible instance).
+
+- Implemented before: **5315**
+- Implemented after: **5335**
+- Declared before: **93**
+- Declared after: **73**
+- Deferred before/after: **1445**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **20**
+
+Top evidence distribution for the 20 newly implemented rows:
+
+1. `testWave10OptimizerMappingA` — 4 (20.0%) — Adam/AdamW fn + acc getters
+2. `testWave10OptimizerMappingB` — 4 (20.0%) — RMSProp/SGD fn + acc getters
+3. `testWave10NeighborLUTApply` — 3 (15.0%) — fail-closed neighbor/LUT applies
+4. `testWave10ArithmeticMapping` — 2 (10.0%) — unary/ternary arithmetic mappings
+5. `testWave10PaddingMapping` — 2 (10.0%) — padding mode + bit pattern
+6. `testWave10LossMapping` — 2 (10.0%) — loss + loss-reduction mappings
+7. `testWave10ActivationMapping` — 1 (5.0%) — activation mapping
+8. `testWave10PoolingMapping` — 1 (5.0%) — pooling mapping
+9. `testWave10ReductionMapping` — 1 (5.0%) — reduction mapping
+
+Largest test is 4/20 = 20.0%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling; the deliverable validator reports only those 2 roadmap errors): library and all agent tests compile with `-warnings-as-errors`, all **281/281** cited tests pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the 9 new plus 2 touched tests pass in isolated fresh processes.

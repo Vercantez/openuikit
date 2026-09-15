@@ -59,6 +59,17 @@ Fresh seed: no prior implemented/declared split. After this pass:
 Declared rows are `openSettings(for:)` (async; no run loop) and the nine
 uninhabited attribute-key `description` getters.
 
+## Wave 10 recount 2026-09-15
+
+Before: **510 implemented / 10 declared / 0 deferred / 520 total**.
+After: **510 implemented / 10 declared / 0 deferred / 520 total** (no change).
+All 10 declared rows were re-examined and none can convert under the sealed
+runner rules: `openSettings(for:)` is async throws and cited tests must be
+synchronous with no `await`, and each `description` getter is an instance
+member of a caseless (uninhabited) attribute-key enum, so no test can
+construct a value that calls it. Product sources still compile clean with
+`swiftc -warnings-as-errors`.
+
 Top-5 implemented evidence distribution:
 
 | Citations | Evidence |

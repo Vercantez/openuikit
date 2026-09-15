@@ -1,4 +1,5 @@
 full/avfoundation/AVAssetSurface.swift
+full/avfoundation/AVAsyncSequenceConformances.swift
 full/avfoundation/AVAudioExtras.swift
 full/avfoundation/AVAudioSurface.swift
 full/avfoundation/AVCaptionSurface.swift

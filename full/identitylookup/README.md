@@ -55,8 +55,9 @@ mutations never report success.
   `AppExtensionConfiguration`.
 - `LiveLookupStoreCoreDataFrameworkManagedObject` is deferred: `NSManagedObject`
   is CoreData-owned.
-- `extensionPointName` is the empty string until an Apple-oracle probe records
-  the Darwin literal.
+- `extensionPointName` is the Apple-oracle pinned Darwin literal
+  `"com.apple.live-lookup"` (`xcrun swiftc`, Xcode 26.1). Linux has no
+  extension host; the constant is for identifier comparison only.
 - No fabricated Apple network, PIR, or classification-service success.
 
 ## Depth pass 2026-09
@@ -64,6 +65,14 @@ mutations never report success.
 Implemented **145** of 150 exact IDs (4 `declared` async methods, 1 CoreData
 `deferred` typealias). Nondeferred count 149, above the medium-full floor of
 75.
+
+Wave 10: Apple-oracle probe (`xcrun swiftc`, Xcode 26.1) pinned
+`extensionPointName` to `"com.apple.live-lookup"`; the answered oracle
+question was removed (7 remain). Implemented/declared/deferred counts are
+unchanged at 145/4/1: the 4 `declared` rows are `async throws` manager
+methods that cannot be invoked from the sealed runner's synchronous
+no-argument tests without `await`, and the 1 `deferred` row is a
+CoreData-owned `NSManagedObject` lookalike this port is forbidden to publish.
 
 Top-5 `implemented` evidence distribution:
 

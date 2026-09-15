@@ -12,6 +12,16 @@ public protocol CLSDataStoreDelegate: NSObjectProtocol {
 /// Supplies descendant contexts for an existing parent.
 public protocol CLSContextProvider {
     func updateDescendants(of context: CLSContext) async throws
+    func updateDescendants(of context: CLSContext, completion: ((any Error)?) -> Void)
+}
+
+extension CLSContextProvider {
+    /// Fail-closed default: Linux has no ClassKit catalog to update from.
+    /// The completion runs before this method returns.
+    public func updateDescendants(of context: CLSContext, completion: ((any Error)?) -> Void) {
+        _ = context
+        completion(CLSMakeError(.classKitUnavailable))
+    }
 }
 
 /// Process-local ClassKit data store.
@@ -66,13 +76,46 @@ open class CLSDataStore: NSObject {
         try contextsMatchingIdentifierPathSync(identifierPath)
     }
 
+    /// Synchronous overlay for `contextsMatchingIdentifierPath:completion:`.
+    /// The completion runs before this method returns.
+    public func contexts(
+        matchingIdentifierPath identifierPath: [String],
+        completion: ([CLSContext]?, (any Error)?) -> Void
+    ) {
+        do {
+            completion(try contextsMatchingIdentifierPathSync(identifierPath), nil)
+        } catch {
+            completion(nil, error)
+        }
+    }
+
     public func contexts(matching predicate: NSPredicate) async throws -> [CLSContext] {
         contextsMatchingPredicateSync(predicate)
+    }
+
+    /// Synchronous overlay for `contextsMatchingPredicate:completion:`.
+    /// The completion runs before this method returns.
+    public func contexts(
+        matching predicate: NSPredicate,
+        completion: ([CLSContext]?, (any Error)?) -> Void
+    ) {
+        completion(contextsMatchingPredicateSync(predicate), nil)
     }
 
     public func fetchActivity(for url: URL) async throws -> CLSActivity {
         _ = url
         throw CLSMakeError(.classKitUnavailable)
+    }
+
+    /// Synchronous overlay for `fetchActivityForURL:completion:`. Fail-closed:
+    /// there is no Schoolwork URL fetch on Linux. The completion runs before
+    /// this method returns.
+    public func fetchActivity(
+        for url: URL,
+        completion: (CLSActivity?, (any Error)?) -> Void
+    ) {
+        _ = url
+        completion(nil, CLSMakeError(.classKitUnavailable))
     }
 
     public func remove(_ context: CLSContext) {

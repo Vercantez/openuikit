@@ -55,6 +55,13 @@ open class MKMapSnapshotter: NSObject {
         throw MKError(.serverFailure)
     }
 
+    /// No Apple Maps snapshot service on Linux: fail closed, handler runs inline.
+    open func start(with queue: DispatchQueue, completionHandler: @escaping CompletionHandler) {
+        _ = queue
+        isLoading = false
+        completionHandler(nil, MKError(.serverFailure))
+    }
+
     open func cancel() {
         isLoading = false
     }

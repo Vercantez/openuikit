@@ -752,3 +752,41 @@ func testStoppedReasonAndFinishedAction() {
     _ = actionHasher.finalize()
     _ = Action.stopEngine.hashValue
 }
+
+func testParameterAttributesProtocol() {
+    let stored = CHHapticPortableParameterAttributes(
+        minValue: 0,
+        maxValue: 1,
+        defaultValue: 0.5
+    )
+    let boxed: any CHHapticParameterAttributes = stored
+    precondition(boxed is CHHapticPortableParameterAttributes)
+    precondition((boxed as? CHHapticPortableParameterAttributes) === stored)
+}
+
+func testParameterAttributesMinValue() {
+    let boxed: any CHHapticParameterAttributes = CHHapticPortableParameterAttributes(
+        minValue: 0.25,
+        maxValue: 1,
+        defaultValue: 0.5
+    )
+    precondition(boxed.minValue == 0.25)
+}
+
+func testParameterAttributesMaxValue() {
+    let boxed: any CHHapticParameterAttributes = CHHapticPortableParameterAttributes(
+        minValue: 0,
+        maxValue: 0.75,
+        defaultValue: 0.5
+    )
+    precondition(boxed.maxValue == 0.75)
+}
+
+func testParameterAttributesDefaultValue() {
+    let boxed: any CHHapticParameterAttributes = CHHapticPortableParameterAttributes(
+        minValue: 0,
+        maxValue: 1,
+        defaultValue: 0.5
+    )
+    precondition(boxed.defaultValue == 0.5)
+}

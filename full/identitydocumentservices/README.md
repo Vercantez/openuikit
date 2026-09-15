@@ -58,6 +58,18 @@ Nondeferred count 106, above the medium-full floor of 53. The three
 `preconditionIsolated`) are `declared`; calling them off the actor
 traps and the isolated runner cannot hop.
 
+## Wave 10 re-examination 2026-09-15
+
+Before: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**.
+After: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**
+(implemented gain 0). The four remaining async members (`status`,
+`registrations`, `addRegistration`, `removeRegistration`) cannot be cited
+by synchronous no-argument tests: calling them requires `await`, which the
+sealed runner forbids, and their fail-closed `.notSupported` behavior must
+not report success without the Apple presentment daemon. The three `Actor`
+isolation witnesses trap when called off the actor. No SwiftUI View-overlay
+rows exist in this module, so the overlay override does not apply.
+
 Top-5 `implemented` evidence distribution:
 
 1. `testPresentmentErrorCodeRawValues` — 9 rows (enum table)

@@ -476,8 +476,10 @@ extension Never: Generable {
     }
 
     public init(_ content: GeneratedContent) throws {
-        _ = content
-        fatalError("Never cannot be decoded from generated content")
+        throw GeneratedContentError.typeMismatch(
+            expected: "never",
+            actual: content.kindName
+        )
     }
 
     public var generatedContent: GeneratedContent {

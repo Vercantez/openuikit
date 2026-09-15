@@ -462,3 +462,41 @@ Nondeferred: **2196** (floor 1267). Gain is **+0 implemented**: the
 sync-testable surface is fully converted; the declared remainder is the
 async/network/hardware floor. Files changed: `README.md` (this section
 only).
+
+## Depth pass 2026-09 (pi-wave10, sync-leftover re-sweep)
+
+Re-counted coverage.tsv (2116 implemented / 80 declared / 0 deferred / 0
+unavailable / 338 n/a of 2534; nondeferred 2196, floor 1267) and
+re-audited all 80 `declared` rows for sync-convertible leftovers
+(convert sync leftovers only; hardware/service success stays
+fail-closed; no `await`):
+
+- 78 carry the `Ya` async mangling (`response()` family, player
+  `play`/`prepareToPlay`/skip, async `Queue.insert`, `with()`
+  requirements + witnesses, library add/create/edit, token providers,
+  `authorization request`, `nextBatch`, `subscriptionUpdates.next()`).
+  None can move to `implemented` without `await` or invented
+  network/hardware/service success.
+- The 2 sync-mangled rows (`MusicDataRequest.currentCountryCode`,
+  `MusicSubscription.current`) are `get async throws` fail-closed
+  properties (re-pinned against the Xcode 26.1 Apple oracle in wave 9).
+  Same bar applies.
+- Overlay OVERRIDE checked: zero `declared` rows are SwiftUI `View`
+  modifiers (all are `s:8MusicKit…`); 337 `not-applicable` rows are
+  stdlib/Foundation `::SYNTHESIZED::` witnesses plus 1 stdlib
+  `Options.hashValue` overlay witness — none convertible per contract.
+- Cited-test hygiene re-checked: no `await`, `DispatchQueue.main`,
+  `RunLoop`, or semaphore waits in `tests/agent/` bodies.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2116 | 2116 |
+| declared | 80 | 80 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 338 | 338 |
+
+Nondeferred: **2196** (floor 1267). Gain is **+0 implemented**: the
+sync-testable surface is fully converted; the declared remainder is the
+async/network/hardware floor. Files changed: `README.md` (this section
+only).

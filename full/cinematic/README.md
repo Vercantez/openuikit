@@ -14,6 +14,19 @@ lane `medium-full`.
 Coverage after this pass: **231 implemented / 6 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+Wave 10 recount (2026-09-15): before 231 implemented / 6 declared /
+0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
+All 6 declared rows are `async`/`async throws` loaders
+(`CNAssetInfo.init(asset:)` / `isCinematic`,
+`CNRenderingSession.Attributes.init(asset:)`,
+`CNAssetSpatialAudioInfo.init(asset:)` / `assetContainsSpatialAudio`,
+`CNScript.init(asset:changes:progress:)`). A synchronous `test*()` cannot
+call them (`'async' call in a function that does not support concurrency`)
+and the coverage contract forbids `await`, `DispatchQueue.main`, `RunLoop`,
+and semaphore waits in cited tests, so they stay `declared` with
+fail-closed bodies (throw `.unsupported` / return `false`). No overlay
+rows: this module has no SwiftUI.View modifiers.
+
 Top-5 evidence distribution (share of the 231 implemented rows):
 
 1. `CNEnumTests.swift#testCNDetectionTypeRawValues` — 13 (5.6%, enum members)

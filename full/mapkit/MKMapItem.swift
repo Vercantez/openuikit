@@ -265,6 +265,16 @@ open class MKMapItem: NSObject {
         return openInMaps(launchOptions: launchOptions)
     }
 
+    /// Linux has no Maps app: listed no-op, reports false via handler inline.
+    open func openInMaps(
+        launchOptions: [String: Any]? = nil,
+        from scene: UIScene?,
+        completionHandler: ((Bool) -> Void)?
+    ) {
+        _ = (launchOptions, scene)
+        completionHandler?(false)
+    }
+
     open class func openMaps(with mapItems: [MKMapItem], launchOptions: [String: Any]? = nil) -> Bool {
         _ = (mapItems, launchOptions)
         return false
@@ -277,6 +287,17 @@ open class MKMapItem: NSObject {
     ) async -> Bool {
         _ = scene
         return openMaps(with: mapItems, launchOptions: launchOptions)
+    }
+
+    /// Linux has no Maps app: listed no-op, reports false via handler inline.
+    open class func openMaps(
+        with mapItems: [MKMapItem],
+        launchOptions: [String: Any]? = nil,
+        from scene: UIScene?,
+        completionHandler: ((Bool) -> Void)?
+    ) {
+        _ = (mapItems, launchOptions, scene)
+        completionHandler?(false)
     }
 }
 

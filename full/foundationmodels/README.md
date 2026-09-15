@@ -61,7 +61,9 @@ runtime.
 - `@Generable` / `@Guide` macros stay `declared` on the isolated Linux host.
 - Combine `Sequence.publisher` witnesses stay `declared` (Combine is not a
   seeded host dependency).
-- `Never.generatedContent` / `Never.init(_:)` cannot be executed.
+- `Never.generatedContent` cannot be executed (no `Never` value can exist).
+  `Never.init(_:)` now throws fail-closed `GeneratedContentError.typeMismatch`
+  and is covered by `testNeverInitAlwaysThrows`.
 - Apple's exact schema/transcript Codable documents, feedback `Data`
   contents, adapter compiler errors, and availability-reason mapping remain
   oracle questions.
@@ -109,9 +111,9 @@ deterministic stand-in model. It is not on-device Apple Intelligence.
 - `LanguageModelFeedback` sentiment/issue value types. Attachment logging
   remains empty `Data`.
 
-Coverage: 664 implemented / 8 declared / 1 deferred / 81 not-applicable
-of 754 IDs; remaining declared rows are macros, Combine publishers, and
-uninhabited `Never` witnesses. `Adapter.isCompatible` stays deferred.
+Coverage: 665 implemented / 7 declared / 1 deferred / 81 not-applicable
+of 754 IDs; remaining declared rows are macros, Combine publishers, and the
+uninhabited `Never.generatedContent` witness. `Adapter.isCompatible` stays deferred.
 
 ### Linux stand-in contract
 

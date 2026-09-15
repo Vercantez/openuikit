@@ -42,6 +42,9 @@ capability reports no haptics and no audio.
 - `capabilitiesForHardware()` reports `supportsHaptics == false` and
   `supportsAudio == false`. Attribute queries throw `notSupported`.
 - `StoppedReason` / `FinishedAction` raw values match pinned macios.
+- `CHHapticPortableParameterAttributes` is a plain caller-supplied holder for
+  the `CHHapticParameterAttributes` min/max/default witnesses; hardware
+  attribute queries still throw `notSupported`.
 - Foundation `TimeInterval`, `URL`, `Data`, `NSError`, and `NSString` values
   pass through public APIs (`tests/agent/CoreHapticsDependencyIdentity.swift`
   is for the later clean EC2 integration build).
@@ -57,6 +60,16 @@ capability reports no haptics and no audio.
   payload is unobserved.
 - Successful playback, looping, seeking, and resource registration are never
   claimed.
+
+## Coverage status (wave 10)
+
+`coverage.tsv` holds 242 rows: 241 `implemented`, 0 `declared`, 1 `deferred`,
+0 `not-applicable` (previously 237 / 4 / 1 / 0). The four converted rows are
+`CHHapticParameterAttributes` and its `minValue` / `maxValue` /
+`defaultValue` witnesses, exercised in-process through
+`CHHapticPortableParameterAttributes`. The remaining deferred row is
+`init(audioSession:)`, which needs `AVAudioSession` (not a declared
+dependency), so it stays deferred.
 
 ## Still open
 

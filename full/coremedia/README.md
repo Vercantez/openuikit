@@ -811,3 +811,54 @@ CoreAudioTypes/CoreVideo (audio/image sample paths, tagged-dynamic pixel
 content, parameter-set and single-sample collections), `simd`, DispatchSource
 timers, hardware/daemons, or unobserved family-overlay shapes. No Apple
 service or hardware success was invented.
+
+## Wave 10 pass 2026-09-15 (leftover audit: ceiling reached)
+
+No SwiftUI/View overlay rows exist in this module's public surface (zero
+`coverage.tsv` IDs mention SwiftUI; the `view` matches are the already
+implemented `CMStereoView` media constants), so the overlay-override clause
+has nothing to convert here. This pass audits every one of the 29 declared
+and 220 deferred rows against the convertibility rules and finds the module
+at its honest ceiling:
+
+- The 20 `sorted(using:)` / `compare` / `formatted` / `publisher` witnesses
+  need a concrete `SortComparator` / `FormatStyle` / Combine, none of which
+exists for these byte hosts on Linux; a throwaway test-only comparator
+would exercise nothing Apple-meaningful.
+- The deprecated optional-`flatMap` on `Buffers` warns under
+  `-warnings-as-errors`, so no cited test may call it.
+- `indices(where:)` / `indices(of:)` on `CMReadOnlyDataBlockBuffer` trap
+  (slicing rebases indices; verified 2026-09-15).
+- `CVBufferRef` attachment members have no host on Linux.
+- The 4 DispatchSource timer overloads abort libdispatch when a live
+  `DispatchSource` is constructed in the sealed gate.
+- All 220 deferred rows need CoreAudioTypes/CoreVideo (audio/image sample
+  paths, tagged-dynamic pixel content, parameter-set and single-sample
+  collections), `simd`, DispatchSource timers, hardware/daemons, or
+  unobserved family-overlay shapes.
+
+No product Swift or test files changed; the guest sources manifest is
+unchanged. Structural audit of `coverage.tsv` (3504 rows): every
+implemented row cites a well-formed
+`test:full/coremedia/tests/agent/*Tests.swift#test*` target that exists as
+a top-level synchronous no-argument function, and every declared row cites
+an existing `source:` anchor. The sealed gate's deliverable phase cannot
+complete in this isolated worktree for reasons outside `full/coremedia/`:
+the shared validator resolves `reference/corpus-summary.json`'s source path
+to `full/framework-roadmap/framework-roadmap.json`, which is absent from
+this worktree (only `coremedia`, `familycontrols`, and `framework-fanout`
+ship here); `reference/` is immutable to this lane so the gap cannot be
+repaired from inside the framework directory.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3255 | 3255 |
+| declared | 29 | 29 |
+| deferred | 220 | 220 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +0 (ceiling; 3255/3504 = 92.9% implemented). Top test
+still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (5.5%). No test owns more than 40% of implemented rows. No Apple
+service or hardware success was invented.

@@ -18,3 +18,4 @@ full/appintents/AppIntentsViewStubs.swift
 full/appintents/AppIntentsWave15.swift
 full/appintents/AppIntentsWave16.swift
 full/appintents/AppIntentsWave18.swift
+full/appintents/AppIntentsWave19.swift

@@ -163,10 +163,10 @@ c:objc(pl)CHHapticDeviceCapability(im)attributesForDynamicParameter:error:	imple
 c:objc(pl)CHHapticDeviceCapability(im)attributesForEventParameter:eventType:error:	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testCapabilities	
 c:objc(pl)CHHapticDeviceCapability(py)supportsAudio	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testCapabilities	
 c:objc(pl)CHHapticDeviceCapability(py)supportsHaptics	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testCapabilities	
-c:objc(pl)CHHapticParameterAttributes	declared	source:full/corehaptics/CoreHaptics.swift#CHHapticParameterAttributes	
-c:objc(pl)CHHapticParameterAttributes(py)defaultValue	declared	source:full/corehaptics/CoreHaptics.swift#defaultValue	
-c:objc(pl)CHHapticParameterAttributes(py)maxValue	declared	source:full/corehaptics/CoreHaptics.swift#maxValue	
-c:objc(pl)CHHapticParameterAttributes(py)minValue	declared	source:full/corehaptics/CoreHaptics.swift#minValue	
+c:objc(pl)CHHapticParameterAttributes	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testParameterAttributesProtocol	
+c:objc(pl)CHHapticParameterAttributes(py)defaultValue	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testParameterAttributesDefaultValue	
+c:objc(pl)CHHapticParameterAttributes(py)maxValue	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testParameterAttributesMaxValue	
+c:objc(pl)CHHapticParameterAttributes(py)minValue	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testParameterAttributesMinValue	
 c:objc(pl)CHHapticPatternPlayer	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testPlayersFailClosed	
 c:objc(pl)CHHapticPatternPlayer(im)cancelAndReturnError:	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testPlayersFailClosed	
 c:objc(pl)CHHapticPatternPlayer(im)scheduleParameterCurve:atTime:error:	implemented	test:full/corehaptics/tests/agent/CoreHapticsTests.swift#testPlayersFailClosed	

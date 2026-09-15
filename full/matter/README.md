@@ -538,3 +538,64 @@ Environment: local `swiftc` is Apple Swift 6.2.1 targeting
 the 6 new `MatterWave9PairingTests` functions pass in-process on this Mac.
 The sealed gate runs in the `uikit-linux` container (Swift 6.2.4,
 `aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).
+
+## Depth pass 2026-09 (wave 10, isolated worktree)
+
+Converts the 53 delegate/storage/keypair/XPC protocol-requirement rows from
+declared to implemented with per-requirement dispatch evidence. No fabric,
+daemon, radio, `await`, or success invention: every requirement is invoked
+on a host recording stub through an `any` existential on the calling thread,
+and assertions check the recorded arguments. Daemon queue choice, delivery
+count, and retention remain an oracle question.
+
+**Coverage before:** 28353 implemented / 57 declared / 12 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28406 implemented / 4 declared / 12 deferred / 40 unavailable / 0 not-applicable
+(+53 implemented; 28410 nondeferred; floor 150).
+
+New product file (in `matter_guest_sources.txt`):
+`MTRProtocolRequirementsWave10.swift`. New tests:
+`tests/agent/MatterProtocolDelegatesWave10Tests.swift` (7 functions, 27 rows)
+and `tests/agent/MatterProtocolFabricWave10Tests.swift` (6 functions,
+26 rows); no new test is cited by more than 6 rows, far below the 40% cap.
+
+### Added this pass
+
+- **Protocol requirements with exact graph spellings.** The 12 protocols in
+  `MTRProtocols.swift` now declare the 53 Apple `@objc optional`
+  requirements using the Xcode 26.1 symbol-graph Swift signatures verbatim
+  (path components, labels, optionality, `@escaping` closures, and the
+  `MTROta*` legacy overload twins). Portable Swift has no `@objc optional`,
+  so `MTRProtocolRequirementsWave10.swift` provides host-inert defaults
+  (accept-and-ignore; `false`/`nil` for value returns) mirroring Apple's
+  optional semantics; existing empty stubs keep compiling unchanged.
+- **Per-requirement dispatch tests.** Pairing (4), controller commissioning
+  (6) and info (4) callbacks, browser + attestation completion (4) and
+  attestation failure (2), storage delegate round-trip (5), keypair RAW/DER
+  echo (2), XPC client report (1), XPC server reads (5) and writes (5), NOC
+  + operational issuers with the validation flag (3), OTA query/notify (6)
+  and BDX (6). The storage stub is a functional in-memory box; all other
+  stubs record invocations without invoking completions (no daemon exists).
+
+### Leftover deferred (12) and declared (4)
+
+- Deferred is unchanged: `MTRSetMessageReliabilityParameters` (would invent
+  radio timing), `MTRAttributeCacheContainer.readAttributeWithEndpointId:...`
+  (generic cache read needs a cache-store design), and 10
+  `NSCoding.initWithCoder` rows (NSCoder round-trips stay deferred by design).
+- Declared rows are XPC surface that cannot compile without
+  NSXPCConnection: `MTRDeviceController.sharedController` x2 (needs
+  `MTRXPCConnectBlock`) and `xpcInterfaceForServerProtocol` /
+  `xpcInterfaceForClientProtocol` (return NSXPCInterface).
+- The guest-source manifest was re-sorted to byte order (the gate requires
+  a path-sorted manifest; `MTRControllerPairingWave9.swift` now precedes
+  `MTRControllers.swift`).
+- New oracle question on `controller:commissioningComplete:` covering daemon
+  queue choice, exactly-once delivery, and controller retention.
+
+Environment: local `swiftc` is Apple Swift 6.2.1 targeting
+`arm64-apple-macosx26.0` (this Mac). Product `libMatter.dylib` and the full
+`tests/agent/*Tests.swift` set compile clean under `-warnings-as-errors`;
+the 13 new protocol tests pass in-process on this Mac. The sealed gate runs
+in the `uikit-linux` container (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).

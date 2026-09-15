@@ -59,7 +59,8 @@ unchanged (183/28/6/2 of 219). pi-wave6 2026-09-15 recount: before 183/28/6/2,
 after 183/28/6/2 (gain 0). pi-wave8 2026-09-15 recount: before 183/28/6/2,
 after 183/28/6/2 (gain 0). pi-wave9 2026-09-15 recount: before 183/28/6/2,
 after 183/28/6/2 (gain 0; compiler probe confirms sync tests cannot call the
-async APIs: `'async' call in a function that does not support concurrency`). All 28 declared rows are `async` product APIs
+async APIs: `'async' call in a function that does not support concurrency`). pi-wave10 2026-09-15 recount: before 183/28/6/2,
+after 183/28/6/2 (gain 0; fresh swiftc probes re-confirm: sync callers of `result(from:)`, `addItems`, `Iterator.next`, and `contains(where:)` fail with `'async' call in a function that does not support concurrency`, and the ObjC completion-handler spellings `fetchMediaItem`/`addMediaItems` have no Swift member since Apple surfaces those IDs async-only, so no sync `test*` can cite them). All 28 declared rows are `async` product APIs
 (`fetch`, library `add`/`addItems`/`removeItems`, `prepare`/`result`,
 `SHSession.result(from:)`, both `Iterator.next` variants) or `async`
 `AsyncSequence` consumers, so none converts to implemented under the

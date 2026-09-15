@@ -619,6 +619,23 @@ public protocol CHHapticParameterAttributes: NSObjectProtocol {
     var defaultValue: Float { get }
 }
 
+/// Process-local parameter-attribute value. Linux has no haptic renderer, so
+/// capability queries stay fail-closed and never vend this type; it exists so
+/// the `CHHapticParameterAttributes` witnesses are exercisable in-process
+/// without inventing hardware min/max/default values.
+public final class CHHapticPortableParameterAttributes: NSObject, CHHapticParameterAttributes {
+    public let minValue: Float
+    public let maxValue: Float
+    public let defaultValue: Float
+
+    public init(minValue: Float, maxValue: Float, defaultValue: Float) {
+        self.minValue = minValue
+        self.maxValue = maxValue
+        self.defaultValue = defaultValue
+        super.init()
+    }
+}
+
 public protocol CHHapticDeviceCapability {
     var supportsHaptics: Bool { get }
     var supportsAudio: Bool { get }

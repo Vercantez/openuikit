@@ -34,6 +34,13 @@ central-review step.
   through `NSSecureCoding`.
 - `CLSDataStore.shared` owns a main app context. `portableContexts(matchingIdentifierPath:)`
   walks or asks `CLSDataStoreDelegate` to create missing nodes.
+- The five ObjC `...:completion:` query methods
+  (`descendantMatchingIdentifierPath:`, `contextsMatchingIdentifierPath:`,
+  `contextsMatchingPredicate:`, `fetchActivityForURL:`,
+  `updateDescendantsOfContext:`) have synchronous overlays whose completion
+  runs before the method returns. Query overlays walk the process-local
+  tree; `fetchActivity` fail-closes; `updateDescendants` has a fail-closed
+  protocol-extension default that conforming providers may override.
 
 Host-compiled sources import Foundation only. The identity probe
 `tests/agent/ClassKitDependencyIdentity.swift` imports `ClassKit` and
@@ -50,8 +57,8 @@ entitlement.
 - `fetchActivity(for:)` throws `classKitUnavailable`.
 - `completeAllAssignedActivities(matching:)` is a no-op (there are no
   assignments).
-- `CLSContextProvider.updateDescendants(of:)` is declared; a conforming
-  type may throw `classKitUnavailable`. Nothing invents a catalog.
+- `CLSContextProvider.updateDescendants(of:completion:)` fail-closes with
+  `classKitUnavailable` by default. Nothing invents a catalog.
 - `CLSContext.thumbnail` (`CGImage`) is deferred: CoreGraphics is not a
   seeded dependency.
 - `NSUserActivity.contextIdentifierPath` / `isClassKitDeepLink` are
@@ -75,9 +82,8 @@ bash full/classkit/tests/acceptance/test_host.sh
 
 ## Depth pass 2026-09
 
-Implemented **193** identifiers, declared **5** (async overlays that the
-host runner cannot await), deferred **3**. Nondeferred total **198** of
-201 (lane floor 101).
+Implemented **198** identifiers, declared **0**, deferred **3**. Nondeferred total
+**198** of 201 (lane floor 101).
 
 Top-5 implemented evidence distribution:
 
@@ -87,6 +93,7 @@ Top-5 implemented evidence distribution:
 4. `testBinaryItem` / `testContextInit` / `testContextProperties` — 7 each
 5. `testActivityLifecycle` / `testDataStoreShared` — 5 each
 
-Enum/option-set members and C constants share table-driven value tests.
-No other single test is cited by more than 40% of the remaining
-implemented rows (`testCLSErrorBridging` is 26/101 ≈ 26%).
+The five `ClassKitCompletionTests` completion-overlay tests are cited once
+each. Enum/option-set members and C constants share table-driven value tests.
+No single test is cited by more than 40% of the implemented rows
+(`testEnumRawValues` is 57/198 ≈ 29%).

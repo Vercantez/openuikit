@@ -182,6 +182,19 @@ open class CLSContext: CLSObject {
         try descendantMatchingIdentifierPathSync(identifierPath)
     }
 
+    /// Synchronous overlay for `descendantMatchingIdentifierPath:completion:`.
+    /// The completion runs before this method returns.
+    public func descendant(
+        matchingIdentifierPath identifierPath: [String],
+        completion: (CLSContext?, (any Error)?) -> Void
+    ) {
+        do {
+            completion(try descendantMatchingIdentifierPathSync(identifierPath), nil)
+        } catch {
+            completion(nil, error)
+        }
+    }
+
     func descendantMatchingIdentifierPathSync(_ identifierPath: [String]) throws -> CLSContext {
         if identifierPath.isEmpty {
             throw CLSMakeError(.invalidArgument)

@@ -14,6 +14,21 @@ This is a fresh seed: 511 exact public identifiers, floor 256 nondeferred.
 Coverage after this pass: **506 implemented / 5 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+## Wave 10 re-examination 2026-09-15
+
+Before: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511.
+After: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511
+(implemented gain 0). The 5 declared rows were rechecked against
+`reference/public-surface.tsv` and `reference/api-digester.json`: all five
+are genuinely `async throws` on Apple (`BEDownloadMonitor.beginMonitoring()`,
+`resumeMonitoring(placeholderURL:)`, and the three process
+`init(bundleIdentifier:onInterruption:)`), so the sealed synchronous runner
+cannot cite them as implemented without `await`, and restating them with
+sync/completion-handler shapes would falsify the Apple signatures. Success
+paths also need a Live Activity daemon / helper appex + libxpc, so they stay
+fail-closed `declared`. Zero deferred and zero not-applicable rows, so there
+is nothing else to convert.
+
 The 14 completion-handler rows (`BETextInput` selection/editing methods and
 `BEScrollViewDelegate.scrollView(_:handle:completion:)`) moved from declared
 to implemented: the Apple symbol graph declares them with completion

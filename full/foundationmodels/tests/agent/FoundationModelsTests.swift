@@ -116,6 +116,19 @@ func testDecimalGenerable() {
     _ = guide
 }
 
+func testNeverInitAlwaysThrows() {
+    let content = GeneratedContent(kind: .null)
+    var sawMismatch = false
+    do {
+        let _: Never = try Never(content)
+    } catch let error as GeneratedContentError {
+        sawMismatch = error.description.contains("never")
+    } catch {
+        preconditionFailure("Never init threw an unexpected error: \(error)")
+    }
+    precondition(sawMismatch, "Never init must throw typeMismatch")
+}
+
 func testArrayAndOptionalGenerable() {
     let values = ["a", "b"]
     let content = values.generatedContent

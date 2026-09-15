@@ -390,3 +390,23 @@ func testMapItemAndPlacemark() {
     _ = spanValue.mkCoordinateSpanValue
     _ = MKIconStyle()
 }
+
+func testMapItemOpenInMapsSceneHandler() {
+    let item = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 1, longitude: 2)))
+    item.openInMaps(launchOptions: nil, from: nil) { success in
+        precondition(success == false)
+    }
+    item.openInMaps(launchOptions: ["x": 1], from: UIScene()) { success in
+        precondition(success == false)
+    }
+}
+
+func testMapItemOpenMapsSceneHandler() {
+    let item = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 1, longitude: 2)))
+    MKMapItem.openMaps(with: [item], launchOptions: nil, from: nil) { success in
+        precondition(success == false)
+    }
+    MKMapItem.openMaps(with: [], launchOptions: ["x": 1], from: UIScene()) { success in
+        precondition(success == false)
+    }
+}

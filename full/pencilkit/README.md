@@ -46,7 +46,7 @@ Apple drawing bytes stay fail-closed.
 
 ## Coverage
 
-443 public precise identifiers: 432 `implemented`, 9 `declared`, 2
+443 public precise identifiers: 438 `implemented`, 3 `declared`, 2
 `unavailable`. The leaf-full floor is 355 nondeferred.
 
 A future EC2 run must build guest Foundation and UIKit first and run
@@ -57,17 +57,28 @@ run.
 ## Depth pass 2026-09
 
 Fresh seed: sources, `coverage.tsv`, and `tests/agent` were created in this
-run. Implemented count: **432**.
+run. Implemented count: **432** (438 after the wave-10 pass below).
 
-Top-5 evidence distribution (424 implemented rows):
+Top-5 evidence distribution (438 implemented rows):
 
 | Citations | Share | Test |
 | --- | --- | --- |
-| 29 | 6.8% | `testPKStrokePathSliceMapFilter` |
-| 26 | 6.1% | `testControlOptionsOptionSet` (option-set family; sharing allowed) |
-| 26 | 6.1% | `testPKStrokePointDefaultsAndLerp` |
-| 21 | 5.0% | `testPKToolPickerCustomItem` |
-| 21 | 5.0% | `testInkTypeRawValuesAndWidths` (enum family; sharing allowed) |
+| 29 | 6.6% | `testPKStrokePathSliceMapFilter` |
+| 26 | 5.9% | `testControlOptionsOptionSet` (option-set family; sharing allowed) |
+| 26 | 5.9% | `testPKStrokePointDefaultsAndLerp` |
+| 21 | 4.8% | `testPKToolPickerCustomItem` |
+| 21 | 4.8% | `testInkTypeRawValuesAndWidths` (enum family; sharing allowed) |
 
 No non-enum/option-set test is cited by more than 40% of the remaining
-implemented rows (max 8.5% after excluding shareable enum/option-set rows).
+implemented rows (max 6.6% after excluding shareable enum/option-set rows).
+
+## Depth pass 2026-09 (wave 10)
+
+Six inherited Foundation `Sequence` witnesses became `implemented` with
+test-local adapters: both `sorted(using:)` overloads (single `SortComparator`
+and comparator-sequence) and `formatted(_:)` (whole-sequence `FormatStyle`),
+each exercised on `PKStrokePath` and `InterpolatedSlice` in
+`tests/agent/PKStrokePathSortFormatTests.swift`. Three rows stay `declared`:
+`PKDrawing.draw` is `async` (isolated tests cannot `await`) and the two
+`compare(_:_:)` witnesses require `PKStrokePoint` itself to conform to
+`SortComparator`, which would invent non-Apple API.

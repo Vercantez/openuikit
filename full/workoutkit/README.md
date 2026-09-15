@@ -27,9 +27,12 @@ It is not a claim of Apple Watch, Workout app, or HealthKit store parity.
   `dataRepresentation` / `init(from:)` round-trip a Linux JSON codec
   (`OpenUIKit.WorkoutKit.WorkoutPlan.v1`) and reject unknown formats.
   `ScheduledWorkoutPlan.complete` starts `false`.
+- **View overlay.** `View.workoutPreview(_:isPresented:)` is an identity
+  no-op returning `Self` (renders `EmptyView` on Linux; no modal sheet).
 - **Scheduler constants.** `WorkoutScheduler.shared` is a singleton.
   `isSupported` is `false`. `maxAllowedScheduledWorkoutCount` is `50`.
   `AuthorizationState` raw values are 0...3 in digester case order.
+  `View.workoutPreview` is an identity overlay (see above).
 
 ## Fail-closed boundaries
 
@@ -40,7 +43,7 @@ It is not a claim of Apple Watch, Workout app, or HealthKit store parity.
 | `schedule` / `remove` / `markComplete` | async no-ops; `scheduledWorkouts` is `[]` |
 | `HKWorkout.workoutPlan` | throws `StateError.watchNotPaired` |
 | Apple `WorkoutPlan` binary | `init(from:)` throws; Linux codec only |
-| `View.workoutPreview` | not compiled (no SwiftUI) |
+| `View.workoutPreview` | identity no-op returning `Self` (no SwiftUI sheet) |
 
 `HealthKit` types (`HKWorkoutActivityType`, session/swim location,
 `HKQuantity`, `HKWorkout`) are imported when the real module is on the
@@ -68,16 +71,17 @@ compiled `libWorkoutKit.dylib`. The sealed gate was not weakened.
 
 ## Depth pass 2026-09
 
-Implemented **270** / declared **8** / deferred **0** / unavailable **0** /
-not-applicable **1** (279 exact IDs).
+Implemented **271** / declared **8** / deferred **0** / unavailable **0** /
+not-applicable **0** (279 exact IDs).
 
 The eight `declared` rows are async Watch / HealthKit APIs that cannot be
 awaited in the host runner (no run loop): scheduler
 `schedule` / `remove` / `markComplete` / `removeAllWorkouts` /
 `scheduledWorkouts` / `authorizationState` / `requestAuthorization`, and
-`HKWorkout.workoutPlan`. `View.workoutPreview` is `not-applicable`.
+`HKWorkout.workoutPlan`. `View.workoutPreview` is `implemented` as an
+identity overlay (`testViewOverlayBatch01` renders `EmptyView`).
 
-**Top-5 implemented evidence distribution** (270 implemented rows;
+**Top-5 implemented evidence distribution** (271 implemented rows;
 40% cap of remaining after enum-member table tests ≈ 87):
 
 | rows | evidence |

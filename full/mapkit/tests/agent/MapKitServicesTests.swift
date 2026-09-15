@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 import MapKit
 
@@ -202,6 +203,16 @@ func testGeocodingRequestsFailClosed() {
     reverse?.cancel()
     _ = reverse?.isCancelled
     _ = reverse?.isLoading
+}
+
+func testSnapshotterQueueCompletionHandler() {
+    let snap = MKMapSnapshotter(options: MKMapSnapshotter.Options())
+    precondition(!snap.isLoading)
+    snap.start(with: DispatchQueue(label: "mapkit-test-snapshotter")) { snapshot, error in
+        precondition(snapshot == nil)
+        precondition((error as? MKError)?.code == .serverFailure)
+    }
+    precondition(!snap.isLoading)
 }
 
 final class MapDelegateProbe: NSObject, MKMapViewDelegate {

@@ -8,3 +8,4 @@ full/workoutkit/WorkoutPlan.swift
 full/workoutkit/WorkoutScheduler.swift
 full/workoutkit/WorkoutSupport.swift
 full/workoutkit/WorkoutTypes.swift
+full/workoutkit/WorkoutViewOverlay.swift

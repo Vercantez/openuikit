@@ -125,6 +125,19 @@ Linux Foundation overlay), and 2 violate Swift return-type overloading rules.
 No SwiftUI `View` overlay rows exist in this surface, so the FamilyControls
 identity-overlay playbook does not apply. Implemented gain this wave: 0.
 
+Wave-10 recount (2026-09-15): **554 implemented / 9 declared / 24 deferred**
+(unchanged, gate re-verified `FRAMEWORK_FANOUT_HOST_OK`). Re-examined all 9
+`declared` rows: all are stdlib `AsyncSequence` synthesized members on
+`CardSession.EventStream` — stdlib/Foundation protocol witnesses, which the
+coverage contract explicitly excludes from promotion (every resolvable one
+requires `await`, forbidden in cited tests; the remaining `Failure == Never`
+`flatMap` overload is uncallable since `EventStream.Failure` is `any Error`).
+Re-examined all 24 `deferred` rows: 13 need UIKit (not a declared
+dependency), 8 need Darwin `_BridgedStoredNSError` bridging, 1 needs
+`NSUserActivity` (absent from this Linux Foundation overlay), and 2 violate
+Swift return-type overloading rules. No SwiftUI `View` overlay rows exist, so
+the identity-overlay override does not apply. Implemented gain this wave: 0.
+
 Top-5 implemented evidence distribution:
 
 | rows | evidence |

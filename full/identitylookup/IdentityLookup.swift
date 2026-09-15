@@ -15,10 +15,13 @@ import FoundationNetworking
 /// annotation and the TBD export `_ILMessageFilterErrorDomain`.
 public let ILMessageFilterErrorDomain = "ILMessageFilterErrorDomain"
 
-/// Unobserved Darwin Live Caller ID / classification extension-point
-/// identifier. Linux keeps the empty string until an Apple-oracle probe
-/// records the exact value; see `oracle-questions.tsv`.
-public let extensionPointName: String = ""
+/// Darwin Live Caller ID extension-point identifier, pinned by Apple-oracle
+/// probe (`import IdentityLookup; print(extensionPointName)` via
+/// `xcrun swiftc`, Xcode 26.1, Apple Swift 6.2.1, arm64-apple-macosx26.0):
+/// `"com.apple.live-lookup"`. Linux has no extension host; the constant is
+/// the verbatim Darwin literal for identifier comparison only and never
+/// installs or enables an extension.
+public let extensionPointName: String = "com.apple.live-lookup"
 
 enum IdentityLookupLinux {
     static func filterError(

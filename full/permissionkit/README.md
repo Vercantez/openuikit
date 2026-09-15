@@ -6,7 +6,7 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **877 implemented / 4 declared / 881 total**
+Coverage: **878 implemented / 3 declared / 881 total**
 (above the leaf-full floor of 705 nondeferred identifiers).
 
 ## What is real
@@ -43,7 +43,9 @@ sync, or system permission UI.
 - `CommunicationLimits.ask` (UIKit overlay and the TBD question-only overload)
   throws `AskError.communicationLimitsNotEnabled`.
 - `isKnownHandle` returns `false`; `knownHandles(in:)` returns `[]`.
-- `updates` is an empty finished `AsyncStream`.
+- `updates` is an empty finished `AsyncStream`, covered synchronously by
+  `CommunicationLimitsTests.swift#testCommunicationLimitsUpdatesStreamType`
+  (getter access plus stream-type check; iterating would need `await`).
 - SwiftUI `View` modifiers on `CommunicationLimitsButton` are identity
   no-ops covered by `tests/agent/ViewModifierIdentityTests.swift`
   (`testViewModifierIdentity01`…`testViewModifierIdentity20`, each modifier
@@ -59,13 +61,27 @@ to `implemented` per the overlay override: the identity no-op modifiers
 in `PermissionKitViewSurface.swift` are exercised by the 20
 `testViewModifierIdentityNN` batches, each calling every assigned modifier
 on both `CommunicationLimitsButton` and `EmptyView` (notes: `identity View
-overlay; renders EmptyView`). No batch is cited by more than 40 of the 877
-implemented rows. The 4 remaining `declared` rows (`ask`, `knownHandles`,
-`isKnownHandle`, `updates`) stay fail-closed: they are async Screen Time /
+overlay; renders EmptyView`). No batch is cited by more than 40 of the 878
+implemented rows. The 3 remaining `declared` rows (`ask`, `knownHandles`,
+`isKnownHandle`) stay fail-closed: they are async Screen Time /
 contact-sync queries the sealed runner cannot await.
 
 Before: **109 implemented / 772 declared**. After:
 **877 implemented / 4 declared**.
+
+## Depth pass 2026-09 (pi-wave10 leftover sweep)
+
+Before: **877 implemented / 4 declared**. After:
+**878 implemented / 3 declared**.
+
+`CommunicationLimits.updates` was converted from `declared` to `implemented`:
+the getter itself is synchronous (it returns an empty finished `AsyncStream`),
+so `testCommunicationLimitsUpdatesStreamType` exercises it with a getter
+access plus a stream-type check and no `await`. The 3 remaining `declared`
+rows (`ask(_:in:)`, `knownHandles(in:)`, `isKnownHandle(_:)`) are `async`
+Screen Time / contact-sync queries: calling them requires `await`, which the
+sealed runner forbids in cited tests, and their success paths need the Apple
+daemon, so they stay fail-closed `declared`.
 
 ## Depth pass 2026-09 (seed)
 

@@ -7,7 +7,7 @@ tiles, directions, local search, Look Around, and snapshotter **success**
 fail closed with `MKError`.
 
 Before: **411 implemented / 73 declared / 669 deferred**.
-After: **1145 implemented / 4 declared / 4 deferred**.
+After: **1149 implemented / 0 declared / 4 deferred**.
 
 ## What is real on the isolated Linux host
 
@@ -35,19 +35,27 @@ After: **1145 implemented / 4 declared / 4 deferred**.
 - `MKMapCameraZoomDefault = -1`; `MKLocalPointsOfInterestRequest.maxRadius = 2000`.
 - `MKError` codes 1…6, domain `MKErrorDomain`.
 
-## Fail-closed / declared
+## Fail-closed (all implemented, synchronous inline handlers)
 
 - `MKMapSnapshotter.start`, `MKDirections.calculate`, `MKLocalSearch.start`,
   `MKLookAroundSceneRequest`, `MKGeocodingRequest` complete with `MKError`
   (`.serverFailure` / `.directionsNotFound` / `.placemarkNotFound`).
 - Completer: nonempty `queryFragment` → `completer(_:didFailWithError:)`.
-- Map tiles: blank `MKMapView` background; `MKTileOverlay.loadTile(at:)`
-  is **declared** (async, no tile bytes).
+- Map tiles: blank `MKMapView` background; `MKTileOverlay.loadTile(at:result:)`
+  is **implemented** as a synchronous fail-closed overload invoking `result`
+  inline with `MKError.serverFailure` (the `async throws` spelling shares the
+  same fail-closed entry point).
 - `MKMapViewDelegate` / Look Around / completer / map-item-detail delegate
   defaults are **implemented** (synchronous default no-op/spy tests in
   `tests/agent/MapKitDelegateTests.swift`).
-- Async `openInMaps(from:)` / snapshot `start(with:)` / tile `loadTile(at:)`
-  are **declared** (async; isolated host tests are synchronous).
+- Scene completion handlers `MKMapItem.openInMaps(launchOptions:from:completionHandler:)`
+  and `MKMapItem.openMaps(with:launchOptions:from:completionHandler:)` are
+  **implemented** as synchronous overloads reporting `false` inline (no Maps
+  app on Linux); the `async` spellings share the same fail-closed entry point.
+- Queue-based `MKMapSnapshotter.start(with:completionHandler:)` is
+  **implemented** as a synchronous overload completing inline with
+  `MKError.serverFailure` (the `async throws` spelling shares the same
+  fail-closed entry point).
 
 ## Deferred (4)
 

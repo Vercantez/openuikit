@@ -89,6 +89,6 @@ func testLiveLookupNSSetTypealiases() {
     precondition(blockingSet.count == 0)
 }
 
-func testExtensionPointNameIsEmptyUntilOracle() {
-    precondition(extensionPointName == "")
+func testExtensionPointNameMatchesDarwinOracle() {
+    precondition(extensionPointName == "com.apple.live-lookup")
 }

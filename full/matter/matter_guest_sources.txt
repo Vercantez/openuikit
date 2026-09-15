@@ -6,8 +6,8 @@ full/matter/MTRClustersWave10.swift
 full/matter/MTRClustersWave11.swift
 full/matter/MTRClustersWave9.swift
 full/matter/MTRConstants.swift
-full/matter/MTRControllers.swift
 full/matter/MTRControllerPairingWave9.swift
+full/matter/MTRControllers.swift
 full/matter/MTRCoreTypes.swift
 full/matter/MTREnumAliasesWave11.swift
 full/matter/MTREnums.swift
@@ -15,6 +15,7 @@ full/matter/MTRError.swift
 full/matter/MTRIDs.swift
 full/matter/MTRNames.swift
 full/matter/MTROptionSets.swift
+full/matter/MTRProtocolRequirementsWave10.swift
 full/matter/MTRProtocols.swift
 full/matter/MTRSetupPayload.swift
 full/matter/Matter.swift

@@ -58,13 +58,13 @@ See `oracle-questions.tsv` for questions that need a central Apple-oracle probe.
 
 Coverage of the 347 exact overlay IDs:
 
-| status | depth start | depth pass | wave-4 | wave-6 |
-| --- | --- | --- | --- | --- |
-| implemented | 102 | 317 | 335 | 335 |
-| declared | 241 | 26 | 8 | 8 |
-| unavailable | 4 | 4 | 4 | 4 |
-| deferred | 0 | 0 | 0 | 0 |
-| not-applicable | 0 | 0 | 0 | 0 |
+| status | depth start | depth pass | wave-4 | wave-6 | wave-10 |
+| --- | --- | --- | --- | --- | --- |
+| implemented | 102 | 317 | 335 | 335 | 335 |
+| declared | 241 | 26 | 8 | 8 | 8 |
+| unavailable | 4 | 4 | 4 | 4 | 4 |
+| deferred | 0 | 0 | 0 | 0 | 0 |
+| not-applicable | 0 | 0 | 0 | 0 | 0 |
 
 Raised `implemented` first for the overlay types the Home Assistant corpus
 reaches through `AudioBuffer` / channel-layout helpers, then for documented
@@ -109,6 +109,19 @@ bare `DarwinBoolean(true)` ambiguous in `tests/agent/CoreAudioRuntime.swift`
 and `tests/agent/HardwareFailClosedTests.swift`; both call sites now
 use `CoreAudio.DarwinBoolean`. `bash tests/acceptance/test_host.sh`
 is green (`FRAMEWORK_FANOUT_HOST_OK`).
+
+Wave-10 (2026-09-15): recounted 335 implemented / 8 declared /
+4 unavailable / 0 deferred / 0 not-applicable of 347 — no change.
+Re-verified both leftover groups against Apple Swift 6.2.1 (Xcode 26.1
+toolchain): `Sequence.compare(_:_:)` requires `Comparator == Element`,
+so calling it on the four overlay collections would need an invented
+`SortComparator` conformance on the `AudioBuffer` / `AudioChannelDescription`
+C-struct stand-ins, and the optional-returning `flatMap` closure is a hard
+`#DeprecatedDeclaration` error under warnings-as-errors (verified with a
+minimal `swiftc -typecheck` probe). Both groups stay honestly `declared`.
+This slug has no SwiftUI View types, so the overlay-override playbook does
+not apply. `bash tests/acceptance/test_host.sh` is green
+(`FRAMEWORK_FANOUT_HOST_OK`).
 
 Top-5 implemented evidence distribution (of 335 implemented rows; no test
 exceeds 4%):

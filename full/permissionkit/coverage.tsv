@@ -93,7 +93,7 @@ s:13PermissionKit19CommunicationLimitsC01_aB6_UIKitE3ask_2inyAA0A8QuestionCyAA0C
 s:13PermissionKit19CommunicationLimitsC12knownHandles2inShyAA0C6HandleVGAH_tYaF	declared	source:full/permissionkit/CommunicationLimits.swift#knownHandles	async known-contact query; Linux returns [] and the sealed runner cannot await
 s:13PermissionKit19CommunicationLimitsC13isKnownHandleySbAA0cG0VYaF	declared	source:full/permissionkit/CommunicationLimits.swift#isKnownHandle	async known-contact query; Linux returns false and the sealed runner cannot await
 s:13PermissionKit19CommunicationLimitsC7currentACvpZ	implemented	test:full/permissionkit/tests/agent/CommunicationLimitsTests.swift#testCommunicationLimitsCurrentSingleton	-
-s:13PermissionKit19CommunicationLimitsC7updatesQrvp	declared	source:full/permissionkit/CommunicationLimits.swift#updates	AsyncSequence of permission responses; Linux stream finishes empty; sealed runner has no run loop
+s:13PermissionKit19CommunicationLimitsC7updatesQrvp	implemented	test:full/permissionkit/tests/agent/CommunicationLimitsTests.swift#testCommunicationLimitsUpdatesStreamType	-
 s:13PermissionKit8AskErrorO	implemented	test:full/permissionkit/tests/agent/AskErrorTests.swift#testAskErrorCases	-
 s:13PermissionKit8AskErrorO06systemD0yACs0D0_p_tcACmF	implemented	test:full/permissionkit/tests/agent/AskErrorTests.swift#testAskErrorSystemErrorUnderlying	-
 s:13PermissionKit8AskErrorO15invalidQuestionyA2CmF	implemented	test:full/permissionkit/tests/agent/AskErrorTests.swift#testAskErrorCases	-

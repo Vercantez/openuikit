@@ -914,3 +914,75 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
+
+### Depth pass 2026-09-15 (wave 10 leftover sweep)
+
+Wave 10 sweep converts 56 synchronous `declared` rows into focused tests
+in `tests/agent/AVDepthPass19Tests.swift` (largest citation group 12).
+`AVAsyncSequenceConformances.swift` (listed in
+`avfoundation_guest_sources.txt`) publishes the formal `AsyncSequence` /
+`AsyncIteratorProtocol` conformances the iPhoneOS 26.1 graph records
+through its SYNTHESIZED witness rows for the five metric/image/timeline
+sequence families (`AVMetrics`, `AVMergedMetrics`,
+`AVAssetImageGenerator.Images`,
+`AVPlayerItemIntegratedTimeline.BoundaryTimes/.PeriodicTimes`); every
+requirement already existed as an Apple-mirroring member (`Element`,
+`AsyncIterator`, `makeAsyncIterator()`, fail-closed `async next()`), so no
+daemon, hardware, codec, or service behavior is added. The 54 converted
+combinator rows are the synchronous lazy constructors (`map` x2,
+`compactMap` x2, `filter`, `drop(while:)`, `prefix(while:)`, `prefix(_:)`,
+`dropFirst`, plus `flatMap` overloads pinned by result-type annotation:
+throwing transforms select `AsyncThrowingFlatMapSequence`, and over a
+throwing base a non-throwing transform selects `Self.Failure ==
+Segment.Failure` for an `AsyncThrowingStream` segment versus
+`Segment.Failure == Never` for an `AsyncStream` segment). `prefix(while:)`
+is rethrows, so over a throwing base it is spelled `try?` (still
+synchronous, no `await`). The two `AsyncIterator.Element` associated-type
+rows are exercised as synchronous typealias identities. Each converted
+test only constructs lazy sequence values; nothing is iterated and no
+Apple service success is claimed. No SwiftUI cross-import overlay rows
+exist in this seed, so the overlay playbook does not apply.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5235 | 5291 |
+| `declared` | 152 | 96 |
+| `deferred` | 245 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest new citation group is 12 rows, well under 40% of the 5,291
+implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The remaining 96 `declared` rows are async witnesses (calling them needs
+`await`, which the sealed gate forbids: async `next()`, async terminal
+`AsyncSequence` consumers like `first`/`contains`/`allSatisfy`/`reduce`/
+`max`/`min`, async `load` / `seek` / `image` / receiver `append` methods),
+the three non-throwing `flatMap` overloads on Never-failure bases (all
+three where-clauses hold there, so no call shape can pin exactly one),
+`Combine` publishers, `FormatStyle` / `compare` /
+`SortComparator`-element witnesses, `Element`-constrained (`Equatable`)
+Sequence witnesses, and `AVAsynchronousKeyValueLoading` `status(of:)`
+witnesses for types that do not adopt the protocol on this host. The 245
+`deferred` rows are unchanged (completion-handler service calls,
+Darwin-only types, `CALayer`/`URLSession` inheritance, and bodies that
+cannot be written without guessing Apple behavior).
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`,
+run under `swift:6.2-noble`, Swift 6.2.4, aarch64) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```

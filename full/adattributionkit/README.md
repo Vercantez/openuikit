@@ -70,6 +70,23 @@ clean EC2 run that builds guest Foundation first.
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
 
+## Depth pass 2026-09 (view/tap fail-closed)
+
+Implemented **68 → 72**. Declared 4 → 0. Deferred 4 (StoreKit overlay) unchanged.
+Unavailable / not-applicable remain 0.
+
+The 4 converted rows are the `async` view/tap methods (`beginView`, `endView`,
+`handleTap()`, `handleTap(reengagementURL:)`), exercised through the underscored
+`_unverifiedForTesting` factory in four new synchronous tests in
+`tests/agent/AdAttributionKitImpressionViewTests.swift`. Each test cites at most
+one implemented row. The factory-built instances throw fail-closed (`unknown`
+for begin/end view; `missingAttributionView` for taps), matching the Postback
+`updateConversionValue` sync-wrapper precedent. No new test is cited by more
+than 1 of 72 implemented rows. The 4 remaining deferred rows are the StoreKit
+overlay surface, which stays deferred because StoreKit is not a declared
+dependency. This slug has no SwiftUI View modifiers, so the FamilyControls
+overlay playbook does not apply.
+
 ## Depth pass 2026-09 (storage getters)
 
 Implemented **55 → 68**. Declared 17 → 4. Deferred 4 (StoreKit overlay) unchanged.

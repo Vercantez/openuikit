@@ -51,7 +51,44 @@ public enum BNNS {
         case gumbelMax(alpha: Float, beta: Float)
         case hardSwish(alpha: Float, beta: Float)
         case threshold(alpha: Float, beta: Float)
-        public var bnnsActivation: BNNSActivation { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured mapping (macOS 26.1 / Xcode 26.1 `xcrun swiftc` probe,
+        /// `enummap`/`fullmap` transcripts 2026-09-15): each case maps to its
+        /// `BNNSActivationFunction` code with associated alpha/beta, `.nan`
+        /// elsewhere. `hardSwish` shares code 30 with `geluApproximation2` on Apple.
+        public var bnnsActivation: BNNSActivation {
+            switch self {
+            case .hardShrink(let alpha): return BNNSActivation(function: BNNSActivationFunction(rawValue: 25), alpha: alpha)
+            case .logSigmoid: return BNNSActivation(function: BNNSActivationFunction(rawValue: 22))
+            case .logSoftmax: return BNNSActivation(function: BNNSActivationFunction(rawValue: 21))
+            case .scaledTanh(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 5), alpha: alpha, beta: beta)
+            case .softShrink(let alpha): return BNNSActivation(function: BNNSActivationFunction(rawValue: 26), alpha: alpha)
+            case .tanhShrink: return BNNSActivation(function: BNNSActivationFunction(rawValue: 27))
+            case .hardSigmoid(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 15), alpha: alpha, beta: beta)
+            case .linearWithBias(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 20), alpha: alpha, beta: beta)
+            case .rectifiedLinear: return BNNSActivation(function: BNNSActivationFunction(rawValue: 1))
+            case .geluApproximation(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 12), alpha: alpha, beta: beta)
+            case .geluApproximation2(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 30), alpha: alpha, beta: beta)
+            case .leakyRectifiedLinear(let alpha): return BNNSActivation(function: BNNSActivationFunction(rawValue: 2), alpha: alpha)
+            case .clampedLeakyRectifiedLinear(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 19), alpha: alpha, beta: beta)
+            case .abs: return BNNSActivation(function: BNNSActivationFunction(rawValue: 6))
+            case .elu(let alpha): return BNNSActivation(function: BNNSActivationFunction(rawValue: 18), alpha: alpha)
+            case .celu(let alpha): return BNNSActivation(function: BNNSActivationFunction(rawValue: 24), alpha: alpha)
+            case .selu: return BNNSActivation(function: BNNSActivationFunction(rawValue: 23))
+            case .silu: return BNNSActivation(function: BNNSActivationFunction(rawValue: 31))
+            case .tanh: return BNNSActivation(function: BNNSActivationFunction(rawValue: 4))
+            case .clamp(let bounds): return BNNSActivation(function: BNNSActivationFunction(rawValue: 8), alpha: bounds.lowerBound, beta: bounds.upperBound)
+            case .gumbel(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 13), alpha: alpha, beta: beta)
+            case .linear(let alpha): return BNNSActivation(function: BNNSActivationFunction(rawValue: 7), alpha: alpha)
+            case .sigmoid: return BNNSActivation(function: BNNSActivationFunction(rawValue: 3))
+            case .softmax: return BNNSActivation(function: BNNSActivationFunction(rawValue: 11))
+            case .identity: return BNNSActivation(function: BNNSActivationFunction(rawValue: 0))
+            case .softplus(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 16), alpha: alpha, beta: beta)
+            case .softsign: return BNNSActivation(function: BNNSActivationFunction(rawValue: 17))
+            case .gumbelMax(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 14), alpha: alpha, beta: beta)
+            case .hardSwish(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 30), alpha: alpha, beta: beta)
+            case .threshold(let alpha, let beta): return BNNSActivation(function: BNNSActivationFunction(rawValue: 28), alpha: alpha, beta: beta)
+            }
+        }
     }
     public class ActivationLayer: UnaryLayer {
     }
@@ -108,7 +145,12 @@ public enum BNNS {
             self.regularizationFunction = regularizationFunction
             self.usesAMSGrad = false
         }
-        public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): Apple always
+        /// reports the clipping-capable variant (8 without AMSGrad, 11 with),
+        /// independent of `gradientClipping`; acc is 2 without AMSGrad, 3 with.
+        public var bnnsOptimizerFunction: BNNSOptimizerFunction {
+            BNNSOptimizerFunction(rawValue: usesAMSGrad ? 11 : 8)
+        }
         public var usesAMSGrad: Bool = false
         public var learningRate: Float = 0.001
         public var gradientScale: Float = 0
@@ -116,7 +158,9 @@ public enum BNNS {
         public var gradientClipping: BNNS.GradientClipping = .none
         public var regularizationScale: Float = 0
         public var regularizationFunction: BNNSOptimizerRegularizationFunction = BNNSOptimizerRegularizationL1
-        public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): 2 without
+        /// AMSGrad, 3 with.
+        public var accumulatorCountMultiplier: Int { usesAMSGrad ? 3 : 2 }
         public var beta1: Float = 0.9
         public var beta2: Float = 0.999
         public var epsilon: Float = 1e-8
@@ -149,8 +193,14 @@ public enum BNNS {
         public var learningRate: Float = 0.001
         public var gradientScale: Float = 0
         public var gradientClipping: BNNS.GradientClipping = .none
-        public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
-        public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): 10 without
+        /// AMSGrad, 12 with; independent of `gradientClipping`.
+        public var bnnsOptimizerFunction: BNNSOptimizerFunction {
+            BNNSOptimizerFunction(rawValue: usesAMSGrad ? 12 : 10)
+        }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): 2 without
+        /// AMSGrad, 3 with.
+        public var accumulatorCountMultiplier: Int { usesAMSGrad ? 3 : 2 }
         public var usesAMSGrad: Bool = false
         public var beta1: Float = 0.9
         public var beta2: Float = 0.999
@@ -180,7 +230,9 @@ public enum BNNS {
     }
     public enum ArithmeticTernaryFunction: Equatable, Hashable {
         case multiplyAdd
-        public var bnnsArithmeticFunction: BNNSArithmeticFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15):
+        /// multiplyAdd maps to `BNNSArithmeticMultiplyAdd` (28).
+        public var bnnsArithmeticFunction: BNNSArithmeticFunction { BNNSArithmeticMultiplyAdd }
     }
     public enum ArithmeticUnaryFunction: Equatable, Hashable {
         case reciprocal
@@ -211,7 +263,38 @@ public enum BNNS {
         case negate
         case square
         public typealias AllCases = [BNNS.ArithmeticUnaryFunction]
-        public var bnnsArithmeticFunction: BNNSArithmeticFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured mapping (macOS 26.1 / Xcode 26.1 probe 2026-09-15).
+        public var bnnsArithmeticFunction: BNNSArithmeticFunction {
+            switch self {
+            case .reciprocal: return BNNSArithmeticReciprocal
+            case .squareRoot: return BNNSArithmeticSquareRoot
+            case .reciprocalSquareRoot: return BNNSArithmeticReciprocalSquareRoot
+            case .abs: return BNNSArithmeticAbs
+            case .cos: return BNNSArithmeticCos
+            case .erf: return BNNSArithmeticErf
+            case .exp: return BNNSArithmeticExp
+            case .log: return BNNSArithmeticLog
+            case .sin: return BNNSArithmeticSin
+            case .tan: return BNNSArithmeticTan
+            case .acos: return BNNSArithmeticAcos
+            case .asin: return BNNSArithmeticAsin
+            case .atan: return BNNSArithmeticAtan
+            case .ceil: return BNNSArithmeticCeil
+            case .cosh: return BNNSArithmeticCosh
+            case .exp2: return BNNSArithmeticExp2
+            case .log2: return BNNSArithmeticLog2
+            case .sign: return BNNSArithmeticSign
+            case .sinh: return BNNSArithmeticSinh
+            case .tanh: return BNNSArithmeticTanh
+            case .acosh: return BNNSArithmeticAcosh
+            case .asinh: return BNNSArithmeticAsinh
+            case .atanh: return BNNSArithmeticAtanh
+            case .floor: return BNNSArithmeticFloor
+            case .round: return BNNSArithmeticRound
+            case .negate: return BNNSArithmeticNegate
+            case .square: return BNNSArithmeticSquare
+            }
+        }
         public static var allCases: [BNNS.ArithmeticUnaryFunction] {
             [
                 .reciprocal, .squareRoot, .reciprocalSquareRoot, .abs, .cos, .erf, .exp, .log,
@@ -551,7 +634,23 @@ public enum BNNS {
         case yolo(parameters: BNNS.LossFunction.YoloParameters)
         case hinge
         case huber(huberDelta: Float)
-        public var bnnsLossFunction: BNNSLossFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured mapping (macOS 26.1 / Xcode 26.1 probe 2026-09-15).
+        /// Associated values (label smoothing, huber delta, YOLO parameters) do
+        /// not affect the function code on Apple.
+        public var bnnsLossFunction: BNNSLossFunction {
+            switch self {
+            case .cosineDistance: return BNNSLossFunctionCosineDistance
+            case .meanSquareError: return BNNSLossFunctionMeanSquareError
+            case .meanAbsoluteError: return BNNSLossFunctionMeanAbsoluteError
+            case .sigmoidCrossEntropy: return BNNSLossFunctionSigmoidCrossEntropy
+            case .softmaxCrossEntropy: return BNNSLossFunctionSoftmaxCrossEntropy
+            case .categoricalCrossEntropy: return BNNSLossFunctionCategoricalCrossEntropy
+            case .log: return BNNSLossFunctionLog
+            case .yolo: return BNNSLossFunctionYolo
+            case .hinge: return BNNSLossFunctionHinge
+            case .huber: return BNNSLossFunctionHuber
+            }
+        }
         public struct YoloParameters {
             public init() {
                 self.init(
@@ -617,7 +716,16 @@ public enum BNNS {
         case zeroWeightMean
         case sum
         case none
-        public var bnnsLossReductionFunction: BNNSLossReductionFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured mapping (macOS 26.1 / Xcode 26.1 probe 2026-09-15).
+        public var bnnsLossReductionFunction: BNNSLossReductionFunction {
+            switch self {
+            case .weightedMean: return BNNSLossReductionWeightedMean
+            case .reductionMean: return BNNSLossReductionMean
+            case .zeroWeightMean: return BNNSLossReductionNonZeroWeightMean
+            case .sum: return BNNSLossReductionSum
+            case .none: return BNNSLossReductionNone
+            }
+        }
     }
     public struct NearestNeighbors {
         public init() {}
@@ -626,6 +734,12 @@ public enum BNNS {
             self.dimensionCount = dimensionCount
             self.neighborCount = neighborCount
             self.dataType = dataType
+        }
+        /// Fail-closed: Linux has no BNNS nearest-neighbor runtime. The call is
+        /// accepted so graph/layer code paths stay source-compatible, but no
+        /// search is performed and no output is written.
+        public func apply(index: Int?, outputIndices: BNNSNDArrayDescriptor, outputDistances: BNNSNDArrayDescriptor) {
+            _ = index; _ = outputIndices; _ = outputDistances
         }
         public var capacity: Int = 0
         public var dimensionCount: Int = 0
@@ -657,8 +771,25 @@ public enum BNNS {
         case constantBitPattern(UInt32)
         case reflect
         case symmetric
-        public var bnnsPaddingMode: BNNSPaddingMode { preconditionFailure("Accelerate Linux: unread property") }
-        public var paddingBitPattern: UInt32 { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): both
+        /// constant spellings report mode 0, reflect 1, symmetric 2.
+        public var bnnsPaddingMode: BNNSPaddingMode {
+            switch self {
+            case .constantScalar, .constantBitPattern: return BNNSPaddingModeConstant
+            case .reflect: return BNNSPaddingModeReflect
+            case .symmetric: return BNNSPaddingModeSymmetric
+            }
+        }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): scalar
+        /// reports the value's bit pattern, bit-pattern passes through,
+        /// reflect/symmetric report 0.
+        public var paddingBitPattern: UInt32 {
+            switch self {
+            case .constantScalar(let value): return value.bitPattern
+            case .constantBitPattern(let bits): return bits
+            case .reflect, .symmetric: return 0
+            }
+        }
     }
     public class PermuteLayer: UnaryLayer {
     }
@@ -671,7 +802,20 @@ public enum BNNS {
         case l2Norm
         case average(countIncludesPadding: Bool)
         case unMaxEx(indicesDescriptor: BNNSNDArrayDescriptor, xDilationStride: Int = 0, yDilationStride: Int = 0)
-        public var bnnsPoolingFunction: BNNSPoolingFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured mapping (macOS 26.1 / Xcode 26.1 probe 2026-09-15):
+        /// max/maxEx report 0, average reports 1/2 by padding inclusion,
+        /// unMax/unMaxEx report 3, l2Norm reports 4.
+        public var bnnsPoolingFunction: BNNSPoolingFunction {
+            switch self {
+            case .max, .maxEx: return BNNSPoolingFunctionMax
+            case .unMax, .unMaxEx: return BNNSPoolingFunctionUnMax
+            case .l2Norm: return BNNSPoolingFunctionL2Norm
+            case .average(let countIncludesPadding):
+                return countIncludesPadding
+                    ? BNNSPoolingFunctionAverageCountIncludePadding
+                    : BNNSPoolingFunctionAverageCountExcludePadding
+            }
+        }
     }
     public struct RMSPropOptimizer {
         public init() {}
@@ -723,14 +867,19 @@ public enum BNNS {
             }
             self.regularizationFunction = regularizationFunction
         }
-        public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): Apple
+        /// always reports the clipping-capable RMSProp variant (9).
+        public var bnnsOptimizerFunction: BNNSOptimizerFunction { BNNSOptimizerFunctionRMSPropWithClipping }
         public var learningRate: Float = 1e-2
         public var gradientScale: Float = 0
         public var gradientBounds: ClosedRange<Float>? = nil
         public var gradientClipping: BNNS.GradientClipping = .none
         public var regularizationScale: Float = 0
         public var regularizationFunction: BNNSOptimizerRegularizationFunction = BNNSOptimizerRegularizationL1
-        public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): Apple
+        /// always reports the clipping-capable RMSProp variant (9); acc is 2
+        /// when centered, 1 otherwise.
+        public var accumulatorCountMultiplier: Int { centered ? 2 : 1 }
         public var alpha: Float = 0.99
         public var epsilon: Float = 1e-8
         public var centered: Bool = false
@@ -768,7 +917,28 @@ public enum BNNS {
         case logSumExp
         case logicalOr
         case sumOfLogs(epsilon: Float)
-        public var bnnsReduceFunction: BNNSReduceFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured mapping (macOS 26.1 / Xcode 26.1 probe 2026-09-15).
+        /// Apple reuses codes across aliases: all/logicalAnd share 11, any/
+        /// logicalOr share 10, argMax/maxIndex share 2, argMin/minIndex share 3.
+        public var bnnsReduceFunction: BNNSReduceFunction {
+            switch self {
+            case .logicalAnd, .all: return BNNSReduceFunctionLogicalAnd
+            case .meanNonZero: return BNNSReduceFunctionMeanNonZero
+            case .sumOfSquares: return BNNSReduceFunctionSumSquare
+            case .sumOfAbsolutes: return BNNSReduceFunctionL1Norm
+            case .any, .logicalOr: return BNNSReduceFunctionLogicalOr
+            case .max: return BNNSReduceFunctionMax
+            case .min: return BNNSReduceFunctionMin
+            case .sum: return BNNSReduceFunctionSum
+            case .mean: return BNNSReduceFunctionMean
+            case .argMax, .maxIndex: return BNNSReduceFunctionArgMax
+            case .argMin, .minIndex: return BNNSReduceFunctionArgMin
+            case .l2Norm: return BNNSReduceFunctionL2Norm
+            case .product: return BNNSReduceFunctionProduct
+            case .logSumExp: return BNNSReduceFunctionLogSumExp
+            case .sumOfLogs: return BNNSReduceFunctionSumLog
+            }
+        }
     }
     public class ReductionLayer: UnaryLayer {
     }
@@ -863,7 +1033,10 @@ public enum BNNS {
             self.regularizationFunction = regularizationFunction
             self.sgdMomentumVariant = sgdMomentumVariant
         }
-        public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): Apple
+        /// always reports the clipping-capable SGD variant (7) with acc 0,
+        /// independent of clipping and Nesterov settings.
+        public var bnnsOptimizerFunction: BNNSOptimizerFunction { BNNSOptimizerFunctionSGDMomentumWithClipping }
         public var learningRate: Float = 0.01
         public var gradientScale: Float = 0
         public var gradientBounds: ClosedRange<Float>? = nil
@@ -873,7 +1046,8 @@ public enum BNNS {
         public var usesNestrovMomentum: Bool = false
         public var usesNesterovMomentum: Bool = false
         public var regularizationFunction: BNNSOptimizerRegularizationFunction = BNNSOptimizerRegularizationL1
-        public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
+        /// Apple-measured (macOS 26.1 / Xcode 26.1 probe 2026-09-15): 0.
+        public var accumulatorCountMultiplier: Int { 0 }
         public var momentum: Float = 0
     }
     public enum Shape: ExpressibleByArrayLiteral {
@@ -1927,6 +2101,25 @@ public enum vImage {
             case full
             case half
             case none
+        }
+        /// Fail-closed: Linux has no vImage multidimensional-lookup numeric path.
+        /// The call is accepted so lookup-table code stays source-compatible,
+        /// but no pixels are transformed.
+        public func apply<SrcFormat, DestFormat>(
+            source: vImage.PixelBuffer<SrcFormat>,
+            destination: vImage.PixelBuffer<DestFormat>,
+            interpolation: vImage.MultidimensionalLookupTable.InterpolationMethod
+        ) where SrcFormat: MultiplePlanePixelFormat, DestFormat: MultiplePlanePixelFormat, SrcFormat.ComponentType == Float, DestFormat.ComponentType == Float {
+            _ = source; _ = destination; _ = interpolation
+        }
+        /// Fail-closed multi-plane twin of the single-source apply: accepted
+        /// without transforming any pixels (no Linux numeric path).
+        public func apply(
+            sources: [vImage.PixelBuffer<vImage.PlanarF>],
+            destinations: [vImage.PixelBuffer<vImage.PlanarF>],
+            interpolation: vImage.MultidimensionalLookupTable.InterpolationMethod
+        ) {
+            _ = sources; _ = destinations; _ = interpolation
         }
     }
     public struct Options: OptionSet, Hashable, Sendable {

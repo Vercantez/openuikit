@@ -195,3 +195,15 @@ func testControlsAndGeoJSON() {
     feature.properties = Data()
     _ = feature.geometry
 }
+
+func testTileOverlayResultHandler() {
+    let tile = MKTileOverlay(urlTemplate: "https://example.com/{z}/{x}/{y}.png")
+    tile.loadTile(at: MKTileOverlayPath(x: 1, y: 2, z: 3, contentScaleFactor: 1)) { data, error in
+        precondition(data == nil)
+        precondition((error as? MKError)?.code == .serverFailure)
+    }
+    tile.loadTile(at: MKTileOverlayPath()) { data, error in
+        precondition(data == nil)
+        precondition((error as? MKError)?.code == .serverFailure)
+    }
+}

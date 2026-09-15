@@ -1080,3 +1080,56 @@ resolve to an existing `test*` function in `tests/agent/` (0 malformed,
 (0 missing), and the top citation (`testViewOverlayBatch01`, 274 rows,
 3.2%) stays far below the 40% cap (3380). Hardware/daemon/Siri/Apple
 Pay/Screen Time success stays fail-closed.
+
+### Wave-10 declared-row audit (pi agent, convert pin-able declared only)
+
+This pass audits the leftover ledger per the wave-10 prompt and the
+overlay override, and converts nothing. It starts from the wave-8
+Shape-overlay ledger as audited in wave 9 (`implemented` 8450,
+`declared` 61, `deferred` 905, `unavailable` 0, `not-applicable` 58)
+and ends with identical counts: implemented gain 0. Nondeferred
+(`implemented` + `declared`) stays 8511, above the medium-full floor
+(4737). Leftover (`declared` + `deferred`) stays 966.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 8450 | 8450 |
+| declared | 61 | 61 |
+| deferred | 905 | 905 |
+| unavailable | 0 | 0 |
+| not-applicable | 58 | 58 |
+
+Why nothing converts:
+
+- All 61 declared rows are uninhabited or lookalike-absent:
+  `ChartContent` / `Chart3DContent` / `AxisContent` / `AxisMark`
+  modifiers synthesized on `Never` (no value can be constructed to
+  call them), `Chart3DContent` modifiers synthesized on
+  lookalike-absent `ModifiedContent`, 2 `PrimitivePlottable`
+  witnesses on `Never`, 1 `AnyChartSymbolShape.AnimatableData` row
+  (no `Animatable` / `VectorArithmetic` in the pinned Linux set), and
+  1 `SurfacePlot.body: Never` row whose product body is intentionally
+  the fail-closed `EmptyView`. Citing any of these from a test that
+  calls a different type's overload would be relabeling, not evidence.
+- The overlay override converts zero rows: none of the 61 declared
+  rows is a `View` modifier, and 0 of the 58 `not-applicable` rows is
+  a `View` (`s:7SwiftUI4View`) row either (all are `Animatable` /
+  `Shape` boolean-combiner / `trim` / `scale` / `rotation` /
+  `sizeThatFits` on `Circle`, `Circle` statics, or
+  `ScrollTargetBehavior.properties`). No stdlib/Foundation witness was
+  touched.
+- All 905 deferred rows stay deferred: GPU/image renderer rows stay
+  deferred per the wave-10 lane rule, plus stdlib integer/collection
+  operators Charts does not redeclare, Combine / `FormatStyle` /
+  `SortComparator` overlays, `symbolRotation` / `metalness` /
+  `roughness` on `Never` / `ModifiedContent` (no RealityKit
+  `Rotation3D` in the pinned Linux set), and scroll/gesture timing.
+  Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed.
+
+Integrity re-verified by script (no product/test edits, so the Linux
+sealed gate was not re-run): header is
+`precise status evidence notes`, all 8450 implemented rows cite
+`test:full/charts/tests/agent/*Tests.swift#test*` (0 malformed), all
+61 declared rows cite `source:full/charts/<product-source>.swift#Symbol`
+(0 malformed). No `DispatchQueue.main`, `RunLoop`, semaphore waits, or
+`await` in cited tests (no test edits).

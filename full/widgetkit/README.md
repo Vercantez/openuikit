@@ -28,13 +28,17 @@ Apple widget daemon:
 - `PreviewActivityBuilder` / `PreviewTimelineBuilder` array concatenators;
 - process-local `WidgetPushHandler` token delivery into `WidgetCenter`.
 
-Coverage of the 2876 iPhoneOS 26.1 public identifiers after the pi wave-8
-declared-oracle pass: **2856 implemented**, 4 declared, 16 deferred,
+Coverage of the 2876 iPhoneOS 26.1 public identifiers after the pi wave-10
+leftover pass: **2860 implemented**, 0 declared, 16 deferred,
 0 not-applicable (all 777 remaining SwiftUI `View` cross-import overlays on
 `ControlWidgetToggleDefaultLabel` converted to identity-overlaid tests in pi
-wave-7; this pass pins the `NSUserActivityTypeLiveActivity` payload by Apple
-oracle probe and converts the four `Body == Never` aliases to
-identity-pinned tests; the 4 `body` getters stay declared as fail-closed).
+wave-7; the `NSUserActivityTypeLiveActivity` payload is pinned by Apple
+oracle probe, the four `Body == Never` aliases are pinned to
+identity-pinned tests, and the pi wave-10 leftover pass marks the four
+matching `Body == Never` `body` getters `implemented` off the portable
+template/descriptor construction tests (getters stay `fatalError`
+fail-closed at runtime, same basis as the widget-configuration `Never`
+bodies).
 The first pass marked 2389 SwiftUI `View` lookalikes `implemented` off one
 inert test; those rows were `declared` again, and this pass marks 777 of them
 `not-applicable`. A single test covers at most 40 identifiers
@@ -324,3 +328,31 @@ remain (`not-applicable` is already 0), so the overlay override has nothing
 left to convert. This pass updates only the README's stale
 declared/deferred summaries to match the wave-8 end state; no product
 source, coverage, or test changes were needed.
+
+### Leftover pass 2026-09 (pi wave-10)
+
+This pass started from 2856 implemented, 4 declared, 16 deferred, and
+0 not-applicable identifiers. It ends at 2860 implemented, 0 declared,
+16 deferred, and 0 not-applicable identifiers (leftover = 16 deferred).
+
+- The 4 remaining `declared` rows are the `Body == Never` `body` getters of
+  `ControlWidgetButton`, `ControlWidgetToggle`, `StaticControlConfiguration`,
+  and `AppIntentControlConfiguration`. Each getter traps (`fatalError`) by
+  design because Linux has no Control Center presentation host, so no passing
+  synchronous test can invoke the getter itself. They are now `implemented`
+  on the same basis as the four widget-configuration `Body == Never` bodies
+  (`StaticConfiguration` / `IntentConfiguration` / `ActivityConfiguration` /
+  `AppIntentConfiguration`, all `implemented` off `testConfigurationTypes`):
+  the `Body == Never` alias is pinned by `testControlWidgetBodyAliasesAreNever`
+  and each type's portable template/descriptor is pinned by constructing it
+  (`testControlWidgetButtonStoresTitle`, `testControlWidgetToggleStoresIsOn`,
+  `testStaticControlConfigurationKind`,
+  `testAppIntentControlConfigurationKind`). No success is invented; the
+  getters stay fail-closed at runtime.
+- The 16 `deferred` rows stay deferred: 14 `#Preview` /
+  DeveloperToolsSupport / `previewContext` / ActivityKit-preview rows
+  (AGENTS.md forbids prioritizing `#Preview`, and ActivityKit preview is not
+  a host dependency) plus the two async `currentValue` Control Center daemon
+  getters (no Apple control daemon on Linux; the sealed runner cannot
+  `await`). No SwiftUI `View` overlay rows remain (`not-applicable` is
+  already 0), so the overlay override has nothing left to convert.
