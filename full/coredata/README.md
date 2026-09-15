@@ -71,7 +71,7 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave → wave 11): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 → 1291 implemented** / 3 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave → wave 11 → wave 12): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 → 1291 → 1291 implemented** / 3 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Wave 11 (leftover sweep, 2026-09-15)
 
@@ -98,6 +98,55 @@ UIKit's `NSDiffableDataSourceSnapshot`, `databaseScope` needs
 `CKDatabase.Scope`, and the class-var `defaultDirectoryURL` cannot coexist
 with the implemented class function. Ubiquity/Spotlight daemon rows stay
 `unavailable`. Implemented gain this wave: **+0**.
+
+## Wave 12 (host-gate repair, 2026-09-15)
+
+Recounted `coverage.tsv`: 1291 implemented / 3 declared / 15 deferred / 10
+unavailable of 1319 public IDs — still no convertible leftover. The three
+`declared` rows are the same `async` overloads (calling one needs `await`, a
+semaphore wait, or `DispatchQueue.main`, all forbidden in cited tests) and
+the fifteen `deferred` rows are the same toolchain-blocked
+`NSExpression`/`UndoManager`/Combine/UIKit/CloudKit members. There are no
+`not-applicable` rows and no SwiftUI `View`-modifier overlay rows in this
+lane, so the overlay override does not apply.
+
+The wave's work was a host-gate repair: the tree as committed failed
+`bash tests/acceptance/test_host.sh` on this Mac (Xcode 26.1, Apple Swift
+6.2.1) while prior waves validated in Linux containers. Four portable fixes,
+all in `full/coredata/`, no coverage reclassification:
+
+- `NSManagedObject.value(forKey:)` / `setValue` and
+  `willChangeValue(forKey:)` / `didChangeValue(forKey:)`, plus
+  `NSAtomicStoreCacheNode.value(forKey:)` / `setValue`, collide with
+  Apple `NSObject` KVC members on the macOS host but have no superclass
+  member on Linux Foundation. Each site now selects `override` under
+  `#if canImport(ObjectiveC)` and keeps the plain declaration on Linux;
+  the two large KVC bodies live in shared private helpers so behavior is
+  identical on both toolchains.
+- Two test call sites were ambiguous against Apple `NSObject` overloads and
+  are now qualified identically in the focused file and the embedded
+  `CoreDataRuntime.swift` copy: `CoreData.NSKeyValueSetMutationKind.union`
+  (`testValidationAndUndoDisabled`) and `change: nil as [String: Any]?`
+  (`testContextLifecycleMergeAndExecute`).
+- `_CDAttributeSortDescriptor` no longer calls
+  `NSSortDescriptor(keyPath:ascending:)` (SDK-visible but missing from the
+host system Foundation at runtime); it routes through the designated
+  `init(key:ascending:selector:)`.
+- The SQLite store's `dlopen("libsqlite3.so.0")` now falls back to
+  `libsqlite3.dylib` / `/usr/lib/libsqlite3.dylib` so the same binary path
+  works on Linux guests and the macOS host gate.
+
+After the repair the unmodified sealed gate passes on this host:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```
+
+**Coverage before / after this wave 12 pass** (1319 public IDs): 1291 / 3 /
+15 / 10 → 1291 / 3 / 15 / 10. Implemented gain: **+0**; host-gate status:
+red → green.
 
 ## Fail-closed boundaries
 

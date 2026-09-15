@@ -1315,6 +1315,14 @@ public enum BNNS {
     }
 }
 
+// Apple api-digester confirms all four overlay optimizers conform to
+// BNNSOptimizer; each already stores the two witnessed properties with
+// oracle-pinned values (wave 10), so these are empty conformances.
+extension BNNS.AdamOptimizer: BNNSOptimizer {}
+extension BNNS.AdamWOptimizer: BNNSOptimizer {}
+extension BNNS.RMSPropOptimizer: BNNSOptimizer {}
+extension BNNS.SGDMomentumOptimizer: BNNSOptimizer {}
+
 public enum BNNSGraph {
     public struct Builder {
         public typealias PoolingPadding = BNNSGraph.Builder.ConvolutionPadding

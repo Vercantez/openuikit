@@ -906,7 +906,7 @@ s:16CoreTransferable0B0PAAE9importing11contentTypex10Foundation3URLV_07UniformE1
 s:16CoreTransferable0B0PAAE9importing11contentTypex10Foundation4DataV_07UniformE11Identifiers6UTTypeVSgtYaKcfc::SYNTHESIZED::s:6WebKit0A4PageC	deferred		UniformTypeIdentifiers.UTType is not on the isolated Linux host.
 s:6WebKit0A4PageC	implemented	test:full/webkit/tests/agent/WebKitPageHistoryTests.swift#testPageHistoryInitialAndLocalDocumentState	iOS 26.1 history oracle and synchronous Linux local-document model; no renderer or network. Unsupported loads fail closed.
 s:6WebKit0A4PageC01_aB8_SwiftUIE10themeColor0dE00G0VSgvp	deferred		SwiftUI overlay (_WebKit_SwiftUI / View / Color / EventModifiers) is unavailable on the isolated Linux host; no SwiftUI lookalike.
-s:6WebKit0A4PageC11navigationsQrvp	declared	source:full/webkit/WebKitPage.swift#navigations	Compiles on the isolated Linux host; Apple behavior unobserved or fail-closed.
+s:6WebKit0A4PageC11navigationsQrvp	implemented	test:full/webkit/tests/agent/WebKitPageHistoryTests.swift#testPageNavigationsSequenceReadable	Portable Linux state machine: Apple WKNavigationDelegate order (didStartProvisionalNavigation → didCommit → didFinish) and content-blocker JSON schema; no renderer.
 s:6WebKit0A4PageC11serverTrustSo03SecE3RefaSgvp	deferred		SecTrust is a Security.framework type; isolated host cannot import it.
 s:6WebKit0A4PageC11stopLoadingyyF	implemented	test:full/webkit/tests/agent/WebKitPagePolicyTests.swift#testPageStopLoadingClearsLoading	
 s:6WebKit0A4PageC12CSSMediaTypeV	implemented	test:full/webkit/tests/agent/WebKitPageValueTests.swift#testPageCSSMediaRoundTrip	Synchronous value behavior; shared test exercised against iOS 26.1 and Linux. No rendering, sensor, or service success claimed.

@@ -14,6 +14,32 @@ This is a fresh seed: 511 exact public identifiers, floor 256 nondeferred.
 Coverage after this pass: **506 implemented / 5 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+## Wave 12 re-examination 2026-09-15
+
+Before: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511.
+After: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511
+(implemented gain 0). All five declared rows were re-verified against
+`reference/api-digester.json` mangled names: `beginMonitoring` (`...yYaKF`),
+`resumeMonitoring(placeholderURL:)` (`...tYaKF`), and the three process
+`init(bundleIdentifier:onInterruption:)` (`...YaKcfc`) are all genuinely
+`async throws` on Apple. A synchronous cited test cannot call them: omitting
+`await` is a Swift 6 compile error, and smuggling the call inside `Task`
+still contains `await` (forbidden in cited tests) while yielding
+fire-and-forget with no behavioral evidence. Success paths additionally need
+a Live Activity daemon (download monitor) and helper appex + libxpc (process
+inits), so fail-closed `declared` with async-throws bodies stays the honest
+state; restating them with sync shapes would falsify the Apple signatures.
+Zero deferred, unavailable, or not-applicable rows, and no SwiftUI
+View-overlay rows, so the overlay OVERRIDE has nothing to apply.
+Static verification: all 511 evidence anchors resolve (implemented cites
+define top-level sync no-arg `test*` funcs; declared anchors present in
+product sources), and no cited test contains `await`/`DispatchQueue.main`/
+`RunLoop`/semaphores. The sealed host gate still refuses before compiling:
+the shared deliverable validator requires
+`full/framework-roadmap/framework-roadmap.json`, absent from this isolated
+worktree — a worktree-environment limitation, not a framework defect; product
+sources are unchanged.
+
 ## Wave 11 re-examination 2026-09-15
 
 Before: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511.

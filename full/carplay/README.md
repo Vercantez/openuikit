@@ -52,7 +52,10 @@ Apple ABI bytes.
 - `init?(coder:)` always fails; no NSCoder archive layout was observed.
 - Isolated-host UIKit/MapKit/CoreLocation names (`UIImage`, `MKMapItem`,
   `UIWindow`, …) are compile-only stand-ins used when those modules cannot be
-  imported. They are not UIKit or MapKit.
+  imported. They are not UIKit or MapKit. Every product and test file that
+  names a MapKit type carries its own `#if canImport(MapKit)` import (Swift
+  imports are per-file), so the module also compiles on hosts where MapKit
+  is importable but UIKit is not.
 - Maximum image sizes and item counts are documented programming-guide values,
   not SDK-byte observations. Oracle questions record the missing payloads.
 
@@ -90,18 +93,33 @@ rows cited `tests/agent/CarPlayRuntime.swift`, which is not
   `CarPlayHostError` paths through the completion). The 3 remaining declared
   rows are the async list / search delegate protocol requirements, which a
   no-argument synchronous test cannot await.
+- Wave 12 (2026-09-15): 988 implemented / 0 declared / 0 deferred. The 3
+  Apple-required delegate callbacks
+  (`listTemplate:didSelectListItem:completionHandler:`,
+  `searchTemplate:selectedResult:completionHandler:`,
+  `searchTemplate:updatedSearchText:completionHandler:`, verified required in
+  the Xcode 26.1 `CPListTemplate.h` / `CPSearchTemplate.h` headers) are now
+  implemented in their canonical synchronous completion-handler form instead
+  of `async`, sharing the apply core with the async `@_spi(OpenUIKitHost)`
+  helpers (`CPListTemplate.openuikit_select`,
+  `CPSearchTemplate.openuikit_updateSearchText` /
+  `openuikit_selectResult`) via checked continuations, and are exercised by 3
+  focused synchronous tests in
+  `tests/agent/CarPlayDelegateCompletionTests.swift` (selection recording
+  plus exactly-once completion delivery; the search-text callback returns one
+  hit echoing the query).
 
-Top-5 implemented evidence citations (985 implemented rows):
+Top-5 implemented evidence citations (988 implemented rows):
 
-1. `CarPlayEnumTests.swift#testEnumOptionSetAndConstantValues` — 353 (35.8%).
+1. `CarPlayEnumTests.swift#testEnumOptionSetAndConstantValues` — 353 (35.7%).
    Table-driven enum / OptionSet / C-constant values (allowed to share).
 2. `CarPlayMapTests.swift#testMapTemplateTripPreviewAndPanning` — 51 (5.2%).
 3. `CarPlayListImageTests.swift#testListImageRowItemElements` — 48 (4.9%).
 4. `CarPlayMapTests.swift#testManeuverLaneAndRouteInformation` — 36 (3.7%).
 5. `CarPlayNowPlayingTests.swift#testNowPlayingSportsMode` — 32 (3.3%).
 
-No other single test exceeds 40% of non-table implemented rows (cap 252.8
-on 985 − 353 table rows).
+No other single test exceeds 40% of non-table implemented rows (cap 254.0
+on 988 − 353 table rows).
 
 - `CPTemplateApplicationScene` / `CPTemplateApplicationSceneDelegate`: the
   documented `@_spi(OpenUIKitHost)` hook `openuikit_connectSimulatedSession`

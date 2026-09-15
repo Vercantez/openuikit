@@ -65,6 +65,14 @@ host, or CDN. Manager APIs that would talk to those services fail closed.
 
 Implemented rows: **185**. Declared: **13**. Nondeferred: **198 / 198**.
 
+Wave 12 re-examined the 13 leftover declared rows: 0 convertible. Six are
+`AssetPackManager` isolated `async` members, three are async
+`backgroundDownload(_:didReceive:)` challenge overlays, one is the async
+`BADownloadManagerDelegate` challenge overlay, and three are synthesized
+actor-isolation helpers that trap off the actor. The sealed runner only
+invokes top-level synchronous no-argument `test*` functions with no `await`,
+so async members stay `declared` and fail closed.
+
 Top-5 evidence distribution (implemented rows):
 
 1. `testAssetPackStatusSetAlgebra` — 24 (SetAlgebra / OptionSet methods)

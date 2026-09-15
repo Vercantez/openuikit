@@ -116,3 +116,24 @@ Daemon success stays fail-closed per contract (scheduler returns
 source evidence. The single SwiftUI overlay row (`workoutPreview`) is
 already `implemented` as an identity no-op; there are no `not-applicable`
 rows to convert.
+
+## Wave 12 re-examination (2026-09-15)
+
+Before **271** / declared **8** / deferred **0** / unavailable **0** /
+not-applicable **0** (279 exact IDs); after **271** / **8** / **0** / **0** /
+**0**. Implemented gain **0**.
+
+Same structural block as wave 11: all eight leftover rows are `async`
+(`Ya` in the precise mangling) Watch-daemon / HealthKit-store witnesses
+(scheduler `schedule` / `remove` / `markComplete` / `removeAllWorkouts` /
+`scheduledWorkouts` / `authorizationState` / `requestAuthorization`, and
+`HKWorkout.workoutPlan` async-throws). The sealed host runner calls every
+cited test synchronously, and the coverage contract forbids `await`,
+semaphore waits, `RunLoop`, and `DispatchQueue.main` in cited tests, so an
+`async` API cannot be invoked from a synchronous `func test*()`. Daemon
+success stays fail-closed per contract (scheduler returns `.denied` /
+`[]` / no-ops; `workoutPlan` throws `StateError.watchNotPaired`), and each
+row keeps a compiling `declared` source anchor (verified: `libWorkoutKit.dylib`
+builds clean from all 11 manifest sources). The single SwiftUI overlay row
+(`workoutPreview`) remains `implemented` as an identity no-op; there are no
+`deferred` rows to re-examine and no `not-applicable` rows to convert.

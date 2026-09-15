@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(MapKit)
+import MapKit
+#endif
 
 public protocol CPApplicationDelegate: UIApplicationDelegate {
     func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow)
@@ -69,7 +72,11 @@ extension CPInterfaceControllerDelegate {
 }
 
 public protocol CPListTemplateDelegate: NSObjectProtocol {
-    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem) async
+    /// Apple-required selection callback (Xcode 26.1 `CPListTemplate.h`): the host
+    /// must invoke `completionHandler` after handling the selection. Deprecated
+    /// on Apple platforms in favor of `CPListItem.handler`; retained here as the
+    /// canonical completion-handler form so synchronous hosts can drive it.
+    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void)
 }
 
 @MainActor public protocol CPListTemplateItem: NSObjectProtocol {
@@ -230,8 +237,10 @@ extension CPPointOfInterestTemplateDelegate {
 }
 
 @MainActor public protocol CPSearchTemplateDelegate: NSObjectProtocol {
-    func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem) async
-    func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String) async -> [CPListItem]
+    /// Apple-required callbacks (Xcode 26.1 `CPSearchTemplate.h`): the host must
+    /// invoke the completion handler with the handled selection / search results.
+    func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
+    func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
     func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate)
 }
 

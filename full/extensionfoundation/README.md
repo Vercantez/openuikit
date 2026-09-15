@@ -59,6 +59,25 @@ This is a fresh seed: 81 exact public identifiers, floor 65 nondeferred.
 Coverage after this pass: **77 implemented / 4 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+Wave-12 recount (2026-09-15): before 77 implemented / 4 declared / 0 deferred,
+after 77 implemented / 4 declared / 0 deferred, implemented gain 0. Re-examined
+all four `declared` rows (`Monitor.addAppExtensionPoint`,
+`Monitor.init(appExtensionPoint:)`, `Monitor.removeAppExtensionPoint`, async
+`AppExtensionProcess.init(configuration:)`): each precise ID is genuinely
+`async` per `reference/public-surface.tsv` and the API digester, so no
+top-level synchronous no-argument `test*` can call that overload — a bare
+`await` does not compile in the sealed runner's sync context and blocking
+waits (`DispatchQueue.main`, `RunLoop`, semaphores) are forbidden, so the rows
+stay `declared` with compiling source anchors. No `deferred` rows to
+re-examine (count is 0) and no View-modifier rows exist, so the overlay
+override does not apply. Product sources still compile clean under
+`swiftc -warnings-as-errors` (macOS host check); all `implemented` evidence
+shapes re-validated (max single-test share 7.8%, well under 40%) and cited
+tests contain no `await`/blocking waits. Full local gate still cannot run:
+the shared deliverable validator rejects on a missing repo file outside this
+lane (`full/framework-roadmap/framework-roadmap.json`), unchanged since
+wave-11.
+
 Wave-11 recount (2026-09-15): before 77 implemented / 4 declared / 0 deferred,
 after 77 implemented / 4 declared / 0 deferred, implemented gain 0. The four
 `declared` rows remain `async` (`Monitor.addAppExtensionPoint`,

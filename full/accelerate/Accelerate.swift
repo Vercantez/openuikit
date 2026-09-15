@@ -73,11 +73,16 @@ public protocol MultiplePlanePixelFormat: PixelFormat {
     associatedtype PlanarPixelFormat
 }
 
-public protocol InitializableFromCGImage: SinglePlanePixelFormat {}
+public protocol InitializableFromCGImage: SinglePlanePixelFormat {
+    static var bitCountPerComponent: Int { get }
+}
 
 public protocol FusableLayerParameters {}
 
-public protocol BNNSOptimizer {}
+public protocol BNNSOptimizer {
+    var bnnsOptimizerFunction: BNNSOptimizerFunction { get }
+    var accumulatorCountMultiplier: Int { get }
+}
 
 public protocol vDSP_IntegerConvertable {
     init<T: BinaryFloatingPoint>(_ value: T)

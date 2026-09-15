@@ -98,6 +98,29 @@ precise IDs in the public surface), so the overlay override does not
 apply. Fail-closed behavior unchanged: async store members report
 `.notSupported` without the Apple presentment daemon.
 
+## Wave 12 re-examination 2026-09-15
+
+Before: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**.
+After: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**
+(implemented gain 0). Re-verified each leftover against the sealed-runner
+rules: the four store members (`status`, `registrations`, `addRegistration`,
+`removeRegistration`) are `async` (see `reference/public-surface.tsv`), so
+any synchronous no-argument citing test would be a compile error, and the
+runner forbids `await`, semaphores, and run-loop waits. Their fail-closed
+`.notSupported` behavior must not report success without the Apple
+presentment daemon. The three `Actor` isolation witnesses
+(`assertIsolated`, `assumeIsolated`, `preconditionIsolated`) trap when
+called off the actor and would crash the sealed runner. No `View`/`SwiftUI`
+precise IDs exist in this module, so the overlay override does not apply.
+Product sources still compile under `swiftc -warnings-as-errors`; the 42
+cited `test*` functions link and emit only the exact success marker
+(harness run with a Darwin shim for the Linux-only `Glibc` gate import).
+The shared deliverable validator (`validate_seed.py --phase deliverable`)
+refuses before compiling because `full/framework-roadmap/framework-roadmap.json`
+is absent from this worktree snapshot — a repo-wide precondition outside
+`full/identitydocumentservices/` that no edit here can satisfy; all
+in-scope checks pass.
+
 ## Tests
 
 `tests/agent/IdentityDocumentServicesLoadSmoke.swift` is the schema-v2

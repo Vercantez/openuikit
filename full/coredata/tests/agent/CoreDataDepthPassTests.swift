@@ -527,7 +527,7 @@ func testContextLifecycleMergeAndExecute() {
         )
         let fault = context.object(with: incoming.objectID)
         _ = context.shouldHandleInaccessibleFault(fault, for: incoming.objectID, triggeredByProperty: nil)
-        context.observeValue(forKeyPath: "title", of: fault, change: nil, context: nil)
+        context.observeValue(forKeyPath: "title", of: fault, change: nil as [String: Any]?, context: nil)
         context.perform { }
         context.performAndWait { }
 

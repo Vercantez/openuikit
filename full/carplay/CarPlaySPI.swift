@@ -84,6 +84,12 @@ extension CPListTemplate {
                 }
             }
         }
-        await delegate?.listTemplate(self, didSelect: item)
+        if let delegate = delegate {
+            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                delegate.listTemplate(self, didSelect: item) {
+                    continuation.resume()
+                }
+            }
+        }
     }
 }

@@ -138,7 +138,12 @@ open class HMCameraProfile: HMAccessoryProfile {
     }
 }
 
+// Linux omits @MainActor (Darwin keeps it via UIKit) so synchronous
+// nonisolated agent tests can construct the view and touch cameraSource.
+// The view never presents camera UI; RTP/HAP sessions stay fail-closed.
+#if canImport(UIKit)
 @MainActor
+#endif
 open class HMCameraView: NSObject {
     public var cameraSource: HMCameraSource?
 

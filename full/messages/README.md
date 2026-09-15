@@ -109,6 +109,32 @@ Verification this wave: `libMessages.dylib` compiles clean under
 `full/framework-roadmap/framework-roadmap.json` is absent from this
 worktree — out of scope for this lane and pre-existing.)
 
+## Wave-12 recount 2026-09-15
+
+Recount: **174** implemented / **3** declared / **3** deferred of 180 —
+unchanged from waves 4 and 11 (gain +0). All 6 leftovers re-examined,
+none convertible in-process:
+
+- The 3 declared rows are the `async throws` Critical Messaging methods
+  (`requestAuthorization`, `checkAuthorizationStatus`, `send`). Any test
+  calling them requires `await`, which the sealed gate forbids in cited
+  tests, and they guard a daemon/entitlement path whose success stays
+  fail-closed, so they remain `declared`.
+- The 3 deferred rows are UIKit-typed properties (`UIImage.image`,
+  `UIEdgeInsets.contentInset`, `UIColor.messageTintColor`). UIKit is not
+  on the isolated link line and a public framework-local substitute for a
+  dependency-owned type is forbidden, so they remain `deferred`.
+- The overlay override (SwiftUI identity View modifiers) does not apply:
+  this surface contains no SwiftUI View modifiers.
+
+Verification this wave: `libMessages.dylib` compiles clean under
+`-warnings-as-errors`; a sealed-gate-equivalent runner (Darwin import
+shim for the macOS host; `Glibc` on Linux) invoking all 64 cited
+`implemented` tests passes and emits the load-smoke marker as its sole
+stdout. (`test_host.sh` still refuses at the shared deliverable
+validator on the missing out-of-lane `framework-roadmap.json`, as in
+wave 11.)
+
 ## Tests
 
 `tests/agent/MessagesLoadSmoke.swift` is the schema-v2 load marker.

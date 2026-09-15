@@ -55,7 +55,9 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
   `ArithmeticUnaryFunction`/`ArithmeticTernaryFunction`, `PaddingMode` (+`paddingBitPattern`),
   `PoolingType`, `LossFunction`, `LossReduction`, `ReductionFunction`, and all four
   optimizer `bnnsOptimizerFunction`/`accumulatorCountMultiplier` getters (Apple always
-  reports clipping-capable variants). `NearestNeighbors.apply` and both
+  reports clipping-capable variants). The Linux `BNNSOptimizer` protocol now
+  carries both requirements with all four optimizers conforming (api-digester
+  pinned). `NearestNeighbors.apply` and both
   `MultidimensionalLookupTable.apply` overloads are fail-closed no-ops.
 - `BNNSGraph.Builder` factories (`argument`, three `constant` spellings) and all
   55 `Builder.Tensor` math ops record symbolic construction nodes: each call
@@ -638,3 +640,30 @@ Top evidence distribution for the 63 newly implemented rows:
 10. `testGraphTensorProperties` — 3 (4.8%) — tensorData/description/dataType
 
 Largest test is 9/63 = 14.3%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **301/301** cited tests pass together, and the new tests pass in an isolated fresh process.
+
+## Depth pass 2026-09-15 (wave 12 declared-remainder conversion)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Converts 3 portable declared rows to implemented and triages 1 CG-gated row to deferred; no GPU/BNNS-runtime success is invented.
+
+- 2 `BNNSOptimizer` protocol witnesses (`bnnsOptimizerFunction`, `accumulatorCountMultiplier`): the Linux protocol now declares both requirements (get-only, matching the Apple signatures in `reference/public-surface.tsv`), and the api-digester confirms all four overlay optimizers conform, so empty `extension BNNS.AdamOptimizer/AdamWOptimizer/RMSPropOptimizer/SGDMomentumOptimizer: BNNSOptimizer` conformances are Apple-faithful. Each witness is exercised through an `any BNNSOptimizer` existential over all four types (default fn 8/10/9/7, acc 2/2/1/0) plus the AMSGrad variant (fn 11, acc 3).
+- 1 `InitializableFromCGImage.bitCountPerComponent` static witness: the Linux protocol now declares the requirement, and the ten api-digester-pinned pixel formats conform (each already stores the member with the Apple value). Exercised through an `(any InitializableFromCGImage.Type, Int)` table. The `CGImage`-taking initializers stay deferred: CoreGraphics is not a declared dependency.
+- 1 `vImage.BufferType.init(bufferTypeCode:model:)` moves declared→deferred: it requires `CGColorSpaceModel`, CoreGraphics is not a declared dependency, and this lane introduces no public lookalike (consistent with the deferred vImage CG/CV conversions).
+
+Still declared (6; no honest Linux behavior to exercise): 5 `BNNSGraph.Context` members (`functionCount`, `functionNames`, `streamingAdvanceCount`, `checkForNaNsAndInfinities`, `tensor(forFunction:argument:fillKnownDynamicShapes:)`) trap or need an instance, and no Context is constructible on Linux (`makeContext` and both `compileFromPath` inits throw `unableToCreateContext`); plus the `async` `Context.init(compileFromPath:functionName:options:)` (cited tests must be synchronous, so it can never be cited; the sync throwing twin is fail-closed implemented).
+
+- Implemented before: **5398**
+- Implemented after: **5401**
+- Declared before: **10**
+- Declared after: **6**
+- Deferred before/after: **1445** / **1446**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **3**
+
+Top evidence distribution for the 3 newly implemented rows:
+
+1. `testWave12OptimizerFunctionWitness` — 1 (33.3%) — optimizer function witness via existential
+2. `testWave12OptimizerAccumulatorWitness` — 1 (33.3%) — accumulator witness via existential
+3. `testWave12CGImageFormatWitness` — 1 (33.3%) — format witness via metatype existential
+
+Largest test is 1/3 = 33.3%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **294/294** cited tests pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the 3 new tests pass in an isolated fresh process.

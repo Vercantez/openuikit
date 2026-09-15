@@ -18,6 +18,13 @@ Wave 10 recount (2026-09-15): before 231 implemented / 6 declared /
 0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
 Wave 11 recount (2026-09-15): before 231 implemented / 6 declared /
 0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
+Wave 12 recount (2026-09-15): before 231 implemented / 6 declared /
+0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
+Compiler probe (`/tmp/mini_async.swift`, Apple Swift 6.2.1) confirms a
+synchronous `test*()` cannot call an `async` API (`'async' call in a
+function that does not support concurrency`), and the coverage contract
+forbids `await`/semaphores in cited tests, so the async-only loaders stay
+`declared`. No overlay rows: this module has no SwiftUI.View modifiers.
 All 6 declared rows are `async`/`async throws` loaders
 (`CNAssetInfo.init(asset:)` / `isCinematic`,
 `CNRenderingSession.Attributes.init(asset:)`,

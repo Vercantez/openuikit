@@ -223,6 +223,86 @@ absent from this worktree); `tests/test_webkit_provenance.py`: 8 tests OK.
 
 Only this README changes in this pass.
 
+### Leftover conversion (pi-wave12 webkit)
+
+Re-examined all 36 declared and 26 deferred rows against the
+`reference/public-surface.tsv` Apple signatures for synchronous in-process
+conversion. Result: **1 conversion** (2171 → 2172 implemented, 36 → 35
+declared; deferred 26, unavailable 0, not-applicable 0 unchanged, total
+2233).
+
+| Status | Before | After |
+| --- | ---: | ---: |
+| implemented | 2171 | 2172 |
+| declared | 36 | 35 |
+| deferred | 26 | 26 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+| Total | 2233 | 2233 |
+
+- `WebPage.navigations` (`s:6WebKit0A4PageC11navigationsQrvp`) → implemented
+  via the new synchronous `testPageNavigationsSequenceReadable` in
+  `tests/agent/WebKitPageHistoryTests.swift`. The getter is synchronous
+  (reading it constructs the page-wide event sequence without awaiting),
+  so the test exercises both reads — idle and after a local simulated
+  commit — and asserts the surrounding committed state
+  (url/title/progress/history item). Draining the sequence still needs
+  `await`, so iterator replay/cancellation/destruction semantics remain
+  unobserved per the updated `oracle-questions.tsv` row; no Apple
+  scheduling or subscription semantics are inferred. This revisits the
+  wave-6/9/10/11 judgment: the wave-12 lane instruction is to convert
+  every declared API that genuinely compiles and runs synchronously, and
+  the getter call is real behavior (sequence construction), matching the
+  value-touch precedent elsewhere in this tree — while the oracle row
+  keeps the unverified semantics explicit.
+- Still declared (not convertible synchronously): 23 Swift-async rows
+  (`callJavaScript`, the 8 `DialogPresenting` requirements + extension
+  defaults, the 6 `NavigationDeciding` requirements + defaults,
+  `mediaPlaybackState`, `pauseAllMediaPlayback`, `setCameraCaptureState`,
+  `setMicrophoneCaptureState`, `closeAllMediaPresentations`,
+  `setAllMediaPlaybackSuspended`, `exported(as:)`, and the 2 async
+  `WKWebExtension` inits) — the contract forbids `await` in cited tests.
+  11 rows have no product member at all and need UIKit /
+  UniformTypeIdentifiers / SwiftUI-overlay types with no isolated-host
+  module (`WKNavigationAction.buttonNumber` / `modifierFlags`,
+  `WebPage.NavigationAction.buttonNumber` / `modifierFlags`,
+  `WKWebExtensionAction.menuItems`, `WKWebExtensionCommand.keyCommand` /
+  `menuItem`, three `WKUIDelegate` edit-menu/input-suggestion methods,
+  `WebPage.Representation` / `transferRepresentation`); framework-local
+  substitutes for dependency-owned types stay forbidden, so no lookalike
+  members are added. Still deferred: NSAttributedString HTML import,
+  `SecTrust`, `ProxyConfiguration`, `UTType`/`Transferable`, the two
+  SwiftUI-typed `WebPage` members, context-menu delegates, and the
+  synthesized `Equatable.!=` witness (a stdlib witness, so the overlay
+  override does not apply).
+- Overlay override does not trigger: 0 `not-applicable` rows remain.
+
+Validation on this Mac (the sealed Linux gate needs a Linux host):
+
+- Coverage recount: 2172 implemented / 35 declared / 26 deferred /
+  0 unavailable / 0 not-applicable, total 2233.
+- `/tmp` overlay build (repo untouched; overlay adds the `import
+  CoreGraphics` lines and drops the Linux-only
+  `NSKeyValueObservingOptions` redeclaration from the test-only UIKit
+  shim, both of which this Mac's SDK needs): `libUIKit.dylib` and
+  `libWebKit.dylib` compile warnings-as-errors with
+  `PORTABLE_WEBKIT_HOST` (17 product sources per
+  `webkit_guest_sources.txt`).
+- All 12 non-overlay `tests/agent/*Tests.swift` compile warnings-as-errors
+  against the overlay dylib; 81/81 runnable tests pass, including the new
+  `testPageNavigationsSequenceReadable` (also verified standalone). The 2
+  failures under a full 83-test run are the pre-existing
+  `PORTABLE`-flag `document.title` error-code artifacts
+  (`testLoadFailsClosedWithoutCommit`,
+  `testCallAsyncJavaScriptJSONOnlyEvaluator`: `.unknown` instead of
+  `.javaScriptExceptionOccurred`), the same artifact the baseline
+  reports. The 16 overlay tests are Linux-only by design
+  (`!canImport(SwiftUI)` product branch) and were not re-run on this Mac.
+
+Only `full/webkit/` changes: `coverage.tsv` (1 row),
+`oracle-questions.tsv` (1 reason), `tests/agent/WebKitPageHistoryTests.swift`
+(1 test), and this README.
+
 ### Leftover re-examination (pi-wave10 webkit)
 
 Re-examined all 36 declared and 26 deferred rows against the

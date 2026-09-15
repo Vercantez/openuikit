@@ -643,3 +643,42 @@ Environment: local `swiftc` is Apple Swift 6.2.1 targeting
 `-warnings-as-errors`; the new cache test passes in-process on this Mac.
 The sealed gate runs in the `uikit-linux` container (Swift 6.2.4,
 `aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).
+
+## Depth pass 2026-09 (wave 12, isolated worktree)
+
+Re-examines the 15 leftover rows for in-process conversion. No fabric,
+daemon, radio, `await`, or success invention is available, so the ledger is
+unchanged. No product, test, manifest, or oracle change.
+
+**Coverage before:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+(+0 implemented; 28411 nondeferred; floor 150).
+
+Ledger re-validated: 28462 data rows, every status in the allowed set,
+all 28407 implemented rows cite well-formed
+`test:full/matter/tests/agent/*Tests.swift#testName` evidence, all 4
+declared rows cite an existing `MTRControllers.swift#MTRDeviceController`
+anchor, and every deferred/unavailable row carries an explanatory note.
+
+### Why nothing converts
+
+- Overlay OVERRIDE has no Matter targets: the census holds 0
+  not-applicable rows, and the only "View" identifiers are the Groups
+  cluster `ViewGroup` params and the AccessControl `view`/`proxyView`
+  privilege enumerators -- not SwiftUI `View` modifiers. There are no
+  stdlib/Foundation protocol-witness rows to protect.
+- The 4 declared rows are XPC surface that cannot compile on Linux:
+  both `sharedController` spellings need `MTRXPCConnectBlock`
+  (itself unavailable without NSXPCConnection) and both
+  `xpcInterfaceFor*Protocol` selectors return NSXPCInterface.
+  Framework-local stand-ins for dependency-owned NSXPC types are
+  forbidden, so these stay declared.
+- The 11 deferred rows stay deferred by design:
+  `MTRSetMessageReliabilityParameters` (a no-op would invent radio
+  timing) and the 10 `NSCoding.initWithCoder` rows (returning nil
+  would fabricate failure; decoding real state would invent Apple's
+  archive format; Linux Foundation has no Apple daemon data to decode).
+- Hardware/daemon success paths (commissioning, reads/commands, CSR/
+  certificate issuance, OTA parsing) remain fail-closed or deferred per
+  the contract.

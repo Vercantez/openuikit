@@ -56,6 +56,40 @@ discriminators, not observed Apple values.
 
 See `oracle-questions.tsv`.
 
+## Wave 12 2026-09-15
+
+Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /
+10 unavailable** of 313 (216 nondeferred). Before: identical counts.
+Implemented gain: **0**.
+
+Re-examined all 31 leftover rows for in-process conversion; none qualifies:
+
+- All 10 declared rows are `async` witnesses, re-verified `async` in product
+  sources via grep (`Attachment.loadMetadata`, `Attachments.Iterator.next`,
+  `Journal.remove`, two messenger `send` overloads, `Messages.Iterator.next`,
+  `Sessions.Iterator.next`, async `metadata` getter, `prepareForActivation`,
+  `activate`). Calling one from a top-level synchronous no-argument `test*()`
+  is a compile error, and the sealed runner forbids `await` /
+  `DispatchQueue.main` / `RunLoop` / semaphore waits. A `Task { await ... }`
+  fire-and-forget wrapper would still place the banned `await` token in the
+  cited test, so no declared row can convert without weakening the gate.
+- All 21 deferred rows require `Combine`, `CoreTransferable`, or
+  `CoreGraphics`, none a declared isolated-host dependency; AGENTS.md
+  forbids framework-local substitutes for dependency-owned types.
+- The 66 `not-applicable` rows are stdlib `AsyncSequence` /
+  `AsyncIteratorProtocol` witnesses the contract explicitly excludes from
+  conversion (stdlib/Foundation protocol witnesses stay n/a); the 10
+  `unavailable` rows are UIKit / `NSItemProvider` / `AVFoundation` overlays.
+  This slug has no SwiftUI identity View-modifier rows, so the overlay
+  override is not applicable.
+
+Validation on macOS: product sources compile under
+`swiftc -warnings-as-errors`, the dylib links, and a Darwin runner invoking
+all 65 top-level `test*()` functions (61 cited by implemented evidence)
+exits 0 with sole stdout `GROUPACTIVITIES_AGENT_RUNTIME_OK`. Evidence audit:
+no banned constructs in test files, worst implemented-evidence share
+`testGroupSessionEventActions` at 8.7% (18/206), well under the 40% cap.
+
 ## Wave 11 2026-09-15
 
 Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /

@@ -800,9 +800,9 @@ c:objc(cs)HMCameraStreamControl(im)stopStream	implemented	test:full/homekit/test
 c:objc(cs)HMCameraStreamControl(py)cameraStream	implemented	test:full/homekit/tests/agent/HomeKitBehaviorTests.swift#testCameraStreamFailClosed	Focused Linux host assertion; not Apple Home success.
 c:objc(cs)HMCameraStreamControl(py)delegate	implemented	test:full/homekit/tests/agent/HomeKitDepthWave9Tests.swift#testCameraAndSetupValueState	Focused synchronous host-state verification.
 c:objc(cs)HMCameraStreamControl(py)streamState	implemented	test:full/homekit/tests/agent/HomeKitBehaviorTests.swift#testCameraStreamFailClosed	Focused Linux host assertion; not Apple Home success.
-c:objc(cs)HMCameraView	declared	source:full/homekit/HMCamera.swift#HMCameraView	Compiles on Linux; @MainActor init/member access cannot be exercised from a synchronous nonisolated agent test.
-c:objc(cs)HMCameraView(im)init	declared	source:full/homekit/HMCamera.swift#HMCameraView	Compiles on Linux; @MainActor init/member access cannot be exercised from a synchronous nonisolated agent test.
-c:objc(cs)HMCameraView(py)cameraSource	declared	source:full/homekit/HMCamera.swift#HMCameraView	Compiles on Linux; @MainActor init/member access cannot be exercised from a synchronous nonisolated agent test.
+c:objc(cs)HMCameraView	implemented	test:full/homekit/tests/agent/HomeKitCameraViewTests.swift#testCameraViewHostIdentity	identity camera view; stores optional source, never presents UI
+c:objc(cs)HMCameraView(im)init	implemented	test:full/homekit/tests/agent/HomeKitCameraViewTests.swift#testCameraViewHostIdentity	identity camera view; stores optional source, never presents UI
+c:objc(cs)HMCameraView(py)cameraSource	implemented	test:full/homekit/tests/agent/HomeKitCameraViewTests.swift#testCameraViewHostIdentity	identity camera view; stores optional source, never presents UI
 c:objc(cs)HMCharacteristic	implemented	test:full/homekit/tests/agent/HomeKitAccessoryDepthTests.swift#testCharacteristicWriteNotifyAndMetadata	Focused Linux host assertion; not Apple Home / HAP success.
 c:objc(cs)HMCharacteristic(im)enableNotification:completionHandler:	implemented	test:full/homekit/tests/agent/HomeKitAccessoryDepthTests.swift#testAccessoryGraphAndDelegate	Focused Linux host assertion; not Apple Home / HAP success.
 c:objc(cs)HMCharacteristic(im)init	implemented	test:full/homekit/tests/agent/HomeKitAccessoryDepthTests.swift#testCharacteristicWriteNotifyAndMetadata	Focused Linux host assertion; not Apple Home / HAP success.

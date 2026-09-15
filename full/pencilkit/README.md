@@ -72,6 +72,28 @@ Top-5 evidence distribution (438 implemented rows):
 No non-enum/option-set test is cited by more than 40% of the remaining
 implemented rows (max 6.6% after excluding shareable enum/option-set rows).
 
+## Depth pass 2026-09 (wave 12)
+
+Recount before: 438 `implemented` / 3 `declared` / 0 `deferred` /
+2 `unavailable` (443 total). Recount after: identical — implemented
+gain **+0**. All three `declared` rows were re-examined with compiler
+probes and stay `declared`:
+
+- `PKDrawing.draw(in:frame:from:darkUserInterfaceStyle:)` is `async`;
+  a synchronous no-argument `func test*()` cannot call it (`'async'
+  call in a function that does not support concurrency`), and cited
+  tests forbid `await`. Linux still does not invent ink pixels.
+- Both `Sequence.compare(_:_:)` witnesses
+  (`PKStrokePath`, `InterpolatedSlice`) are only callable when
+  `Element: SortComparator`. `PKStrokePoint` is not one (verified:
+  `[Double].compare` fails the same way), so calling them would
+  require inventing a `SortComparator` (plus `Hashable`) conformance
+  on `PKStrokePoint` — non-Apple API. Unlike `sorted(using:)`, which
+  takes a caller-provided comparator, there is no honest adapter.
+
+No `not-applicable` rows exist, so the overlay override has nothing to
+convert in this lane.
+
 ## Depth pass 2026-09 (wave 10)
 
 Six inherited Foundation `Sequence` witnesses became `implemented` with

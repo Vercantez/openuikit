@@ -144,7 +144,13 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         set { setValue(newValue, forKey: key) }
     }
 
-    open func value(forKey key: String) -> Any? {
+    #if canImport(ObjectiveC)
+    override open func value(forKey key: String) -> Any? { _cdKVCValue(forKey: key) }
+    #else
+    open func value(forKey key: String) -> Any? { _cdKVCValue(forKey: key) }
+    #endif
+
+    private func _cdKVCValue(forKey key: String) -> Any? {
         willAccessValue(forKey: key)
         defer { didAccessValue(forKey: key) }
         if let fetched = entity.propertiesByName[key] as? NSFetchedPropertyDescription,
@@ -155,7 +161,13 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         return primitiveValue(forKey: key)
     }
 
-    open func setValue(_ value: Any?, forKey key: String) {
+    #if canImport(ObjectiveC)
+    override open func setValue(_ value: Any?, forKey key: String) { _cdKVCSetValue(value, forKey: key) }
+    #else
+    open func setValue(_ value: Any?, forKey key: String) { _cdKVCSetValue(value, forKey: key) }
+    #endif
+
+    private func _cdKVCSetValue(_ value: Any?, forKey key: String) {
         willChangeValue(forKey: key)
         let old = primitiveValue(forKey: key)
         setPrimitiveValue(value, forKey: key)
@@ -207,8 +219,13 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     }
 
     open func didAccessValue(forKey key: String?) { _ = key }
+    #if canImport(ObjectiveC)
+    override open func willChangeValue(forKey key: String) { _ = key }
+    override open func didChangeValue(forKey key: String) { _ = key }
+    #else
     open func willChangeValue(forKey key: String) { _ = key }
     open func didChangeValue(forKey key: String) { _ = key }
+    #endif
 
     open func willChangeValue(
         forKey inKey: String,

@@ -66,6 +66,16 @@ Implemented **145** of 150 exact IDs (4 `declared` async methods, 1 CoreData
 `deferred` typealias). Nondeferred count 149, above the medium-full floor of
 75.
 
+Wave 12: recounted coverage.tsv at 145 `implemented` / 4 `declared` / 1
+`deferred` of 150 (leftover 5, unchanged). The 4 `declared` rows are the
+`async throws` LiveCallerIDLookupManager methods (`openSettings`, `reset`,
+`refreshPIRParameters`, `refreshExtensionContext`): citing them from the
+sealed runner's synchronous no-argument tests would require `await`, which
+the contract forbids, so they stay fail-closed `declared`. The 1 `deferred`
+row is the CoreData-owned `NSManagedObject` lookalike, which this port is
+forbidden to publish. Product compiles warning-free; the 40 cited agent
+tests build against it.
+
 Wave 10: Apple-oracle probe (`xcrun swiftc`, Xcode 26.1) pinned
 `extensionPointName` to `"com.apple.live-lookup"`; the answered oracle
 question was removed (7 remain). Implemented/declared/deferred counts are

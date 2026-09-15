@@ -75,6 +75,21 @@ validator requires `full/framework-roadmap/framework-roadmap.json`, absent
 here — same as wave-9); no product, coverage, test, or manifest file was
 modified.
 
+Wave-12 audit (2026-09-15): recounted **284 implemented / 65 declared /
+0 deferred / 0 not-applicable / 349 total** — unchanged. Re-verified every
+declared precise ID carries the async marker (`Ya`, 65/65) with zero
+non-async declared rows (`grep -v Ya` empty), and zero SwiftUI/View overlay
+rows in coverage, so the overlay-conversion playbook does not apply and the
+stdlib-witness rows stay `declared` per the operator merge ruling (never
+`not-applicable`). All 65 are async hardware/camera commands, async iterator
+`next()` methods, or async-consuming stdlib `AsyncSequence`/
+`AsyncIteratorProtocol` witnesses — none synchronously callable, so none can
+gain a synchronous `test*` caller under the sealed-runner contract (no `await`,
+`DispatchQueue.main`, `RunLoop`, or semaphore waits allowed), and
+hardware/daemon/camera success stays fail-closed per the task brief.
+Implemented gain this wave: 0. No product, coverage, test, or manifest file
+was modified.
+
 ## What is real
 
 - `DockKitError` cases in API-digester order (`notSupported` …

@@ -693,6 +693,16 @@ open class NSAtomicStoreCacheNode: NSObject {
         super.init()
     }
 
+    #if canImport(ObjectiveC)
+    override open func value(forKey key: String) -> Any? { propertyCache?[key] }
+    override open func setValue(_ value: Any?, forKey key: String) {
+        if let value {
+            propertyCache?[key] = value
+        } else {
+            propertyCache?.removeObject(forKey: key)
+        }
+    }
+    #else
     open func value(forKey key: String) -> Any? { propertyCache?[key] }
     open func setValue(_ value: Any?, forKey key: String) {
         if let value {
@@ -701,6 +711,7 @@ open class NSAtomicStoreCacheNode: NSObject {
             propertyCache?.removeObject(forKey: key)
         }
     }
+    #endif
 }
 
 open class NSAtomicStore: NSPersistentStore {

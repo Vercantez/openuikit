@@ -114,3 +114,22 @@ tests while hardware/daemon success must stay fail-closed. They remain
 per-row oracle questions. No SwiftUI View-overlay rows exist in this
 framework, and the single `unavailable` row is a Foundation-owned
 `NotificationCenter.MessageIdentifier` witness that must not be stubbed.
+
+## Wave 12 leftover review (2026-09-15)
+
+Before: **281 implemented / 7 declared / 0 deferred / 1 unavailable / 289 total**.
+After: **281 implemented / 7 declared / 0 deferred / 1 unavailable / 289 total**
+(implemented gain 0).
+
+Re-audited all 7 `declared` rows: unchanged, all `async throws` daemon-gated
+methods listed above. Conversion to `implemented` remains blocked for the same
+reasons (synchronous cited tests cannot `await` an `async` call; daemon success
+stays fail-closed; the sealed runner forbids concurrency primitives in cited
+tests). Re-checked the overlay override: `coverage.tsv` contains zero
+SwiftUI / View rows, so there is nothing to convert under that rule, and the
+single `unavailable` row is a stdlib/Foundation protocol witness that must stay
+`unavailable`. Product sources still compile warning-free
+(`swiftc -warnings-as-errors -emit-library` → `libLiveCommunicationKit.dylib`
+OK). The shared host gate (`tests/acceptance/test_host.sh`) refuses in this
+isolated worktree for an out-of-scope reason (missing shared
+`full/framework-roadmap/framework-roadmap.json`, outside `full/livecommunicationkit/`); no framework-owned check regressed.

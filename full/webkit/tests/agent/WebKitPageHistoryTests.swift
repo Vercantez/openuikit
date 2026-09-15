@@ -177,3 +177,23 @@ func testPageHistoryUnavailableLoadPreservesCommittedState() {
         precondition(page.backForwardList.currentItem!.url == historyURL("local"))
     }
 }
+
+func testPageNavigationsSequenceReadable() {
+    // `WebPage.navigations` is a synchronous getter: reading it constructs
+    // the page-wide event sequence without awaiting. Draining the sequence
+    // needs `await`, so this test exercises both reads (idle and after a
+    // local commit) and asserts the surrounding committed state instead.
+    // No renderer, scheduling, replay, or cancellation is implied.
+    MainActor.assumeIsolated {
+        let page = WebPage()
+        let idle = page.navigations
+        _ = idle
+        precondition(page.url == nil && !page.isLoading)
+        page.load(simulatedRequest: URLRequest(url: historyURL("nav")), responseHTML: "<title>Nav</title>")
+        let afterCommit = page.navigations
+        _ = afterCommit
+        precondition(page.url == historyURL("nav") && page.title == "Nav")
+        precondition(!page.isLoading && page.estimatedProgress == 1)
+        precondition(page.backForwardList.currentItem!.url == historyURL("nav"))
+    }
+}

@@ -639,3 +639,44 @@ After: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
 
 No non-exempt test is cited by more than 40% of implemented rows
 (largest share 191/2978 = 6.4%).
+
+## Depth pass 2026-09-15 (wave 12 leftover sweep)
+
+Before: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Leftover = 69.
+
+Re-verified every leftover row against the contract. Zero `View` overlay
+rows exist in this framework (the 14 `coverage.tsv` lines matching
+"SwiftUI"/"View" are deferred-note text stating the rows are *not*
+SwiftUI cross-import overlays), so the overlay override does not apply.
+All 20 `declared` rows are `async` (19 `NetworkChannel`
+send/receive/ping/pong/close overloads in `NetworkTyped.swift` plus async
+`NWPathMonitor.Iterator.next()` in `Network.swift`); a synchronous sealed
+test cannot call them without `await`, which the contract forbids, so they
+stay `declared` at their maximum honest status. The 49 `deferred` rows
+stay deferred: 4 `withNWConnection` overloads with no source-compatible
+declaration, async-only typed-overlay APIs (QUIC `openStream`/
+`inboundStreams`, `Browser`/`Listener` `run`, channel reports, WebSocket
+`startSend`/`startReceive`), one deprecated `flatMap` witness
+(warnings-as-errors), and stdlib/Combine/Foundation/Concurrency witnesses
+that are not Network-owned declarations (the contract forbids converting
+those). Hardware/daemon (TLS handshake, QUIC transport, mDNS/Bonjour)
+stays fail-closed.
+
+Verification this run (no product/test edits): coverage holds all 3047
+public-surface IDs exactly once with no duplicates; every `declared`
+anchor is present in its manifest-listed product source (`send` x12 /
+`receive` x9 / `ping` / `pong` / `close` in `NetworkTyped.swift`, `next`
+in `Network.swift`); all 163 cited `test*` functions resolve to defined
+top-level synchronous no-argument functions; largest evidence share
+191/2978 = 6.4%. Product `libNetwork.dylib` and module compile clean
+under `swiftc -warnings-as-errors`, and all `tests/agent/*Tests.swift`
+files typecheck clean (macOS host; `NetworkDependencyIdentity.swift` and
+`NetworkRuntime.swift` are sealed-runner mains by design and excluded
+from the typecheck, as in prior waves).
+
+After: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Implemented gain **+0**.
+
+No non-exempt test is cited by more than 40% of implemented rows
+(largest share 191/2978 = 6.4%).

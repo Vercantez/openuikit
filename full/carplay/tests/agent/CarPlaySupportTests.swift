@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(MapKit)
+import MapKit
+#endif
 @_spi(OpenUIKitHost) import CarPlay
 
 final class HostNSCoder: NSCoder {
@@ -99,9 +102,9 @@ final class RecordingSessionDelegate: NSObject, CPSessionConfigurationDelegate {
 }
 
 final class RecordingSearchDelegate: NSObject, CPSearchTemplateDelegate {
-    func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem) async {}
-    func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String) async -> [CPListItem] {
-        [CPListItem(text: searchText, detailText: "hit")]
+    func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) { completionHandler() }
+    func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+        completionHandler([CPListItem(text: searchText, detailText: "hit")])
     }
     func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {}
 }
@@ -113,7 +116,7 @@ final class RecordingPOIDelegate: NSObject, CPPointOfInterestTemplateDelegate {
 }
 
 final class RecordingListDelegate: NSObject, CPListTemplateDelegate {
-    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem) async {}
+    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) { completionHandler() }
 }
 
 final class RecordingClusterDelegate: NSObject, CPInstrumentClusterControllerDelegate {

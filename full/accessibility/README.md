@@ -142,3 +142,30 @@ worktree does not contain (present in the main checkout). No files outside
 `full/accessibility/` were touched.
 
 Local toolchain: Apple Swift 6.2.1 targeting `arm64-apple-macosx26.0`.
+
+## Wave 12 recount 2026-09-15
+
+Before: **510 implemented / 10 declared / 0 deferred / 520 total**.
+After: **510 implemented / 10 declared / 0 deferred / 520 total** (no change).
+All 10 declared rows were re-examined against the sealed-runner rules and
+none can convert. `So21AccessibilitySettingsV0A0E04openB03forySo17AXSettingsFeatureV_tYaKFZ`
+is `static func openSettings(for:) async throws` (confirmed in
+`reference/api-digester.json` and `AXSettings.swift`), so no synchronous
+`func test*()` without `await` can call it. Each of the nine
+`s:10Foundation19AttributedStringKeyPAAE11descriptionSSvp::SYNTHESIZED` rows
+is the instance `description` getter of a caseless (uninhabited)
+attribute-key enum; no value can be constructed in safe Swift, so no test
+can invoke the getter, and the contract explicitly forbids converting
+stdlib/Foundation protocol witnesses. The overlay override does not apply:
+this lane has zero `not-applicable` rows and no SwiftUI View-modifier rows.
+Deferred stays at 0; every unavailable behavior remains honestly fail-closed.
+
+Top evidence citation is 19/510 rows (3.7%), far under the 40% cap.
+Product sources and all 62 cited test functions still compile clean with
+`swiftc -warnings-as-errors`; the 62-test Darwin-adapted runner emits only
+`ACCESSIBILITY_AGENT_RUNTIME_OK`. The sealed `test_host.sh` still refuses
+inside this isolated worktree for the same out-of-lane reason as wave 11:
+it requires `full/framework-roadmap/framework-roadmap.json` at the repo
+root, which the worktree does not contain. No files outside
+`full/accessibility/` were touched; the only file changed in wave 12 is
+this README recount.

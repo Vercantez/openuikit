@@ -53,7 +53,15 @@ and converting the 9 throwing methods would require inventing a synthetic
 succeeding initializer for hardware-backed keys, both of which would fabricate
 SecureEnclave success and violate the fail-closed rule; the 12 LAContext/SecAccessControl
 inits plus 11 Combine publishers stay unavailable and the 22 Foundation
-compare/formatted witnesses stay not-applicable). Implemented ≥ 900. Nondeferred except
+compare/formatted witnesses stay not-applicable). Wave 12 recount: before
+1221/21/0, after 1221/21/0 (gain 0 — re-verified all 8 guest sources still build
+libCryptoKit.dylib with -warnings-as-errors and all 23 cited agent tests pass in a
+manual marker-only runner emitting only CRYPTOKIT_AGENT_RUNTIME_OK; the 21 declared
+rows remain unconvertible in-process because the 6 SecureEnclave PrivateKey structs
+expose no public initializer (memberwise init is internal and tests link externally),
+Apple's only initializers require LAContext/SecAccessControl (unavailable), and the
+sole factories (ML-KEM generate) correctly throw fail-closed, so no instance exists
+on which to call the 12 getters or 9 throwing methods; deferred is 0). Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
 not-applicable: their generic constraints (`Element: SortComparator`,

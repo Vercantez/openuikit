@@ -77,7 +77,16 @@ public final class _CDAttributeSortDescriptor: NSSortDescriptor {
     public init(attributeKey: String, ascending: Bool) {
         self.attributeKey = attributeKey
         self.attributeAscending = ascending
-        super.init(keyPath: \NSObject.hash, ascending: true)
+        // `NSSortDescriptor(keyPath:ascending:)` is SDK-visible but missing
+        // from the host system Foundation at runtime, and `init(key:ascending:)`
+        // funnels into the selector-designated initializer, so route through it.
+        super.init(key: attributeKey, ascending: ascending, selector: nil)
+    }
+
+    public override init(key: String?, ascending: Bool, selector: Selector?) {
+        self.attributeKey = key ?? ""
+        self.attributeAscending = ascending
+        super.init(key: key, ascending: ascending, selector: selector)
     }
 
     public required init?(coder: NSCoder) {

@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(MapKit)
+import MapKit
+#endif
 
 open class CPAlertAction: NSObject, @unchecked Sendable {
     public enum Style: Int, Sendable, Hashable {
@@ -1398,12 +1401,21 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
     @_spi(OpenUIKitHost)
     public func openuikit_updateSearchText(_ text: String) async -> [CPListItem] {
         guard let delegate else { return [] }
-        return await delegate.searchTemplate(self, updatedSearchText: text)
+        return await withCheckedContinuation { continuation in
+            delegate.searchTemplate(self, updatedSearchText: text) { results in
+                continuation.resume(returning: results)
+            }
+        }
     }
 
     @_spi(OpenUIKitHost)
     public func openuikit_selectResult(_ item: CPListItem) async {
-        await delegate?.searchTemplate(self, selectedResult: item)
+        guard let delegate else { return }
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            delegate.searchTemplate(self, selectedResult: item) {
+                continuation.resume()
+            }
+        }
     }
 
     @_spi(OpenUIKitHost)

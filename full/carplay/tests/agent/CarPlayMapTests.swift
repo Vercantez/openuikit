@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(MapKit)
+import MapKit
+#endif
 @_spi(OpenUIKitHost) import CarPlay
 
 func testMapTemplateTripPreviewAndPanning() {

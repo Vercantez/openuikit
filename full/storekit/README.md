@@ -845,3 +845,57 @@ source), and async-sequence helpers (`allSatisfy`/`compactMap`/`map`/
 Nondeferred stays **15530** (floor 7848). Implemented gain: 0 — every
 leftover `declared` row requires `await` to call and purchase success
 stays fail-closed. No product sources, tests, or manifests changed.
+
+## Wave 12 (pi wave-12 storekit declared-leftover port)
+
+Recount of `coverage.tsv`: 15480 implemented / 50 declared / 165 deferred /
+0 unavailable / 0 not-applicable of 15695 (leftover 215). Re-audited all 50
+`declared` rows against the sealed-gate evidence rules (top-level
+synchronous no-argument `func test*()` that calls the identifier, no
+`await` / `DispatchQueue.main` / `RunLoop` / semaphores) and verified the
+`get async` spelling in product source (`StoreKitGenerated.swift:672-673,
+688-689, 704-705, 744-745`; `StoreKitProduct.swift:770-772`;
+`StoreKitGenerated.swift:839-841`):
+
+- 46 API/synthesized rows carry `Ya` (`async`) in the mangled precise ID —
+  async-throws entry points (`presentNoticeSheet`, `open`, `open(url:)`,
+  `bind`, `purchase`, `token(for:)`, `showNotice`), async-throws inits
+  (`PaymentMethodBinding.init(id:)`,
+  `AdvancedCommerceProduct.init(id:)`), async iterator `next()`
+  (`PurchaseIntent.Intents`, `Message.Messages`), and 34 AsyncSequence
+  synthesized witnesses (`next`/`isolation`, `max`/`min`/`first`/`contains`
+  and friends) over `Storefronts`, `Transactions`, `Intents`, `Messages`,
+  and `Statuses`.
+- 4 property rows carry no `Ya` in the mangling but declare `get async`
+  getters in source (`ExternalPurchase.canPresent`,
+  `ExternalLinkAccount.canOpen`, `ExternalPurchaseLink.canOpen`,
+  `ExternalPurchaseCustomLink.isEligible`); any read requires `await`, so
+  no cited sync test can call them.
+
+The fail-closed synchronous behavior behind every async spelling (`*Now`
+shims, `make(id:)`, `eligibleURLs`) is already exercised by synchronous
+depth-pass-3 tests, and no cited test file contains `await` /
+`DispatchQueue.main` / `RunLoop` / semaphores, so behavior coverage is
+unchanged; only the async spellings stay `declared`, which is the honest
+status. Purchase / Apple Pay success stays fail-closed per the lane rule.
+`not-applicable` is 0, so the overlay OVERRIDE has no rows to convert.
+`deferred` (165) is unchanged: Optional/Never `StoreContent` stdlib
+witnesses (never converted per the override), `SwiftUI.Transaction`
+collisions, Foundation `FormatStyle` synthesis, async
+`EntitlementTaskState.map`/`flatMap`, `PurchaseAction`
+`callAsFunction` overloads (the sync `callAsFunction()` / throwing
+`callAsFunction(_:)` overloads are already implemented; the deferred rows
+are the async purchase variants), CryptoKit `P256` signatures, async
+`AdvancedCommerceProduct.latestTransaction` (`get async`, verified in
+source), and async-sequence helpers. Largest evidence,
+`testViewOverlayBatch17`, cites 595 rows (3.8% of 15480); no cited test
+covers more than 40% of implemented rows.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before wave-12 port | 15480 | 50 | 165 | 0 | 0 |
+| after wave-12 port | 15480 | 50 | 165 | 0 | 0 |
+
+Nondeferred stays **15530** (floor 7848). Implemented gain: 0 — every
+leftover `declared` row requires `await` to call and purchase success
+stays fail-closed. No product sources, tests, or manifests changed.

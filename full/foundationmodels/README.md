@@ -116,6 +116,41 @@ Coverage before/after wave 11 (recount, no change): 665 implemented /
 declared rows are macros, Combine publishers, and the uninhabited
 `Never.generatedContent` witness. `Adapter.isCompatible` stays deferred.
 
+### Wave-12 leftover re-examination (2026-09, recount: no change)
+
+Recount after re-examining every leftover row: 665 implemented /
+7 declared / 1 deferred / 81 not-applicable of 754 IDs (leftover = 8).
+No declared row could be honestly promoted; each was probed:
+
+- 4 macro rows (`@Generable`, 3 `@Guide` overloads): the declarations are
+  `#if !os(Linux)`-gated, so they do not exist in the Linux host module
+  and no cited test can expand them there (the generated runner calls
+  cited tests unconditionally, so `#if`-gated tests would fail to link).
+  An out-of-tree probe against the host-built module showed `@Generable`
+  expanding only by binding Apple's toolchain plugin — Apple-runtime
+  behavior that cannot be claimed on Linux. Stay `declared`.
+- 2 Combine `publisher` witnesses (`Transcript`, `Transcript.ToolCalls`):
+  Combine is not a seeded host dependency (sealed dependencies list
+  `Foundation` only), and a framework-local `publisher` substitute is
+  forbidden. An `xcrun swiftc` typecheck probe against the macOS 26 SDK
+  pins the exact witness types (`Publishers.Sequence<Transcript, Never>`
+  and `Publishers.Sequence<Transcript.ToolCalls, Never>`). Stay `declared`.
+- `Never.generatedContent`: the type is uninhabited and the witness body
+  (`switch self {}`) traps, so any calling test would crash the runner
+  before the success marker. A `KeyPath<Never, GeneratedContent>` probe
+  pins the declaration on the Apple SDK without executing it.
+  Stays `declared`.
+- `Adapter.isCompatible(_:)` stays `deferred`: it takes
+  `BackgroundAssets.AssetPack`, which is not a seeded host dependency,
+  and no public lookalike may be declared for a dependency-owned type.
+
+Gate status: the shared validator is blocked in this sparse worktree by a
+pre-existing missing `full/framework-roadmap/framework-roadmap.json`
+(outside this lane, untouched). The lane build-plus-run steps were
+replicated faithfully against this checkout: product compiles under
+`-warnings-as-errors`, all 30 unique cited tests pass, and the runner
+emits only the exact success marker.
+
 ### Linux stand-in contract
 
 Install with `SystemLanguageModel.installLinuxStandInForTesting()` and remove

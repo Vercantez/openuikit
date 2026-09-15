@@ -72,6 +72,19 @@ APIs never report success.
 Implemented **189** of 207 exact IDs (18 `declared` async service methods).
 Nondeferred count 207, above the medium-full floor of 104.
 
+## Wave 12 recount (2026-09-15)
+
+Before: 189 implemented / 18 declared / 0 deferred / 0 not-applicable (207).
+After: 189 implemented / 18 declared / 0 deferred / 0 not-applicable (207).
+Gain: 0. All 18 leftover rows are `async`/`async throws` Apple service or
+daemon methods (AppLibrary install/update/license/age-exception/territory,
+MarketplaceExtension automaticUpdates, MarketplaceAppExtension defaults,
+AppDistributor.current, TransactionReporting.token). They compile, stay
+fail-closed, and cannot be cited by synchronous no-argument tests without
+`await`, semaphore waits, or fabricated Apple-service success, so they remain
+`declared`. No SwiftUI View-overlay modifiers and no `not-applicable` rows
+exist in this framework, so the overlay override does not apply.
+
 Top-5 `implemented` evidence distribution:
 
 1. `testMarketplaceKitErrorCases` — 24 rows (enum table + Codable/localizedDescription)

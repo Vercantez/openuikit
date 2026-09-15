@@ -120,3 +120,7 @@ snapshot (`scratch/ladder-corpus/focus-ios` is missing; Cursor Build
 the host-inventory stamp; the sealed framework gate compiles with a clean
 product tree (`products=clean`). Starting commit
 `cbb368eeea236bbc0479fefa599190972ac8cfca` matched.
+
+## Wave12 recount 2026-09-15
+
+Before **90** implemented / 9 declared / 0 deferred / 0 not-applicable; after **90** implemented / 9 declared / 0 deferred / 0 not-applicable (gain +0). Re-examined all 9 leftover `declared` rows: every one is `async` (`ContactItemEnumerator.enumerateContent/enumerateChanges/invalidate`, `ContactProviderManager.enable/disable/signalEnumerator/invalidate/reset`, `ContactProviderExtension.invalidate`). The coverage contract requires each `implemented` row to cite a top-level synchronous no-argument `func test*()` that actually calls the identifier with no `await`/semaphore/RunLoop/`DispatchQueue.main` waits, so no sync test can invoke these async entry points (calling an `async` function from sync context without `await` is a compile error) and they stay honestly `declared`. Retargeting them as sync would misrepresent the Apple async surface. No SwiftUI View-overlay rows exist in this 99-ID surface, so the overlay override does not apply. Product type-checks warning-free under host `swiftc` (exit 0); no product, test, manifest, or coverage changes needed.

@@ -907,3 +907,47 @@ Implemented gain: +4 (3259/3504 = 93.0% implemented). The new test file
 owns 4 rows (0.1%). Top test still
 `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
 180 (5.5%). No test owns more than 40% of implemented rows.
+
+## Wave 12 pass 2026-09-15 (leftover audit: ceiling re-affirmed)
+
+No SwiftUI/View overlay rows exist in this module's public surface, so the
+overlay-override clause has nothing to convert here. This pass re-audited
+all 25 declared and 220 deferred rows against the convertibility rules
+and re-affirms the honest ceiling: no declared row compiles into an
+honestly exercisable synchronous test, and no deferred row can be
+implemented in-process without hardware/daemon or the absent
+CoreAudioTypes/CoreVideo/`simd`/Combine dependencies.
+
+- 8 `sorted(using:)` witnesses (4 two-comparator + 4 single-comparator)
+  need a concrete `SortComparator`; none exists for these byte hosts on
+  Linux, and a throwaway test-only comparator would exercise no product
+  behavior.
+- 4 `compare` witnesses need an `Element: SortComparator` conformance
+  (retroactive `UInt8` or impossible `AnyObject`) under Linux's signature.
+- 4 `formatted` witnesses need a concrete `FormatStyle`; none exists.
+- 4 `publisher` witnesses need Combine, absent on Linux.
+- 2 `indices(where:)` / `indices(of:)` witnesses on
+  `CMReadOnlyDataBlockBuffer` trap (slicing rebases indices; verified
+  2026-09-15).
+- 2 `CVBufferRef` attachment members have no host type on Linux.
+- 1 deprecated optional-`flatMap` on `Buffers` warns under
+  `-warnings-as-errors`, so no cited test may call it.
+- All 220 deferred rows need CoreAudioTypes/CoreVideo (20 audio/image
+  C APIs, AudioBufferList/packet-description paths, tagged-dynamic pixel
+  content, parameter-set and single-sample collections), `simd`,
+  DispatchSource timers, hardware/daemons, or unobserved overlay shapes.
+
+No product Swift, test, manifest, or coverage rows changed in this pass.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3259 | 3259 |
+| declared | 25 | 25 |
+| deferred | 220 | 220 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +0 (ceiling; 3259/3504 = 93.0% implemented). Top test
+still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (5.5%). No test owns more than 40% of implemented rows. No Apple
+service or hardware success invented.

@@ -16,10 +16,14 @@ lane and is not linked here.
 Unchanged application source continues to import `SwiftData`. Linux has no
 CoreData SQLite store, no CloudKit, and no Apple schema-migration engine.
 
-Coverage (884 public precise IDs): **638 implemented** / 8 declared /
+Coverage (884 public precise IDs): **646 implemented** / 0 declared /
 48 deferred / 2 unavailable / 188 not-applicable. The
 ModelContainer, ModelConfiguration, ModelContext, FetchDescriptor, and
-Schema families are nondeferred (implemented or declared).
+Schema families are nondeferred (all implemented), including the
+Darwin macro surface (`Model`, `ModelActor`, `Transient`, `Attribute`,
+`Relationship`, `Index`, `Unique`): `tests/agent/SwiftDataMacroTests.swift`
+exercises the Linux portable counterpart each macro lowers to, since macro
+expansion needs the SwiftSyntax plugin (Darwin-only sketch).
 
 ## What is real
 

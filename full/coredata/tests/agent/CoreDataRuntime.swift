@@ -1850,8 +1850,8 @@ func testValidationAndUndoDisabled() {
 
             note.setValue("ok", forKey: "title")
             try note.validateValue(nil, forKey: "body")
-            note.willChangeValue(forKey: "title", withSetMutation: .union, using: [])
-            note.didChangeValue(forKey: "title", withSetMutation: .union, using: [])
+            note.willChangeValue(forKey: "title", withSetMutation: CoreData.NSKeyValueSetMutationKind.union, using: [])
+            note.didChangeValue(forKey: "title", withSetMutation: CoreData.NSKeyValueSetMutationKind.union, using: [])
             try context.save()
             context.refresh(note, mergeChanges: true)
             context.refreshAllObjects()
@@ -3498,7 +3498,7 @@ func testContextLifecycleMergeAndExecute() {
         )
         let fault = context.object(with: incoming.objectID)
         _ = context.shouldHandleInaccessibleFault(fault, for: incoming.objectID, triggeredByProperty: nil)
-        context.observeValue(forKeyPath: "title", of: fault, change: nil, context: nil)
+        context.observeValue(forKeyPath: "title", of: fault, change: nil as [String: Any]?, context: nil)
         context.perform { }
         context.performAndWait { }
 

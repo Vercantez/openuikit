@@ -291,3 +291,35 @@ branches flipped to simulate the SwiftUI-less Linux host, where the product
 dylib plus all `*Tests.swift` compiled and a local runner invoked all 54
 unique cited tests, exited 0, and printed only
 `HOMEKIT_AGENT_RUNTIME_OK`.
+
+## Wave 12 pass 2026-09 (pi-wave12)
+
+This pass converts the 3 leftover `declared` rows (`HMCameraView`, its
+`init`, and its `cameraSource`). Coverage moved from **2284 implemented /
+3 declared / 0 deferred / 8 unavailable / 0 not-applicable** to **2287
+implemented / 0 declared / 0 deferred / 8 unavailable / 0
+not-applicable**. The implemented gain is **+3** (2295 total).
+
+Product change (`full/homekit/HMCamera.swift`, already in the guest
+manifest): `HMCameraView` keeps `@MainActor` on Darwin (`#if
+canImport(UIKit)`) and omits it on the UIKit-less Linux host, mirroring
+the `CameraView` overlay precedent, so synchronous nonisolated agent tests
+can construct the view and touch `cameraSource`. The view stores an
+optional `HMCameraSource` and never presents camera UI; RTP/HAP sessions
+stay fail-closed as documented above.
+
+Tests (`tests/agent/HomeKitCameraViewTests.swift`):
+`testCameraViewHostIdentity` constructs `HMCameraView()`, reads/writes
+`cameraSource`, and references `HMCameraView.self` (3 rows; negligible
+share, far under the 40% cap). No `DispatchQueue`, `RunLoop`, semaphore
+waits, or `await`.
+
+The 8 `unavailable` rows are unchanged: Matter/XPC daemon blocks,
+`NSComparisonPredicate.Operator`, and `CLRegion`/CoreLocation hardware.
+
+Environment: `swiftc` on this Mac reports Swift 6.2.1. The sealed
+`tests/acceptance/test_host.sh` runner phase generates `import Glibc`,
+which cannot compile on macOS. Verification used `-warnings-as-errors`
+builds: the real-tree product dylib compiles clean, and the product
+module plus `HomeKitCameraViewTests.swift` link and run, exiting 0 and
+printing only `HOMEKIT_AGENT_RUNTIME_OK`.

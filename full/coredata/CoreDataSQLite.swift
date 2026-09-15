@@ -50,9 +50,20 @@ private enum _CDSQLiteAPI {
         lock.lock()
         defer { lock.unlock() }
         if handle != nil { return }
-        guard let loaded = dlopen("libsqlite3.so.0", RTLD_NOW) else {
-            let message = dlerror().map { String(cString: $0) } ?? "dlopen failed"
-            throw _CDMakeError(NSPersistentStoreOpenError, "libsqlite3.so.0 unavailable: \(message)")
+        // Linux guests link `libsqlite3.so.0`; the macOS host gate carries
+        // the same API as `libsqlite3.dylib`. Try each name in order.
+        let candidates = ["libsqlite3.so.0", "libsqlite3.dylib", "/usr/lib/libsqlite3.dylib"]
+        var loaded: UnsafeMutableRawPointer?
+        var lastMessage = "dlopen failed"
+        for name in candidates {
+            if let handle = dlopen(name, RTLD_NOW) {
+                loaded = handle
+                break
+            }
+            lastMessage = dlerror().map { String(cString: $0) } ?? "dlopen failed"
+        }
+        guard let loaded else {
+            throw _CDMakeError(NSPersistentStoreOpenError, "libsqlite3 unavailable: \(lastMessage)")
         }
         func symbol<T>(_ name: String) throws -> T {
             guard let pointer = dlsym(loaded, name) else {

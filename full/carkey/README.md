@@ -116,3 +116,22 @@ snapshot (`scratch/ladder-corpus/focus-ios` is missing; Cursor Build
 is the host-inventory stamp; the sealed framework gate prints the
 deliverable / reference / runtime / host markers. The gate compiles with
 a clean product tree (`products=clean`).
+
+## Wave 12 leftover re-examination (2026-09-15)
+
+Before: 110 implemented / 4 declared / 0 deferred / 114 total.
+After: 110 implemented / 4 declared / 0 deferred / 114 total (no change).
+
+All 4 leftover `declared` rows re-verified as unconvertible: every mangling
+contains `Ya` (async) — `CarKeyRemoteControl.start` plus the three
+`ExecutionRequest.results()` variants. They compile clean
+(`swiftc -warnings-as-errors` dylib build OK on Apple Swift 6.2.1,
+BUILD_EXIT=0) and fail closed without suspending, but no honest sync test
+can call them under the coverage contract (no `await`, semaphores,
+`DispatchQueue.main`, or `RunLoop` in cited tests; sealed runner only
+invokes top-level sync no-argument `func test*()`). The overlay OVERRIDE is
+not applicable: zero SwiftUI View-modifier rows in this surface
+(`grep -i swiftui|overlay` on coverage.tsv returns nothing). Top citation
+share is 13/110 = 11.8% (`testCarKeyErrorCodeCases`), well under the 40%
+bulk-relabel bound. No product, coverage, oracle, manifest, or test file
+needed changes; only this README section was added.
