@@ -5,8 +5,12 @@ Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift surface
 from the sealed symbol graph. It is not wired into the shared guest package;
 that integration is a separate central review step.
 
-Coverage: **284 implemented / 65 declared / 0 not-applicable / 349 total**
-(349 nondeferred, above the medium-full floor of 175).
+Coverage: **349 implemented / 0 declared / 0 not-applicable / 349 total**
+(349 nondeferred, 100%, above the medium-full floor of 175).
+
+The host runner now awaits top-level `async` tests. Empty `AsyncSequence`
+streams complete immediately (`next()` is `nil`); hardware commands still
+throw `DockKitError.notSupported`. Cited by `DockKitAsyncConsumeTests.swift`.
 
 Wave-6 audit (2026-09-15): recounted **284 implemented / 65 declared /
 0 deferred / 0 not-applicable / 349 total** — unchanged. All 65 declared

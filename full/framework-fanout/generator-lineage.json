@@ -32,6 +32,12 @@
       "commit": "f682e158dcfd6eafe16e67cb8bf741c7085a1fa1",
       "date": "2026-09-04",
       "reason": "framework-fanout: allow moduleLocation/roadmap in the host-gate key check"
+    },
+    {
+      "sha256": "4898fdaeb0ae9ff9e02053b4494f87abfe51c722ccb504f0f731a8b6c85ec333",
+      "commit": "pending",
+      "date": "2026-09-17",
+      "reason": "framework-fanout: await in-process async tests from the sealed @main runner"
     }
   ],
   "generators": {

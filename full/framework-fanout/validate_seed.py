@@ -3372,12 +3372,14 @@ class Validator:
             return
         declaration_pattern = re.compile(
             rf"(?m)^[ \t]*func[ \t]+{re.escape(anchor)}[ \t]*"
-            r"\([ \t]*\)[ \t\r\n]*(?:->[ \t]*Void[ \t\r\n]*)?\{"
+            r"\([ \t]*\)[ \t\r\n]*(?:async[ \t\r\n]+)?"
+            r"(?:throws[ \t\r\n]+|rethrows[ \t\r\n]+)?"
+            r"(?:->[ \t]*Void[ \t\r\n]*)?\{"
         )
         if declaration_pattern.search(source_code) is None:
             self.error(
                 f"coverage.tsv:{number}: implemented evidence must define a top-level "
-                "synchronous no-argument test function"
+                "no-argument test function (optionally async/throws)"
             )
 
     def _validate_oracle_questions(self, path: Path) -> None:

@@ -58,6 +58,14 @@ class HostGateFrameworkJsonKeysTest(unittest.TestCase):
             validate_seed.OPTIONAL_FRAMEWORK_METADATA_KEYS,
         )
 
+    def test_acceptance_script_embeds_async_runner(self) -> None:
+        script = base.acceptance_script()
+        self.assertIn("FanoutHostRunner", script)
+        self.assertIn("static func main() async", script)
+        self.assertIn('await {name}()', script)
+        self.assertIn("-parse-as-library -I", script)
+        self.assertIn("no-argument test function (optionally async/throws)", script)
+
     def test_acceptance_script_embeds_generated_key_check(self) -> None:
         script = base.acceptance_script()
         fragment = base.host_gate_framework_json_key_check_python()

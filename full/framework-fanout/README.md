@@ -164,9 +164,10 @@ the behavior works. In schema v2, each `declared` row must cite
 `source:full/<slug>/<product-source>.swift#Symbol`, and that source must be in
 the guest manifest. Each `implemented` row must cite
 `test:full/<slug>/tests/agent/*Tests.swift#testFunction`; the function must exist
-as a top-level synchronous no-argument function. The acceptance gate derives a
-trusted runner from those anchors, compiles every test source, explicitly loads
-the dylib, and invokes every distinct cited test exactly once. Coverage rows are
+as a top-level no-argument function (`async` and `throws` are allowed). The
+acceptance gate derives a trusted `@main` async runner from those anchors,
+compiles every test source, explicitly loads the dylib, and invokes every
+distinct cited test exactly once (`await` for async tests). Coverage rows are
 a review index, not a substitute for meaningful assertions.
 
 ## Oracle queue

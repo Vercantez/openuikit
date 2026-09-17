@@ -2337,7 +2337,7 @@ oracle question. Do not guess.
 - Create a nonempty `README.md` describing what is real, fail-closed, and still
   deferred. The primary implementation file must be `{module}.swift`.
 - Put focused behavioral checks in `tests/agent/*Tests.swift` as top-level,
-  synchronous, no-argument functions named `test*`. Create
+  no-argument functions named `test*` (`async` and `throws` are allowed). Create
   `tests/agent/{module}LoadSmoke.swift` with exactly these three logical lines
   (including the blank line): `import {module}`, a blank line, and
   `let frameworkLoadSmokeMarker = "{marker}"`. The sealed gate generates the
@@ -2435,8 +2435,8 @@ Deliver all of the following in `full/{slug}/`:
 3. Nonempty `{module}.swift` and `README.md`, plus `oracle-questions.tsv` with
    header `precise\tquestion\trisk\treason` and at least one question; use
    `module` only for cross-cutting items.
-4. Top-level synchronous no-argument functions named `test*` in
-   `tests/agent/*Tests.swift`, plus `tests/agent/{module}LoadSmoke.swift` whose
+4. Top-level no-argument functions named `test*` in
+   `tests/agent/*Tests.swift` (`async`/`throws` allowed), plus `tests/agent/{module}LoadSmoke.swift` whose
    exact content is `import {module}`, one blank line, and
    `let frameworkLoadSmokeMarker = "{marker}"`. The sealed gate derives a runner
    from `implemented` coverage, loads `lib{module}.dylib`, and calls each cited
@@ -3456,12 +3456,14 @@ for number, status, evidence in structured_claims:
         )
     declaration_pattern = re.compile(
         rf"(?m)^[ \t]*func[ \t]+{re.escape(anchor)}[ \t]*"
-        r"\([ \t]*\)[ \t\r\n]*(?:->[ \t]*Void[ \t\r\n]*)?\{"
+        r"\([ \t]*\)[ \t\r\n]*(?:async[ \t\r\n]+)?"
+        r"(?:throws[ \t\r\n]+|rethrows[ \t\r\n]+)?"
+        r"(?:->[ \t]*Void[ \t\r\n]*)?\{"
     )
     if declaration_pattern.search(evidence_code) is None:
         fail(
             f"coverage.tsv:{number}: implemented evidence must define a top-level "
-            "synchronous no-argument test function"
+            "no-argument test function (optionally async/throws)"
         )
 
 if framework["dependencies"]:
@@ -3502,7 +3504,7 @@ swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
 test -s "$TMP/lib$MODULE.dylib" || die "lib$MODULE.dylib was not produced"
 
 python3 -B - "$FRAMEWORK_ROOT/coverage.tsv" "$TMP/main.swift" \
-    "$MODULE" "$MARKER" <<'PY'
+    "$MODULE" "$MARKER" "$FRAMEWORK_ROOT/tests/agent" <<'PY'
 import csv
 import json
 from pathlib import Path
@@ -3513,6 +3515,7 @@ coverage_path = Path(sys.argv[1])
 output_path = Path(sys.argv[2])
 module = sys.argv[3]
 marker = sys.argv[4]
+tests_dir = Path(sys.argv[5])
 if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", module) is None:
     raise SystemExit("invalid module in runner generation")
 if re.fullmatch(r"[A-Z0-9_]+_AGENT_RUNTIME_OK", marker) is None:
@@ -3528,22 +3531,47 @@ for row in rows[1:]:
         raise SystemExit(f"invalid implemented test anchor: {anchor!r}")
     tests.append(anchor)
 tests = sorted(set(tests))
+sig_re = re.compile(
+    r"(?m)^[ \t]*func[ \t]+(test[A-Za-z0-9_]*)[ \t]*"
+    r"\([ \t]*\)[ \t\r\n]*(?:async[ \t\r\n]+)?"
+    r"(?:throws[ \t\r\n]+|rethrows[ \t\r\n]+)?"
+    r"(?:->[ \t]*Void[ \t\r\n]*)?\{"
+)
+async_names = set()
+if tests_dir.is_dir():
+    for source in tests_dir.glob("*Tests.swift"):
+        text = source.read_text(encoding="utf-8")
+        for match in sig_re.finditer(text):
+            header = match.group(0)
+            if re.search(r"\)[^{]*\basync\b", header):
+                async_names.add(match.group(1))
+calls = []
+for name in tests:
+    if name in async_names:
+        calls.append(f"        await {name}()")
+    else:
+        calls.append(f"        {name}()")
 lines = [
     "import Glibc",
     f"import {module}",
     "",
-    "guard let frameworkPath = getenv(\"OPENUIKIT_LOAD_DYLIB\") else {",
-    '    fatalError("OPENUIKIT_LOAD_DYLIB is missing")',
-    "}",
-    "guard let frameworkHandle = dlopen(frameworkPath, RTLD_NOW | RTLD_LOCAL) else {",
-    '    fatalError("framework dlopen failed")',
-    "}",
+    "@main",
+    "enum FanoutHostRunner {",
+    "    static func main() async {",
+    "        guard let frameworkPath = getenv(\"OPENUIKIT_LOAD_DYLIB\") else {",
+    '            fatalError("OPENUIKIT_LOAD_DYLIB is missing")',
+    "        }",
+    "        guard let frameworkHandle = dlopen(frameworkPath, RTLD_NOW | RTLD_LOCAL) else {",
+    '            fatalError("framework dlopen failed")',
+    "        }",
 ]
-lines.extend(f"{name}()" for name in tests)
+lines.extend(calls)
 lines.extend(
     [
-        "_ = dlclose(frameworkHandle)",
-        f"print({json.dumps(marker)})",
+        "        _ = dlclose(frameworkHandle)",
+        f"        print({json.dumps(marker)})",
+        "    }",
+        "}",
         "",
     ]
 )
@@ -3553,7 +3581,7 @@ mapfile -d '' -t TEST_PATHS < <(
     find "$FRAMEWORK_ROOT/tests/agent" -type f -name '*Tests.swift' -print0 \
         | sort -z
 )
-swiftc -warnings-as-errors -I "$TMP" \
+swiftc -warnings-as-errors -parse-as-library -I "$TMP" \
     "$TMP/main.swift" \
     "${TEST_PATHS[@]}" \
     "$TMP/lib$MODULE.dylib" \

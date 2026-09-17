@@ -1423,7 +1423,26 @@ class ValidatorTests(unittest.TestCase):
         )
         errors = self.validate(fixture, "deliverable")
         self.assertTrue(
-            any("top-level synchronous no-argument test function" in error for error in errors),
+            any(
+                "top-level no-argument test function (optionally async/throws)" in error
+                for error in errors
+            ),
+            errors,
+        )
+
+    def test_schema2_accepts_async_no_argument_test_function(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        fixture.create_deliverable()
+        (fixture.agent_tests / "TinyKitBehaviorTests.swift").write_text(
+            "func testAnswer() async {\n"
+            "    precondition(answer == 42)\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        errors = self.validate(fixture, "deliverable")
+        self.assertFalse(
+            any("no-argument test function" in error for error in errors),
             errors,
         )
 
