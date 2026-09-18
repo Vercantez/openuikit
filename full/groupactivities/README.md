@@ -56,6 +56,51 @@ discriminators, not observed Apple values.
 
 See `oracle-questions.tsv`.
 
+## Wave 13 2026-09-18
+
+Recount: **216 implemented / 0 declared / 21 deferred / 66 not-applicable /
+10 unavailable** of 313 (216 nondeferred). Before: 206 implemented / 10 declared.
+Implemented gain: **+10** (declared is now empty).
+
+The sealed host runner now awaits top-level `func test*() async`, so all 10
+leftover declared async witnesses converted to `implemented` with focused
+in-process async tests in `tests/agent/GroupActivitiesAsyncTests.swift` —
+each cited exactly once, so the worst implemented-evidence share stays
+`testGroupSessionEventActions` at 8.3% (18/216), well under the 40% cap:
+
+- `Attachment.loadMetadata(of:)` throws `journalUnavailable` →
+  `testJournalAttachmentLoadMetadataAsync`
+- `Attachments.Iterator.next()` returns `nil` (empty) →
+  `testJournalAttachmentsIteratorNextAsync`
+- `Journal.remove(attachment:)` throws `journalUnavailable` →
+  `testJournalRemoveAttachmentAsync`
+- Async `Messenger.send(Data)` / `send(Message)` throw `messengerUnavailable` →
+  `testMessengerSendDataAsync` / `testMessengerSendMessageAsync`
+- `Messages.Iterator.next()` returns `nil` (empty) →
+  `testMessengerMessagesIteratorNextAsync`
+- `Sessions.Iterator.next()` returns `nil` (empty) →
+  `testSessionsIteratorNextAsync`
+- Async `metadata` getter returns the probe's default metadata →
+  `testActivityMetadataGetterAsync`
+- `prepareForActivation()` returns `.activationDisabled` →
+  `testPrepareForActivationAsync`
+- `activate()` throws `sharePlayUnavailable` → `testActivateAsync`
+
+No `DispatchQueue.main` / `RunLoop` / semaphore waits; every awaited call
+completes in-process (immediate throw or empty-sequence `nil`). The 21
+deferred rows still require `Combine`, `CoreTransferable`, or `CoreGraphics`,
+none a declared isolated-host dependency. The 66 `not-applicable` rows are
+stdlib `AsyncSequence` / `AsyncIteratorProtocol` witnesses the contract
+excludes from conversion; the 10 `unavailable` rows are UIKit /
+`NSItemProvider` / `AVFoundation` overlays. This slug has no SwiftUI identity
+View-modifier rows, so the overlay override is not applicable.
+
+Validation on macOS: product sources compile under
+`swiftc -warnings-as-errors`, the dylib links, and a Darwin runner invoking
+all 75 top-level `test*()` functions (65 sync + 10 async, awaiting the
+async ones) exits 0 with sole stdout
+`GROUPACTIVITIES_AGENT_RUNTIME_OK` and empty stderr.
+
 ## Wave 12 2026-09-15
 
 Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /

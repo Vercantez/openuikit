@@ -182,4 +182,10 @@ public enum SharedWithYouHostControl {
     public static func contentView(_ view: SWCollaborationView) -> UIView? {
         view.hostContentView
     }
+
+    /// Detail-list content type name last supplied to
+    /// `setDetailViewListContent(_:)`, if any. Never presented on Linux.
+    public static func detailListContentKind(_ view: SWCollaborationView) -> String? {
+        view.hostDetailListContentKind
+    }
 }

@@ -116,3 +116,18 @@ func testUnlaunchedProcessPreservesIdentity() {
     ))
     precondition(process.host_configuration.appExtensionIdentity == identity)
 }
+
+func testProcessAsyncInitThrowsProcessUnavailable() async {
+    let configuration = AppExtensionProcess.Configuration(
+        appExtensionIdentity: sampleIdentity()
+    )
+    do {
+        _ = try await AppExtensionProcess(configuration: configuration)
+        preconditionFailure("async process init must throw")
+    } catch let error as ExtensionFoundationHostError {
+        precondition(error == .processUnavailable)
+        precondition(error.errorCode == 2)
+    } catch {
+        preconditionFailure("unexpected error \(error)")
+    }
+}

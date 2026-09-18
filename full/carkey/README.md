@@ -5,8 +5,8 @@ Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift surface
 from the sealed symbol graph. It is not wired into the shared guest package;
 that integration is a separate central review step.
 
-Coverage: **110 implemented / 4 declared / 0 deferred / 114 total**
-(fully nondeferred, above the leaf-full floor of 92).
+Coverage: **114 implemented / 0 declared / 0 deferred / 114 total**
+(fully implemented, above the leaf-full floor of 92).
 
 ## What is real
 
@@ -40,10 +40,12 @@ Linux has no CarKey daemon, Wallet/CarKey entitlement, Secure Element,
 vehicle UWB/NFC/BLE radio, or paired digital key.
 
 - `CarKeyRemoteControl.start(delegate:subscriptionRange:with:)` is async
-  and throws `FeatureNotSupported` without producing a session. It is
-  `declared` because the sealed runner cannot `await`.
+  and throws `FeatureNotSupported` without producing a session (covered by
+  async test `testAsyncStartFailsClosed`).
 - `ExecutionRequest.results()` (all three request types) is async and
-  throws `RequestNotInProgress`. Also `declared`.
+  throws `RequestNotInProgress` (covered by async
+  `testAsyncOneShotResultsFailsClosed`, `testAsyncEnduringResultsFailsClosed`,
+  `testAsyncConfigurableResultsFailsClosed`).
 - `sign(data:forVehicle:)` never returns an attestation.
 - Delegate callbacks are never delivered by the session. Tests invoke
   delegate methods directly.
@@ -55,6 +57,30 @@ vehicle UWB/NFC/BLE radio, or paired digital key.
 
 Fresh seed: no prior implemented/declared split. After this pass:
 **110 implemented / 4 declared / 0 deferred**.
+
+## Wave 13 async conversion (2026-09-18)
+
+Before: 110 implemented / 4 declared / 0 deferred / 114 total.
+After: 114 implemented / 0 declared / 0 deferred / 114 total.
+
+The sealed host runner is now `@main async` and awaits top-level
+`func test*() async`, so all 4 leftover `declared` rows converted to
+`implemented`: `CarKeyRemoteControl.start` (throws `FeatureNotSupported`
+immediately, no suspension) plus the three `ExecutionRequest.results()`
+variants (each throws `RequestNotInProgress` immediately). New
+`tests/agent/CarKeyAsyncTests.swift` holds the four async tests, each
+calling its identifier and asserting the fail-closed error with
+`precondition` (no `DispatchQueue.main`, `RunLoop`, or semaphores).
+The overlay OVERRIDE is not applicable: zero SwiftUI View-modifier rows
+in this surface. Top citation share is 13/114 = 11.4%
+(`testCarKeyErrorCodeCases`), well under the 40% bulk-relabel bound.
+
+Validation on this host: product `swiftc -warnings-as-errors` dylib build
+OK; all 34 distinct cited tests (30 sync + 4 async) compiled and ran with
+marker-only `CARKEY_AGENT_RUNTIME_OK` output (runner generated from
+`implemented` rows exactly as `tests/acceptance/test_host.sh` does, with
+`Darwin` shimmed for `Glibc` on this macOS host only — no repo file
+changed for that).
 
 ## Wave 11 leftover re-examination (2026-09-15)
 

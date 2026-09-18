@@ -58,10 +58,10 @@ See `oracle-questions.tsv` for questions that need a central Apple-oracle probe.
 
 Coverage of the 347 exact overlay IDs:
 
-| status | depth start | depth pass | wave-4 | wave-6 | wave-10 | wave-11 | wave-12 |
+| status | depth start | depth pass | wave-4 | wave-6 | wave-10 | wave-11 | wave-12 | wave-13 |
 | --- | --- | --- | --- | --- | --- |
-| implemented | 102 | 317 | 335 | 335 | 335 | 335 | 335 |
-| declared | 241 | 26 | 8 | 8 | 8 | 8 | 8 |
+| implemented | 102 | 317 | 335 | 335 | 335 | 335 | 335 | 335 |
+| declared | 241 | 26 | 8 | 8 | 8 | 8 | 8 | 8 |
 | unavailable | 4 | 4 | 4 | 4 | 4 |
 | deferred | 0 | 0 | 0 | 0 | 0 |
 | not-applicable | 0 | 0 | 0 | 0 | 0 |
@@ -146,6 +146,23 @@ would need an invented `SortComparator` conformance on the `AudioBuffer` /
 `AudioChannelDescription` C-struct stand-ins that Apple does not declare.
 Both groups stay honestly `declared`. This slug has no SwiftUI View types,
 so the overlay-override playbook does not apply. `bash
+tests/acceptance/test_host.sh` is green (`FRAMEWORK_FANOUT_HOST_OK`).
+
+Wave-13 (2026-09-18): recounted 335 implemented / 8 declared /
+4 unavailable / 0 deferred / 0 not-applicable of 347 — no change.
+This wave allows `async` tests, but the coverage contains zero
+async-shaped IDs (grep for `async|await|AsyncSequence|AsyncStream`: 0 hits),
+so there are no in-process async leftovers to convert. The 8 `declared`
+rows are sync stdlib/Foundation protocol witnesses that async does not
+unlock: the optional-returning `flatMap` closure is still a hard
+`#DeprecatedDeclaration` error under warnings-as-errors (re-confirmed with
+a minimal `swiftc -typecheck -warnings-as-errors` probe on this toolchain),
+and `Sequence.compare(_:_:)` still requires `Comparator == Element`, which
+would need an invented `SortComparator` conformance on the `AudioBuffer` /
+`AudioChannelDescription` C-struct stand-ins that Apple does not declare.
+Per the contract, stdlib/Foundation witness rows stay `declared` (not
+`not-applicable`). This slug has no SwiftUI View types, so the
+overlay-override playbook does not apply. `bash
 tests/acceptance/test_host.sh` is green (`FRAMEWORK_FANOUT_HOST_OK`).
 
 Top-5 implemented evidence distribution (of 335 implemented rows; no test

@@ -51,8 +51,11 @@ coverage.
 - Icon/screenshot APIs do not invent URLs.
 - `attemptRecovery` always returns `false`.
 - Overlay views do not present Apple offer chrome.
-- Swift concurrency `AsyncSequence` witnesses on `ManagedApps` are
-  **deferred**: the sealed runner cannot await.
+- Swift concurrency `AsyncSequence` iteration over `ManagedApps` is exercised
+  by `async` tests (`tests/agent/ManagedAppAsyncSequenceTests.swift`): the
+  fail-closed sequence yields one `.failure(.deviceNotManaged)` snapshot
+  and then ends, so every stdlib operator piped over it completes
+  in-process with no hardware, daemon, or network wait.
 
 ## Depth pass 2026-09
 
@@ -155,3 +158,54 @@ on this Mac its reference/coverage/evidence validation reports
 `FRAMEWORK_FANOUT_REFERENCE_OK`, while the compile-and-run stages cannot
 execute here (Xcode SwiftUI is present, so the Linux `View` stubs are
 correctly excluded).
+
+## Depth pass 2026-09 (wave 13, async tests allowed)
+
+Wave 13's sealed runner is `@main async` and awaits top-level
+`func test*() async`, so the 24 remaining `async` rows convert to
+`implemented` with focused in-process tests instead of block-wait
+harnesses. New file `tests/agent/ManagedAppAsyncSequenceTests.swift`
+holds eight `async` (never `throws`) tests: `testAsyncIteratorNext`
+(`next()` plus the `AsyncIteratorProtocol` witness),
+`testAsyncIteratorNextIsolation` (`next(isolation:)`), and six
+`AsyncSequence` operator tests (`testAsyncSequenceMap`,
+`testAsyncSequenceCompactMap`, `testAsyncSequenceFlatMap`,
+`testAsyncSequenceFilterTransforms`, `testAsyncSequenceSearch`,
+`testAsyncSequenceAggregation`) covering the stdlib `map` /
+`compactMap` / `flatMap` (throwing and non-throwing transforms),
+`filter`, `prefix`, `prefix(while:)`, `dropFirst`, `drop(while:)`,
+`first(where:)`, `contains`, `contains(where:)`, `allSatisfy`,
+`reduce`, `reduce(into:)`, `min(by:)`, and `max(by:)` witnesses.
+Every test observes the same fail-closed behavior (one
+`.failure(.deviceNotManaged)` snapshot, then end) and completes
+without suspension on hardware, a daemon, or the network. Throwing
+calls are handled with `do`/`catch` inside the test body so the
+runner can call each test as plain `await test()`. No test uses
+`DispatchQueue.main`, a run loop, a semaphore or condition wait, or
+`Task` detachment.
+
+Before: **1640 implemented / 0 declared / 24 deferred / 0 unavailable /
+0 not-applicable**. After: **1664 implemented / 0 declared / 0 deferred /
+0 unavailable / 0 not-applicable**. The implemented gain is 24
+identifiers; no row was bulk-relabeled, and there are no leftover
+deferred rows.
+
+Top-5 implemented evidence distribution:
+
+| Citations | Share | Evidence |
+| ---: | ---: | --- |
+| 70 | 4.21% | `ManagedOverlayIdentityDTests.swift#testSearchableIdentity` |
+| 40 | 2.40% | `ManagedOverlayIdentityATests.swift#testAccessibilityRotorIdentity` |
+| 40 | 2.40% | `ManagedOverlayIdentityATests.swift#testAlertIdentity` |
+| 32 | 1.92% | `ManagedOverlayIdentityCTests.swift#testConfirmationDialogIdentity` |
+| 24 | 1.44% | `ManagedOverlayIdentityATests.swift#testAccessibilityIdentity` |
+
+No single test is cited by more than 40% of implemented rows
+(maximum 4.21%). The eight new async tests are cited 1–5 times each
+(24 citations total).
+
+The sealed host gate is run as
+`bash full/managedappdistribution/tests/acceptance/test_host.sh`. It is
+Linux-only (the generated runner imports `Glibc`); on this Mac the
+reference/coverage/evidence validation path is exercised while the
+compile-and-run stages require the Linux toolchain.

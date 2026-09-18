@@ -12,8 +12,9 @@ func testStoreDownloaderExtensionProtocol() {
         return true
     }
     expectWave8(acceptsDownloader(Wave8Downloader()), "StoreDownloaderExtension conformance")
+    let wave8Erased: Any = Wave8Downloader()
     expectWave8(
-        Wave8Downloader() is any StoreDownloaderExtension,
+        wave8Erased is any StoreDownloaderExtension,
         "StoreDownloaderExtension existential"
     )
     _ = Wave8Downloader.self

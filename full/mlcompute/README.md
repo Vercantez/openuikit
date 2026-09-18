@@ -59,16 +59,18 @@ Linux has no Metal, Apple Neural Engine, or BNNS:
   `MLComputeError.executeFailed` (`org.openuikit.MLCompute.linux` code 4).
   Apple's queue choice is an oracle question; the sealed runner has no
   run loop.
-- Async `execute*` overlays are **declared** only (cannot be awaited by
-  the sync runner) and throw the same execute-failed error.
+- Async `execute*` overlays throw the same execute-failed error
+  immediately (in-process, no hardware wait) and are covered by
+  `async` tests in `MLComputeAsyncTests.swift`, which the sealed
+  `@main async` runner awaits.
 
 ## Depth pass 2026-09
 
 Exact public IDs: **787**. Nondeferred floor for `large-partitioned` is 79.
 
-- After this seed: implemented **780** / declared **4** / unavailable **3**
-  (Metal `MTLDevice` GPU device APIs) / deferred **0**.
-- Top-5 implemented evidence distribution (780 rows):
+- After this pass (wave 13): implemented **784** / declared **0** /
+  unavailable **3** (Metal `MTLDevice` GPU device APIs) / deferred **0**.
+- Top-5 implemented evidence distribution (784 rows):
   1. `MLComputeLayerTests.swift#testSimpleLayerConstruction` — 77
   2. `MLComputeLayerTests.swift#testWeightedLayerConstruction` — 62
   3. `MLComputeGraphTests.swift#testOptimizerHyperparameters` — 40
@@ -76,8 +78,14 @@ Exact public IDs: **787**. Nondeferred floor for `large-partitioned` is 79.
   5. `MLComputeLayerTests.swift#testActivationLayerFactories` — 31
 - Enum/option-set members share table-driven tests. No other single test
   exceeds 40% of the remaining implemented rows (largest remaining
-  citation is about 15%).
-- Gate: `bash full/mlcompute/tests/acceptance/test_host.sh`.
+  citation is about 15%). The four wave-13 async tests
+  (`MLComputeAsyncTests.swift#testAsync*`) are each cited exactly once.
+- Gate: `bash full/mlcompute/tests/acceptance/test_host.sh`. The shared
+  deliverable validator in this snapshot also requires
+  `full/framework-roadmap/framework-roadmap.json`, which is absent from
+  this isolated worktree; product + focused-test compilation and the
+  exact marker were verified manually with an equivalent `@main async`
+  runner (51 unique tests, 4 async, `MLCOMPUTE_AGENT_RUNTIME_OK`).
 
 Still not claimed: Apple-identical BNNS kernels, Metal GPU placement,
 ANE fusion, callback queues, or bit-identical RNG / quantizer output.

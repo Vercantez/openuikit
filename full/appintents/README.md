@@ -40,8 +40,57 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 19 | 5261 | 177 | 1130 | 0 | 18 | 5438 |
 | After wave 20 | 5267 | 171 | 1130 | 0 | 18 | 5438 |
 | After wave 21 | 5278 | 163 | 1127 | 0 | 18 | 5441 |
+| After wave 22 | 5402 | 39 | 1127 | 0 | 18 | 5441 |
 
-Wave 21 (this increment) converts 11 rows with five synchronous tests in
+Wave 22 (this increment) converts 124 rows with seventeen async tests in
+`tests/agent/AppIntentsWave22Tests.swift` (largest cites 18), now that the
+sealed runner awaits top-level `func test*() async`. Seventy-two rows are
+the `EntityProperty` `asyncGetter` specializations (plain + titled, across
+scalars, texts, entity values, and 18 measurement families), pinned by
+constructing each concrete `EntityProperty<Value>` with an async getter
+and round-tripping it through the in-process `resolveAsyncGetter(for:)`
+entry point — no run loop is blocked. The UniqueEntityQuery trio
+(`allEntities` / `suggestedEntities` / `entities(for:)`) plus
+`UniqueAppEntityProvider.uniqueEntity()` delegate to the injected query in
+memory. `IntentDonationManager` async `donate(intent:)` /
+`donate(intent:result:)` (new overloads in `AppIntents.swift` recording
+locally like their sync twins) and `deleteDonations(matching:)` record
+and reset process-local donations. Async `IntentFile.data` / `file`
+round-trip in-memory bytes to a temporary URL. Async `AppIntent.donate`
+/ `donate(result:)` / `requestChoice` complete locally (first option
+returned), while `requestConfirmation` (`conditions` / `output` /
+`result` / snippet spellings, the latter two new fail-closed overloads in
+`AppIntentsWave22.swift`), `IntentParameter` /
+`IntentParameterContext` `requestValue` / `requestConfirmation` /
+`requestDisambiguation` (the one missing `IntentParameter` spelling added
+fail-closed), `ControlConfigurationIntent.performs()` /
+`URLRepresentableIntent.performs()` (new fail-closed `Never` overloads;
+`OpenURLIntent` gains the graph-backed `URLRepresentableIntent`
+conformance), `OpenURLIntent.init(urlRepresentable:)` entity overload
+(new fail-closed async init), `EmptySnippetIntent.perform()`, and the new
+`IntentValueQuery.values(for:)` requirement (single test-double
+conformance; `Wave18ValueQuery` already satisfied it) all complete
+in-process as fail-closed throws or local values. New product source lives
+in `AppIntentsWave22.swift` (listed in the guest sources manifest).
+Deliberately left declared: SwiftUI `requestChoice` / `requestConfirmation`
+`view` / `content` overloads (SwiftUI-lane owned), `UISceneAppIntent`
+`perform` (UIKit-lane owned), `OpenIntent` / `TargetContentProvidingIntent`
+`perform` and the constrained `performs` refinements (a protocol-extension
+default is shadowed by every conformer's own `perform`, so no test could
+call that spelling), `EnumerableEntityQuery.suggestedEntities` (Apple's
+default is unobserved; guessing `allEntities` would invent behavior),
+`Never.init()` (uninhabited) and async `Never.perform()` (no `Never`
+value exists to call it with), macros (`AppEnum(schema:)` et al, no
+plugin), `IntentResultContainer` `result()` / `result(dialog:)` (kept out
+so `IntentResultValue` inference stays unambiguous), `entityType` (host
+stores only the type-name string, never the metatype),
+`StartWorkoutIntent.init(style:)` (no init requirement to delegate to),
+`AppIntentsExtension.configuration` (dependency-owned `AppExtension`),
+`ExpressibleByNilLiteral` when-condition overloads (indistinguishable
+without invented labels), stdlib `IntegerFormatStyle` witnesses, and
+Siri/daemon/service behavior.
+
+Wave 21 converts 11 rows with five synchronous tests in
 `tests/agent/AppIntentsWave21Tests.swift` (largest cites 3): the six
 remaining `_System`-constrained `IntentParameter` description-first shapes
 (no-title optionsProvider+resolvers / optionsProvider / resolvers / plain,
@@ -278,9 +327,10 @@ No test is cited by more than 293 rows (5.9% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
 Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
 each. Wave-17 overlay batches cite at most 293 rows each; depth tests cite
-at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each. Wave-20 tests cite at most 4 rows each. Wave-21 tests cite at most 3 rows each.
-New depth-pass tests are synchronous; they do not
-wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
+at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each. Wave-20 tests cite at most 4 rows each. Wave-21 tests cite at most 3 rows each. Wave-22 async tests cite at most 18 rows each.
+New depth-pass tests are synchronous except the wave-22 async pins, which
+the sealed `@main async` runner awaits; none wait on `DispatchSemaphore`,
+`RunLoop`, or `DispatchQueue.main`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
 
 Environment: `.cursor/verify-cloud-environment.sh` emitted

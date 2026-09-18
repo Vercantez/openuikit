@@ -60,3 +60,37 @@ func testBEDownloadMonitorIDTypealias() {
     let typed: BEDownloadMonitor.ID = monitor.id
     precondition(typed == monitor.id)
 }
+
+func testBEDownloadMonitorBeginMonitoringThrowsAsync() async {
+    let monitor = BEDownloadMonitor(
+        sourceURL: URL(string: "https://example.test/begin")!,
+        destinationURL: URL(string: "file:///tmp/begin")!,
+        observedProgress: Progress(totalUnitCount: 1),
+        liveActivityAccessToken: Data()
+    )
+    do {
+        _ = try await monitor.beginMonitoring()
+        preconditionFailure("beginMonitoring must fail closed")
+    } catch let error as BrowserEngineKitHostError {
+        precondition(error == .downloadMonitorUnavailable)
+    } catch {
+        preconditionFailure("unexpected error")
+    }
+}
+
+func testBEDownloadMonitorResumeMonitoringThrowsAsync() async {
+    let monitor = BEDownloadMonitor(
+        sourceURL: URL(string: "https://example.test/resume")!,
+        destinationURL: URL(string: "file:///tmp/resume")!,
+        observedProgress: Progress(totalUnitCount: 1),
+        liveActivityAccessToken: Data()
+    )
+    do {
+        try await monitor.resumeMonitoring(placeholderURL: URL(string: "file:///tmp/placeholder")!)
+        preconditionFailure("resumeMonitoring must fail closed")
+    } catch let error as BrowserEngineKitHostError {
+        precondition(error == .downloadMonitorUnavailable)
+    } catch {
+        preconditionFailure("unexpected error")
+    }
+}

@@ -109,7 +109,7 @@
     },
     {
       "path": "full/webkit/WebKitExtensions.swift",
-      "sha256": "c467ebea26e619e188096d21d8f40246ae1751a3e05a097d75d0b5c0b5b78ab5"
+      "sha256": "cc2f517305ff9ff61bc422ab2b18160942e351e91ca61beb90f93255e42f7f13"
     },
     {
       "path": "full/webkit/WebKitNavigation.swift",
@@ -121,7 +121,7 @@
     },
     {
       "path": "full/webkit/WebKitPage.swift",
-      "sha256": "345ee3d06eabea5686bcc673e6f29f4d2a2e9d6dd143a2ec79223821995ea944"
+      "sha256": "62a23d08ec785590a3eac7ad986c4e2a375ea1cc2366d5cac9d8f5f924bdd45e"
     },
     {
       "path": "full/webkit/WebKitPageHistory.swift",

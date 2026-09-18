@@ -55,7 +55,10 @@ are not a public HealthKit substitute for the EC2 identity probe.
 
 `tests/agent/WorkoutKitLoadSmoke.swift` is the schema-v2 load marker
 (`WORKOUTKIT_AGENT_RUNTIME_OK`). Focused checks live in
-`tests/agent/*Tests.swift` as top-level synchronous `func test*()`.
+`tests/agent/*Tests.swift` as top-level `func test*()` (sync or `async`).
+`tests/agent/WorkoutKitSchedulerAsyncTests.swift` awaits the eight scheduler /
+store witnesses in-process (empty list, `.notDetermined` / `.denied`,
+`watchNotPaired` throw); no `RunLoop` / `DispatchQueue.main` / semaphores.
 `tests/agent/WorkoutKitDependencyIdentity.swift` imports `Foundation`,
 `HealthKit`, and `WorkoutKit` for a future clean EC2 probe; it is not
 part of the isolated host gate.
@@ -71,7 +74,7 @@ compiled `libWorkoutKit.dylib`. The sealed gate was not weakened.
 
 ## Depth pass 2026-09
 
-Implemented **271** / declared **8** / deferred **0** / unavailable **0** /
+Implemented **279** / declared **0** / deferred **0** / unavailable **0** /
 not-applicable **0** (279 exact IDs).
 
 The eight `declared` rows are async Watch / HealthKit APIs that cannot be
@@ -116,6 +119,29 @@ Daemon success stays fail-closed per contract (scheduler returns
 source evidence. The single SwiftUI overlay row (`workoutPreview`) is
 already `implemented` as an identity no-op; there are no `not-applicable`
 rows to convert.
+
+## Wave 13 re-examination (2026-09-18)
+
+Before **271** / declared **8** / deferred **0** / unavailable **0** /
+not-applicable **0** (279 exact IDs); after **279** / **0** / **0** / **0** /
+**0**. Implemented gain **+8**.
+
+The sealed host runner is now `@main async` and awaits `func test*() async`,
+so the eight previously `declared` async witnesses became testable without
+`RunLoop` / `DispatchQueue.main` / semaphores: scheduler `schedule` /
+`remove` / `markComplete` / `removeAllWorkouts` (async no-ops, list stays
+`[]`), `scheduledWorkouts` (async `[]`), `authorizationState` (async
+`.notDetermined`), `requestAuthorization()` (async `.denied`), and
+`HKWorkout.workoutPlan` (async throws `StateError.watchNotPaired`). New
+coverage cites `tests/agent/WorkoutKitSchedulerAsyncTests.swift`
+(`testSchedulerScheduleAsync`, `testSchedulerRemoveAsync`,
+`testSchedulerMarkCompleteAsync`, `testSchedulerRemoveAllWorkoutsAsync`,
+`testSchedulerScheduledWorkoutsAsync`,
+`testSchedulerAuthorizationStateAsync`,
+`testSchedulerRequestAuthorizationAsync`, `testHKWorkoutPlanAsync`).
+Emulated Linux-gate run (HealthKit/SwiftUI hidden): product dylib plus all
+40 cited tests build warnings-as-errors and emit exactly
+`WORKOUTKIT_AGENT_RUNTIME_OK`. Daemon success stays fail-closed per contract.
 
 ## Wave 12 re-examination (2026-09-15)
 

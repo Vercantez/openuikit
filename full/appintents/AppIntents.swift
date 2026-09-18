@@ -1199,6 +1199,23 @@ public struct IntentDonationManager: Sendable {
         return recordLocal(intent)
     }
 
+    /// Async spellings of the in-process donations above. They complete
+    /// without touching a Shortcuts daemon; `await` only matches Apple's
+    /// async signatures.
+    @discardableResult
+    public func donate(intent: some AppIntent) async throws -> IntentDonationIdentifier {
+        recordLocal(intent)
+    }
+
+    @discardableResult
+    public func donate(
+        intent: some AppIntent,
+        result: some IntentResult
+    ) async throws -> IntentDonationIdentifier {
+        _ = result
+        return recordLocal(intent)
+    }
+
     fileprivate func recordLocal(_ intent: any AppIntent) -> IntentDonationIdentifier {
         let identifier = IntentDonationIdentifier(
             "local.\(type(of: intent)).\(Self.identifiers.count)"

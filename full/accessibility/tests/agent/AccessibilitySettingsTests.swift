@@ -41,3 +41,14 @@ func testSettingsFailClosedDefaults() {
             == "AXPrefersHorizontalTextLayoutDidChangeNotification"
     )
 }
+
+func testOpenSettingsFailClosed() async {
+    let result: Void? = try? await AccessibilitySettings.openSettings(for: .assistiveTouch)
+    precondition(result == nil)
+    do {
+        try await AccessibilitySettings.openSettings(for: .assistiveTouch)
+        preconditionFailure("openSettings(for:) must throw fail-closed on Linux")
+    } catch {
+        precondition(!String(describing: error).isEmpty)
+    }
+}

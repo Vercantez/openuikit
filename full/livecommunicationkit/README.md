@@ -6,7 +6,7 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **281 implemented / 7 declared / 1 unavailable / 289 total**
+Coverage: **288 implemented / 0 declared / 1 unavailable / 289 total**
 (above the medium-full floor of 145 nondeferred identifiers).
 
 ## What is real
@@ -133,3 +133,32 @@ single `unavailable` row is a stdlib/Foundation protocol witness that must stay
 OK). The shared host gate (`tests/acceptance/test_host.sh`) refuses in this
 isolated worktree for an out-of-scope reason (missing shared
 `full/framework-roadmap/framework-roadmap.json`, outside `full/livecommunicationkit/`); no framework-owned check regressed.
+
+## Wave 13 leftover review (2026-09-18)
+
+Before: **281 implemented / 7 declared / 0 deferred / 1 unavailable / 289 total**.
+After: **288 implemented / 0 declared / 0 deferred / 1 unavailable / 289 total**
+(implemented gain +7).
+
+The sealed runner is now `@main async` and awaits `func test*() async`, so the
+7 `async throws` daemon-gated methods (`ConversationManager.perform`,
+`reportNewIncomingConversation`, `reportNewIncomingVoIPPushPayload`,
+`ConversationHistoryManager.recentConversations`, `markConversationAsRead`,
+`markConversationsAsRead`,
+`TelephonyConversationManager.startCellularConversation`) are now covered by
+7 new async tests in `tests/agent/AsyncFailClosedTests.swift`. Each test
+`await`s its identifier in-process and asserts the fail-closed
+`CocoaError.featureUnsupported` (no daemon, no RunLoop/DispatchQueue/semaphore,
+no hardware wait); daemon *success* still stays fail-closed. Each new test is
+cited by exactly one row, so the top-5 distribution above is unchanged and no
+test exceeds the 40% bound. Re-checked the overlay override: `coverage.tsv`
+contains zero SwiftUI / View rows, and the single `unavailable` row is the
+Foundation-owned `NotificationCenter.MessageIdentifier` witness that must stay
+`unavailable`. Product sources still compile warning-free, and a manual
+replica of the sealed runner (dylib + generated `@main async` host invoking
+all 87 cited tests) emits exactly `LIVECOMMUNICATIONKIT_AGENT_RUNTIME_OK`
+within the 120s timeout. The shared host gate
+(`tests/acceptance/test_host.sh`) still refuses in this isolated worktree for
+the same out-of-scope reason as wave 12 (missing shared
+`full/framework-roadmap/framework-roadmap.json`); the deliverable validator
+reports only those 2 roadmap errors and no framework-owned check regressed.

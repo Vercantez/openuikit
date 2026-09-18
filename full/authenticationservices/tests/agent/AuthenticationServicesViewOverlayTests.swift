@@ -853,3 +853,85 @@ func testAuthenticationServicesOverlayEnvironment() {
 func testAuthorizationControllerOverlayIdentity() {
     _ = AuthorizationController()
 }
+
+// SwiftUI AuthorizationController async request methods stay fail-closed:
+// Linux has no auth daemon, so every one throws .notHandled immediately
+// without suspending. These complete in-process; nothing awaits hardware,
+// a daemon, or Apple Pay.
+func testAuthorizationControllerPerformRequestFailClosed() async {
+    let controller = AuthorizationController()
+    let request = ASAuthorizationPasswordProvider().createRequest()
+    do {
+        _ = try await controller.performRequest(request)
+        preconditionFailure("performRequest unexpectedly succeeded")
+    } catch let error as ASAuthorizationError {
+        precondition(error.code == .notHandled)
+    } catch {
+        preconditionFailure("unexpected performRequest error \(error)")
+    }
+}
+
+func testAuthorizationControllerPerformRequestWithOptionsFailClosed() async {
+    let controller = AuthorizationController()
+    let request = ASAuthorizationPasswordProvider().createRequest()
+    do {
+        _ = try await controller.performRequest(request, options: [])
+        preconditionFailure("performRequest(options:) unexpectedly succeeded")
+    } catch let error as ASAuthorizationError {
+        precondition(error.code == .notHandled)
+    } catch {
+        preconditionFailure("unexpected performRequest(options:) error \(error)")
+    }
+}
+
+func testAuthorizationControllerPerformRequestsFailClosed() async {
+    let controller = AuthorizationController()
+    let request = ASAuthorizationPasswordProvider().createRequest()
+    do {
+        _ = try await controller.performRequests([request])
+        preconditionFailure("performRequests unexpectedly succeeded")
+    } catch let error as ASAuthorizationError {
+        precondition(error.code == .notHandled)
+    } catch {
+        preconditionFailure("unexpected performRequests error \(error)")
+    }
+}
+
+func testAuthorizationControllerPerformRequestsWithOptionsFailClosed() async {
+    let controller = AuthorizationController()
+    let request = ASAuthorizationPasswordProvider().createRequest()
+    do {
+        _ = try await controller.performRequests([request], options: [])
+        preconditionFailure("performRequests(options:) unexpectedly succeeded")
+    } catch let error as ASAuthorizationError {
+        precondition(error.code == .notHandled)
+    } catch {
+        preconditionFailure("unexpected performRequests(options:) error \(error)")
+    }
+}
+
+func testAuthorizationControllerPerformAutoFillAssistedRequestFailClosed() async {
+    let controller = AuthorizationController()
+    let request = ASAuthorizationPasswordProvider().createRequest()
+    do {
+        _ = try await controller.performAutoFillAssistedRequest(request)
+        preconditionFailure("performAutoFillAssistedRequest unexpectedly succeeded")
+    } catch let error as ASAuthorizationError {
+        precondition(error.code == .notHandled)
+    } catch {
+        preconditionFailure("unexpected performAutoFillAssistedRequest error \(error)")
+    }
+}
+
+func testAuthorizationControllerPerformAutoFillAssistedRequestsFailClosed() async {
+    let controller = AuthorizationController()
+    let request = ASAuthorizationPasswordProvider().createRequest()
+    do {
+        _ = try await controller.performAutoFillAssistedRequests([request])
+        preconditionFailure("performAutoFillAssistedRequests unexpectedly succeeded")
+    } catch let error as ASAuthorizationError {
+        precondition(error.code == .notHandled)
+    } catch {
+        preconditionFailure("unexpected performAutoFillAssistedRequests error \(error)")
+    }
+}

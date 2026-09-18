@@ -27,9 +27,17 @@ Product sources `import Foundation` only. `AVAudioPCMBuffer`, `AVAudioTime`,
   synchronously. Custom-catalog hits produce `SHMatch`; misses call
   `didNotFindMatch` with a `nil` error. The default Apple catalog always
   reports `matchAttemptFailed`. `SHSession.Result` cases construct. `Results`
-  is an empty `AsyncSequence` (no microphone).
+  is an empty `AsyncSequence` (no microphone); `result(from:)`,
+  `Results.Iterator.next()` / `next(isolation:)`, and the `AsyncSequence`
+  consumers (`allSatisfy`, `max`, `min`, `first`, `reduce`, `reduce(into:)`,
+  `contains(where:)`) are awaited on empty/local data. `SHSignature.Slices`
+  likewise: `Slices.Iterator.next()` / `next(isolation:)`, `contains`, and
+  the same consumers are awaited on empty slices.
 - **Managed session / library.** `SHManagedSession` starts `.idle`; `cancel()`
-  returns to `.idle`. `SHLibrary.default.items` is empty.
+  returns to `.idle`; `prepare()` enters `.prerecording` and `result()`
+  fail-closes with `matchAttemptFailed`, both awaited. `SHLibrary.default.items`
+  is empty; `addItems` / `removeItems`, `SHMediaLibrary.add`, and
+  `SHMediaItem.fetch` throw their fail-closed errors under `await`.
 
 ## Fail-closed boundaries
 
@@ -48,13 +56,13 @@ Product sources `import Foundation` only. `AVAudioPCMBuffer`, `AVAudioTime`,
 
 `tests/agent/ShazamKitLoadSmoke.swift` is the schema-v2 marker probe.
 Focused `*Tests.swift` functions are the coverage evidence. The sealed runner
-calls each cited `test*` once with no run loop; async APIs are `declared`
-rather than awaited.
+is `@main async` and `await`s each cited `async test*` once with no run loop;
+no `DispatchQueue.main`, `RunLoop`, or semaphore waits.
 
 ## Depth pass 2026-09
 
-Coverage: **183 implemented** / 28 declared / 6 deferred / 0 unavailable /
-2 not-applicable (211 nondeferred, floor 176). Wave 2026-09-15 recount: counts
+Coverage: **211 implemented** / 0 declared / 6 deferred / 0 unavailable /
+2 not-applicable (213 nondeferred, floor 176). Wave 2026-09-15 recount: counts
 unchanged (183/28/6/2 of 219). pi-wave6 2026-09-15 recount: before 183/28/6/2,
 after 183/28/6/2 (gain 0). pi-wave8 2026-09-15 recount: before 183/28/6/2,
 after 183/28/6/2 (gain 0). pi-wave9 2026-09-15 recount: before 183/28/6/2,
@@ -67,7 +75,19 @@ after 183/28/6/2 (gain 0; re-probed `result(from:)` in sync context -> `'async' 
 `SHSession.result(from:)`, both `Iterator.next` variants) or `async`
 `AsyncSequence` consumers, so none converts to implemented under the
 no-`await` sealed gate. The 6 deferred rows need AVFoundation / MusicKit /
-UniformTypeIdentifiers outside this seed's Foundation-only dependencies.
+UniformTypeIdentifiers outside this seed's Foundation-only dependencies. pi-wave13 2026-09-18 recount: before 183/28/6/2,
+after 211/0/6/2 (gain +28; the sealed runner is now `@main async` and awaits
+`async test*`, so all 28 formerly-declared `async` rows convert: 9 product
+`async` APIs (`fetch`, library `add`/`addItems`/`removeItems`,
+`prepare`/`result`, `SHSession.result(from:)`, both `Iterator.next` variants)
+plus 4 protocol `next`/`next(isolation:)` witnesses plus 15 `AsyncSequence`
+consumers (`allSatisfy`, `max`, `min`, `first`, `reduce`, `reduce(into:)`,
+`contains(where:)`, `contains`), each awaited on empty/local data in the new
+`tests/agent/SHAsyncAwaitTests.swift` (28 async tests, all complete without
+microphone/network/daemons); manual @main-async runner over all 165 unique
+cited tests prints RUNNER_OK, product `swiftc -emit-library` build clean,
+no SwiftUI overlay rows in this framework so the overlay OVERRIDE is vacuous).
+The 6 deferred rows still need AVFoundation / MusicKit /
 
 Top-5 evidence distribution (implemented rows):
 

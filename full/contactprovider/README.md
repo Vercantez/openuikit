@@ -41,9 +41,9 @@ invalidation never report success.
 - `ContactProviderManager.enable()`, `disable()`, `signalEnumerator(for:)`,
   `invalidate()`, and `reset()` throw `featureNotAvailable`. There is no
   extension process to signal and no Contacts cache to delete.
-- `ContactItemEnumerator` async methods and
-  `ContactProviderExtension.invalidate()` are declared only: the sealed
-  runner has no run loop and cannot `await`.
+- `ContactItemEnumerator` async methods are in-process no-ops on stub
+  enumerators and `ContactProviderExtension.invalidate()` returns
+  in-process; the sealed async runner `await`s them.
 - Linux never writes the system Contacts database, never presents an
   enablement prompt, and never claims an extension was discovered.
 - Darwin `errorCode` integers, default-domain identifier, and
@@ -52,7 +52,7 @@ invalidation never report success.
 
 ## Depth pass 2026-09
 
-Implemented **90** of 99 exact IDs (9 `declared` async methods). Nondeferred
+Implemented **99** of 99 exact IDs (0 `declared`, 0 deferred). Nondeferred
 count 99, above the leaf-full floor of 80.
 
 ## Wave6 recount 2026-09-15
@@ -120,6 +120,10 @@ snapshot (`scratch/ladder-corpus/focus-ios` is missing; Cursor Build
 the host-inventory stamp; the sealed framework gate compiles with a clean
 product tree (`products=clean`). Starting commit
 `cbb368eeea236bbc0479fefa599190972ac8cfca` matched.
+
+## Wave13 recount 2026-09-18
+
+Before **90** implemented / 9 declared / 0 deferred / 0 not-applicable; after **99** implemented / 0 declared / 0 deferred / 0 not-applicable (gain +9). The sealed runner is now `@main async` and `await`s top-level `func test*() async`, so all 9 leftover async rows convert to `implemented` with in-process evidence in `tests/agent/ContactProviderAsyncTests.swift`: the 3 `ContactItemEnumerator` methods are no-ops on a stub enumerator, the 5 `ContactProviderManager` methods throw `featureNotAvailable` immediately, and `ContactProviderExtension.invalidate()` returns in-process on a stub extension. No hardware/daemon waits; all 82 cited test functions (73 sync + 9 async) compile warning-free under host `swiftc` and execute to the exact `CONTACTPROVIDER_AGENT_RUNTIME_OK` marker. No SwiftUI View-overlay rows exist in this 99-ID surface, so the overlay override does not apply.
 
 ## Wave12 recount 2026-09-15
 

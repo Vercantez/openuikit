@@ -487,7 +487,9 @@ open class WKWebExtension: NSObject {
         errors = [WKWebExtension.Error(.unknown, userInfo: ["WKPortableOperation": "no-extension-archive"])]
     }
 
-    public convenience init(appExtensionBundle: Any) async throws {
+    /// Apple `init(appExtensionBundle:)`: no Apple extension process on this
+    /// host, so construction fails closed immediately. Completes in-process.
+    public convenience init(appExtensionBundle: Bundle) async throws {
         _ = appExtensionBundle
         self.init()
         throw WKWebExtension.Error(.resourceNotFound)

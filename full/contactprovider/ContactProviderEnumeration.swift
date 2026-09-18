@@ -12,9 +12,9 @@ public protocol ContactItemEnumerating {
 /// A protocol to provide enumerations of all contact items and changed contact
 /// items.
 ///
-/// Linux never talks to `contactsd`. Implementations of the async methods are
-/// host-side; the sealed runner cannot `await` them, so those identifiers are
-/// `declared` in coverage.
+/// Linux never talks to `contactsd`. The async methods are host-side no-ops
+/// (enumerators) or immediate `featureNotAvailable` throws (manager); async
+/// tests `await` them in-process.
 public protocol ContactItemEnumerator {
     /// Enumerates all items, batched in pages.
     func enumerateContent(

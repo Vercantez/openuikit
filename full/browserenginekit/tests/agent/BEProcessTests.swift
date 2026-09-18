@@ -276,3 +276,36 @@ func testLinuxBoundaryFlags() {
     precondition(BrowserEngineKitLinuxBoundary.mediaCaptureAvailable == false)
     precondition(BrowserEngineKitLinuxBoundary.downloadMonitorAvailable == false)
 }
+
+func testWebContentProcessAsyncInitThrows() async {
+    do {
+        _ = try await WebContentProcess(bundleIdentifier: nil, onInterruption: {})
+        preconditionFailure("WebContentProcess init must fail closed")
+    } catch let error as BrowserEngineKitHostError {
+        precondition(error == .processUnavailable)
+    } catch {
+        preconditionFailure("unexpected error")
+    }
+}
+
+func testNetworkingProcessAsyncInitThrows() async {
+    do {
+        _ = try await NetworkingProcess(bundleIdentifier: nil, onInterruption: {})
+        preconditionFailure("NetworkingProcess init must fail closed")
+    } catch let error as BrowserEngineKitHostError {
+        precondition(error == .processUnavailable)
+    } catch {
+        preconditionFailure("unexpected error")
+    }
+}
+
+func testRenderingProcessAsyncInitThrows() async {
+    do {
+        _ = try await RenderingProcess(bundleIdentifier: nil, onInterruption: {})
+        preconditionFailure("RenderingProcess init must fail closed")
+    } catch let error as BrowserEngineKitHostError {
+        precondition(error == .processUnavailable)
+    } catch {
+        preconditionFailure("unexpected error")
+    }
+}

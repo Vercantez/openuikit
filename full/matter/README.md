@@ -682,3 +682,37 @@ anchor, and every deferred/unavailable row carries an explanatory note.
 - Hardware/daemon success paths (commissioning, reads/commands, CSR/
   certificate issuance, OTA parsing) remain fail-closed or deferred per
   the contract.
+
+## Depth pass 2026-09 (wave 13, isolated worktree)
+
+Audits the 15 leftover rows for async-shaped surface that completes
+in-process now that the sealed runner awaits top-level
+`func test*() async` (empty AsyncSequence, immediate throw). No fabric,
+daemon, radio, `await`, or success invention is available, so the ledger
+is unchanged. No product, test, manifest, or oracle change.
+
+**Coverage before:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+(+0 implemented; 28411 nondeferred; floor 150).
+
+### Why nothing converts
+
+- Async-shaped leftover is zero: `coverage.tsv` holds no
+  AsyncSequence/AsyncStream/AsyncThrowing identifiers, and none of the 15
+  leftover rows has an async Apple spelling. Earlier async overlays were
+  already implemented citing their completion-handler spellings (same USR).
+- Overlay OVERRIDE has no Matter targets: 0 not-applicable rows and no
+  SwiftUI `View` modifiers (only Groups `ViewGroup` params and
+  AccessControl `view`/`proxyView` privilege enumerators).
+- The 4 declared rows are XPC surface that cannot compile on Linux
+  (`sharedController` needs unavailable `MTRXPCConnectBlock`;
+  `xpcInterfaceFor*Protocol` return NSXPCInterface). Framework-local
+  stand-ins for dependency-owned NSXPC types are forbidden.
+- The 11 deferred rows stay deferred by design:
+  `MTRSetMessageReliabilityParameters` (a no-op would invent radio
+  timing) and the 10 `NSCoding.initWithCoder` rows (Linux Foundation has
+  no Apple daemon data to decode; decoding real state would invent
+  Apple's archive format).
+- Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed
+  or deferred per the contract.

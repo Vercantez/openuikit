@@ -11,8 +11,17 @@ success with guest AVFoundation, CoreMedia, Metal, or Apple cinematic video.
 This is a fresh seed: 237 exact public identifiers, floor 119 nondeferred,
 lane `medium-full`.
 
-Coverage after this pass: **231 implemented / 6 declared / 0 deferred /
+Coverage after this pass: **237 implemented / 0 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
+
+Wave 13 recount (2026-09): before 231 implemented / 6 declared /
+0 deferred, after 237 implemented / 0 declared / 0 deferred — gain +6.
+The sealed host runner now awaits `func test*() async`, so the six
+async-only loaders moved to `implemented` via
+`tests/agent/CNAsyncLoadersTests.swift` (one async test per row, each
+awaiting an in-process fail-closed body: immediate `throw .unsupported`
+or immediate `false`). No overlay rows: this module has no
+SwiftUI.View modifiers.
 
 Wave 10 recount (2026-09-15): before 231 implemented / 6 declared /
 0 deferred, after 231 implemented / 6 declared / 0 deferred — no gain.
@@ -94,8 +103,8 @@ ML, or spatial-audio mix daemon.
   lookalikes live behind `canImport` so the sealed gate can compile. They are
   not ports of those modules.
 
-The six async-only loaders are `declared` because the sealed runner cannot
-`await`. Their fail-closed bodies still throw or return false.
+The six async-only loaders are now `implemented` via awaiting async tests
+(`CNAsyncLoadersTests.swift`). Their fail-closed bodies still throw or return false.
 
 ## Still open
 

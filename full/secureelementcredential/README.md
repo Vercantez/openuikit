@@ -6,7 +6,7 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **123 implemented / 25 declared / 7 unavailable / 0 not-applicable /
+Coverage: **145 implemented / 3 declared / 7 unavailable / 0 not-applicable /
 155 total** (148 nondeferred, above the medium-full floor of 78).
 
 ## What is real
@@ -37,8 +37,8 @@ sheet, or presentment authorization UI.
 
 - `startSession()`, `isEligible`, provision/list/delete, wired/transceive,
   presentment assertion, `secureElementInfo`, `eventStream`, and SwiftUI
-  perform APIs throw `featureUnavailable` (async; `declared` because the
-  sealed runner cannot `await`).
+  perform APIs throw `featureUnavailable` (async; `implemented` via async
+  `await` tests in `tests/agent/AsyncSessionTests.swift`).
 - `InstanceInfo.securityDomainCounter` throws the same error.
 - Entering wired/delete with `installationPending` or `installationFailed`
   credentials throws `invalidCredentialState` before the unavailable
@@ -48,11 +48,38 @@ sheet, or presentment authorization UI.
   `CredentialSessionWindowSceneDelegate`, and SwiftUI
   `View.transactionTask` are `unavailable` (those modules are not
   dependencies of this Foundation-only seed).
-- `endCardEmulation()` has no scene type, so it is declared on the actor
-  and still throws `featureUnavailable`.
+- `endCardEmulation()` has no scene type, so it is defined on the actor
+  and still throws `featureUnavailable` (async; `implemented` via
+  `testEndCardEmulationThrows`).
 - Actor isolation witnesses (`assertIsolated`, `assumeIsolated`,
   `preconditionIsolated`) are `declared`: they trap off-actor, and the
   sealed runner has no isolation hop.
+
+## Wave13 pass 2026-09-18
+
+Sealed runner is now `@main async` and awaits `func test*() async`.
+Re-examined all 25 `declared` rows for async conversion (before: 123
+implemented / 25 declared / 7 unavailable / 0 not-applicable; after: 145
+implemented / 3 declared / 7 unavailable / 0 not-applicable, gain +22).
+All 22 non-isolation declared rows complete in-process — immediate
+`featureUnavailable` throws, synchronous-value async getters (`state`,
+`PresentmentIntentAssertion.state`), or a single-yield-then-finish
+`eventStream` — so each gained an async `await` test in new
+`tests/agent/AsyncSessionTests.swift` (one focused test per row, each
+cited once). The 3 actor-isolation witnesses (`assertIsolated`,
+`assumeIsolated`, `preconditionIsolated`) trap off-actor with no isolation
+hop, so they remain `declared`. Overlay override checked: no identity
+`Self`-returning SwiftUI `View` modifiers exist — `View.transactionTask`
+returns `some View` and requires SwiftUI, and the three UIKit scene
+overlays require `UIScene`; they correctly stay `unavailable`. No
+stdlib/Foundation protocol-witness n/a rows to preserve. Product sources
+recompile clean under `swiftc` (exit 0); a lane-local `@main async`
+runner over all 96 cited tests exits 0 emitting only the exact marker;
+cited agent tests contain no `DispatchQueue.main`/`RunLoop`/semaphore;
+top citation `testErrorCodeCases` is 23/145 (15.9%, under the 40% bound).
+The in-worktree host gate still refuses at the shared deliverable
+validator (`full/framework-roadmap/framework-roadmap.json` absent from
+the worktree, out of lane scope).
 
 ## Wave12 pass 2026-09-15
 

@@ -2845,4 +2845,12 @@ public extension BNNSGraph.Context {
         _ = path; _ = functionName; _ = options
         throw BNNSGraph.Error.unableToCreateContext
     }
+    convenience init(
+        compileFromPath path: String,
+        functionName: String? = nil,
+        options: BNNSGraph.CompileOptions = BNNSGraph.CompileOptions()
+    ) async throws {
+        _ = path; _ = functionName; _ = options
+        throw BNNSGraph.Error.unableToCreateContext
+    }
 }

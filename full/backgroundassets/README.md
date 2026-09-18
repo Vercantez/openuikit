@@ -50,20 +50,31 @@ host, or CDN. Manager APIs that would talk to those services fail closed.
   `(false, callerConnectionInvalid)`.
 - `AssetPackManager` file accessors (`contents`, `descriptor`, `url`) throw
   `fileNotFound`. Isolated async members throw `assetPackNotFound` or
-  `callerConnectionInvalid` and are `declared` because the sealed runner has no
-  run loop.
+  `callerConnectionInvalid` and are covered by `await`ed fail-closed tests.
 - Actor isolation helpers (`assertIsolated` / `assumeIsolated` /
-  `preconditionIsolated`) trap off the actor and are `declared`.
-- Async authentication-challenge methods are `declared`; constructing
-  `URLAuthenticationChallenge` and awaiting is outside the sync runner.
+  `preconditionIsolated`) trap off the actor and stay `declared`.
+- Async authentication-challenge methods return
+  `(.performDefaultHandling, nil)` and are covered by `await`ed tests that
+  construct a `URLAuthenticationChallenge` with a test sender.
 - `System.FilePath` / `FileDescriptor` are not importable on this Swift 6.2.4
   Linux toolchain. The module vends portable `FilePath` / `FileDescriptor`
   values used by the overlay signatures. ExtensionKit `AppExtension` is not a
   declared dependency; `BADownloaderExtension` does not inherit it.
 
-## Depth pass 2026-09
+## Depth pass 2026-09 (wave 13)
 
-Implemented rows: **185**. Declared: **13**. Nondeferred: **198 / 198**.
+Implemented rows: **195**. Declared: **3**. Nondeferred: **198 / 198**.
+
+Wave 13 used the sealed `@main async` runner, which `await`s top-level
+`func test*() async`, to convert 10 in-process async leftovers
+(`tests/agent/BackgroundAssetsAsyncTests.swift`): the six isolated
+`AssetPackManager` async members (immediate fail-closed throws) and the four
+async `backgroundDownload` / `download` challenge overlays (immediate
+`(.performDefaultHandling, nil)` via a test-constructed
+`URLAuthenticationChallenge`). The 3 remaining declared rows are the
+synthesized actor-isolation helpers that trap off the actor.
+
+## Depth pass 2026-09 (wave 12)
 
 Wave 12 re-examined the 13 leftover declared rows: 0 convertible. Six are
 `AssetPackManager` isolated `async` members, three are async

@@ -11,8 +11,37 @@ Live Activity download monitoring.
 
 This is a fresh seed: 511 exact public identifiers, floor 256 nondeferred.
 
-Coverage after this pass: **506 implemented / 5 declared / 0 deferred /
+Coverage after this pass: **511 implemented / 0 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
+
+## Wave 13 async conversion 2026-09
+
+Before: 506 implemented / 5 declared / 0 deferred / 0 n-a of 511.
+After: 511 implemented / 0 declared / 0 deferred / 0 n-a of 511
+(implemented gain 5). The sealed runner is now `@main async` and awaits
+`func test*() async`, so the five genuinely `async throws` leftovers could
+move from fail-closed `declared` to fail-closed `implemented`: each throws
+immediately in-process with no daemon, appex, libxpc, or run loop wait.
+`BEDownloadMonitor.beginMonitoring()` /
+`resumeMonitoring(placeholderURL:)` throw
+`BrowserEngineKitHostError.downloadMonitorUnavailable` (awaited in
+`testBEDownloadMonitorBeginMonitoringThrowsAsync` /
+`testBEDownloadMonitorResumeMonitoringThrowsAsync`); the three process
+`init(bundleIdentifier:onInterruption:)` throw `.processUnavailable`
+(awaited in `testWebContentProcessAsyncInitThrows`,
+`testNetworkingProcessAsyncInitThrows`,
+`testRenderingProcessAsyncInitThrows`). No `DispatchQueue.main`, `RunLoop`,
+or semaphore waits; the fail-closed bodies complete before the 120s host
+timeout. Zero deferred, unavailable, or not-applicable rows, and no SwiftUI
+View-overlay rows, so the overlay OVERRIDE still has nothing to apply.
+Static verification: all 511 evidence anchors resolve (including the five
+new async cites), and no cited test contains `DispatchQueue.main`/
+`RunLoop`/semaphores. The shared deliverable validator still refuses
+before compiling (`full/framework-roadmap/framework-roadmap.json` absent
+from this isolated worktree) — a worktree-environment limitation, not a
+framework defect; async fail-closed semantics were additionally verified
+against identical signatures on the macOS toolchain (typecheck clean,
+all five throw-and-catch paths complete in-process).
 
 ## Wave 12 re-examination 2026-09-15
 
@@ -141,9 +170,10 @@ hierarchy, `AVCaptureSession` sandbox, or Live Activity download daemon.
 - `WebContentProcess` / `NetworkingProcess` / `RenderingProcess`
   `makeLibXPCConnection` and `grantCapability` throw
   `BrowserEngineKitHostError.processUnavailable` or `.xpcUnavailable`.
-  Async process inits and download-monitor async methods are declared,
-  not run: they are `async throws` on Apple and the sealed runner has
-  no run loop.
+  Async process inits and download-monitor async methods are implemented
+  fail-closed: they throw `.processUnavailable` /
+  `.downloadMonitorUnavailable` immediately when awaited, with no daemon
+  or run loop wait.
 - `LayerHierarchy.init()` and handle/coordinator port/XPC inits throw
   `.layerHierarchyUnavailable`. `encode(_:)` does not invent a mach port.
 - `MediaEnvironment.activate` / `suspend` / `makeCaptureSession` throw

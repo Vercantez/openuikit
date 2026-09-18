@@ -56,8 +56,27 @@ never report a launched extension.
 
 This is a fresh seed: 81 exact public identifiers, floor 65 nondeferred.
 
-Coverage after this pass: **77 implemented / 4 declared / 0 deferred /
+Coverage after this pass: **81 implemented / 0 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
+
+Wave-13 recount (2026-09-18): before 77 implemented / 4 declared / 0 deferred,
+after 81 implemented / 0 declared / 0 deferred, implemented gain 4. The sealed
+host runner is now `@main async` and awaits top-level `func test*() async`, so
+the four in-process async leftovers were converted with awaiting tests that
+complete without hardware/daemons or blocking waits: `Monitor.addAppExtensionPoint`
+(`testMonitorAddAppExtensionPointTracksAsync`), `Monitor.init(appExtensionPoint:)`
+(`testMonitorInitWithPointAsync`), `Monitor.removeAppExtensionPoint`
+(`testMonitorRemoveAppExtensionPointAsync`), and async
+`AppExtensionProcess.init(configuration:)`
+(`testProcessAsyncInitThrowsProcessUnavailable`, fail-closed throw). Tests are
+`async` without `throws` so the checked-in `test_host.sh` runner (which emits
+bare `await name()` calls) still compiles. Max single-test share stays 7.4%
+(`testAppExtensionPointErrorCases`, 6 rows), well under 40%. No `deferred` rows
+exist. Product sources still compile clean under `swiftc -warnings-as-errors`
+(macOS host check); the four new async tests also pass at runtime there. Full
+local gate still cannot run: the shared deliverable validator rejects on a
+missing repo file outside this lane (`full/framework-roadmap/framework-roadmap.json`),
+unchanged since wave-11.
 
 Wave-12 recount (2026-09-15): before 77 implemented / 4 declared / 0 deferred,
 after 77 implemented / 4 declared / 0 deferred, implemented gain 0. Re-examined

@@ -110,12 +110,24 @@ public struct AuthorizationController: Sendable {
         throw ASAuthorizationError(.notHandled)
     }
 
+    public func performRequest(
+        _ request: ASAuthorizationRequest
+    ) async throws -> ASAuthorizationResult {
+        try await performRequest(request, options: [])
+    }
+
     public func performRequests(
         _ requests: [ASAuthorizationRequest],
         options: ASAuthorizationController.RequestOptions = []
     ) async throws -> ASAuthorizationResult {
         _ = (requests, options)
         throw ASAuthorizationError(.notHandled)
+    }
+
+    public func performRequests(
+        _ requests: [ASAuthorizationRequest]
+    ) async throws -> ASAuthorizationResult {
+        try await performRequests(requests, options: [])
     }
 
     public func performAutoFillAssistedRequest(

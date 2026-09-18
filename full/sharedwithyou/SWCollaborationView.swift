@@ -45,6 +45,9 @@ open class SWCollaborationView: UIView {
     private let itemProvider: NSItemProvider
     var hostShowsManageButton: Bool = false
     var hostContentView: UIView?
+    /// Type name last supplied via `setDetailViewListContent(_:)`, if any.
+    /// Linux never presents a popover, so this is record-only.
+    var hostDetailListContentKind: String?
 
     public init(itemProvider: NSItemProvider) {
         self.itemProvider = itemProvider

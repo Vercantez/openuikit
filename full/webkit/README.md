@@ -56,6 +56,11 @@ There is no Web Content process, network fetch, or renderer on this host.
 There is still no renderer, network stack, or JavaScript VM. Snapshots, PDF,
 and web archives fail with `WKError.unknown`. Non-literal /
 non-JSON `evaluateJavaScript` fails with `javaScriptExceptionOccurred`.
+`WebPage.callJavaScript` and `WebPage.exported(as:)` throw `WKError.unknown`
+immediately: no script engine or export pipeline exists. `WebPage` media
+controls complete in-process without a media engine (`mediaPlaybackState()`
+answers `.none`; capture setters record the request in the readable idle
+properties; dismissal/suspend are recorded no-ops).
 Cancelled navigation policy does not start. Download policy creates a
 `WKDownload` that immediately fails closed (no bytes). Nested network loads
 from inside `didFailProvisionalNavigation` record a terminal error without
@@ -87,6 +92,104 @@ SwiftUI `_WebKit_SwiftUI` / `View` overlay identifiers were `not-applicable`
 (`s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15_WebKit_SwiftUI0A4ViewV20ActivatedElementInfoV`)
 stays `deferred`, not `not-applicable`: its precise ID is not a SwiftUI
 overlay re-export.
+
+## Depth pass 2026-09 (wave 13)
+
+### Async in-process conversion (pi-wave13 webkit)
+
+The sealed runner is now `@main async` and awaits top-level
+`func test*() async`, so this pass converts **22 declared Swift-async rows
+to implemented** (2172 → 2194 implemented, 35 → 13 declared; deferred 26,
+unavailable 0, not-applicable 0 unchanged, total 2233). Every converted call
+completes in-process: fail-closed defaults, immediate throws, idle values,
+and in-memory extension parsing. No test awaits hardware, daemons, Siri,
+Apple Pay, or network; none touches `DispatchQueue.main`, `RunLoop`, or
+semaphores. Evidence is **six async, self-contained tests** in the new
+`tests/agent/WebKitPageAsyncTests.swift`; no product source was added (new
+`WebPage` media/export members live in the existing `WebKitPage.swift`, so
+`webkit_guest_sources.txt` still lists 17 sources and only the
+`WebKitPage.swift` / `WebKitExtensions.swift` digests in
+`webkit-provenance.json` were refreshed).
+
+| Status | Before | After |
+| --- | ---: | ---: |
+| implemented | 2172 | 2194 |
+| declared | 35 | 13 |
+| deferred | 26 | 26 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+| Total | 2233 | 2233 |
+
+- `WebPage.callJavaScript` (already `throw WKPortableUnknown`) → implemented
+  via `testPageAsyncCallJavaScriptThrows` (default and explicit-argument
+  calls both throw `WKError.unknown`).
+- All 8 `DialogPresenting` rows (4 requirements + 4 extension defaults) →
+  implemented via `testPageAsyncDialogDefaults`, which awaits each method on
+  a defaults-only conformer held as `any WebPage.DialogPresenting` (alert is
+  a no-op; file/prompt/confirm return `.cancel`).
+- 4 of 6 `NavigationDeciding` rows (both `decidePolicy` requirements +
+  defaults) → implemented via `testPageAsyncNavigationDecideDefaults`
+  (both deny with `.cancel`). The 2
+  `decideAuthenticationChallengeDisposition` rows stay declared: the isolated
+  host cannot portably construct `URLAuthenticationChallenge`, so no
+  in-process call is formable.
+- 6 `WebPage` media members (new product code: `mediaPlaybackState()` answers
+  `.none`, `pauseAllMediaPlayback` / `closeAllMediaPresentations` no-ops,
+  camera/microphone setters round-trip into the existing readable idle
+  properties, `setAllMediaPlaybackSuspended` round-trips into the new
+  host-only `isMediaPlaybackSuspended`) plus `exported(as:)` (new
+  `nonisolated` product member throwing `WKError.unknown`) → implemented via
+  `testPageAsyncMediaState` / `testPageAsyncExportThrows`.
+- Both async `WKWebExtension` inits → implemented via
+  `testPageAsyncExtensionInits`: `init(appExtensionBundle:)` (product
+  signature corrected from `Any` to Apple's `Bundle`) throws
+  `.resourceNotFound` immediately, and `init(resourceBaseURL:)` shares the
+  sync loader (temp-dir manifest parses to version 3; a missing directory
+  throws).
+- The largest new evidence group is 8/22 rows; the largest share of the 2194
+  implemented rows stays far below 40% — no test exceeds it.
+- Still declared (13): 11 rows with no product member needing UIKit /
+  UniformTypeIdentifiers / SwiftUI-overlay types (`WKNavigationAction`
+  `buttonNumber` / `modifierFlags`, `WebPage.NavigationAction`
+  `buttonNumber`, `WKWebExtensionAction.menuItems`,
+  `WKWebExtensionCommand.keyCommand` / `menuItem`, three `WKUIDelegate`
+  edit-menu/input-suggestion methods, `WebPage.Representation` /
+  `transferRepresentation`), plus the 2 challenge-disposition rows above.
+  Still deferred: NSAttributedString HTML import, `SecTrust`,
+  `ProxyConfiguration`, `UTType`/`Transferable`, the two SwiftUI-typed
+  `WebPage` members, context-menu delegates, and the synthesized
+  `Equatable.!=` witness (a stdlib witness, so the overlay override does not
+  apply).
+- One `oracle-questions.tsv` row added for the media/export state timing and
+  permission gating the in-process runner cannot observe.
+
+Validation on this Mac (the sealed Linux gate needs a Linux host):
+
+- Coverage recount: 2194 implemented / 13 declared / 26 deferred /
+  0 unavailable / 0 not-applicable, total 2233.
+- `validate_seed.py --phase deliverable` reports no coverage/evidence errors
+  (the only two errors are the pre-existing missing
+  `full/framework-roadmap/framework-roadmap.json`, absent from this
+  worktree); the validator accepts `async` test declarations.
+- `test_webkit_provenance.py`: 8 tests OK.
+- `/tmp` overlay build (repo untouched; overlay adds the `import
+  CoreGraphics` lines and drops the Linux-only
+  `NSKeyValueObservingOptions` redeclaration from the test-only UIKit shim,
+  both of which this Mac's SDK needs): `libUIKit.dylib` and
+  `libWebKit.dylib` compile warnings-as-errors with
+  `PORTABLE_WEBKIT_HOST` (17 product sources per
+  `webkit_guest_sources.txt`).
+- All 13 non-overlay `tests/agent/*Tests.swift` typecheck warnings-as-errors
+  against the overlay dylib; 90/90 runnable tests pass, including the 6 new
+  async ones (also verified standalone as `WEBKIT_ASYNC6_OK`). The 2 excluded
+  tests are the pre-existing `PORTABLE`-flag `document.title` error-code
+  artifacts (`testLoadFailsClosedWithoutCommit`,
+  `testCallAsyncJavaScriptJSONOnlyEvaluator`: `.unknown` instead of
+  `.javaScriptExceptionOccurred`), the same artifact the baseline reports.
+  The overlay tests are Linux-only by design (`!canImport(SwiftUI)` product
+  branch) and were not re-run on this Mac.
+
+Only `full/webkit/` changes.
 
 ## Depth pass 2026-09 (wave 8)
 

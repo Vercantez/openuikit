@@ -90,6 +90,9 @@ public protocol IntentValueQuery: PersistentlyIdentifiable, _SupportsAppDependen
     /// express as a default without a concrete anchor.
     associatedtype Result: ResultsCollection = [String]
     associatedtype ResultValue = String
+    /// Linux resolves values in-process from the conformer's own catalog;
+    /// no Siri or Shortcuts value-resolution service is consulted.
+    func values(for input: Input) async throws -> Result
 }
 
 public protocol PredictableIntent: AppIntent {

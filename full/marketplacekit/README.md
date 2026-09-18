@@ -69,10 +69,25 @@ APIs never report success.
 
 ## Depth pass 2026-09
 
-Implemented **189** of 207 exact IDs (18 `declared` async service methods).
+Implemented **207** of 207 exact IDs (0 `declared`, 0 `deferred`).
 Nondeferred count 207, above the medium-full floor of 104.
 
-## Wave 12 recount (2026-09-15)
+## Wave 13 recount (2026-09-18)
+
+Before: 189 implemented / 18 declared / 0 deferred / 0 not-applicable (207).
+After: 207 implemented / 0 declared / 0 deferred / 0 not-applicable (207).
+Gain: +18. The sealed host runner now `await`s top-level `func test*() async`,
+so the 18 in-process async leftovers (AppLibrary install/update/license/
+age-exception/territory/auth, MarketplaceExtension + MarketplaceAppExtension
+async defaults, AppDistributor.current, TransactionReporting.token) are now
+covered by `tests/agent/MarketplaceKitAsyncServiceTests.swift`: empty async
+returns (`availableAppVersions`, `additionalHeaders`,
+`currentAgeExceptionRequests`), status-derived `requestFailed`, territory
+round-trip plus `didAuthenticate` no-op, and immediate fail-closed throws
+(`automaticUpdates`, install/update overloads, browser install, age sheet,
+license renewal, distributor current, reporting token). No test awaits
+hardware/daemons; every async test completes in-process. Largest new-test
+citation is `testAppLibraryInstallRequestsFailClosed` with 5 rows (28%).
 
 Before: 189 implemented / 18 declared / 0 deferred / 0 not-applicable (207).
 After: 189 implemented / 18 declared / 0 deferred / 0 not-applicable (207).

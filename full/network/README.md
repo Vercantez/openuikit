@@ -680,3 +680,59 @@ After: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
 
 No non-exempt test is cited by more than 40% of implemented rows
 (largest share 191/2978 = 6.4%).
+
+## Depth pass 2026-09 (wave 13 async conversion)
+
+Before: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Leftover = 69.
+
+The sealed runner is now `@main async` and awaits top-level
+`func test*() async`, so the 20 `async`-shaped `declared` rows become
+testable without `RunLoop` / `DispatchQueue.main` / semaphores. Zero
+`View` overlay rows exist in this framework, so the overlay override
+does not apply.
+
+This pass adds `tests/agent/NetworkAsyncChannelTests.swift` with 11
+non-throwing `async` tests that convert all 20 `declared` rows to
+`implemented`:
+
+- Stream (`TCP`) `send(Data)` / `send(UInt8)` complete immediately: the
+  unstarted channel's `sendIdempotent` hits the `.setup` state, records
+  `notConnectedError` internally, and returns without invoking a
+  completion handler. No handshake is awaited and nothing blocks.
+- Datagram (`UDP`), TLV, Framer (`LengthPrefixedHostFramer`), Coder
+  (`String`/`String`/`NetworkJSONCoder`), and WebSocket `send` / `ping`
+  / `pong` / `close` behave the same way: frame encode plus a
+  non-blocking `sendIdempotent` on the unstarted channel.
+- Every `receive` overload (stream typed/bounded/exact, datagram, TLV,
+  framer, coder, WebSocket) throws `NWError.posix(.ENOTCONN)`
+  immediately; the tests assert exactly that error.
+- `NWPathMonitor.Iterator.next()` yields the current path once, then
+  nil, with no blocking wait.
+
+No product source changed: the bodies under test already fail closed or
+complete without blocking. The 49 `deferred` rows stay deferred: 4
+`withNWConnection` overloads with no source-compatible declaration,
+async `run` / `openStream` / `inboundStreams` / channel reports /
+WebSocket `startSend` / `startReceive` that would await a daemon or
+handshake and hang the 120s gate, one deprecated `flatMap` witness
+(warnings-as-errors), and stdlib/Combine/Foundation/Concurrency
+witnesses that are not Network-owned declarations. Hardware/daemon
+(TLS handshake, QUIC transport, mDNS/Bonjour) stays fail-closed.
+
+After: **2998 implemented / 0 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Implemented gain **+20**.
+
+No non-exempt test is cited by more than 40% of implemented rows
+(largest share 191/2998 = 6.4%; largest new test cites 3 rows).
+
+Verification on this Mac (Xcode 26.1): coverage holds all 3047
+public-surface IDs exactly once with no duplicates; all 194 cited
+`test*` functions resolve to defined top-level no-argument functions
+(11 of them `async`, matching the runner's `await` detection); product
+`libNetwork.dylib` and module compile clean under
+`swiftc -warnings-as-errors`; the 11 new async tests run green
+in-process with no hang. The full `test_host.sh` gate targets Linux
+(`import Glibc`) and must run on Linux; on macOS the run additionally
+trips only the known system-`Network.framework` class-name collision,
+inapplicable to the sealed gate.

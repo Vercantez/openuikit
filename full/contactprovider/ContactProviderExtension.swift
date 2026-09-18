@@ -20,7 +20,7 @@ where Configuration == ContactProviderExtensionConfiguration {
     /// Invalidates the extension.
     ///
     /// The system calls this method before terminating the extension. Linux
-    /// has no extension process. The sealed runner cannot `await` this method.
+    /// has no extension process; conforming types return in-process.
     func invalidate() async throws
 }
 

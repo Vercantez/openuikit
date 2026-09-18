@@ -99,3 +99,14 @@ func testWeatherServicePermissionDeniedIsNotGuessed() {
         preconditionFailure("expected WeatherError")
     }
 }
+
+func testWeatherServiceAttributionFailClosed() async {
+    do {
+        let _: WeatherAttribution = try await WeatherService.shared.attribution
+        preconditionFailure("Linux host must not fabricate Apple attribution")
+    } catch let error as WeatherError {
+        precondition(error == .unknown)
+    } catch {
+        preconditionFailure("expected WeatherError.unknown")
+    }
+}

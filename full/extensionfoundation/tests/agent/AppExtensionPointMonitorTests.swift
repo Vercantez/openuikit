@@ -69,3 +69,51 @@ func testMonitorIsObservable() {
     }
     precondition(takeObservable(monitor))
 }
+
+func testMonitorAddAppExtensionPointTracksAsync() async {
+    let point = AppExtensionPoint.Bind.buildBlock(
+        AppExtensionPoint.Identifier("com.example.async-add")
+    )
+    let monitor = AppExtensionPoint.Monitor()
+    do {
+        try await monitor.addAppExtensionPoint(point)
+    } catch {
+        preconditionFailure("addAppExtensionPoint must not throw \(error)")
+    }
+    precondition(monitor.host_trackedCount == 1)
+    precondition(monitor.identities.isEmpty)
+}
+
+func testMonitorInitWithPointAsync() async {
+    let point = AppExtensionPoint.Bind.buildBlock(
+        AppExtensionPoint.Identifier("com.example.async-init")
+    )
+    let monitor: AppExtensionPoint.Monitor
+    do {
+        monitor = try await AppExtensionPoint.Monitor(appExtensionPoint: point)
+    } catch {
+        preconditionFailure("Monitor init must not throw \(error)")
+    }
+    precondition(monitor.host_trackedCount == 1)
+    precondition(monitor.identities.isEmpty)
+}
+
+func testMonitorRemoveAppExtensionPointAsync() async {
+    let point = AppExtensionPoint.Bind.buildBlock(
+        AppExtensionPoint.Identifier("com.example.async-remove")
+    )
+    let monitor = AppExtensionPoint.Monitor()
+    do {
+        try await monitor.addAppExtensionPoint(point)
+    } catch {
+        preconditionFailure("addAppExtensionPoint must not throw \(error)")
+    }
+    precondition(monitor.host_trackedCount == 1)
+    do {
+        try await monitor.removeAppExtensionPoint(point)
+    } catch {
+        preconditionFailure("removeAppExtensionPoint must not throw \(error)")
+    }
+    precondition(monitor.host_trackedCount == 0)
+    precondition(monitor.identities.isEmpty)
+}

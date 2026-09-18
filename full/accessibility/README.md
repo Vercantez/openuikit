@@ -5,7 +5,7 @@ OpenUIKit Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS
 Swift surface from the sealed symbol graph. It is not wired into the shared
 guest package; that integration is a separate central review step.
 
-Coverage: **510 implemented / 10 declared / 0 deferred / 520 total**
+Coverage: **511 implemented / 9 declared / 0 deferred / 520 total**
 (above the leaf-full floor of 416).
 
 ## What is real
@@ -169,3 +169,27 @@ it requires `full/framework-roadmap/framework-roadmap.json` at the repo
 root, which the worktree does not contain. No files outside
 `full/accessibility/` were touched; the only file changed in wave 12 is
 this README recount.
+
+## Wave 13 recount 2026-09-18
+
+Before: **510 implemented / 10 declared / 0 deferred / 520 total**.
+After: **511 implemented / 9 declared / 0 deferred / 520 total** (+1).
+The sealed runner is now `@main async` and awaits `func test*() async`, so
+the one async-shaped leftover converts: `openSettings(for:)` throws
+fail-closed immediately in-process (no daemon, no suspension, no
+RunLoop/DispatchQueue/semaphores), and new async test
+`AccessibilitySettingsTests.swift#testOpenSettingsFailClosed` calls it via
+`try? await` plus `try await` in `do/catch` and asserts the throw.
+The remaining 9 declared rows are the `AttributedStringKey.description`
+getters of caseless (uninhabited) attribute-key enums: no value can be
+constructed in safe Swift, so no test can invoke them, and the contract
+explicitly forbids converting stdlib/Foundation protocol witnesses. The
+overlay override does not apply (zero `not-applicable` rows, no SwiftUI
+View-modifier rows). Deferred stays at 0.
+
+Top evidence citation is 19/511 rows (3.7%), far under the 40% cap; the
+new test is cited once. Product sources and all 63 test functions compile
+clean with `swiftc -warnings-as-errors`; a Darwin-adapted async runner
+invoking all 63 tests emits only `ACCESSIBILITY_AGENT_RUNTIME_OK` well
+under the 120s timeout. Local toolchain: Apple Swift 6.2.1 targeting
+`arm64-apple-macosx26.0`.

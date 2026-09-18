@@ -8,3 +8,4 @@ full/sharedwithyou/SWPerson.swift
 full/sharedwithyou/SWRemoveParticipantAlertController.swift
 full/sharedwithyou/SharedWithYou.swift
 full/sharedwithyou/SharedWithYouLookalikes.swift
+full/sharedwithyou/SharedWithYouViewOverlays.swift

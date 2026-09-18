@@ -49,7 +49,9 @@ read / present / store-and-forward sessions fail closed.
   Store and Forward session APIs, `MobileDocumentReader.prepare`,
   `requestDocument`, and `ProximityReaderDiscovery` content / present APIs
   throw the documented unsupported / notAllowed / readerNotAvailable error.
-  They are `declared` in coverage because the sealed runner cannot `await`.
+  They are `implemented` in coverage because the sealed runner awaits
+  `async` tests that assert each fail-closed throw (see
+  `tests/agent/ProximityReaderAsyncTests.swift`).
 - Empty reader tokens throw `.emptyReaderToken` from `prepare(using:)` before
   the unsupported fallback; that path is still async.
 - National ID supported-region lists, Apple VAS status-word integers, option
@@ -64,15 +66,13 @@ read / present / store-and-forward sessions fail closed.
 
 ## Depth pass 2026-09
 
-Coverage: **960 implemented** / **26 declared** / 0 deferred / 0 unavailable / 0 not-applicable
-(986 nondeferred of 986; floor 493). Wave-6 delta: +5 implemented (the five
-`MobileDocumentRequest` / `MobileDocumentDataRequest` /
-`MobileDocumentDataResponse` / `MobileDocumentRawDataRequest` protocol and
-`Response` associated-type rows, evidenced by the existing synchronous
-`testMobileDocumentRequestIdentity` / `testMobileDocumentDataProtocols` host
-checks). The remaining 26 declared rows are all async NFC / Secure Element /
-merchant-service entry points the sealed runner cannot `await`, so they stay
-fail-closed `declared`.
+Coverage: **986 implemented** / **0 declared** / 0 deferred / 0 unavailable / 0 not-applicable
+(986 nondeferred of 986; floor 493). Wave-13 delta: +26 implemented (all
+remaining async NFC / Secure Element / merchant-service entry points, now
+evidenced by `await`ed fail-closed `async` tests in
+`tests/agent/ProximityReaderAsyncTests.swift` asserting each documented
+throw). No declared rows remain; hardware success paths stay fail-closed by
+test-evidenced throws.
 
 Top-5 evidence distribution (960 implemented rows):
 

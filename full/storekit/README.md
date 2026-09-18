@@ -899,3 +899,74 @@ covers more than 40% of implemented rows.
 Nondeferred stays **15530** (floor 7848). Implemented gain: 0 — every
 leftover `declared` row requires `await` to call and purchase success
 stays fail-closed. No product sources, tests, or manifests changed.
+
+## Wave 13 (pi wave-13 storekit async leftovers)
+
+The sealed runner is now `@main async` and `await`s top-level
+`func test*() async` (non-throwing; the generated runner emits `await name()`
+with no `try`). This pass converts every leftover row whose async spelling
+returns immediately with a fail-closed value or error. New tests live in
+`tests/agent/StoreKitWave13Tests.swift` (23 async tests, one family each, no
+main-queue hops, run loops, or blocking waits). Live
+`Transaction.updates` (which suspends on a continuation) is never touched;
+all exercised sequences are finite snapshots, so every `await` resolves
+without a daemon.
+
+Converted (131 rows):
+
+- 16 async fail-closed API rows: `ExternalPurchase.canPresent` (false) /
+  `presentNoticeSheet` (throws), `ExternalLinkAccount.canOpen` (false) /
+  `open` (throws), `ExternalPurchaseLink.canOpen` (false) / `open()` /
+  `open(url:)` (throw), `ExternalPurchaseCustomLink.isEligible` (false) /
+  `token(for:)` / `showNotice` (throw), `PaymentMethodBinding.init(id:)`
+  (throws `notEligible`) / `bind` (throws `failed`),
+  `AdvancedCommerceProduct.init(id:)` (throws without a store, resolves
+  after load) / `purchase(compactJWS:confirmIn:)` (throws
+  `notAvailableInStorefront`).
+- 2 direct `AsyncIterator.next` rows (`PurchaseIntent.Intents`,
+  `Message.Messages`) plus 32 AsyncSequence synthesized witnesses:
+  `next` x5, `next(isolation:)` x5, `first(where:)` x5,
+  `contains(where:)` x5, `contains(_:)` x4 (elements taken from a recorded
+  purchase / subscription purchase / constructed values),
+  `max(by:)` x5, `min(by:)` x5.
+- 81 deferred async-shaped rows: `allSatisfy` x5, `map` x10 (both
+  `AsyncMapSequence` and `AsyncThrowingMapSequence` spellings),
+  `compactMap` x10 (both spellings), `filter` x5,
+  `drop(while:)` / `prefix(while:)` x10, `prefix(_:)` / `dropFirst(_:)` x10,
+  `reduce` / `reduce(into:)` x10, `flatMap` x20 (AsyncSequence segments are
+  our own empty snapshot sequences; both plain and throwing spellings),
+  `AdvancedCommerceProduct.latestTransaction` x1 (nil when absent,
+  resolves after purchase).
+
+Two compile facts found by building against Linux Swift 6.2: iterating a
+throwing AsyncSequence requires `for try await` (plain `for await` is a
+hard error, even inside `do/catch`), and `Sequence.async` does not exist
+on this toolchain, so flatMap segments are same-type snapshot sequences.
+One pre-existing warning-as-error was fixed without behavior change:
+`StoreKitWave8Tests.testStoreDownloaderExtensionProtocol` erased to `Any`
+before the `is any StoreDownloaderExtension` check (`'is' test is always
+true` under `-warnings-as-errors`).
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before wave-13 port | 15480 | 50 | 165 | 0 | 0 |
+| after wave-13 port | 15611 | 0 | 84 | 0 | 0 |
+
+Nondeferred is **15611** (floor 7848). Unique `implemented` evidence tests:
+217. Largest evidence, `testViewOverlayBatch17`, cites 595 rows (3.8% of
+15611); no cited test covers more than 40% of implemented rows.
+Leftover `deferred` (84) is honestly non-convertible in-process:
+`SwiftUI.Transaction` collision modifiers (51, need a SwiftUI module),
+Optional/Never `StoreContent` witnesses (20, stdlib witnesses per the lane
+rule), Foundation `FormatStyle` synthesis (6, no compiling declaration on
+the Foundation-only host), CryptoKit `P256` signatures (3, absent
+dependency), Optional `Body` witnesses (2, stdlib), and async
+`PurchaseAction.callAsFunction` overloads (2, purchase waits on a daemon).
+Purchase / Apple Pay success stays fail-closed. No product sources or
+manifests changed (tests only).
+
+Verification replicated the sealed gate on Linux Swift 6.2 (Docker):
+guest module plus the generated `@main async` runner and all
+`tests/agent/*Tests.swift` compile `-warnings-as-errors`, all 217 cited
+tests (194 sync + 23 async) run under the 120 s timeout, and stdout is
+exactly `STOREKIT_AGENT_RUNTIME_OK`.

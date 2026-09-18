@@ -234,6 +234,10 @@ public final class WebPage {
     public private(set) var isBlockedByScreenTime = false
     public private(set) var cameraCaptureState: WKMediaCaptureState = .none
     public private(set) var microphoneCaptureState: WKMediaCaptureState = .none
+    /// Host-only record of the last `setAllMediaPlaybackSuspended` request.
+    /// Apple has no such member; there is no media engine on this host, so
+    /// suspending never starts, pauses, or inspects real playback.
+    public private(set) var isMediaPlaybackSuspended = false
     public private(set) var isLoading = false
     public private(set) var title: String = ""
     public private(set) var url: URL?
@@ -433,6 +437,32 @@ public final class WebPage {
         _ = (javaScriptString, arguments, frame, contentWorld ?? .page)
         throw WKPortableUnknown("WebPage.callJavaScript")
     }
+
+    // Apple media controls: no media engine, camera, microphone, or
+    // presentation exists on this host. Capture setters record the requested
+    // state in the readable idle properties; playback queries stay idle and
+    // presentation dismissal is a no-op. Every method completes in-process.
+    public func mediaPlaybackState() async -> WKMediaPlaybackState { .none }
+    public func pauseAllMediaPlayback() async {}
+    public func setCameraCaptureState(_ state: WKMediaCaptureState) async {
+        cameraCaptureState = state
+    }
+    public func setMicrophoneCaptureState(_ state: WKMediaCaptureState) async {
+        microphoneCaptureState = state
+    }
+    public func closeAllMediaPresentations() async {}
+    public func setAllMediaPlaybackSuspended(_ suspended: Bool) async {
+        isMediaPlaybackSuspended = suspended
+    }
+
+    // Apple `exported(as:)`: no renderer or export pipeline on this host, so
+    // every request fails closed immediately. Completes in-process.
+    nonisolated public func exported(
+        as representation: ExportedContentConfiguration
+    ) async throws -> Data {
+        _ = representation
+        throw WKPortableUnknown("WebPage.exported")
+    }
 }
 
 @preconcurrency @MainActor
@@ -441,10 +471,10 @@ public protocol URLSchemeHandler: AnyObject {
     func reply(for request: URLRequest) async -> Result
 }
 
-// Fail-closed defaults for Apple's async dialog/policy hooks. These exist so
-// the declared extension requirements genuinely compile on the isolated host;
-// they are never invoked by the synchronous sealed runner. Dialogs cancel,
+// Fail-closed defaults for Apple's async dialog/policy hooks. Dialogs cancel,
 // navigation policy denies, and authentication challenges are cancelled.
+// Async agent tests invoke every default except the authentication-challenge
+// one (the isolated host cannot portably construct URLAuthenticationChallenge).
 extension WebPage.DialogPresenting {
     public func handleFileInputPrompt(
         parameters: WKOpenPanelParameters,

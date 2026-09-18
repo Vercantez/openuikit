@@ -136,3 +136,26 @@ compile to `declared` here; the sources already carry the fail-closed
 `#if canImport` bodies for a future guest UIKit/Vision build. No SwiftUI
 View-overlay rows exist in this lane, so the overlay override is
 not applicable. `bash tests/acceptance/test_host.sh` passes.
+
+## Wave 13 recount 2026-09-18
+
+Coverage before this pass: **233 implemented / 0 declared / 23 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after: **233 implemented / 0 declared / 23 deferred / 0 unavailable /
+0 not-applicable** (implemented gain +0).
+
+All 23 `deferred` rows still require UIKit, Vision, CoreImage, CoreVideo, or
+ImageIO named types that do not exist on the isolated host, so none can
+compile to `declared`; the async-shaped leftovers (`analyze` overloads,
+`image(for:)`, `capturePhoto`) all take or return those same missing types
+and cannot complete in-process here, while the fail-closed `#if canImport`
+bodies (immediate `throw`) stay ready for a future guest build. The
+already-implemented in-process async surface (`subject(at:)`, `subjects`)
+gained a real `await` exercise: new `func testInteractionSubjectsAsync()
+async` in `tests/agent/ImageAnalysisInteractionTests.swift` awaits both
+APIs (nil / empty, never suspends), and those two coverage rows now cite it.
+No SwiftUI View-overlay rows exist in this lane, so the overlay override is
+not applicable. `bash tests/acceptance/test_host.sh` passes, and the full
+agent-test set plus the new async test compile `warnings-as-errors` and run
+to completion.

@@ -71,7 +71,7 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave → wave 11 → wave 12): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 → 1291 → 1291 implemented** / 3 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave → wave 11 → wave 12 → wave 13): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 → 1291 → 1291 → 1294 implemented** / 0 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Wave 11 (leftover sweep, 2026-09-15)
 
@@ -147,6 +147,40 @@ FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
 **Coverage before / after this wave 12 pass** (1319 public IDs): 1291 / 3 /
 15 / 10 → 1291 / 3 / 15 / 10. Implemented gain: **+0**; host-gate status:
 red → green.
+
+## Wave 13 (async leftover sweep, 2026-09-18)
+
+Recounted `coverage.tsv`: 1291 implemented / 3 declared / 15 deferred / 10
+unavailable of 1319 public IDs. The sealed runner is now `@main async` and
+awaits top-level `func test*() async`, so the three `declared` rows — all
+in-process `async` overloads — convert to `implemented` (gain **+3**,
+`1294 / 0 / 15 / 10`):
+
+- `NSPersistentContainer.performBackgroundTask<T>(_:)` generic `async throws`
+  overload, observed by `testAsyncContainerBackgroundTask` in
+  `tests/agent/CoreDataAsyncPerformTests.swift` (background insert + save,
+  return value, then view-context fetch proves the save reached the store).
+- `NSManagedObjectContext.perform(schedule:_:)` `async throws`, observed by
+  `testAsyncContextPerformSchedule` (`.immediate` fetch round-trip plus an
+  `.enqueued` value).
+- `NSPersistentStoreCoordinator.perform(_:)` `async rethrows`, observed by
+  `testAsyncCoordinatorPerform` (value return and live store count).
+
+Each new test is cited by exactly one row (≈ 0.08% each), below the 40%
+cap; the largest citation remains
+`CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues` at
+401 / 1294 (≈ 31%). The async paths complete in-process against the
+in-memory store (verified <1s on this host); no `DispatchQueue.main`,
+`RunLoop`, or semaphore waits. The fifteen `deferred` rows stay deferred
+(`NSExpression`/`UndoManager` toolchain-blocked, Combine, UIKit snapshot,
+CloudKit scope, class-var duplicate) and the ten daemon rows stay
+`unavailable`. There are no `not-applicable` rows and no SwiftUI
+`View`-modifier overlay rows in this lane, so the overlay override does
+not apply.
+
+**Coverage before / after this wave 13 pass** (1319 public IDs): 1291 / 3 /
+15 / 10 → 1294 / 0 / 15 / 10. Implemented gain: **+3**; host-gate status:
+green → green.
 
 ## Fail-closed boundaries
 

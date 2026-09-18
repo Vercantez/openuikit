@@ -43,8 +43,9 @@ daemon. Insert, send, and authorization never report success.
 
 - `MSCriticalSMSMessenger.maximumCriticalMessagingRecipients` is `0`.
 - `requestAuthorization(for:)`, `checkAuthorizationStatus(for:)`, and
-  `send(_:to:)` throw `MSCriticalMessagingError.notSupported` (async; declared,
-  not awaited by the isolated runner).
+  `send(_:to:)` throw `MSCriticalMessagingError.notSupported` (async;
+  awaited in-process by `MSCriticalMessagingTests`, throwing immediately
+  with no daemon or carrier).
 - No Mail/Messages UI, no extension presentation, no fabricated send.
 - `MSMessageTemplateLayout.image`, `MSStickerBrowserView.contentInset`, and
   `MSMessagesAppTranscriptPresentation.messageTintColor` are deferred until
@@ -52,8 +53,8 @@ daemon. Insert, send, and authorization never report success.
 
 ## Depth pass 2026-09
 
-Implemented **174** of 180 exact IDs (3 `declared` async Critical Messaging
-methods, 3 UIKit-typed `deferred` properties). Nondeferred count 177, above
+Implemented **177** of 180 exact IDs (0 `declared`, 3 UIKit-typed `deferred`
+properties). Nondeferred count 180, above
 the medium-full floor of 90.
 
 Top-5 `implemented` evidence distribution:
@@ -108,6 +109,28 @@ Verification this wave: `libMessages.dylib` compiles clean under
 `test_host.sh` deliverable validator refuses before compiling because
 `full/framework-roadmap/framework-roadmap.json` is absent from this
 worktree — out of scope for this lane and pre-existing.)
+
+## Wave-13 recount 2026-09-18
+
+Recount: **177** implemented / **0** declared / **3** deferred of 180 —
+gain +3 over waves 4, 11, and 12. The sealed runner is now `@main async`
+and awaits top-level `func test*() async`, so the 3 formerly declared
+`async throws` Critical Messaging methods (`requestAuthorization`,
+`checkAuthorizationStatus`, `send`) are now `implemented`: each is
+awaited in-process in `tests/agent/MSCriticalMessagingTests.swift` and
+throws `MSCriticalMessagingError.notSupported` immediately with no
+daemon, entitlement, or carrier path (fail-closed success stays
+fail-closed). The 3 deferred rows remain UIKit-typed properties
+(`UIImage.image`, `UIEdgeInsets.contentInset`,
+`UIColor.messageTintColor`); UIKit is not on the isolated link line and
+a public framework-local substitute for a dependency-owned type is
+forbidden, so they remain `deferred`. The overlay override (SwiftUI
+identity View modifiers) does not apply: this surface contains no
+SwiftUI View modifiers.
+
+Verification this wave: `libMessages.dylib` compiles clean under
+`-warnings-as-errors`; an async host runner awaiting the 3 new
+`MSCriticalMessagingTests` passes and emits its marker.
 
 ## Wave-12 recount 2026-09-15
 

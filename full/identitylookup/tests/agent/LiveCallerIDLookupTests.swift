@@ -92,3 +92,39 @@ func testLiveLookupNSSetTypealiases() {
 func testExtensionPointNameMatchesDarwinOracle() {
     precondition(extensionPointName == "com.apple.live-lookup")
 }
+
+func testLiveCallerIDLookupManagerOpenSettingsFailsClosed() async {
+    do {
+        try await LiveCallerIDLookupManager.shared.openSettings()
+        preconditionFailure("openSettings must throw")
+    } catch {
+        precondition(ILMessageFilterError.Code.system ~= error)
+    }
+}
+
+func testLiveCallerIDLookupManagerResetFailsClosed() async {
+    do {
+        try await LiveCallerIDLookupManager.shared.reset(forExtensionWithIdentifier: "com.example.lookup")
+        preconditionFailure("reset must throw")
+    } catch {
+        precondition(ILMessageFilterError.Code.system ~= error)
+    }
+}
+
+func testLiveCallerIDLookupManagerRefreshPIRParametersFailsClosed() async {
+    do {
+        try await LiveCallerIDLookupManager.shared.refreshPIRParameters(forExtensionWithIdentifier: "com.example.lookup")
+        preconditionFailure("refreshPIRParameters must throw")
+    } catch {
+        precondition(ILMessageFilterError.Code.system ~= error)
+    }
+}
+
+func testLiveCallerIDLookupManagerRefreshExtensionContextFailsClosed() async {
+    do {
+        try await LiveCallerIDLookupManager.shared.refreshExtensionContext(forExtensionWithIdentifier: "com.example.lookup")
+        preconditionFailure("refreshExtensionContext must throw")
+    } catch {
+        precondition(ILMessageFilterError.Code.system ~= error)
+    }
+}

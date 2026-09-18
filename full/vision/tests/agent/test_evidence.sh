@@ -20,23 +20,42 @@ counts = collections.Counter(row["evidence"] for row in implemented)
 assert implemented, "no implemented evidence"
 assert max(counts.values()) <= len(implemented) * 0.4, "single-test evidence exceeds 40%"
 tests = {}
+flags = {}
 for anchor in sorted(counts):
     match = re.fullmatch(r"test:full/vision/tests/agent/(\w+Tests\.swift)#(test\w+)", anchor)
     assert match, f"invalid evidence: {anchor}"
     filename, name = match.groups()
     text = (root / "tests/agent" / filename).read_text()
-    assert len(re.findall(r"^func " + name + r"\(\)\s*\{", text, re.M)) == 1, anchor
+    sig = re.findall(r"^func " + name + r"\(\)\s*(async)?\s*(throws)?\s*\{", text, re.M)
+    assert len(sig) == 1, anchor
     assert name not in tests, f"ambiguous test: {name}"
     tests[name] = filename
+    flags[name] = sig[0]
 for path in (root / "tests/agent").glob("*Tests.swift"):
-    assert not re.search(r"\b(?:DispatchSemaphore|Task|await)\b", path.read_text()), path
+    body = path.read_text()
+    assert not re.search(r"\b(?:DispatchSemaphore|RunLoop)\b", body), path
+    assert "DispatchQueue.main" not in body, path
 for row in rows:
     if row["status"] == "not-applicable":
         assert "::SYNTHESIZED::" in row["precise"] or "SwiftUI" in row["precise"], row["precise"]
-runner = ["import Foundation", "@_spi(OpenUIKitHost) import Vision", "switch CommandLine.arguments[1] {"]
+runner = [
+    "import Foundation",
+    "@_spi(OpenUIKitHost) import Vision",
+    "@main",
+    "struct VisionEvidenceRunner {",
+    "    static func main() async throws {",
+    "        switch CommandLine.arguments[1] {",
+]
 for name in sorted(tests):
-    runner.append(f'case "{name}": {name}()')
-runner += ['default: fatalError("unknown evidence test")', '}']
+    is_async, is_throwing = flags[name]
+    prefix = ("try " if is_throwing else "") + ("await " if is_async else "")
+    runner.append(f'        case "{name}": {prefix}{name}()')
+runner += [
+    '        default: fatalError("unknown evidence test")',
+    "        }",
+    "    }",
+    "}",
+]
 (out / "main.swift").write_text("\n".join(runner) + "\n")
 (out / "names.txt").write_text("\n".join(sorted(tests)) + "\n")
 print(f"VISION_EVIDENCE_LEDGER_OK implemented={len(implemented)} tests={len(tests)} largest={max(counts.values())}")
@@ -49,13 +68,14 @@ done < "$FRAMEWORK_ROOT/vision_guest_sources.txt"
 swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
     -module-name Vision -emit-module-path "$TMP/Vision.swiftmodule" \
     -o "$TMP/libVision.dylib" "${SOURCES[@]}"
-swiftc -warnings-as-errors -I "$TMP" \
+swiftc -warnings-as-errors -parse-as-library -I "$TMP" \
     "$FRAMEWORK_ROOT"/tests/agent/*Tests.swift "$TMP/main.swift" \
     "$TMP/libVision.dylib" -o "$TMP/evidence-tests"
 while IFS= read -r name; do
-    # Each cited test starts in a fresh process and must finish synchronously.
+    # Each cited test starts in a fresh process; async tests are awaited in-process
+    # and must return promptly (no frame waits, run loops, or semaphores).
     LD_LIBRARY_PATH="$TMP${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-        timeout 30 "$TMP/evidence-tests" "$name"
+        timeout 60 "$TMP/evidence-tests" "$name"
     printf 'VISION_EVIDENCE_TEST_OK %s\n' "$name"
 done < "$TMP/names.txt"
 printf 'VISION_EVIDENCE_OK\n'

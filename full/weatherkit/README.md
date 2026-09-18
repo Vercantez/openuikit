@@ -31,6 +31,7 @@ arithmetic:
   `WeatherChanges`, and `HistoricalComparisons` as `RandomAccessCollection`
 - `WeatherQuery` data-set tokens and dated daily/hourly range queries (`isValid` / `validate()`)
 - `WeatherService.shared` / `init()` identity; Linux `weather(latitude:longitude:including:)` validates coordinates and query ranges then throws `WeatherError.unknown`
+- `WeatherService.attribution` async getter fails closed with `WeatherError.unknown` (awaited async test, no daemon or network)
 - NOAA solar-calculator `SunEvents(date:latitude:longitude:)` (official/civil/nautical/astronomical zeniths) and Meeus-style `MoonPhase(date:)` synodic-month phases
 - WeatherKit REST document decoding (`WeatherKitREST`) for `currentWeather` / `forecastHourly` / `forecastDaily` JSON
 - Sequence/Collection/Foundation witnesses on `Forecast`, statistics, summaries, `WeatherChanges`, and `HistoricalComparisons`
@@ -61,7 +62,8 @@ those methods are omitted from the Linux dylib and marked `deferred`.
 
 - `tests/agent/WeatherKitLoadSmoke.swift` — schema-v2 import/marker probe
 - `tests/agent/*Tests.swift` — focused family tests; each `implemented`
-  coverage row cites one top-level synchronous `test*` function
+  coverage row cites one top-level no-argument `test*` function
+  (synchronous or `async`; the sealed runner awaits async tests)
 - `tests/agent/WeatherKitDependencyIdentity.swift` — CoreLocation +
   Foundation import probe for the clean integration build
 
@@ -170,3 +172,38 @@ Leftover `deferred` reasons (34, all terminal on this host):
 Seven Combine `publisher` rows stay `unavailable` (no Combine dependency or
 runtime). WeatherKit has no SwiftUI `View` modifiers, so the overlay-override
 playbook does not apply to this framework.
+
+## Depth pass 2026-09 (wave 13, async runner)
+
+Recount of the 1264 iPhoneOS 26.1 public identifiers:
+
+| status | before | after |
+| --- | --- | --- |
+| implemented | 1222 | 1223 |
+| declared | 1 | 0 |
+| deferred | 34 | 34 |
+| unavailable | 7 | 7 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+1** — the sealed runner is now `@main async` and
+awaits top-level `func test*() async`, so the single `declared` row
+(`WeatherService.attribution`, an `async throws` getter) converts to
+`implemented` via `WeatherKitServiceTests.swift#testWeatherServiceAttributionFailClosed`,
+which awaits the getter and asserts the immediate fail-closed
+`WeatherError.unknown` throw (no daemon, network, RunLoop, or semaphore).
+
+Leftover `deferred` reasons (34, all terminal on this host):
+
+- 20 `CLLocation`-gated rows (`WeatherService.weather(for:...)` overloads,
+  daily/hourly/monthly summary and statistics queries,
+  `WeatherMetadata.location`) — CoreLocation is not importable on the
+  isolated Linux host gate; they compile only under `canImport(CoreLocation)`
+  on the integration toolchain and cannot be awaited here.
+- 7 synthesized `Sequence.flatMap` returning-Optional witnesses — Swift 6
+  rejects that spelling as deprecated under warnings-as-errors
+  (`compactMap` is tested separately).
+- 7 synthesized `Collection.index(of:)` witnesses — likewise deprecated
+  (`firstIndex(of:)` is tested separately).
+
+Seven Combine `publisher` rows stay `unavailable` (no Combine dependency or
+runtime). No hardware/daemon/Siri/Apple Pay success is fabricated.

@@ -667,3 +667,24 @@ Top evidence distribution for the 3 newly implemented rows:
 3. `testWave12CGImageFormatWitness` — 1 (33.3%) — format witness via metatype existential
 
 Largest test is 1/3 = 33.3%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **294/294** cited tests pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the 3 new tests pass in an isolated fresh process.
+
+## Depth pass 2026-09-18 (wave 13 async in-process conversion)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. The sealed runner is now `@main async` and awaits top-level `func test*() async`, so the one in-process async leftover becomes citable: the `async` `BNNSGraph.Context.init(compileFromPath:functionName:options:)` overload (previously declared with "cited tests must be synchronous"). The product gains a fail-closed `async throws` convenience init next to the sync twin in `AccelerateOverlay.swift` (immediate `unableToCreateContext`, no BNNS runtime touched), exercised by `testBNNSRemGraphContextAsync`, which `await`s the init and asserts the throw. The `await` forces async-overload resolution, and the test file compiles under `-warnings-as-errors` (a sync resolution would warn on a needless `await`).
+
+Still declared (5): the 5 `BNNSGraph.Context` members that need a constructible instance (`functionCount`, `functionNames`, `streamingAdvanceCount`, `checkForNaNsAndInfinities`, `tensor(forFunction:argument:fillKnownDynamicShapes:)`); `makeContext` and both `compileFromPath` inits throw, so no instance exists to exercise them. Still deferred: the 2 async `Context` instance methods (`executeFunction(_:arguments:)` async, `setDynamicShapes(_:forFunction:)` async) for the same reason — an immediate-throw body is implementable, but no test can call an instance method without an instance, and this lane will not fabricate one. Remaining deferred rows are CG/CV-gated conversions, BNNS-runtime apply paths, and stdlib/Foundation synthesized witnesses.
+
+- Implemented before: **5401**
+- Implemented after: **5402**
+- Declared before: **6**
+- Declared after: **5**
+- Deferred before/after: **1446**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **1**
+
+Top evidence distribution for the 1 newly implemented row:
+
+1. `testBNNSRemGraphContextAsync` — 1 (100% of the 1-row gain; 1/295 = 0.3% of all cited tests) — async fail-closed context init
+
+The single-row gain trivially satisfies the 40% remaining-row ceiling. The cited function is top-level, no-argument, `async`, self-contained, and completes in-process (immediate throw; no hardware, daemon, queue, or semaphore wait). Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **295/295** cited tests (294 sync + 1 awaited async) pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the new async test passes in an isolated fresh process alongside its sync twin.

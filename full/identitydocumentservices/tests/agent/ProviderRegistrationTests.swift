@@ -133,3 +133,50 @@ func testRegistrationStoreStatusHash() {
     let value = IdentityDocumentProviderRegistrationStore.Status.authorized.hashValue
     precondition(value == IdentityDocumentProviderRegistrationStore.Status.authorized.hashValue)
 }
+
+func testProviderRegistrationStoreStatusNotSupported() async {
+    let store = IdentityDocumentProviderRegistrationStore()
+    let status = await store.status
+    precondition(status == .notSupported)
+}
+
+func testProviderRegistrationStoreRegistrationsThrowsNotSupported() async {
+    let store = IdentityDocumentProviderRegistrationStore()
+    do {
+        _ = try await store.registrations
+        preconditionFailure("registrations should throw notSupported without the Apple presentment daemon")
+    } catch let error as IdentityDocumentProviderRegistrationStore.RegistrationError {
+        precondition(error == .notSupported)
+    } catch {
+        preconditionFailure("unexpected registrations error: \(error)")
+    }
+}
+
+func testProviderRegistrationStoreAddRegistrationThrowsNotSupported() async {
+    let store = IdentityDocumentProviderRegistrationStore()
+    let registration = MobileDocumentRegistration(
+        mobileDocumentType: "org.iso.18013.5.mDL",
+        supportedAuthorityKeyIdentifiers: [],
+        documentIdentifier: "async-add-1"
+    )
+    do {
+        try await store.addRegistration(registration)
+        preconditionFailure("addRegistration should throw notSupported without the Apple presentment daemon")
+    } catch let error as IdentityDocumentProviderRegistrationStore.RegistrationError {
+        precondition(error == .notSupported)
+    } catch {
+        preconditionFailure("unexpected addRegistration error: \(error)")
+    }
+}
+
+func testProviderRegistrationStoreRemoveRegistrationThrowsNotSupported() async {
+    let store = IdentityDocumentProviderRegistrationStore()
+    do {
+        try await store.removeRegistration(forDocumentIdentifier: "async-remove-1")
+        preconditionFailure("removeRegistration should throw notSupported without the Apple presentment daemon")
+    } catch let error as IdentityDocumentProviderRegistrationStore.RegistrationError {
+        precondition(error == .notSupported)
+    } catch {
+        preconditionFailure("unexpected removeRegistration error: \(error)")
+    }
+}

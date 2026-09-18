@@ -166,6 +166,26 @@ dependency), 8 need Darwin `_BridgedStoredNSError` bridging, 1 needs
 Swift return-type overloading rules. No SwiftUI `View` overlay rows exist, so
 the identity-overlay override does not apply. Implemented gain this wave: 0.
 
+Wave-13 recount (2026-09-18): **562 implemented / 1 declared / 24 deferred**
+(gate re-verified `FRAMEWORK_FANOUT_HOST_OK`; counts sum to the 587-ID surface:
+562 + 1 + 24). The sealed runner now awaits top-level `func test*() async`, so
+8 of the 9 remaining `declared` stdlib `AsyncSequence` rows were promoted via
+in-process async probes in `tests/agent/NFCEventStreamAsyncTests.swift`, each
+cited by exactly one test: the async-terminal operators (`allSatisfy`,
+`contains(where:)`, `first(where:)`, `min(by:)`, `max(by:)`, both `reduce`
+overloads) and `Iterator.next(isolation:)` all complete without hardware or
+suspension because `EventStream.Iterator.next()` throws
+`CardSession.Error.systemNotAvailable` on its first call, which each operator
+propagates immediately (verified with a 60s-timeout `@main async` harness:
+`ASYNC_PROBES_OK`). The last `declared` row is the remaining `Failure == Never`
+`flatMap` overload, which is uncallable on `EventStream` (`Failure` is
+`any Error`) so no call expression can resolve to it. Re-examined all 24
+`deferred` rows: 13 need UIKit (not a declared dependency), 8 need Darwin
+`_BridgedStoredNSError` bridging, 1 needs `NSUserActivity` (absent from this
+Linux Foundation overlay), and 2 violate Swift return-type overloading rules.
+No SwiftUI `View` overlay rows exist, so the identity-overlay override does not
+apply. Implemented gain this wave: +8.
+
 Top-5 implemented evidence distribution:
 
 | rows | evidence |

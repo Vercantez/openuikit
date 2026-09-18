@@ -951,3 +951,52 @@ Implemented gain: +0 (ceiling; 3259/3504 = 93.0% implemented). Top test
 still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
 180 (5.5%). No test owns more than 40% of implemented rows. No Apple
 service or hardware success invented.
+
+## Wave 13 pass 2026-09-18 (async leftover audit: ceiling re-affirmed)
+
+No SwiftUI/View overlay rows exist in this module's public surface (zero
+`coverage.tsv` IDs mention SwiftUI; the `view` matches are the already
+implemented `CMStereoView` media constants), so the overlay-override clause
+has nothing to convert here. This pass answers the wave-13 prompt directly:
+the sealed runner now awaits top-level `func test*() async`, so every one
+of the 25 declared and 220 deferred rows was audited for async-shaped
+leftover that completes in-process (empty AsyncSequence, immediate throw).
+Result: `coverage.tsv` contains zero async identifiers (no `async`,
+`AsyncSequence`, `AsyncStream`, continuation, or actor rows), so there is
+no async-shaped leftover to convert — the prompt's "~0" estimate is
+exactly 0.
+
+- The 25 declared rows are all synchronous stdlib witnesses already ruled
+  unconvertible in waves 10/12: 8 `sorted(using:)` (no concrete
+  `SortComparator` on Linux), 4 `compare` (needs `Element:
+  SortComparator`), 4 `formatted` (no concrete `FormatStyle`), 4
+  `publisher` (no Combine on Linux), 2 trapping `indices` on
+  `CMReadOnlyDataBlockBuffer`, 2 `CVBufferRef` members with no host type,
+  1 deprecated optional-`flatMap` (warns under `-warnings-as-errors`).
+  None has an async spelling; none completes in-process as async.
+- The 220 deferred rows need CoreAudioTypes/CoreVideo (20 audio/image C
+  APIs whose signatures cannot even be spelled without
+  `AudioStreamBasicDescription` / `AudioBufferList` / `CVImageBuffer`),
+  `simd`, DispatchSource timers, hardware/daemons, or unobserved overlay
+  shapes. None is an in-process empty-sequence or immediate-throw
+  candidate; hardware/daemon success stays fail-closed per contract.
+- Structural audit re-run: all 3259 implemented rows cite well-formed
+  `test:full/coremedia/tests/agent/*Tests.swift#test*` targets that exist
+  as top-level `func test*()` functions (0 missing, 0 bad-format); all 25
+  declared rows cite existing `source:` anchors. Product sources typecheck
+  clean under `swiftc -typecheck -warnings-as-errors` (Apple Swift 6.2.1).
+
+No product Swift, test, manifest, or coverage rows changed in this pass.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3259 | 3259 |
+| declared | 25 | 25 |
+| deferred | 220 | 220 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +0 (ceiling; 3259/3504 = 93.0% implemented). Top test
+still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (5.5%). No test owns more than 40% of implemented rows. No Apple
+service or hardware success invented.

@@ -12,7 +12,7 @@ members (the same pattern `webkit` / `linkpresentation` use with a
 Foundation-only declared dependency list). There is no UIKit, SwiftUI, or
 CryptoKit module on this Linux gate.
 
-Coverage for this pass: **2057 implemented / 0 declared / 39 deferred**
+Coverage for this pass: **2063 implemented / 0 declared / 33 deferred**
 of 2096 public precise IDs. The
 `ASWebAuthenticationSession`, `ASAuthorizationController`,
 `ASAuthorizationAppleIDProvider` / `Request` / `Credential`, and
@@ -283,3 +283,25 @@ toolchain), 6 are SwiftUI `AuthorizationController` async request methods
 (success would claim Apple-daemon authorization and cited tests cannot
 `await`), and 2 are WebKit overlay `clientData` facets owned by the browser
 module.
+
+## Async wave 2026-09 (pi wave 13)
+
+Ledger before this pass: **2057 implemented / 0 declared / 39 deferred /
+0 unavailable / 0 not-applicable**. Ledger after this pass: **2063
+implemented / 0 declared / 33 deferred / 0 unavailable / 0
+not-applicable** (2096 precise IDs). Implemented gain: **6**.
+
+The sealed runner is now `@main async` and `await`s top-level `func test*()
+async`, so the six SwiftUI `AuthorizationController` async request rows move
+from deferred to implemented as fail-closed async: each method throws
+`ASAuthorizationError.notHandled` immediately without suspending, and six
+new `async` tests (one per overload spelling, including the two no-options
+forwarding overloads added to the overlay controller) assert the immediate
+throw. No test awaits hardware, a daemon, Siri, Apple Pay, or Screen Time;
+authorization success stays fail-closed on Linux.
+
+The remaining 33 deferred rows cannot move in-process: 25 need UIKit
+view-controller/anchor identity (a framework-local substitute superclass is
+forbidden), 6 need CryptoKit `SymmetricKey` (no such module on the gate
+toolchain), and 2 are WebKit overlay `clientData` facets owned by the
+browser module.

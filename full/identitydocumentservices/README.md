@@ -121,6 +121,34 @@ is absent from this worktree snapshot — a repo-wide precondition outside
 `full/identitydocumentservices/` that no edit here can satisfy; all
 in-scope checks pass.
 
+## Wave 13 re-examination 2026-09-18
+
+Before: **99 implemented** / **7 declared** / **0 deferred** / **0 n/a**.
+After: **103 implemented** / **3 declared** / **0 deferred** / **0 n/a**
+(implemented gain 4). The sealed host runner is now `@main async` and
+`await`s top-level `func test*() async`, so the four in-process async
+store members convert cleanly: `status` (async getter returning
+`.notSupported`), `registrations`, `addRegistration`, and
+`removeRegistration` (each throwing `.notSupported` immediately with no
+hardware/daemon wait). Each is cited by a dedicated non-throwing `async`
+test that awaits the member in-process and asserts the fail-closed
+`.notSupported` outcome — no `DispatchQueue.main`, `RunLoop`, or
+semaphore waits, and no success is reported without the Apple
+presentment daemon. The runner emits `await name()` without `try`, so
+the new tests are `async` (not `async throws`) with internal
+do/catch. The remaining 3 `declared` rows are the synthesized `Actor`
+isolation witnesses (`assertIsolated`, `assumeIsolated`,
+`preconditionIsolated`), which trap when called off the actor and would
+crash the sealed runner. No `View`/`SwiftUI` precise IDs exist in this
+module, so the overlay override does not apply. Product sources still
+compile under `swiftc -warnings-as-errors`; all 46 cited `test*`
+functions (42 sync + 4 async) link and emit only the exact success
+marker (harness run with a Darwin shim for the Linux-only `Glibc` gate
+import). The shared deliverable validator still refuses only on the
+missing repo-wide `full/framework-roadmap/framework-roadmap.json`
+precondition outside `full/identitydocumentservices/`; all in-scope
+checks pass.
+
 ## Tests
 
 `tests/agent/IdentityDocumentServicesLoadSmoke.swift` is the schema-v2

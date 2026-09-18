@@ -119,6 +119,14 @@ func testInteractionSubjects() {
     _ = asyncPeek
 }
 
+func testInteractionSubjectsAsync() async {
+    let interaction = ImageAnalysisInteraction()
+    let found = await interaction.subject(at: .zero)
+    precondition(found == nil)
+    let all = await interaction.subjects
+    precondition(all.isEmpty)
+}
+
 func testSubjectUnavailable() {
     precondition(
         ImageAnalysisInteraction.SubjectUnavailable.imageUnavailable

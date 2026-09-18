@@ -566,3 +566,62 @@ Nondeferred: 2196 (floor 1267). Gain is +0 implemented: the sync-testable
 surface is fully converted; the declared remainder is the
 async/network/hardware floor. Files changed: README.md (this section
 only).
+
+## Depth pass 2026-09 (pi-wave13, async fail-closed conversion)
+
+The sealed runner is now `@main async` and awaits top-level
+`func test*() async` (sync tests still work; no `RunLoop` /
+`DispatchQueue.main` / semaphores). Re-audited all 80 `declared` rows:
+every one completes in-process without invented success — fail-closed
+`async throws` (throwing `catalogUnavailable` / `permissionDenied` /
+`playbackUnavailable` / token errors), async `Authorization.request()`
+(returning `.denied`), `Subscription.Updates.Iterator.next()` (returning
+`nil`), or async `Queue.insert` (real in-process insertion). Added
+`tests/agent/MusicKitAsyncFailClosedTests.swift` (11 async tests, no new
+product code) and converted all 80 rows to `implemented`:
+
+- `testAsyncDataRequest` — `currentCountryCode`, data `response()`.
+- `testAsyncCatalogResponses` — catalog search/charts/resource,
+  recently-played, personal-recommendations, and suggestions
+  `response()`.
+- `testAsyncLibraryResponses` — library, sectioned, and library-search
+  `response()`.
+- `testAsyncPlayerControls` — `prepareToPlay`, skip next/previous,
+  `play` (all throw `playbackUnavailable`).
+- `testAsyncQueueInsert` — all 4 `Queue.insert` overloads (verified via
+  `currentEntry` promotion on an empty queue).
+- `testAsyncLibraryMutations` — both `createPlaylist`, both `add`, both
+  `edit` overloads (throw `permissionDenied`).
+- `testAsyncTokenProviders` — `DefaultMusicTokenProvider.developerToken`
+  (concrete + `MusicDeveloperTokenProvider` existential) and
+  `MusicUserTokenProvider.userToken`.
+- `testAsyncAuthorizationSubscription` — `Authorization.request`,
+  `Subscription.current`, `Updates.Iterator.next`, both `nextBatch`
+  manglings (state reset to `.notDetermined` afterwards).
+- `testAsyncWithBatchA/B/C` — all 4 `with` shapes (variadic/array ×
+  with/without `preferredSource`) on Song/Album/Artist/Genre,
+  Station/Playlist/`Playlist.Entry`/`Playlist.Entry.Item`/MusicVideo,
+  and Curator/RecordLabel/RadioShow/Track/`Queue.Entry.Item`,
+  covering the 4 `PropertyContainer` requirements, the `PAAE`
+  extension row, the 3 `MusicItem` base rows, and all 39 synthesized
+  `with` witnesses.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2116 | 2196 |
+| declared | 80 | 0 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 338 | 338 |
+
+Nondeferred: **2196** (floor 1267). Gain is **+80 implemented**:
+the declared remainder is fully converted; leftover `not-applicable`
+is 337 stdlib/Foundation `::SYNTHESIZED::` witnesses plus the stdlib
+`Options.hashValue` overlay witness, none convertible per contract.
+
+Top evidence: `testPlaylistAndVideo` 169 rows (7.7%); no test exceeds
+the 40% cap (878.4). All 77 cited tests (66 sync + 11 async) compile
+under `-warnings-as-errors` and execute green; the runner prints only
+`MUSICKIT_AGENT_RUNTIME_OK`. Files changed: `coverage.tsv`,
+`tests/agent/MusicKitAsyncFailClosedTests.swift`, `README.md` (this
+section).

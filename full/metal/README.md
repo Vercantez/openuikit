@@ -506,3 +506,46 @@ Foundation), and the `async` Metal 4 compiler entry points plus
 `MTLSharedEvent.valueSignaled` (cited tests stay synchronous with no
 `await`). The three unavailable process-info APIs still require Apple's
 hardware certification service.
+
+## Depth pass 2026-09 (wave 13)
+
+Eighth pass on the existing CPU reference. The sealed host runner now awaits
+top-level `func test*() async`, so the eight `async`-shaped leftovers that
+complete in-process convert: seven `MTL4Compiler` async overlays (forwarded
+to the synchronous requirements through non-`async` forwarders so overload
+resolution cannot recurse; the CPU reference still throws immediately with
+no shader compiler / file-not-found loader) plus
+`MTLSharedEvent.valueSignaled(_:)` (polls the host-clock `signaledValue`
+with `Task.yield()`; pre-signaled callers return without suspending, no run
+loop or dispatch-queue hop). No `DispatchQueue.main`, `RunLoop`, or
+semaphore waits; nothing awaits hardware, daemons, Siri, or Apple Pay.
+
+| Status | Before (wave-9 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 4516 | 4524 |
+| declared | 0 | 0 |
+| deferred | 28 | 20 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+8**. Evidence is
+`test:full/metal/tests/agent/MetalAsyncTests.swift#testAsync*` (eight
+top-level `async` no-argument functions, each awaiting its identifier):
+
+- `testAsyncCompilerBinaryFunction`, `testAsyncCompilerRenderPipeline`,
+  `testAsyncCompilerComputePipeline`,
+  `testAsyncCompilerRenderPipelineSpecialization`,
+  `testAsyncCompilerMachineLearningPipeline`,
+  `testAsyncCompilerDynamicLibraryFromLibrary` assert immediate
+  `MTLLibraryError.compileFailure`; `testAsyncCompilerDynamicLibraryFromURL`
+  asserts `MTLLibraryError.fileNotFound`.
+- `testAsyncSharedEventValueSignaled` pre-signals a CPU shared event to 9
+  then awaits `valueSignaled(9)` and `valueSignaled(4)`.
+
+Still deferred (20): hardware device-certification types
+(`NSDeviceCertification`, `NSProcessPerformanceProfile` and witnesses),
+`MTLLogContainer` Foundation/Combine overlay witnesses, and
+`IOSurfaceRef`-typed texture properties (`iosurface`, `iosurfacePlane`; the
+seed `IOSurface` dependency is not imported so this module compiles
+standalone against Foundation). The three unavailable process-info APIs
+still require Apple's hardware certification service.

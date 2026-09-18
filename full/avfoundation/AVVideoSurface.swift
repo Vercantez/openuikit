@@ -103,7 +103,7 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
     get { storedSpatialVideoConfigurations }
     set { storedSpatialVideoConfigurations = newValue }
   }
-  convenience init(applyingFiltersTo asset: AVAsset, applier: @escaping (AVCIImageFilteringParameters) async throws -> AVCIImageFilteringResult) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public convenience init(applyingFiltersTo asset: AVAsset, applier: @escaping (AVCIImageFilteringParameters) async throws -> AVCIImageFilteringResult) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
   public convenience init(configuration: AVVideoComposition.Configuration) {
     self.init()
     animationTool = configuration.animationTool

@@ -61,7 +61,13 @@ rows remain unconvertible in-process because the 6 SecureEnclave PrivateKey stru
 expose no public initializer (memberwise init is internal and tests link externally),
 Apple's only initializers require LAContext/SecAccessControl (unavailable), and the
 sole factories (ML-KEM generate) correctly throw fail-closed, so no instance exists
-on which to call the 12 getters or 9 throwing methods; deferred is 0). Implemented ≥ 900. Nondeferred except
+on which to call the 12 getters or 9 throwing methods; deferred is 0). Wave 13 recount: before
+1221/21/0, after 1221/21/0 (gain 0 — async-shaped leftover is 0: the symbol graph and
+API digester contain no async/await/AsyncSequence symbols, the sealed @main async runner
+still passes all 23 cited agent tests emitting only CRYPTOKIT_AGENT_RUNTIME_OK, the
+dylib still builds with -warnings-as-errors, and the 21 declared SecureEnclave instance
+members remain uncallable in-process for the same no-obtainable-instance reason; the
+Overlay OVERRIDE does not apply (no SwiftUI View modifiers in CryptoKit coverage). Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
 not-applicable: their generic constraints (`Element: SortComparator`,

@@ -1012,3 +1012,61 @@ Implemented gain: **+0**. Findings, re-verified:
   Linux-green ledger stands unaltered. This macOS host (Apple Swift 6.2.1,
   arm64-apple-macosx) has no Linux Swift toolchain to re-run the sealed
   Linux gate.
+
+## Depth pass 2026-09 (pi-wave13 async, full conversion)
+
+Campaign `pi-wave13`, framework `Vision` (3584 IDs). Work stays inside
+`full/vision/`. Starting ledger: 3312 implemented / 214 declared / 58
+deferred. The sealed runner is now `@main async` and awaits top-level
+`func test*() async`, so the 214 async-shaped leftovers were convertible to
+in-process evidence. No `DispatchQueue.main`, `RunLoop`, or semaphore waits
+in cited tests.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this pass | 3312 | 214 | 58 | 0 | 0 |
+| After this pass | **3526** | **0** | **58** | **0** | **0** |
+
+Implemented gain: **+214** (every leftover declared row). Nondeferred 3526.
+No rows are `unavailable` or `not-applicable`: the overlay OVERRIDE is
+inapplicable (0 precise IDs mention `View`/`SwiftUI`; no identity
+`Self`-returning view modifiers exist in this surface).
+
+New evidence: `tests/agent/VisionAsyncPerformTests.swift` with 8 async tests
+(`testAsyncPerformOnURL/Data/CGImage/PixelBuffer/SampleBuffer/CIImage`,
+`testAsyncImageRequestHandlerPerform`,
+`testAsyncTargetedImageRequestHandlerPerform`). Each `perform(on:orientation:)`
+input test awaits all 33 `ImageProcessingRequest` conformers on a valid QR
+fixture (QR payload `HELLO` asserted end to end through every input path):
+classical requests return, model-backed requests fail closed with
+`invalidModel`. The handler tests cover the classical + fail-closed paths and
+the targeted empty-raster `invalidImage` path. Every async `perform`
+delegates synchronously to `performOnHandler`/`performNow` and returns
+immediately (no frame waits), so in-process awaiting cannot hang.
+
+Evidence distribution (3526 rows, 126 distinct tests): largest anchor remains
+`testOverlayRevisionComparableOperators` at 319 rows (9.05%); each new async
+test cites at most 35 rows (<1%). No non-enum test exceeds 40%.
+
+`tests/agent/test_evidence.sh` now supports async: it allows `async`/`await`
+(still forbidding `DispatchSemaphore`, `RunLoop`, and `DispatchQueue.main`),
+parses per-test `async`/`throws` flags, and generates an `@main async` runner
+that awaits async tests (compiled with `-parse-as-library`).
+
+Validation in `swift:6.2-noble` Linux container (product + tests compiled with
+warnings as errors):
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+VISION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Vision dylib=libVision.dylib
+VISION_EVIDENCE_LEDGER_OK implemented=3526 tests=126 largest=319
+VISION_EVIDENCE_OK
+```
+
+Still deferred (58): 40 `VNVideoProcessor` / cadence / processing-options rows
+(no Linux AVFoundation video pipeline) and 18
+`VNCoreMLFeatureValueObservation` rows (no Apple Core ML runtime).
+Classify / recognize / faces / humans / poses / Core ML stay fail-closed
+(`invalidModel`); homography stays classical-or-`unsupportedRequest` as
+previously recorded; no Apple ML success is invented.

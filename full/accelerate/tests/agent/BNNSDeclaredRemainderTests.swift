@@ -266,3 +266,15 @@ func testBNNSRemGraphContext() {
         preconditionFailure("unexpected graph context error")
     }
 }
+
+func testBNNSRemGraphContextAsync() async {
+    _ = BNNSGraph.Context.self
+    do {
+        _ = try await BNNSGraph.Context(compileFromPath: "/nonexistent-graph")
+        preconditionFailure("async graph context creation unexpectedly succeeded without a runtime")
+    } catch let e as BNNSGraph.Error {
+        precondition(e == .unableToCreateContext)
+    } catch {
+        preconditionFailure("unexpected async graph context error")
+    }
+}

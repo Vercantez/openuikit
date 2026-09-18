@@ -62,9 +62,18 @@ mutations never report success.
 
 ## Depth pass 2026-09
 
-Implemented **145** of 150 exact IDs (4 `declared` async methods, 1 CoreData
+Implemented **149** of 150 exact IDs (0 `declared`, 1 CoreData
 `deferred` typealias). Nondeferred count 149, above the medium-full floor of
 75.
+
+Wave 13: recounted coverage.tsv at 149 `implemented` / 0 `declared` / 1
+`deferred` of 150 (leftover 1). The sealed host runner is now `@main async`
+and awaits top-level `func test*() async`, so the 4 `async throws`
+LiveCallerIDLookupManager methods (`openSettings`, `reset`,
+`refreshPIRParameters`, `refreshExtensionContext`) are now `implemented` via
+four awaited fail-closed tests asserting they throw
+`ILMessageFilterError.system`. The 1 `deferred` row is the CoreData-owned
+`NSManagedObject` lookalike, which this port is forbidden to publish.
 
 Wave 12: recounted coverage.tsv at 145 `implemented` / 4 `declared` / 1
 `deferred` of 150 (leftover 5, unchanged). The 4 `declared` rows are the

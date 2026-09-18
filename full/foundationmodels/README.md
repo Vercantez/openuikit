@@ -151,6 +151,33 @@ replicated faithfully against this checkout: product compiles under
 `-warnings-as-errors`, all 30 unique cited tests pass, and the runner
 emits only the exact success marker.
 
+### Wave-13 leftover re-examination (2026-09-18, recount: no change)
+
+Recount before work: 665 implemented / 7 declared / 1 deferred /
+81 not-applicable of 754 IDs (leftover = 8). Recount after: identical —
+665 implemented / 7 declared / 1 deferred / 81 not-applicable.
+Implemented gain: +0; no honest promotion was available.
+
+Async-shaped leftover is 0: every `ResponseStream` / `streamResponse` /
+`collect` / `next(isolation:)` row is already `implemented` with sync
+fail-closed coverage, and none of the 8 leftover rows completes
+in-process — 4 `#if !os(Linux)`-gated macros (absent from the Linux host
+module), 2 Combine `publisher` witnesses (Combine is not a seeded host
+dependency), uninhabited `Never.generatedContent` (calling it traps),
+and deferred `Adapter.isCompatible(_:)` (takes dependency-owned
+`BackgroundAssets.AssetPack`). Hardware/daemon/Siri/Apple Pay success
+stays fail-closed per contract. No SwiftUI View-overlay rows exist in
+this framework's coverage, so the overlay override does not apply.
+
+Gate status unchanged: the shared validator is still blocked by the
+pre-existing missing `full/framework-roadmap/framework-roadmap.json`
+outside this lane. Lane steps replicated faithfully against this
+checkout (macOS host uses `import Darwin` in place of the sealed
+Linux runner's `import Glibc`; all other steps byte-equivalent):
+product compiles under `-warnings-as-errors`, all 30 unique cited
+tests pass (0 async), and the runner emits only the exact success
+marker.
+
 ### Linux stand-in contract
 
 Install with `SystemLanguageModel.installLinuxStandInForTesting()` and remove

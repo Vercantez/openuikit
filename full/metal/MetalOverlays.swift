@@ -515,6 +515,152 @@ open class MTLAccelerationStructureDescriptor: NSObject, @unchecked Sendable {
     }
 }
 
+/// Async Metal 4 compiler overlays (iPhoneOS 26.1).
+///
+/// The symbol graph records these as `async` protocol-extension methods. On
+/// the CPU reference they forward to the synchronous requirements, which
+/// fail closed immediately (no AIR compiler, no dynamic-library loader), so
+/// the async forms complete in-process without touching hardware or daemons.
+extension MTL4Compiler {
+    public func makeBinaryFunction(
+        descriptor: MTL4BinaryFunctionDescriptor,
+        compilerTaskOptions: MTL4CompilerTaskOptions? = nil
+    ) async throws -> any MTL4BinaryFunction {
+        try MTL4CompilerSyncForward.makeBinaryFunction(
+            self,
+            descriptor: descriptor,
+            compilerTaskOptions: compilerTaskOptions
+        )
+    }
+
+    public func makeDynamicLibrary(library: any MTLLibrary) async throws -> any MTLDynamicLibrary {
+        try MTL4CompilerSyncForward.makeDynamicLibrary(self, library: library)
+    }
+
+    public func makeDynamicLibrary(url: URL) async throws -> any MTLDynamicLibrary {
+        try MTL4CompilerSyncForward.makeDynamicLibrary(self, url: url)
+    }
+
+    public func makeRenderPipelineState(
+        descriptor: MTL4PipelineDescriptor,
+        dynamicLinkingDescriptor: MTL4RenderPipelineDynamicLinkingDescriptor? = nil,
+        compilerTaskOptions: MTL4CompilerTaskOptions? = nil
+    ) async throws -> any MTLRenderPipelineState {
+        try MTL4CompilerSyncForward.makeRenderPipelineState(
+            self,
+            descriptor: descriptor,
+            dynamicLinkingDescriptor: dynamicLinkingDescriptor,
+            compilerTaskOptions: compilerTaskOptions
+        )
+    }
+
+    public func makeComputePipelineState(
+        descriptor: MTL4ComputePipelineDescriptor,
+        dynamicLinkingDescriptor: MTL4PipelineStageDynamicLinkingDescriptor? = nil,
+        compilerTaskOptions: MTL4CompilerTaskOptions? = nil
+    ) async throws -> any MTLComputePipelineState {
+        try MTL4CompilerSyncForward.makeComputePipelineState(
+            self,
+            descriptor: descriptor,
+            dynamicLinkingDescriptor: dynamicLinkingDescriptor,
+            compilerTaskOptions: compilerTaskOptions
+        )
+    }
+
+    public func makeRenderPipelineStateBySpecialization(
+        descriptor: MTL4PipelineDescriptor,
+        pipeline: any MTLRenderPipelineState
+    ) async throws -> any MTLRenderPipelineState {
+        try MTL4CompilerSyncForward.makeRenderPipelineStateBySpecialization(
+            self,
+            descriptor: descriptor,
+            pipeline: pipeline
+        )
+    }
+
+    public func makeMachineLearningPipelineState(
+        descriptor: MTL4MachineLearningPipelineDescriptor
+    ) async throws -> any MTL4MachineLearningPipelineState {
+        try MTL4CompilerSyncForward.makeMachineLearningPipelineState(self, descriptor: descriptor)
+    }
+}
+
+/// Synchronous forwarders for the async compiler overlays above.
+///
+/// These helpers run in a non-`async` context so each call resolves to the
+/// synchronous protocol requirement instead of recursing into the overlay.
+private enum MTL4CompilerSyncForward {
+    static func makeBinaryFunction(
+        _ compiler: any MTL4Compiler,
+        descriptor: MTL4BinaryFunctionDescriptor,
+        compilerTaskOptions: MTL4CompilerTaskOptions?
+    ) throws -> any MTL4BinaryFunction {
+        try compiler.makeBinaryFunction(descriptor: descriptor, compilerTaskOptions: compilerTaskOptions)
+    }
+
+    static func makeDynamicLibrary(_ compiler: any MTL4Compiler, library: any MTLLibrary) throws -> any MTLDynamicLibrary {
+        try compiler.makeDynamicLibrary(library: library)
+    }
+
+    static func makeDynamicLibrary(_ compiler: any MTL4Compiler, url: URL) throws -> any MTLDynamicLibrary {
+        try compiler.makeDynamicLibrary(url: url)
+    }
+
+    static func makeRenderPipelineState(
+        _ compiler: any MTL4Compiler,
+        descriptor: MTL4PipelineDescriptor,
+        dynamicLinkingDescriptor: MTL4RenderPipelineDynamicLinkingDescriptor?,
+        compilerTaskOptions: MTL4CompilerTaskOptions?
+    ) throws -> any MTLRenderPipelineState {
+        try compiler.makeRenderPipelineState(
+            descriptor: descriptor,
+            dynamicLinkingDescriptor: dynamicLinkingDescriptor,
+            compilerTaskOptions: compilerTaskOptions
+        )
+    }
+
+    static func makeComputePipelineState(
+        _ compiler: any MTL4Compiler,
+        descriptor: MTL4ComputePipelineDescriptor,
+        dynamicLinkingDescriptor: MTL4PipelineStageDynamicLinkingDescriptor?,
+        compilerTaskOptions: MTL4CompilerTaskOptions?
+    ) throws -> any MTLComputePipelineState {
+        try compiler.makeComputePipelineState(
+            descriptor: descriptor,
+            dynamicLinkingDescriptor: dynamicLinkingDescriptor,
+            compilerTaskOptions: compilerTaskOptions
+        )
+    }
+
+    static func makeRenderPipelineStateBySpecialization(
+        _ compiler: any MTL4Compiler,
+        descriptor: MTL4PipelineDescriptor,
+        pipeline: any MTLRenderPipelineState
+    ) throws -> any MTLRenderPipelineState {
+        try compiler.makeRenderPipelineStateBySpecialization(descriptor: descriptor, pipeline: pipeline)
+    }
+
+    static func makeMachineLearningPipelineState(
+        _ compiler: any MTL4Compiler,
+        descriptor: MTL4MachineLearningPipelineDescriptor
+    ) throws -> any MTL4MachineLearningPipelineState {
+        try compiler.makeMachineLearningPipelineState(descriptor: descriptor)
+    }
+}
+
+/// Async shared-event overlay (iPhoneOS 26.1, back-deployed).
+///
+/// Polls the host-clock `signaledValue` and yields; callers that signal
+/// first return without suspending. There is no run loop or dispatch-queue
+/// hop on the CPU reference.
+extension MTLSharedEvent {
+    public func valueSignaled(_ value: UInt64) async {
+        while signaledValue < value {
+            await Task.yield()
+        }
+    }
+}
+
 private func metalBindBuffers(
     _ buffers: [(any MTLBuffer)?],
     offsets: [Int],

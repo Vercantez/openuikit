@@ -51,6 +51,18 @@ func testCollaborationHighlightForIdentifierStringThrows() {
     swRequire(thrown == .accessDenied, "string overlay")
 }
 
+func testCollaborationHighlightForURLThrows() async {
+    let center = SWHighlightCenter()
+    do {
+        _ = try await center.collaborationHighlight(for: swSampleURL("missing"))
+        fatalError("expected accessDenied")
+    } catch let error as SWHighlightCenterErrorCode {
+        swRequire(error == .accessDenied, "accessDenied")
+    } catch {
+        fatalError("unexpected \(error)")
+    }
+}
+
 func testGetHighlightForCompletesAccessDenied() {
     let center = SWHighlightCenter()
     var highlight: SWHighlight? = swSampleHighlight("sentinel")

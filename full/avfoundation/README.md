@@ -1135,3 +1135,82 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
+
+### Depth pass 2026-09-18 (wave 13 async sweep)
+
+Wave 13 converts 68 async-shaped `declared` rows into 24 focused `async`
+tests in `tests/agent/AVDepthPass22Tests.swift` (largest citation group is
+5 rows for each async terminal consumer across the five sequence
+families). The sealed runner is now `@main async` and `await`s each
+test, so fail-closed `async` methods and async `AsyncSequence` terminal
+consumers are exercised directly with no `RunLoop`, `DispatchQueue.main`,
+or semaphore. One product access-level fix in `AVVideoSurface.swift`
+(`public` on the existing Apple-mirroring
+`AVVideoComposition(applyingFiltersTo:applier:)` async-throwing
+convenience init, matching prior passes' treatment); no new product
+files, so `avfoundation_guest_sources.txt` is unchanged.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5422 | 5490 |
+| `declared` | 92 | 24 |
+| `deferred` | 118 | 118 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest new citation group is 5 rows, well under 40% of the 5,490
+implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+Converted: `AVPlayerItem.seek(to: Date)` reports false (async overload
+pinned by an `(Date) async -> Bool` function-value coercion, since a sync
+twin shares the label); all six writer-receiver `append` methods throw
+`mediaServiceUnavailable`; `AVVideoComposition.Configuration(for:)` and
+`AVVideoComposition(applyingFiltersTo:)` throw `mediaServiceUnavailable`;
+`AVAssetReaderOutput.Provider.next()` returns nil;
+`AVAssetImageGenerator.image(at:)` throws `noImageAtTime`;
+`loadChapterMetadataGroups(withTitleLocale:)` returns []; every
+`next()` iterator (concrete plus `next` / `next(isolation:)` witnesses)
+across the five families (`AVMetrics`, `AVMergedMetrics`, `Images`,
+`BoundaryTimes`, `PeriodicTimes`) returns nil; and the async terminals
+`allSatisfy` (true), `max(by:)` / `min(by:)` / `first(where:)` (nil),
+`reduce` / `reduce(into:)` (seed), `contains(where:)` (false), plus
+`Comparable`/`Equatable` `max()` / `min()` (nil) and `contains(_:)`
+(false) over the empty `CMTime` timeline sequences. Every sequence is
+empty on this host, so each `await` completes immediately; no hardware,
+daemon, codec, or service success is claimed. Throwing calls are caught
+inside their tests (the runner invokes `await name()`, never `try`), and
+`await` never appears inside a `precondition` autoclosure.
+
+The remaining 24 `declared` rows are the eleven `flatMap` overloads whose
+`where`-clauses cannot pin exactly one call shape on Never-failure bases
+(as wave 10 documented), the six `AVAsynchronousKeyValueLoading`
+`load` / `status(of:)` witnesses for `AVAssetTrack` / `AVMetadataItem`
+(which do not adopt the protocol on this host; adding the conformance
+would invent Apple API), the deprecated optional `flatMap` (calling it
+trips `-warnings-as-errors`), the `Combine` publisher (no Combine on the
+isolated host), `FormatStyle` / `compare` witnesses, and the three generic
+`AVMetrics` `max()` / `min()` / `contains(_:)` witnesses (the generic
+`MetricEvent` is neither `Comparable` nor `Equatable`). The 118
+`deferred` rows are unchanged (hardware/daemon/`URLSession`/`CALayer`/
+async-service bodies that cannot be written without guessing Apple
+behavior).
+
+Sealed Linux gate (same `swift:6.2-noble` replication as above, Swift
+6.2.4, aarch64; 249 distinct cited tests, 24 of them `async`, across 27
+`*Tests.swift` files) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```

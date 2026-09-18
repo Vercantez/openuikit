@@ -20,3 +20,4 @@ full/appintents/AppIntentsWave16.swift
 full/appintents/AppIntentsWave18.swift
 full/appintents/AppIntentsWave19.swift
 full/appintents/AppIntentsWave20.swift
+full/appintents/AppIntentsWave22.swift
