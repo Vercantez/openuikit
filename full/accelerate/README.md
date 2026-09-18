@@ -688,3 +688,16 @@ Top evidence distribution for the 1 newly implemented row:
 1. `testBNNSRemGraphContextAsync` — 1 (100% of the 1-row gain; 1/295 = 0.3% of all cited tests) — async fail-closed context init
 
 The single-row gain trivially satisfies the 40% remaining-row ceiling. The cited function is top-level, no-argument, `async`, self-contained, and completes in-process (immediate throw; no hardware, daemon, queue, or semaphore wait). Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **295/295** cited tests (294 sync + 1 awaited async) pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the new async test passes in an isolated fresh process alongside its sync twin.
+
+## Depth pass 2026-09-18 (wave 14 declared-remainder triage)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Triages the last 5 declared rows to deferred; no GPU/BNNS-graph success is invented.
+
+The 5 leftovers are all `BNNSGraph.Context` instance members needing a constructible instance: `functionCount`, `functionNames`, `streamingAdvanceCount`, `checkForNaNsAndInfinities` (all trapping getters on Linux), and `tensor(forFunction:argument:fillKnownDynamicShapes:)` (not declared on Linux at all). Every creation path (`makeContext`, both `compileFromPath` inits) throws `unableToCreateContext`, agent tests import the built module (so the synthesized internal `init()` is unreachable), and Apple exposes no public no-arg constructor — so no top-level `func test*()` can call these identifiers, and adding a constructor or success value would fabricate graph behavior. This matches the sibling `Context` instance methods (`setBatchSize`, `argumentCount`, `executeFunction`, `allocateTensor`, …), which are already deferred as unobserved without a Linux runtime. No product Swift, test, or manifest changes were needed.
+
+- Implemented before/after: **5402**
+- Declared before/after: **5** / **0**
+- Deferred before/after: **1446** / **1451**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **0** (declared-remainder triage; zero declared remain)

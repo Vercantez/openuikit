@@ -5,7 +5,7 @@ OpenUIKit Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS
 Swift surface from the sealed symbol graph. It is not wired into the shared
 guest package; that integration is a separate central review step.
 
-Coverage: **122 implemented / 2 declared / 124 total** (fully nondeferred,
+Coverage: **124 implemented / 0 declared / 124 total** (fully nondeferred,
 above the medium-full floor of 62).
 
 ## What is real
@@ -55,12 +55,16 @@ Apple's `-init` is unsupported on `EAAccessory`, `EAAccessoryManager`, and
 ## Depth pass 2026-09
 
 Fresh seed: no prior sources, coverage, or agent tests. After this pass:
-**122 implemented / 2 declared / 0 deferred**.
+**124 implemented / 0 declared / 0 deferred**.
 
-The two `declared` rows are
+The last two `declared` rows were
 `EAWiFiUnconfiguredAccessoryBrowserDelegate.accessoryBrowser(_:didFindUnconfiguredAccessories:)`
 and `didRemoveUnconfiguredAccessories`. The browser never invents WAC
-discoveries, so those required protocol methods are declared and unused.
+discoveries, so these required protocol methods are now covered by direct
+delegate-dispatch tests (`browser.delegate?.accessoryBrowser(browser,
+didFindUnconfiguredAccessories:)` / `didRemoveUnconfiguredAccessories:`)
+that record the delivered sets on a probe while asserting the browser's own
+`unconfiguredAccessories` stays empty.
 
 Top-5 implemented evidence distribution:
 

@@ -75,3 +75,13 @@ that file against toolchain Foundation is not guest-Foundation success.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+## Coverage status (wave 14)
+
+Before: 80 implemented / 2 declared / 0 deferred of 82.
+After: 82 implemented / 0 declared / 0 deferred of 82.
+
+The two leftover declared rows were the synthesized `Hashable.hashValue`
+witnesses for `ACErrorCode` and `ACAccountCredentialRenewResult`, exercised by
+`tests/agent/AccountsHashableTests.swift` (`testACErrorCodeHashValue`,
+`testAccountCredentialRenewResultHashValue`). No deferred rows remain.

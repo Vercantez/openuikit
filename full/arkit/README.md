@@ -43,7 +43,7 @@ bash tests/acceptance/test_host.sh
 
 Wave-2 starting point was 526 implemented / 267 declared / 82 deferred. The first depth commit finished the session/configuration/anchor model with a documented simulated frame source, but merge review refused **874** `implemented` rows because evidence was a file path (`tests/agent/ARKitRuntime.swift`) rather than `test:full/arkit/tests/agent/<File>Tests.swift#testName`.
 
-This repair split the runtime probe into 63 top-level synchronous `func test*()` functions across focused `*Tests.swift` files. Coverage is **874 implemented / 1 declared / 0 deferred** (875 IDs). The remaining declared row is `ARGeometrySource`'s overlapping `UInt8` subscript (`source:full/arkit/ARGeometry.swift#ARGeometrySource`).
+This repair split the runtime probe into 64 top-level synchronous `func test*()` functions across focused `*Tests.swift` files. Coverage is **875 implemented / 0 declared / 0 deferred** (875 IDs, was 874 / 1 / 0). The last declared row — `ARGeometrySource`'s overlapping `UInt8` subscript — turned out to be expressible after all: Swift accepts same-parameter subscripts that differ only by return type and resolves them by contextual type, so the classification-byte overload now sits beside the float3 subscript and is covered by `testGeometrySourceClassificationBytes`.
 
 Top-5 `implemented` evidence citations:
 

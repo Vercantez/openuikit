@@ -1000,3 +1000,71 @@ Implemented gain: +0 (ceiling; 3259/3504 = 93.0% implemented). Top test
 still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
 180 (5.5%). No test owns more than 40% of implemented rows. No Apple
 service or hardware success invented.
+
+## Wave 14 pass 2026-09-18 (sorted(using:) / formatted with caller-supplied types)
+
+No SwiftUI/View overlay rows exist in this module's public surface, so the
+overlay-override clause has nothing to convert here. This pass converts the
+12 honestly exercisable `sorted(using:)` / `formatted(_:)` witnesses the
+wave-13 audit kept declared for "no concrete `SortComparator` /
+`FormatStyle` on Linux". That rationale is superseded: these APIs are
+*designed* for caller-supplied comparators and styles (exactly like the
+already-implemented `sorted(by:)` closure overload), and the coreaudio lane
+proves the pattern Linux-gate-safe — its `FoundationComparatorTests`
+test-only comparators/styles are cited by implemented rows and its sealed
+gate is green (`FRAMEWORK_FANOUT_HOST_OK`), so `SortComparator` /
+`FormatStyle` exist on the Linux toolchain.
+
+New `CMSortComparatorDepthTests.swift` (mirrors the coreaudio /
+Photos/TabularData/WeatherKit precedent):
+
+- `CMByteOrderComparator: SortComparator` (`Compared == UInt8`,
+  order-aware) drives both `sorted(using:)` overloads (single comparator
+  and comparator-sequence, including the empty-sequence preserves-order
+  case) on all three byte projections (`CMReadOnlyDataBlockBuffer` and
+  both `BlockRegion` types): 6 rows via
+  `#testCMDataBlockBufferSortedUsingComparators`. Every call asserts the
+  produced order plus non-mutation of the host.
+- One `FormatStyle` per byte host (host type as `FormatInput`, comma-joined
+  string output): 3 rows via `#testCMDataBlockBufferFormattedStyles`.
+- `CMBufferPTSComparator` (`Compared == CMBuffer`, PTS-ordered) and
+  `CMBuffersPTSStyle` (`FormatInput == Buffers`, PTS-value output) drive
+  both `sorted(using:)` overloads and `formatted(_:)` on
+  `CMBufferQueue.Buffers` over three enqueued samples (inserted out of PTS
+  order so the assertions are non-vacuous): 3 rows via
+  `#testCMBufferQueueBuffersSortedAndFormatted`.
+
+No retroactive conformances are invented: the comparators/styles are new
+test-only types, not extensions of imported types. The remaining 13
+declared rows stay declared, concurring with the coreaudio lane's
+keep-list: 4 `compare` (needs `Element: SortComparator` — an invented
+conformance Apple does not declare; `UInt8` fails as retroactive under
+`-warnings-as-errors` without `@retroactive`, and `AnyObject`/`CFTypeRef`
+cannot be extended), 4 `publisher` (no Combine on Linux), 2 trapping
+`indices` on `CMReadOnlyDataBlockBuffer`, 2 `CVBufferRef` members with no
+host type, 1 deprecated optional-`flatMap` (hard `#DeprecatedDeclaration`
+error under `-warnings-as-errors`). All 220 deferred rows still need
+CoreAudioTypes/CoreVideo, `simd`, DispatchSource timers,
+hardware/daemons, or unobserved overlay shapes. No Apple service or
+hardware success invented.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3259 | 3271 |
+| declared | 25 | 13 |
+| deferred | 220 | 220 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +12 (3271/3504 = 93.4% implemented). The three new
+tests own 6 + 3 + 3 rows (0.2% max). Top test still
+`CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (5.5%). No test owns more than 40% of implemented rows. Verified on
+this Mac: product plus all 32 test files compile warnings-clean and a
+macOS runner over the 3 new tests prints marker-only stdout
+(`COREMEDIA_SORT_PROBE_OK`; ObjC duplicate-class notes on stderr from the
+system `libswiftCoreMedia.dylib`, as in prior passes). The shared
+deliverable validator reports only its 2 pre-existing out-of-lane errors
+(missing `full/framework-roadmap/framework-roadmap.json`, unrepairable
+from inside `full/coremedia/`); no new errors. The sealed gate's final
+stage remains Linux-only (`import Glibc` in the generated runner).

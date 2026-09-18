@@ -42,10 +42,14 @@ open class SLRequest: NSObject {
         super.init()
     }
 
-    /// Swift 3 renamed this to `url:`. Kept as a declaration for the pinned
-    /// synthesized identifier; Swift 6 cannot call an obsoleted-in-Swift-3 API.
-    @available(swift, obsoleted: 3, renamed: "init(forServiceType:requestMethod:url:parameters:)")
-    public init!(
+    /// Source-compatibility alias for the Swift-3-obsoleted `URL:`-label
+    /// spelling (`...URL:parameters:::SYNTHESIZED...`). Darwin obsoletes this
+    /// spelling in Swift 3+ (renamed to the lowercase `url:` label), so Swift 6
+    /// clients there must use `init(forServiceType:requestMethod:url:parameters:)`.
+    /// Linux keeps this spelling callable as a `@nonobjc` Swift-only shim (no ObjC
+    /// selector; the canonical `@objc` selector stays on the `url:` spelling) so the
+    /// stored behavior is exercised by `testSLRequestObsoletedURLLabel`.
+    @nonobjc public init!(
         forServiceType serviceType: String!,
         requestMethod: SLRequestMethod,
         URL url: URL!,

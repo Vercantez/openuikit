@@ -212,22 +212,22 @@ private func exerciseAsyncOverlay() async {
 }
 
 private func exerciseMixedCallbackAndAsync() async {
-    let group = DispatchGroup()
     let callbackCount = LockedCounter()
     let asyncCount = LockedCounter()
 
-    for _ in 0..<4 {
-        group.enter()
-        DispatchQueue.global(qos: .userInitiated).async {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                precondition(status == .denied)
-                callbackCount.increment()
-                group.leave()
+    await withTaskGroup(of: Void.self) { taskGroup in
+        for _ in 0..<4 {
+            taskGroup.addTask {
+                await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+                    ATTrackingManager.requestTrackingAuthorization { status in
+                        precondition(status == .denied)
+                        callbackCount.increment()
+                        continuation.resume()
+                    }
+                }
             }
         }
-    }
 
-    await withTaskGroup(of: Void.self) { taskGroup in
         for _ in 0..<4 {
             taskGroup.addTask {
                 let status = await ATTrackingManager.requestTrackingAuthorization()
@@ -238,8 +238,6 @@ private func exerciseMixedCallbackAndAsync() async {
         await taskGroup.waitForAll()
     }
 
-    let waitResult = group.wait(timeout: .now() + eventTimeout)
-    precondition(waitResult == .success, "mixed callback wait timed out")
     precondition(callbackCount.current() == 4)
     precondition(asyncCount.current() == 4)
 }

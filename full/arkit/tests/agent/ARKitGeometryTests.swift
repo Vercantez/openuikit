@@ -33,7 +33,7 @@ func testMeshGeometrySources() {
     _ = mesh.vertices.count
     _ = mesh.vertices.offset
     _ = mesh.vertices.stride
-    _ = mesh.vertices[Int32(0)]
+    _ = mesh.vertices[Int32(0)] as (Float, Float, Float)
     _ = mesh.faces.buffer
     _ = mesh.faces.bytesPerIndex
     _ = mesh.faces.count
@@ -43,6 +43,17 @@ func testMeshGeometrySources() {
     mesh.encode(with: NSKeyedArchiver(requiringSecureCoding: true))
     mesh.vertices.encode(with: NSKeyedArchiver(requiringSecureCoding: true))
     mesh.faces.encode(with: NSKeyedArchiver(requiringSecureCoding: true))
+}
+
+func testGeometrySourceClassificationBytes() {
+    let mesh = ARMeshAnchor(anchor: ARAnchor(transform: .identity)).geometry
+    let byte: UInt8 = mesh.vertices[Int32(0)]
+    arkitRequire(byte == 0, "empty buffer reads zero")
+    let normalByte: UInt8 = mesh.normals[Int32(0)]
+    arkitRequire(normalByte == 0, "normals bytes read zero")
+    let triple: (Float, Float, Float) = mesh.vertices[Int32(0)]
+    arkitRequire(triple.0 == 0 && triple.1 == 0 && triple.2 == 0, "float3 overload intact")
+    arkitRequire(mesh.classification == nil, "no Apple classification buffer")
 }
 
 func testPointCloudAndWorldMap() {

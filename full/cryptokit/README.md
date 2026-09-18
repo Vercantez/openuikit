@@ -67,7 +67,16 @@ API digester contain no async/await/AsyncSequence symbols, the sealed @main asyn
 still passes all 23 cited agent tests emitting only CRYPTOKIT_AGENT_RUNTIME_OK, the
 dylib still builds with -warnings-as-errors, and the 21 declared SecureEnclave instance
 members remain uncallable in-process for the same no-obtainable-instance reason; the
-Overlay OVERRIDE does not apply (no SwiftUI View modifiers in CryptoKit coverage). Implemented ≥ 900. Nondeferred except
+Overlay OVERRIDE does not apply (no SwiftUI View modifiers in CryptoKit coverage). Wave 14 recount: before
+1221/21/0, after 1221/21/0 (gain 0 — re-verified all 8 guest sources still build
+libCryptoKit.dylib with -warnings-as-errors and all 23 cited agent tests pass in a
+manual @main runner emitting only CRYPTOKIT_AGENT_RUNTIME_OK; the 21 declared
+SecureEnclave instance members (12 non-throwing publicKey/dataRepresentation getters
+that cannot fail closed without changing Apple's signatures, plus 9 throwing
+signature/sharedSecretFromKeyAgreement/decapsulate methods with no obtainable instance
+since the 6 PrivateKey structs expose no public initializer and Apple's only inits
+require LAContext/SecAccessControl) stay declared fail-closed; the Overlay OVERRIDE
+does not apply — no SwiftUI View modifiers exist in CryptoKit coverage). Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
 not-applicable: their generic constraints (`Element: SortComparator`,

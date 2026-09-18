@@ -90,3 +90,51 @@ func testCGRectStandIn() {
     precondition(rect.height == 40)
     precondition(CGRect.zero == CGRect(x: 0, y: 0, width: 0, height: 0))
 }
+
+func testRoomBuilderCapturedRoomFailClosed() async {
+    final class DataBox: RoomCaptureSessionDelegate {
+        var data: CapturedRoomData?
+        func captureSession(
+            _ session: RoomCaptureSession,
+            didEndWith data: CapturedRoomData,
+            error: (any Error)?
+        ) {
+            self.data = data
+        }
+    }
+    let session = RoomCaptureSession()
+    let box = DataBox()
+    session.delegate = box
+    session.run(configuration: RoomCaptureSession.Configuration())
+    let input = box.data!
+    let builder = RoomBuilder(options: .beautifyObjects)
+    do {
+        _ = try await builder.capturedRoom(from: input)
+        preconditionFailure("capturedRoom must fail closed on Linux")
+    } catch let error as RoomBuilder.BuildError {
+        precondition(error == .deviceNotSupported)
+    } catch {
+        preconditionFailure("unexpected capturedRoom error: \(error)")
+    }
+}
+
+func testStructureBuilderCapturedStructureFailClosed() async {
+    let builder = StructureBuilder(options: [])
+    do {
+        _ = try await builder.capturedStructure(from: [])
+        preconditionFailure("empty input must throw insufficientInput")
+    } catch let error as StructureBuilder.BuildError {
+        precondition(error == .insufficientInput)
+    } catch {
+        preconditionFailure("unexpected capturedStructure error: \(error)")
+    }
+    let room = CapturedRoom(objects: [CapturedRoom.Object(category: .bed)])
+    do {
+        _ = try await builder.capturedStructure(from: [room])
+        preconditionFailure("capturedStructure must fail closed on Linux")
+    } catch let error as StructureBuilder.BuildError {
+        precondition(error == .deviceNotSupported)
+    } catch {
+        preconditionFailure("unexpected capturedStructure error: \(error)")
+    }
+}

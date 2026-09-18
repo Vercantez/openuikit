@@ -625,7 +625,7 @@ c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNContactRelation	i
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNContainer	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testSecureCodingRoundTrip	-
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNGroup	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testSecureCodingRoundTrip	-
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNInstantMessageAddress	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testSecureCodingRoundTrip	-
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNLabeledValue	declared	source:full/contacts/CNTypes.swift#CNLabeledValue	Linux NSKeyedArchiver cannot archive generic CNLabeledValue.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNLabeledValue	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testLabeledValueSecureCoding	-
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNPhoneNumber	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testSecureCodingRoundTrip	-
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNPostalAddress	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testSecureCodingRoundTrip	-
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CNSocialProfile	implemented	test:full/contacts/tests/agent/ContactsCodingTests.swift#testSecureCodingRoundTrip	-

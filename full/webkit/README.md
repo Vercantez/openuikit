@@ -93,6 +93,69 @@ SwiftUI `_WebKit_SwiftUI` / `View` overlay identifiers were `not-applicable`
 stays `deferred`, not `not-applicable`: its precise ID is not a SwiftUI
 overlay re-export.
 
+## Depth pass 2026-09 (wave 14)
+
+### Async challenge-disposition conversion (pi-wave14 webkit)
+
+This pass converts **2 declared Swift-async rows to implemented** (2194 →
+2196 implemented, 13 → 11 declared; deferred 26, unavailable 0,
+not-applicable 0 unchanged, total 2233). No new product source was added
+(the `decideAuthenticationChallengeDisposition` requirement and extension
+default already live in `WebKitPage.swift`; only its comment was updated,
+so `webkit_guest_sources.txt` still lists 17 sources and only that file's
+digest in `webkit-provenance.json` was refreshed).
+
+| Status | Before | After |
+| --- | ---: | ---: |
+| implemented | 2194 | 2196 |
+| declared | 13 | 11 |
+| deferred | 26 | 26 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+| Total | 2233 | 2233 |
+
+- Both `decideAuthenticationChallengeDisposition` rows (the
+  `NavigationDeciding` requirement and its `AAE` extension default) →
+  implemented via the new async `testPageAsyncChallengeDispositionDefaults`
+  in `tests/agent/WebKitPageAsyncTests.swift`. The wave-13 blocker ("the
+  isolated host cannot portably construct URLAuthenticationChallenge") is
+  resolved: the challenge IS formable in-process from
+  swift-corelibs-foundation API pinned from source
+  (`URLProtectionSpace(host:port:protocol:realm:authenticationMethod:)` +
+  `URLAuthenticationChallenge(protectionSpace:proposedCredential:previousFailureCount:failureResponse:error:sender:)`
+  with a test-local `URLAuthenticationChallengeSender`, nil credential,
+  and no failure response), and the identical call compiles on Darwin
+  (verified with `xcrun swiftc -typecheck` under Swift 6 and Swift 5
+  language modes, warnings-as-errors). The test holds a defaults-only
+  conformer as `any WebPage.NavigationDeciding` and asserts the fail-closed
+  default `(.cancelAuthenticationChallenge, nil)` — the same
+  requirement-plus-default pattern as wave 13's `decidePolicy` coverage.
+  Nothing waits on a queue, semaphore, `DispatchQueue.main`, or `RunLoop`.
+- Still declared (11): rows with no product member and no formable
+  dependency-owned parameter types on the isolated host
+  (`WKNavigationAction` `buttonNumber` / `modifierFlags`,
+  `WebPage.NavigationAction` `buttonNumber`, `WKWebExtensionAction`
+  `menuItems`, `WKWebExtensionCommand` `keyCommand` / `menuItem`, three
+  `WKUIDelegate` edit-menu/input-suggestion methods needing UIKit animator
+  / suggestion types, `WebPage.Representation` / `transferRepresentation`
+  needing `UTType`/`Transferable`). Framework-local substitutes stay
+  forbidden, so no lookalike members are added. Still deferred:
+  NSAttributedString HTML import, `SecTrust`, `ProxyConfiguration`,
+  `UTType`/`Transferable`, the two SwiftUI-typed `WebPage` members,
+  context-menu delegates, and the synthesized `Equatable.!=` witness.
+- One `oracle-questions.tsv` row added for the challenge-hook ordering /
+  system-trust interplay the in-process runner cannot observe.
+
+Validation on this Mac (the sealed Linux gate needs a Linux host):
+
+- Coverage recount: 2196 implemented / 11 declared / 26 deferred /
+  0 unavailable / 0 not-applicable, total 2233.
+- `tests/test_webkit_provenance.py`: 8 tests OK.
+- Challenge-construction probe typechecks warnings-as-errors on this Mac's
+  SDK; the new test awaits only the in-process fail-closed default.
+
+Only `full/webkit/` changes.
+
 ## Depth pass 2026-09 (wave 13)
 
 ### Async in-process conversion (pi-wave13 webkit)

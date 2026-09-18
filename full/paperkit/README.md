@@ -16,23 +16,23 @@ seed: `FeatureSet` factories and set algebra, `LineMarkerPositions` OptionSet
 bits, `PaperMarkup` insert/transform/remove and the Linux `OPKM` archive,
 `MarkupError` cases, `ShapeConfiguration` / `RenderingOptions` defaults, and
 view-controller documented property defaults are implemented with focused
-tests. Three async APIs stay `declared` because the sealed runner has no run
-loop.
+tests, including three in-process `async` tests for the `PaperMarkup`
+async APIs (the sealed runner awaits `async` tests directly).
 
-Coverage this round: **177 implemented / 3 declared / 180 total**
-(177 nondeferred, floor 90). Enum and OptionSet members share table-driven
+Coverage this round: **180 implemented / 0 declared / 180 total**
+(180 nondeferred, floor 90). Enum and OptionSet members share table-driven
 value tests; synthesized `LineMarkerPositions` algebra shares one OptionSet
 test (24 rows). No non-member test exceeds 40% of the remaining implemented
-rows (algebra is 24 / 110 ≈ 21.8% after member tables).
+rows (algebra is 24 / 113 ≈ 21.2% after member tables).
 
-Top-5 implemented evidence (of 177 rows; 40% cap of remaining non-member
-rows ≈ 44):
+Top-5 implemented evidence (of 180 rows; 40% cap of remaining non-member
+rows ≈ 45):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 24 | 13.6% | `LineMarkerPositionsTests.swift#testLineMarkerPositionsAlgebra` (OptionSet algebra) |
-| 16 | 9.0% | `FeatureSetTests.swift#testFeatureSetFeatureCases` (table-driven enum cases) |
-| 15 | 8.5% | `ShapeRenderingErrorTests.swift#testShapeConfigurationShapeCases` (table-driven enum cases) |
+| 24 | 13.3% | `LineMarkerPositionsTests.swift#testLineMarkerPositionsAlgebra` (OptionSet algebra) |
+| 16 | 8.9% | `FeatureSetTests.swift#testFeatureSetFeatureCases` (table-driven enum cases) |
+| 15 | 8.3% | `ShapeRenderingErrorTests.swift#testShapeConfigurationShapeCases` (table-driven enum cases) |
 | 10 | 5.6% | `FeatureSetTests.swift#testFeatureSetContentVersionRawValues` |
 | 10 | 5.6% | `LineMarkerPositionsTests.swift#testLineMarkerPositionsMembers` |
 
@@ -95,8 +95,13 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 ## Still deferred / declared
 
 - `PaperMarkup.dataRepresentation()` (async throws), `indexableContent`
-  (async getter), and `draw(in:frame:options:)` (async) are `declared`. The
-  throwing `init(dataRepresentation:)` path is tested with hand-built OPKM
+  (async getter), and `draw(in:frame:options:)` (async) are `implemented`:
+  `testPaperMarkupAsyncDataRepresentation` round-trips the OPKM archive
+  in-process, `testPaperMarkupAsyncIndexableContent` checks the
+  joined textbox strings (and `nil` for empty papers), and
+  `testPaperMarkupAsyncDraw` awaits the no-op rasterize call. No
+  `declared` or `deferred` rows remain. The throwing
+  `init(dataRepresentation:)` path is tested with hand-built OPKM
   bytes.
 - Apple PaperKit archive bytes, UTI identifier, OptionSet bits, and
   `ContentVersion` raw values remain oracle questions.

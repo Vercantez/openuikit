@@ -98,6 +98,14 @@ func testCXCallDirectoryNonIncrementalIgnoresRemoval() {
     precondition(directory.hostBlockingEntries() == [42])
 }
 
+func testCXCallDirectoryPhoneNumberMax() {
+    precondition(CXCallDirectoryPhoneNumberMax == 9_223_372_036_854_775_806)
+    precondition(CXCallDirectoryPhoneNumberMax == Int64.max - 1)
+    precondition(CXCallDirectoryPhoneNumberMax < Int64.max)
+    precondition(type(of: CXCallDirectoryPhoneNumberMax) == CXCallDirectoryPhoneNumber.self)
+    precondition(type(of: CXCallDirectoryPhoneNumberMax) == Int64.self)
+}
+
 func testCXCallDirectoryExtensionContextDelegateIdentity() {
     let delegate: any CXCallDirectoryExtensionContextDelegate = DirectoryDelegate()
     _ = delegate

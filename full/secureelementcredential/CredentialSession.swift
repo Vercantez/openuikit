@@ -338,7 +338,7 @@ public actor CredentialSession: Equatable {
 }
 
 /// Synthesized `Actor` isolation witnesses. Calling them off-actor traps;
-/// the sealed runner has no isolation hop, so they stay declared.
+/// tests hop onto the actor first (see tests/agent/ActorIsolationTests.swift).
 enum CredentialSessionIsolationAnchors {
     case assertIsolated
     case assumeIsolated

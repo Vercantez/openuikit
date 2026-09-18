@@ -204,3 +204,47 @@ func testPaperMarkupFeatureSetFromContents() {
     precondition(markup.featureSet.contains(.images))
     precondition(!markup.featureSet.contains(.stickers))
 }
+
+func testPaperMarkupAsyncDataRepresentation() async {
+    var markup = PaperMarkup(bounds: CGRect(x: 0, y: 0, width: 60, height: 60))
+    markup.insertNewTextbox(
+        attributedText: NSAttributedString(string: "roundtrip"),
+        frame: CGRect(x: 4, y: 4, width: 20, height: 10)
+    )
+    let data = try! await markup.dataRepresentation()
+    precondition(data.prefix(4) == PaperMarkupOpenUIKitMagic)
+    let decoded = try! PaperMarkup(dataRepresentation: data)
+    precondition(decoded == markup)
+    precondition(decoded.featureSet.contains(.text))
+}
+
+func testPaperMarkupAsyncIndexableContent() async {
+    let empty = PaperMarkup(bounds: CGRect(x: 0, y: 0, width: 10, height: 10))
+    let emptyContent = await empty.indexableContent
+    precondition(emptyContent == nil)
+    var markup = PaperMarkup(bounds: CGRect(x: 0, y: 0, width: 80, height: 80))
+    markup.insertNewTextbox(
+        attributedText: NSAttributedString(string: "hello"),
+        frame: CGRect(x: 5, y: 5, width: 40, height: 20)
+    )
+    markup.insertNewTextbox(
+        attributedText: AttributedString("world"),
+        frame: CGRect(x: 5, y: 30, width: 40, height: 20)
+    )
+    let content = await markup.indexableContent
+    precondition(content == "hello\nworld")
+}
+
+func testPaperMarkupAsyncDraw() async {
+    var markup = PaperMarkup(bounds: CGRect(x: 0, y: 0, width: 100, height: 100))
+    markup.insertNewShape(
+        configuration: ShapeConfiguration(type: .rectangle),
+        frame: CGRect(x: 10, y: 10, width: 20, height: 20)
+    )
+    await markup.draw(
+        in: CGContext(),
+        frame: CGRect(x: 0, y: 0, width: 100, height: 100),
+        options: RenderingOptions()
+    )
+    precondition(markup.featureSet.shapes.contains(.rectangle))
+}

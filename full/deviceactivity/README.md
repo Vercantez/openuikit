@@ -127,3 +127,11 @@ Converted 782 declared rows with real synchronous tests:
 - 3 `DeviceActivityResults<UInt8>` overlays (`characters`, `lines`, `unicodeScalars`) via synchronous property-access checks; a macOS probe confirmed these Foundation overlays exist for byte sequences.
 
 Leftover `declared` (1): `makeConfiguration(representing:)` (async, fail-closed to declaration). Leftover `deferred` (13): ManagedSettings-token members (`ApplicationToken` / `ActivityCategoryToken` / `WebDomainToken`); this lane must not ship local substitutes. Monitor/daemon behavior stays fail-closed (`isAuthorized == false`, inert extension callbacks, empty results unless constructed by hand).
+
+## Depth pass 2026-09 (wave 14)
+
+Coverage before wave 14: **1022 implemented / 1 declared / 13 deferred / 0 unavailable / 0 not-applicable** (1036 total).
+
+Coverage after wave 14: **1023 implemented / 0 declared / 13 deferred / 0 unavailable / 0 not-applicable** (1023 nondeferred, floor 829).
+
+Converted the final declared row `DeviceActivityReportScene.makeConfiguration(representing:)` (async) with a real in-process async test `testDeviceActivityReportSceneMakeConfigurationAsync` in `tests/agent/DeviceActivityReportSceneTests.swift`: it directly `await`s `makeConfiguration` on a two-record `DeviceActivityResults<DeviceActivityData>` (`"records:2"`) and on an empty sequence (`"records:0"`). No `DispatchQueue.main`, `RunLoop`, or semaphore waits; the sealed runner awaits the `async` test directly. Leftover `deferred` (13): ManagedSettings-token members; this lane must not ship local substitutes.

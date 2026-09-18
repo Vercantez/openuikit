@@ -414,7 +414,7 @@ c:objc(cs)SRPhotoplethysmogramSample(py)startDate	implemented	test:full/sensorki
 c:objc(cs)SRPhotoplethysmogramSample(py)temperature	implemented	test:full/sensorkit/tests/agent/SRPPGTests.swift#testPPGAccelerometerAndSample	
 c:objc(cs)SRPhotoplethysmogramSample(py)usage	implemented	test:full/sensorkit/tests/agent/SRPPGTests.swift#testPPGAccelerometerAndSample	
 c:objc(cs)SRSensorReader	implemented	test:full/sensorkit/tests/agent/SRReaderTests.swift#testSRSensorReaderFailClosed	
-c:objc(cs)SRSensorReader(cm)requestAuthorizationForSensors:completion:	declared	source:full/sensorkit/SRReader.swift#requestAuthorization	async throws; isolated runner has no run loop so this path is not awaited
+c:objc(cs)SRSensorReader(cm)requestAuthorizationForSensors:completion:	implemented	test:full/sensorkit/tests/agent/SRReaderTests.swift#testSRSensorReaderRequestAuthorization	async throws; fail-closed invalidEntitlement, awaited by the sealed runner
 c:objc(cs)SRSensorReader(im)fetch:	implemented	test:full/sensorkit/tests/agent/SRReaderTests.swift#testSRSensorReaderFailClosed	
 c:objc(cs)SRSensorReader(im)fetchDevices	implemented	test:full/sensorkit/tests/agent/SRReaderTests.swift#testSRSensorReaderFailClosed	
 c:objc(cs)SRSensorReader(im)initWithSensor:	implemented	test:full/sensorkit/tests/agent/SRReaderTests.swift#testSRSensorReaderFailClosed	

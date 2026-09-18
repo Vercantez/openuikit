@@ -19,6 +19,9 @@ The public Swift surface compiles to `libAppTrackingTransparency.dylib`.
   header bytes are not vendored). Unknown raw values fail the failable
   initializer.
 - `Equatable.!=` and `Hashable.hash(into:)` are synthesized and exercised.
+- `Hashable.hashValue` is stable per case and consistent with the
+  raw-value initializer (`tests/agent/AppTrackingTransparencyTests.swift#testStatusHashValue`).
+  It compiles cleanly under `-warnings-as-errors` on this toolchain.
 - `trackingAuthorizationStatus` is always `.denied`.
 - `requestTrackingAuthorization(completionHandler:)` returns first, then
   delivers `.denied` exactly once on the private serial queue
@@ -40,8 +43,18 @@ privacy toggle. Tracking is never authorized.
 - `ATTrackingEnforcementManager` appears only in the TBD export list, not in
   the sealed public Swift graph. It is not declared here.
 
-`hashValue` is the Hashable protocol default. It is **declared**, not
-exercised, because accessing it is noisy under `-warnings-as-errors`.
+`hashValue` is exercised alongside the other Hashable witnesses. There are
+no deferred rows.
+
+## Coverage (wave 14)
+
+Before: 11 implemented / 1 declared / 0 deferred of 12.
+After: 12 implemented / 0 declared / 0 deferred of 12.
+
+The remaining declared row (`AuthorizationStatus.hashValue`) was converted to
+`implemented` with `testStatusHashValue`; every row is now cited by a
+top-level `func test*()` in `tests/agent/AppTrackingTransparencyTests.swift`
+that calls that identifier.
 
 ## Still open
 

@@ -193,3 +193,23 @@ clean with `swiftc -warnings-as-errors`; a Darwin-adapted async runner
 invoking all 63 tests emits only `ACCESSIBILITY_AGENT_RUNTIME_OK` well
 under the 120s timeout. Local toolchain: Apple Swift 6.2.1 targeting
 `arm64-apple-macosx26.0`.
+
+## Wave 14 recount 2026-09-18
+
+Before: **511 implemented / 9 declared / 0 deferred / 520 total**.
+After: **511 implemented / 9 declared / 0 deferred / 520 total** (no change).
+All 9 remaining declared rows were re-examined and none can convert. Each
+is the instance `description` getter (`AttributedStringKey` /
+`CustomStringConvertible` protocol witness) of a caseless (uninhabited)
+attribute-key enum (`TextCustom/IPANotation/HeadingLevel/AdjustedPitch/
+TextualContext/QueueAnnouncement/IncludesPunctuation/AnnouncementPriority/
+SpellOut`, confirmed caseless in `AccessibilityAttributes.swift`): no value
+can be constructed in safe Swift, so no `func test*()` can invoke the
+getter, and the contract explicitly forbids converting stdlib/Foundation
+protocol witnesses. The overlay override does not apply (zero
+`not-applicable` rows, no SwiftUI View-modifier rows). Deferred stays at
+0; every unavailable behavior remains honestly fail-closed.
+
+Product sources still compile clean with `swiftc -warnings-as-errors`
+(re-verified this wave). No files outside `full/accessibility/` were
+touched; the only file changed in wave 14 is this README recount.

@@ -112,6 +112,42 @@ func testEAWiFiUnconfiguredAccessoryBrowserConfigureFailClosed() {
     precondition(probe.finished[0].1 == .failed)
 }
 
+func testEAWiFiUnconfiguredAccessoryBrowserDidFindUnconfiguredAccessories() {
+    let probe = EAWiFiBrowserProbe()
+    let browser = EAWiFiUnconfiguredAccessoryBrowser(delegate: probe, queue: nil)
+    let accessory = EAWiFiUnconfiguredAccessory(
+        hostName: "Lamp",
+        manufacturer: "Acme",
+        model: "L2",
+        ssid: "LampNet",
+        macAddress: "00:11:22:33:44:55",
+        properties: [.propertySupportsHomeKit]
+    )
+    browser.delegate?.accessoryBrowser(browser, didFindUnconfiguredAccessories: [accessory])
+    precondition(probe.found.count == 1)
+    precondition(probe.found[0].count == 1)
+    precondition(probe.found[0].contains(accessory))
+    precondition(browser.unconfiguredAccessories.isEmpty)
+}
+
+func testEAWiFiUnconfiguredAccessoryBrowserDidRemoveUnconfiguredAccessories() {
+    let probe = EAWiFiBrowserProbe()
+    let browser = EAWiFiUnconfiguredAccessoryBrowser(delegate: probe, queue: nil)
+    let accessory = EAWiFiUnconfiguredAccessory(
+        hostName: "Lamp",
+        manufacturer: "Acme",
+        model: "L2",
+        ssid: "LampNet",
+        macAddress: "00:11:22:33:44:55",
+        properties: []
+    )
+    browser.delegate?.accessoryBrowser(browser, didRemoveUnconfiguredAccessories: [accessory])
+    precondition(probe.removed.count == 1)
+    precondition(probe.removed[0].count == 1)
+    precondition(probe.removed[0].contains(accessory))
+    precondition(browser.unconfiguredAccessories.isEmpty)
+}
+
 func testEAWiFiUnconfiguredAccessoryBrowserDelegateAssignment() {
     let first = EAWiFiBrowserProbe()
     let second = EAWiFiBrowserProbe()

@@ -73,8 +73,8 @@ c:objc(cs)ACAccountType(py)accountTypeDescription	implemented	Accounts.swift;Acc
 c:objc(cs)ACAccountType(py)identifier	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Matches the known requested identifier.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Synthesized Equatable !=.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Synthesized Equatable !=.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	declared	Accounts.swift	Hashable protocol default; hashValue is not exercised under warnings-as-errors.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACErrorCode	declared	Accounts.swift	Hashable protocol default; hashValue is not exercised under warnings-as-errors.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	test:full/accounts/tests/agent/AccountsHashableTests.swift#testAccountCredentialRenewResultHashValue	Synthesized Hashable hashValue; deterministic Int witness.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACErrorCode	implemented	test:full/accounts/tests/agent/AccountsHashableTests.swift#testACErrorCodeHashValue	Synthesized Hashable hashValue; deterministic Int witness.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Hashable synthesis via Hasher and Set.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Hashable synthesis via Hasher and Set.
 s:So11ACErrorCodeV8rawValueABs6UInt32V_tcfc	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	RawRepresentable initializer.

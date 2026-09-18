@@ -6,7 +6,7 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **878 implemented / 3 declared / 881 total**
+Coverage: **881 implemented / 0 declared / 881 total**
 (above the leaf-full floor of 705 nondeferred identifiers).
 
 ## What is real
@@ -68,6 +68,26 @@ contact-sync queries the sealed runner cannot await.
 
 Before: **109 implemented / 772 declared**. After:
 **877 implemented / 4 declared**.
+
+## Depth pass 2026-09 (pi-wave14 leftover sweep)
+
+Before: **878 implemented / 3 declared**. After:
+**881 implemented / 0 declared**.
+
+The sealed runner now awaits `func test*() async` in-process, so the 3
+remaining `declared` rows were converted to `implemented` with real async
+tests in `CommunicationLimitsTests.swift`: `isKnownHandle(_:)` returns
+`false` (`testCommunicationLimitsIsKnownHandleReturnsFalse`),
+`knownHandles(in:)` returns `[]`
+(`testCommunicationLimitsKnownHandlesReturnsEmpty`), and the UIKit overlay
+`ask(_:in:)` throws `AskError.communicationLimitsNotEnabled`
+(`testCommunicationLimitsAskInViewControllerThrowsNotEnabled`). All three
+stay fail-closed (no Screen Time daemon, contact sync, or permission UI on
+Linux); the async tests complete in-process with no waits. Verified locally
+with `-warnings-as-errors`: module + tests compile and all 6
+`CommunicationLimits` tests pass (`PK_VERIFY_OK`). The shared host gate
+could not run to completion in this snapshot (missing
+`full/framework-roadmap/framework-roadmap.json`, pre-existing).
 
 ## Depth pass 2026-09 (pi-wave10 leftover sweep)
 

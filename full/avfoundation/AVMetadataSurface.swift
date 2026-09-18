@@ -378,6 +378,7 @@ public struct AVMetadataIdentifier: RawRepresentable, Hashable, Sendable, Expres
 
 open class AVMetadataItem: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  let itemLoadState = AVAssetLoadState()
 
   var storedIdentifier: AVMetadataIdentifier?
   var storedExtendedLanguageTag: String?

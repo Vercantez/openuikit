@@ -257,14 +257,25 @@ when no store directory is writable.
 
 ## Coverage
 
-See `coverage.tsv`. Implemented 2644, declared 1, deferred 0, unavailable 0,
+See `coverage.tsv`. Implemented 2645, declared 0, deferred 0, unavailable 0,
 not-applicable 0.
-The single declared row is the async file-URL `addAttachment` overload (compiles;
-no synchronous test can call it under the no-`await`/no-semaphore cited-test rule).
-No rows remain deferred: the `NSComparisonPredicate.Operator` / `UTType` APIs are
-implemented against the Apple oracle in `scratch/oracle-2026-09-14/`.
+No rows remain declared or deferred: the async file-URL `addAttachment` overload
+is covered by `testAttachmentAsyncFileURLAdd` (async, awaited in-process, no
+semaphores/`RunLoop`/`DispatchQueue.main`); the `NSComparisonPredicate.Operator`
+/ `UTType` APIs are implemented against the Apple oracle in
+`scratch/oracle-2026-09-14/`.
 Wave-8/9 async `result(for:)` / `Sci12_Concurrency` combinators are implemented and
 tested via the local store snapshots.
+
+## Depth pass 2026-09-14 (wave 14, overnight)
+
+Final sweep: 2644 implemented / 1 declared / 0 deferred → **2645 implemented /
+0 declared / 0 deferred** (+1). The last declared row was the async file-URL
+`HKAttachmentStore.addAttachment(to:name:contentType:url:metadata:)` overload;
+it now has a real async cited test that writes a temp file, awaits the add,
+checks name/size/content-type/metadata, and checks the missing-file path throws.
+No hardware/daemon/Siri/Apple Pay/Screen Time success was invented; the add copies
+bytes into the local in-process attachment table (not the Apple Health daemon).
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -357,8 +368,8 @@ Behaviour added (`HKOperatorPredicates.swift`, in the guest manifest):
   data-created attachments, caller-supplied type for file-URL adds), with
   NSSecureCoding round-trip.
 - File-URL `HKAttachmentStore.addAttachment` completion overload (local byte
-  copy, fail-closed on unreadable URLs). The async overload is **declared**
-  (compiles; no synchronous cited test can `await` it).
+  copy, fail-closed on unreadable URLs). The async overload is covered by
+  `testAttachmentAsyncFileURLAdd` (wave 14; awaited in-process).
 
 Every new `implemented` row cites a synchronous top-level `func test*()` in
 `tests/agent/HealthKitPredicateOperatorTests.swift` (19 rows max per test,
@@ -371,4 +382,6 @@ The runtime probe's sort descriptor was also made portable
 which fatals on non-`@objc` roots in this host Foundation); the local `hkSort`
 behaves identically.
 
-Leftover: 1 declared row (async file-URL add, needs `await`); 0 deferred.
+Leftover after this pass: 1 declared row (async file-URL add) and 0 deferred.
+The wave-14 overnight sweep converted that last row to implemented (see the
+Coverage section), leaving 2645 implemented / 0 declared / 0 deferred.

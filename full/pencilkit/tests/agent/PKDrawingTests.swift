@@ -112,3 +112,28 @@ func testPKDrawingInequality() {
     pkExpect(pkSampleDrawing() != PKDrawing(), "neq")
     pkExpect(!(pkSampleDrawing() != pkSampleDrawing()), "eq via neq")
 }
+
+func testPKDrawingDrawAsyncNoOp() async {
+    let drawing = pkSampleDrawing()
+#if canImport(CoreGraphics)
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+    let context = CGContext(
+        data: nil,
+        width: 8,
+        height: 8,
+        bitsPerComponent: 8,
+        bytesPerRow: 0,
+        space: colorSpace,
+        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+    )!
+#else
+    let context = PencilKitContext()
+#endif
+    await drawing.draw(
+        in: context,
+        frame: CGRect(x: 0, y: 0, width: 20, height: 10),
+        from: CGRect(x: 0, y: 0, width: 20, height: 10)
+    )
+    await drawing.draw(in: context, frame: .zero, from: .zero, darkUserInterfaceStyle: true)
+    pkExpectEqual(drawing.strokes.count, 1, "draw is a non-mutating replay no-op")
+}

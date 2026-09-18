@@ -72,19 +72,21 @@ instead of `test:full/contacts/tests/agent/<File>Tests.swift#testName`.
 This ledger repair keeps the same honest statuses and cites real focused
 tests:
 
-- After: implemented **712** / declared **1** / deferred **0** / not-applicable **1**
+- After: implemented **713** / declared **0** / deferred **0** / not-applicable **1**
   (`CNContact.id` Identifiable overlay is UUID, not ObjectIdentifier;
-  generic `CNLabeledValue` `init(coder:)` is `declared` —
-  `source:full/contacts/CNTypes.swift#CNLabeledValue` — because Linux
-  `NSKeyedArchiver` cannot archive that generic class).
-- Top-5 implemented evidence distribution (712 rows):
+  generic `CNLabeledValue` `init(coder:)` is exercised directly through a
+  dictionary-backed `NSCoder` stub in `ContactsCodingTests.swift#testLabeledValueSecureCoding`
+  (`CNPhoneNumber` and `NSString` values, nil label, empty-coder rejection).
+  `NSKeyedArchiver` itself round-trips the same specializations on the host,
+  but the generic class name lookup stays unclaimed for guest corelibs.)
+- Top-5 implemented evidence distribution (713 rows):
   1. `ContactsConstantsTests.swift#testPublicStringConstants` — 308 (table-driven C string constants)
   2. `ContactsEnumTests.swift#testEnumRawValues` — 97 (enum cases plus synthesized `!=` / hash / `rawValue`)
   3. `ContactsHistoryTests.swift#testChangeHistoryEventsAndVisitor` — 42
   4. `ContactsContactTests.swift#testContactPropertiesAndKeys` — 34
   5. `ContactsContactTests.swift#testMutableContactSetters` — 28
-- No non-constant/non-enum test exceeds 40% of the remaining 307 implemented rows
-  (largest remaining citation is history visitor at 13.7%).
+- No non-constant/non-enum test exceeds 40% of the remaining 308 implemented rows
+  (largest remaining citation is history visitor at 13.6%).
 - Local directory store with `store.json`, reload SPI, and transactional
   `execute`.
 - Authorization `.notDetermined` → `.authorized` / `.denied`.

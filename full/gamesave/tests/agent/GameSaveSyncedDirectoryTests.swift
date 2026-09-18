@@ -118,3 +118,25 @@ func testResolveConflicts() {
     }
     precondition(chosen == otherURL)
 }
+
+func testFinishSyncingAsync() async {
+    let directory = GameSaveSyncedDirectory.openDirectory(
+        containerIdentifier: "finish-async")
+    directory.hostEnterSyncing()
+    await directory.finishSyncing()
+    guard case .local(let url) = directory.state else {
+        preconditionFailure("expected local after async finishSyncing from syncing")
+    }
+    precondition(url == directory.hostLocalURL)
+    await directory.finishSyncing()
+    guard case .local = directory.state else {
+        preconditionFailure("async finishSyncing no-ops when already local")
+    }
+}
+
+func testTriggerPendingUploadAsync() async {
+    let directory = GameSaveSyncedDirectory.openDirectory(
+        containerIdentifier: "upload-async")
+    let pending = await directory.triggerPendingUpload()
+    precondition(pending == false)
+}

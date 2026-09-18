@@ -13,10 +13,10 @@ public let CXErrorDomainRequestTransaction = "CXErrorDomainRequestTransaction"
 public let CXErrorDomainCallDirectoryManager = "CXErrorDomainCallDirectoryManager"
 public let CXErrorDomainNotificationServiceExtension = "CXErrorDomainNotificationServiceExtension"
 
-/// Phone-number storage is `Int64`. Apple's exact `CXCallDirectoryPhoneNumberMax`
-/// payload is not in the sealed seed; this is a process-local ceiling so the
-/// symbol compiles. Do not treat it as an attested Apple maximum.
-public let CXCallDirectoryPhoneNumberMax: CXCallDirectoryPhoneNumber = .max
+/// Phone-number ceiling pinned by an Xcode 26.1 `import CallKit` probe
+/// (`xcrun swiftc`): `CXCallDirectoryPhoneNumberMax` prints as
+/// `9223372036854775806` (`Int64.max - 1`), typed `Int64`.
+public let CXCallDirectoryPhoneNumberMax: CXCallDirectoryPhoneNumber = 9_223_372_036_854_775_806
 
 public typealias CXCallDirectoryPhoneNumber = Int64
 

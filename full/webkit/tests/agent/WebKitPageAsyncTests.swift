@@ -150,3 +150,36 @@ func testPageAsyncExtensionInits() async {
         _ = error
     }
 }
+
+// Authentication-challenge fail-closed default: the isolated host has no Web
+// Content process or trust-evaluation daemon, so the NavigationDeciding
+// default cancels. The challenge is formable in-process with a test-local
+// URLAuthenticationChallengeSender (nil credential, no failure response);
+// the product ignores it and answers (.cancelAuthenticationChallenge, nil).
+private final class AsyncChallengeSenderProbe: NSObject, URLAuthenticationChallengeSender, @unchecked Sendable {
+    func use(_ credential: URLCredential, for challenge: URLAuthenticationChallenge) {}
+    func continueWithoutCredential(for challenge: URLAuthenticationChallenge) {}
+    func cancel(_ challenge: URLAuthenticationChallenge) {}
+    func performDefaultHandling(for challenge: URLAuthenticationChallenge) {}
+    func rejectProtectionSpaceAndContinue(with challenge: URLAuthenticationChallenge) {}
+}
+
+func testPageAsyncChallengeDispositionDefaults() async {
+    var decider: any WebPage.NavigationDeciding = AsyncDefaultDeciderProbe()
+    let space = URLProtectionSpace(
+        host: "example.com", port: 443, protocol: "https", realm: nil, authenticationMethod: nil
+    )
+    let challenge = URLAuthenticationChallenge(
+        protectionSpace: space,
+        proposedCredential: nil,
+        previousFailureCount: 0,
+        failureResponse: nil,
+        error: nil,
+        sender: AsyncChallengeSenderProbe()
+    )
+    let (disposition, credential) = await decider.decideAuthenticationChallengeDisposition(
+        for: challenge
+    )
+    precondition(disposition == .cancelAuthenticationChallenge)
+    precondition(credential == nil)
+}

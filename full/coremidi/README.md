@@ -88,6 +88,28 @@ comparators/styles. `Sequence.compare` stays `declared` (`Element` is not a
 `SortComparator`).
 Optional `Sequence.flatMap` and `Collection.index(of:)` stay `declared`.
 
+## Wave 14 verification (2026-09-18)
+
+Before/after: implemented 1739 / declared 24 / deferred 0 (of 1773; plus 10
+`unavailable` Combine `publisher` rows). Implemented gain: 0. All 24 leftover
+`declared` rows are stdlib/Foundation synthesized witnesses, not MIDI objects,
+and each bucket was re-probed with `swiftc` against this toolchain:
+
+- `Sequence.compare` (10 rows): requires `Element` itself to conform to
+  `SortComparator`. Every view's `Element` is a stdlib type (`UInt8`,
+  `UInt32`, `UnsafePointer<MIDIPacket>`, `UnsafePointer<MIDIEventPacket>`),
+  so the witness is uncallable without a retroactive global conformance.
+  Stays `declared`.
+- Optional-`Sequence` `flatMap` (10 rows): the overload no longer resolves in
+  Swift 6.2; calls are rejected even without warnings-as-errors (the compiler
+  selects the `compactMap`-renamed `U?` overload). Stays `declared`.
+- `Collection.index(of:)` (4 rows): still exists but is deprecated
+  (`firstIndex(of:)` is exercised instead); any call fails the
+  `-warnings-as-errors` gate. Stays `declared`.
+
+There is no SwiftUI overlay in CoreMIDI, so the View-modifier overlay override
+does not apply. Real MIDI hardware I/O remains fail-closed as documented above.
+
 Top-5 implemented evidence distribution (of 1739 implemented rows):
 
 1. `ConstantsTests.swift#testEnumRawValues` — 216 (table-driven enum raw values)

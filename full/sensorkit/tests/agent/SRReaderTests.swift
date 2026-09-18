@@ -122,6 +122,21 @@ func testSRSensorReaderFailClosed() {
     reader.stopRecording()
 }
 
+func testSRSensorReaderRequestAuthorization() async {
+    do {
+        try await SRSensorReader.requestAuthorization(sensors: [.accelerometer])
+        skExpect(false, "requestAuthorization must throw fail-closed")
+    } catch {
+        skExpect(SRError.Code.invalidEntitlement ~= error, "invalidEntitlement")
+    }
+    do {
+        try await SRSensorReader.requestAuthorization(sensors: [])
+        skExpect(false, "empty set must also throw fail-closed")
+    } catch {
+        skExpect(SRError.Code.invalidEntitlement ~= error, "invalidEntitlement empty")
+    }
+}
+
 func testSRSensorReaderDelegateProtocolExists() {
     let unused: (any SRSensorReaderDelegate)? = nil
     skExpect(unused == nil, "protocol is instantiable as existential")

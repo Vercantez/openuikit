@@ -1214,3 +1214,91 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
+
+### Depth pass 2026-09-18 (wave 14 async KVO / contains sweep)
+
+Wave 14 converts 7 `declared` rows into 5 focused `async` tests in
+`tests/agent/AVDepthPass23Tests.swift` (largest citation group is 2 rows).
+New product surface in `AVTrackItemAsyncLoading.swift` (listed in
+`avfoundation_guest_sources.txt`): Apple-mirroring async key-value-loading
+twins on `AVAssetTrack` and `AVMetadataItem` (single / double / triple
+`load` plus `status(of:)`), shaped exactly like the `AVAsset` twins in
+`AVPlaybackRuntime.swift` that converted that class's rows in an earlier
+pass. Each class gains a per-instance `AVAssetLoadState` (`trackLoadState`
+/ `itemLoadState`; two one-line class-body additions); `load` marks the
+key loaded and returns the synchronously projected stored value, or throws
+`mediaServiceUnavailable` when the key has no projectable value on this
+host. `status` reports `.loaded` only after `load` marked the key.
+`formatDescriptions` (token `[CMFormatDescription]` vs stored `[Any]`) and
+`mediaCharacteristics` (no stored projection) stay fail-closed rather than
+fabricating media data. The seventh row is the Equatable-constrained
+`AsyncSequence.contains(_:)` witness on `AVMetrics`: `Element` is the
+`MetricEvent` generic parameter, and the concrete `AVMetricEvent` inherits
+`Equatable` from `NSObject`, so `contains` over the empty metrics sequence
+is `false` with no invented conformance (mirrors the wave 13
+`BoundaryTimes` / `PeriodicTimes` `contains` conversions, whose `CMTime`
+elements are `Equatable` the same way).
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5490 | 5497 |
+| `declared` | 24 | 17 |
+| `deferred` | 118 | 118 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest new citation group is 2 rows, well under 40% of the 5,497
+implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The remaining 17 `declared` rows were each probed for a call shape on this
+host and are uncallable without inventing API or tripping
+`-warnings-as-errors`:
+
+- 11 non-throwing `flatMap` overloads. All three take an identical `async`
+  closure; demangling confirms the only differences are the `where`
+  clauses (`Self.Failure == Segment.Failure`,
+  `Segment.Failure == Never`, both). The five `...RtzAiJRtd` rows
+  (`Self.Failure == Never`) can never hold on the throwing `AVMetrics` /
+  `AVMergedMetrics` bases. On the `Never` bases (`Images`,
+  `BoundaryTimes`, `PeriodicTimes`) a `Never`-segment call compiles, but
+  `-emit-sil` shows the solver routes it to a fourth stdlib overload
+  (`...s5NeverO7FailureRtzAhIRtd__lF`, a `Sendable`-constrained shape the
+  iPhoneOS 26.1 census never recorded), not to any catalogued witness —
+  so no declared row can honestly cite that call shape. A throwing
+  segment on a `Never` base matches no overload at all.
+- `AVMetrics` `max()` / `min()`: `Element` is the generic `MetricEvent`,
+  which is not `Comparable`; conforming it would invent Apple API.
+- Deprecated optional `flatMap` on `AVCaptureSynchronizedDataCollection`:
+  calling it is a deprecation error under `-warnings-as-errors` (probe:
+  `'flatMap' is deprecated: Please use compactMap(_:)`).
+- `Combine` `publisher`: `import Combine` fails on the isolated Linux
+  host (`no such module 'Combine'`).
+- `compare` / `formatted` on `AVCaptureSynchronizedDataCollection`:
+  calling them needs an invented `SortComparator` / `FormatStyle`, and
+  `compare(_:_:using:)` never consumes the collection — a test would
+  exercise only stdlib plus a test double, not product behavior.
+
+The 118 `deferred` rows are unchanged (hardware/daemon/`URLSession`/
+`CALayer`/async-service bodies that cannot be written without guessing
+Apple behavior). No SwiftUI cross-import overlay rows exist in this seed,
+so the overlay playbook does not apply.
+
+Sealed Linux gate (same `swift:6.2-noble` replication as above, Swift
+6.2.4, aarch64; 254 distinct cited tests, 29 of them `async`, across 28
+`*Tests.swift` files) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```

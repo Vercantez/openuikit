@@ -31,9 +31,9 @@ s:8GameSave0aB11ErrorDomainSSvp	implemented	test:full/gamesave/tests/agent/GameS
 s:8GameSave0aB15SyncedDirectoryC	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryType	Swift overlay class; Identifiable and Equatable.
 s:8GameSave0aB15SyncedDirectoryC04openD019containerIdentifierACSSSg_tFZ	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testOpenDirectory	Creates a real local directory; never claims iCloud ready.
 s:8GameSave0aB15SyncedDirectoryC13finishSyncing13statusDisplayySo8UIWindowC_tYaF	deferred		UIWindow status-display API requires UIKit, which is not a GameSave dependency.
-s:8GameSave0aB15SyncedDirectoryC13finishSyncingyyYaF	declared	source:full/gamesave/GameSaveSyncedDirectory.swift#finishSyncing	Async overlay; sealed runner has no run loop so the completion-handler path is the tested settle.
+s:8GameSave0aB15SyncedDirectoryC13finishSyncingyyYaF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testFinishSyncingAsync	Async overlay; host-injected .syncing settles to .local, other states unchanged.
 s:8GameSave0aB15SyncedDirectoryC16resolveConflicts4withyAC7VersionC_tF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testResolveConflicts	No-op unless conflicted; then .local(chosen URL).
-s:8GameSave0aB15SyncedDirectoryC20triggerPendingUploadSbyYaF	declared	source:full/gamesave/GameSaveSyncedDirectory.swift#triggerPendingUpload	Async overlay of the fail-closed false return; completion-handler path is tested.
+s:8GameSave0aB15SyncedDirectoryC20triggerPendingUploadSbyYaF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testTriggerPendingUploadAsync	Async overlay of the fail-closed false return; awaited in-process.
 s:8GameSave0aB15SyncedDirectoryC2IDa	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryIDTypealias	typealias ID = String.
 s:8GameSave0aB15SyncedDirectoryC2eeoiySbAC_ACtFZ	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryEquality	Equality by container id.
 s:8GameSave0aB15SyncedDirectoryC2idSSvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryId	Container identifier identity.

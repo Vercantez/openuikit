@@ -473,8 +473,8 @@ public protocol URLSchemeHandler: AnyObject {
 
 // Fail-closed defaults for Apple's async dialog/policy hooks. Dialogs cancel,
 // navigation policy denies, and authentication challenges are cancelled.
-// Async agent tests invoke every default except the authentication-challenge
-// one (the isolated host cannot portably construct URLAuthenticationChallenge).
+// Async agent tests invoke every default, including the authentication-challenge
+// one (via a test-local URLAuthenticationChallengeSender with nil credential).
 extension WebPage.DialogPresenting {
     public func handleFileInputPrompt(
         parameters: WKOpenPanelParameters,

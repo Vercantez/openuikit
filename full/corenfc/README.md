@@ -186,6 +186,21 @@ Linux Foundation overlay), and 2 violate Swift return-type overloading rules.
 No SwiftUI `View` overlay rows exist, so the identity-overlay override does not
 apply. Implemented gain this wave: +8.
 
+Wave-14 recount (2026-09-18): **562 implemented / 1 declared / 24 deferred**
+(unchanged, gate re-verified `FRAMEWORK_FANOUT_HOST_OK`; counts sum to the 587-ID surface:
+562 + 1 + 24). Re-examined the 1 remaining `declared` row (the `Failure == Never`
+`flatMap` overload on `CardSession.EventStream`): it is a stdlib `AsyncSequence`
+protocol witness whose overload requires `Self.Failure == Never` while
+`EventStream.Failure` is `any Error` (`Iterator.next()` throws), so no call
+expression on `EventStream` can resolve to it and no citing test can call THAT
+identifier — the coverage contract explicitly excludes stdlib/Foundation
+protocol witnesses from promotion. Re-examined all 24 `deferred` rows: 13 need
+UIKit (not a declared dependency), 8 need Darwin `_BridgedStoredNSError`
+bridging, 1 needs `NSUserActivity` (absent from this Linux Foundation overlay),
+and 2 violate Swift return-type overloading rules. No SwiftUI `View` overlay rows
+exist, so the identity-overlay override does not apply. Implemented gain this
+wave: 0.
+
 Top-5 implemented evidence distribution:
 
 | rows | evidence |

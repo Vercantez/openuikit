@@ -716,3 +716,42 @@ is unchanged. No product, test, manifest, or oracle change.
   Apple's archive format).
 - Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed
   or deferred per the contract.
+
+## Depth pass 2026-09 (wave 14, isolated worktree)
+
+Re-audits the 15 leftover rows for in-process conversion now that the
+prompt asks to convert remaining declared compiling APIs. No fabric,
+daemon, radio, `await`, or success invention is available, so the ledger
+is unchanged. No product, test, manifest, oracle, or coverage.tsv change.
+
+**Coverage before:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28407 implemented / 4 declared / 11 deferred / 40 unavailable / 0 not-applicable
+(+0 implemented; 28411 nondeferred; floor 150).
+
+Ledger re-validated: 28462 data rows, every status in the allowed set,
+all 28407 implemented rows cite well-formed
+`test:full/matter/tests/agent/*Tests.swift#testName` evidence (0 malformed),
+all 4 declared rows cite an existing `MTRControllers.swift#MTRDeviceController`
+anchor, and every deferred/unavailable row carries an explanatory note.
+
+### Why nothing converts
+
+- The 4 declared rows are not compiling APIs on Linux, so there is
+  nothing to promote on this prompt's terms: both `sharedController`
+  spellings take `MTRXPCConnectBlock` (itself an unavailable row:
+  `() -> NSXPCConnection`, and NSXPCConnection is not a declared
+  dependency), and both `xpcInterfaceFor*Protocol` selectors return
+  NSXPCInterface. Framework-local stand-ins for dependency-owned NSXPC
+  types are forbidden, so these stay declared rather than inventing
+  signatures that would diverge from the Apple symbol graph.
+- The 11 deferred rows stay deferred by design:
+  `MTRSetMessageReliabilityParameters` (a no-op would invent radio
+  timing) and the 10 `NSCoding.initWithCoder` rows (Linux Foundation has
+  no Apple daemon data to decode; decoding real state would invent
+  Apple's archive format; returning nil would fabricate failure).
+- Overlay OVERRIDE has no Matter targets: 0 not-applicable rows and no
+  SwiftUI `View` modifiers in the census (no `SwiftUI`/`ViewModifier`
+  identifiers at all).
+- Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed
+  or deferred per the contract.

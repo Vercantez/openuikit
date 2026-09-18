@@ -168,3 +168,24 @@ func testAttachmentContentTypeAndFileURLAdd() {
     }
     hkOpRequire(dataMade.contentType == .data, "data default content type")
 }
+
+func testAttachmentAsyncFileURLAdd() async throws {
+    let store = HKAttachmentStore()
+    let object = HKObject()
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("hk-op-async-\(UUID().uuidString).bin")
+    guard (try? Data([5, 6, 7, 8]).write(to: url)) != nil else {
+        hkOpRequire(false, "write temp async")
+        return
+    }
+    defer { try? FileManager.default.removeItem(at: url) }
+    let added = try await store.addAttachment(to: object, name: "async-reading", contentType: .pdf, url: url, metadata: ["hkOp": "async"])
+    hkOpRequire(added.name == "async-reading", "async add name")
+    hkOpRequire(added.size == 4, "async add size")
+    hkOpRequire(added.contentType == .pdf, "async add content type")
+    hkOpRequire(added.metadata?["hkOp"] as? String == "async", "async add metadata")
+    do {
+        _ = try await store.addAttachment(to: object, name: "async-missing", contentType: .plainText, url: url.appendingPathComponent("nope.bin"))
+        hkOpRequire(false, "async missing should throw")
+    } catch {
+    }
+}

@@ -15,8 +15,8 @@ import UIKit
 
 // Host-only stand-ins for types owned by modules that are not declared
 // dependencies of this isolated Foundation gate (UniformTypeIdentifiers,
-// CoreGraphics, PDFKit, UIKit). Compiled out when the real modules are
-// importable. Do not treat these as Apple runtime evidence.
+// CoreGraphics, PDFKit, UIKit, SwiftUI). Compiled out when the real modules
+// are importable. Do not treat these as Apple runtime evidence.
 
 #if !canImport(UniformTypeIdentifiers)
 public struct UTType: Hashable, Sendable {
@@ -164,6 +164,59 @@ open class UIView: NSObject, @unchecked Sendable {}
 open class UIImage: NSObject, @unchecked Sendable {
   public override init() {
     super.init()
+  }
+}
+#endif
+
+#if !canImport(SwiftUI)
+// Isolated-host stand-ins for the SwiftUI names used by the portable
+// `quickLookPreview` overlay. Compiled out when SwiftUI is importable.
+// They are not a Linux SwiftUI port: hosts without SwiftUI have no
+// presentation engine, so the overlay below is an identity no-op.
+public protocol View {}
+
+public struct EmptyView: View {
+  public init() {}
+}
+
+@propertyWrapper
+public struct Binding<Value> {
+  private let getter: () -> Value
+  private let setter: (Value) -> Void
+
+  public var wrappedValue: Value {
+    get { getter() }
+    nonmutating set { setter(newValue) }
+  }
+
+  public var projectedValue: Binding<Value> { self }
+
+  public init(get: @escaping () -> Value, set: @escaping (Value) -> Void) {
+    self.getter = get
+    self.setter = set
+  }
+
+  public static func constant(_ value: Value) -> Binding<Value> {
+    Binding(get: { value }, set: { _ in })
+  }
+}
+
+extension View {
+  /// Identity on hosts without SwiftUI: building the view never presents,
+  /// dismisses, or mutates the selection. SwiftUI hosts use the portable
+  /// `ViewModifier` in `QuickLook.swift` instead.
+  public func quickLookPreview(_ item: Binding<URL?>) -> Self {
+    _ = item.wrappedValue
+    return self
+  }
+
+  public func quickLookPreview<Items>(
+    _ selection: Binding<Items.Element?>,
+    in items: Items
+  ) -> Self where Items: RandomAccessCollection, Items.Element == URL {
+    _ = selection.wrappedValue
+    _ = Array(items)
+    return self
   }
 }
 #endif

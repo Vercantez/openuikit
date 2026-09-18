@@ -10,7 +10,7 @@ Linux guest stack with UIKit, SwiftUI, or iCloud Drive.
 
 ## Depth pass 2026-09
 
-**57 implemented** / **2 declared** / **3 deferred** (62 IDs).
+**59 implemented** / **0 declared** / **3 deferred** (62 IDs).
 Nondeferred 59 is above the leaf-full floor of 50.
 
 Top-5 implemented evidence (by row count):
@@ -53,9 +53,10 @@ table-driven raw-value test.
 - `finishSyncing(statusDisplay:)` / `GSSyncedDirectory.finishSyncing(_:)`
   that take `UIWindow` are deferred (UIKit is not a dependency).
 - `View.gameSaveSyncingAlert` is deferred (SwiftUI is not a dependency).
-- Async `finishSyncing()` / `triggerPendingUpload()` are declared; the
-  isolated runner has no run loop and cannot await them. The ObjC
-  completion-handler settle is the tested path.
+- Async `finishSyncing()` / `triggerPendingUpload()` are implemented with
+  awaited in-process tests (`testFinishSyncingAsync` /
+  `testTriggerPendingUploadAsync`). Host-injected `.syncing` settles to
+  `.local`; upload always reports `false`.
 - Observation.Observable / `@MainActor` overlays are omitted.
 
 ## Gates and markers

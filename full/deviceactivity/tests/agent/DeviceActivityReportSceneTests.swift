@@ -126,6 +126,27 @@ func testDeviceActivityReportSceneMakeConfiguration() {
     )
 }
 
+func testDeviceActivityReportSceneMakeConfigurationAsync() async {
+    let day = DateInterval(start: Date(timeIntervalSince1970: 0), duration: 3600)
+    let user = DeviceActivityData.User(role: .individual)
+    let device = DeviceActivityData.Device(model: .iPhone)
+    let record = DeviceActivityData(
+        lastUpdatedDate: Date(timeIntervalSince1970: 0),
+        segmentInterval: .daily(during: day),
+        user: user,
+        device: device
+    )
+    let scene = deviceActivityAgentScene()
+    let two = await scene.makeConfiguration(
+        representing: DeviceActivityResults([record, record])
+    )
+    deviceActivityRequire(two == "records:2", "makeConfiguration")
+    let none = await scene.makeConfiguration(
+        representing: DeviceActivityResults<DeviceActivityData>()
+    )
+    deviceActivityRequire(none == "records:0", "empty")
+}
+
 func testDeviceActivityReportExtensionSurface() {
     let scene = deviceActivityAgentScene(context: "extension")
     let ext = DeviceActivityAgentTestExtension(body: scene)

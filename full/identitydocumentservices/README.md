@@ -149,6 +149,24 @@ missing repo-wide `full/framework-roadmap/framework-roadmap.json`
 precondition outside `full/identitydocumentservices/`; all in-scope
 checks pass.
 
+## Wave 14 re-examination 2026-09-18
+
+Before: **103 implemented** / **3 declared** / **0 deferred** / **0 n/a**.
+After: **103 implemented** / **3 declared** / **0 deferred** / **0 n/a**
+(implemented gain 0). Prompt asked to convert remaining declared rows;
+re-verified each leftover is unconvertible: the three `declared` rows are
+the synthesized stdlib `Actor` isolation witnesses (`assertIsolated`,
+`assumeIsolated`, `preconditionIsolated`) on
+`IdentityDocumentProviderRegistrationStore`, which trap when called off the
+actor and would crash the sealed runner — the overlay override explicitly
+forbids converting stdlib/Foundation protocol witnesses, and these
+concurrency witnesses fall in that class. No `View`/`SwiftUI` precise IDs
+exist in this module (`grep -ci View/SwiftUI coverage.tsv` returns 0), so
+the overlay override does not apply. The four async store members were
+already converted in wave 13 once the sealed runner began awaiting
+`async` tests. Product sources still compile under
+`swiftc -warnings-as-errors` and cited test files typecheck clean.
+
 ## Tests
 
 `tests/agent/IdentityDocumentServicesLoadSmoke.swift` is the schema-v2

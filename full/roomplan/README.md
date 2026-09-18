@@ -5,7 +5,7 @@ Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift surface
 from the sealed symbol graph. It is not wired into the shared guest package;
 that integration is a separate central review step.
 
-Coverage: **479 implemented / 2 declared / 0 deferred / 481 total**
+Coverage: **481 implemented / 0 declared / 0 deferred / 481 total**
 (above the large-partitioned floor of 50).
 
 ## What is real
@@ -40,8 +40,8 @@ exporter.
 
 - `RoomBuilder.capturedRoom(from:)` and `StructureBuilder.capturedStructure(from:)`
   throw `deviceNotSupported` (empty structure input throws `insufficientInput`).
-  Those two async identifiers are **declared**, not implemented: the sealed
-  runner has no run loop and cannot `await`.
+  Both are `async` and covered by `async` agent tests that the sealed runner
+  awaits; each throws immediately in-process with no run loop.
 - `RoomCaptureView` is an `NSObject` stand-in (UIKit is not a declared
   dependency). `init(coder:)` returns `nil`, `subviews` is empty, layout and
   trait callbacks are no-ops, and no miniature model is rendered.
@@ -52,7 +52,7 @@ exporter.
 ## Depth pass 2026-09
 
 Fresh seed: no prior sources, coverage, or agent tests. After this pass:
-**479 implemented / 2 declared / 0 deferred**.
+**481 implemented / 0 declared / 0 deferred**.
 
 Top-5 implemented evidence distribution:
 

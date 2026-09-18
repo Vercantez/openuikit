@@ -265,6 +265,49 @@ func testSecureCodingRoundTrip() {
             == CNContactGivenNameKey,
         "CNContactProperty nscoding"
     )
+
+}
+
+func testLabeledValueSecureCoding() {
+    final class DictionaryCoder: NSCoder {
+        var storage: [String: Any] = [:]
+        override var allowsKeyedCoding: Bool { true }
+        override func encode(_ object: Any?, forKey key: String) {
+            storage[key] = object
+        }
+        override func decodeObject(forKey key: String) -> Any? {
+            storage[key]
+        }
+    }
+
+    let phone = CNLabeledValue(label: CNLabelPhoneNumberMobile, value: CNPhoneNumber(stringValue: "+1-555-0100"))
+    let phoneCoder = DictionaryCoder()
+    phone.encode(with: phoneCoder)
+    let phoneBack = CNLabeledValue<CNPhoneNumber>(coder: phoneCoder)
+    expect(phoneBack?.label == CNLabelPhoneNumberMobile, "CNLabeledValue initWithCoder label")
+    expect(phoneBack?.value.stringValue == "+1-555-0100", "CNLabeledValue initWithCoder value")
+    expect(phoneBack?.identifier == phone.identifier, "CNLabeledValue initWithCoder identifier")
+
+    let email = CNLabeledValue(label: CNLabelHome, value: "ada@example.com" as NSString)
+    let emailCoder = DictionaryCoder()
+    email.encode(with: emailCoder)
+    let emailBack = CNLabeledValue<NSString>(coder: emailCoder)
+    expect(emailBack?.label == CNLabelHome, "CNLabeledValue string initWithCoder label")
+    expect((emailBack?.value as String?) == "ada@example.com", "CNLabeledValue string initWithCoder value")
+    expect(emailBack?.identifier == email.identifier, "CNLabeledValue string initWithCoder identifier")
+
+    let unlabeled = CNLabeledValue(label: nil, value: CNPhoneNumber(stringValue: "555"))
+    let unlabeledCoder = DictionaryCoder()
+    unlabeled.encode(with: unlabeledCoder)
+    expect(
+        CNLabeledValue<CNPhoneNumber>(coder: unlabeledCoder)?.label == nil,
+        "CNLabeledValue nil label round trip"
+    )
+
+    expect(
+        CNLabeledValue<CNPhoneNumber>(coder: DictionaryCoder()) == nil,
+        "CNLabeledValue initWithCoder rejects empty coder"
+    )
 }
 
 // --- ContactsConstantsTests.swift ---
@@ -1659,6 +1702,7 @@ func runContactsAgentTests() {
     testPostalAddressFormatter()
     testVCardSerialization()
     testSecureCodingRoundTrip()
+    testLabeledValueSecureCoding()
     testChangeHistoryFetchRequest()
     testContactStoreAuthorization()
     testContactStoreSaveAndFetch()

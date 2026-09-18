@@ -178,6 +178,39 @@ product compiles under `-warnings-as-errors`, all 30 unique cited
 tests pass (0 async), and the runner emits only the exact success
 marker.
 
+### Wave-14 leftover re-examination (2026-09-18, recount: no change)
+
+Recount before work: 665 implemented / 7 declared / 1 deferred /
+81 not-applicable of 754 IDs (leftover = 8). Recount after: identical —
+665 implemented / 7 declared / 1 deferred / 81 not-applicable.
+Implemented gain: +0; no honest promotion was available.
+
+Async-shaped leftover is 0: none of the 8 leftover rows completes
+in-process on the sealed Linux runner — 4 `#if !os(Linux)`-gated macros
+(absent from the Linux host module, so no cited test can expand them),
+2 Combine `publisher` witnesses (Combine is not a seeded host dependency;
+a framework-local substitute is forbidden), uninhabited
+`Never.generatedContent` (calling it traps; `Never.init` and
+`Never.generationSchema` stay implemented via
+`testNeverInitAlwaysThrows` / `testGenerablePrimitives`), and deferred
+`Adapter.isCompatible(_:)` (takes dependency-owned
+`BackgroundAssets.AssetPack`). Hardware/daemon/Siri/Apple Pay success
+stays fail-closed per contract. No SwiftUI View-overlay rows exist in
+this framework's coverage, so the overlay override does not apply.
+
+Re-pinned on the Xcode 26.1 macOS SDK with `xcrun swiftc -typecheck`
+(exit 0): `Transcript.publisher: Publishers.Sequence<Transcript, Never>`,
+`Transcript.ToolCalls.publisher` on `ToolCalls`, and
+`KeyPath<Never, GeneratedContent>` for `Never.generatedContent` —
+declarations confirmed on Apple without executing the trapping getter.
+
+Gate status unchanged: the shared validator is still blocked by the
+pre-existing missing `full/framework-roadmap/framework-roadmap.json`
+outside this lane. No product or test files were changed in this pass
+(README-only), so the wave-13 lane replication still stands: product
+compiles under `-warnings-as-errors`, all 30 unique cited tests pass
+(0 async), and the runner emits only the exact success marker.
+
 ### Linux stand-in contract
 
 Install with `SystemLanguageModel.installLinuxStandInForTesting()` and remove

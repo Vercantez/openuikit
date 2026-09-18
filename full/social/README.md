@@ -32,7 +32,11 @@ be imported. A build that `canImport` the canonical modules does not emit
 - `SLRequest` URLRequest construction (query/urlencoded and multipart), CR/LF/quote
   rejection, collision-checked multipart boundaries. `preparedURLRequest()` is
   nil when `account` is set (no OAuth signer). `perform(handler:)` does not
-  network.
+  network. Both initializer spellings work: the canonical
+  `init(forServiceType:requestMethod:url:parameters:)` and the Swift-3-obsoleted
+  capital-`URL:` spelling, which Linux keeps as a `@nonobjc` Swift-only shim
+  (no ObjC selector; Darwin obsoletes it, so Swift 6 clients there must use
+  the lowercase `url:` label).
 
 ## Fail-closed boundaries
 
@@ -49,6 +53,16 @@ share-extension host.
   `scratch/oracle-2026-09-14/social-service-types-2026-09-15.txt`).
   Covered by `tests/agent/SocialServiceTypesTests.swift`.
 
+## Coverage status (pi-wave14, 2026-09-18)
+
+Before: 66 implemented / 1 declared / 0 deferred / 0 not-applicable of 67.
+After: 67 implemented / 0 declared / 0 deferred / 0 not-applicable of 67
+(+1: the Swift-3-obsoleted `SLRequest` `...URL:parameters::SYNTHESIZED...`
+capital-`URL:` init, kept as a `@nonobjc` Swift-only shim and exercised by
+`tests/agent/SocialObsoletedURLLabelTests.swift#testSLRequestObsoletedURLLabel`
+plus a legacy/canonical parity test. Darwin obsoletes this spelling, so the
+note on that coverage row records the divergence.)
+
 ## Coverage status (pi-wave4, 2026-09-15)
 
 Before: 61 implemented / 6 declared / 0 deferred / 0 not-applicable of 67.
@@ -56,10 +70,10 @@ After: 66 implemented / 1 declared / 0 deferred / 0 not-applicable of 67
 (+5: the `SLServiceType*` constants, oracle-pinned and tested in
 `tests/agent/SocialServiceTypesTests.swift`).
 
-The one leftover `declared` row is the Swift-3-obsoleted
+The former leftover `declared` row (the Swift-3-obsoleted
 `SLRequest.init(forServiceType:requestMethod:URL:parameters:)` synthesized
-variant (`...URL:parameters:::SYNTHESIZED::...`): it compiles but is not
-callable from Swift 6, so no calling test can exist. Nothing is deferred.
+variant) is now `implemented` via the `@nonobjc` shim described above.
+Nothing is deferred.
 
 ## Still open
 

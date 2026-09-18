@@ -1,5 +1,5 @@
 precise	status	evidence	notes
-c:@CXCallDirectoryPhoneNumberMax	declared	source:full/callkit/CallKit.swift#CXCallDirectoryPhoneNumberMax	compiles as Int64.max; Apple payload unobserved in the sealed seed
+c:@CXCallDirectoryPhoneNumberMax	implemented	test:full/callkit/tests/agent/CXCallDirectoryTests.swift#testCXCallDirectoryPhoneNumberMax	Xcode 26.1 probe pins 9223372036854775806 (Int64.max - 1)
 c:@CXErrorDomain	implemented	test:full/callkit/tests/agent/CXErrorCodeTests.swift#testCXErrorDomainConstants	-
 c:@CXErrorDomainCallDirectoryManager	implemented	test:full/callkit/tests/agent/CXCallDirectoryErrorTests.swift#testCallDirectoryManagerErrorInitUserInfoAndCustomNSError	-
 c:@CXErrorDomainIncomingCall	implemented	test:full/callkit/tests/agent/CXIncomingCallErrorTests.swift#testIncomingCallErrorInitUserInfoAndCustomNSError	-

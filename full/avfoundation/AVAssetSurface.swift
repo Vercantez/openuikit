@@ -716,6 +716,7 @@ open class AVAssetTrack: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   weak var portableAsset: AVAsset?
   var portableRecord = AVLocalMediaTrack()
+  let trackLoadState = AVAssetLoadState()
 
   convenience init(portable record: AVLocalMediaTrack, asset: AVAsset) {
     self.init()

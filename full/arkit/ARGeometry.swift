@@ -137,6 +137,14 @@ open class ARGeometrySource: NSObject, NSSecureCoding {
         _ = index
         return (0, 0, 0)
     }
+
+    public subscript(index: Int32) -> CUnsignedChar {
+        // Classification-byte view of the same buffer. Host buffers are empty
+        // stand-ins, so out-of-range reads fail closed to zero. Swift resolves
+        // the two same-parameter subscripts by contextual result type.
+        _ = index
+        return 0
+    }
 }
 
 open class ARGeometryElement: NSObject, NSSecureCoding {

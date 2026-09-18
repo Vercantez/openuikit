@@ -23,15 +23,18 @@ module is importable, and text via `UITextView`. Other types show a metadata
 fallback. Proprietary preview generators and editing stay disabled. Hosts may
 replace presentation through the `OpenUIKitHost` SPI.
 
-SwiftUI `quickLookPreview` overloads are declared behind `canImport(SwiftUI)`
-and live in the overlay guest as well. The Foundation host gate does not compile
-SwiftUI.
+SwiftUI `quickLookPreview` overloads are implemented behind `canImport(SwiftUI)`
+via the portable presentation modifier in the overlay guest. The Foundation
+host gate does not compile SwiftUI, so `QuickLookHostTypes.swift` ships
+isolated-host `View`/`EmptyView`/`Binding` stand-ins with identity no-op
+overloads; building the view never presents synchronously and never mutates
+the selection binding.
 
 No app, package, or vendor source is patched.
 
 ## Depth pass 2026-09
 
-SDK depth for the 63 precise IDs: 61 implemented, 2 declared, 0 deferred.
+SDK depth for the 63 precise IDs: 63 implemented, 0 declared, 0 deferred.
 
 Implemented this pass:
 
@@ -55,6 +58,10 @@ Implemented this pass:
 - `QLPreviewingController` / `QLPreviewProvider`:
   `preparePreviewOfFile` / `preparePreviewOfSearchableItem` / `providePreview`
   fail closed with `CocoaError.featureUnsupported`.
+- SwiftUI `quickLookPreview` overloads (`_ item:` and `_ selection:in:`) are
+  covered by `QuickLookViewOverlayTests` (`testViewOverlayBatch01/02`):
+  construction on `EmptyView` performs no synchronous presentation and leaves
+  the selection binding untouched.
 - `QLPreviewReply` / `QLFilePreviewRequest` / `QLPreviewReplyAttachment`
   (`init(data:contentType:)`). Generator reply initializers store arguments and
   do not invoke drawing/data/PDF closures.

@@ -52,7 +52,10 @@ host, or CDN. Manager APIs that would talk to those services fail closed.
   `fileNotFound`. Isolated async members throw `assetPackNotFound` or
   `callerConnectionInvalid` and are covered by `await`ed fail-closed tests.
 - Actor isolation helpers (`assertIsolated` / `assumeIsolated` /
-  `preconditionIsolated`) trap off the actor and stay `declared`.
+  `preconditionIsolated`) are exercised on-executor via `await`ed isolated
+  helpers (`tests/agent/BackgroundAssetsActorIsolationTests.swift`); direct
+  off-executor calls trap and direct `assumeIsolated` calls from `async`
+  contexts are unavailable in Swift 6 language mode.
 - Async authentication-challenge methods return
   `(.performDefaultHandling, nil)` and are covered by `await`ed tests that
   construct a `URLAuthenticationChallenge` with a test sender.
@@ -61,9 +64,21 @@ host, or CDN. Manager APIs that would talk to those services fail closed.
   values used by the overlay signatures. ExtensionKit `AppExtension` is not a
   declared dependency; `BADownloaderExtension` does not inherit it.
 
+## Depth pass 2026-09 (wave 14)
+
+Implemented rows: **198**. Declared: **0**. Nondeferred: **198 / 198**.
+
+Wave 14 converted the 3 remaining declared rows (synthesized
+`AssetPackManager` actor-isolation helpers) with the sealed `@main async`
+runner: `tests/agent/BackgroundAssetsActorIsolationTests.swift` drives
+`assertIsolated` / `preconditionIsolated` on-executor through an isolated
+`agentWithIsolatedCheck` helper and `assumeIsolated` on-executor inside an
+isolated `agentVerifyAssumeIsolated` helper. Before: 195 implemented / 3
+declared / 0 deferred. After: 198 implemented / 0 declared / 0 deferred.
+
 ## Depth pass 2026-09 (wave 13)
 
-Implemented rows: **195**. Declared: **3**. Nondeferred: **198 / 198**.
+Implemented rows at the time: **195**. Declared: **3**. Nondeferred: **198 / 198**.
 
 Wave 13 used the sealed `@main async` runner, which `await`s top-level
 `func test*() async`, to convert 10 in-process async leftovers
@@ -71,8 +86,8 @@ Wave 13 used the sealed `@main async` runner, which `await`s top-level
 `AssetPackManager` async members (immediate fail-closed throws) and the four
 async `backgroundDownload` / `download` challenge overlays (immediate
 `(.performDefaultHandling, nil)` via a test-constructed
-`URLAuthenticationChallenge`). The 3 remaining declared rows are the
-synthesized actor-isolation helpers that trap off the actor.
+`URLAuthenticationChallenge`). The 3 actor-isolation helpers were converted
+in wave 14 (see above).
 
 ## Depth pass 2026-09 (wave 12)
 

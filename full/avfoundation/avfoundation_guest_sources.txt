@@ -24,5 +24,6 @@ full/avfoundation/AVPlayerLayerSurface.swift
 full/avfoundation/AVPlayerSurface.swift
 full/avfoundation/AVRestSurface.swift
 full/avfoundation/AVSampleSurface.swift
+full/avfoundation/AVTrackItemAsyncLoading.swift
 full/avfoundation/AVVideoSurface.swift
 full/avfoundation/AVWave12SyncTwins.swift

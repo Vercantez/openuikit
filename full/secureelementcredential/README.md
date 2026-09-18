@@ -6,7 +6,7 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **145 implemented / 3 declared / 7 unavailable / 0 not-applicable /
+Coverage: **148 implemented / 0 declared / 7 unavailable / 0 not-applicable /
 155 total** (148 nondeferred, above the medium-full floor of 78).
 
 ## What is real
@@ -52,8 +52,32 @@ sheet, or presentment authorization UI.
   and still throws `featureUnavailable` (async; `implemented` via
   `testEndCardEmulationThrows`).
 - Actor isolation witnesses (`assertIsolated`, `assumeIsolated`,
-  `preconditionIsolated`) are `declared`: they trap off-actor, and the
-  sealed runner has no isolation hop.
+  `preconditionIsolated`) trap off-actor, so each `implemented` test first
+  hops onto the actor by awaiting an isolated helper, then calls its
+  witness while isolated (`tests/agent/ActorIsolationTests.swift`).
+
+## Wave14 pass 2026-09-18
+
+Converted the last 3 `declared` rows (before: 145 implemented / 3 declared
+/ 7 unavailable / 0 not-applicable; after: 148 implemented / 0 declared /
+7 unavailable / 0 not-applicable, gain +3). Direct off-actor calls to
+`assertIsolated` / `assumeIsolated` / `preconditionIsolated` trap even in
+release builds (verified with a local `swiftc` probe: "Incorrect actor
+executor assumption"), so each new async test in
+`tests/agent/ActorIsolationTests.swift` awaits an isolated
+`runIsolated(_:)` helper — declared as an `extension CredentialSession` in
+the test file, so no product surface was added — then calls its witness
+from inside the `(isolated CredentialSession)` closure while running on
+the session actor. Each test cites exactly one row. Overlay override
+checked: no identity `Self`-returning SwiftUI `View` modifiers exist —
+`View.transactionTask` returns `some View` and requires SwiftUI, and the
+three UIKit scene overlays require `UIScene`; they correctly stay
+`unavailable`. No stdlib/Foundation protocol-witness n/a rows to preserve
+(the `Actor` witnesses are now genuinely exercised, not relabeled).
+Product sources recompile clean under `swiftc -warnings-as-errors`
+(exit 0); a lane-local `@main async` runner over all cited tests exits 0
+emitting only the exact marker; cited agent tests contain no
+`DispatchQueue.main`/`RunLoop`/semaphore.
 
 ## Wave13 pass 2026-09-18
 

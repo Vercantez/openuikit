@@ -41,6 +41,37 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 20 | 5267 | 171 | 1130 | 0 | 18 | 5438 |
 | After wave 21 | 5278 | 163 | 1127 | 0 | 18 | 5441 |
 | After wave 22 | 5402 | 39 | 1127 | 0 | 18 | 5441 |
+| After wave 23 | 5402 | 39 | 1127 | 0 | 18 | 5441 |
+
+Wave 23 (this increment) audits all 39 remaining declared rows and converts
+none: every one is uncallable, lane-owned, or kept out by an inference
+constraint, so before/after counts are identical (5402 / 39 / 1127 / 18,
+gain 0). No SwiftUI `s:7SwiftUI…` overlay rows remain declared, so the
+overlay override is already satisfied. The 39 break down as: 6 `schema(_:)`
+spellings (`AppEnum` / `AppEntity` / `AppIntent` plus `AssistantEnum` /
+`AssistantEntity` / `AssistantIntent`) on the macro surface with no host
+plugin; 7 SwiftUI-lane `requestChoice` / `requestConfirmation` `view` /
+`content` overloads (`AppIntent` 3, `IntentParameter` 2,
+`IntentParameterContext` 2) needing a SwiftUI `View`; 5 shadowed
+`perform` / `performs` refinements (`OpenIntent` 1,
+`TargetContentProvidingIntent` 2, `URLRepresentableIntent` 2) whose
+protocol-extension default no test can reach past a conformer's own
+`perform`, plus 2 UIKit-lane `UISceneAppIntent` `perform` spellings (none
+of these four protocols has host source); 6 `IntentResultContainer`
+`result()` / `result(dialog:)` bases plus synthesized witnesses, kept out
+so `IntentResultValue` inference stays unambiguous; 5 stdlib/Foundation
+synthesized witnesses (`IntegerFormatStyle` 3, parse `strategy` 2) with no
+AppIntents anchor; `Never.init()` (calling traps) plus async
+`Never.perform()` (no inhabitant to call it on); 2
+`ParameterSummaryWhenCondition` `ExpressibleByNilLiteral` overloads that
+are indistinguishable redeclarations of the implemented value-based
+arities; `EntityIdentifier.entityType` (metatype unrecoverable from the
+stored type-name string on a Codable struct), `StartWorkoutIntent.init(style:)`
+(no init requirement; no host source), the `EnumerableEntityQuery`
+`suggestedEntities` default (the witness resolves to `EntityQuery`'s `[]`
+default; guessing `allEntities` invents behavior), and
+`AppIntentsExtension.configuration` (dependency-owned `AppExtension`).
+No product source, manifest, or oracle change; this pass touches README only.
 
 Wave 22 (this increment) converts 124 rows with seventeen async tests in
 `tests/agent/AppIntentsWave22Tests.swift` (largest cites 18), now that the

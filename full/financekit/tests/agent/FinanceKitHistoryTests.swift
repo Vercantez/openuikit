@@ -125,11 +125,31 @@ func testHistoryFlatMapThrowing() {
     financeKitSink(flattened)
 }
 
-func testHistoryFlatMapNeverNever() {
-    // History.next() throws, so the Failure == Never overlay is not callable.
-    // The identifier remains declared; this test keeps the History AsyncSequence
-    // surface loadable.
-    financeKitSink(FinanceStore.shared.accountHistory())
+func testHistoryFlatMapNeverNever() async {
+    // Covers the AsyncSequence.flatMap overlay constrained to
+    // `Self.Failure == Never, SegmentOfResult.Failure == Never`.
+    // History.Failure == Error because Iterator.next() throws
+    // FinanceError.dataRestricted fail-closed, so that extra-constrained
+    // overload is never the resolved candidate; this test calls the
+    // `flatMap` identifier on History with a Never-failure segment and
+    // proves the flattened sequence stays fail-closed end to end.
+    let flattened = FinanceStore.shared.accountHistory().flatMap { _ -> AsyncStream<Int> in
+        AsyncStream { continuation in
+            continuation.finish()
+        }
+    }
+    financeKitSink(flattened)
+    do {
+        for try await value in flattened {
+            financeKitSink(value)
+            financeKitExpect(false, "flattened history must not yield elements")
+        }
+        financeKitExpect(false, "flattened history must throw dataRestricted")
+    } catch let error as FinanceError {
+        financeKitExpect(error == .dataRestricted(.financialData))
+    } catch {
+        financeKitExpect(false, "unexpected flattened history error")
+    }
 }
 
 func testChangesProperties() {

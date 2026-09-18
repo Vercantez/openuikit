@@ -46,7 +46,7 @@ Apple drawing bytes stay fail-closed.
 
 ## Coverage
 
-443 public precise identifiers: 438 `implemented`, 3 `declared`, 2
+443 public precise identifiers: 439 `implemented`, 2 `declared`, 2
 `unavailable`. The leaf-full floor is 355 nondeferred.
 
 A future EC2 run must build guest Foundation and UIKit first and run
@@ -104,3 +104,26 @@ each exercised on `PKStrokePath` and `InterpolatedSlice` in
 `PKDrawing.draw` is `async` (isolated tests cannot `await`) and the two
 `compare(_:_:)` witnesses require `PKStrokePoint` itself to conform to
 `SortComparator`, which would invent non-Apple API.
+
+## Depth pass 2026-09 (wave 14)
+
+Recount before: 438 `implemented` / 3 `declared` / 0 `deferred` /
+2 `unavailable` (443 total). Recount after: 439 `implemented` /
+2 `declared` / 0 `deferred` / 2 `unavailable` — implemented
+gain **+1**.
+
+- `PKDrawing.draw(in:frame:from:darkUserInterfaceStyle:)` became
+  `implemented` via new `async` test
+  `testPKDrawingDrawAsyncNoOp` in `tests/agent/PKDrawingTests.swift`:
+  the sealed runner now awaits `func test*() async`, so the test awaits
+  two `draw` calls (default and `darkUserInterfaceStyle: true`) on a
+  real bitmap `CGContext` under `canImport(CoreGraphics)` (host
+  `PencilKitContext` otherwise) and asserts the drawing is unchanged.
+  The replay stays fail-closed: no ink pixels are invented.
+- The two `Sequence.compare(_:_:)` witnesses (`PKStrokePath`,
+  `InterpolatedSlice`) stay `declared`. Re-verified with an `xcrun swiftc`
+  probe on Xcode 26.1: `compare` requires `Element: SortComparator` with
+  `(Element.Compared, Element.Compared)` arguments, and `PKStrokePoint`
+  is not a `SortComparator`. Calling them would require inventing
+  `Hashable` + `SortComparator` conformances on `PKStrokePoint` —
+  non-Apple API — so they remain honestly declared.

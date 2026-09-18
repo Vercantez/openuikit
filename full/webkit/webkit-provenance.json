@@ -121,7 +121,7 @@
     },
     {
       "path": "full/webkit/WebKitPage.swift",
-      "sha256": "62a23d08ec785590a3eac7ad986c4e2a375ea1cc2366d5cac9d8f5f924bdd45e"
+      "sha256": "3b7e2ca1ef7f5fbda5fb659cc403da6cacb23a68f0079bb8974c3d22c1f108e9"
     },
     {
       "path": "full/webkit/WebKitPageHistory.swift",

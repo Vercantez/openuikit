@@ -722,7 +722,7 @@ s:So15ARRaycastTargetV8rawValueABSgSi_tcfc	implemented	test:full/arkit/tests/age
 s:So16ARAltitudeSourceV8rawValueABSgSi_tcfc	implemented	test:full/arkit/tests/agent/ARKitEnumTests.swift#testAnchorEnumCases	Focused Linux host assertion.
 s:So16ARFrameSemanticsV8rawValueABSu_tcfc	implemented	test:full/arkit/tests/agent/ARKitOptionSetTests.swift#testFrameSemanticsMembers	Option-set members and inits.
 s:So16ARGeometrySourceC5ARKitEySf_S2fts5Int32Vcip	implemented	test:full/arkit/tests/agent/ARKitGeometryTests.swift#testMeshGeometrySources	Focused Linux host assertion.
-s:So16ARGeometrySourceC5ARKitEys5UInt8Vs5Int32Vcip	declared	source:full/arkit/ARGeometry.swift#ARGeometrySource	Overlapping UInt8 subscript cannot be expressed beside the float3 subscript.
+s:So16ARGeometrySourceC5ARKitEys5UInt8Vs5Int32Vcip	implemented	test:full/arkit/tests/agent/ARKitGeometryTests.swift#testGeometrySourceClassificationBytes	UInt8 classification-byte overload beside the float3 subscript; Linux host assertion.
 s:So16ARPlaneDetectionV8rawValueABSu_tcfc	implemented	test:full/arkit/tests/agent/ARKitOptionSetTests.swift#testPlaneDetectionMembers	Option-set members and inits.
 s:So16ARWorldAlignmentV8rawValueABSgSi_tcfc	implemented	test:full/arkit/tests/agent/ARKitEnumTests.swift#testWorldAlignmentAndTexturingCases	Focused Linux host assertion.
 s:So17ARConfidenceLevelV5ARKitE1loiySbAB_ABtFZ	implemented	test:full/arkit/tests/agent/ARKitEnumTests.swift#testConfidenceLevelComparable	Focused Linux host assertion.

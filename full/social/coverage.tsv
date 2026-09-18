@@ -50,7 +50,7 @@ c:objc(cs)SLComposeViewController(py)completionHandler	implemented	SLComposeView
 c:objc(cs)SLComposeViewController(py)serviceType	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Stored on isolated-host instance.
 c:objc(cs)SLRequest	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	NSObject request builder; no networking.
 c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	init!(forServiceType:requestMethod:url:parameters:).
-c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:::SYNTHESIZED::c:objc(cs)SLRequest	declared	SLRequest.swift	Swift-3-obsoleted URL: label; compiles, not callable from Swift 6.
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:::SYNTHESIZED::c:objc(cs)SLRequest	implemented	test:full/social/tests/agent/SocialObsoletedURLLabelTests.swift#testSLRequestObsoletedURLLabel	Swift-3-obsoleted URL: label on Darwin; Linux keeps it as a @nonobjc Swift-only shim over the same stored behavior, called directly with the capital URL: label.
 c:objc(cs)SLRequest(im)addMultipartData:withName:type:filename:	implemented	SLRequest.swift;SocialRuntime.swift:assertMultipart	Rejects CR/LF/quote metadata; stores safe parts.
 c:objc(cs)SLRequest(im)performRequestWithHandler:	implemented	SLRequest.swift;SocialRuntime.swift:assertPerformFailClosed	Async fail-closed; no HTTP.
 c:objc(cs)SLRequest(im)preparedURLRequest	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface;assertAccountFailClosed;assertMultipart	Nil when account set or URL/metadata invalid.

@@ -54,6 +54,15 @@ token, incoming APNs payload, or successful registration.
 - `PKVoIPPushMetadata` / `didReceiveIncomingVoIPPush` appear in later macios
   bindings (iOS 26.4) and are absent from this iPhoneOS 26.1 seed.
 
+## Coverage (wave 14)
+
+24 precise identifiers: 24 implemented / 0 declared / 0 deferred
+(was 22 implemented / 2 declared / 0 deferred). The two leftovers — the
+deprecated `didReceiveIncomingPushWithPayload:forType:` path and the
+synthesized `PKPushType.hashValue` — are now exercised in-process by
+`tests/agent/PushKitDeclaredTests.swift` (`testDeprecatedIncomingPushPath`,
+`testPushTypeHashValue`). No deferred rows remain.
+
 ## Still open
 
 See `oracle-questions.tsv` for NSString payloads, nil-queue identity,

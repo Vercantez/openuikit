@@ -45,8 +45,8 @@ not integrated Linux success.
   `provider(_:didDeactivate:)` are omitted: the isolated host gate cannot
   `import AVFoundation`, and a module-local `AVAudioSession` would collide
   with the first-party type. Those exact IDs are `deferred`.
-- `CXCallDirectoryPhoneNumberMax` compiles as `Int64.max`. Apple's exact
-  payload is unobserved in the sealed seed; the row is `declared`.
+- `CXCallDirectoryPhoneNumberMax` is pinned by an Xcode 26.1 `import CallKit`
+  probe (`xcrun swiftc`) to `9223372036854775806` (`Int64.max - 1`).
 - Translation languages are stored strings; no Apple translation engine runs.
 
 ## Tests
@@ -60,7 +60,7 @@ evidence anchors.
 Coverage before this pass: **313 implemented / 51 declared / 2 deferred /
 0 unavailable / 0 not-applicable**.
 
-Coverage after this pass: **363 implemented / 1 declared / 2 deferred /
+Coverage after this pass: **364 implemented / 0 declared / 2 deferred /
 0 unavailable / 0 not-applicable**.
 
 Raised to `implemented`: NSCoder round-trips for actions and
@@ -68,11 +68,10 @@ Raised to `implemented`: NSCoder round-trips for actions and
 (equality, hash, `userInfo`, `init(_:userInfo:)`), and
 `provider(_:timedOutPerforming:)` via a past-`timeoutDate` state machine.
 
-Still `declared`: `CXCallDirectoryPhoneNumberMax` (integer payload
-unobserved). Still `deferred`: audio-session delegate methods (no
+Still `declared`: none. Still `deferred`: audio-session delegate methods (no
 `AVAudioSession` in the isolated gate).
 
-Top-5 evidence distribution among the 363 `implemented` rows:
+Top-5 evidence distribution among the 364 `implemented` rows:
 
 1. `CXCallDirectoryErrorTests.swift#testCallDirectoryManagerErrorCodeRawValues` — 12 (3.3%)
 2. `CXRequestTransactionErrorTests.swift#testRequestTransactionErrorCodeRawValues` — 12 (3.3%)

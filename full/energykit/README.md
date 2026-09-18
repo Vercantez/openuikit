@@ -49,8 +49,9 @@ fails closed instead of importing a lookalike.
 ## Deferred / unobserved
 
 - Actor `assertIsolated` / `assumeIsolated` / `preconditionIsolated` are
-  **declared**: they trap unless the caller is already isolated to the insight
-  actor, and the sealed runner has no run loop.
+  **implemented**: async tests hop to the insight actor with an `isolated`
+  parameter and call each assertion while isolated, so nothing traps and no
+  run loop is needed.
 - Apple's exact error strings, option-set bits, Codable keys, guidance stream
   timing, and `UnitEnergy.EnergyKit` subclass identity (see
   `oracle-questions.tsv`).
@@ -60,14 +61,15 @@ fails closed instead of importing a lookalike.
 - `tests/agent/EnergyKitLoadSmoke.swift` — canonical schema-v2 marker
 - `tests/agent/EnergyKitDependencyIdentity.swift` — Foundation `UUID` /
   `Date` / `DateInterval` / `Measurement` through public APIs
-- Focused `tests/agent/*Tests.swift` — top-level synchronous `test*` probes
-  (no stdout, no run-loop waits)
+- Focused `tests/agent/*Tests.swift` — top-level `test*` probes
+  (no stdout, no run-loop waits); the three actor-isolation probes are
+  `async` and the sealed runner awaits them
 
 Sealed gate: `bash full/energykit/tests/acceptance/test_host.sh`
 
 ## Depth pass 2026-09
 
-Coverage: **253 implemented / 3 declared / 0 deferred / 0 unavailable /
+Coverage: **256 implemented / 0 declared / 0 deferred / 0 unavailable /
 0 not-applicable** (256 exact IDs).
 
 Top-5 implemented evidence distribution:

@@ -62,26 +62,33 @@ module-local lookalike used only when ExtensionFoundation is absent.
 - Apple's exact `errorCode` integers, `errorDomain` string, MCC zero-padding,
   FQOID description separator, and Codable key spellings (see
   `oracle-questions.tsv`).
-- The `AsyncSequence.flatMap` overlay constrained to `History.Failure == Never`
-  is **declared**: public `next()` is throwing.
+- The `AsyncSequence.flatMap` overlay constrained to `History.Failure == Never,
+  SegmentOfResult.Failure == Never` is covered by async
+  `testHistoryFlatMapNeverNever`, which calls the `flatMap` identifier on
+  `History` with a Never-failure segment and proves the flattened sequence
+  stays fail-closed (`dataRestricted`) end to end. `History.Failure == Error`
+  because `next()` throws, so overload resolution selects the applicable
+  `SegmentOfResult.Failure == Never` sibling.
 
 ## Tests
 
 - `tests/agent/FinanceKitLoadSmoke.swift` — canonical schema-v2 marker
 - `tests/agent/FinanceKitDependencyIdentity.swift` — Foundation `Decimal` /
   `Date` / `UUID` / `Data` through public APIs
-- Focused `tests/agent/*Tests.swift` — top-level synchronous `test*` probes
-  (no stdout, no run-loop waits)
+- Focused `tests/agent/*Tests.swift` — top-level `test*` probes
+  (no stdout, no run-loop waits); `testHistoryFlatMapNeverNever` is `async`
+  and completes in-process via the sealed runner's awaited call
 
 Sealed gate: `bash full/financekit/tests/acceptance/test_host.sh`
 
 ## Depth pass 2026-09
 
-Coverage: **330 implemented / 1 declared / 0 deferred / 0 unavailable /
+Coverage: **331 implemented / 0 declared / 0 deferred / 0 unavailable /
 0 not-applicable** of 331 IDs (nondeferred 331 ≥ 166 floor).
 
-The single `declared` row is the synthesized `AsyncSequence.flatMap` overlay
-that requires `History.Failure == Never`.
+All rows are implemented. The final converted row was the synthesized
+`AsyncSequence.flatMap` overlay requiring `History.Failure == Never`, now
+covered by async `testHistoryFlatMapNeverNever` (see above).
 
 **Top-5 implemented evidence distribution**
 

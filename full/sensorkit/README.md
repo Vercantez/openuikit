@@ -51,8 +51,8 @@ Linux has no SensorKit daemon, Research app, or Apple Watch/iPhone sensors.
 
 ## Depth pass 2026-09
 
-- Implemented: **699** of 705 exact IDs (plus 1 `declared`, 5 `unavailable`)
-- Nondeferred: **700** (floor 353)
+- Implemented: **700** of 705 exact IDs (plus 0 `declared`, 5 `unavailable`)
+- Nondeferred: **705** (floor 353)
 - Top-5 `implemented` evidence distribution:
   1. 53 × `tests/agent/SRAcousticSettingsTests.swift#testAcousticSettingsEnums`
   2. 49 × `tests/agent/SRKeyboardMetricsTests.swift#testKeyboardProbabilityMetrics`
