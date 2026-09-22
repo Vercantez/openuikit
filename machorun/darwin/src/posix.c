@@ -2693,6 +2693,37 @@ EXPORT int madvise(void *addr, size_t len, int advice)
     return MR_ERRNO_CALL(glibc_madvise(addr, len, l));
 }
 
+/* --- posix_madvise: Darwin's convention, not POSIX's -------------------- */
+
+/* Reached by the iOS-simulator guest: swift-foundation-icu's iOS branch maps
+ * its data and advises it (docs/agent_reports/ios-target-route.md). MEASURED
+ * on macOS 26 and the iOS 26.1 simulator, identical
+ * (tests/src/posix_madvise.c, tests/expected/posix_madvise.stdout):
+ *
+ *   advice 0..4 (NORMAL..DONTNEED) agree with glibc's POSIX_MADV_* values;
+ *   an invalid advice returns -1 and sets errno EINVAL -- madvise's
+ *     convention. glibc returns the error number and leaves errno alone;
+ *   an unaligned address succeeds. Linux EINVALs it, so the range is widened
+ *     down to the host page;
+ *   DONTNEED keeps the contents. glibc's posix_madvise ignores DONTNEED for
+ *     that reason (madvise's MADV_DONTNEED would zero a private page), so
+ *     forwarding to posix_madvise, not madvise, is what keeps it. */
+EXPORT int posix_madvise(void *addr, size_t len, int advice)
+{
+    if (advice < 0 || advice > 4) {
+        *mr_errno_slot() = 22;             /* Darwin EINVAL */
+        return -1;
+    }
+    uintptr_t page = (uintptr_t)glibc_getpagesize();
+    uintptr_t a = (uintptr_t)addr, start = a & ~(page - 1);
+    int rc = glibc_posix_madvise((void *)start, len + (size_t)(a - start), advice);
+    if (rc != 0) {
+        *mr_errno_slot() = darwin_from_linux_errno(rc);
+        return -1;
+    }
+    return 0;
+}
+
 /* --- pwrite and the two pthread_attr entries ----------------------------- */
 
 /* The only genuinely plain forward in the group: off_t is 8 bytes on both, the

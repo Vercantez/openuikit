@@ -288,6 +288,8 @@ extern long    glibc_recvfrom(int, void *, size_t, int, void *, unsigned *)     
 extern int     glibc_inet_pton(int, const char *, void *)   GLIBCSYM(inet_pton);
 extern const char *glibc_inet_ntop(int, const void *, char *, unsigned) GLIBCSYM(inet_ntop);
 extern int     glibc_madvise(void *, size_t, int)           GLIBCSYM(madvise);
+extern int     glibc_posix_madvise(void *, size_t, int)     GLIBCSYM(posix_madvise);
+extern int     glibc_getpagesize(void)                     GLIBCSYM(getpagesize);
 extern long    glibc_pwrite(int, const void *, size_t, long) GLIBCSYM(pwrite);
 extern int     glibc_pthread_attr_init(void *)              GLIBCSYM(pthread_attr_init);
 extern int     glibc_pthread_attr_destroy(void *)           GLIBCSYM(pthread_attr_destroy);

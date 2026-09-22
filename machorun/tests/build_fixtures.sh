@@ -369,6 +369,12 @@ fi
 # MADV_FREE, the only one libdispatch uses -- does not.
 want fcntl_madvise    && build fcntl_madvise    "$CHAINED_TARGET" fcntl_madvise    fcntl_madvise.c --
 
+# --------------------------------------------------------------- the `posix_madvise` rung
+# Reached by the iOS-simulator guest: swift-foundation-icu's iOS branch calls
+# posix_madvise. Darwin returns -1/errno (not POSIX's error number), accepts an
+# unaligned address, and keeps DONTNEED pages (docs/agent_reports/ios-target-route.md).
+want posix_madvise    && build posix_madvise    "$CHAINED_TARGET" posix_madvise    posix_madvise.c --
+
 # --------------------------------------------------------------- the `pthread_attr` rung
 # The pthread_attr surface, where the SAFE-LOOKING direction is the broken one:
 # Darwin's PTHREAD_CREATE_JOINABLE is 1 and glibc's 1 is DETACHED, so a forward
