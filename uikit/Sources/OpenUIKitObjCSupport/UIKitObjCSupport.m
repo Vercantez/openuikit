@@ -8,6 +8,15 @@
 
 #import "UIKitObjCSupport.h"
 
+/* Build-time check that UI_APPEARANCE_SELECTOR is defined the way Objective-C
+ * pods use it (a property annotation); without the macro this is a parse
+ * error, as it was for SVProgressHUD 2.2.3's 42 declarations. */
+@interface _OUKAppearanceSelectorCheck : NSObject
+@property (nonatomic) NSInteger value UI_APPEARANCE_SELECTOR;
+@end
+@implementation _OUKAppearanceSelectorCheck
+@end
+
 const UIEdgeInsets UIEdgeInsetsZero = {0, 0, 0, 0};
 const NSDirectionalEdgeInsets NSDirectionalEdgeInsetsZero = {0, 0, 0, 0};
 
