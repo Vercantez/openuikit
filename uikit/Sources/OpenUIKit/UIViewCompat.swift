@@ -180,6 +180,9 @@ extension UIView {
 // MARK: - Semantic content direction
 
 /// Raw values match UIKit's `UISemanticContentAttribute`.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UISemanticContentAttribute: Int, Sendable {
     case unspecified = 0
     case playback = 1
@@ -322,8 +325,9 @@ extension UIView {
             // style was effective before and after an inherited host change,
             // so rebuild that child's previous environment before filtering.
             var childPrevious = previous
-            if subview.overrideUserInterfaceStyle != .unspecified {
-                childPrevious.userInterfaceStyle = subview.overrideUserInterfaceStyle
+            let childStyle = subview.overrideUserInterfaceStyle
+            if childStyle != .unspecified {
+                childPrevious = previous._with { $0.userInterfaceStyle = childStyle }
             }
             subview._traitsDidChange(previous: childPrevious)
         }

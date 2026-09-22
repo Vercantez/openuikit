@@ -19,11 +19,26 @@
 // `sendActions(for:)` invokes every registration whose event set intersects
 // the sent events (UIKit semantics).
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIControl)
+#endif
 @preconcurrency @MainActor
 open class UIControl: UIView {
     /// UIKit's legacy control-content alignment values and raw values.
     /// They remain the layout contract for unconfigured UIButton instances
     /// used by older applications.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UIControlContentVerticalAlignment)
+#endif
     public enum ContentVerticalAlignment: Int, Sendable {
         case center = 0
         case top = 1
@@ -31,6 +46,9 @@ open class UIControl: UIView {
         case fill = 3
     }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UIControlContentHorizontalAlignment)
+#endif
     public enum ContentHorizontalAlignment: Int, Sendable {
         case center = 0
         case left = 1
@@ -40,13 +58,19 @@ open class UIControl: UIView {
         case trailing = 5
     }
 
-    open var contentVerticalAlignment: ContentVerticalAlignment = .center {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var contentVerticalAlignment: ContentVerticalAlignment = .center {
         didSet {
             if contentVerticalAlignment != oldValue { setNeedsLayout() }
         }
     }
 
-    open var contentHorizontalAlignment: ContentHorizontalAlignment = .center {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var contentHorizontalAlignment: ContentHorizontalAlignment = .center {
         didSet {
             if contentHorizontalAlignment != oldValue { setNeedsLayout() }
         }
@@ -54,7 +78,10 @@ open class UIControl: UIView {
 
     /// Resolve logical leading/trailing through the receiver's semantic
     /// direction. UIKit guarantees this property returns a physical value.
-    open var effectiveContentHorizontalAlignment: ContentHorizontalAlignment {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var effectiveContentHorizontalAlignment: ContentHorizontalAlignment {
         switch contentHorizontalAlignment {
         case .leading:
             return effectiveUserInterfaceLayoutDirection == .rightToLeft
@@ -107,17 +134,71 @@ open class UIControl: UIView {
         public static let allEvents = Event(rawValue: 0xFFFF_FFFF)
     }
 
-    open var isEnabled: Bool = true {
-        didSet { if isEnabled != oldValue { stateDidChange() } }
+    /// Backing store; the property below carries UIKit's Objective-C
+    /// spelling (`getter=isEnabled`, `setEnabled:`) so an Objective-C
+    /// subclass's `-setEnabled:` override is what Swift-side sets reach.
+    final var _isEnabledStorage: Bool = true
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(enabled)
+#endif
+    open dynamic var isEnabled: Bool {
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(isEnabled)
+#endif
+        get { _isEnabledStorage }
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(setEnabled:)
+#endif
+        set {
+            let oldValue = _isEnabledStorage
+            _isEnabledStorage = newValue
+            if isEnabled != oldValue { stateDidChange() }
+        }
     }
-    open var isSelected: Bool = false {
-        didSet { if isSelected != oldValue { stateDidChange() } }
+    /// Backing store; the property below carries UIKit's Objective-C
+    /// spelling (`getter=isSelected`, `setSelected:`) so an Objective-C
+    /// subclass's `-setSelected:` override is what Swift-side sets reach.
+    final var _isSelectedStorage: Bool = false
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(selected)
+#endif
+    open dynamic var isSelected: Bool {
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(isSelected)
+#endif
+        get { _isSelectedStorage }
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(setSelected:)
+#endif
+        set {
+            let oldValue = _isSelectedStorage
+            _isSelectedStorage = newValue
+            if isSelected != oldValue { stateDidChange() }
+        }
     }
-    open var isHighlighted: Bool = false {
-        didSet { if isHighlighted != oldValue { stateDidChange() } }
+    /// Backing store; the property below carries UIKit's Objective-C
+    /// spelling (`getter=isHighlighted`, `setHighlighted:`) so an Objective-C
+    /// subclass's `-setHighlighted:` override is what Swift-side sets reach.
+    final var _isHighlightedStorage: Bool = false
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(highlighted)
+#endif
+    open dynamic var isHighlighted: Bool {
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(isHighlighted)
+#endif
+        get { _isHighlightedStorage }
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(setHighlighted:)
+#endif
+        set {
+            let oldValue = _isHighlightedStorage
+            _isHighlightedStorage = newValue
+            if isHighlighted != oldValue { stateDidChange() }
+        }
     }
 
-    open var state: State {
+    public final var state: State {
         var s: State = .normal
         if !isEnabled { s.insert(.disabled) }
         if isHighlighted { s.insert(.highlighted) }
@@ -126,14 +207,17 @@ open class UIControl: UIView {
     }
 
     /// Hook for subclasses: any of enabled/selected/highlighted changed.
-    open func stateDidChange() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func stateDidChange() {
         setNeedsLayout()
     }
 
     // MARK: Tracking state
 
-    public internal(set) var isTracking = false
-    public internal(set) var isTouchInside = false
+    public internal(set) final var isTracking = false
+    public internal(set) final var isTouchInside = false
 
     // MARK: Target-action
 
@@ -149,13 +233,13 @@ open class UIControl: UIView {
         weak var target: AnyObject?
         let action: Selector?
     }
-    var targets: [Target] = []
-    private var nextToken = 0
+    final var targets: [Target] = []
+    private final var nextToken = 0
 
     /// Register `handler` for every control event in `controlEvents`.
     /// Returns a token for `removeTarget(_:)`.
     @discardableResult
-    public func addTarget(for controlEvents: Event,
+    public final func addTarget(for controlEvents: Event,
                           _ handler: @escaping ActionHandler) -> Int {
         nextToken += 1
         targets.append(Target(token: nextToken, events: controlEvents,
@@ -164,7 +248,7 @@ open class UIControl: UIView {
     }
 
     /// Remove a closure registration by the token `addTarget(for:_:)` returned.
-    public func removeTarget(_ token: Int) {
+    public final func removeTarget(_ token: Int) {
         targets.removeAll { $0.token == token }
     }
 
@@ -182,7 +266,7 @@ open class UIControl: UIView {
     /// `rightBtnTarget: Any?`) and would not compile against a narrower one.
     /// A non-class target cannot be held weakly, so it is dropped — UIKit
     /// traps on one instead, but only after the same registration is useless.
-    public func addTarget(_ target: Any?, action: Selector,
+    public final func addTarget(_ target: Any?, action: Selector,
                           for controlEvents: Event) {
         nextToken += 1
         targets.append(Target(token: nextToken, events: controlEvents,
@@ -193,7 +277,7 @@ open class UIControl: UIView {
     /// UIKit's `removeTarget(_:action:for:)`. `nil` matches any target /
     /// any action; only the named event bits are unregistered, and a
     /// registration keeps any bits that were not named.
-    public func removeTarget(_ target: Any?, action: Selector?,
+    public final func removeTarget(_ target: Any?, action: Selector?,
                              for controlEvents: Event) {
         // `flatMap`, not `as?`: `Optional<Any>.none as? AnyObject` bridges the
         // empty optional to NSNull on Darwin, so a plain `removeTarget(nil,
@@ -212,16 +296,16 @@ open class UIControl: UIView {
 
     /// Drop selector registrations whose weak target has deallocated (UIKit
     /// does this implicitly; we do it lazily, before each send).
-    func pruneDeadTargets() {
+    final func pruneDeadTargets() {
         targets.removeAll { $0.handler == nil && $0.target == nil }
     }
 
-    public var allControlEvents: Event {
+    public final var allControlEvents: Event {
         pruneDeadTargets()
         return targets.reduce(Event()) { $0.union($1.events) }
     }
 
-    public func sendActions(for controlEvents: Event, with event: UIEvent? = nil) {
+    public final func sendActions(for controlEvents: Event, with event: UIEvent? = nil) {
         pruneDeadTargets()
         for t in targets where !t.events.intersection(controlEvents).isEmpty {
             if let handler = t.handler {
@@ -238,14 +322,14 @@ open class UIControl: UIView {
     /// UIKit's `addAction(_:for:)`. Modern code-based UIKit wires controls
     /// this way instead of with a selector, which is why `UIAction` alone is
     /// worth 69 uses in the census (docs/APP_COMPAT.md).
-    public func addAction(_ action: UIAction, for controlEvents: Event) {
+    public final func addAction(_ action: UIAction, for controlEvents: Event) {
         let token = addTarget(for: controlEvents) { control, _ in
             action.performWithSender(control, target: nil)
         }
         _actions.append((action, controlEvents, token))
     }
 
-    public func removeAction(_ action: UIAction, for controlEvents: Event) {
+    public final func removeAction(_ action: UIAction, for controlEvents: Event) {
         for entry in _actions
         where entry.action === action && entry.events == controlEvents {
             removeTarget(entry.token)
@@ -255,15 +339,27 @@ open class UIControl: UIView {
 
     /// Registered UIActions, in registration order (UIKit exposes
     /// `enumerateEventHandlers`; this is the honest small version).
-    public var actions: [UIAction] { _actions.map(\.action) }
-    var _actions: [(action: UIAction, events: Event, token: Int)] = []
+    public final var actions: [UIAction] { _actions.map(\.action) }
+    final var _actions: [(action: UIAction, events: Event, token: Int)] = []
 
     // MARK: Tracking overrides (subclass API, UIKit signatures)
 
-    open func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { true }
-    open func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { true }
-    open func endTracking(_ touch: UITouch?, with event: UIEvent?) {}
-    open func cancelTracking(with event: UIEvent?) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(beginTrackingWithTouch:withEvent:)
+#endif
+    open dynamic func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { true }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(continueTrackingWithTouch:withEvent:)
+#endif
+    open dynamic func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool { true }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(endTrackingWithTouch:withEvent:)
+#endif
+    open dynamic func endTracking(_ touch: UITouch?, with event: UIEvent?) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(cancelTrackingWithEvent:)
+#endif
+    open dynamic func cancelTracking(with event: UIEvent?) {}
 
     // MARK: UIResponder plumbing (UIKit behavior)
 
