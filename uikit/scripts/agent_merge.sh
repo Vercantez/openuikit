@@ -218,6 +218,14 @@ cleanup() {
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; fi
   if [ -n "${SLOT_LOCK:-}" ]; then rm -rf "$SLOT_LOCK"; fi
   git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; drop_lock
+  # a passing run keeps its logs and conformance summaries, not ~4 GB of
+  # renders (GATE_KEEP_OUTPUTS=1 keeps them; a failing run keeps everything
+  # until the reaper, GATE_KEEP_H)
+  if [ "$rc" = 0 ] && [ -z "${GATE_KEEP_OUTPUTS:-}" ] && [ -n "${S:-}" ]; then
+    mkdir -p "$S/summaries"
+    for d in "$S"/conf-*/; do [ -f "$d/summary.json" ] && cp "$d/summary.json" "$S/summaries/$(basename "$d").json"; done
+    rm -rf "$S"/conf-*/ "$S/gate" "$S/app" "$S/golden_realapp_ios" "$S/guest-route"
+  fi
   exit $rc
 }
 trap cleanup EXIT; trap 'exit 130' INT TERM HUP
