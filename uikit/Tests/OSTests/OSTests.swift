@@ -2,6 +2,28 @@ import Dispatch
 import XCTest
 import os
 
+final class OSLogFormattingTests: XCTestCase {
+    func testFloatIntegerFormattingAndAlignmentInterpolationsCompile() {
+        // NetNewsWire RSDatabase FMDatabase+Extras.swift:43:
+        //   "\(duration, format: .fixed(precision: 4), privacy: .public)"
+        // Declarations follow iPhoneSimulator26.1.sdk os.swiftinterface
+        // (OSLogFloatFormatting / OSLogIntegerFormatting / OSLogStringAlignment).
+        // The port's Logger discards messages, so the values are never read.
+        let logger = Logger(subsystem: "com.example", category: "fmt")
+        let duration = 0.25
+        let count = 7
+        let ratio: Float = 1.5
+        logger.debug("VACUUM took \(duration, format: .fixed(precision: 4), privacy: .public) seconds")
+        logger.info("\(duration, format: .exponential) \(duration, format: .hybrid(precision: 3)) \(ratio, format: .fixed)")
+        logger.info("\(duration, format: .fixed, align: .right(columns: 8))")
+        logger.info("\(count, format: .hex(includePrefix: true), privacy: .public) \(count, format: .decimal(minDigits: 3))")
+        logger.info("\(UInt8(3), format: .octal) \(Int64(9), format: .decimal, align: .left(columns: 4))")
+        // the existing privacy-only shape still resolves (no ambiguity)
+        logger.info("\(count, privacy: .public) \(duration)")
+        XCTAssertEqual(logger.category, "fmt")
+    }
+}
+
 final class OSAllocatedUnfairLockTests: XCTestCase {
     func testWithLockSerializesConcurrentIncrements() {
         // NetNewsWire Cache.swift:24 / Hackers DependencyContainer.swift:85
