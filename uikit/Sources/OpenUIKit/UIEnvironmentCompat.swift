@@ -61,6 +61,9 @@ public struct UIInterfaceOrientationMask: OptionSet, Sendable {
 /// A controller's preferred status-bar foreground treatment. OpenUIKit does
 /// not draw host-system chrome, but retaining UIKit's values lets the host and
 /// app/controller policy communicate without lossy ad-hoc integers.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UIStatusBarStyle: Int, Sendable {
     case `default` = 0
     case lightContent = 1

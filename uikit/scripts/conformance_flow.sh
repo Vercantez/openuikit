@@ -24,6 +24,9 @@
 #   scripts/conformance_flow.sh /tmp/conf-landscape NavFlow --landscape
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
 #
+# Exit 4: a short set — a capture in script.json has no golden or no render
+# (SHORT CAPTURE line names them); summary.json is still written.
+#
 # --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
 # openhost renders with idiom .pad, that window size, and the measured
 # pad safe area `[32, 0, 25, 0]` (same plumbing as realapp *_ipad).
@@ -99,6 +102,9 @@ if [ -z "${SKIP_CAPTURE:-}" ]; then
   if [ "$IPAD" -eq 1 ]; then PROBE_ARGS+=(--ipad); fi
   if [ "$ORIENTATION" = landscape ]; then PROBE_ARGS+=(--landscape); fi
   zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" | tail -1
+  # What the goldens were captured from (agent_merge.sh refuses a committed
+  # set whose app sources changed since; goldens_snapshot.sh carries it).
+  python3 Tools/compare/conformance_provenance.py write "$OUT/golden" "$APPNAME"
 else
   pngs=()
   for f in "$OUT"/golden/*.png; do
@@ -129,12 +135,23 @@ else
 fi
 
 echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE direction=$DIRECTION contentSize=$CONTENT_SIZE orientation=$ORIENTATION"
-swift build -c release --product openhost >/dev/null
+# CONFORMANCE_PREBUILT=1: the caller already built openhost from THIS tree
+# (agent_merge.sh builds it once, then replays sets in parallel; concurrent
+# no-op builds would only queue on the .build lock).
+if [ -z "${CONFORMANCE_PREBUILT:-}" ]; then
+  swift build -c release --product openhost >/dev/null
+fi
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
 HOST_ARGS=(--app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours")
 if [ "$IPAD" -eq 1 ]; then HOST_ARGS+=(--ipad); fi
 if [ "$ORIENTATION" = landscape ]; then HOST_ARGS+=(--landscape); fi
-./.build/release/openhost "${HOST_ARGS[@]}" \
+# CONFORMANCE_HOST_BIN: a symlink to openhost under another NAME. openhost
+# links Foundation, so an app's UserDefaults.standard is the CFPreferences
+# domain named after the process: two replays running at once shared one
+# domain, and NavFlow's switch (reset at launch, set at t3.3) leaked from one
+# replay into the other (measured: 10 of 24 concurrent NavFlow --dark replays
+# drew the switch on at t3000). agent_merge.sh gives every replay its own name.
+"${CONFORMANCE_HOST_BIN:-./.build/release/openhost}" "${HOST_ARGS[@]}" \
   | tail -1
 
 echo "==> compare"
@@ -226,6 +243,7 @@ def layout_problems(g, o, tol=compare.LAYOUT_TOL):
     return problems
 
 captures = []
+missing = []   # (name, have golden, have ours)
 for t in script["captures"]:
     name = suffix(t)
     d = f"{out}/report/{name}"
@@ -236,6 +254,7 @@ for t in script["captures"]:
     if not (os.path.exists(g) and os.path.exists(o)):
         open(f"{d}/report.txt", "w").write("missing golden or render\n")
         captures.append({"name": name, "score": 0.0, "blob": 0.0, "layout_issues": 1})
+        missing.append((name, os.path.exists(g), os.path.exists(o)))
         continue
     gdump, odump = json.load(open(gl)), json.load(open(ol))
     if scale is None:
@@ -285,5 +304,14 @@ json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
 print(f"\n{app} ({style}/{direction}/{content_size}/{orientation}): {len(captures)} capture(s), worst {min(scores):.3f}, "
       f"mean {sum(scores) / len(scores):.3f}")
+# A short capture (a loaded simulator drops frames: 3-6 of 7-8 goldens, and the
+# flow used to exit 0 scoring the rest 0.0) is a failed run, not a score:
+# exit 4 so callers retry or refuse it. summary.json is still written.
+if missing:
+    n = len(script["captures"])
+    print(f"SHORT CAPTURE: {len(missing)} of {n} capture(s) missing "
+          f"(golden {n - sum(1 for m in missing if not m[1])}/{n}, ours {n - sum(1 for m in missing if not m[2])}/{n}): "
+          + ", ".join(m[0] for m in missing))
+    sys.exit(4)
 PY
 echo "reports: $OUT/report/<t>/{sheet,diff,golden,ours}.png + report.txt; $OUT/summary.json"

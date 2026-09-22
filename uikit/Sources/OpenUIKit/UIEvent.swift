@@ -36,8 +36,21 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
+// UIKit's UIEvent is an NSObject (`@interface UIEvent : NSObject`; MEASURED
+// Tools/oracle2/objcsubclassprobe). Needed so `touchesBegan(_:with:)`,
+// `hitTest(_:with:)` and `point(inside:with:)` can be `@objc` override points.
+// Not final: UIPressesEvent derives from it, as in UIKit. Not `open`
+// either — nothing outside OpenUIKit subclasses it.
 @preconcurrency @MainActor
-public final class UIEvent {
+public class UIEvent: NSObject {
     public enum EventType: Sendable {
         case touches
     }
@@ -65,6 +78,7 @@ public final class UIEvent {
 
     init(timestamp: TimeInterval) {
         self.timestamp = timestamp
+        super.init()
     }
 }
 
@@ -80,15 +94,16 @@ open class UIWindow: UIView {
         // completes missing axes from UIScreen, which would erase the fact
         // that this window still needs to classify its own (possibly smaller)
         // surface. A UIWindow is the root of its trait environment.
-        var traits = UITraitCollection.current
-        if overrideUserInterfaceStyle != .unspecified {
-            traits.userInterfaceStyle = overrideUserInterfaceStyle
-        }
-        if traitOverrides.preferredContentSizeCategory != .unspecified {
-            traits.preferredContentSizeCategory = traitOverrides.preferredContentSizeCategory
-        }
-        traits._resolveUnspecifiedSizeClasses(for: bounds.size)
-        return traits
+        let style = overrideUserInterfaceStyle
+        let category = traitOverrides.preferredContentSizeCategory
+        return UITraitCollection.current._with { traits in
+            if style != .unspecified {
+                traits.userInterfaceStyle = style
+            }
+            if category != .unspecified {
+                traits.preferredContentSizeCategory = category
+            }
+        }._resolvingUnspecifiedSizeClasses(for: bounds.size)
     }
 
     /// Window stacking priority. Values match UIKit's public constants so

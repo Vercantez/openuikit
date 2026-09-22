@@ -18,6 +18,11 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
 
 
 public enum NSTextAlignment: Sendable {
@@ -164,7 +169,7 @@ open class UILabel: UIView {
     /// rounding the draw path uses (`baselineInLine` in drawContent); the
     /// last baseline of a single-line label is measured back from the
     /// line-box bottom. Verified against golden/constraints_baseline.
-    override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
+    final func _labelConstraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
         let ascender = FontEngine.metrics(for: _font).ascender
         var first: CGFloat = (ascender + 0.5).rounded(.down)
         if let s = LayoutEngine.iOSPixelScale {
@@ -324,12 +329,17 @@ open class UILabel: UIView {
     }
 
     /// Draws the label's text in `rect` into the current context.
-    open func drawText(in rect: CGRect) {
+    /// `@objc dynamic` under OPENUIKIT_OBJC_SUBCLASSING (UIKit's selector),
+    /// so an Objective-C subclass can override it too.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(drawTextInRect:)
+#endif
+    open dynamic func drawText(in rect: CGRect) {
         guard let canvas = UIGraphicsGetCurrentContext() else { return }
         _drawText(in: canvas, bounds: rect)
     }
 
-    func _drawText(in canvas: Canvas, bounds: CGRect) {
+    final func _drawText(in canvas: Canvas, bounds: CGRect) {
         if let t = attributedLayoutText {
             let lines = attributedDrawLines(t, width: bounds.width)
             canvas.save()

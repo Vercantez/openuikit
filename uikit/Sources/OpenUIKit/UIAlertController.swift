@@ -747,15 +747,10 @@ open class UIAlertController: UIViewController {
 
     // MARK: Presentation plumbing
 
-    override func _makeDefaultPresentationController(presenting: UIViewController)
-        -> UIPresentationController {
+    // UIViewController._makeDefaultPresentAnimator/_makeDefaultDismissAnimator
+    // pick _UIAlertAnimator for an alert (vtable-free base; type check).
+    final func _alertPresentationController(presenting: UIViewController) -> UIPresentationController {
         _UIAlertPresentationController(presentedViewController: self, presenting: presenting)
-    }
-    override func _makeDefaultPresentAnimator() -> UIViewControllerAnimatedTransitioning {
-        _UIAlertAnimator(presenting: true)
-    }
-    override func _makeDefaultDismissAnimator() -> UIViewControllerAnimatedTransitioning {
-        _UIAlertAnimator(presenting: false)
     }
 }
 

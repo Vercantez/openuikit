@@ -21,6 +21,21 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+// Canvas derives from NSObject so `UIView.drawContent(in:bounds:)` can be an
+// `@objc dynamic` override point on the Apple toolchain (OpenUIKit's
+// OPENUIKIT_OBJC_SUBCLASSING vtable-free chain; see
+// uikit/docs/agent_reports/simplenote-objc-core.md). Same fail-closed
+// provider choice as OpenUIKit's UIResponder.swift: Foundation's NSObject
+// on native builds (corelibs on Linux ELF), the ObjectiveC root class on the
+// Foundation-hidden Mach-O guest library route. No drawing behaviour moves.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenCoreGraphics requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
 
 /// Straight (non-premultiplied) sRGB color with 0–1 components.
 
@@ -204,7 +219,7 @@ public struct Path: Sendable {
 /// - Transparency layers: drawing between begin/end goes to an offscreen
 ///   buffer composited on end with the given alpha (this is how UIView
 ///   alpha groups its subviews).
-public final class Canvas {
+public final class Canvas: NSObject {
     public let bitmap: Bitmap
     public let scale: CGFloat
 
@@ -226,6 +241,7 @@ public final class Canvas {
         self.bitmap = bitmap
         self.scale = scale
         self.state = CanvasState(ctm: CGAffineTransform(scaleX: scale, y: scale))
+        super.init()
         switch CanvasBackendSelection.current {
         case .quartz:
             // Falls back to the Swift rasterizer for degenerate (empty)

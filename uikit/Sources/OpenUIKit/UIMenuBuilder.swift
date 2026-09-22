@@ -95,7 +95,7 @@ open class UIMenuSystem: NSObject {
         let builder = _MenuTreeBuilder(system: self,
                                        root: kind == .main ? _MenuNode.defaultMain() : _MenuNode.emptyRoot())
         for responder in start._responderChain {
-            responder.buildMenu(with: builder)
+            responder._buildMenuDispatch(with: builder)
         }
         _builtRoot = builder.root
         _needsRebuild = false

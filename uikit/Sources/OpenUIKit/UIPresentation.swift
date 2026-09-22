@@ -60,6 +60,9 @@ import Foundation
 /// portable presenter currently retains this policy for source and state
 /// compatibility; its built-in sheet/full-screen animations remain the
 /// measured OpenUIKit transitions documented at the top of this file.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 @available(watchOS, unavailable)
 public enum UIModalTransitionStyle: Int, Sendable {
     case coverVertical = 0
@@ -810,7 +813,7 @@ final class _UIPageSheetView: UIView {
         _usesIOSDarkGlass = traitCollection.userInterfaceStyle == .dark
     }
 
-    override func _iosGlassPath(in bounds: CGRect) -> Path {
+    final func _sheetGlassPath(in bounds: CGRect) -> Path {
         let top: CGFloat
         let bottom: CGFloat
         if padFormSheet {

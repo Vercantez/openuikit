@@ -19,6 +19,16 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+// UIColor is an NSObject in UIKit (MEASURED Tools/oracle2/objcsubclassprobe:
+// class_getSuperclass(UIColor) == NSObject). Same provider choice as
+// UIResponder.swift.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
 
 public enum UIUserInterfaceStyle: Sendable {
     case unspecified, light, dark
@@ -33,75 +43,111 @@ public enum UIUserInterfaceSizeClass: Int, Sendable {
 
 /// Raw values are Darwin's `UIUserInterfaceLayoutDirection` (UIApplication.h).
 /// `.leading` / `.trailing` follow this via `effectiveUserInterfaceLayoutDirection`.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UIUserInterfaceLayoutDirection: Int, Sendable {
     case leftToRight = 0, rightToLeft = 1
 }
 
-public struct UITraitCollection: Equatable, Sendable {
-    public var userInterfaceStyle: UIUserInterfaceStyle
-    public var displayScale: CGFloat
-    public var horizontalSizeClass: UIUserInterfaceSizeClass
-    public var verticalSizeClass: UIUserInterfaceSizeClass
+/// UIKit's `UITraitCollection` is an immutable NSObject class
+/// (`@interface UITraitCollection : NSObject <NSCopying, NSSecureCoding>`;
+/// MEASURED Tools/oracle2/objcsubclassprobe: class_getSuperclass ==
+/// NSObject). It used to be a mutable struct here; it is a class now so
+/// `UIView.traitCollection` and `traitCollectionDidChange(_:)` can be
+/// Objective-C override points (an Objective-C app's
+/// `-traitCollectionDidChange:` must be reached). The modeled traits and
+/// every initializer are unchanged; OpenUIKit's own "copy with one trait
+/// changed" sites use `_with { … }` instead of mutating a local copy.
+public final class UITraitCollection: NSObject, @unchecked Sendable {
+    /// The modeled traits as a value (the former struct's stored fields).
+    struct _Values: Equatable {
+        var userInterfaceStyle: UIUserInterfaceStyle
+        var displayScale: CGFloat
+        var horizontalSizeClass: UIUserInterfaceSizeClass
+        var verticalSizeClass: UIUserInterfaceSizeClass
+        var preferredContentSizeCategory: UIContentSizeCategory
+        var userInterfaceIdiom: UIUserInterfaceIdiom
+
+        static let empty = _Values(userInterfaceStyle: .unspecified, displayScale: 0,
+                                   horizontalSizeClass: .unspecified, verticalSizeClass: .unspecified,
+                                   preferredContentSizeCategory: .unspecified,
+                                   userInterfaceIdiom: .unspecified)
+
+        func with(_ change: (inout _Values) -> Void) -> _Values {
+            var v = self
+            change(&v)
+            return v
+        }
+    }
+    let _values: _Values
+
+    public var userInterfaceStyle: UIUserInterfaceStyle { _values.userInterfaceStyle }
+    public var displayScale: CGFloat { _values.displayScale }
+    public var horizontalSizeClass: UIUserInterfaceSizeClass { _values.horizontalSizeClass }
+    public var verticalSizeClass: UIUserInterfaceSizeClass { _values.verticalSizeClass }
     /// Dynamic Type setting (M14). A partial collection defaults to
     /// `.unspecified`; OpenUIKit's complete host environment defaults to
     /// `.large`, the category where every `UIFontMetrics` factor is 1.0.
-    public var preferredContentSizeCategory: UIContentSizeCategory
+    public var preferredContentSizeCategory: UIContentSizeCategory { _values.preferredContentSizeCategory }
     /// Device class. A partial collection defaults to `.unspecified`;
     /// hosts that want pad chrome (realapp_settings_light_ipad) must set
     /// `.pad` — unspecified does not inherit `UIDevice.current`.
-    public var userInterfaceIdiom: UIUserInterfaceIdiom
+    public var userInterfaceIdiom: UIUserInterfaceIdiom { _values.userInterfaceIdiom }
+
+    init(_values values: _Values) {
+        self._values = values
+        super.init()
+    }
+
+    /// A copy with some traits changed (the former struct's
+    /// `var t = traits; t.x = …` idiom).
+    func _with(_ change: (inout _Values) -> Void) -> UITraitCollection {
+        UITraitCollection(_values: _values.with(change))
+    }
 
     /// UIKit's empty collection: every modeled trait is unspecified.
-    public init() {
-        userInterfaceStyle = .unspecified
-        displayScale = 0
-        horizontalSizeClass = .unspecified
-        verticalSizeClass = .unspecified
-        preferredContentSizeCategory = .unspecified
-        userInterfaceIdiom = .unspecified
+    public convenience override init() {
+        self.init(_values: .empty)
     }
 
     /// UIKit's partial collection containing only an interface style.
-    public init(userInterfaceStyle: UIUserInterfaceStyle) {
-        self.init()
-        self.userInterfaceStyle = userInterfaceStyle
+    public convenience init(userInterfaceStyle: UIUserInterfaceStyle) {
+        self.init(_values: _Values.empty.with { $0.userInterfaceStyle = userInterfaceStyle })
     }
 
     /// UIKit's partial collection containing only a display scale.
-    public init(displayScale: CGFloat) {
-        self.init()
-        self.displayScale = displayScale
+    public convenience init(displayScale: CGFloat) {
+        self.init(_values: _Values.empty.with { $0.displayScale = displayScale })
     }
 
     /// UIKit's partial collection containing only a horizontal size class.
-    public init(horizontalSizeClass: UIUserInterfaceSizeClass) {
-        self.init()
-        self.horizontalSizeClass = horizontalSizeClass
+    public convenience init(horizontalSizeClass: UIUserInterfaceSizeClass) {
+        self.init(_values: _Values.empty.with { $0.horizontalSizeClass = horizontalSizeClass })
     }
 
     /// UIKit's partial collection containing only a vertical size class.
-    public init(verticalSizeClass: UIUserInterfaceSizeClass) {
-        self.init()
-        self.verticalSizeClass = verticalSizeClass
+    public convenience init(verticalSizeClass: UIUserInterfaceSizeClass) {
+        self.init(_values: _Values.empty.with { $0.verticalSizeClass = verticalSizeClass })
     }
 
     /// UIKit's partial collection containing only a Dynamic Type category.
-    public init(preferredContentSizeCategory: UIContentSizeCategory) {
-        self.init()
-        self.preferredContentSizeCategory = preferredContentSizeCategory
+    public convenience init(preferredContentSizeCategory: UIContentSizeCategory) {
+        self.init(_values: _Values.empty.with {
+            $0.preferredContentSizeCategory = preferredContentSizeCategory
+        })
     }
 
     /// UIKit's partial collection containing only a user-interface idiom.
-    public init(userInterfaceIdiom: UIUserInterfaceIdiom) {
-        self.init()
-        self.userInterfaceIdiom = userInterfaceIdiom
+    public convenience init(userInterfaceIdiom: UIUserInterfaceIdiom) {
+        self.init(_values: _Values.empty.with { $0.userInterfaceIdiom = userInterfaceIdiom })
     }
 
     /// OpenUIKit host convenience: construct a complete render environment in
     /// one call. The existing style/scale spelling is retained; size classes
     /// may be supplied by a host that already knows them, while `.unspecified`
     /// lets UIScreen/UIWindow derive the portable bounds approximation.
-    public init(
+    public convenience init(
         userInterfaceStyle: UIUserInterfaceStyle,
         displayScale: CGFloat,
         horizontalSizeClass: UIUserInterfaceSizeClass = .unspecified,
@@ -109,40 +155,55 @@ public struct UITraitCollection: Equatable, Sendable {
         preferredContentSizeCategory: UIContentSizeCategory = .large,
         userInterfaceIdiom: UIUserInterfaceIdiom = .unspecified
     ) {
-        self.userInterfaceStyle = userInterfaceStyle
-        self.displayScale = displayScale
-        self.horizontalSizeClass = horizontalSizeClass
-        self.verticalSizeClass = verticalSizeClass
-        self.preferredContentSizeCategory = preferredContentSizeCategory
-        self.userInterfaceIdiom = userInterfaceIdiom
+        self.init(_values: _Values(userInterfaceStyle: userInterfaceStyle, displayScale: displayScale,
+                                   horizontalSizeClass: horizontalSizeClass,
+                                   verticalSizeClass: verticalSizeClass,
+                                   preferredContentSizeCategory: preferredContentSizeCategory,
+                                   userInterfaceIdiom: userInterfaceIdiom))
     }
 
     /// UIKit's legacy merge initializer. Later collections win for each trait,
     /// but an unspecified/default value does not erase an earlier value. This
     /// includes Dynamic Type deliberately; it is part of the modeled trait
     /// environment rather than an unrelated OpenUIKit setting.
-    public init(traitsFrom traitCollections: [UITraitCollection]) {
-        self.init()
+    public convenience init(traitsFrom traitCollections: [UITraitCollection]) {
+        var v = _Values.empty
         for traits in traitCollections {
             if traits.userInterfaceStyle != .unspecified {
-                userInterfaceStyle = traits.userInterfaceStyle
+                v.userInterfaceStyle = traits.userInterfaceStyle
             }
             if traits.displayScale != 0 {
-                displayScale = traits.displayScale
+                v.displayScale = traits.displayScale
             }
             if traits.horizontalSizeClass != .unspecified {
-                horizontalSizeClass = traits.horizontalSizeClass
+                v.horizontalSizeClass = traits.horizontalSizeClass
             }
             if traits.verticalSizeClass != .unspecified {
-                verticalSizeClass = traits.verticalSizeClass
+                v.verticalSizeClass = traits.verticalSizeClass
             }
             if traits.preferredContentSizeCategory != .unspecified {
-                preferredContentSizeCategory = traits.preferredContentSizeCategory
+                v.preferredContentSizeCategory = traits.preferredContentSizeCategory
             }
             if traits.userInterfaceIdiom != .unspecified {
-                userInterfaceIdiom = traits.userInterfaceIdiom
+                v.userInterfaceIdiom = traits.userInterfaceIdiom
             }
         }
+        self.init(_values: v)
+    }
+
+    /// Value equality over the modeled traits (the former struct's
+    /// synthesized `==`; Swift's `==` on an NSObject calls this).
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? UITraitCollection else { return false }
+        return _values == other._values
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(_values.displayScale)
+        hasher.combine(_values.horizontalSizeClass)
+        hasher.combine(_values.verticalSizeClass)
+        return hasher.finalize()
     }
 
     /// Pad chrome under the iOS cut. Unspecified does not count — a host
@@ -153,12 +214,14 @@ public struct UITraitCollection: Equatable, Sendable {
     /// A portable host approximation, not Apple's idiom/multitasking policy:
     /// each unspecified axis becomes regular at 600 pt and compact below it.
     /// Explicit host/current axes remain authoritative.
-    mutating func _resolveUnspecifiedSizeClasses(for size: CGSize) {
-        if horizontalSizeClass == .unspecified {
-            horizontalSizeClass = size.width >= 600 ? .regular : .compact
-        }
-        if verticalSizeClass == .unspecified {
-            verticalSizeClass = size.height >= 600 ? .regular : .compact
+    func _resolvingUnspecifiedSizeClasses(for size: CGSize) -> UITraitCollection {
+        _with { v in
+            if v.horizontalSizeClass == .unspecified {
+                v.horizontalSizeClass = size.width >= 600 ? .regular : .compact
+            }
+            if v.verticalSizeClass == .unspecified {
+                v.verticalSizeClass = size.height >= 600 ? .regular : .compact
+            }
         }
     }
 
@@ -184,7 +247,12 @@ public final class UITraitOverrides {
     public init() {}
 }
 
-public class UIColor: Hashable, @unchecked Sendable {
+/// NSObject-derived so a `UIColor` can cross an `@objc` signature
+/// (`UIView.tintColor` is an Objective-C override point, and an Objective-C
+/// app passes colors to every view). Equality and hashing keep their
+/// previous meaning (resolved components under the current traits) through
+/// `isEqual(_:)` / `hash`, which is what Swift's `==` on an NSObject calls.
+public class UIColor: NSObject, @unchecked Sendable {
     /// Static color, or a named semantic color resolved via traits.
     enum Storage {
         case fixed(CGColor)
@@ -195,14 +263,17 @@ public class UIColor: Hashable, @unchecked Sendable {
 
     public init(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         storage = .fixed(CGColor(red: red, green: green, blue: blue, alpha: alpha))
+        super.init()
     }
     public init(white: CGFloat, alpha: CGFloat) {
         storage = .fixed(CGColor(gray: white, alpha: alpha))
+        super.init()
     }
-    init(_ storage: Storage) { self.storage = storage }
-    init(semantic name: String) { storage = .semantic(name: name) }
+    init(_ storage: Storage) { self.storage = storage; super.init() }
+    init(semantic name: String) { storage = .semantic(name: name); super.init() }
     public init(dynamicProvider: @escaping (UITraitCollection) -> UIColor) {
         storage = .dynamic { traits in dynamicProvider(traits).resolvedCGColor(with: traits) }
+        super.init()
     }
 
     /// Decomposes the color resolved in the current trait environment into
@@ -393,16 +464,19 @@ public class UIColor: Hashable, @unchecked Sendable {
         }
     }
 
-    public static func == (lhs: UIColor, rhs: UIColor) -> Bool {
-        lhs.resolvedCGColor(with: .current) == rhs.resolvedCGColor(with: .current)
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? UIColor else { return false }
+        return resolvedCGColor(with: .current) == other.resolvedCGColor(with: .current)
     }
 
-    public func hash(into hasher: inout Hasher) {
+    public override var hash: Int {
         let color = resolvedCGColor(with: .current)
+        var hasher = Hasher()
         hasher.combine(color.red)
         hasher.combine(color.green)
         hasher.combine(color.blue)
         hasher.combine(color.alpha)
+        return hasher.finalize()
     }
 
     // Fixed palette colors (values match UIKit's fixed colors).

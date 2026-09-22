@@ -36,6 +36,12 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -174,6 +180,12 @@ public extension UITextViewDelegate {
 #endif
 }
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITextView)
+#endif
 @preconcurrency @MainActor
 open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretHosting {
 
@@ -181,7 +193,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     /// `UITextViewDelegate` refines `UIScrollViewDelegate`, assigning it also
     /// satisfies the scroll delegate the superclass calls. The scroll
     /// callbacks therefore keep working through the SAME object, as in UIKit.
-    public var textViewDelegate: UITextViewDelegate? {
+    public final var textViewDelegate: UITextViewDelegate? {
         get { delegate as? UITextViewDelegate }
         set { delegate = newValue }
     }
@@ -190,22 +202,28 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     // UIKit text-input traits. The portable renderer has no keyboard of its
     // own; hosts can inspect these exact values when choosing an input UI.
-    open var autocapitalizationType: UITextAutocapitalizationType = .sentences
-    open var autocorrectionType: UITextAutocorrectionType = .default
-    open var spellCheckingType: UITextSpellCheckingType = .default
-    open var keyboardType: UIKeyboardType = .default
-    open var keyboardAppearance: UIKeyboardAppearance = .default
-    open var returnKeyType: UIReturnKeyType = .default
-    open var enablesReturnKeyAutomatically = false
+    public final var autocapitalizationType: UITextAutocapitalizationType = .sentences
+    public final var autocorrectionType: UITextAutocorrectionType = .default
+    public final var spellCheckingType: UITextSpellCheckingType = .default
+    public final var keyboardType: UIKeyboardType = .default
+    public final var keyboardAppearance: UIKeyboardAppearance = .default
+    public final var returnKeyType: UIReturnKeyType = .default
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var enablesReturnKeyAutomatically = false
     /// Semantic purpose retained for password managers and host keyboards,
     /// matching the same trait on UITextField.
-    open var textContentType: UITextContentType?
+    public final var textContentType: UITextContentType?
 
     /// UIKit imports its `null_resettable` NSString property as `String!`:
     /// callers may use optional binding, while assigning nil resets to an
     /// empty string. The normalization is the first observer operation so
     /// every subsequent text-layout path continues to see non-nil content.
-    open var text: String! = "" {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var text: String! = "" {
         didSet {
             if text == nil { text = "" }
             _attributed = nil
@@ -220,7 +238,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     /// AttributedTextLayout with `usesFontLineHeight` set, so a single-font
     /// attributed string lays out exactly like the plain path. Editing
     /// rewrites `text` and DROPS the attributes (docs/KNOWN_GAPS.md).
-    public var attributedText: NSAttributedString? {
+    public final var attributedText: NSAttributedString? {
         get {
             if let a = _attributed { return a }
             guard !text.isEmpty else { return nil }
@@ -240,9 +258,9 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             contentDidChange()
         }
     }
-    var _attributed: NSAttributedString?
+    final var _attributed: NSAttributedString?
     /// Write-through to `text` without tripping its didSet.
-    private var _plainBacking: String {
+    private final var _plainBacking: String {
         get { text }
         set {
             let saved = _attributed
@@ -252,7 +270,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     }
 
     /// Flattened attributed content, or nil when the view holds plain text.
-    var attributedLayoutText: AttributedTextLayout.Text? {
+    final var attributedLayoutText: AttributedTextLayout.Text? {
         guard let a = _attributed, a.length > 0 else { return nil }
         var t = AttributedTextLayout.flatten(_applyingLinkAttributes(a),
                                              defaultFont: effectiveFont,
@@ -260,7 +278,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         t.usesFontLineHeight = true
         return t
     }
-    public var font: UIFont? {
+    public final var font: UIFont? {
         didSet { contentDidChange() }
     }
     /// UIKit declares `textColor` nullable. MEASURED iPhone 16 / iOS 26.1
@@ -268,32 +286,32 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     /// non-nil label colour; after `= nil` the getter reads nil. OpenUIKit
     /// draws a nil colour as `.label` (the rendered colour of a nil
     /// `textColor` is not measured).
-    public var textColor: UIColor? {
+    public final var textColor: UIColor? {
         get { _textColor }
         set { _textColor = newValue; contentDidChange() }
     }
-    private var _textColor: UIColor? = .label
-    var effectiveTextColor: UIColor { _textColor ?? .label }
+    private final var _textColor: UIColor? = .label
+    final var effectiveTextColor: UIColor { _textColor ?? .label }
 
     /// UIKit's `textAlignment` (iOS 26.1 default `.natural`, raw 4).
     /// Stored only: plain-text drawing stays leading-aligned; attributed text
     /// follows its paragraph style.
-    public var textAlignment: NSTextAlignment = .natural
+    public final var textAlignment: NSTextAlignment = .natural
 
     /// UITextInputTraits' `isSecureTextEntry` (iOS 26.1 default false).
     /// Stored only — a text view never masks its text here.
-    public var isSecureTextEntry: Bool = false
-    public var textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
+    public final var isSecureTextEntry: Bool = false
+    public final var textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
         didSet { contentDidChange() }
     }
-    public var isEditable = true
+    public final var isEditable = true
     /// UIKit default true. False turns text-item interaction off entirely
     /// (MEASURED wordpressrowsprobe `tap.link.new.notSelectable`: no
     /// delegate call, nothing opens).
-    public var isSelectable = true
+    public final var isSelectable = true
     /// Attributes painted over `.link` runs. MEASURED default on iOS 26.1:
     /// exactly `[.foregroundColor: systemBlue]` (no underline).
-    public var linkTextAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemBlue] {
+    public final var linkTextAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.systemBlue] {
         didSet { contentDidChange() }
     }
 
@@ -302,34 +320,37 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     /// TextKit-1 stack. The three objects are the real ones; `attributedText`
     /// / `text` write through `textStorage`. MEASURED attach_probe UITextView
     /// path 7: lineFragmentPadding 5, inset (8, 0, 8, 0).
-    public let textStorage = NSTextStorage()
-    public let layoutManager = NSLayoutManager()
-    public let textContainer = NSTextContainer(size: CGSize(width: 0, height: 0))
+    public final let textStorage = NSTextStorage()
+    public final let layoutManager = NSLayoutManager()
+    public final let textContainer = NSTextContainer(size: CGSize(width: 0, height: 0))
 
-    var effectiveFont: UIFont { font ?? .systemFont(ofSize: 12) }
-    var lineHeight: CGFloat { FontEngine.metrics(for: effectiveFont).lineHeight }
+    final var effectiveFont: UIFont { font ?? .systemFont(ofSize: 12) }
+    final var lineHeight: CGFloat { FontEngine.metrics(for: effectiveFont).lineHeight }
 
     // MARK: Internal views / editing state
 
-    let contentView = UITextViewCanvasView()
-    var caretView: UIView?
-    public private(set) var isEditing = false
+    final let contentView = UITextViewCanvasView()
+    final var caretView: UIView?
+    public private(set) final var isEditing = false
     /// Caret position as a unicode-scalar offset into `text`.
-    public internal(set) var caretOffset: Int = 0
+    public internal(set) final var caretOffset: Int = 0
     /// Preferred caret x (text space) preserved across up/down moves.
-    var preferredCaretX: CGFloat?
+    final var preferredCaretX: CGFloat?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         configureTextCanvas()
     }
 
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         super.init(coder: coder)
         configureTextCanvas()
     }
 
-    private func configureTextCanvas() {
+    private final func configureTextCanvas() {
         isOpaque = true
         backgroundColor = .systemBackground
         contentView.owner = self
@@ -341,16 +362,16 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         textStorage.delegate = self
     }
 
-    func contentDidChange() {
+    final func contentDidChange() {
         syncTextKitStorage()
         contentView.setNeedsDisplay()
         setNeedsLayout()
     }
 
-    private var suppressingStorage = false
-    private var attachmentProviders: [Int: NSTextAttachmentViewProvider] = [:]
+    private final var suppressingStorage = false
+    private final var attachmentProviders: [Int: NSTextAttachmentViewProvider] = [:]
 
-    private func syncTextKitStorage() {
+    private final func syncTextKitStorage() {
         if suppressingStorage { return }
         suppressingStorage = true
         let s: NSAttributedString
@@ -367,7 +388,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     // MARK: Line layout
 
-    var wrapWidth: CGFloat {
+    final var wrapWidth: CGFloat {
         Swift.max(0, bounds.width - textContainerInset.left - textContainerInset.right
                      - 2 * UITextView.lineFragmentPadding)
     }
@@ -379,7 +400,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         var end: Int     // scalar offset past the last character
     }
 
-    func lineRuns() -> [LineRun] {
+    final func lineRuns() -> [LineRun] {
         let lines = TextLayout.wrap(text, font: effectiveFont,
                                     maxWidth: wrapWidth, maxLines: 0)
         var runs: [LineRun] = []
@@ -397,7 +418,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         return runs
     }
 
-    var contentHeight: CGFloat {
+    final var contentHeight: CGFloat {
         if let t = attributedLayoutText {
             let lines = AttributedTextLayout.wrap(t, maxWidth: wrapWidth, maxLines: 0,
                                                   scale: traitCollection.displayScale)
@@ -428,7 +449,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     // MARK: Drawing (called by the content canvas)
 
-    func drawText(in canvas: Canvas) {
+    final func drawText(in canvas: Canvas) {
         if let t = attributedLayoutText {
             let lines = AttributedTextLayout.wrap(t, maxWidth: wrapWidth, maxLines: 0,
                                                   scale: traitCollection.displayScale)
@@ -531,7 +552,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     /// Start of the current press, for the tap-versus-long-press split of
     /// the text-item path (`textItemPressDuration`).
-    var _pressStart: TimeInterval?
+    final var _pressStart: TimeInterval?
 
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -576,7 +597,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     }
 
     /// Nearest glyph boundary to a point in content coordinates.
-    func caretIndex(at p: CGPoint) -> Int {
+    final func caretIndex(at p: CGPoint) -> Int {
         let runs = lineRuns()
         let lineH = lineHeight
         let rawLine = ((p.y - textContainerInset.top) / lineH).rounded(.down)
@@ -590,9 +611,9 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     // MARK: UIKeyInput
 
-    public var hasText: Bool { !text.isEmpty }
+    public final var hasText: Bool { !text.isEmpty }
 
-    public func insertText(_ str: String) {
+    public final func insertText(_ str: String) {
         guard isEditing else { return }
         if let d = textViewDelegate,
            !d.textView(self, shouldChangeTextIn: NSRange(location: caretOffset, length: 0),
@@ -604,7 +625,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         afterEdit()
     }
 
-    public func deleteBackward() {
+    public final func deleteBackward() {
         guard isEditing, caretOffset > 0 else { return }
         if let d = textViewDelegate,
            !d.textView(self, shouldChangeTextIn: NSRange(location: caretOffset - 1, length: 1),
@@ -617,7 +638,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         afterEdit()
     }
 
-    func afterEdit() {
+    final func afterEdit() {
         contentDidChange()
         caretView?.isHidden = false
         layoutIfNeeded()
@@ -626,7 +647,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         textViewDelegate?.textViewDidChangeSelection(self)
     }
 
-    func handleKey(_ key: UIKeyEventKey) {
+    final func handleKey(_ key: UIKeyEventKey) {
         guard isEditing else { return }
         switch key {
         case .backspace:
@@ -653,7 +674,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     /// Up/down arrows: nearest boundary in the adjacent line, preserving
     /// the caret's x across consecutive vertical moves (UIKit behavior).
-    func moveCaretVertically(by delta: Int) {
+    final func moveCaretVertically(by delta: Int) {
         let runs = lineRuns()
         guard let (line, within) = caretLine(in: runs) else { return }
         let target = line + delta
@@ -670,7 +691,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     }
 
     /// (line index, scalar offset within the line) for the caret.
-    func caretLine(in runs: [LineRun]) -> (Int, Int)? {
+    final func caretLine(in runs: [LineRun]) -> (Int, Int)? {
         for (i, r) in runs.enumerated() {
             if caretOffset < r.end { return (i, Swift.max(0, caretOffset - r.start)) }
             if caretOffset == r.end {
@@ -689,7 +710,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     // MARK: Caret geometry (measured — see header)
 
     /// Caret rect in CONTENT coordinates.
-    public func caretRect() -> CGRect {
+    public final func caretRect() -> CGRect {
         let runs = lineRuns()
         guard let (line, within) = caretLine(in: runs) else { return .zero }
         let font = effectiveFont
@@ -703,7 +724,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         return CGRect(x: x, y: y, width: 2, height: lineH + 1.5)
     }
 
-    func ensureCaretView() {
+    final func ensureCaretView() {
         if caretView == nil {
             let v = UIView()   // plain UIView: no dump noise, no content pass
             v.isUserInteractionEnabled = false
@@ -712,19 +733,19 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         }
     }
 
-    func layoutCaret() {
+    final func layoutCaret() {
         guard let caret = caretView, isEditing else { return }
         caret.backgroundColor = tintColor
         caret.frame = caretRect()
     }
 
-    func caretBlinkChanged(visible: Bool) {
+    final func caretBlinkChanged(visible: Bool) {
         guard isEditing else { return }
         caretView?.isHidden = !visible
     }
 
     /// Keep the caret's line inside the visible rect (vertical only).
-    func scrollCaretToVisible() {
+    final func scrollCaretToVisible() {
         let r = caretRect()
         var off = contentOffset
         let visibleH = bounds.height
@@ -742,7 +763,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     /// oracle); a hosted UIImageView sits on the same box so app code that
     /// walks subviews finds a view. MEASURED attach_probe UITextView path 7:
     /// 24×24 box at (16.023, 8) in view space (padding 5 + "A" + inset 8).
-    func layoutAttachmentViews() {
+    final func layoutAttachmentViews() {
         guard let t = attributedLayoutText else {
             for p in attachmentProviders.values { p.view?.removeFromSuperview() }
             attachmentProviders.removeAll()
