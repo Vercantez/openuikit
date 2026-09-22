@@ -44,6 +44,19 @@ if [ "${1:-}" != --inside ]; then
         log "staging iOS-simulator SDK variant from $SDK"
         rm -rf "$LGI/true-ios-sdk"
         bash "$TREE/full/xcodeplan/stage_true_ios_full_sdk.sh" "$LGI/core" "$SDK" "$LGI/true-ios-sdk" >&2
+        # The stager copies Apple's iOS libSystem.B.tbd / libobjc.A.tbd. Apple's
+        # libSystem advertises the Swift Dispatch overlay (it lives in
+        # libdispatch on iOS), so LLD bound `Dispatch.DispatchQueue` metadata
+        # and the port's DispatchQueue: OpenCombine.Scheduler conformance to
+        # /usr/lib/libSystem.B.dylib instead of the port's libDispatch.dylib,
+        # and machorun stopped at load (MEASURED, IOSTargetGuestProbe:
+        # "undefined symbol '_$s8Dispatch0A5QueueC11OpenCombine9SchedulerAAMc'").
+        # Link against what the guest actually provides: machorun's own
+        # generated .tbds, retargeted to the iOS-simulator platform.
+        for tbd in libSystem.B.tbd libobjc.A.tbd; do
+            sed 's/arm64-macos/arm64-ios-simulator/g' "$LG/sysroot_fe4/usr/lib/$tbd" \
+                > "$LGI/true-ios-sdk/sdk/usr/lib/$tbd"
+        done
         echo "$stage_key" > "$LGI/true-ios-sdk/.stage-key"
     fi
     mounts=(-v "$HOME:$HOME")
