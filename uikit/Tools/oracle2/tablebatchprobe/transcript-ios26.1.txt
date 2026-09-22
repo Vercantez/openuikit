@@ -1,0 +1,25 @@
+# tablebatchprobe — iOS 26.1
+-- no window, animated
+before rows=2 visible=2
+updates block (turn 0)
+returned rows=3 visible=3
+completion finished=false (turn 1) rows=3
+end rows=3 visible=3
+-- window, animated
+before rows=2 visible=2
+updates block (turn 0)
+returned rows=3 visible=3
+completion finished=true (turn 16) rows=3
+end rows=3 visible=3
+-- window, performWithoutAnimation
+before rows=2 visible=2
+updates block (turn 0)
+returned rows=3 visible=3
+completion finished=true (turn 1) rows=3
+end rows=3 visible=3
+-- no window, performWithoutAnimation
+before rows=2 visible=2
+updates block (turn 0)
+returned rows=3 visible=3
+completion finished=true (turn 1) rows=3
+end rows=3 visible=3
