@@ -138,6 +138,8 @@ public enum FontEngine {
     // MARK: - Lookup
 
     static func familyKey(for font: UIFont) -> String {
+        // A registered face never matches a system-font table entry.
+        if let name = font.customFontName { return "custom:" + name }
         switch font.design {
         case .monospaced:
             // The table only carries mono-regular and mono-bold.
@@ -183,6 +185,7 @@ public enum FontEngine {
     }
 
     public static func metrics(for font: UIFont) -> FontMetrics {
+        if let face = font._registeredFace { return face.metrics(pointSize: font.pointSize) }
         // iOS cut: the vertical metrics of the SFUI build (see tablesIOS).
         if OpenUIKitRuntime.systemFontCut == .iOS, font.design != .monospaced,
            let (a, b, f) = neighbors(for: font, in: tablesIOS) {
@@ -283,7 +286,12 @@ public enum FontEngine {
     /// Advance of a single character (kerning-free), interpolated like
     /// metrics, in the currently selected system-font cut.
     public static func advance(of scalar: Unicode.Scalar, font: UIFont) -> CGFloat {
-        macAdvance(of: scalar, font: font) - cutDelta(for: font)
+        if font.customFontName != nil {
+            // Registered face: the file's default-instance advance (no HVAR,
+            // no system-font cut delta).
+            return GlyphRasterizer.font(for: font)?.advancePoints(of: scalar, pointSize: font.pointSize) ?? 0
+        }
+        return macAdvance(of: scalar, font: font) - cutDelta(for: font)
     }
 
     /// Advance in the macOS (`.SFNS`) cut — what font_metrics.json stores.
@@ -356,6 +364,13 @@ public enum FontEngine {
     /// mono and italic.
     public static func labelLineHeight(for font: UIFont) -> CGFloat {
         let lh = metrics(for: font).lineHeight
+        if font.customFontName != nil {
+            // Registered face: the iOS rule (lineHeight up to the pixel
+            // grid) without the system face's Catalyst bands. Not measured
+            // for a custom face.
+            let scale = max(1, UIScreen.main.scale)
+            return (lh * scale).rounded(.up) / scale
+        }
         // iOS cut, MEASURED 2026-09-04 (realappprobe, iPhone 16 3x, iOS 26.1):
         // a UILabel line is the font's lineHeight rounded UP to the pixel
         // grid — 21.48 -> 21.667, 19.094 -> 19.333, 15.514 -> 15.667 — with

@@ -26,7 +26,10 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
 
     /// The controller's table (same object as `view`).
     public final var tableView: UITableView! {
-        view as? UITableView
+        get { view as? UITableView }
+        // iOS 26.1 (iososswallsprobe lens.tvc.*): assigning a table makes it
+        // both `tableView` and `view`.
+        set { view = newValue }
     }
 
 #if OPENUIKIT_OBJC_SUBCLASSING
@@ -48,6 +51,8 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
     }
 
     open override func loadView() {
+        // A storyboard table view controller's view is its view nib's table.
+        if _loadStoryboardView() { return }
         let tv = UITableView(frame: CGRect(x: 0, y: 0, width: 390, height: 844),
                              style: style)
         tv.autoresizingMask = [.flexibleWidth, .flexibleHeight]

@@ -650,7 +650,7 @@ open class UIAlertController: UIViewController {
                     height: UIAlertMetrics.textFieldHeight))
                 pill.backgroundColor = UIAlertMetrics.actionFill
                 pill.layer.cornerRadius = UIAlertMetrics.actionCornerRadius
-                let fh = tf.font.labelLineHeight
+                let fh = tf._font.labelLineHeight
                 tf.frame = CGRect(x: inset - UIAlertMetrics.textFieldInsetX,
                                   y: (UIAlertMetrics.textFieldHeight - fh) / 2,
                                   width: textWidth, height: fh)

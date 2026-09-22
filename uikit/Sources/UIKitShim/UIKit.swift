@@ -38,6 +38,15 @@
 @_exported import OpenUIKitObjectiveC
 #endif
 @_exported import OpenUIKit
+// iOS 26.1 (ios-oss-launch3): a file that imports only UIKit can name
+// UserNotifications types (`UNAuthorizationStatus` compiles with
+// `import UIKit` alone against the iPhoneSimulator 26.1 SDK — ios-oss
+// Library KSRAnalytics.swift:1573). OpenUIKit has no UserNotifications port;
+// on the Apple host the SDK's module is re-exported (it loads Foundation and
+// Combine only, no AppKit). Not on the guest route, which has no AppKit.
+#if canImport(AppKit) && canImport(UserNotifications)
+@_exported import UserNotifications
+#endif
 
 // UIKit owns the typed AttributedString keys for font and text decoration.
 // Foundation deliberately cannot define these keys because their values are

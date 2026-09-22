@@ -97,6 +97,8 @@ open class UICollectionViewController: UIViewController,
     /// is itself a `UICollectionView` (that view keeps autoresizing 0 and is
     /// neither wired as data source nor adopted as `collectionView`).
     open override func loadView() {
+        // A storyboard collection view controller's view is its view nib.
+        if _loadStoryboardView() { return }
         // vc.loaded/window: wrapper and collection both [0,0,393,852] on
         // the measured phone; use the host screen bounds, not a phone constant.
         let wrapper = UICollectionViewControllerWrapperView(frame: UIScreen.main.bounds)

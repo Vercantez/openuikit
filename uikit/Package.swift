@@ -411,9 +411,14 @@ let coreTargets: [Target] = [
             "OpenUIKit",
             "DeveloperToolsSupport",
             "OpenUIKitPreviewMacros",
+            // Clang submodules (`import UIKit.UIStackView`); see
+            // Sources/UIKitClangModule/include/module.modulemap. Apple
+            // toolchain only for now.
+            .target(name: "UIKitClangModule", condition: .when(platforms: [.macOS, .iOS, .macCatalyst])),
         ] + uiKitLinuxDependencies,
         path: "Sources/UIKitShim"
     ),
+    .target(name: "UIKitClangModule", path: "Sources/UIKitClangModule"),
     // M14 real-app harness: UNMODIFIED source files lifted out of a
     // shipping open-source iOS app (Automattic/pocket-casts-ios), compiled
     // against OpenUIKit to measure how much of a real screen survives.
@@ -675,6 +680,16 @@ let testTargets: [Target] = [
         ]
     ),
     swiftUITestTarget,
+    // Storyboard / NIB runtime against iOS 26.1 (fixtures/nibruntime). The
+    // module name is load-bearing: the probe storyboard names its classes in
+    // module NibRuntimeTests, and the simulator oracle is built with the same
+    // name from the same scenario sources (scripts/nib_runtime_probe_sim.sh).
+    .testTarget(
+        name: "NibRuntimeTests",
+        dependencies: ["OpenUIKit"],
+        path: "Tests/NibRuntimeTests",
+        swiftSettings: [.unsafeFlags(["-swift-version", "5"])]
+    ),
     .testTarget(
         name: "OpenUIKitCTests",
         dependencies: openUIKitCTestDeps,
@@ -781,6 +796,12 @@ let testTargets: [Target] = [
                 "-Xfrontend", "-warn-concurrency",
             ], .when(platforms: [.linux])),
         ]
+    ),
+    // ios-oss launch pass 3: the fail-closed Apple Pay surface in PassKit,
+    // checked against the iOS 26.1 applepayprobe transcript.
+    .testTarget(
+        name: "PassKitTests",
+        dependencies: ["PassKit", "OpenUIKit"]
     ),
     .testTarget(
         name: "FuziTests",

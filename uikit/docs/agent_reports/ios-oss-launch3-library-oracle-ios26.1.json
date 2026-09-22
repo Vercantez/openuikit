@@ -1,0 +1,25 @@
+{
+ "date": "2026-09-22",
+ "probe": "uikit/Tools/oracle2/iososslibraryprobe/main.swift",
+ "runner": "uikit/scripts/iososs_library_probe_sim.sh OUTDIR",
+ "device": "iPhone 16 (private OpenUIKit-IosOssLibrary-ios-oss-launch3, deleted after)",
+ "runtime": "iOS 26.1 (23B86)",
+ "xcode": "26.1 (17B55)",
+ "how": "swiftc -target arm64-apple-ios26.1-simulator command-line binary run with simctl spawn; stdout verbatim",
+ "lines": [
+  "view.maximumContentSizeCategory=nil",
+  "view.minimumContentSizeCategory=nil",
+  "view.maximumContentSizeCategory.set=UICTContentSizeCategoryM",
+  "contentSizeCategory.medium=UICTContentSizeCategoryM",
+  "vc.shouldAutomaticallyForwardAppearanceMethods=true",
+  "unAuthorizationStatus.raws=[0, 1, 2, 3, 4]",
+  "label.plain.intrinsic=(16.0, 20.333333333333332)",
+  "label.plain.ink=x=1...239 y=0...79 scale=2.0",
+  "label.plain.drawTextRects=[(0.0, 0.0, 120.0, 40.0)]",
+  "label.inset.intrinsic=(16.0, 20.333333333333332)",
+  "label.inset.ink=x=5...239 y=0...79 scale=2.0",
+  "label.inset.drawTextRects=[(0.0, 0.0, 120.0, 40.0)]",
+  "text.truncationMode.raws=[\"head\", \"tail\", \"middle\"]",
+  "done=1"
+ ]
+}

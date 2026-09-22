@@ -27,7 +27,30 @@ public struct UIAxis: OptionSet, Sendable {
 // NSDirectionalRectEdge lives in AutoLayout/UILayoutGuide.swift (main).
 // Incoming lists-diffable re-declared it here; keeping both does not compile.
 
-public typealias UIConfigurationColorTransformer = @Sendable (UIColor) -> UIColor
+/// UIKit's `UIConfigurationColorTransformer`.
+///
+/// This was a closure typealias until the ios-oss pass. It is a STRUCT in
+/// UIKit, and Kickstarter's KDS writes the initializer form --
+/// `UIConfigurationColorTransformer { [weak self] _ in self?.tintColor ?? .white }`
+/// (KDS/Sources/KDS/Buttons/KSRButtonStyleConfiguration.swift:74) -- which a
+/// function type cannot spell: a closure type has no `init`. Every use inside
+/// the port applies it as `transformer(color)`, and `callAsFunction` keeps
+/// those call sites identical.
+///
+/// The closure is deliberately NOT `@Sendable`, for the same measured reason
+/// as `UIConfigurationTextAttributesTransformer`: KDS's captures `self`, a
+/// `@MainActor` `UIButton`, and reads `self.tintColor` in the body.
+public struct UIConfigurationColorTransformer {
+    private let _transform: (UIColor) -> UIColor
+
+    public init(_ transform: @escaping (UIColor) -> UIColor) {
+        _transform = transform
+    }
+
+    public func callAsFunction(_ input: UIColor) -> UIColor { _transform(input) }
+
+    public func transform(_ input: UIColor) -> UIColor { _transform(input) }
+}
 
 public struct UIConfigurationStateCustomKey: Hashable, RawRepresentable, Sendable {
     public var rawValue: String

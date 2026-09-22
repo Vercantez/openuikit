@@ -250,7 +250,8 @@ final class AttributedStringTests: XCTestCase {
         XCTAssertEqual(d.pointSize, 17)
         XCTAssertFalse(d.symbolicTraits.contains(.traitBold))
         let bold = try! XCTUnwrap(d.withSymbolicTraits(.traitBold))
-        XCTAssertEqual(UIFont(descriptor: bold, size: 0).weight, .bold)
+        // iOS 26.1 (iososswallsprobe fontdesc.withBold): `.SFUI-Semibold`.
+        XCTAssertEqual(UIFont(descriptor: bold, size: 0).weight, .semibold)
         XCTAssertTrue(bold.symbolicTraits.contains(.traitBold))
         // size 0 keeps the descriptor's size; a real size overrides it.
         XCTAssertEqual(UIFont(descriptor: bold, size: 0).pointSize, 17)
@@ -262,10 +263,10 @@ final class AttributedStringTests: XCTestCase {
             .withSymbolicTraits(.traitBold)!
         // Real UIKit REPLACES the trait set: asking for bold alone drops italic.
         XCTAssertEqual(italicBold.design, .default)
-        XCTAssertEqual(italicBold.weight, .bold)
+        XCTAssertEqual(italicBold.weight, .semibold)
         let both = UIFont.systemFont(ofSize: 17).fontDescriptor
             .withSymbolicTraits([.traitBold, .traitItalic])!
-        XCTAssertEqual(both.weight, .bold)
+        XCTAssertEqual(both.weight, .semibold)
         XCTAssertEqual(both.design, .italic)
     }
 

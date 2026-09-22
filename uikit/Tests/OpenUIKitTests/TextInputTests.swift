@@ -213,7 +213,7 @@ final class FirstResponderTests: XCTestCase {
         // Tap between 'H' and 'e' (prefix "H" is ~12pt wide): text starts at
         // textRect.x = 27 in window coords.
         let hw = UITextCaretMath.prefixWidth("Hello UIKit", count: 1,
-                                             font: tf.font)
+                                             font: tf.font!)
         let p = CGPoint(x: 27 + hw + 0.5, y: 37)
         w.sendTouch(.began, at: p, timestamp: 0)
         w.sendTouch(.ended, at: p, timestamp: 0.05)
@@ -402,7 +402,7 @@ final class TextFieldEditingTests: XCTestCase {
         tf.text = "The quick brown fox jumps over the lazy dog near the bank"
         tf.becomeFirstResponder()   // caret at end
         w.layoutIfNeeded()
-        let textW = FontEngine.measure(tf.text!, font: tf.font)
+        let textW = FontEngine.measure(tf.text!, font: tf.font!)
         let visibleW = tf.textRect(forBounds: tf.bounds).width
         XCTAssertGreaterThan(textW, visibleW)
         // Caret (at the end) must sit inside the visible strip.
@@ -445,7 +445,7 @@ final class TextFieldEditingTests: XCTestCase {
         XCTAssertEqual(caret.frame.width, 2)
         // Caret x = pixel-rounded text width (caret at end).
         let expected = FontEngine.roundToPixel(
-            FontEngine.measure("Hello", font: tf.font), scale: 2)
+            FontEngine.measure("Hello", font: tf.font!), scale: 2)
         XCTAssertEqual(caret.frame.minX, expected, accuracy: 1e-9)
     }
 }
@@ -678,7 +678,7 @@ final class TextFieldSelectionTests: XCTestCase {
 
         let caret = field.caretRect(for: position(2, in: field))
         let expectedX = field.textRect(forBounds: field.bounds).minX
-            + FontEngine.roundToPixel(FontEngine.measure("He", font: field.font), scale: 2)
+            + FontEngine.roundToPixel(FontEngine.measure("He", font: field.font!), scale: 2)
         XCTAssertEqual(caret.minX, expectedX, accuracy: 1e-9)
         XCTAssertEqual(caret.minY, 6, accuracy: 1e-9)
         XCTAssertEqual(caret.width, 1, accuracy: 1e-9)

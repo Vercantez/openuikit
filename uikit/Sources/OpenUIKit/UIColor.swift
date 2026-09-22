@@ -266,7 +266,7 @@ public class UIColor: NSObject, @unchecked Sendable {
         super.init()
     }
     public init(white: CGFloat, alpha: CGFloat) {
-        storage = .fixed(CGColor(red: white, green: white, blue: white, alpha: alpha))
+        storage = .fixed(CGColor(gray: white, alpha: alpha))
         super.init()
     }
     init(_ storage: Storage) { self.storage = storage; super.init() }
@@ -452,7 +452,9 @@ public class UIColor: NSObject, @unchecked Sendable {
     public func withAlphaComponent(_ alpha: CGFloat) -> UIColor {
         switch storage {
         case .fixed(let c):
-            return UIColor(.fixed(CGColor(red: c.red, green: c.green, blue: c.blue, alpha: alpha)))
+            var next = c
+            next.alpha = alpha
+            return UIColor(.fixed(next))
         case .semantic(let name):
             return UIColor(.dynamic { t in
                 var c = SystemColors.resolve(name, traits: t); c.alpha = alpha; return c
@@ -478,9 +480,10 @@ public class UIColor: NSObject, @unchecked Sendable {
     }
 
     // Fixed palette colors (values match UIKit's fixed colors).
-    public static let clear = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
-    public static let black = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-    public static let white = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+    // iOS 26.1: these three are gray-model colours (two CGColor components).
+    public static let clear = UIColor(white: 0, alpha: 0)
+    public static let black = UIColor(white: 0, alpha: 1)
+    public static let white = UIColor(white: 1, alpha: 1)
     public static let red = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
     public static let green = UIColor(red: 0, green: 1, blue: 0, alpha: 1)
     public static let blue = UIColor(red: 0, green: 0, blue: 1, alpha: 1)

@@ -32,6 +32,7 @@
 #      scripts/conformance_probe_sim.sh NavFlow /tmp/conf/golden --landscape
 set -e
 setopt null_glob
+zmodload zsh/datetime
 cd "$(dirname "$0")/.."
 APPNAME=${1:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad] [--landscape]}
 OUTDIR=${2:?usage: conformance_probe_sim.sh <app> <outdir> [--ipad] [--landscape]}
@@ -58,10 +59,14 @@ rm -rf "$APP"; mkdir -p "$APP"
 
 # Every ConformanceApps Swift file (Registry.swift + each app). script.json
 # is a harness input, not compiled; the glob does not match it.
-APP_SOURCES=(Sources/ConformanceApps/*.swift Sources/ConformanceApps/*/*.swift)
-# Same exclusion as Package.swift's ConformanceApps target: EidolonTap imports
-# the vendored RxSwift/RxCocoa, which this plain swiftc invocation cannot see.
-APP_SOURCES=(${APP_SOURCES:#Sources/ConformanceApps/EidolonTap/*})
+# Only directories that are conformance apps (carry a script.json) — the
+# same set the SPM ConformanceApps target compiles. EidolonTap is excluded
+# there (Package.swift) because it imports RxSwift; globbing it here broke
+# every probe compile since adb34026.
+APP_SOURCES=(Sources/ConformanceApps/*.swift)
+for d in Sources/ConformanceApps/*/script.json; do
+  APP_SOURCES+=(${d:h}/*.swift)
+done
 [[ ${#APP_SOURCES} -gt 0 ]] || { echo "no ConformanceApps sources" >&2; exit 2 }
 
 # -default-isolation MainActor: the same setting the SPM target carries and
@@ -80,6 +85,35 @@ else
   cp Tools/oracle2/ConfProbe-Info.plist "$APP/Info.plist"
 fi
 cp "$SRCDIR/script.json" "$APP/script.json"
+
+# Serialize simulator work across agents/worktrees: mkdir-style
+# /tmp/conformance_sim.lock with a pid file, the same lock
+# refresh_conformance_goldens.sh / agent_merge.sh take. Re-entrant: if the
+# holder is one of our ancestors (refresh -> flow -> probe) we already own it.
+SIM_LOCK=/tmp/conformance_sim.lock
+OWN_LOCK=0
+lock_held_by_ancestor() {
+  local holder=$1 p=$$
+  while [[ -n "$p" && "$p" -gt 1 ]]; do
+    [[ "$p" == "$holder" ]] && return 0
+    p=$(ps -o ppid= -p "$p" 2>/dev/null | tr -d ' ')
+  done
+  return 1
+}
+if [[ -z "${CONFPROBE_NO_LOCK:-}" ]]; then
+  while ! mkdir "$SIM_LOCK" 2>/dev/null; do
+    holder=$(cat "$SIM_LOCK/pid" 2>/dev/null || true)
+    if [[ -n "$holder" ]] && lock_held_by_ancestor "$holder"; then break; fi
+    if [[ -n "$holder" ]] && ! kill -0 "$holder" 2>/dev/null; then rm -rf "$SIM_LOCK"; continue; fi
+    echo "conformance_probe_sim: waiting for $SIM_LOCK (pid ${holder:-?})" >&2
+    sleep 15
+  done
+  if [[ ! -f "$SIM_LOCK/pid" ]]; then
+    echo $$ > "$SIM_LOCK/pid"; OWN_LOCK=1
+    trap 'rm -rf "$SIM_LOCK"' EXIT
+    trap 'rm -rf "$SIM_LOCK"; exit 130' INT TERM HUP
+  fi
+fi
 
 if [[ $IPAD -eq 1 ]]; then
   # iPad (A16) 820×1180 @2x portrait. Same device type as
@@ -159,15 +193,28 @@ fi
 # Keyboard pixels live in a remote process. drawHierarchy of the app window
 # is blank there (kbprobe: UITextEffectsWindow snapOpaquePixels=0). When a
 # capture has a UIKeyInput first responder, confprobe writes NEED_SHOT and
-# waits for GOT_SHOT; this watcher takes a simctl framebuffer screenshot
-# into Documents. Unfocused captures stay drawHierarchy. Start BEFORE
-# --console-pty, which blocks until exit.
+# pauses its script clock (without blocking its main thread) until GOT_SHOT;
+# this watcher takes a simctl framebuffer screenshot into Documents.
+# Unfocused captures stay drawHierarchy. Start BEFORE --console-pty, which
+# blocks until exit.
+#
+# MEASURED (docs/agent_reports/probe-keyboard-capture.md): the FIRST
+# `simctl io screenshot` against a device took 2.6-10.4 s on a loaded host
+# and the next ones ~0.2 s. Take one throwaway shot now so the first
+# keyboard capture does not pay for it (confprobe no longer depends on it:
+# a slow shot only lengthens the pause).
+t0=$EPOCHREALTIME
+xcrun simctl io "$UDID" screenshot "${TMPDIR:-/tmp}/confprobe-warm-$$.png" >/dev/null 2>&1 || true
+rm -f "${TMPDIR:-/tmp}/confprobe-warm-$$.png"
+printf 'conformance_probe_sim: warm-up screenshot took %.2f s\n' $(( EPOCHREALTIME - t0 )) >&2
 (
   while true; do
     if [[ -f "$CONTAINER/Documents/DONE" ]]; then break; fi
     if [[ -f "$CONTAINER/Documents/NEED_SHOT" ]]; then
       name=$(cat "$CONTAINER/Documents/NEED_SHOT")
-      xcrun simctl io "$UDID" screenshot "$CONTAINER/Documents/$name" >/dev/null
+      t0=$EPOCHREALTIME
+      xcrun simctl io "$UDID" screenshot "$CONTAINER/Documents/$name" >/dev/null 2>&1
+      printf 'conformance_probe_sim: screenshot %s took %.2f s\n' "$name" $(( EPOCHREALTIME - t0 )) >&2
       rm -f "$CONTAINER/Documents/NEED_SHOT"
       echo got > "$CONTAINER/Documents/GOT_SHOT"
     fi
@@ -179,12 +226,20 @@ env $LAUNCH_ENV xcrun simctl launch --console-pty "$UDID" com.openuikit.confprob
 kill $WATCH_PID 2>/dev/null || true
 wait $WATCH_PID 2>/dev/null || true
 for i in {1..90}; do [[ -f "$CONTAINER/Documents/DONE" ]] && break; sleep 1; done
+if [[ $LANDSCAPE -eq 1 && $IPAD -eq 0 ]]; then
+  xcrun simctl ui "$UDID" orientation portrait >/dev/null 2>&1 || true
+fi
 [[ -f "$CONTAINER/Documents/DONE" ]] || { echo "conformance_probe_sim: no DONE marker" >&2; exit 1 }
 [[ "$(cat "$CONTAINER/Documents/DONE")" == "ok" ]] \
   || { echo "conformance_probe_sim: $(cat "$CONTAINER/Documents/DONE")" >&2; exit 1 }
 rm -f "$OUTDIR"/$APPNAME.* 2>/dev/null || true
 cp "$CONTAINER"/Documents/*.png "$CONTAINER"/Documents/*.json "$OUTDIR"/
-if [[ $LANDSCAPE -eq 1 && $IPAD -eq 0 ]]; then
-  xcrun simctl ui "$UDID" orientation portrait >/dev/null 2>&1 || true
+# Belt and braces on top of confprobe's own check: one PNG per scripted
+# capture, or this run failed.
+WANT=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["captures"]))' "$SRCDIR/script.json")
+GOT=$(ls "$OUTDIR"/$APPNAME.*.png 2>/dev/null | wc -l | tr -d ' ')
+if [[ "$GOT" != "$WANT" ]]; then
+  echo "conformance_probe_sim: SHORT CAPTURE $APPNAME $GOT/$WANT frame(s) in $OUTDIR" >&2
+  exit 1
 fi
 echo "captured $(ls "$OUTDIR"/$APPNAME.*.png | wc -l | tr -d ' ') frame(s) into $OUTDIR style=${CONFPROBE_STYLE:-light} direction=${CONFPROBE_DIRECTION:-ltr} contentSize=${CONFPROBE_CONTENT_SIZE:-large} orientation=${CONFPROBE_ORIENTATION:-portrait}"

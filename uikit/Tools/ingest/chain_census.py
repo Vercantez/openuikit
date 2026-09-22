@@ -47,8 +47,21 @@ def member_of(msg: str) -> str | None:
     return None
 
 
+def is_own(path: str, own_roots: list[str]) -> bool:
+    real = os.path.realpath(path)
+    return any(real == r or real.startswith(r + os.sep) for r in own_roots)
+
+
 def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
     own_dir = os.path.realpath(os.path.join(pkg, "Sources", name))
+    # A target with generated files (spm_app_chain "generated") is a real
+    # directory of per-entry symlinks; its files resolve into those entries.
+    own_roots = [own_dir]
+    if os.path.isdir(own_dir):
+        for entry in os.listdir(own_dir):
+            child = os.path.join(own_dir, entry)
+            if os.path.islink(child):
+                own_roots.append(os.path.realpath(child))
     cmd = ["swift", "build", "--target", name, "-j", str(jobs)]
     t0 = time.time()
     try:
@@ -68,7 +81,7 @@ def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
             continue
         seen.add(key)
         rec = {"file": m.group("file"), "line": int(m.group("line")), "col": int(m.group("col")),
-               "msg": m.group("msg"), "own": os.path.realpath(m.group("file")).startswith(own_dir + os.sep)}
+               "msg": m.group("msg"), "own": is_own(m.group("file"), own_roots)}
         if m.group("kind") == "error":
             errors.append(rec)
         elif m.group("kind") == "note" and "protocol requires" in m.group("msg"):
