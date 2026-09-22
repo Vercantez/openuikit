@@ -40,5 +40,12 @@ int posix_madvise(void *addr, size_t len, int advice)
         return 0;
     uintptr_t a = (uintptr_t)addr;
     uintptr_t start = a & ~(uintptr_t)4095;
-    return madvise((void *)start, len + (size_t)(a - start), advice);
+    /* Darwin leaves errno alone on success; machorun's madvise copies
+     * glibc's errno out after every call (MEASURED: the fixture read
+     * "errno=other" after rc 0 until this was saved and restored). */
+    int saved = errno;
+    int rc = madvise((void *)start, len + (size_t)(a - start), advice);
+    if (rc == 0)
+        errno = saved;
+    return rc;
 }

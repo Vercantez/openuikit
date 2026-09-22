@@ -53,6 +53,7 @@ if [ "${1:-}" != --inside ]; then
     exec docker run --rm --platform linux/arm64 "${mounts[@]}" -w "$TREE" \
         -e TREE="$TREE" -e MAIN="$MAIN" -e SCRATCH="$SCRATCH" \
         -e IOS_TARGET="$IOS_TARGET" -e IOS_MINOS="$IOS_MINOS" \
+        -e IOS_GUEST_REUSE_BUILD="${IOS_GUEST_REUSE_BUILD:-0}" \
         "$IMAGE" bash "$TREE/full/iostarget/ios_guest.sh" --inside
 fi
 
@@ -71,18 +72,24 @@ export SWIFT_FOUNDATION_ICU=$SCRATCH/swift-foundation-icu
 export OPENCOMBINE_ROOT=$SCRATCH/opencombine-core-durable-20260828-r2
 export BASE_RUNTIME_SOURCE=$LG/mrroot-base FE_RUNTIME_SOURCE=$SCRATCH/mrroot_fe
 mkdir -p "$OUT" "$ROOTDIR" "$MC"
-log "build_full for $TARGET (log $LGI/build_full.log)"
-bash full/scripts/build_full.sh > "$LGI/build_full.log" 2>&1 \
-    || { tail -40 "$LGI/build_full.log" >&2; die "build_full failed for $TARGET"; }
+if [ "${IOS_GUEST_REUSE_BUILD:-0}" = 1 ] && [ -f "$OUT/IOSTargetGuestProbe" ]; then
+    log "reusing $OUT (IOS_GUEST_REUSE_BUILD=1)"
+else
+    log "build_full for $TARGET (log $LGI/build_full.log)"
+    bash full/scripts/build_full.sh > "$LGI/build_full.log" 2>&1 \
+        || { tail -40 "$LGI/build_full.log" >&2; die "build_full failed for $TARGET"; }
+fi
 
 # posix_madvise, the libSystem symbol the iOS-triple ICU needs (umbrella,
 # full/shims/libsystem_posix_compat.c): same transcript as macOS 26 and the
 # iOS 26.1 simulator.
 clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -c full/iostarget/posix_madvise.c -o "$LGI/posix_madvise.o"
 ld64.lld-18 -arch arm64 -platform_version ios-simulator "$MINOS" "$LINK_SDK_VERSION" \
-    -syslibroot "$ROOTDIR/darwin" -o "$LGI/posix_madvise" "$LGI/posix_madvise.o" \
-    "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
-MACHORUN_ROOT=$ROOTDIR "$ROOTDIR/machorun" "$LGI/posix_madvise" > "$LGI/posix_madvise.txt" 2>&1 \
+    -syslibroot "$SYS" -o "$LGI/posix_madvise" "$LGI/posix_madvise.o" \
+    -L"$ROOTDIR/darwin/usr/lib" -L/usr/lib -lSystem "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
+MACHORUN_ROOT=$ROOTDIR LD_LIBRARY_PATH=$OUT/host \
+    LD_PRELOAD="$OUT/host/libOpenDispatchHost.so:$OUT/host/libOpenFoundationInternationalizationHost.so:$OUT/host/libOpenURLTransportHost.so:$OUT/host/libOpenRelativeTimeHost.so" \
+    "$ROOTDIR/machorun" "$LGI/posix_madvise" > "$LGI/posix_madvise.txt" 2>&1 \
     || { cat "$LGI/posix_madvise.txt" >&2; die 'posix_madvise fixture failed under machorun'; }
 diff full/iostarget/posix_madvise.expected "$LGI/posix_madvise.txt" \
     || die 'posix_madvise differs from macOS 26 / iOS 26.1'
