@@ -413,8 +413,11 @@ extension NibDecoder {
         for pair in object.values {
             switch pair.key {
             case "UINibName", "UIClassName", "UIOriginalClassName", "UIParentViewController",
-                 "UIChildViewControllers", "UINavigationBar":
+                 "UIChildViewControllers", "UINavigationBar", "UITabBar",
+                 "UICustomizableViewControllers":
                 continue
+            case "UITabBarItem":
+                if let item = self.object(pair.value) as? UITabBarItem { controller.tabBarItem = item }
             case "UITitle":
                 controller.title = string(pair.value)
             case "UINavigationItem":
@@ -456,6 +459,9 @@ extension NibDecoder {
         }
         if let children, let nav = controller as? UINavigationController {
             nav._setArchivedViewControllers(children)
+        }
+        if let children, let tabs = controller as? UITabBarController {
+            tabs._setArchivedViewControllers(children)
         }
     }
 }

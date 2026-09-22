@@ -6,6 +6,8 @@
 // target compiles — so the class names in the compiled storyboard resolve on
 // both sides. Writes:
 //   <Documents>/nibruntime.json   NibProbe.run over NibRuntimeProbe.storyboardc
+//   <Documents>/nibruntime2.json  NibProbe.runExtended (stacks, prototype
+//                                 cells, tabs, ProbeXibView.nib)
 //   <Documents>/eidolonnibs.json  every Eidolon view archive, no app classes
 //
 // MEASURED while building it: without UIApplicationMain, `sendActions(for:)`
@@ -25,6 +27,7 @@ final class ProbeAppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         write(NibProbe.run(storyboardName: "NibRuntimeProbe"), "nibruntime.json")
+        write(NibProbe.runExtended(storyboardName: "NibRuntimeProbe"), "nibruntime2.json")
 
         EidolonNibProbe.guardedCall = { body in
             // Object addresses differ per run; the class and key do not.

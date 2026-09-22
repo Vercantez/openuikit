@@ -193,7 +193,8 @@ extension NibDecoder {
                     view.layoutMargins = UIEdgeInsets(top: m[0], left: m[1], bottom: m[2], right: m[3])
                 }
             case "UIViewLayoutMarginsAreDirectional", "UIViewPreservesSuperviewMargins",
-                 "UIViewEdgesPreservingSuperviewLayoutMargins":
+                 "UIViewEdgesPreservingSuperviewLayoutMargins",
+                 "UIViewInsetsLayoutMarginsFromSafeArea":
                 continue
             default:
                 applySpecific(pair, to: view)
@@ -377,6 +378,27 @@ extension NibDecoder {
         }
         if let table = view as? UITableView {
             switch pair.key {
+            case "UITableViewCellPrototypeNibs":
+                // A storyboard table's prototype cells: reuse identifier ->
+                // embedded nib, registered as `register(_:forCellReuseIdentifier:)`
+                // does (MEASURED: `dequeueReusableCell(withIdentifier:)`
+                // returns the prototype's custom class with its outlet set
+                // and awakeFromNib run).
+                guard case .reference(let i) = pair.value else { return }
+                for (key, value) in dictionaryPairs(at: i) {
+                    if let identifier = key as? NibString, let nib = value as? UINib {
+                        table.register(nib, forCellReuseIdentifier: identifier.value)
+                    }
+                }
+                return
+            case "UITableViewCellPrototypeNibExternalObjects":
+                guard case .reference(let i) = pair.value else { return }
+                for (_, value) in dictionaryPairs(at: i) {
+                    if let table = value as? NibDictionaryBox, !dictionaryPairs(at: table.index).isEmpty {
+                        UINib.noteUnhandled("UITableView.prototypeExternalObjects")
+                    }
+                }
+                return
             case "UITableViewStyle":
                 // UIKit's UITableViewStyle: plain = 0, grouped = 1,
                 // insetGrouped = 2.
@@ -430,6 +452,16 @@ extension NibDecoder {
             default: break
             }
         }
+        if let cell = view as? UITableViewCell {
+            switch pair.key {
+            case "UIReuseIdentifier":
+                if let identifier = string(pair.value) { cell._setNibReuseIdentifier(identifier) }
+                return
+            case "UIViewPreservesSpecificSuperviewMargins":
+                return
+            default: break
+            }
+        }
         if let scroll = view as? UIScrollView {
             switch pair.key {
             case "UIAlwaysBounceVertical":
@@ -473,6 +505,69 @@ extension NibDecoder {
             default: break
             }
         }
+        if let stack = view as? UIStackView {
+            switch pair.key {
+            case "UIStackViewArrangedSubviews":
+                guard case .reference(let i) = pair.value else { return }
+                for case let arranged as UIView in arrangedElementsForStack(i) {
+                    stack.addArrangedSubview(arranged)
+                }
+                return
+            case "UIStackViewAxis":
+                // UILayoutConstraintAxis: horizontal = 0, vertical = 1.
+                if let raw = int(pair.value) { stack.axis = raw == 1 ? .vertical : .horizontal }
+                return
+            case "UIStackViewDistribution":
+                // UIStackViewDistribution raw values (UIStackView.h).
+                let all: [UIStackView.Distribution] = [.fill, .fillEqually, .fillProportionally,
+                                                       .equalSpacing, .equalCentering]
+                if let raw = int(pair.value), raw >= 0, raw < all.count { stack.distribution = all[raw] }
+                return
+            case "UIStackViewAlignment":
+                // UIStackViewAlignment: fill 0, leading = top 1,
+                // firstBaseline 2, center 3, trailing = bottom 4,
+                // lastBaseline 5. The port spells top/bottom separately for a
+                // horizontal stack; `UIStackViewAxis` precedes this key.
+                guard let raw = int(pair.value) else { return }
+                let vertical = stack.axis == .vertical
+                switch raw {
+                case 0: stack.alignment = .fill
+                case 1: stack.alignment = vertical ? .leading : .top
+                case 2: stack.alignment = .firstBaseline
+                case 3: stack.alignment = .center
+                case 4: stack.alignment = vertical ? .trailing : .bottom
+                case 5: stack.alignment = .lastBaseline
+                default: UINib.noteUnhandled("UIStackViewAlignment:\(raw)")
+                }
+                return
+            case "UIStackViewSpacing":
+                if let spacing = cgFloat(pair.value) { stack.spacing = spacing }
+                return
+            case "UIStackViewLayoutMarginsRelative":
+                if let flag = bool(pair.value) { stack.isLayoutMarginsRelativeArrangement = flag }
+                return
+            case "UIStackViewBaselineRelative":
+                if bool(pair.value) == true { UINib.noteUnhandled("UIStackView.baselineRelative") }
+                return
+            default: break
+            }
+        }
+        if let spinner = view as? UIActivityIndicatorView {
+            switch pair.key {
+            case "UIAnimating":
+                if bool(pair.value) == true { spinner.startAnimating() }
+                return
+            case "UIHidesWhenStopped":
+                if let flag = bool(pair.value) { spinner.hidesWhenStopped = flag }
+                return
+            case "UIColor":
+                if let color = self.object(pair.value) as? UIColor { spinner.color = color }
+                return
+            case "UIActivityIndicatorViewStyle-Modern", "UIActivityIndicatorViewStyle":
+                return
+            default: break
+            }
+        }
         if let segments = view as? UISegmentedControl {
             switch pair.key {
             case "UISegments":
@@ -490,6 +585,11 @@ extension NibDecoder {
             }
         }
         UINib.noteUnhandled("\(type(of: view)).\(pair.key)")
+    }
+
+    /// A stack's arranged subviews, in order.
+    func arrangedElementsForStack(_ index: Int) -> [AnyObject] {
+        arrayElements(at: index)
     }
 
     // MARK: Non-view objects

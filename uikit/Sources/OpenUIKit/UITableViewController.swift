@@ -30,6 +30,8 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
     }
 
     open override func loadView() {
+        // A storyboard table view controller's view is its view nib's table.
+        if _loadStoryboardView() { return }
         let tv = UITableView(frame: CGRect(x: 0, y: 0, width: 390, height: 844),
                              style: style)
         tv.autoresizingMask = [.flexibleWidth, .flexibleHeight]

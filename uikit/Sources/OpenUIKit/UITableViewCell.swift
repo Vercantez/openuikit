@@ -801,6 +801,7 @@ open class UITableViewCell: UIView, ReusableView {
         reuseIdentifier = nil
         super.init(coder: coder)
         configureCell(for: .default)
+        UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
     /// Stamp the reuse identifier onto a cell a `UINib` produced (see

@@ -94,7 +94,7 @@ enum NibProbe {
         }
         // Leaves: a control's and a text view's subviews are private
         // implementation, as are a scroll view's `_`-prefixed indicators.
-        if view is UIControl || view is UITextView { return out }
+        if view is UIControl || view is UITextView || view is UIActivityIndicatorView { return out }
         out["subviews"] = view.subviews
             .filter { !(view is UIScrollView && name($0).hasPrefix("_")) }
             .map { dump($0) }
@@ -313,6 +313,164 @@ final class ProbeChildViewController: ProbeLoggingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NibProbe.log("Child.view frame=\(NibProbe.rect(view.frame)) autoresizing=\(view.autoresizingMask.rawValue)")
+    }
+}
+
+// MARK: - Second scenario: stack views, prototype cells, tabs, a xib
+
+extension NibProbe {
+    static func stackName(_ d: UIStackView.Distribution) -> String {
+        if d == .fill { return "fill" }
+        if d == .fillEqually { return "fillEqually" }
+        if d == .fillProportionally { return "fillProportionally" }
+        if d == .equalSpacing { return "equalSpacing" }
+        if d == .equalCentering { return "equalCentering" }
+        return "other"
+    }
+
+    static func stackName(_ a: UIStackView.Alignment) -> String {
+        if a == .fill { return "fill" }
+        if a == .leading { return "leading" }
+        if a == .center { return "center" }
+        if a == .trailing { return "trailing" }
+        if a == .firstBaseline { return "firstBaseline" }
+        if a == .lastBaseline { return "lastBaseline" }
+        return "other"
+    }
+
+    static func describe(_ stack: UIStackView?) -> [String: Any] {
+        guard let stack else { return ["nil": true] }
+        return [
+            "vertical": stack.axis == .vertical,
+            "spacing": round(stack.spacing),
+            "distribution": stackName(stack.distribution),
+            "alignment": stackName(stack.alignment),
+            "arranged": stack.arrangedSubviews.map { name($0) },
+        ]
+    }
+
+    static func runExtended(storyboardName: String) -> [String: Any] {
+        events = []
+        var result: [String: Any] = [:]
+        let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
+
+        // Stack views, safe-area constraints, an activity indicator.
+        let stack = storyboard.instantiateViewController(withIdentifier: "Stack")
+        stack.view.frame = CGRect(x: 0, y: 0, width: 393, height: 852)
+        stack.view.layoutIfNeeded()
+        let probe = stack as? ProbeStackViewController
+        result["stack.class"] = name(stack)
+        result["stack.outer"] = describe(probe?.stack)
+        result["stack.inner"] = describe(probe?.innerStack)
+        result["stack.spinnerAnimating"] = probe?.spinner?.isAnimating ?? false
+        result["stack.view"] = dump(stack.view)
+
+        // A table view controller whose view nib archives a prototype cell.
+        let table = storyboard.instantiateViewController(withIdentifier: "Table")
+        result["table.class"] = name(table)
+        if let tableVC = table as? UITableViewController, let tableView = tableVC.tableView {
+            result["table.isView"] = tableVC.view === tableView
+            result["table.dataSourceIsController"] = tableView.dataSource === tableVC
+            // In a window, as an app shows it (cell margins follow the
+            // window's layout, not an off-screen default).
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 393, height: 852))
+            window.rootViewController = tableVC
+            window.isHidden = false
+            tableView.reloadData()
+            window.layoutIfNeeded()
+            tableView.layoutIfNeeded()
+            result["table.frame"] = rect(tableView.frame)
+            result["table.visibleCells"] = tableView.visibleCells.map { cell -> [String: Any] in
+                [
+                    "class": name(cell),
+                    "frame": rect(cell.frame),
+                    "reuseIdentifier": cell.reuseIdentifier ?? "nil",
+                    "label": (cell as? ProbeCell)?.label?.text ?? "nil",
+                    "labelFrame": (cell as? ProbeCell)?.label.map { rect($0.frame) } ?? [],
+                    "contentSubviews": cell.contentView.subviews.map { name($0) },
+                ]
+            }
+            let fresh = tableView.dequeueReusableCell(withIdentifier: "Custom")
+            result["table.dequeued"] = [
+                "class": name(fresh),
+                "labelText": (fresh as? ProbeCell)?.label?.text ?? "nil",
+                "reuseIdentifier": fresh?.reuseIdentifier ?? "nil",
+            ] as [String: Any]
+        }
+
+        // A tab bar controller with two relationship children.
+        let tabs = storyboard.instantiateViewController(withIdentifier: "Tabs")
+        result["tabs.class"] = name(tabs)
+        if let tabsVC = tabs as? UITabBarController {
+            result["tabs.viewControllers"] = tabsVC.viewControllers?.map { name($0) } ?? []
+            result["tabs.titles"] = tabsVC.viewControllers?.map { $0.tabBarItem?.title ?? "nil" } ?? []
+            result["tabs.childParents"] = tabsVC.viewControllers?.map { $0.parent === tabsVC } ?? []
+            result["tabs.selectedIndex"] = tabsVC.selectedIndex
+            result["tabs.children"] = tabsVC.children.count
+            tabsVC.loadViewIfNeeded()
+            result["tabs.selectedIndexAfterLoad"] = tabsVC.selectedIndex
+            result["tabs.selectedAfterLoad"] = name(tabsVC.selectedViewController)
+        }
+
+        // A plain xib with a custom File's Owner and two top-level views.
+        let owner = ProbeXibOwner()
+        let objects = UINib(nibName: "ProbeXibView", bundle: nil).instantiate(withOwner: owner, options: nil)
+        result["xib.topLevel"] = objects.map { name($0) }
+        result["xib.ownerViewIsFirst"] = owner.xibView === (objects.first as AnyObject?)
+        result["xib.captionShared"] = owner.caption === owner.xibView?.caption
+        if let view = owner.xibView {
+            view.layoutIfNeeded()
+            result["xib.view"] = dump(view)
+        }
+        let bundleOwner = ProbeXibOwner()
+        let loaded = Bundle.main.loadNibNamed("ProbeXibView", owner: bundleOwner, options: nil) ?? []
+        result["xib.bundleLoad"] = loaded.map { name($0) }
+        result["xib.bundleLoadOwnerSet"] = bundleOwner.xibView === (loaded.first as AnyObject?)
+        result["events"] = events
+        return result
+    }
+}
+
+final class ProbeStackViewController: ProbeLoggingViewController {
+    override var probeName: String { "Stack" }
+    @IBOutlet var stack: UIStackView?
+    @IBOutlet var innerStack: UIStackView?
+    @IBOutlet var spinner: UIActivityIndicatorView?
+}
+
+final class ProbeCell: UITableViewCell {
+    @IBOutlet var label: UILabel?
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        NibProbe.log("Cell.awakeFromNib reuse=\(reuseIdentifier ?? "nil") label=\(label?.text ?? "nil")")
+    }
+}
+
+final class ProbeTableViewController: UITableViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Custom", for: indexPath)
+        (cell as? ProbeCell)?.label?.text = "Row \(indexPath.row)"
+        return cell
+    }
+}
+
+@MainActor
+final class ProbeXibOwner: NSObject {
+    @IBOutlet var xibView: ProbeXibView? { didSet { NibProbe.log("XibOwner.outlet.xibView") } }
+    @IBOutlet var caption: UILabel? { didSet { NibProbe.log("XibOwner.outlet.caption") } }
+}
+
+final class ProbeXibView: UIView {
+    @IBOutlet var caption: UILabel? { didSet { NibProbe.log("XibView.outlet.caption") } }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        NibProbe.log("XibView.init(coder) frame=\(NibProbe.rect(frame)) subviews=\(subviews.count)")
+    }
+    override init(frame: CGRect) { super.init(frame: frame) }
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        NibProbe.log("XibView.awakeFromNib caption=\(caption?.text ?? "nil")")
     }
 }
 

@@ -103,7 +103,7 @@ final class NibRuntimeTests: XCTestCase {
         let plist = try XCTUnwrap(BinaryPropertyList.parse(bytes))
         XCTAssertEqual(plist["UIStoryboardDesignatedEntryPointIdentifier"]?.string, "Nav")
         XCTAssertEqual(plist["UIStoryboardVersion"], .integer(1))
-        XCTAssertEqual(plist["UIViewControllerIdentifiersToNibNames"]?.dictionary?.count, 4)
+        XCTAssertEqual(plist["UIViewControllerIdentifiersToNibNames"]?.dictionary?.count, 7)
         XCTAssertEqual(plist["UIViewControllerIdentifiersToNibNames"]?["Root"]?.string, "Root")
         XCTAssertNil(BinaryPropertyList.parse(Array("bplist00".utf8) + [UInt8](repeating: 0, count: 40)))
     }
@@ -135,6 +135,23 @@ final class NibRuntimeTests: XCTestCase {
         let theirs = try NibRuntimeTests.oracle("nibruntime.json")
         let diffs = NibRuntimeTests.differences(ours, theirs)
         XCTAssert(diffs.isEmpty, "\(diffs.count) differences from iOS 26.1:\n" + diffs.joined(separator: "\n"))
+    }
+
+    /// Stack views with safe-area constraints, a table view controller's
+    /// prototype cell, a tab bar controller's relationship children, and a
+    /// plain xib with a custom File's Owner — against the same iOS run.
+    func testStoryboardScenario2MatchesiOS() throws {
+        let ours = try NibRuntimeTests.normalized(NibProbe.runExtended(storyboardName: "NibRuntimeProbe"))
+        NibRuntimeTests.dump(ours, "nibruntime2.json")
+        let theirs = try NibRuntimeTests.oracle("nibruntime2.json")
+        let known = try NibRuntimeTests.knownDivergences("nibruntime2.json")
+        let diffs = NibRuntimeTests.differences(ours, theirs)
+        let differing = Set(diffs.map { String($0.prefix(while: { $0 != ":" })) })
+        let unexpected = diffs.filter { !known.contains(String($0.prefix(while: { $0 != ":" }))) }
+        XCTAssert(unexpected.isEmpty, "\(unexpected.count) differences from iOS 26.1:\n"
+                  + unexpected.joined(separator: "\n"))
+        XCTAssertEqual(known.subtracting(differing), [],
+                       "known divergences that no longer differ: remove them from the list")
     }
 
     /// Eidolon's own compiled view archives, no app classes, against iOS

@@ -1,0 +1,427 @@
+{
+  "events" : [
+    "Stack.init(coder) nibName=stk-00-001-view-stv-00-001 title=nil storyboardNil=true",
+    "Stack.awakeFromNib storyboardNil=false parent=nil",
+    "Stack.loadView begin",
+    "Stack.loadView end children=0",
+    "Stack.viewDidLoad children=0",
+    "Cell.awakeFromNib reuse=Custom label=Cell",
+    "Cell.awakeFromNib reuse=Custom label=Cell",
+    "Cell.awakeFromNib reuse=Custom label=Cell",
+    "Cell.awakeFromNib reuse=Custom label=Cell",
+    "XibView.init(coder) frame=[0.0, 0.0, 300.0, 120.0] subviews=1",
+    "XibOwner.outlet.caption",
+    "XibView.outlet.caption",
+    "XibOwner.outlet.xibView",
+    "XibView.awakeFromNib caption=Xib caption",
+    "XibView.init(coder) frame=[0.0, 0.0, 300.0, 120.0] subviews=1",
+    "XibOwner.outlet.caption",
+    "XibView.outlet.caption",
+    "XibOwner.outlet.xibView",
+    "XibView.awakeFromNib caption=Xib caption"
+  ],
+  "stack.class" : "ProbeStackViewController",
+  "stack.inner" : {
+    "alignment" : "fill",
+    "arranged" : [
+      "UIButton",
+      "UIButton"
+    ],
+    "distribution" : "fillEqually",
+    "spacing" : 4,
+    "vertical" : false
+  },
+  "stack.outer" : {
+    "alignment" : "fill",
+    "arranged" : [
+      "UILabel",
+      "UIStackView",
+      "UIView",
+      "UILabel"
+    ],
+    "distribution" : "fill",
+    "spacing" : 8,
+    "vertical" : true
+  },
+  "stack.spinnerAnimating" : true,
+  "stack.view" : {
+    "alpha" : 1,
+    "autoresizing" : 18,
+    "background" : [
+      1,
+      1,
+      1,
+      1
+    ],
+    "class" : "UIView",
+    "clips" : false,
+    "frame" : [
+      0,
+      0,
+      393,
+      852
+    ],
+    "hidden" : false,
+    "subviews" : [
+      {
+        "alpha" : 1,
+        "autoresizing" : 36,
+        "class" : "UIStackView",
+        "clips" : false,
+        "frame" : [
+          16,
+          20,
+          361,
+          132.333
+        ],
+        "hidden" : false,
+        "subviews" : [
+          {
+            "alignment" : 0,
+            "alpha" : 1,
+            "autoresizing" : 36,
+            "class" : "UILabel",
+            "clips" : false,
+            "frame" : [
+              0,
+              0,
+              361,
+              20.332999999999998
+            ],
+            "hidden" : false,
+            "ios.fontName" : ".SFUI-Regular",
+            "lines" : 1,
+            "pointSize" : 17,
+            "subviews" : [
+
+            ],
+            "tag" : 0,
+            "tamic" : false,
+            "text" : "Stack A",
+            "textColor" : [
+              0,
+              0,
+              0,
+              1
+            ],
+            "userInteraction" : false
+          },
+          {
+            "alpha" : 1,
+            "autoresizing" : 36,
+            "class" : "UIStackView",
+            "clips" : false,
+            "frame" : [
+              0,
+              28.332999999999998,
+              361,
+              30
+            ],
+            "hidden" : false,
+            "subviews" : [
+              {
+                "alpha" : 1,
+                "autoresizing" : 36,
+                "buttonType" : 1,
+                "class" : "UIButton",
+                "clips" : false,
+                "frame" : [
+                  0,
+                  0,
+                  178.667,
+                  30
+                ],
+                "hidden" : false,
+                "tag" : 0,
+                "tamic" : false,
+                "title" : "L",
+                "userInteraction" : true
+              },
+              {
+                "alpha" : 1,
+                "autoresizing" : 36,
+                "buttonType" : 1,
+                "class" : "UIButton",
+                "clips" : false,
+                "frame" : [
+                  182.667,
+                  0,
+                  178.333,
+                  30
+                ],
+                "hidden" : false,
+                "tag" : 0,
+                "tamic" : false,
+                "title" : "R",
+                "userInteraction" : true
+              }
+            ],
+            "tag" : 0,
+            "tamic" : false,
+            "userInteraction" : true
+          },
+          {
+            "alpha" : 1,
+            "autoresizing" : 36,
+            "background" : [
+              0.20000000000000001,
+              0.20000000000000001,
+              0.80000000000000004,
+              1
+            ],
+            "class" : "UIView",
+            "clips" : false,
+            "frame" : [
+              0,
+              66.332999999999998,
+              361,
+              40
+            ],
+            "hidden" : false,
+            "subviews" : [
+
+            ],
+            "tag" : 0,
+            "tamic" : false,
+            "userInteraction" : true
+          },
+          {
+            "alignment" : 2,
+            "alpha" : 1,
+            "autoresizing" : 36,
+            "class" : "UILabel",
+            "clips" : false,
+            "frame" : [
+              0,
+              114.333,
+              361,
+              18
+            ],
+            "hidden" : false,
+            "ios.fontName" : ".SFUI-Regular",
+            "lines" : 1,
+            "pointSize" : 15,
+            "subviews" : [
+
+            ],
+            "tag" : 0,
+            "tamic" : false,
+            "text" : "Stack B",
+            "textColor" : [
+              0,
+              0,
+              0,
+              1
+            ],
+            "userInteraction" : false
+          }
+        ],
+        "tag" : 0,
+        "tamic" : false,
+        "userInteraction" : true
+      },
+      {
+        "alpha" : 1,
+        "autoresizing" : 36,
+        "background" : [
+          0.80000000000000004,
+          0.5,
+          0.10000000000000001,
+          1
+        ],
+        "class" : "UIView",
+        "clips" : false,
+        "frame" : [
+          8,
+          172.333,
+          100,
+          50
+        ],
+        "hidden" : false,
+        "subviews" : [
+
+        ],
+        "tag" : 0,
+        "tamic" : false,
+        "userInteraction" : true
+      },
+      {
+        "alpha" : 1,
+        "autoresizing" : 36,
+        "class" : "UIActivityIndicatorView",
+        "clips" : false,
+        "frame" : [
+          300,
+          200,
+          37,
+          37
+        ],
+        "hidden" : false,
+        "tag" : 0,
+        "tamic" : true,
+        "userInteraction" : true
+      }
+    ],
+    "tag" : 0,
+    "tamic" : true,
+    "userInteraction" : true
+  },
+  "table.class" : "ProbeTableViewController",
+  "table.dataSourceIsController" : true,
+  "table.dequeued" : {
+    "class" : "ProbeCell",
+    "labelText" : "Cell",
+    "reuseIdentifier" : "Custom"
+  },
+  "table.frame" : [
+    0,
+    0,
+    393,
+    852
+  ],
+  "table.isView" : true,
+  "table.visibleCells" : [
+    {
+      "class" : "ProbeCell",
+      "contentSubviews" : [
+        "UILabel"
+      ],
+      "frame" : [
+        0,
+        0,
+        393,
+        51
+      ],
+      "label" : "Row 0",
+      "labelFrame" : [
+        20,
+        15.333,
+        47.332999999999998,
+        20.332999999999998
+      ],
+      "reuseIdentifier" : "Custom"
+    },
+    {
+      "class" : "ProbeCell",
+      "contentSubviews" : [
+        "UILabel"
+      ],
+      "frame" : [
+        0,
+        51,
+        393,
+        51
+      ],
+      "label" : "Row 1",
+      "labelFrame" : [
+        20,
+        15.333,
+        44.332999999999998,
+        20.332999999999998
+      ],
+      "reuseIdentifier" : "Custom"
+    },
+    {
+      "class" : "ProbeCell",
+      "contentSubviews" : [
+        "UILabel"
+      ],
+      "frame" : [
+        0,
+        102,
+        393,
+        51
+      ],
+      "label" : "Row 2",
+      "labelFrame" : [
+        20,
+        15.333,
+        46.667000000000002,
+        20.332999999999998
+      ],
+      "reuseIdentifier" : "Custom"
+    }
+  ],
+  "tabs.childParents" : [
+    true,
+    true
+  ],
+  "tabs.children" : 2,
+  "tabs.class" : "UITabBarController",
+  "tabs.selectedAfterLoad" : "nil",
+  "tabs.selectedIndex" : 9223372036854775807,
+  "tabs.selectedIndexAfterLoad" : 9223372036854775807,
+  "tabs.titles" : [
+    "One",
+    "Two"
+  ],
+  "tabs.viewControllers" : [
+    "UIViewController",
+    "UIViewController"
+  ],
+  "xib.bundleLoad" : [
+    "ProbeXibView",
+    "UIView"
+  ],
+  "xib.bundleLoadOwnerSet" : true,
+  "xib.captionShared" : true,
+  "xib.ownerViewIsFirst" : true,
+  "xib.topLevel" : [
+    "ProbeXibView",
+    "UIView"
+  ],
+  "xib.view" : {
+    "alpha" : 1,
+    "autoresizing" : 36,
+    "background" : [
+      0.94999999999999996,
+      0.90000000000000002,
+      0.80000000000000004,
+      1
+    ],
+    "class" : "ProbeXibView",
+    "clips" : false,
+    "frame" : [
+      0,
+      0,
+      300,
+      120
+    ],
+    "hidden" : false,
+    "subviews" : [
+      {
+        "alignment" : 1,
+        "alpha" : 1,
+        "autoresizing" : 36,
+        "class" : "UILabel",
+        "clips" : false,
+        "frame" : [
+          20,
+          20,
+          260,
+          24
+        ],
+        "hidden" : false,
+        "ios.fontName" : ".SFUI-Semibold",
+        "lines" : 1,
+        "pointSize" : 20,
+        "subviews" : [
+
+        ],
+        "tag" : 0,
+        "tamic" : false,
+        "text" : "Xib caption",
+        "textColor" : [
+          0.5,
+          0.10000000000000001,
+          0.10000000000000001,
+          1
+        ],
+        "userInteraction" : false
+      }
+    ],
+    "tag" : 0,
+    "tamic" : true,
+    "userInteraction" : true
+  }
+}

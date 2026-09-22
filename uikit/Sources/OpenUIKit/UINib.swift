@@ -586,6 +586,18 @@ open class UINib {
     }
 }
 
+extension Bundle {
+    /// UIKit's `-[NSBundle loadNibNamed:owner:options:]`: the same load as
+    /// `UINib(nibName:bundle:).instantiate(withOwner:options:)` (MEASURED
+    /// identical top-level objects and owner outlets in the nibruntime2
+    /// oracle), from this bundle.
+    @MainActor
+    public func loadNibNamed(_ name: String, owner: Any?,
+                             options: [UINib.OptionsKey: Any]? = nil) -> [Any]? {
+        UINib(nibName: name, bundle: self).instantiate(withOwner: owner, options: options)
+    }
+}
+
 /// A bundle's resource directory as a path, without Foundation's `Bundle`
 /// API surface differences between the package build and the guest shim.
 @MainActor
@@ -787,6 +799,27 @@ final class NibDecoder {
         case "NSDictionary", "NSMutableDictionary":
             return NibDictionaryBox(index: index)
 
+        case "NSData", "NSMutableData":
+            if case .bytes(let raw)? = object.first("NS.bytes") { return NibDataBox(bytes: raw) }
+            return NibDataBox(bytes: [])
+
+        case "UINib":
+            // A nib archived inside a nib: a storyboard table's prototype
+            // cells (`UITableViewCellPrototypeNibs`), `archiveData` holding a
+            // complete NIBArchive.
+            guard let data = self.object(object.first("archiveData")) as? NibDataBox else {
+                UINib.noteUnhandled("UINib:archiveData")
+                return nil
+            }
+            return UINib(nibBytes: data.bytes, name: "<prototype>")
+
+        case "UITabBarItem":
+            let item = UITabBarItem(title: string(object.first("UITitle")),
+                                    image: self.object(object.first("UIImage")) as? UIImage,
+                                    tag: int(object.first("UITag")) ?? 0)
+            if let enabled = bool(object.first("UIEnabled")) { item.isEnabled = enabled }
+            return item
+
         case "NSNumber":
             for pair in object.values {
                 switch pair.value {
@@ -877,7 +910,10 @@ final class NibDecoder {
             // would be a second, unmanaged separator. Dropped on purpose.
             return NibProxyPlaceholder(identifier: object.className)
 
-        case "NSObject", "UILayoutGuide", "UITapRecognizer", "UIFontDescriptor",
+        case "UILayoutGuide":
+            return makeLayoutGuide(object)
+
+        case "NSObject", "UITapRecognizer", "UIFontDescriptor",
              "NSMutableParagraphStyle", "NSParagraphStyle", "UIRuntimeAccessibilityConfiguration":
             // Archive bookkeeping or values read through their owner's keys
             // (a tap recognizer's `_imp`, a font's descriptor, the safe-area
@@ -923,6 +959,11 @@ final class NibDecoder {
         // UIKit raw values: custom = 0, system = 1.
         if name == "UIButton", int(object.first("UIButtonType")) == 1 {
             return UIButton(type: .system)
+        }
+        // `style` is fixed at construction too: UIActivityIndicatorViewStyle
+        // medium = 100, large = 101 (UIActivityIndicatorView.h).
+        if name == "UIActivityIndicatorView", int(object.first("UIActivityIndicatorViewStyle-Modern")) == 101 {
+            return UIActivityIndicatorView(style: .large)
         }
         return UINibClassRegistry.make(name)
     }
@@ -1292,6 +1333,27 @@ final class NibDecoder {
         symbolicSpacings = []
     }
 
+    /// An archived layout guide. A view's safe-area guide is archived with
+    /// identifier `UIViewSafeAreaLayoutGuide` and its owning view, and
+    /// constraints to it must bind to that view's live guide.
+    func makeLayoutGuide(_ object: NibArchive.Object) -> AnyObject? {
+        let identifier = string(object.first("UILayoutGuideIdentifier")) ?? ""
+        let owner = self.object(object.first("UILayoutGuideOwningView")) as? UIView
+        switch (identifier, owner) {
+        case ("UIViewSafeAreaLayoutGuide", let view?):
+            return view.safeAreaLayoutGuide
+        case ("UIViewLayoutMarginsGuide", let view?):
+            return view.layoutMarginsGuide
+        case ("", nil):
+            // The unowned, unarchived guide ibtool writes beside a scene's
+            // safe area; nothing refers to it.
+            return NibProxyPlaceholder(identifier: "UILayoutGuide")
+        default:
+            UINib.noteUnhandled("UILayoutGuide:\(identifier)")
+            return NibProxyPlaceholder(identifier: "UILayoutGuide")
+        }
+    }
+
     // MARK: Connections and key-value pairs
 
     func makeOutletConnection(_ object: NibArchive.Object) -> AnyObject? {
@@ -1391,6 +1453,12 @@ final class NibArrayBox {
 final class NibDictionaryBox {
     let index: Int
     init(index: Int) { self.index = index }
+}
+
+/// An archived NSData.
+final class NibDataBox {
+    let bytes: [UInt8]
+    init(bytes: [UInt8]) { self.bytes = bytes }
 }
 
 /// One `UIButtonContent`: a button's per-state title / colours / images.

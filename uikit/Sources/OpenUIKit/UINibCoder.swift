@@ -110,10 +110,13 @@ final class UINibCoder: NSCoder, @unchecked Sendable {
         guard let nib = coder as? UINibCoder else { return }
         let object = nib.decoder.archive.objects[nib.index]
         nib.decoder.applyView(object, to: view, scalarsOnly: true)
-        // The frame is the one geometry key a framework init resets
-        // (UISwitch forces its size); UIKit's decode wins, then the
-        // control's own frame rule applies when it is next set.
-        _ = object
+        // A cell's own init re-adds its default text label and image view
+        // to the content view; an archived custom cell has neither
+        // (`UITextLabel` / `UIImageView` archive nil).
+        if let cell = view as? UITableViewCell, object.first("UIContentView") != nil {
+            cell.textLabel?.removeFromSuperview()
+            cell.imageView?.removeFromSuperview()
+        }
     }
 
     /// From `UIViewController.init?(coder:)`.

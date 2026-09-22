@@ -12,6 +12,7 @@ app="$out/NibRuntimeProbe.app"
 rm -rf "$app"
 mkdir -p "$app/eidolon/Auction" "$app/eidolon/Fulfillment" "$app/eidolon/xib"
 cp -R fixtures/nibruntime/NibRuntimeProbe.storyboardc "$app/"
+cp fixtures/nibruntime/ProbeXibView.nib "$app/"
 cp fixtures/realapp/eidolon/nibs/Auction.storyboardc/*.nib "$app/eidolon/Auction/"
 cp fixtures/realapp/eidolon/nibs/Fulfillment.storyboardc/*.nib "$app/eidolon/Fulfillment/"
 cp fixtures/realapp/eidolon/nibs/KeypadView.nib "$app/eidolon/xib/"
@@ -37,8 +38,9 @@ xcrun simctl bootstatus "$device" -b
 trap 'xcrun simctl shutdown "$device" >/dev/null 2>&1 || true' EXIT
 xcrun simctl install "$device" "$app"
 container=$(xcrun simctl get_app_container "$device" com.openuikit.nibruntimeprobe data)
-rm -f "$container/Documents/nibruntime.json" "$container/Documents/eidolonnibs.json"
+rm -f "$container/Documents/nibruntime.json" "$container/Documents/nibruntime2.json" "$container/Documents/eidolonnibs.json"
 xcrun simctl launch --console-pty "$device" com.openuikit.nibruntimeprobe > "$out/console.log" 2>&1 || true
 cp "$container/Documents/nibruntime.json" "$out/nibruntime.json"
+cp "$container/Documents/nibruntime2.json" "$out/nibruntime2.json"
 cp "$container/Documents/eidolonnibs.json" "$out/eidolonnibs.json"
 echo "Measured iOS 26.1 storyboard runtime: $out/nibruntime.json $out/eidolonnibs.json"
