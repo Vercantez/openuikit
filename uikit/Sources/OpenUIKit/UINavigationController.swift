@@ -117,7 +117,57 @@ open class UINavigationController: UIViewController {
 
     // MARK: Stack
 
-    public private(set) var viewControllers: [UIViewController] = []
+    var _viewControllerStack: [UIViewController] = []
+
+    /// UIKit's `viewControllers`; assigning it is
+    /// `setViewControllers(_:animated: false)`.
+    public var viewControllers: [UIViewController] {
+        get { _viewControllerStack }
+        set { setViewControllers(newValue, animated: false) }
+    }
+
+    /// UIKit's `setViewControllers(_:animated:)`, non-animated shape.
+    ///
+    /// Controllers leaving the stack get `willMove(toParent: nil)` and are
+    /// detached; controllers joining it are added as children. When the view
+    /// is loaded and the top changes, the old top disappears and the new top
+    /// appears with the same non-animated appearance pairing
+    /// `pushViewController(_:animated: false)` uses. The relative order of
+    /// these callbacks for a whole-stack replace was not separately measured;
+    /// `animated: true` is performed without an animation.
+    open func setViewControllers(_ newStack: [UIViewController], animated: Bool) {
+        finishActiveTransition()
+        var seen = Set<ObjectIdentifier>()
+        let stack = newStack.filter { seen.insert(ObjectIdentifier($0)).inserted }
+        let oldTop = topViewController
+        let removed = _viewControllerStack.filter { old in !stack.contains { $0 === old } }
+        let added = stack.filter { new in !_viewControllerStack.contains { $0 === new } }
+        for vc in removed where vc !== oldTop {
+            vc.willMove(toParent: nil)
+            detachFromParent(vc)
+        }
+        for vc in added { addChild(vc) }
+        _viewControllerStack = stack
+        let newTop = stack.last
+        if isViewLoaded, oldTop !== newTop {
+            if let newTop { newTop.loadViewIfNeeded(); newTop.beginAppearanceTransition(true, animated: false) }
+            oldTop?.beginAppearanceTransition(false, animated: false)
+            if let newTop { installTopView(newTop) }
+            if let oldTop {
+                oldTop.view.removeFromSuperview()
+                oldTop.endAppearanceTransition()
+            }
+            newTop?.endAppearanceTransition()
+            updateBarState()
+        } else if isViewLoaded {
+            updateBarState()
+        }
+        if let oldTop, removed.contains(where: { $0 === oldTop }) {
+            oldTop.willMove(toParent: nil)
+            detachFromParent(oldTop)
+        }
+        for vc in added { vc.didMove(toParent: self) }
+    }
     public var topViewController: UIViewController? { viewControllers.last }
 
     /// The controller whose view is currently in front of the navigation
@@ -210,7 +260,7 @@ open class UINavigationController: UIViewController {
     public init(rootViewController: UIViewController) {
         super.init()
         addChild(rootViewController)
-        viewControllers = [rootViewController]
+        _viewControllerStack = [rootViewController]
         rootViewController.didMove(toParent: self)
     }
 
@@ -752,7 +802,7 @@ open class UINavigationController: UIViewController {
         finishActiveTransition()
         let from = topViewController
         addChild(vc)
-        viewControllers.append(vc)
+        _viewControllerStack.append(vc)
         // MEASURED: `shouldPush(item)` reaches the bar delegate with
         // `viewControllers` already holding the new controller and the bar
         // items not yet; no `didPush` follows on the controller path. The
@@ -822,7 +872,7 @@ open class UINavigationController: UIViewController {
     public func popViewController(animated: Bool) -> UIViewController? {
         finishActiveTransition()
         guard viewControllers.count > 1 else { return nil }
-        let from = viewControllers.removeLast()
+        let from = _viewControllerStack.removeLast()
         from.willMove(toParent: nil)
         let to = viewControllers[viewControllers.count - 1]
         guard isViewLoaded else {
@@ -978,7 +1028,7 @@ open class UINavigationController: UIViewController {
             vc.willMove(toParent: nil)
             detachFromParent(vc)
         }
-        viewControllers.removeSubrange(1..<(viewControllers.count - 1))
+        _viewControllerStack.removeSubrange(1..<(viewControllers.count - 1))
         guard let top = popViewController(animated: animated) else { return removed }
         return removed + [top]
     }
@@ -1081,7 +1131,7 @@ open class UINavigationController: UIViewController {
         } else {
             if t.interactive {
                 // Interactive pop mutates the stack only on completion.
-                viewControllers.removeAll { $0 === t.frontVC }
+                _viewControllerStack.removeAll { $0 === t.frontVC }
                 t.frontVC.willMove(toParent: nil)
             }
             t.frontVC.endAppearanceTransition()

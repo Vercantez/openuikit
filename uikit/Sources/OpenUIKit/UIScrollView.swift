@@ -471,6 +471,23 @@ open class UIScrollView: UIView {
         // separate window (docs/ORACLE_FLOW.md). Do not apply 260 here.
         return 0
     }
+    /// UIKit's (deprecated) combined indicator insets. MEASURED iPhone 16 /
+    /// iOS 26.1 (iososswallsprobe `lens.scroll.*`, `scroll2.*`): the setter
+    /// writes both the vertical and the horizontal insets; the getter reads
+    /// them back only while the two are equal and reads .zero otherwise
+    /// (fresh view .zero; set (1,2,3,4) → (1,2,3,4); then vertical
+    /// (5,6,7,8) → .zero; horizontal (5,6,7,8) as well → (5,6,7,8)).
+    public var scrollIndicatorInsets: UIEdgeInsets {
+        get {
+            verticalScrollIndicatorInsets == horizontalScrollIndicatorInsets
+                ? verticalScrollIndicatorInsets : .zero
+        }
+        set {
+            verticalScrollIndicatorInsets = newValue
+            horizontalScrollIndicatorInsets = newValue
+        }
+    }
+
     public var verticalScrollIndicatorInsets: UIEdgeInsets = .zero {
         didSet { if verticalScrollIndicatorInsets != oldValue { updateIndicators() } }
     }

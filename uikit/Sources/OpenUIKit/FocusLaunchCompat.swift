@@ -33,18 +33,9 @@ public func CATransform3DMakeScale(_ sx: CGFloat, _ sy: CGFloat, _ sz: CGFloat) 
 // NSLayoutConstraint() lives on the class (NSLayoutConstraint.swift) now
 // that it inherits NSObject (focus-deps).
 
-extension UIProgressView {
-    public enum Style: Int, Sendable {
-        case `default` = 0
-        case bar = 1
-    }
-
-    /// GradientProgressBar(progressViewStyle: .bar) — URLBar.swift:179.
-    public convenience init(progressViewStyle style: Style) {
-        self.init(frame: .zero)
-        _ = style
-    }
-}
+// UIProgressView.Style / init(progressViewStyle:) moved to UIProgressView.swift
+// (ios-oss-launch2: measured and stored; GradientProgressBar in URLBar.swift:179
+// still calls it).
 
 // MARK: - Edit menu (URLBar.swift:687)
 

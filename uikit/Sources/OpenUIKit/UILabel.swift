@@ -43,7 +43,14 @@ open class UILabel: UIView {
         }
     }
     var _text: String?
-    public var font: UIFont = .systemFont(ofSize: 17)
+    /// UIKit declares `font` `null_resettable` (Swift `UIFont!`). MEASURED
+    /// iPhone 16 / iOS 26.1 (iososswallsprobe `lens.label.font.*`): a fresh
+    /// label reads `.SFUI-Regular` 17 and assigning nil reads it again.
+    public var font: UIFont! {
+        get { _font }
+        set { _font = newValue ?? .systemFont(ofSize: 17) }
+    }
+    var _font: UIFont = .systemFont(ofSize: 17)
     /// UIKit declares `textColor` `null_resettable` (Swift `UIColor!`).
     /// MEASURED iPhone 16 / iOS 26.1: a fresh label reads `labelColor`, and
     /// assigning nil reads `labelColor` again (ios-oss-launch.md probe).
@@ -108,7 +115,7 @@ open class UILabel: UIView {
             if let a = _attributed { return a }
             guard let text else { return nil }
             return NSAttributedString(string: text,
-                                      attributes: [.font: font, .foregroundColor: _textColor])
+                                      attributes: [.font: _font, .foregroundColor: _textColor])
         }
         set {
             _attributed = newValue
@@ -130,7 +137,7 @@ open class UILabel: UIView {
     /// Flattened attributed content, or nil when the label holds plain text.
     var attributedLayoutText: AttributedTextLayout.Text? {
         guard let a = _attributed, a.length > 0 else { return nil }
-        return AttributedTextLayout.flatten(a, defaultFont: font, defaultColor: _textColor)
+        return AttributedTextLayout.flatten(a, defaultFont: _font, defaultColor: _textColor)
     }
 
     public override init(frame: CGRect) {
@@ -158,7 +165,7 @@ open class UILabel: UIView {
     /// last baseline of a single-line label is measured back from the
     /// line-box bottom. Verified against golden/constraints_baseline.
     override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
-        let ascender = FontEngine.metrics(for: font).ascender
+        let ascender = FontEngine.metrics(for: _font).ascender
         var first: CGFloat = (ascender + 0.5).rounded(.down)
         if let s = LayoutEngine.iOSPixelScale {
             // iOS (MEASURED 2026-09-04, constraints_baseline on the 2x
@@ -176,7 +183,7 @@ open class UILabel: UIView {
     }
 
     /// Single-line label height (real UIKit rounding; see FontEngine).
-    var lineBoxHeight: CGFloat { FontEngine.labelLineHeight(for: font) }
+    var lineBoxHeight: CGFloat { FontEngine.labelLineHeight(for: _font) }
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         if let t = attributedLayoutText { return attributedSizeThatFits(t, size) }
@@ -186,16 +193,16 @@ open class UILabel: UIView {
         // Single-line labels ignore the constraint entirely (real UIKit:
         // sizeThatFits of a 1-line label reports the full text width).
         if numberOfLines == 1 {
-            let w = FontEngine.ceilToPixel(FontEngine.measure(text, font: font), scale: scale)
+            let w = FontEngine.ceilToPixel(FontEngine.measure(text, font: _font), scale: scale)
             return CGSize(width: w, height: lineH)
         }
         let halfMax: CGFloat = CGFloat.greatestFiniteMagnitude / CGFloat(2)
         let unbounded = !(size.width > 0) || size.width >= halfMax
         if unbounded {
-            let w = FontEngine.ceilToPixel(FontEngine.measure(text, font: font), scale: scale)
+            let w = FontEngine.ceilToPixel(FontEngine.measure(text, font: _font), scale: scale)
             return CGSize(width: w, height: lineH)
         }
-        let lines = TextLayout.wrap(text, font: font, maxWidth: size.width,
+        let lines = TextLayout.wrap(text, font: _font, maxWidth: size.width,
                                     maxLines: numberOfLines)
         guard !lines.isEmpty else { return .zero }
         var maxW: CGFloat = 0
@@ -210,9 +217,9 @@ open class UILabel: UIView {
                 // width — so it keeps the whole-word measure (within the
                 // golden's tolerance).
                 let remainder = String(text[l.text.startIndex...]).replacingNewlines()
-                let t = TextLayout.truncate(remainder, font: font, maxWidth: size.width,
+                let t = TextLayout.truncate(remainder, font: _font, maxWidth: size.width,
                                             mode: .byTruncatingTail)
-                maxW = Swift.max(maxW, FontEngine.measure(t.text, font: font)
+                maxW = Swift.max(maxW, FontEngine.measure(t.text, font: _font)
                                  + t.delta * CGFloat(t.text.unicodeScalars.count))
             } else {
                 maxW = Swift.max(maxW, l.measuredWidth)
@@ -224,11 +231,11 @@ open class UILabel: UIView {
             // UILabel (probe_space_trail path 8: 197.5).
             if i > 0, OpenUIKitRuntime.systemFontCut == .iOS,
                textAlignment == .right {
-                maxW = Swift.max(maxW, FontEngine.measure(" " + String(l.text), font: font))
+                maxW = Swift.max(maxW, FontEngine.measure(" " + String(l.text), font: _font))
             }
         }
         return CGSize(width: FontEngine.ceilToPixel(maxW, scale: scale),
-                      height: FontEngine.labelBlockHeight(for: font, lines: lines.count))
+                      height: FontEngine.labelBlockHeight(for: _font, lines: lines.count))
     }
 
     open override var intrinsicContentSize: CGSize {
@@ -270,16 +277,16 @@ open class UILabel: UIView {
     /// Attributed and multiline shrinking remain outside this focused surface.
     func effectiveDrawingFont(for text: String, width: CGFloat) -> UIFont {
         guard adjustsFontSizeToFitWidth, numberOfLines == 1,
-              _attributed == nil, width > 0, font.pointSize > 0 else {
-            return font
+              _attributed == nil, width > 0, _font.pointSize > 0 else {
+            return _font
         }
-        let natural = FontEngine.measure(text, font: font)
-        guard natural > width + 1e-6 else { return font }
+        let natural = FontEngine.measure(text, font: _font)
+        guard natural > width + 1e-6 else { return _font }
 
         let minimum = Swift.min(Swift.max(minimumScaleFactor, 0), 1)
-        var lower = Swift.max(font.pointSize * minimum, 0.1)
-        var upper = font.pointSize
-        var candidate = font
+        var lower = Swift.max(_font.pointSize * minimum, 0.1)
+        var upper = _font.pointSize
+        var candidate = _font
         candidate.pointSize = lower
 
         // If even the minimum is too wide, use it and let the existing
@@ -293,7 +300,7 @@ open class UILabel: UIView {
         // required scale is above the minimum is never needlessly ellipsized.
         for _ in 0..<28 {
             let mid = (lower + upper) / 2
-            var probe = font
+            var probe = _font
             probe.pointSize = mid
             if FontEngine.measure(text, font: probe) <= width + 1e-6 {
                 lower = mid

@@ -63,6 +63,11 @@ open class UIStackView: UIView {
     public var alignment: Alignment = .fill {
         didSet { setNeedsLayout() }
     }
+    /// UIKit's `isBaselineRelativeArrangement` (iOS 26.1 default false,
+    /// iososswallsprobe lens.stack.*). Stored only: vertical spacing is
+    /// never measured from baselines here.
+    public var isBaselineRelativeArrangement = false
+
     public var isLayoutMarginsRelativeArrangement = false {
         didSet {
             if isLayoutMarginsRelativeArrangement != oldValue { setNeedsLayout() }

@@ -19,6 +19,10 @@
 // `sendActions(for:)` invokes every registration whose event set intersects
 // the sent events (UIKit semantics).
 
+#if canImport(Foundation)
+import class Foundation.NSNull
+#endif
+
 @preconcurrency @MainActor
 open class UIControl: UIView {
     /// UIKit's legacy control-content alignment values and raw values.
@@ -148,6 +152,10 @@ open class UIControl: UIView {
         /// UIKit: a control never keeps its target alive.
         weak var target: AnyObject?
         let action: Selector?
+        /// A selector registration made with a nil target (UIKit sends it
+        /// up the responder chain). Kept apart from a weak target that has
+        /// since deallocated, which `pruneDeadTargets` drops.
+        var isNilTarget = false
     }
     var targets: [Target] = []
     private var nextToken = 0
@@ -185,9 +193,10 @@ open class UIControl: UIView {
     public func addTarget(_ target: Any?, action: Selector,
                           for controlEvents: Event) {
         nextToken += 1
+        let object = target.flatMap { $0 as? AnyObject }
         targets.append(Target(token: nextToken, events: controlEvents,
-                              handler: nil, target: target.flatMap { $0 as? AnyObject },
-                              action: action))
+                              handler: nil, target: object,
+                              action: action, isNilTarget: target == nil))
     }
 
     /// UIKit's `removeTarget(_:action:for:)`. `nil` matches any target /
@@ -213,7 +222,46 @@ open class UIControl: UIView {
     /// Drop selector registrations whose weak target has deallocated (UIKit
     /// does this implicitly; we do it lazily, before each send).
     func pruneDeadTargets() {
-        targets.removeAll { $0.handler == nil && $0.target == nil }
+        targets.removeAll { $0.handler == nil && $0.target == nil && !$0.isNilTarget }
+    }
+
+    /// UIKit's `allTargets`: every distinct selector target, with a nil
+    /// target reported as `NSNull` (iOS 26.1: one target registered for two
+    /// actions counts once; adding a nil-target action makes the count 2 and
+    /// the set contains NSNull). Closure registrations are not targets.
+    public var allTargets: Set<AnyHashable> {
+        pruneDeadTargets()
+        var out = Set<AnyHashable>()
+        for t in targets where t.handler == nil {
+            if t.isNilTarget {
+#if canImport(Foundation)
+                out.insert(AnyHashable(NSNull()))
+#else
+                out.insert(AnyHashable("<null>"))
+#endif
+            } else if let object = t.target {
+                if let hashable = object as? AnyHashable { out.insert(hashable) }
+                else { out.insert(AnyHashable(ObjectIdentifier(object))) }
+            }
+        }
+        return out
+    }
+
+    /// UIKit's `actions(forTarget:forControlEvent:)`: the selector names
+    /// registered for `target` (nil = the nil-target registrations) on any
+    /// bit of `controlEvent`, in registration order, or nil when there are
+    /// none (iOS 26.1: `["tap:"]`, then `["tap:", "other"]` after a second
+    /// action; nil for an unregistered event or target).
+    public func actions(forTarget target: Any?, forControlEvent controlEvent: Event) -> [String]? {
+        pruneDeadTargets()
+        let object = target.flatMap { $0 as? AnyObject }
+        var names: [String] = []
+        for t in targets where t.handler == nil && !t.events.intersection(controlEvent).isEmpty {
+            guard let action = t.action else { continue }
+            let matches = target == nil ? t.isNilTarget : (t.target != nil && t.target === object)
+            if matches { names.append(String(describing: action)) }
+        }
+        return names.isEmpty ? nil : names
     }
 
     public var allControlEvents: Event {

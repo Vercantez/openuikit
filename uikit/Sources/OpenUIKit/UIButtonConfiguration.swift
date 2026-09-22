@@ -309,19 +309,21 @@ public extension UIButton {
             baseBackgroundColor = nil
             showsActivityIndicator = false
             imageColorTransformer = nil
-            // DELIBERATE DIVERGENCE, documented in the report: the oracle
-            // reads a factory's `background.backgroundColor` back as an
-            // opaque-zero clear rather than nil, and then REPLACES it during
-            // resolution (`updated(for:)` overwrites exactly that one field).
-            // The port leaves it nil so that "nil means derive from the
-            // style, non-nil means use verbatim" is expressible — which is
-            // what every corpus site relies on, because KDS and AlertBanner
-            // both assign an explicit per-state colour and expect it drawn
-            // untouched.
+            // The oracle reads a factory's `background.backgroundColor` back
+            // as a zero-alpha clear, not nil (buttonconfigprobe
+            // factoryDefaults, and iososswallsprobe `config.*.background.
+            // backgroundColor` which prints nil distinctly), and then
+            // REPLACES it during resolution (`updated(for:)` overwrites
+            // exactly that one field). The port stores that clear as one
+            // shared sentinel object: it reads back clear, and while the
+            // field still holds the sentinel the style's fill applies; any
+            // colour the app assigns (KDS, AlertBanner) is drawn verbatim.
             var background = UIBackgroundConfiguration()
+            background.backgroundColor = Configuration._factoryBackgroundColor
             // Measured: every factory carries strokeWidth 1 with a clear
             // stroke colour, so no border draws until one is assigned.
             background.strokeWidth = 1
+            background.strokeColor = Configuration._factoryStrokeColor
             switch style {
             case .glass:
                 _cornerStyle = .capsule
@@ -338,6 +340,10 @@ public extension UIButton {
                 automaticallyUpdateForSelection = true
             }
         }
+
+        /// The factory's clear background / stroke colours (see `init`).
+        static let _factoryBackgroundColor = UIColor(white: 0, alpha: 0)
+        static let _factoryStrokeColor = UIColor(white: 0, alpha: 0)
 
         // MARK: Factories
 

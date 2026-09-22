@@ -104,6 +104,50 @@ open class UIButton: UIControl {
     private var attributedTitles: [UInt: NSAttributedString] = [:]
     private var titleColors: [UInt: UIColor] = [:]
     private var images: [UInt: UIImage] = [:]
+    private var backgroundImages: [UInt: UIImage] = [:]
+    /// Created on the first background image, never before, so an image-less
+    /// button keeps the subview list the Catalyst goldens record.
+    private var _backgroundImageView: UIImageView?
+
+    // MARK: Legacy image adjustment flags (storage-only)
+
+    /// iOS 26.1 (Tools/oracle2/iososswallsprobe `lens.button.*`): true on a
+    /// `.custom` button, false on a `.system` button. Stored only —
+    /// OpenUIKit does not dim images on highlight/disable.
+    open var adjustsImageWhenHighlighted: Bool = true
+    /// Same measurement and defaults as `adjustsImageWhenHighlighted`.
+    open var adjustsImageWhenDisabled: Bool = true
+
+    // MARK: Background images
+
+    /// UIKit's `setBackgroundImage(_:for:)`. The image fills the bounds
+    /// behind the title and image.
+    public func setBackgroundImage(_ image: UIImage?, for state: State) {
+        backgroundImages[state.rawValue] = image
+        updateBackgroundImageView()
+        setNeedsLayout()
+    }
+
+    /// Exact state, then `.normal` — iOS 26.1 (`lens.button.bg.*`): a
+    /// normal-only background image is also what `.highlighted`,
+    /// `.disabled` and `.selected` read.
+    public func backgroundImage(for state: State) -> UIImage? {
+        backgroundImages[state.rawValue] ?? backgroundImages[State.normal.rawValue]
+    }
+
+    public var currentBackgroundImage: UIImage? { backgroundImage(for: state) }
+
+    private func updateBackgroundImageView() {
+        let image = currentBackgroundImage
+        if image != nil, _backgroundImageView == nil {
+            let view = UIImageView()
+            view.contentMode = .scaleToFill
+            _backgroundImageView = view
+            insertSubview(view, at: 0)
+        }
+        _backgroundImageView?.image = image
+        _backgroundImageView?.isHidden = image == nil
+    }
 
     /// MEASURED (Tools/oracle2/buttonconfigprobe, `updateHandler` section):
     /// assigning `configuration` does NOT request a configuration update —
@@ -143,11 +187,12 @@ open class UIButton: UIControl {
         setNeedsLayout()
     }
 
-    /// UIKit's overridable update point. The base implementation calls
-    /// `configurationUpdateHandler`.
-    open func updateConfiguration() {
-        configurationUpdateHandler?(self)
-    }
+    /// UIKit's overridable update point. MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/iososswallsprobe `config.handler.afterUpdateConfiguration`):
+    /// calling `updateConfiguration()` directly does NOT run the handler (2
+    /// calls before, 2 after); the layout-time update runs this method and
+    /// then the handler.
+    open func updateConfiguration() {}
 
     private func performConfigurationUpdateIfNeeded() {
         guard needsConfigurationUpdate else { return }
@@ -156,6 +201,7 @@ open class UIButton: UIControl {
         // button permanently dirty and relayout forever.
         needsConfigurationUpdate = false
         updateConfiguration()
+        configurationUpdateHandler?(self)
     }
 
     /// A tint change re-runs the configuration update (measured: 1 call).
@@ -236,6 +282,10 @@ open class UIButton: UIControl {
     public convenience init(type: ButtonType) {
         self.init(frame: .zero)
         buttonType = type
+        if type == .system {
+            adjustsImageWhenHighlighted = false
+            adjustsImageWhenDisabled = false
+        }
     }
 
     /// `UIButton(configuration:)` — Kickstarter's `AlertBanner` writes
@@ -551,7 +601,8 @@ open class UIButton: UIControl {
         // highlighted AND disabled. That is exactly why KDS's
         // `updateColors(with:)` and AlertBanner's handler assign a different
         // colour per state themselves.
-        if let explicit = configuration.background.backgroundColor {
+        if let explicit = configuration.background.backgroundColor,
+           explicit !== Configuration._factoryBackgroundColor {
             return explicit
         }
         guard let base = configurationStyleFill(configuration) else {
@@ -760,6 +811,7 @@ open class UIButton: UIControl {
         // button). The port draws the same border on the button's own layer;
         // the extra view is not modelled.
         if let stroke = configuration.background.strokeColor,
+           stroke !== Configuration._factoryStrokeColor,
            configuration.background.strokeWidth > 0 {
             layer.borderWidth = configuration.background.strokeWidth
             layer.borderColor = stroke.resolvedCGColor(with: traits)
@@ -847,6 +899,7 @@ open class UIButton: UIControl {
         updateConfigurationAppearance()
         updateTitleView()
         updateImageView()
+        updateBackgroundImageView()
     }
 
 
@@ -1026,6 +1079,7 @@ open class UIButton: UIControl {
         performConfigurationUpdateIfNeeded()
         updateTitleView()
         updateImageView()
+        _backgroundImageView?.frame = bounds
         if let configuration {
             updateConfigurationAppearance()
             layer.cornerRadius = Swift.max(
@@ -1188,7 +1242,7 @@ open class UIButton: UIControl {
                 w = availableTitleWidth
             } else {
                 let title = _titleLabel.text ?? ""
-                let font = _titleLabel.font
+                let font = _titleLabel._font
                 if FontEngine.measureTight(title, font: font)
                     <= availableTitleWidth.rounded(.down) + 1e-6 {
                     w = availableTitleWidth

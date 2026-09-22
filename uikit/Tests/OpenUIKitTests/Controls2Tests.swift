@@ -315,8 +315,8 @@ final class UISearchBarTests: XCTestCase {
         let sb = UISearchBar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
         sb.placeholder = "Search"
         sb.layoutIfNeeded()
-        XCTAssertEqual(sb.searchTextField.font.pointSize, 17)
-        XCTAssertEqual(sb.searchTextField.font.weight, UIFont.Weight.medium)
+        XCTAssertEqual(sb.searchTextField.font!.pointSize, 17)
+        XCTAssertEqual(sb.searchTextField.font!.weight, UIFont.Weight.medium)
         let empty = sb.searchTextField.textRect(
             forBounds: CGRect(x: 0, y: 0, width: 304, height: 36))
         XCTAssertEqual(empty, CGRect(x: 39.5, y: 0, width: 264.5, height: 36))
