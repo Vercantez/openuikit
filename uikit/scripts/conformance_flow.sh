@@ -99,6 +99,9 @@ if [ -z "${SKIP_CAPTURE:-}" ]; then
   if [ "$IPAD" -eq 1 ]; then PROBE_ARGS+=(--ipad); fi
   if [ "$ORIENTATION" = landscape ]; then PROBE_ARGS+=(--landscape); fi
   zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" | tail -1
+  # What the goldens were captured from (agent_merge.sh refuses a committed
+  # set whose app sources changed since; goldens_snapshot.sh carries it).
+  python3 Tools/compare/conformance_provenance.py write "$OUT/golden" "$APPNAME"
 else
   pngs=()
   for f in "$OUT"/golden/*.png; do
@@ -129,7 +132,12 @@ else
 fi
 
 echo "==> OpenUIKit replay, iOS cut ($OUT/ours) style=$STYLE direction=$DIRECTION contentSize=$CONTENT_SIZE orientation=$ORIENTATION"
-swift build -c release --product openhost >/dev/null
+# CONFORMANCE_PREBUILT=1: the caller already built openhost from THIS tree
+# (agent_merge.sh builds it once, then replays sets in parallel; concurrent
+# no-op builds would only queue on the .build lock).
+if [ -z "${CONFORMANCE_PREBUILT:-}" ]; then
+  swift build -c release --product openhost >/dev/null
+fi
 rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
 HOST_ARGS=(--app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours")
 if [ "$IPAD" -eq 1 ]; then HOST_ARGS+=(--ipad); fi

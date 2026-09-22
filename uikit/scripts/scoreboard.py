@@ -14,6 +14,10 @@ committed per round so the climb has a history):
 Usage:
   scripts/scoreboard.py [--suite /tmp/ios_suite] [--realapp-out DIR]
                         [--gate-out DIR] [--conformance DIR...] [--write]
+  scripts/scoreboard.py --refresh-conformance DIR... [--write]
+      replace ONLY the rows of those conformance work dirs in the existing
+      scoreboard/latest.json (every other row, head and date untouched), print
+      old board vs new score per row (scripts/refresh_conformance_goldens.sh).
 
 Without --write it prints the markdown only. Rows carry a "status":
   pass       at or above the category threshold
@@ -22,7 +26,7 @@ Without --write it prints the markdown only. Rows carry a "status":
              not modellable yet (listed in scoreboard/open.txt, one name per
              line, with the reason after a '#') — the climb skips these.
 """
-import argparse, json, os, re, subprocess, sys, datetime
+import hashlib, argparse, json, os, re, subprocess, sys, datetime
 
 THRESH = {"geometry": 99.5, "effects": 98.0, "text": 97.0, "control": 96.0, "chrome": 97.5}
 REALAPP_FLOOR = {
@@ -108,11 +112,21 @@ def parse_conformance(dirs):
         if s.get("orientation") == "landscape":
             key = key + ".landscape"
         CONFORMANCE_CAPTURED[key] = captured
+        # golden_sha pins the exact golden PNG a row was graded against:
+        # agent_merge.sh grades the merged tree against the committed golden
+        # and refuses when that golden is not the one the board row used
+        # (stale committed goldens once read as 30-point drops, and mid-fling
+        # frames differ between two simulator captures).
+        base_app = app[:-len("-ipad")] if app.endswith("-ipad") else app
         for cap in s.get("captures", []):
-            rows.append({"scene": f"{s.get('app')}:{cap.get('name')}", "category": "conformance",
-                         "score": float(cap.get("score", 0)), "blob": float(cap.get("blob", 0)),
-                         "layout_issues": int(cap.get("layout_issues", 0)), "captured": captured,
-                         "verdict": "PASS" if float(cap.get("score", 0)) >= 97.5 else "FAIL", "threshold": 97.5})
+            row = {"scene": f"{s.get('app')}:{cap.get('name')}", "category": "conformance",
+                   "score": float(cap.get("score", 0)), "blob": float(cap.get("blob", 0)),
+                   "layout_issues": int(cap.get("layout_issues", 0)), "captured": captured,
+                   "verdict": "PASS" if float(cap.get("score", 0)) >= 97.5 else "FAIL", "threshold": 97.5}
+            golden = os.path.join(d, "golden", f"{base_app}.{cap.get('name')}.png")
+            if os.path.exists(golden):
+                row["golden_sha"] = hashlib.sha256(open(golden, "rb").read()).hexdigest()
+            rows.append(row)
     return rows
 
 def main():
@@ -122,6 +136,7 @@ def main():
     ap.add_argument("--gate-out")
     ap.add_argument("--conformance", nargs="*")
     ap.add_argument("--write", action="store_true")
+    ap.add_argument("--refresh-conformance", nargs="+")
     a = ap.parse_args()
     os.makedirs("scoreboard", exist_ok=True)
     open_set = {}
@@ -130,22 +145,61 @@ def main():
             line = line.strip()
             if line and not line.startswith("#"):
                 name, _, why = line.partition("#"); open_set[name.strip()] = why.strip()
-    rows = parse_compare(os.path.join(a.suite, "compare.txt")) + parse_realapp(a.realapp_out) + parse_conformance(a.conformance)
-    for r in rows:
-        r["status"] = "pass" if r["verdict"] == "PASS" else ("open" if r["scene"] in open_set else "fail")
-        if r["status"] == "open": r["open_reason"] = open_set[r["scene"]]
-    gate = parse_gate(a.gate_out)
-    head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
-    board = {"head": head, "date": datetime.datetime.utcnow().isoformat(timespec="minutes") + "Z",
-             "suite": {"pass": sum(r["verdict"] == "PASS" for r in rows if r["category"] not in ("realapp", "conformance")),
-                       "total": sum(1 for r in rows if r["category"] not in ("realapp", "conformance"))},
-             "gate": gate, "rows": sorted(rows, key=lambda r: r["score"])}
+    def set_status(rows):
+        for r in rows:
+            r["status"] = "pass" if r["verdict"] == "PASS" else ("open" if r["scene"] in open_set else "fail")
+            if r["status"] == "open": r["open_reason"] = open_set[r["scene"]]
+    if a.refresh_conformance:
+        board = json.load(open("scoreboard/latest.json"))
+        new_rows = parse_conformance(a.refresh_conformance)
+        set_status(new_rows)
+        old = {r["scene"]: r for r in board["rows"]}
+        # the refreshed sets, as (summary app, capture suffix): every board row
+        # of such a set is replaced, including frames the script no longer has
+        def set_key(scene):
+            app, cap = scene.split(":", 1)
+            return app, tuple(cap.split(".")[1:])
+        refreshed = {set_key(r["scene"]) for r in new_rows}
+        kept = [r for r in board["rows"] if not (r["category"] == "conformance" and set_key(r["scene"]) in refreshed)]
+        print(f"{'row':40s} {'board':>8s} {'new':>8s} {'delta':>7s}")
+        for r in sorted(new_rows, key=lambda r: r["scene"]):
+            o = old.get(r["scene"])
+            if o is None:
+                print(f"{r['scene']:40s} {'-':>8s} {r['score']:8.3f}     new")
+                continue
+            dlt = r["score"] - o["score"]
+            flag = "  <-- DROPPED more than 0.5: a regression or a changed golden? look before committing" if dlt < -0.5 else ""
+            print(f"{r['scene']:40s} {o['score']:8.3f} {r['score']:8.3f} {dlt:+7.3f}{flag}")
+        for sc in sorted(set(old) - {r["scene"] for r in new_rows}):
+            if old[sc]["category"] == "conformance" and set_key(sc) in refreshed:
+                print(f"{sc:40s} {old[sc]['score']:8.3f} {'-':>8s}  removed (no longer captured)")
+        board["rows"] = sorted(kept + new_rows, key=lambda r: r["score"])
+    else:
+        rows = parse_compare(os.path.join(a.suite, "compare.txt")) + parse_realapp(a.realapp_out) + parse_conformance(a.conformance)
+        set_status(rows)
+        gate = parse_gate(a.gate_out)
+        head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+        board = {"head": head, "date": datetime.datetime.utcnow().isoformat(timespec="minutes") + "Z",
+                 "suite": {"pass": sum(r["verdict"] == "PASS" for r in rows if r["category"] not in ("realapp", "conformance")),
+                           "total": sum(1 for r in rows if r["category"] not in ("realapp", "conformance"))},
+                 "gate": gate, "rows": sorted(rows, key=lambda r: r["score"])}
+    rows = board["rows"]
+    head, gate = board["head"], board.get("gate")
+    captured_by_set = CONFORMANCE_CAPTURED
+    if a.refresh_conformance:
+        # the md header lists every set on the board, not just the refreshed ones
+        captured_by_set = {}
+        for r in rows:
+            if r["category"] != "conformance": continue
+            app, cap = r["scene"].split(":", 1)
+            k = ".".join([app] + cap.split(".")[1:])
+            captured_by_set[k] = max(captured_by_set.get(k, ""), r.get("captured", ""))
     worst = [r for r in board["rows"] if r["status"] == "fail"]
     md = [f"# Scoreboard — {head} ({board['date']})", "",
           f"iOS scene suite: **{board['suite']['pass']}/{board['suite']['total']}**"
           + (f" · Catalyst gate: **{gate['pass']}/{gate['total']}**" if gate else ""), "",
-          ("conformance captured: " + ", ".join(f"{a} @ {t}" for a, t in sorted(CONFORMANCE_CAPTURED.items()))
-           if CONFORMANCE_CAPTURED else "conformance: none"), "",
+          ("conformance captured: " + ", ".join(f"{a} @ {t}" for a, t in sorted(captured_by_set.items()))
+           if captured_by_set else "conformance: none"), "",
           "| scene | category | score | bar | blob pt² | layout | status |", "|---|---|---|---|---|---|---|"]
     for r in board["rows"]:
         if r["status"] == "pass" and r["score"] >= r["threshold"] + 0.3: continue  # keep the table about the frontier
@@ -156,7 +210,8 @@ def main():
     if a.write:
         json.dump(board, open("scoreboard/latest.json", "w"), indent=1)
         open("scoreboard/latest.md", "w").write(text)
-    print(text)
+    if not a.refresh_conformance:
+        print(text)
 
 if __name__ == "__main__":
     main()
