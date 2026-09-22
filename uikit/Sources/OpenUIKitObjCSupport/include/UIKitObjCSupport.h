@@ -237,6 +237,8 @@ typedef OUKTextStorageEditActions NSTextStorageEditActions NS_SWIFT_NAME(NSTextS
 #if TARGET_OS_OSX
 @class OUKTextStorage;
 @compatibility_alias NSTextStorage OUKTextStorage;
+/* Same for the delegate protocol (Objective-C has no protocol alias). */
+#define NSTextStorageDelegate OUKTextStorageDelegate
 #endif
 
 #pragma mark - Typed strings, keys and notification names

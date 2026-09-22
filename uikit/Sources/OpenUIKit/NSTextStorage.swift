@@ -52,7 +52,17 @@ import CPortableIO
 import AppKit
 #endif
 
-@objc public protocol NSTextStorageDelegate: NSObjectProtocol {
+// Objective-C name: UIKit's where no other exists; on the macOS host AppKit's
+// protocol of the same name is in every Clang context that also sees AppKit
+// ('NSTextStorageDelegate' has different definitions in different modules,
+// measured in Simplenote's Swift half), so there it is OUKTextStorageDelegate
+// and UIKitObjCSupport.h spells it NSTextStorageDelegate for Objective-C.
+#if canImport(AppKit)
+@objc(OUKTextStorageDelegate)
+#else
+@objc(NSTextStorageDelegate)
+#endif
+public protocol NSTextStorageDelegate: NSObjectProtocol {
     @objc(textStorage:willProcessEditing:range:changeInLength:)
     optional func textStorage(_ textStorage: NSTextStorage,
                               willProcessEditing editedMask: NSTextStorage.EditActions,
