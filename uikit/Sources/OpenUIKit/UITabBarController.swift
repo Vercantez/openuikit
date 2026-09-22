@@ -473,3 +473,20 @@ public extension UITabBarControllerDelegate {
                           animationControllerForTransitionFrom fromVC: UIViewController,
                           to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? { nil }
 }
+
+extension UITabBarController {
+    /// The children a storyboard archived (`UIViewControllers`, with their
+    /// archived `tabBarItem`s). MEASURED (Tools/oracle2/nibruntimeprobe,
+    /// iOS 26.1): both children are parented, and `selectedIndex` stays
+    /// NSNotFound with no selected controller — before AND after the view
+    /// loads; UIKit selects on appearance, which is not modelled here.
+    func _setArchivedViewControllers(_ controllers: [UIViewController]) {
+        _installChildren(controllers, itemFor: { vc, i in
+            if vc.tabBarItem == nil {
+                vc.tabBarItem = UITabBarItem(title: vc.title, image: nil, tag: i)
+            }
+            return vc.tabBarItem!
+        })
+        _selectedIndex = Int.max
+    }
+}

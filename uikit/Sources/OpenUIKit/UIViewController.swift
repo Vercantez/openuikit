@@ -92,6 +92,18 @@ open class UIViewController: UIResponder, UIContentContainer {
     open dynamic func observeValue(forKeyPath keyPath: String?, of object: Any?,
                            change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {}
 #endif
+#if !(canImport(ObjectiveC) && canImport(Foundation))
+    // The storyboard segue hooks (UIStoryboard.swift). Where Objective-C and
+    // Foundation are both present they are `@objc` extension members; a
+    // Foundation-hidden guest library cannot represent a `String` parameter
+    // in Objective-C and a Linux build has no `@objc`, so there they are
+    // declared here, where an app subclass can still override them.
+    open func performSegue(withIdentifier identifier: String, sender: Any?) {
+        _performSegue(withIdentifier: identifier, sender: sender)
+    }
+    open func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool { true }
+    open func prepare(for segue: UIStoryboardSegue, sender: Any?) {}
+#endif
 
     private final let _nibName: String?
     private final let _nibBundle: Bundle
@@ -136,15 +148,21 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// Apple round-trips (`UITitle`, `UIRestorationIdentifier`,
     /// `base.roundTrip`) are not read and this path is exactly the nil/nil
     /// programmatic initializer with a different spelling.
+    ///
+    /// From a storyboard (`UINibCoder`), the archived controller state is
+    /// decoded too: `nibName` is the scene's view nib (MEASURED
+    /// `roo-00-001-view-rtv-00-001` for the probe's root), and `title`, the
+    /// navigation item, segue templates and child controllers are set before
+    /// this returns (UIStoryboard.swift).
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc
 #endif
     public required dynamic init?(coder: NSCoder) {
-        _ = coder
-        _nibName = nil
+        _nibName = UINibCoder.archivedString(coder, "UINibName")
         _nibBundle = .main
         _hasExplicitNibRequest = false
         super.init()
+        UINibCoder.decodeControllerState(self, from: coder)
     }
 
     /// The requested nib name, retained even though the portable core cannot
@@ -222,6 +240,9 @@ open class UIViewController: UIResponder, UIContentContainer {
         guard _view == nil else { return }
         loadView()
         if _view == nil { _view = UIView() } // loadView() that set nothing
+        // Storyboard embed segues run here, after loadView and before
+        // viewDidLoad (MEASURED order, UIStoryboard.swift).
+        _performSeguesOnViewLoad()
         viewDidLoad()
     }
 
@@ -255,6 +276,8 @@ open class UIViewController: UIResponder, UIContentContainer {
     @objc
 #endif
     open dynamic func loadView() {
+        // A storyboard controller's view is its scene's view nib.
+        if _loadStoryboardView() { return }
         // UIKit's rule: a controller with a nib gets its view from the nib's
         // `view` outlet on the File's Owner (UINib.swift). The name defaults
         // to the class's own, which is how the pocket-casts settings screens
@@ -820,5 +843,18 @@ open class UIViewController: UIResponder, UIContentContainer {
         } else {
             present(vc, animated: true)
         }
+    }
+}
+
+extension UIViewController {
+    /// A child a storyboard archived under this controller
+    /// (`UIChildViewControllers` / a navigation root relationship): parented
+    /// WITHOUT the containment callbacks. MEASURED (nibruntimeprobe): the
+    /// probe's root reports `parent` = its navigation controller in
+    /// `awakeFromNib` and logs no `willMove`/`didMove(toParent:)` at all.
+    func _adoptArchivedChild(_ child: UIViewController) {
+        guard child.parent !== self else { return }
+        children.append(child)
+        child.parent = self
     }
 }

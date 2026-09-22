@@ -59,6 +59,11 @@ rm -rf "$APP"; mkdir -p "$APP"
 # Every ConformanceApps Swift file (Registry.swift + each app). script.json
 # is a harness input, not compiled; the glob does not match it.
 APP_SOURCES=(Sources/ConformanceApps/*.swift Sources/ConformanceApps/*/*.swift)
+# EidolonTap is not a conformance app: it is the RxSwift/RxCocoa tap oracle
+# (scripts/eidolon_tap_probe_sim.py builds it with its dependencies), excluded
+# from the SwiftPM ConformanceApps target the same way. Compiling it here made
+# every real-iOS recapture fail with "no such module 'RxSwift'".
+APP_SOURCES=(${APP_SOURCES:#Sources/ConformanceApps/EidolonTap/*})
 [[ ${#APP_SOURCES} -gt 0 ]] || { echo "no ConformanceApps sources" >&2; exit 2 }
 
 # -default-isolation MainActor: the same setting the SPM target carries and

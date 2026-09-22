@@ -489,6 +489,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     public required dynamic init?(coder: NSCoder) {
         super.init(coder: coder)
         configureTextFieldViews()
+        UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
     private final func configureTextFieldViews() {

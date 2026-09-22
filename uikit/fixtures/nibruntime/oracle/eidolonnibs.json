@@ -1,0 +1,7154 @@
+{
+  "Auction\/8YY-cB-YpC-view-7KS-Qt-fFc.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.offlineLabel=UILabel",
+      "UpstreamPlaceholder-1.subtitleLabel=UILabel",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        0,
+        0,
+        0,
+        0.84999999999999998
+      ],
+      "class" : "UIView",
+      "clips" : true,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 1,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            218,
+            287,
+            588,
+            56
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 49,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "No Internet Connection",
+          "textColor" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 1,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            196,
+            361,
+            632,
+            56
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 32,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Please notify an Artsy representative",
+          "textColor" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/ADb-HQ-Xrv-view-FO4-2G-EgI.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.logTextView=UITextView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            152,
+            21,
+            196,
+            44
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Card Tester",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            8,
+            0,
+            120,
+            65
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "EXIT",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 3,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            596,
+            124,
+            262,
+            30
+          ],
+          "hidden" : false,
+          "placeholder" : "card number",
+          "pointSize" : 14,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 3,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            596,
+            194,
+            70,
+            30
+          ],
+          "hidden" : false,
+          "placeholder" : "1",
+          "pointSize" : 14,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 3,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            722,
+            194,
+            70,
+            30
+          ],
+          "hidden" : false,
+          "placeholder" : "2017",
+          "pointSize" : 14,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            596,
+            290,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "TEST INPUT",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UITextView",
+          "clips" : true,
+          "frame" : [
+            12,
+            161,
+            510,
+            559
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/anX-QX-ldh-view-gf1-MR-Qcf.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.loadingSpinner=UIView",
+      "UpstreamPlaceholder-1.stagingFlag=UIImageView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIImageView",
+          "clips" : true,
+          "frame" : [
+            0,
+            0,
+            80,
+            80
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.61699999999999999,
+            0.84599999999999997,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            497,
+            369,
+            30,
+            30
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/Jj5-n3-bv0-view-nu4-re-HAA.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.additionalDetailScrollView=UIScrollView",
+      "UpstreamPlaceholder-1.metadataStackView=UIView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            8,
+            20,
+            120,
+            44
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "BACK",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            683,
+            90,
+            276,
+            658
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.75600000000000001,
+            0.75600000000000001,
+            0.75600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            631,
+            98,
+            1,
+            670
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "class" : "UIScrollView",
+          "clips" : true,
+          "frame" : [
+            8,
+            90,
+            615,
+            678
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/KCM-cT-BEX-view-jGy-SO-AWq.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-2.offlineBlockingView=UIView",
+      "UpstreamPlaceholder-2.registerToBidButton=UIButton",
+      "UpstreamPlaceholder-3.countdownContainerView=UIView",
+      "UpstreamPlaceholder-3.countdownLabel=UILabel",
+      "UpstreamPlaceholder-4.containerView=UIView",
+      "UpstreamPlaceholder-5.containerView=UIView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            1024,
+            768
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            783,
+            20,
+            176,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "REGISTER TO BID",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            352,
+            -9,
+            320,
+            107
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "class" : "UIView",
+              "clips" : true,
+              "frame" : [
+                20,
+                20,
+                280,
+                67
+              ],
+              "hidden" : true,
+              "subviews" : [
+                {
+                  "alignment" : 1,
+                  "alpha" : 1,
+                  "autoresizing" : 36,
+                  "class" : "UILabel",
+                  "clips" : false,
+                  "frame" : [
+                    67,
+                    17,
+                    148,
+                    21
+                  ],
+                  "hidden" : false,
+                  "ios.fontName" : "Helvetica",
+                  "lines" : 1,
+                  "pointSize" : 20,
+                  "subviews" : [
+
+                  ],
+                  "tag" : 0,
+                  "tamic" : true,
+                  "text" : "88 : 88 : 88",
+                  "textColor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "userInteraction" : false
+                },
+                {
+                  "alignment" : 1,
+                  "alpha" : 1,
+                  "autoresizing" : 36,
+                  "class" : "UILabel",
+                  "clips" : false,
+                  "frame" : [
+                    72,
+                    41,
+                    39,
+                    26
+                  ],
+                  "hidden" : false,
+                  "ios.fontName" : "Helvetica",
+                  "lines" : 1,
+                  "pointSize" : 15,
+                  "subviews" : [
+
+                  ],
+                  "tag" : 0,
+                  "tamic" : true,
+                  "text" : "HRS",
+                  "textColor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "userInteraction" : false
+                },
+                {
+                  "alignment" : 1,
+                  "alpha" : 1,
+                  "autoresizing" : 36,
+                  "class" : "UILabel",
+                  "clips" : false,
+                  "frame" : [
+                    170,
+                    41,
+                    39,
+                    26
+                  ],
+                  "hidden" : false,
+                  "ios.fontName" : "Helvetica",
+                  "lines" : 1,
+                  "pointSize" : 15,
+                  "subviews" : [
+
+                  ],
+                  "tag" : 0,
+                  "tamic" : true,
+                  "text" : "SEC",
+                  "textColor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "userInteraction" : false
+                },
+                {
+                  "alignment" : 1,
+                  "alpha" : 1,
+                  "autoresizing" : 36,
+                  "class" : "UILabel",
+                  "clips" : false,
+                  "frame" : [
+                    121,
+                    41,
+                    39,
+                    26
+                  ],
+                  "hidden" : false,
+                  "ios.fontName" : "Helvetica",
+                  "lines" : 1,
+                  "pointSize" : 15,
+                  "subviews" : [
+
+                  ],
+                  "tag" : 0,
+                  "tamic" : true,
+                  "text" : "MIN",
+                  "textColor" : [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "userInteraction" : false
+                }
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : false
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            1024,
+            768
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/MKI-if-fbr-view-Kmy-Hx-K8l.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.auctionIDLabel=UILabel",
+      "UpstreamPlaceholder-1.cardReaderLabel=UILabel",
+      "UpstreamPlaceholder-1.environmentChangeButton=UIButton",
+      "UpstreamPlaceholder-1.showAdminButtonsButton=UIButton",
+      "UpstreamPlaceholder-1.toggleCardReaderButton=UIButton",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            65,
+            79,
+            894,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            800,
+            658,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "CLOSE APP",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            55,
+            126,
+            187,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Switch to website",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            322,
+            120,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "WEBSITE",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            558,
+            127,
+            187,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Change  Auction",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            795,
+            120,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "CHANGE",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            164,
+            23,
+            277,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Admin Panel",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            748,
+            260,
+            211,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "SWITCH TO PROD",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            558,
+            197,
+            187,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Admin Buttons",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            795,
+            190,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "SHOW",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            55,
+            197,
+            187,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Admin Logs",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            322,
+            190,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "LOG ME",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            558,
+            391,
+            493,
+            40
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 20,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Note: changing any of these will restart the app",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            60,
+            267,
+            187,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Card Testing",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            322,
+            260,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "TEST ME",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 2,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            492,
+            25,
+            467,
+            40
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 20,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "auction-id",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            20,
+            19,
+            120,
+            45
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "EXIT",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            558,
+            267,
+            170,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Server",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            795,
+            327,
+            164,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "SHOW",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            558,
+            334,
+            200,
+            35
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Card Reader Status",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/Sb3-CP-VQj-view-eXy-cL-60c.nib" : {
+    "outlets" : [
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            8,
+            20,
+            120,
+            44
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "BACK",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/wIW-NU-4pH-view-b5a-hg-oLU.nib" : {
+    "outlets" : [
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/xVq-Ix-pQs-view-fiB-0O-nhZ.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.stackScrollView=UIView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            252,
+            691,
+            232,
+            40
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 20,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Note: selecting an Auction will restart the app",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.94299999999999995,
+            0.52600000000000002,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            251,
+            98,
+            522,
+            563
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            16,
+            15,
+            120,
+            45
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "BACK",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            60,
+            73,
+            894,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            159,
+            17,
+            277,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Switch auctions",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Auction\/yff-WV-ozf-view-F6N-AU-wHA.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.textView=UITextView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UITextView",
+          "clips" : true,
+          "frame" : [
+            251,
+            134,
+            522,
+            529
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            918,
+            22
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            152,
+            1,
+            188,
+            44
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Admin logs",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            8,
+            0,
+            120,
+            45
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "EXIT",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            781,
+            134,
+            190,
+            30
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "Scroll to Bottom",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/2lt-co-qW2-view-5i6-CZ-9za.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.backToAuctionButton=UIButton",
+      "UpstreamPlaceholder-1.bidConfirmationImageView=UIImageView",
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "UpstreamPlaceholder-1.placeHigherBidButton=UIButton",
+      "UpstreamPlaceholder-1.spinner=UIView",
+      "UpstreamPlaceholder-1.statusMessage=UILabel",
+      "UpstreamPlaceholder-1.titleLabel=UILabel",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            263,
+            411,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Registration Complete",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            345,
+            253,
+            331,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIImageView",
+          "clips" : true,
+          "frame" : [
+            692,
+            261,
+            46,
+            46
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.61699999999999999,
+            0.84599999999999997,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            700,
+            269,
+            30,
+            30
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            523,
+            523.66700000000003,
+            215,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "BACK TO AUCTION",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            523,
+            458.66699999999997,
+            215,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "PLACE HIGHER BID",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 1,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            161,
+            340.66699999999997,
+            468,
+            100
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 29,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Status message goes here.",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/awQ-xt-Guo-view-4VH-9a-8Ed.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.emailTextField=UITextField",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            -2,
+            5,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 33,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Enter your Email",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            291,
+            73,
+            102,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "ENTER",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            0,
+            73,
+            283,
+            50
+          ],
+          "hidden" : false,
+          "placeholder" : "nil",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/b5H-c8-Ctw-view-bfU-8z-kUE.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            65,
+            80,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Confirm Your Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            65,
+            168,
+            298,
+            37
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Enter your Artsy Password",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            65,
+            139,
+            685,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIImageView",
+          "clips" : true,
+          "frame" : [
+            716,
+            75,
+            34,
+            34
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            500,
+            603,
+            255,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            510,
+            613,
+            107,
+            57
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "NEXT",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            400,
+            237,
+            156,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "CONFIRM",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            426,
+            61,
+            250,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            65,
+            237,
+            319,
+            50
+          ],
+          "hidden" : false,
+          "placeholder" : "Password",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/b7X-gR-AEL-view-AgK-EL-Rn1.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.zipCodeTextField=UITextField",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            291,
+            73,
+            102,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "ENTER",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            -2,
+            5,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 33,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Enter your Postal \/ Zip code",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            0,
+            73,
+            283,
+            50
+          ],
+          "hidden" : false,
+          "placeholder" : "nil",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/BKe-0r-2Pc-view-8HC-EN-LKn.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.flowView=UIView",
+      "UpstreamPlaceholder-2.containerView=UIView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            345,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Register to Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            121,
+            685,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            567,
+            265,
+            73
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                8,
+                8,
+                249,
+                57
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 0,
+              "pointSize" : 18,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "Card Status:",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            523,
+            580,
+            255,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                111,
+                8,
+                107,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "NEXT",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            155,
+            449,
+            485
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.74199999999999999,
+            0.81899999999999995,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            523,
+            155,
+            215,
+            280
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            414,
+            44,
+            324,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            523,
+            537,
+            215,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "CONFIRM",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/Djc-do-o8V-view-C0u-LT-eEX.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.emailTextField=UITextField",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            334,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Confirm Your Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            148,
+            298,
+            37
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Enter your Email",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            119,
+            685,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            394,
+            583,
+            349,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                177,
+                8,
+                164,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "EMAIL UKNOWN",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                5,
+                8,
+                164,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "EMAIL EXISTS",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            53,
+            202,
+            430,
+            50
+          ],
+          "hidden" : false,
+          "placeholder" : "Email",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            414,
+            41,
+            324,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            495,
+            202,
+            100,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "ENTER",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/hrW-WV-2L3-view-dVu-kh-jLt.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.keypadContainer=UIView",
+      "UpstreamPlaceholder-1.pinTextField=UITextField",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Confirm Your Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            46,
+            148,
+            298,
+            76
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Enter PIN to authorize your bid.",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.81000000000000005,
+            0.81000000000000005,
+            0.81000000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            483,
+            232,
+            255,
+            282
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            119,
+            685,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            483,
+            534,
+            255,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "CONFIRM",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            483,
+            583,
+            255,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                115,
+                8,
+                120,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "LOGGED IN",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            483,
+            156,
+            255,
+            44
+          ],
+          "hidden" : false,
+          "placeholder" : "PIN",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            414,
+            44,
+            324,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            655,
+            202,
+            94,
+            28
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "Forgot PIN?",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/HtL-zn-13v-view-e0d-hR-IJc.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.cardStatusLabel=UILabel",
+      "UpstreamPlaceholder-1.illustrationImageView=UIImageView",
+      "UpstreamPlaceholder-1.spinner=UIView",
+      "UpstreamPlaceholder-1.titleLabel=UILabel",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            0,
+            5,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 33,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Swipe your Credit Card",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIImageView",
+          "clips" : true,
+          "frame" : [
+            -3,
+            127,
+            322,
+            297
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            424,
+            433,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                8,
+                8,
+                249,
+                57
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 0,
+              "pointSize" : 18,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "Card Status:",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                327,
+                17,
+                106,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "CC Decline",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                210,
+                17,
+                109,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "CC Accept",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            0,
+            56,
+            359,
+            57
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 17,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "A credit card is required to verify your identity and bid in this auction",
+          "textColor" : [
+            0.5,
+            0.5,
+            0.5,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            129,
+            281,
+            40,
+            40
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/igv-xv-sfe-view-EVf-2q-VBn.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidderNumberLabel=UILabel",
+      "UpstreamPlaceholder-1.bidderNumberTitleLabel=UILabel",
+      "UpstreamPlaceholder-1.bidderPinTitleLabel=UILabel",
+      "UpstreamPlaceholder-1.bodyLabel=UILabel",
+      "UpstreamPlaceholder-1.confirmationImageView=UIImageView",
+      "UpstreamPlaceholder-1.notificationLabel=UILabel",
+      "UpstreamPlaceholder-1.pinNumberLabel=UILabel",
+      "UpstreamPlaceholder-1.subtitleLabel=UILabel",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            535,
+            552,
+            215,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "BACK TO AUCTION",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIImageView",
+          "clips" : true,
+          "frame" : [
+            704,
+            70,
+            46,
+            46
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            0.85499999999999998,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            276,
+            815,
+            170
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                308,
+                30,
+                102,
+                21
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 20,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "PIN",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                308,
+                80,
+                116,
+                40
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 40,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "1234",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                65,
+                30,
+                182,
+                21
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 20,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "BIDDER NUMBER",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                65,
+                77,
+                182,
+                43
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 40,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "09922",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                496,
+                30,
+                254,
+                110
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 0,
+              "pointSize" : 20,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "An email and text message have been sent to you with these details. We encourage you to write them down as well.",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            65,
+            70,
+            631,
+            46
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 40,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "You are now registered to bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            65,
+            138,
+            418,
+            100
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 30,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Use your Bidder Number and PIN next time you bid.",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/ljx-1e-Xv5-view-se7-qy-Xk6.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.artworkImageView=UIImageView",
+      "UpstreamPlaceholder-1.bidAmountTextField=UITextField",
+      "UpstreamPlaceholder-1.bidButton=UIButton",
+      "UpstreamPlaceholder-1.conditionsOfSaleButton=UIButton",
+      "UpstreamPlaceholder-1.currencySymbolLabel=UILabel",
+      "UpstreamPlaceholder-1.currentBidAmountLabel=UILabel",
+      "UpstreamPlaceholder-1.currentBidTitleLabel=UILabel",
+      "UpstreamPlaceholder-1.cursor=UIView",
+      "UpstreamPlaceholder-1.detailsStackView=UIView",
+      "UpstreamPlaceholder-1.keypadContainer=UIView",
+      "UpstreamPlaceholder-1.nextBidAmountLabel=UILabel",
+      "UpstreamPlaceholder-1.privacyPolictyButton=UIButton",
+      "UpstreamPlaceholder-1.yourBidTitleLabel=UILabel",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            360,
+            364,
+            247
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            483,
+            76,
+            93,
+            21
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 17,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Current Bid:",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            483,
+            130,
+            70,
+            21
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 17,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Your Bid:",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 2,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            578,
+            66,
+            160,
+            42
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 26,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "$9,000",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            315,
+            40
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Place Your Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            483,
+            538,
+            255,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "BID",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIImageView",
+          "clips" : false,
+          "frame" : [
+            53,
+            170,
+            364,
+            182
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 2,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            513,
+            176,
+            225,
+            21
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 17,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Enter $9,500 or more ",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            558,
+            118,
+            180,
+            44
+          ],
+          "hidden" : false,
+          "placeholder" : "nil",
+          "pointSize" : 26,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            720,
+            125,
+            18,
+            30
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            566,
+            119,
+            54,
+            42
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 26,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "$",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            506,
+            608,
+            114,
+            32
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "PRIVACY POLICY",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.81000000000000005,
+            0.81000000000000005,
+            0.81000000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            483,
+            236,
+            255,
+            282
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            600,
+            255,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                25,
+                8,
+                199,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "Next Increment",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            483,
+            614,
+            23,
+            21
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 13,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "and",
+          "textColor" : [
+            0.53000000000000003,
+            0.53000000000000003,
+            0.53000000000000003,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            617,
+            592,
+            145,
+            32
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "CONDITIONS OF SALE",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            483,
+            598,
+            153,
+            21
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 13,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "by bidding you accept the",
+          "textColor" : [
+            0.53000000000000003,
+            0.53000000000000003,
+            0.53000000000000003,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/MRb-fW-vfZ-view-eoi-Zv-BeQ.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "UpstreamPlaceholder-1.confirmCredentialsButton=UIButton",
+      "UpstreamPlaceholder-1.emailTextField=UITextField",
+      "UpstreamPlaceholder-1.passwordTextField=UITextField",
+      "UpstreamPlaceholder-1.useArtsyBidderButton=UIButton",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            483,
+            194,
+            255,
+            44
+          ],
+          "hidden" : false,
+          "placeholder" : "Password",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            150,
+            298,
+            76
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Enter your Artsy email and password",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            483,
+            274,
+            255,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "CONFIRM",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            277,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Confirm Your Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            121,
+            685,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            483,
+            145,
+            255,
+            44
+          ],
+          "hidden" : false,
+          "placeholder" : "Email",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            483,
+            580,
+            255,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                15,
+                8,
+                107,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "NEED CC",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                140,
+                8,
+                107,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "HAS CC",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            613,
+            239,
+            125,
+            37
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "Forgot Password?",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            414,
+            53,
+            324,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            53,
+            537,
+            192,
+            19
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "Use Artsy Bidder Details",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/MZV-Pg-x2N-view-VNA-Px-nYJ.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.billingZipConfirmButton=UIButton",
+      "UpstreamPlaceholder-1.billingZipErrorLabel=UILabel",
+      "UpstreamPlaceholder-1.billingZipTextField=UITextField",
+      "UpstreamPlaceholder-1.billingZipWrapperView=UIView",
+      "UpstreamPlaceholder-1.cardConfirmButton=UIButton",
+      "UpstreamPlaceholder-1.cardNumberTextField=UITextField",
+      "UpstreamPlaceholder-1.cardNumberWrapperView=UIView",
+      "UpstreamPlaceholder-1.dateConfirmButton=UIButton",
+      "UpstreamPlaceholder-1.expirationDateWrapperView=UIView",
+      "UpstreamPlaceholder-1.expirationMonthTextField=UITextField",
+      "UpstreamPlaceholder-1.expirationYearTextField=UITextField",
+      "UpstreamPlaceholder-1.securityCodeConfirmButton=UIButton",
+      "UpstreamPlaceholder-1.securityCodeWrapperView=UIView",
+      "UpstreamPlaceholder-1.securitycodeTextField=UITextField",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            435,
+            148
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                -1,
+                0,
+                395,
+                41
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 33,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "Enter your card number",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "borderStyle" : 1,
+              "class" : "UITextField",
+              "clips" : false,
+              "frame" : [
+                0,
+                73,
+                283,
+                50
+              ],
+              "hidden" : false,
+              "placeholder" : "0000 0000 0000 0000",
+              "pointSize" : 20,
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                291,
+                73,
+                94,
+                50
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "ENTER",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            1,
+            449,
+            186
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                1,
+                0,
+                230,
+                41
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 33,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "Expiration date",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                -11,
+                132,
+                184,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "Back to card number",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "borderStyle" : 1,
+              "class" : "UITextField",
+              "clips" : false,
+              "frame" : [
+                0,
+                73,
+                66,
+                50
+              ],
+              "hidden" : false,
+              "placeholder" : "02",
+              "pointSize" : 20,
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "borderStyle" : 1,
+              "class" : "UITextField",
+              "clips" : false,
+              "frame" : [
+                74,
+                73,
+                107,
+                50
+              ],
+              "hidden" : false,
+              "placeholder" : "2018",
+              "pointSize" : 20,
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                189,
+                73,
+                94,
+                50
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "ENTER",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "class" : "UIView",
+              "clips" : false,
+              "frame" : [
+                1,
+                163,
+                157,
+                1
+              ],
+              "hidden" : false,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            8,
+            425,
+            433,
+            60
+          ],
+          "hidden" : true,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                352,
+                17,
+                81,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "CC 👎",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                263,
+                17,
+                81,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "CC 👍",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            449,
+            186
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                1,
+                0,
+                230,
+                41
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 33,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "Security Code",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                0,
+                132,
+                184,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "Back to expiration date",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "borderStyle" : 1,
+              "class" : "UITextField",
+              "clips" : false,
+              "frame" : [
+                0,
+                73,
+                77,
+                50
+              ],
+              "hidden" : false,
+              "placeholder" : "123",
+              "pointSize" : 20,
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "class" : "UIView",
+              "clips" : false,
+              "frame" : [
+                1,
+                163,
+                183,
+                1
+              ],
+              "hidden" : false,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                85,
+                74,
+                94,
+                50
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "ENTER",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            1,
+            1,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            449,
+            186
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                1,
+                0,
+                230,
+                41
+              ],
+              "hidden" : false,
+              "ios.fontName" : "Helvetica",
+              "lines" : 1,
+              "pointSize" : 33,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "Billing ZIP",
+              "textColor" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                0,
+                132,
+                184,
+                43
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "Back to security code",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "borderStyle" : 1,
+              "class" : "UITextField",
+              "clips" : false,
+              "frame" : [
+                0,
+                73,
+                111,
+                50
+              ],
+              "hidden" : false,
+              "placeholder" : "10001",
+              "pointSize" : 20,
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0,
+                0,
+                0,
+                1
+              ],
+              "class" : "UIView",
+              "clips" : false,
+              "frame" : [
+                1,
+                163,
+                183,
+                1
+              ],
+              "hidden" : false,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "userInteraction" : true
+            },
+            {
+              "alignment" : 0,
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "class" : "UILabel",
+              "clips" : false,
+              "frame" : [
+                202,
+                125,
+                220,
+                57
+              ],
+              "hidden" : true,
+              "ios.fontName" : "Helvetica",
+              "lines" : 0,
+              "pointSize" : 17,
+              "subviews" : [
+
+              ],
+              "tag" : 0,
+              "tamic" : true,
+              "text" : "We could not register your card, please verify it is correct",
+              "textColor" : [
+                0.5,
+                0.16400000000000001,
+                0.152,
+                1
+              ],
+              "userInteraction" : false
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                119,
+                74,
+                94,
+                50
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "ENTER",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/O1R-5R-23t-view-EbC-dQ-hBv.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.backgroundView=UIView",
+      "UpstreamPlaceholder-1.cancelButton=UIButton",
+      "UpstreamPlaceholder-1.contentView=UIView",
+      "UpstreamPlaceholder-2.containerView=UIView",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        1024,
+        768
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0,
+            0,
+            0,
+            0.69999999999999996
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            1024,
+            768
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            104.667,
+            54,
+            815,
+            660
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            105,
+            54,
+            140,
+            72
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "CANCEL",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            768,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/q7z-ij-DNu-view-z3s-jo-rdg.nib" : {
+    "outlets" : [
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            -2,
+            5,
+            442,
+            76
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 33,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Confirm that the information you have entered is correct",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/rWY-Fx-Onm-view-hOe-9d-uPK.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.forgotPasswordButton=UIButton",
+      "UpstreamPlaceholder-1.passwordTextField=UITextField",
+      "UpstreamPlaceholder-1.subtitleLabel=UILabel",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            291,
+            73,
+            102,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "ENTER",
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            -2,
+            5,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 33,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Create a password",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            0,
+            73,
+            283,
+            50
+          ],
+          "hidden" : false,
+          "placeholder" : "nil",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 1,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            158,
+            131,
+            125,
+            37
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "Forgot Password?",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/SQx-bj-vr1-view-ySl-MI-0X8.nib" : {
+    "outlets" : [
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/vkP-Fx-jvL-view-LB4-fL-p0q.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.confirmButton=UIButton",
+      "UpstreamPlaceholder-1.numberTextField=UITextField",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        449,
+        485
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            0,
+            73,
+            283,
+            50
+          ],
+          "hidden" : false,
+          "placeholder" : "nil",
+          "pointSize" : 20,
+          "tag" : 0,
+          "tamic" : true,
+          "userInteraction" : true
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            -2,
+            5,
+            395,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 33,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : true,
+          "text" : "Enter your Mobile",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            291,
+            73,
+            102,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : true,
+          "title" : "ENTER",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            485,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "Fulfillment\/Yzb-AU-icr-view-PY1-Lf-UOn.nib" : {
+    "outlets" : [
+      "UpstreamPlaceholder-1.bidDetailsPreviewView=UIView",
+      "UpstreamPlaceholder-1.cursor=UIView",
+      "UpstreamPlaceholder-1.enterButton=UIButton",
+      "UpstreamPlaceholder-1.keypadContainer=UIView",
+      "UpstreamPlaceholder-1.numberAmountTextField=UITextField",
+      "UpstreamPlaceholder-1.useArtsyLoginButton=UIButton",
+      "owner.view=UIView"
+    ],
+    "root" : {
+      "alpha" : 1,
+      "autoresizing" : 18,
+      "background" : [
+        1,
+        1,
+        1,
+        1
+      ],
+      "class" : "UIView",
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        815,
+        660
+      ],
+      "hidden" : false,
+      "subviews" : [
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            53,
+            60,
+            288,
+            41
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 1,
+          "pointSize" : 38,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Confirm Your Bid",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alignment" : 0,
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "class" : "UILabel",
+          "clips" : false,
+          "frame" : [
+            46,
+            148,
+            298,
+            76
+          ],
+          "hidden" : false,
+          "ios.fontName" : "Helvetica",
+          "lines" : 0,
+          "pointSize" : 25,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "text" : "Enter your mobile number or bidder number.",
+          "textColor" : [
+            0,
+            0,
+            0,
+            1
+          ],
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.95699999999999996,
+            0.95699999999999996,
+            0.95699999999999996,
+            1
+          ],
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            483,
+            534,
+            255,
+            50
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "ENTER",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.88600000000000001,
+            0.88600000000000001,
+            0.88600000000000001,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            53,
+            119,
+            685,
+            2
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.84999999999999998,
+            1,
+            0.93400000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            483,
+            580,
+            255,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                28,
+                8,
+                72,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "no #",
+              "userInteraction" : true
+            },
+            {
+              "alpha" : 1,
+              "autoresizing" : 36,
+              "background" : [
+                0.95699999999999996,
+                0.95699999999999996,
+                0.95699999999999996,
+                1
+              ],
+              "buttonType" : 0,
+              "class" : "UIButton",
+              "clips" : false,
+              "frame" : [
+                152,
+                8,
+                72,
+                57
+              ],
+              "hidden" : false,
+              "tag" : 0,
+              "tamic" : true,
+              "title" : "yes #",
+              "userInteraction" : true
+            }
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "borderStyle" : 1,
+          "class" : "UITextField",
+          "clips" : false,
+          "frame" : [
+            483,
+            159,
+            255,
+            44
+          ],
+          "hidden" : false,
+          "placeholder" : "nil",
+          "pointSize" : 26,
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : false
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            728,
+            165,
+            2,
+            32
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "buttonType" : 0,
+          "class" : "UIButton",
+          "clips" : false,
+          "frame" : [
+            53,
+            524,
+            184,
+            43
+          ],
+          "hidden" : false,
+          "tag" : 0,
+          "tamic" : false,
+          "title" : "Use Artsy Login Details",
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            1,
+            0.90300000000000002,
+            0.71999999999999997,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            414,
+            44,
+            324,
+            60
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 36,
+          "background" : [
+            0.81000000000000005,
+            0.81000000000000005,
+            0.81000000000000005,
+            1
+          ],
+          "class" : "UIView",
+          "clips" : false,
+          "frame" : [
+            483,
+            232,
+            255,
+            282
+          ],
+          "hidden" : false,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        },
+        {
+          "alpha" : 1,
+          "autoresizing" : 0,
+          "class" : "_UILayoutGuide",
+          "clips" : false,
+          "frame" : [
+            0,
+            660,
+            0,
+            0
+          ],
+          "hidden" : true,
+          "subviews" : [
+
+          ],
+          "tag" : 0,
+          "tamic" : false,
+          "userInteraction" : true
+        }
+      ],
+      "tag" : 0,
+      "tamic" : true,
+      "userInteraction" : true
+    },
+    "topLevel" : [
+      "UIView"
+    ]
+  },
+  "xib\/KeypadView.nib" : {
+    "exception" : "NSUnknownKeyException: [<UIView> setValue:forUndefinedKey:]: this class is not key value coding-compliant for the key keys.",
+    "outlets" : [
+
+    ]
+  }
+}
