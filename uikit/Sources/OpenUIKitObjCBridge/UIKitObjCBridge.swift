@@ -339,4 +339,94 @@ extension UITapGestureRecognizer {
         get { numberOfTouchesRequired } set { numberOfTouchesRequired = newValue }
     }
 }
+// MARK: - UIColor (NSObject-derived since simplenote-objc-core)
+
+// UIColor.h spells the named colors as class properties `<name>Color`
+// (`clearColor`, `labelColor`, `systemBackgroundColor`, ...) and the
+// component factories as `colorWithRed:green:blue:alpha:` /
+// `colorWithWhite:alpha:`. Each twin returns OpenUIKit's own color.
+extension UIColor {
+    @objc(clearColor) public class var __objc_clearColor: UIColor { UIColor.clear }
+    @objc(blackColor) public class var __objc_blackColor: UIColor { UIColor.black }
+    @objc(whiteColor) public class var __objc_whiteColor: UIColor { UIColor.white }
+    @objc(redColor) public class var __objc_redColor: UIColor { UIColor.red }
+    @objc(greenColor) public class var __objc_greenColor: UIColor { UIColor.green }
+    @objc(blueColor) public class var __objc_blueColor: UIColor { UIColor.blue }
+    @objc(grayColor) public class var __objc_grayColor: UIColor { UIColor.gray }
+    @objc(lightGrayColor) public class var __objc_lightGrayColor: UIColor { UIColor.lightGray }
+    @objc(darkGrayColor) public class var __objc_darkGrayColor: UIColor { UIColor.darkGray }
+    @objc(yellowColor) public class var __objc_yellowColor: UIColor { UIColor.yellow }
+    @objc(orangeColor) public class var __objc_orangeColor: UIColor { UIColor.orange }
+    @objc(purpleColor) public class var __objc_purpleColor: UIColor { UIColor.purple }
+    @objc(cyanColor) public class var __objc_cyanColor: UIColor { UIColor.cyan }
+    @objc(magentaColor) public class var __objc_magentaColor: UIColor { UIColor.magenta }
+    @objc(brownColor) public class var __objc_brownColor: UIColor { UIColor.brown }
+    @objc(systemRedColor) public class var __objc_systemRedColor: UIColor { UIColor.systemRed }
+    @objc(systemOrangeColor) public class var __objc_systemOrangeColor: UIColor { UIColor.systemOrange }
+    @objc(systemYellowColor) public class var __objc_systemYellowColor: UIColor { UIColor.systemYellow }
+    @objc(systemGreenColor) public class var __objc_systemGreenColor: UIColor { UIColor.systemGreen }
+    @objc(systemMintColor) public class var __objc_systemMintColor: UIColor { UIColor.systemMint }
+    @objc(systemTealColor) public class var __objc_systemTealColor: UIColor { UIColor.systemTeal }
+    @objc(systemCyanColor) public class var __objc_systemCyanColor: UIColor { UIColor.systemCyan }
+    @objc(systemBlueColor) public class var __objc_systemBlueColor: UIColor { UIColor.systemBlue }
+    @objc(systemIndigoColor) public class var __objc_systemIndigoColor: UIColor { UIColor.systemIndigo }
+    @objc(systemPurpleColor) public class var __objc_systemPurpleColor: UIColor { UIColor.systemPurple }
+    @objc(systemPinkColor) public class var __objc_systemPinkColor: UIColor { UIColor.systemPink }
+    @objc(systemBrownColor) public class var __objc_systemBrownColor: UIColor { UIColor.systemBrown }
+    @objc(systemGrayColor) public class var __objc_systemGrayColor: UIColor { UIColor.systemGray }
+    @objc(systemGray2Color) public class var __objc_systemGray2Color: UIColor { UIColor.systemGray2 }
+    @objc(systemGray3Color) public class var __objc_systemGray3Color: UIColor { UIColor.systemGray3 }
+    @objc(systemGray4Color) public class var __objc_systemGray4Color: UIColor { UIColor.systemGray4 }
+    @objc(systemGray5Color) public class var __objc_systemGray5Color: UIColor { UIColor.systemGray5 }
+    @objc(systemGray6Color) public class var __objc_systemGray6Color: UIColor { UIColor.systemGray6 }
+    @objc(labelColor) public class var __objc_labelColor: UIColor { UIColor.label }
+    @objc(secondaryLabelColor) public class var __objc_secondaryLabelColor: UIColor { UIColor.secondaryLabel }
+    @objc(tertiaryLabelColor) public class var __objc_tertiaryLabelColor: UIColor { UIColor.tertiaryLabel }
+    @objc(quaternaryLabelColor) public class var __objc_quaternaryLabelColor: UIColor { UIColor.quaternaryLabel }
+    @objc(systemBackgroundColor) public class var __objc_systemBackgroundColor: UIColor { UIColor.systemBackground }
+    @objc(secondarySystemBackgroundColor) public class var __objc_secondarySystemBackgroundColor: UIColor { UIColor.secondarySystemBackground }
+    @objc(tertiarySystemBackgroundColor) public class var __objc_tertiarySystemBackgroundColor: UIColor { UIColor.tertiarySystemBackground }
+    @objc(systemGroupedBackgroundColor) public class var __objc_systemGroupedBackgroundColor: UIColor { UIColor.systemGroupedBackground }
+    @objc(secondarySystemGroupedBackgroundColor) public class var __objc_secondarySystemGroupedBackgroundColor: UIColor { UIColor.secondarySystemGroupedBackground }
+    @objc(tertiarySystemGroupedBackgroundColor) public class var __objc_tertiarySystemGroupedBackgroundColor: UIColor { UIColor.tertiarySystemGroupedBackground }
+    @objc(separatorColor) public class var __objc_separatorColor: UIColor { UIColor.separator }
+    @objc(opaqueSeparatorColor) public class var __objc_opaqueSeparatorColor: UIColor { UIColor.opaqueSeparator }
+    @objc(linkColor) public class var __objc_linkColor: UIColor { UIColor.link }
+    @objc(placeholderTextColor) public class var __objc_placeholderTextColor: UIColor { UIColor.placeholderText }
+    @objc(systemFillColor) public class var __objc_systemFillColor: UIColor { UIColor.systemFill }
+    @objc(secondarySystemFillColor) public class var __objc_secondarySystemFillColor: UIColor { UIColor.secondarySystemFill }
+    @objc(tertiarySystemFillColor) public class var __objc_tertiarySystemFillColor: UIColor { UIColor.tertiarySystemFill }
+    @objc(quaternarySystemFillColor) public class var __objc_quaternarySystemFillColor: UIColor { UIColor.quaternarySystemFill }
+    @objc(tintColorColor) public class var __objc_tintColorColor: UIColor { UIColor.tintColor }
+    @objc(colorWithRed:green:blue:alpha:)
+    public class func __objc_color(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIColor {
+        UIColor(red: red, green: green, blue: blue, alpha: alpha)
+    }
+    @objc(colorWithWhite:alpha:)
+    public class func __objc_color(white: CGFloat, alpha: CGFloat) -> UIColor { UIColor(white: white, alpha: alpha) }
+    @objc(colorNamed:) public class func __objc_colorNamed(_ name: String) -> UIColor? { UIColor(named: name) }
+    @objc(colorWithAlphaComponent:) public func __objc_withAlphaComponent(_ alpha: CGFloat) -> UIColor {
+        withAlphaComponent(alpha)
+    }
+}
+
+extension UIView {
+    @objc(backgroundColor) public var __objc_backgroundColor: UIColor? {
+        get { backgroundColor } set { backgroundColor = newValue }
+    }
+}
+
+extension UILabel {
+    @objc(textColor) public var __objc_textColor: UIColor? { get { textColor } set { textColor = newValue } }
+}
+
+extension UITextField {
+    @objc(textColor) public var __objc_textColor: UIColor? { get { textColor } set { textColor = newValue } }
+}
+
+extension UITextView {
+    // UIKit declares the property nullable; OpenUIKit's is not, so nil
+    // restores OpenUIKit's own initial value (UITextView.swift).
+    @objc(textColor) public var __objc_textColor: UIColor? { get { textColor } set { textColor = newValue ?? .label } }
+}
 #endif

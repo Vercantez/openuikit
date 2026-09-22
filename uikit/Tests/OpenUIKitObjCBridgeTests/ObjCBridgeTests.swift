@@ -105,6 +105,30 @@ final class ObjCBridgeTests: XCTestCase {
         XCTAssertEqual(NSStringFromProtocol(UITableViewDataSourceObjC.self), "UITableViewDataSource")
     }
 
+    /// UIColor is NSObject-derived now (simplenote-objc-core), so the color
+    /// surface an Objective-C app uses exists: SDK selectors, sent through
+    /// the runtime, reaching OpenUIKit's own colors and properties.
+    @MainActor
+    func testColorSelectorsReachOpenUIKit() throws {
+        let clear = UIColor.perform(NSSelectorFromString("clearColor"))?.takeUnretainedValue() as? UIColor
+        XCTAssertEqual(clear, UIColor.clear)
+        let label = UIColor.perform(NSSelectorFromString("labelColor"))?.takeUnretainedValue() as? UIColor
+        XCTAssertTrue(label === UIColor.label)
+        let sel = NSSelectorFromString("colorWithRed:green:blue:alpha:")
+        let method = try XCTUnwrap(class_getClassMethod(UIColor.self, sel))
+        typealias Factory = @convention(c) (AnyClass, Selector, CGFloat, CGFloat, CGFloat, CGFloat) -> UIColor
+        let made = unsafeBitCast(method_getImplementation(method), to: Factory.self)(UIColor.self, sel, 1, 0, 0, 1)
+        XCTAssertEqual(made, UIColor(red: 1, green: 0, blue: 0, alpha: 1))
+
+        let view = UIView(frame: .zero)
+        view.perform(NSSelectorFromString("setBackgroundColor:"), with: UIColor.red)
+        XCTAssertEqual(view.backgroundColor, .red)
+        let labelView = UILabel()
+        labelView.perform(NSSelectorFromString("setTextColor:"), with: UIColor.blue)
+        XCTAssertEqual(labelView.textColor, .blue)
+        XCTAssertTrue(UIView.instancesRespond(to: NSSelectorFromString("setTintColor:")))  // native @objc
+    }
+
     @MainActor
     func testApplicationSharedSelector() {
         let app = UIApplication.perform(NSSelectorFromString("sharedApplication"))?.takeUnretainedValue() as? UIApplication
