@@ -3186,6 +3186,27 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .accessibilityTraits(traits))
     }
 
+    /// SwiftUI's `accessibilityHeading(_:)` (ServerDrivenUI TextBlock.swift:98).
+    /// The heading level has no UIKit trait to land on (UIKit has only
+    /// `.header`, which the app adds itself) and its effect on the hosted
+    /// accessibility tree could not be measured (swiftuia11yprobe: no tree
+    /// without an assistive technology), so the level is not recorded: the
+    /// view is returned unchanged.
+    func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> Self {
+        _ = level
+        return self
+    }
+
+    /// SwiftUI's `backgroundStyle(_:)` (ServerDrivenUI RichTextView.swift:18).
+    /// It sets the environment's background style, which only views filled
+    /// with `.background` read; the modifier itself draws nothing. OpenUIKit
+    /// has no background-style environment value, so the view is returned
+    /// unchanged — equal pixels for any view that does not read it.
+    func backgroundStyle<S: ShapeStyle>(_ style: S) -> Self {
+        _ = style
+        return self
+    }
+
     func accessibilityAction(
         _ kind: AccessibilityActionKind = .default,
         _ handler: @escaping @MainActor () -> Void

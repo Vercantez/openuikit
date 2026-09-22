@@ -642,6 +642,8 @@ private func _openUIKitTraits(_ traits: AccessibilityTraits) -> UIAccessibilityT
     if traits.contains(.isImage) { result.insert(.image) }
     if traits.contains(.isSelected) { result.insert(.selected) }
     if traits.contains(.updatesFrequently) { result.insert(.updatesFrequently) }
+    if traits.contains(.isStaticText) { result.insert(.staticText) }
+    if traits.contains(.startsMediaSession) { result.insert(.startsMediaSession) }
     return result
 }
 

@@ -40,6 +40,9 @@ public struct _OpenFont: Hashable, Sendable {
     enum Storage: Hashable, Sendable {
         case textStyle(TextStyle)
         case uiFont(pointSize: CGFloat, weight: UIFont.Weight, design: UIFont.Design)
+        /// A concrete UIFont kept whole — a registered face (KDS's Inter via
+        /// `Font(uiFont)`) must not be flattened into the system font.
+        case font(UIFont)
     }
 
     let storage: Storage
@@ -52,11 +55,7 @@ public struct _OpenFont: Hashable, Sendable {
     /// portable bridge preserves the same source spelling while carrying the
     /// immutable OpenUIKit font metrics directly.
     public init(_ font: CTFont) {
-        storage = .uiFont(
-            pointSize: font.pointSize,
-            weight: font.weight,
-            design: font.design
-        )
+        storage = .font(font)
     }
 
     public static let largeTitle = _OpenFont(.largeTitle)
@@ -127,6 +126,30 @@ public struct _OpenFont: Hashable, Sendable {
                     design: design
                 )
             )
+        case .font(let font):
+            // A registered face keeps its own face; only a system font
+            // changes weight (what a weight means for a custom family's
+            // other faces is not measured).
+            guard font.fontName.hasPrefix(".SF") else { return self }
+            return _OpenFont(storage: .uiFont(pointSize: font.pointSize, weight: weight.value,
+                                              design: font.design))
+        }
+    }
+
+    /// SwiftUI's `Font.italic()` (ServerDrivenUI TextBlock.swift:50). A text
+    /// style or system font becomes the italic system design at the same size
+    /// and weight; a registered face is returned unchanged (its italic face
+    /// is a separate registered font — not measured).
+    public func italic() -> _OpenFont {
+        switch storage {
+        case .textStyle:
+            let base = resolve(weight: nil)
+            return _OpenFont(storage: .uiFont(pointSize: base.pointSize, weight: base.weight, design: .italic))
+        case .uiFont(let pointSize, let weight, _):
+            return _OpenFont(storage: .uiFont(pointSize: pointSize, weight: weight, design: .italic))
+        case .font(let font):
+            guard font.fontName.hasPrefix(".SF") else { return self }
+            return _OpenFont(storage: .uiFont(pointSize: font.pointSize, weight: font.weight, design: .italic))
         }
     }
 
@@ -160,6 +183,9 @@ public struct _OpenFont: Hashable, Sendable {
                 design: design
             )
             return UIFont(descriptor: descriptor, size: pointSize)
+        case .font(let font):
+            guard let override, font.fontName.hasPrefix(".SF") else { return font }
+            return .systemFont(ofSize: font.pointSize, weight: override.value)
         }
     }
 }
@@ -200,6 +226,12 @@ public struct _OpenColor: Hashable, @unchecked Sendable {
                 alpha: CGFloat(opacity)
             )
         )
+    }
+
+    /// SwiftUI's `Color(_ color: Color)` (compiles on iOS 26.1; ServerDrivenUI
+    /// ImageBlock.swift:22): the same colour.
+    public init(_ color: _OpenColor) {
+        self = color
     }
 
     public init(_ uiColor: UIColor) {
@@ -591,6 +623,12 @@ public enum _OpenTextTruncationMode: UInt8, Hashable, Sendable {
     case tail
 }
 
+public extension _OpenText {
+    /// SwiftUI's nested spelling `Text.TruncationMode` (ios-oss Library
+    /// PagedTabBar.swift:83; cases head / tail / middle on iOS 26.1).
+    typealias TruncationMode = _OpenTextTruncationMode
+}
+
 public struct _OpenContentShapeKinds: OptionSet, Hashable, Sendable {
     public let rawValue: UInt8
     public init(rawValue: UInt8) { self.rawValue = rawValue }
@@ -680,6 +718,17 @@ public struct _OpenAccessibilityTraits: OptionSet, Sendable {
     public static let isImage = _OpenAccessibilityTraits(rawValue: 1 << 3)
     public static let isSelected = _OpenAccessibilityTraits(rawValue: 1 << 4)
     public static let updatesFrequently = _OpenAccessibilityTraits(rawValue: 1 << 5)
+    // ios-oss ServerDrivenUI (TextBlock.swift:95, AudioVideoBlock.swift:72).
+    // Mapped to UIKit's `.staticText` / `.startsMediaSession` by name; the
+    // hosted mapping is not measured (SwiftUI builds no accessibility tree
+    // without an assistive technology — swiftuia11yprobe).
+    public static let isStaticText = _OpenAccessibilityTraits(rawValue: 1 << 6)
+    public static let startsMediaSession = _OpenAccessibilityTraits(rawValue: 1 << 7)
+}
+
+/// SwiftUI's `AccessibilityHeadingLevel`.
+public enum AccessibilityHeadingLevel: Hashable, Sendable {
+    case unspecified, h1, h2, h3, h4, h5, h6
 }
 
 public struct _OpenMatchedGeometryProperties: OptionSet, Sendable {
