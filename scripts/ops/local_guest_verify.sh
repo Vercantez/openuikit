@@ -7,11 +7,11 @@
 #   LOCAL_GUEST_FORCE=1 ...                              # rebuild everything, cold
 #                                                        # (stage cache bypassed)
 #   LOCAL_GUEST_SKIP_VERIFY=1 ...                        # build only
-#   LOCAL_GUEST_CACHE=1 ...                              # build_full stage cache (off by default: its store
-#       failed on the main checkout with "cp: ... replaced while being copied")
-#       (default 1: BUILD_FULL_STAGE_CACHE=1 under build/local-guest/stage-cache,
+#   LOCAL_GUEST_CACHE=1 ...                              # opt in to build_full's
+#       stage cache (BUILD_FULL_STAGE_CACHE=1 under build/local-guest/stage-cache),
 #       so a uikit/ edit does not recompile FoundationEssentials or
-#       FoundationInternationalization; hits are byte-identical to cold builds)
+#       FoundationInternationalization; hits are byte-identical to cold builds.
+#       Default 0 until the cache has soaked on the main checkout.
 #   LOCAL_GUEST_JOBS=N ...                               # parallel compile jobs
 #       inside build_full (default: all container CPUs)
 #   LOCAL_GUEST_BUILD_FULL=/path/build_full.sh ...       # diagnostic: run another
