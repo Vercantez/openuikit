@@ -74,17 +74,13 @@ private func edgeInsets(_ insets: OpenUIKitObjCSupport.UIEdgeInsets) -> OpenUIKi
 // MARK: - UIResponder
 
 extension UIResponder {
-    @objc(becomeFirstResponder) @discardableResult public func __objc_becomeFirstResponder() -> Bool { becomeFirstResponder() }
-    @objc(resignFirstResponder) @discardableResult public func __objc_resignFirstResponder() -> Bool { resignFirstResponder() }
     @objc(isFirstResponder) public var __objc_isFirstResponder: Bool { isFirstResponder }
 }
 
 // MARK: - UIView
 
 extension UIView {
-    @objc(initWithFrame:) public convenience init(__objcFrame frame: CGRect) { self.init(frame: frame) }
     @objc(frame) public var __objc_frame: CGRect { get { frame } set { frame = newValue } }
-    @objc(bounds) public var __objc_bounds: CGRect { get { bounds } set { bounds = newValue } }
     @objc(center) public var __objc_center: CGPoint { get { center } set { center = newValue } }
     @objc(alpha) public var __objc_alpha: CGFloat { get { alpha } set { alpha = newValue } }
     @objc(isHidden) public var __objc_hidden: Bool { get { isHidden } set { isHidden = newValue } }
@@ -110,10 +106,8 @@ extension UIView {
     @objc(removeFromSuperview) public func __objc_removeFromSuperview() { removeFromSuperview() }
     @objc(setNeedsLayout) public func __objc_setNeedsLayout() { setNeedsLayout() }
     @objc(layoutIfNeeded) public func __objc_layoutIfNeeded() { layoutIfNeeded() }
-    @objc(layoutSubviews) public func __objc_layoutSubviews() { layoutSubviews() }
     @objc(setNeedsDisplay) public func __objc_setNeedsDisplay() { setNeedsDisplay() }
     @objc(sizeToFit) public func __objc_sizeToFit() { sizeToFit() }
-    @objc(sizeThatFits:) public func __objc_sizeThatFits(_ size: CGSize) -> CGSize { sizeThatFits(size) }
     @objc(safeAreaInsets) public var __objc_safeAreaInsets: OpenUIKitObjCSupport.UIEdgeInsets { edgeInsets(safeAreaInsets) }
     @objc(addGestureRecognizer:) public func __objc_addGestureRecognizer(_ recognizer: UIGestureRecognizer) { addGestureRecognizer(recognizer) }
     @objc(removeGestureRecognizer:) public func __objc_removeGestureRecognizer(_ recognizer: UIGestureRecognizer) { removeGestureRecognizer(recognizer) }
@@ -124,8 +118,6 @@ extension UIView {
 // MARK: - UIControl
 
 extension UIControl {
-    @objc(isEnabled) public var __objc_enabled: Bool { get { isEnabled } set { isEnabled = newValue } }
-    @objc(enabled) public var __objc_enabledPlain: Bool { get { isEnabled } set { isEnabled = newValue } }
     @objc(addTarget:action:forControlEvents:)
     public func __objc_addTarget(_ target: Any?, action: Selector, forControlEvents events: UInt) {
         addTarget(target, action: action, for: UIControl.Event(rawValue: events))
@@ -158,32 +150,19 @@ extension UILabel {
 }
 
 extension UITextView {
-    @objc(text) public var __objc_text: String? { get { text } set { text = newValue ?? "" } }
     @objc(editable) public var __objc_editable: Bool { get { isEditable } set { isEditable = newValue } }
 }
 
 extension UITextField {
-    @objc(text) public var __objc_text: String? { get { text } set { text = newValue } }
-    @objc(placeholder) public var __objc_placeholder: String? { get { placeholder } set { placeholder = newValue } }
 }
 
 // MARK: - UIViewController
 
 extension UIViewController {
-    @objc(initWithNibName:bundle:) public convenience init(__objcNibName nibName: String?, bundle: Bundle?) {
-        self.init(nibName: nibName, bundle: bundle)
-    }
     @objc(view) public var __objc_view: UIView { get { view } set { view = newValue } }
     @objc(isViewLoaded) public var __objc_isViewLoaded: Bool { isViewLoaded }
     @objc(loadViewIfNeeded) public func __objc_loadViewIfNeeded() { loadViewIfNeeded() }
     @objc(title) public var __objc_title: String? { get { title } set { title = newValue } }
-    @objc(viewDidLoad) public func __objc_viewDidLoad() { viewDidLoad() }
-    @objc(viewWillAppear:) public func __objc_viewWillAppear(_ animated: Bool) { viewWillAppear(animated) }
-    @objc(viewDidAppear:) public func __objc_viewDidAppear(_ animated: Bool) { viewDidAppear(animated) }
-    @objc(viewWillDisappear:) public func __objc_viewWillDisappear(_ animated: Bool) { viewWillDisappear(animated) }
-    @objc(viewDidDisappear:) public func __objc_viewDidDisappear(_ animated: Bool) { viewDidDisappear(animated) }
-    @objc(viewWillLayoutSubviews) public func __objc_viewWillLayoutSubviews() { viewWillLayoutSubviews() }
-    @objc(viewDidLayoutSubviews) public func __objc_viewDidLayoutSubviews() { viewDidLayoutSubviews() }
     @objc(parentViewController) public var __objc_parent: UIViewController? { parent }
     @objc(navigationController) public var __objc_navigationController: UINavigationController? { navigationController }
     @objc(presentingViewController) public var __objc_presentingViewController: UIViewController? { presentingViewController }
@@ -191,8 +170,6 @@ extension UIViewController {
     @objc(childViewControllers) public var __objc_children: [UIViewController] { children }
     @objc(addChildViewController:) public func __objc_addChild(_ child: UIViewController) { addChild(child) }
     @objc(removeFromParentViewController) public func __objc_removeFromParent() { removeFromParent() }
-    @objc(willMoveToParentViewController:) public func __objc_willMove(toParent parent: UIViewController?) { willMove(toParent: parent) }
-    @objc(didMoveToParentViewController:) public func __objc_didMove(toParent parent: UIViewController?) { didMove(toParent: parent) }
     @objc(beginAppearanceTransition:animated:) public func __objc_beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
         beginAppearanceTransition(isAppearing, animated: animated)
     }
@@ -210,9 +187,6 @@ extension UIViewController {
 // MARK: - UINavigationController
 
 extension UINavigationController {
-    @objc(initWithRootViewController:) public convenience init(__objcRoot root: UIViewController) {
-        self.init(rootViewController: root)
-    }
     @objc(viewControllers) public var __objc_viewControllers: [UIViewController] { viewControllers }
     @objc(topViewController) public var __objc_topViewController: UIViewController? { topViewController }
     @objc(visibleViewController) public var __objc_visibleViewController: UIViewController? { visibleViewController }
@@ -225,9 +199,6 @@ extension UINavigationController {
     }
     @objc(popToRootViewControllerAnimated:) @discardableResult public func __objc_popToRoot(animated: Bool) -> [UIViewController]? {
         popToRootViewController(animated: animated)
-    }
-    @objc(setNavigationBarHidden:animated:) public func __objc_setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
-        setNavigationBarHidden(hidden, animated: animated)
     }
 }
 
@@ -258,9 +229,6 @@ extension UIApplication {
 // MARK: - UITableView / UITableViewCell / NSIndexPath
 
 extension UITableView {
-    @objc(initWithFrame:style:) public convenience init(__objcFrame frame: CGRect, style: Int) {
-        self.init(frame: frame, style: tableStyle(style))
-    }
     @objc(reloadData) public func __objc_reloadData() { reloadData() }
     @objc(beginUpdates) public func __objc_beginUpdates() { beginUpdates() }
     @objc(endUpdates) public func __objc_endUpdates() { endUpdates() }
@@ -288,9 +256,6 @@ extension UITableView {
 }
 
 extension UITableViewCell {
-    @objc(initWithStyle:reuseIdentifier:) public convenience init(__objcStyle style: Int, reuseIdentifier: String?) {
-        self.init(style: cellStyle(style), reuseIdentifier: reuseIdentifier)
-    }
     @objc(textLabel) public var __objc_textLabel: UILabel? { textLabel }
     @objc(detailTextLabel) public var __objc_detailTextLabel: UILabel? { detailTextLabel }
     @objc(imageView) public var __objc_imageView: UIImageView? { imageView }
@@ -306,12 +271,7 @@ extension UITableViewCell {
         get { accessoryTypeRaw(accessoryType) } set { accessoryType = mapAccessoryType(newValue) }
     }
     @objc(isSelected) public var __objc_selected: Bool { isSelected }
-    @objc(setSelected:animated:) public func __objc_setSelected(_ selected: Bool, animated: Bool) { setSelected(selected, animated: animated) }
-    @objc(setHighlighted:animated:) public func __objc_setHighlighted(_ highlighted: Bool, animated: Bool) {
-        setHighlighted(highlighted, animated: animated)
-    }
     @objc(reuseIdentifier) public var __objc_reuseIdentifier: String? { reuseIdentifier }
-    @objc(prepareForReuse) public func __objc_prepareForReuse() { prepareForReuse() }
 }
 
 /// UIKit's `NSIndexPath (UITableView)` category: `row` and `section` are

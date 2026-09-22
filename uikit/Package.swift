@@ -333,7 +333,19 @@ let coreTargets: [Target] = [
     // Apple framework is imported for its types.
     .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
     // The UIKit reimplementation. Same rule as above.
-    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+    //
+    // OPENUIKIT_OBJC_SUBCLASSING (Apple-toolchain builds only): the classes an
+    // Objective-C app subclasses (UIResponder → UIView → UIControl /
+    // UIScrollView / …, UIResponder → UIViewController → …) are compiled
+    // vtable-free — every overridable member `@objc dynamic`, every other
+    // member `final` — so a statically emitted Objective-C subclass, whose
+    // class object has no Swift vtable region, never has a slot read from it
+    // (docs/agent_reports/simplenote-objc-core.md). Linux ELF and the
+    // Foundation-hidden guest library route compile the same sources without
+    // it (no `@objc` there); their behaviour is unchanged.
+    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"],
+            swiftSettings: [.define("OPENUIKIT_OBJC_SUBCLASSING",
+                                    .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]),
     .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
     // The declaration macro executes on the build host even when UIKit is
     // being emitted for a different target triple.
@@ -891,6 +903,22 @@ let simplenoteProducts: [Product] = [
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
+// The generated OpenUIKit-Swift.h marks every class
+// objc_subclassing_restricted through SWIFT_CLASS / SWIFT_CLASS_NAMED unless
+// the includer predefines them. Predefine SWIFT_CLASS exactly as the header
+// would (restricted) and SWIFT_CLASS_NAMED without the attribute: only the
+// vtable-free classes carry an explicit `@objc(Name)` and therefore
+// SWIFT_CLASS_NAMED, so an Objective-C subclass of any other OpenUIKit class
+// is still a compile error rather than a runtime vtable crash. Command-line
+// macros reach the Clang module build, so every Clang and Swift consumer of
+// the header must carry the same pair (Tools/ingest emits it for apps).
+let openUIKitObjCSubclassingDefines = [
+    "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) __attribute__((objc_subclassing_restricted)) SWIFT_CLASS_EXTRA",
+    "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+]
+let openUIKitObjCSubclassingCFlags: CSetting = .unsafeFlags(openUIKitObjCSubclassingDefines)
+let openUIKitObjCSubclassingSwiftFlags: SwiftSetting =
+    .unsafeFlags(openUIKitObjCSubclassingDefines.flatMap { ["-Xcc", $0] })
 let simplenoteTargets: [Target] = [
     .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
     // Route (b) Objective-C declarations that OpenUIKit-Swift.h cannot carry
@@ -906,6 +934,16 @@ let simplenoteTargets: [Target] = [
             path: "Sources/OpenUIKitObjCBridge", swiftSettings: simplenoteSettings),
     .testTarget(name: "OpenUIKitObjCBridgeTests", dependencies: ["OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/OpenUIKitObjCBridgeTests", swiftSettings: simplenoteSettings),
+    // Objective-C subclasses of OpenUIKit classes (simplenote-objc-core).
+    // The scenario is the SAME .m the iOS 26.1 oracle runs
+    // (Tools/oracle2/objcsubclassprobe/run.sh); the test compares traces.
+    .target(name: "OpenUIKitObjCSubclassFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
+            path: "Tools/oracle2/objcsubclassprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCSubclassingTests",
+                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCSubclassingTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

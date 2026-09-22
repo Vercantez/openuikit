@@ -765,8 +765,8 @@ final class ViewCompatTests: XCTestCase {
         v.registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) {
             (_: UIView, _) in fired += 1
         }
-        var previous = v.traitCollection
-        previous.preferredContentSizeCategory = .extraLarge
+        // UITraitCollection is an immutable class now (UIKit's shape).
+        let previous = v.traitCollection._with { $0.preferredContentSizeCategory = .extraLarge }
         v._traitsDidChange(previous: previous)
         XCTAssertEqual(fired, 1)
     }

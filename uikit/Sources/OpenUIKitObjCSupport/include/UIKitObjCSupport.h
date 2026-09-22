@@ -17,11 +17,20 @@
  * same name (MEASURED probe1: `'UITableViewDataSource' is ambiguous for type
  * lookup` when both are visible).
  *
- * Objective-C classes CANNOT subclass the classes in OpenUIKit-Swift.h: the
- * header marks them objc_subclassing_restricted, and lifting the attribute
- * jumps to a null Swift vtable slot at UIView.init() (MEASURED probe1,
- * docs/agent_reports/simplenote-launch3.md). This header does not pretend
- * otherwise. */
+ * Objective-C classes may subclass only the OpenUIKit classes compiled
+ * vtable-free under OPENUIKIT_OBJC_SUBCLASSING (they carry UIKit's runtime
+ * name and SWIFT_CLASS_NAMED in the generated header; the consumer's
+ * -DSWIFT_CLASS_NAMED lifts objc_subclassing_restricted from exactly those).
+ * Every other generated interface stays restricted: lifting it jumps to a
+ * null Swift vtable slot (MEASURED probe1, simplenote-launch3.md;
+ * docs/agent_reports/simplenote-objc-core.md).
+ *
+ * An enum that OpenUIKit itself exports as `@objc` (UISemanticContentAttribute,
+ * UIUserInterfaceLayoutDirection, UITableViewStyle, UITableViewCellStyle,
+ * UITableViewCellEditingStyle, UIStatusBarStyle, UIModalTransitionStyle) must
+ * NOT be repeated here: Clang rejects the pair as `has different definitions
+ * in different modules`. Where a protocol below needs one of them, it is
+ * spelled NSInteger (the enums' underlying type). */
 
 #ifndef OPENUIKIT_OBJC_SUPPORT_H
 #define OPENUIKIT_OBJC_SUPPORT_H
@@ -74,19 +83,12 @@ typedef NS_OPTIONS(NSUInteger, UIRectEdge) {
 
 #pragma mark - Enumerations (raw values: iOS 26.1 SDK)
 
-typedef NS_ENUM(NSInteger, UITableViewStyle) {
-    UITableViewStylePlain, UITableViewStyleGrouped, UITableViewStyleInsetGrouped,
-} NS_SWIFT_NAME(UITableViewStyleObjC);
-typedef NS_ENUM(NSInteger, UITableViewCellStyle) {
-    UITableViewCellStyleDefault, UITableViewCellStyleValue1, UITableViewCellStyleValue2, UITableViewCellStyleSubtitle,
-} NS_SWIFT_NAME(UITableViewCellStyleObjC);
+/* UITableViewStyle, UITableViewCellStyle: exported by OpenUIKit-Swift.h. */
 typedef NS_ENUM(NSInteger, UITableViewCellSelectionStyle) {
     UITableViewCellSelectionStyleNone, UITableViewCellSelectionStyleBlue,
     UITableViewCellSelectionStyleGray, UITableViewCellSelectionStyleDefault,
 } NS_SWIFT_NAME(UITableViewCellSelectionStyleObjC);
-typedef NS_ENUM(NSInteger, UITableViewCellEditingStyle) {
-    UITableViewCellEditingStyleNone, UITableViewCellEditingStyleDelete, UITableViewCellEditingStyleInsert,
-} NS_SWIFT_NAME(UITableViewCellEditingStyleObjC);
+/* UITableViewCellEditingStyle: exported by OpenUIKit-Swift.h. */
 typedef NS_ENUM(NSInteger, UITableViewCellAccessoryType) {
     UITableViewCellAccessoryNone, UITableViewCellAccessoryDisclosureIndicator,
     UITableViewCellAccessoryDetailDisclosureButton, UITableViewCellAccessoryCheckmark,
@@ -152,9 +154,7 @@ typedef NS_ENUM(NSInteger, UIAlertControllerStyle) {
 typedef NS_ENUM(NSInteger, UIAlertActionStyle) {
     UIAlertActionStyleDefault = 0, UIAlertActionStyleCancel, UIAlertActionStyleDestructive,
 } NS_SWIFT_NAME(UIAlertActionStyleObjC);
-typedef NS_ENUM(NSInteger, UIStatusBarStyle) {
-    UIStatusBarStyleDefault = 0, UIStatusBarStyleLightContent = 1, UIStatusBarStyleDarkContent = 3,
-} NS_SWIFT_NAME(UIStatusBarStyleObjC);
+/* UIStatusBarStyle: exported by OpenUIKit-Swift.h. */
 typedef NS_ENUM(NSInteger, UIBarStyle) {
     UIBarStyleDefault = 0, UIBarStyleBlack = 1,
 } NS_SWIFT_NAME(UIBarStyleObjC);
@@ -180,9 +180,8 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 typedef NS_ENUM(NSInteger, UIActivityIndicatorViewStyle) {
     UIActivityIndicatorViewStyleMedium = 100, UIActivityIndicatorViewStyleLarge = 101,
 } NS_SWIFT_NAME(UIActivityIndicatorViewStyleObjC);
-typedef NS_ENUM(NSInteger, UIUserInterfaceLayoutDirection) {
-    UIUserInterfaceLayoutDirectionLeftToRight, UIUserInterfaceLayoutDirectionRightToLeft,
-} NS_SWIFT_NAME(UIUserInterfaceLayoutDirectionObjC);
+/* UIUserInterfaceLayoutDirection: exported by OpenUIKit-Swift.h (an @objc
+ * Int enum, raw values 0/1 as in UIApplication.h). */
 typedef NS_ENUM(NSInteger, UIAccessibilityContrast) {
     UIAccessibilityContrastUnspecified = -1, UIAccessibilityContrastNormal, UIAccessibilityContrastHigh,
 } NS_SWIFT_NAME(UIAccessibilityContrastObjC);
@@ -289,14 +288,14 @@ extern NSString * const UIKeyInputDownArrow;
 - (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section;
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(NSInteger)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 @protocol UITableViewDelegate <NSObject, UIScrollViewDelegate>
 @optional
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSInteger)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 

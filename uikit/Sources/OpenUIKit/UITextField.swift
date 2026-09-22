@@ -45,6 +45,12 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -199,6 +205,12 @@ final class UITextFieldClearButton: UIControl {
 /// coincidentally matching integer offsets.
 private final class UITextFieldDocumentIdentity {}
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITextField)
+#endif
 @preconcurrency @MainActor
 open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHosting {
 
@@ -220,29 +232,52 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // Keyboard traits are retained even though OpenUIKit itself owns no
     // software keyboard. A host can inspect them when choosing an input UI.
-    open var autocapitalizationType: UITextAutocapitalizationType = .sentences
-    open var autocorrectionType: UITextAutocorrectionType = .default
-    open var spellCheckingType: UITextSpellCheckingType = .default
+    public final var autocapitalizationType: UITextAutocapitalizationType = .sentences
+    public final var autocorrectionType: UITextAutocorrectionType = .default
+    public final var spellCheckingType: UITextSpellCheckingType = .default
     /// The semantic credential/contact purpose is retained for the embedding
     /// keyboard or password-manager service.  OpenUIKit does not inspect or
     /// persist the entered value itself.
-    open var textContentType: UITextContentType?
-    open var keyboardType: UIKeyboardType = .default
-    open var keyboardAppearance: UIKeyboardAppearance = .default
-    open var returnKeyType: UIReturnKeyType = .default
-    open var enablesReturnKeyAutomatically = false
+    public final var textContentType: UITextContentType?
+    public final var keyboardType: UIKeyboardType = .default
+    public final var keyboardAppearance: UIKeyboardAppearance = .default
+    public final var returnKeyType: UIReturnKeyType = .default
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var enablesReturnKeyAutomatically = false
     /// Secure entry keeps the model text unchanged while rendering one bullet
     /// per composed character. This mirrors UIKit's privacy boundary: bindings
     /// and delegates receive the real value, but neither static nor editing
     /// snapshots expose it.
-    open var isSecureTextEntry = false {
-        didSet {
-            guard isSecureTextEntry != oldValue else { return }
-            refreshContent()
+    /// Backing store; the property below carries UIKit's Objective-C
+    /// spelling (`getter=isSecureTextEntry`, `setSecureTextEntry:`) so an Objective-C
+    /// subclass's `-setSecureTextEntry:` override is what Swift-side sets reach.
+    final var _isSecureTextEntryStorage: Bool = false
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(secureTextEntry)
+#endif
+    open dynamic var isSecureTextEntry: Bool {
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(isSecureTextEntry)
+#endif
+        get { _isSecureTextEntryStorage }
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(setSecureTextEntry:)
+#endif
+        set {
+            let oldValue = _isSecureTextEntryStorage
+            _isSecureTextEntryStorage = newValue
+                guard isSecureTextEntry != oldValue else { return }
+                refreshContent()
+        
         }
     }
 
-    open var text: String? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var text: String? {
         get { _text.isEmpty ? (_hasText ? _text : nil) : _text }
         set {
             _text = newValue ?? ""
@@ -261,15 +296,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             refreshContent()
         }
     }
-    var _text: String = ""
-    var _hasText = false
+    final var _text: String = ""
+    final var _hasText = false
 
     /// Attributed content (M12). Rendering goes through the same
     /// UITextFieldLabel the plain path uses, so per-run fonts/colors/kern
     /// land unchanged. Editing rewrites the plain string and DROPS the
     /// attributes (documented in docs/KNOWN_GAPS.md — real UIKit keeps
     /// typing attributes; we do not model them).
-    open var attributedText: NSAttributedString? {
+    public final var attributedText: NSAttributedString? {
         get {
             if let a = _attributed { return a }
             guard _hasText || !_text.isEmpty else { return nil }
@@ -293,16 +328,19 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             refreshContent()
         }
     }
-    var _attributed: NSAttributedString?
+    final var _attributed: NSAttributedString?
 
-    private var _placeholder: String?
-    private var _attributedPlaceholder: NSAttributedString?
-    private var placeholderUsesDefaultAttributes = false
+    private final var _placeholder: String?
+    private final var _attributedPlaceholder: NSAttributedString?
+    private final var placeholderUsesDefaultAttributes = false
 
     /// The plain and attributed placeholder properties are two views of one
     /// UIKit value: assigning either updates the other's string, and nil on
     /// either side clears both (iOS 26.1 oracle).
-    open var placeholder: String? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var placeholder: String? {
         get { _placeholder }
         set {
             _placeholder = newValue
@@ -312,7 +350,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
 
-    open var attributedPlaceholder: NSAttributedString? {
+    public final var attributedPlaceholder: NSAttributedString? {
         get { _attributedPlaceholder }
         set {
             _attributedPlaceholder = newValue.map(NSAttributedString.init(attributedString:))
@@ -322,7 +360,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
 
-    public var font: UIFont = .systemFont(ofSize: 17) {
+    public final var font: UIFont = .systemFont(ofSize: 17) {
         didSet {
             if placeholderUsesDefaultAttributes, let placeholder = _placeholder {
                 _attributedPlaceholder = makeDefaultAttributedPlaceholder(placeholder)
@@ -335,35 +373,41 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// fresh field reads `labelColor`, and assigning nil reads `labelColor`
     /// again (ios-oss-launch.md probe) — nil resets to the default, it is
     /// never observed.
-    public var textColor: UIColor? {
+    public final var textColor: UIColor? {
         get { _textColor }
         set { _textColor = newValue ?? .label }
     }
-    private var _textColor: UIColor = .label {
+    private final var _textColor: UIColor = .label {
         didSet { refreshContent() }
     }
 
-    public var borderStyle: UITextFieldBorderStyle = .none {
+    public final var borderStyle: UITextFieldBorderStyle = .none {
         didSet { setNeedsLayout() }
     }
 
-    open var clearButtonMode: ViewMode = .never {
+    public final var clearButtonMode: ViewMode = .never {
         didSet {
             if clearButtonMode != .never { ensureClearButton() }
             setNeedsLayout()
         }
     }
 
-    open var leftView: UIView? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var leftView: UIView? {
         didSet { replaceAccessoryView(oldValue, with: leftView) }
     }
-    open var leftViewMode: ViewMode = .never {
+    public final var leftViewMode: ViewMode = .never {
         didSet { setNeedsLayout() }
     }
-    open var rightView: UIView? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var rightView: UIView? {
         didSet { replaceAccessoryView(oldValue, with: rightView) }
     }
-    open var rightViewMode: ViewMode = .never {
+    public final var rightViewMode: ViewMode = .never {
         didSet { setNeedsLayout() }
     }
 
@@ -395,14 +439,14 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // MARK: Internal views
 
-    let backgroundView = UITextFieldBackgroundView()
-    let canvasView = UITextFieldCanvasView()
-    let textLabel = UITextFieldLabel()
-    let placeholderLabel = UITextFieldLabel()
+    final let backgroundView = UITextFieldBackgroundView()
+    final let canvasView = UITextFieldCanvasView()
+    final let textLabel = UITextFieldLabel()
+    final let placeholderLabel = UITextFieldLabel()
     /// Created lazily on first edit so static scenes/layout dumps never
     /// see it (a plain UIView: background = tint bar).
-    var caretView: UIView?
-    private var clearButton: UITextFieldClearButton?
+    final var caretView: UIView?
+    private final var clearButton: UITextFieldClearButton?
 
     // MARK: Delegate (M13)
 
@@ -411,19 +455,19 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// has no equivalent here — every end is `.committed`.
     public enum DidEndEditingReason: Sendable { case committed, cancelled }
 
-    public weak var delegate: UITextFieldDelegate?
+    public weak final var delegate: UITextFieldDelegate?
 
     // MARK: Editing state
 
-    public private(set) var isEditing = false
-    private let textDocumentIdentity = UITextFieldDocumentIdentity()
-    private var selectedUTF16Range: NSRange? = NSRange(location: 0, length: 0)
-    private var unselectedCaretOffset = 0
-    private var markedUTF16Range: NSRange?
+    public private(set) final var isEditing = false
+    private final let textDocumentIdentity = UITextFieldDocumentIdentity()
+    private final var selectedUTF16Range: NSRange? = NSRange(location: 0, length: 0)
+    private final var unselectedCaretOffset = 0
+    private final var markedUTF16Range: NSRange?
 
     /// Caret position as a UTF-16 offset into `_text`. Kept public-for-tests
     /// for the original M8 harness; `selectedTextRange` is the app API.
-    public internal(set) var caretOffset: Int {
+    public internal(set) final var caretOffset: Int {
         get { selectedUTF16Range?.upperBound ?? unselectedCaretOffset }
         set {
             let offset = Swift.min(Swift.max(0, newValue), documentUTF16Length)
@@ -432,19 +476,22 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
     /// Horizontal scroll of overflowing text (points, >= 0).
-    public internal(set) var textScrollOffset: CGFloat = 0
+    public internal(set) final var textScrollOffset: CGFloat = 0
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         configureTextFieldViews()
     }
 
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         super.init(coder: coder)
         configureTextFieldViews()
     }
 
-    private func configureTextFieldViews() {
+    private final func configureTextFieldViews() {
         isOpaque = false
         backgroundView.isUserInteractionEnabled = false
         canvasView.isUserInteractionEnabled = false
@@ -462,15 +509,18 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// Colour of a placeholder the field itself built (an app-supplied
     /// `attributedPlaceholder` carries its own). `UISearchTextField`
     /// overrides it.
-    var defaultPlaceholderColor: UIColor { .placeholderText }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    dynamic var defaultPlaceholderColor: UIColor { .placeholderText }
 
-    private func makeDefaultAttributedPlaceholder(_ text: String) -> NSAttributedString {
+    private final func makeDefaultAttributedPlaceholder(_ text: String) -> NSAttributedString {
         NSAttributedString(string: text,
                            attributes: [.font: font,
                                         .foregroundColor: defaultPlaceholderColor])
     }
 
-    private func replaceAccessoryView(_ oldView: UIView?, with newView: UIView?) {
+    private final func replaceAccessoryView(_ oldView: UIView?, with newView: UIView?) {
         guard oldView !== newView else { return }
         oldView?.removeFromSuperview()
         setNeedsLayout()
@@ -479,7 +529,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// UIKit keeps an inactive accessory detached while preserving its last
     /// frame, bounds, and caller-controlled `isHidden` value. Attachment is
     /// reconciled in layout (not synchronously from the property setters).
-    private func layoutAccessoryView(_ view: UIView, mode viewMode: ViewMode,
+    private final func layoutAccessoryView(_ view: UIView, mode viewMode: ViewMode,
                                      frame: @autoclosure () -> CGRect) {
         if mode(viewMode, showsForEditing: isEditing) {
             if view.superview !== self { addSubview(view) }
@@ -490,19 +540,31 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     }
 
     /// Clear-glyph colours. `UISearchTextField` overrides both.
-    var clearButtonPalette: (circle: UIColor, knockout: UIColor) {
+    /// Vtable-free (OPENUIKIT_OBJC_SUBCLASSING): a tuple is not an
+    /// Objective-C type, so UISearchTextField's override is a type check.
+    final var clearButtonPalette: (circle: UIColor, knockout: UIColor) {
+        if let search = self as? UISearchTextField { return search._searchClearButtonPalette }
+        return _fieldClearButtonPalette
+    }
+    final var _fieldClearButtonPalette: (circle: UIColor, knockout: UIColor) {
         (.tertiaryLabel, .systemBackground)
     }
 
     /// Diameter of the filled circle inside the clear button's box; 0 means
     /// "the whole box", which is the plain field's measured glyph.
-    var clearButtonCircleDiameter: CGFloat { 0 }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    dynamic var clearButtonCircleDiameter: CGFloat { 0 }
 
     /// Tip-to-tip length of the cross knocked out of that circle; 0 means the
     /// plain field's fixed 5.5 pt inset.
-    var clearButtonCrossSpan: CGFloat { 0 }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    dynamic var clearButtonCrossSpan: CGFloat { 0 }
 
-    private func ensureClearButton() {
+    private final func ensureClearButton() {
         if let clearButton {
             if clearButton.superview !== self { addSubview(clearButton) }
             return
@@ -516,7 +578,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         addSubview(button)
     }
 
-    private func mode(_ mode: ViewMode, showsForEditing editing: Bool) -> Bool {
+    private final func mode(_ mode: ViewMode, showsForEditing editing: Bool) -> Bool {
         switch mode {
         case .never: return false
         case .whileEditing: return editing
@@ -525,15 +587,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
 
-    private var shouldShowRightView: Bool {
+    private final var shouldShowRightView: Bool {
         rightView != nil && mode(rightViewMode, showsForEditing: isEditing)
     }
 
-    private var isClearButtonModeActive: Bool {
+    private final var isClearButtonModeActive: Bool {
         mode(clearButtonMode, showsForEditing: isEditing)
     }
 
-    private var shouldShowClearButton: Bool {
+    private final var shouldShowClearButton: Bool {
         !_text.isEmpty
             && isClearButtonModeActive
             && !shouldShowRightView
@@ -541,20 +603,20 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // MARK: UTF-16 document model
 
-    private var documentUTF16Length: Int { _text.utf16.count }
+    private final var documentUTF16Length: Int { _text.utf16.count }
 
-    private func makePosition(_ offset: Int) -> UITextPosition {
+    private final func makePosition(_ offset: Int) -> UITextPosition {
         UITextPosition(document: textDocumentIdentity, utf16Offset: offset)
     }
 
-    private func validatedOffset(_ position: UITextPosition) -> Int? {
+    private final func validatedOffset(_ position: UITextPosition) -> Int? {
         guard position._document === textDocumentIdentity,
               let offset = position._utf16Offset,
               offset >= 0, offset <= documentUTF16Length else { return nil }
         return offset
     }
 
-    private func validatedRange(_ range: UITextRange) -> NSRange? {
+    private final func validatedRange(_ range: UITextRange) -> NSRange? {
         guard range._isOpenUIKitRange,
               let first = validatedOffset(range.start),
               let second = validatedOffset(range.end) else { return nil }
@@ -563,16 +625,16 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return NSRange(location: lower, length: upper - lower)
     }
 
-    private func makeRange(_ range: NSRange) -> UITextRange {
+    private final func makeRange(_ range: NSRange) -> UITextRange {
         UITextRange(start: makePosition(range.location),
                     end: makePosition(range.upperBound))
     }
 
-    private func clampedOffset(_ offset: Int) -> Int {
+    private final func clampedOffset(_ offset: Int) -> Int {
         Swift.min(Swift.max(0, offset), documentUTF16Length)
     }
 
-    private func clampedRange(_ range: NSRange) -> NSRange {
+    private final func clampedRange(_ range: NSRange) -> NSRange {
         let start = clampedOffset(range.location)
         // All internally stored ranges are already non-overflowing, but this
         // saturating form also handles NSNotFound/hostile marked selections.
@@ -590,7 +652,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return NSRange(location: lower, length: upper - lower)
     }
 
-    private func storeSelection(_ range: NSRange?, notifyDelegate: Bool,
+    private final func storeSelection(_ range: NSRange?, notifyDelegate: Bool,
                                 preserveMarkedText: Bool = false) {
         let old = selectedUTF16Range
         if let range {
@@ -616,7 +678,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         if notifyDelegate { delegate?.textFieldDidChangeSelection(self) }
     }
 
-    private func normalizeTextStateAfterContentAssignment() {
+    private final func normalizeTextStateAfterContentAssignment() {
         let oldSelection = selectedUTF16Range
         if let oldSelection {
             let oldStart = oldSelection.location
@@ -632,17 +694,17 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         markedUTF16Range = nil
     }
 
-    private func utf16Slice(_ range: NSRange) -> String {
+    private final func utf16Slice(_ range: NSRange) -> String {
         let units = Array(_text.utf16)
         return String(decoding: units[range.location..<range.upperBound], as: UTF16.self)
     }
 
-    private func prefix(toUTF16Offset offset: Int) -> String {
+    private final func prefix(toUTF16Offset offset: Int) -> String {
         let units = Array(_text.utf16)
         return String(decoding: units[0..<clampedOffset(offset)], as: UTF16.self)
     }
 
-    private func replacingUTF16(_ range: NSRange, with replacement: String) -> String {
+    private final func replacingUTF16(_ range: NSRange, with replacement: String) -> String {
         var units = Array(_text.utf16)
         units.replaceSubrange(range.location..<range.upperBound, with: replacement.utf16)
         return String(decoding: units, as: UTF16.self)
@@ -651,7 +713,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// UTF-16 offsets at Swift Character boundaries. UIKit document methods
     /// accept every code-unit boundary, but keyboard arrows/backspace operate
     /// on composed characters (verified with surrogate and combining probes).
-    private var characterBoundaries: [Int] {
+    private final var characterBoundaries: [Int] {
         var result: [Int] = []
         result.reserveCapacity(_text.count + 1)
         for index in _text.indices {
@@ -665,15 +727,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return result
     }
 
-    private func previousCharacterBoundary(before offset: Int) -> Int {
+    private final func previousCharacterBoundary(before offset: Int) -> Int {
         characterBoundaries.last(where: { $0 < offset }) ?? 0
     }
 
-    private func nextCharacterBoundary(after offset: Int) -> Int {
+    private final func nextCharacterBoundary(after offset: Int) -> Int {
         characterBoundaries.first(where: { $0 > offset }) ?? documentUTF16Length
     }
 
-    private func utf16Offset(forScalarOffset scalarOffset: Int) -> Int {
+    private final func utf16Offset(forScalarOffset scalarOffset: Int) -> Int {
         let index = UITextCaretMath.index(_text, atScalarOffset: scalarOffset)
         guard let utf16Index = index.samePosition(in: _text.utf16) else {
             return documentUTF16Length
@@ -681,7 +743,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return _text.utf16.distance(from: _text.utf16.startIndex, to: utf16Index)
     }
 
-    private func mutate(_ range: NSRange, replacement: String,
+    private final func mutate(_ range: NSRange, replacement: String,
                         consultDelegate: Bool, emitEditingChanged: Bool) -> Bool {
         if consultDelegate, let delegate,
            !delegate.textField(self, shouldChangeCharactersIn: range,
@@ -708,10 +770,19 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // MARK: UITextInput document API
 
-    open var beginningOfDocument: UITextPosition { makePosition(0) }
-    open var endOfDocument: UITextPosition { makePosition(documentUTF16Length) }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var beginningOfDocument: UITextPosition { makePosition(0) }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var endOfDocument: UITextPosition { makePosition(documentUTF16Length) }
 
-    open var selectedTextRange: UITextRange? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var selectedTextRange: UITextRange? {
         get { selectedUTF16Range.map(makeRange) }
         set {
             guard let newValue else {
@@ -727,16 +798,25 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
 
-    open var markedTextRange: UITextRange? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var markedTextRange: UITextRange? {
         markedUTF16Range.map(makeRange)
     }
 
-    open func text(in range: UITextRange) -> String? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(textInRange:)
+#endif
+    open dynamic func text(in range: UITextRange) -> String? {
         guard let range = validatedRange(range) else { return nil }
         return utf16Slice(range)
     }
 
-    open func replace(_ range: UITextRange, withText text: String) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(replaceRange:withText:)
+#endif
+    open dynamic func replace(_ range: UITextRange, withText text: String) {
         guard let range = validatedRange(range) else { return }
         // Direct UITextInput replacement is lower-level than keyboard entry:
         // UIKit bypasses UITextFieldDelegate's mutation gate and the control's
@@ -745,7 +825,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                    emitEditingChanged: false)
     }
 
-    open func textRange(from fromPosition: UITextPosition,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(textRangeFromPosition:toPosition:)
+#endif
+    open dynamic func textRange(from fromPosition: UITextPosition,
                         to toPosition: UITextPosition) -> UITextRange? {
         guard let from = validatedOffset(fromPosition),
               let to = validatedOffset(toPosition) else { return nil }
@@ -754,7 +837,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return makeRange(NSRange(location: lower, length: upper - lower))
     }
 
-    open func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(positionFromPosition:offset:)
+#endif
+    open dynamic func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
         guard let start = validatedOffset(position) else { return nil }
         let result: Int
         if offset > 0, start > Int.max - offset { return nil }
@@ -765,12 +851,18 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return makePosition(result)
     }
 
-    open func offset(from: UITextPosition, to: UITextPosition) -> Int {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(offsetFromPosition:toPosition:)
+#endif
+    open dynamic func offset(from: UITextPosition, to: UITextPosition) -> Int {
         guard let first = validatedOffset(from), let second = validatedOffset(to) else { return 0 }
         return second - first
     }
 
-    open func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
         guard let markedText, !markedText.isEmpty else {
             if let markedUTF16Range {
                 _ = mutate(markedUTF16Range, replacement: "",
@@ -800,7 +892,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         delegate?.textFieldDidChangeSelection(self)
     }
 
-    open func unmarkText() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func unmarkText() {
         markedUTF16Range = nil
     }
 
@@ -813,7 +908,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                        notifyDelegate: true)
     }
 
-    func refreshContent() {
+    final func refreshContent() {
         textLabel.font = font
         textLabel.textColor = _textColor
         if isSecureTextEntry {
@@ -831,21 +926,27 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         setNeedsLayout()
     }
 
-    private var secureDisplayText: String {
+    private final var secureDisplayText: String {
         String(repeating: "\u{2022}", count: _text.count)
     }
 
-    private var renderedText: String {
+    private final var renderedText: String {
         isSecureTextEntry ? secureDisplayText : _text
     }
 
     // MARK: Geometry (measured)
 
-    var lineHeight: CGFloat { FontEngine.labelLineHeight(for: font) }
+    final var lineHeight: CGFloat { FontEngine.labelLineHeight(for: font) }
 
-    open func borderRect(forBounds bounds: CGRect) -> CGRect { bounds }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func borderRect(forBounds bounds: CGRect) -> CGRect { bounds }
 
-    open func textRect(forBounds bounds: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func textRect(forBounds bounds: CGRect) -> CGRect {
         var rect: CGRect
         switch borderStyle {
         case .roundedRect, .bezel, .line:
@@ -871,15 +972,24 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return rect
     }
 
-    open func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         textRect(forBounds: bounds)
     }
 
-    open func editingRect(forBounds bounds: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func editingRect(forBounds bounds: CGRect) -> CGRect {
         textRect(forBounds: bounds)
     }
 
-    open func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
         // iOS 26.1 bases this hook on MODE ACTIVITY, not text presence or the
         // existence of a visible private control. For a 200x34 field an active
         // clear mode uses (175, 8, 19.667, 19), even with empty text. An
@@ -895,7 +1005,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return CGRect(x: x, y: y, width: width, height: height)
     }
 
-    open func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func leftViewRect(forBounds bounds: CGRect) -> CGRect {
         guard let leftView else { return .zero }
         return CGRect(x: bounds.minX,
                       y: FontEngine.ceilToPixel(
@@ -904,7 +1017,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                       width: leftView.bounds.width, height: leftView.bounds.height)
     }
 
-    open func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func rightViewRect(forBounds bounds: CGRect) -> CGRect {
         guard let rightView else { return .zero }
         return CGRect(x: bounds.maxX - rightView.bounds.width,
                       y: FontEngine.ceilToPixel(
@@ -1091,9 +1207,12 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // MARK: UIKeyInput
 
-    public var hasText: Bool { !_text.isEmpty }
+    public final var hasText: Bool { !_text.isEmpty }
 
-    open func insertText(_ text: String) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func insertText(_ text: String) {
         guard isEditing else { return }
         let target = markedUTF16Range ?? selectedUTF16Range
             ?? NSRange(location: unselectedCaretOffset, length: 0)
@@ -1101,7 +1220,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                    emitEditingChanged: true)
     }
 
-    open func deleteBackward() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func deleteBackward() {
         guard isEditing else { return }
         let selection = selectedUTF16Range
             ?? NSRange(location: unselectedCaretOffset, length: 0)
@@ -1126,7 +1248,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// measured yet — see docs/KNOWN_GAPS.md). Exposed so an app that draws
     /// its own clear affordance gets the delegate gate UIKit gives it.
     @discardableResult
-    public func _clear() -> Bool {
+    public final func _clear() -> Bool {
         if let d = delegate, !d.textFieldShouldClear(self) { return false }
         // Real clear-button interaction leaves a non-nil empty string.
         text = ""
@@ -1137,7 +1259,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         return true
     }
 
-    func handleKey(_ key: UIKeyEventKey) {
+    final func handleKey(_ key: UIKeyEventKey) {
         guard isEditing else { return }
         switch key {
         case .backspace:
@@ -1176,7 +1298,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // MARK: Caret
 
-    func ensureCaretView() {
+    final func ensureCaretView() {
         if caretView == nil {
             let v = UIView()   // plain UIView: no content pass, no dump noise
             v.isUserInteractionEnabled = false
@@ -1186,26 +1308,26 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     }
 
     /// Caret becomes solid immediately after any caret motion/edit.
-    func revealCaret() {
+    final func revealCaret() {
         caretView?.isHidden = false
     }
 
-    private func revealSelectionEnd() {
+    private final func revealSelectionEnd() {
         setNeedsLayout()
     }
 
-    func caretBlinkChanged(visible: Bool) {
+    final func caretBlinkChanged(visible: Bool) {
         guard isEditing else { return }
         caretView?.isHidden = !visible
     }
 
     /// Caret x in text space (pen 0 at the first glyph), pixel-rounded like
     /// real caretRect values.
-    var caretTextX: CGFloat {
+    final var caretTextX: CGFloat {
         textX(atUTF16Offset: caretOffset)
     }
 
-    private func textX(atUTF16Offset offset: Int) -> CGFloat {
+    private final func textX(atUTF16Offset offset: Int) -> CGFloat {
         let scale = textLabel.layoutScale
         // Document offsets may address the interior of a surrogate pair or
         // combining sequence, but glyph geometry cannot. UIKit anchors such
@@ -1223,7 +1345,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             scale: scale)
     }
 
-    private var caretVerticalMetrics: (y: CGFloat, height: CGFloat) {
+    private final var caretVerticalMetrics: (y: CGFloat, height: CGFloat) {
         let tr = textRect(forBounds: bounds)
         let fontLineHeight = FontEngine.metrics(for: font).lineHeight
         let height = fontLineHeight + 1.5
@@ -1233,7 +1355,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     /// UIKit reports a one-point caret rect even though the visible iOS bar
     /// is two points wide. Geometry is in the text field's coordinate space.
-    open func caretRect(for position: UITextPosition) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(caretRectForPosition:)
+#endif
+    open dynamic func caretRect(for position: UITextPosition) -> CGRect {
         guard let offset = validatedOffset(position) else { return .zero }
         let tr = textRect(forBounds: bounds)
         let metrics = caretVerticalMetrics
@@ -1241,7 +1366,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                       y: metrics.y, width: 1, height: metrics.height)
     }
 
-    open func firstRect(for range: UITextRange) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(firstRectForRange:)
+#endif
+    open dynamic func firstRect(for range: UITextRange) -> CGRect {
         guard let range = validatedRange(range) else { return .zero }
         if range.length == 0 { return caretRect(for: makePosition(range.location)) }
         let tr = textRect(forBounds: bounds)
@@ -1254,13 +1382,16 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                       height: metrics.height)
     }
 
-    open func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(selectionRectsForRange:)
+#endif
+    open dynamic func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
         guard let range = validatedRange(range), range.length > 0 else { return [] }
         return [UITextSelectionRect(rect: firstRect(for: makeRange(range)),
                                     containsStart: true, containsEnd: true)]
     }
 
-    func layoutCaret() {
+    final func layoutCaret() {
         guard let caret = caretView, isEditing else { return }
         let tr = textRect(forBounds: bounds)
         // Keep the caret visible: adjust the horizontal scroll first.

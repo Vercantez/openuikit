@@ -30,8 +30,12 @@ final class ObjCBridgeTests: XCTestCase {
 
     @MainActor
     func testInitWithStyleReuseIdentifierMapsSDKRawValues() {
-        // UITableViewCellStyleValue1 = 1 (UITableViewCell.h)
-        let cell = UITableViewCell(__objcStyle: 1, reuseIdentifier: "v1")
+        // UITableViewCellStyleValue1 = 1 (UITableViewCell.h). The designated
+        // initializer is UITableViewCell's own `@objc dynamic`
+        // `initWithStyle:reuseIdentifier:` now (OPENUIKIT_OBJC_SUBCLASSING),
+        // and CellStyle carries the SDK raw values.
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle(rawValue: 1)!, reuseIdentifier: "v1")
+        XCTAssertEqual(cell.style, .value1)
         XCTAssertEqual(cell.reuseIdentifier, "v1")
         XCTAssertTrue(cell.responds(to: NSSelectorFromString("initWithStyle:reuseIdentifier:")))
     }
@@ -55,7 +59,10 @@ final class ObjCBridgeTests: XCTestCase {
     @MainActor
     func testViewSelectorsForwardToOpenUIKit() {
         let host = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        let child = UIView(__objcFrame: CGRect(x: 1, y: 2, width: 3, height: 4))
+        // `initWithFrame:` is UIView's own `@objc dynamic` initializer now
+        // (OPENUIKIT_OBJC_SUBCLASSING), no longer a bridge twin.
+        XCTAssertTrue(UIView.instancesRespond(to: NSSelectorFromString("initWithFrame:")))
+        let child = UIView(frame: CGRect(x: 1, y: 2, width: 3, height: 4))
         XCTAssertEqual(child.frame, CGRect(x: 1, y: 2, width: 3, height: 4))
         host.perform(NSSelectorFromString("addSubview:"), with: child)
         XCTAssertTrue(host.subviews.contains { $0 === child })
@@ -69,7 +76,8 @@ final class ObjCBridgeTests: XCTestCase {
     @MainActor
     func testNavigationControllerSelectors() {
         let root = UIViewController()
-        let nav = UINavigationController(__objcRoot: root)
+        XCTAssertTrue(UINavigationController.instancesRespond(to: NSSelectorFromString("initWithRootViewController:")))
+        let nav = UINavigationController(rootViewController: root)
         XCTAssertTrue(nav.topViewController === root)
         let next = UIViewController()
         nav.perform(NSSelectorFromString("pushViewController:animated:"), with: next, with: false)
