@@ -289,6 +289,33 @@ if let v = hostEnv("OPENUIKIT_BACKEND") {
 if let v = hostEnv("OPENUIKIT_RESOURCE_ROOT") { OpenUIKitRuntime.resourceRoot = v }
 if let v = hostEnv("OPENUIKIT_REALAPP_SCALE"), let s = Double(v), s > 0 { realAppScale = CGFloat(s) }
 
+// Glyphs. The guest draws text from the harvested iOS ink tables and has no
+// SF outline font, so render_full traps on a glyph the harvest lacks
+// (OPENUIKIT_IOS_INK_MISS). A window the user types into cannot trap on the
+// first unharvested key, so host_full records misses instead (reported as
+// HOST_FULL_INK_MISSES when it exits) and draws them from a substitute
+// outline face: DejaVu, the same fallback ResourceIO installs for packaged
+// apps. Harvested glyphs, and every ASCII advance (font_metrics.json), are
+// unchanged; only glyphs that would otherwise trap or vanish use the face.
+GlyphInkTable.logMisses = true
+let hostFallbackFontDir = hostEnv("OPENUIKIT_HOST_FALLBACK_FONT_DIR") ?? "/usr/share/fonts/truetype/dejavu"
+if ResourceIO.readFile(hostFallbackFontDir + "/DejaVuSans.ttf") != nil {
+    let regular = hostFallbackFontDir + "/DejaVuSans.ttf"
+    let bold = ResourceIO.readFile(hostFallbackFontDir + "/DejaVuSans-Bold.ttf") != nil
+        ? hostFallbackFontDir + "/DejaVuSans-Bold.ttf" : regular
+    OpenUIKitRuntime.fontPaths = [
+        "system": regular, "medium": bold, "semibold": bold,
+        "bold": bold, "heavy": bold, "black": bold,
+    ]
+} else {
+    hostWarn("host_full: no fallback face in \(hostFallbackFontDir); unharvested glyphs will be blank")
+}
+
+func reportInkMisses() {
+    let missed = GlyphInkTable.missedKeys.sorted()
+    print("HOST_FULL_INK_MISSES \(missed.count)" + (missed.isEmpty ? "" : ": " + missed.joined(separator: " ")))
+}
+
 let hostUsage = "usage: host_full [--app focus] [--assets DIR] [--script events.json --record outdir]"
 var hostAppName = "focus"
 var hostAssets = "/uikit/fixtures/realapp/assets"
@@ -344,6 +371,7 @@ MainActor.assumeIsolated {
                                           outdir: recordDir, host: surface, hooks: hooks,
                                           save: hostWrite)
             print("recorded \(written.count) frames to \(recordDir)")
+            reportInkMisses()
         } catch let e as HostIOError {
             hostWarn("host_full: cannot write \(e.path)")
             hostExit(1)
@@ -357,5 +385,6 @@ MainActor.assumeIsolated {
     let surface = GuestSDLSurface(title: "Firefox Focus (OpenUIKit guest)",
                                   sizePt: scene.sizePt, scale: scene.scale)
     runLive(scene, host: surface, hooks: hooks)
+    reportInkMisses()
     hostExit(0)
 }
