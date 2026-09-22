@@ -504,4 +504,155 @@ extension UITextField {
 extension UITextView {
     @objc(font) public var __objc_font: UIFont? { get { font } set { font = newValue } }
 }
+// MARK: - UIVisualEffectView / UIBlurEffect, UIView.transform / contentMode / animations
+
+// The eidolon pod census ranked these next (docs/agent_reports/objc-surface.md).
+// Raw values are the iOS 26.1 SDK's; each body is one OpenUIKit call.
+
+extension UIVisualEffectView {
+    @objc(initWithEffect:) public convenience init(__objcEffect effect: UIVisualEffect?) { self.init(effect: effect) }
+    @objc(contentView) public var __objc_contentView: UIView { contentView }
+    @objc(effect) public var __objc_effect: UIVisualEffect? { get { effect } set { effect = newValue } }
+}
+
+extension UIBlurEffect {
+    /// `+effectWithStyle:`; a raw value UIKit does not define fails closed
+    /// to the inert `UIBlurEffect()`.
+    @objc(effectWithStyle:) public class func __objc_effect(style: Int) -> UIBlurEffect {
+        Style(rawValue: style).map { UIBlurEffect(style: $0) } ?? UIBlurEffect()
+    }
+}
+
+/// UIViewContentMode's SDK order (UIView.h) is OpenUIKit's case order.
+private let contentModes: [UIViewContentMode] = [
+    .scaleToFill, .scaleAspectFit, .scaleAspectFill, .redraw, .center, .top, .bottom,
+    .left, .right, .topLeft, .topRight, .bottomLeft, .bottomRight,
+]
+
+extension UIView {
+    /// OpenUIKit's CGAffineTransform is OpenCoreGraphics' struct; Objective-C
+    /// passes CoreGraphics' C struct with the same six fields.
+    @objc(transform) public var __objc_transform: CoreGraphics.CGAffineTransform {
+        get {
+            let t = transform
+            return CoreGraphics.CGAffineTransform(a: t.a, b: t.b, c: t.c, d: t.d, tx: t.tx, ty: t.ty)
+        }
+        set {
+            transform = OpenCoreGraphics.CGAffineTransform(a: newValue.a, b: newValue.b, c: newValue.c,
+                                                           d: newValue.d, tx: newValue.tx, ty: newValue.ty)
+        }
+    }
+    @objc(contentMode) public var __objc_contentMode: Int {
+        get { contentModes.firstIndex(of: contentMode) ?? 0 }
+        set { contentMode = contentModes.indices.contains(newValue) ? contentModes[newValue] : .scaleToFill }
+    }
+    @objc(addConstraint:) public func __objc_addConstraint(_ constraint: NSLayoutConstraint) { addConstraint(constraint) }
+    @objc(animateWithDuration:animations:)
+    public class func __objc_animate(withDuration duration: TimeInterval, animations: @escaping () -> Void) {
+        animate(withDuration: duration, animations: animations)
+    }
+    @objc(animateWithDuration:animations:completion:)
+    public class func __objc_animate(withDuration duration: TimeInterval, animations: @escaping () -> Void,
+                                     completion: ((Bool) -> Void)?) {
+        animate(withDuration: duration, animations: animations, completion: completion)
+    }
+    @objc(animateWithDuration:delay:options:animations:completion:)
+    public class func __objc_animate(withDuration duration: TimeInterval, delay: TimeInterval, options: UInt,
+                                     animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+        animate(withDuration: duration, delay: delay, options: AnimationOptions(rawValue: options),
+                animations: animations, completion: completion)
+    }
+}
+
+// MARK: - Auto Layout
+
+extension NSLayoutConstraint {
+    /// `+constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:`.
+    /// NSLayoutAttribute / NSLayoutRelation raw values equal OpenUIKit's
+    /// (the support header's enums); an undefined raw value fails closed to
+    /// `.notAnAttribute` / `.equal`.
+    @objc(constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:)
+    public class func __objc_constraint(item view1: AnyObject, attribute attr1: Int, relatedBy relation: Int,
+                                        toItem view2: AnyObject?, attribute attr2: Int,
+                                        multiplier: CGFloat, constant: CGFloat) -> NSLayoutConstraint {
+        NSLayoutConstraint(item: view1, attribute: Attribute(rawValue: attr1) ?? .notAnAttribute,
+                           relatedBy: Relation(rawValue: relation) ?? .equal,
+                           toItem: view2, attribute: Attribute(rawValue: attr2) ?? .notAnAttribute,
+                           multiplier: multiplier, constant: constant)
+    }
+    @objc(constant) public var __objc_constant: CGFloat { get { constant } set { constant = newValue } }
+    @objc(isActive) public var __objc_isActive: Bool { get { isActive } set { isActive = newValue } }
+    @objc(setActive:) public func __objc_setActive(_ active: Bool) { isActive = active }
+}
+
+// MARK: - UIImage / UIImageView
+
+extension UIImage {
+    @objc(imageWithContentsOfFile:) public class func __objc_image(contentsOfFile path: String) -> UIImage? {
+        UIImage(contentsOfFile: path)
+    }
+    @objc(initWithData:) public convenience init?(__objcData data: Data) { self.init(data: [UInt8](data)) }
+    @objc(imageWithData:) public class func __objc_image(data: Data) -> UIImage? { UIImage(data: [UInt8](data)) }
+    /// UIImageRenderingMode's SDK values: Automatic 0, AlwaysOriginal 1,
+    /// AlwaysTemplate 2 (UIImage.h).
+    @objc(imageWithRenderingMode:) public func __objc_withRenderingMode(_ mode: Int) -> UIImage {
+        withRenderingMode(mode == 2 ? .alwaysTemplate : mode == 1 ? .alwaysOriginal : .automatic)
+    }
+    @objc(renderingMode) public var __objc_renderingMode: Int {
+        switch renderingMode {
+        case .automatic: return 0
+        case .alwaysOriginal: return 1
+        case .alwaysTemplate: return 2
+        }
+    }
+}
+
+// MARK: - UIButton / UIControl
+
+extension UIControl {
+    @objc(state) public var __objc_state: UInt { state.rawValue }
+}
+
+extension UIButton {
+    @objc(titleLabel) public var __objc_titleLabel: UILabel? { titleLabel }
+    @objc(imageView) public var __objc_imageView: UIImageView? { imageView }
+    @objc(setTitle:forState:) public func __objc_setTitle(_ title: String?, forState state: UInt) {
+        setTitle(title, for: State(rawValue: state))
+    }
+    @objc(setTitleColor:forState:) public func __objc_setTitleColor(_ color: UIColor?, forState state: UInt) {
+        setTitleColor(color, for: State(rawValue: state))
+    }
+    @objc(setImage:forState:) public func __objc_setImage(_ image: UIImage?, forState state: UInt) {
+        setImage(image, for: State(rawValue: state))
+    }
+    @objc(setBackgroundImage:forState:) public func __objc_setBackgroundImage(_ image: UIImage?, forState state: UInt) {
+        setBackgroundImage(image, for: State(rawValue: state))
+    }
+}
+
+// MARK: - UIApplication / UIScreen / UIColor
+
+extension UIApplication {
+    @objc(canOpenURL:) public func __objc_canOpenURL(_ url: URL) -> Bool { canOpenURL(url) }
+    /// Deprecated since iOS 10 (UIApplication.h); OpenUIKit's
+    /// `open(_:options:completionHandler:)` with no completion.
+    @objc(openURL:) public func __objc_openURL(_ url: URL) -> Bool {
+        let can = canOpenURL(url)
+        open(url, options: [:], completionHandler: nil)
+        return can
+    }
+}
+
+extension UIScreen {
+    @objc(mainScreen) public class var __objc_mainScreen: UIScreen { UIScreen.main }
+    @objc(bounds) public var __objc_bounds: CGRect { bounds }
+    @objc(scale) public var __objc_scale: CGFloat { scale }
+}
+
+extension UIColor {
+    @objc(colorWithHue:saturation:brightness:alpha:)
+    public class func __objc_color(hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) -> UIColor {
+        UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
+    }
+}
 #endif

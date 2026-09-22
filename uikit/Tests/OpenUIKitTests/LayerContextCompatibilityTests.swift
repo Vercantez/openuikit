@@ -302,6 +302,12 @@ final class LayerContextCompatibilityTests: XCTestCase {
         let probe = LayerLayoutDelegateProbe()
         root.delegate = probe
 
+        // iOS 26.1 (objcsurfaceprobe `## layersubclass`): a new layer is
+        // clean, and layoutIfNeeded on it runs no layoutSublayers.
+        XCTAssertFalse(root.needsLayout())
+        root.layoutIfNeeded()
+        XCTAssertEqual(probe.layers.count, 0)
+        root.setNeedsLayout()
         XCTAssertTrue(root.needsLayout())
         root.layoutIfNeeded()
         XCTAssertEqual(probe.layers.count, 1)

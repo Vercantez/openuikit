@@ -232,6 +232,97 @@ typedef NS_OPTIONS(NSUInteger, NSTextStorageEditActions) {
     NSTextStorageEditedAttributes = (1 << 0), NSTextStorageEditedCharacters = (1 << 1),
 } NS_SWIFT_NAME(NSTextStorageEditActionsObjC);
 
+/* UIGeometry.h: the inline helpers, verbatim in behaviour. */
+static inline BOOL UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsets insets1, UIEdgeInsets insets2) {
+    return insets1.left == insets2.left && insets1.top == insets2.top && insets1.right == insets2.right && insets1.bottom == insets2.bottom;
+}
+static inline CGRect UIEdgeInsetsInsetRect(CGRect rect, UIEdgeInsets insets) {
+    rect.origin.x += insets.left;
+    rect.origin.y += insets.top;
+    rect.size.width -= (insets.left + insets.right);
+    rect.size.height -= (insets.top + insets.bottom);
+    return rect;
+}
+typedef struct NS_SWIFT_NAME(UIOffsetObjC) UIOffset { CGFloat horizontal, vertical; } UIOffset;
+static inline UIOffset UIOffsetMake(CGFloat horizontal, CGFloat vertical) {
+    UIOffset offset = {horizontal, vertical}; return offset;
+}
+static inline BOOL UIOffsetEqualToOffset(UIOffset offset1, UIOffset offset2) {
+    return offset1.horizontal == offset2.horizontal && offset1.vertical == offset2.vertical;
+}
+extern const UIOffset UIOffsetZero;
+
+#pragma mark - Auto Layout (NSLayoutConstraint.h)
+
+/* iOS 26.1 SDK NSLayoutConstraint.h: priorities are `static const` in the
+ * header itself; the two enums carry the iOS (TARGET_OS_IPHONE) members and
+ * equal OpenUIKit's NSLayoutConstraint.Attribute / Relation raw values
+ * (AutoLayout/NSLayoutConstraint.swift).
+ *
+ * The enums are Objective-C-side only (`!__swift__`): on the macOS triple
+ * AppKit declares NSLayoutAttribute without the iOS margin members, and a
+ * Swift importer that sees both modules rejects the pair (MEASURED building
+ * OpenUIKitObjCBridge: "'NSLayoutAttributeLeftMargin' from module
+ * 'OpenUIKitObjCSupport' is not present in definition of 'enum
+ * NSLayoutAttribute' in module 'AppKit.NSLayoutConstraint'"). Swift code uses
+ * OpenUIKit's NSLayoutConstraint.Attribute. An Objective-C file that also
+ * imports AppKit is the macOS-triple leakage ios-target owns. */
+typedef float UILayoutPriority NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UILayoutPriorityObjC);
+static const UILayoutPriority UILayoutPriorityRequired = 1000;
+static const UILayoutPriority UILayoutPriorityDefaultHigh = 750;
+static const UILayoutPriority UILayoutPriorityDragThatCanResizeScene = 510;
+static const UILayoutPriority UILayoutPrioritySceneSizeStayPut = 500;
+static const UILayoutPriority UILayoutPriorityDragThatCannotResizeScene = 490;
+static const UILayoutPriority UILayoutPriorityDefaultLow = 250;
+static const UILayoutPriority UILayoutPriorityFittingSizeLevel = 50;
+#if !__swift__
+typedef NS_ENUM(NSInteger, NSLayoutRelation) {
+    NSLayoutRelationLessThanOrEqual = -1, NSLayoutRelationEqual = 0, NSLayoutRelationGreaterThanOrEqual = 1,
+} NS_SWIFT_NAME(NSLayoutRelationObjC);
+typedef NS_ENUM(NSInteger, NSLayoutAttribute) {
+    NSLayoutAttributeLeft = 1, NSLayoutAttributeRight, NSLayoutAttributeTop, NSLayoutAttributeBottom,
+    NSLayoutAttributeLeading, NSLayoutAttributeTrailing, NSLayoutAttributeWidth, NSLayoutAttributeHeight,
+    NSLayoutAttributeCenterX, NSLayoutAttributeCenterY, NSLayoutAttributeLastBaseline,
+    NSLayoutAttributeBaseline = NSLayoutAttributeLastBaseline,
+    NSLayoutAttributeFirstBaseline,
+    NSLayoutAttributeLeftMargin, NSLayoutAttributeRightMargin, NSLayoutAttributeTopMargin,
+    NSLayoutAttributeBottomMargin, NSLayoutAttributeLeadingMargin, NSLayoutAttributeTrailingMargin,
+    NSLayoutAttributeCenterXWithinMargins, NSLayoutAttributeCenterYWithinMargins,
+    NSLayoutAttributeNotAnAttribute = 0,
+} NS_SWIFT_NAME(NSLayoutAttributeObjC);
+#endif
+
+#pragma mark - Images and views (UIImage.h, UIView.h, UIBlurEffect.h, UIApplication.h)
+
+typedef NS_ENUM(NSInteger, UIImageOrientation) {
+    UIImageOrientationUp, UIImageOrientationDown, UIImageOrientationLeft, UIImageOrientationRight,
+    UIImageOrientationUpMirrored, UIImageOrientationDownMirrored, UIImageOrientationLeftMirrored,
+    UIImageOrientationRightMirrored,
+} NS_SWIFT_NAME(UIImageOrientationObjC);
+typedef NS_ENUM(NSInteger, UIImageRenderingMode) {
+    UIImageRenderingModeAutomatic, UIImageRenderingModeAlwaysOriginal, UIImageRenderingModeAlwaysTemplate,
+} NS_SWIFT_NAME(UIImageRenderingModeObjC);
+typedef NS_ENUM(NSInteger, UIViewContentMode) {
+    UIViewContentModeScaleToFill, UIViewContentModeScaleAspectFit, UIViewContentModeScaleAspectFill,
+    UIViewContentModeRedraw, UIViewContentModeCenter, UIViewContentModeTop, UIViewContentModeBottom,
+    UIViewContentModeLeft, UIViewContentModeRight, UIViewContentModeTopLeft, UIViewContentModeTopRight,
+    UIViewContentModeBottomLeft, UIViewContentModeBottomRight,
+} NS_SWIFT_NAME(UIViewContentModeObjC);
+/* UIBlurEffect.h; 3 is a private UIKit value (UIVisualEffect.swift). */
+typedef NS_ENUM(NSInteger, UIBlurEffectStyle) {
+    UIBlurEffectStyleExtraLight, UIBlurEffectStyleLight, UIBlurEffectStyleDark,
+    UIBlurEffectStyleRegular = 4, UIBlurEffectStyleProminent = 5,
+    UIBlurEffectStyleSystemUltraThinMaterial, UIBlurEffectStyleSystemThinMaterial,
+    UIBlurEffectStyleSystemMaterial, UIBlurEffectStyleSystemThickMaterial,
+    UIBlurEffectStyleSystemChromeMaterial,
+    UIBlurEffectStyleSystemUltraThinMaterialLight, UIBlurEffectStyleSystemThinMaterialLight,
+    UIBlurEffectStyleSystemMaterialLight, UIBlurEffectStyleSystemThickMaterialLight,
+    UIBlurEffectStyleSystemChromeMaterialLight,
+    UIBlurEffectStyleSystemUltraThinMaterialDark, UIBlurEffectStyleSystemThinMaterialDark,
+    UIBlurEffectStyleSystemMaterialDark, UIBlurEffectStyleSystemThickMaterialDark,
+    UIBlurEffectStyleSystemChromeMaterialDark,
+} NS_SWIFT_NAME(UIBlurEffectStyleObjC);
+
 #pragma mark - Font weights (UIFontDescriptor.h)
 
 /* `typedef CGFloat UIFontWeight NS_TYPED_EXTENSIBLE_ENUM` (UIFontDescriptor.h).
@@ -275,6 +366,8 @@ extern NSAttributedStringKey const NSParagraphStyleAttributeName;
 extern NSAttributedStringKey const NSLinkAttributeName;
 extern NSAttributedStringKey const NSAttachmentAttributeName;
 extern NSNotificationName const UIApplicationDidEnterBackgroundNotification;
+extern NSNotificationName const UIApplicationDidBecomeActiveNotification;
+extern NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification;
 extern NSNotificationName const UIApplicationWillEnterForegroundNotification;
 extern NSNotificationName const UIContentSizeCategoryDidChangeNotification;
 extern NSNotificationName const UIKeyboardWillShowNotification;

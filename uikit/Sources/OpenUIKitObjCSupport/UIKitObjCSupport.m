@@ -18,6 +18,7 @@
 @end
 
 const UIEdgeInsets UIEdgeInsetsZero = {0, 0, 0, 0};
+const UIOffset UIOffsetZero = {0, 0};
 
 const UIFontWeight UIFontWeightUltraLight = -0.8;
 const UIFontWeight UIFontWeightThin = -0.6;
@@ -43,6 +44,8 @@ NSAttributedStringKey const NSParagraphStyleAttributeName = @"NSParagraphStyle";
 NSAttributedStringKey const NSLinkAttributeName = @"NSLink";
 NSAttributedStringKey const NSAttachmentAttributeName = @"NSAttachment";
 NSNotificationName const UIApplicationDidEnterBackgroundNotification = @"UIApplicationDidEnterBackgroundNotification";
+NSNotificationName const UIApplicationDidBecomeActiveNotification = @"UIApplicationDidBecomeActiveNotification";
+NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
 NSNotificationName const UIApplicationWillEnterForegroundNotification = @"UIApplicationWillEnterForegroundNotification";
 NSNotificationName const UIContentSizeCategoryDidChangeNotification = @"UIContentSizeCategoryDidChangeNotification";
 NSNotificationName const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";

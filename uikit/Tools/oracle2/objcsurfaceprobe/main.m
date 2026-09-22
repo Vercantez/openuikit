@@ -28,6 +28,12 @@ int main(int argc, char **argv) {
                [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize,
                [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName.UTF8String);
         printf("italicSystemFontOfSize:17 fontName=%s\n", [UIFont italicSystemFontOfSize:17].fontName.UTF8String);
+        // Weights between the named constants (OpenUIKit maps to the nearest).
+        const CGFloat weights[] = {-0.7, -0.1, 0.1, 0.12, 0.26, 0.35, 0.48, 0.6};
+        for (unsigned i = 0; i < sizeof weights / sizeof weights[0]; i++) {
+            UIFont *f = [UIFont systemFontOfSize:17 weight:weights[i]];
+            printf("systemFontOfSize:17 weight:%g fontName=%s\n", weights[i], f.fontName.UTF8String);
+        }
         printf("hash sys17=%lu sys18=%lu bold17=%lu\n", (unsigned long)a.hash,
                (unsigned long)[UIFont systemFontOfSize:18].hash, (unsigned long)[UIFont boldSystemFontOfSize:17].hash);
         printf("UIView.layer class=%s CAShapeLayer:%s CAGradientLayer:%s\n",

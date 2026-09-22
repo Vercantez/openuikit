@@ -177,6 +177,28 @@ final class ObjCSurfaceTests: XCTestCase {
         XCTAssertEqual(introducedVTableEntries(CALayer.self), [])
     }
 
+    /// A bridge or surface twin must not repeat a selector the class already
+    /// implements: the category method would replace the native one and
+    /// call itself (simplenote-objc-core). objc4 keeps both entries in the
+    /// method list, so a duplicate shows up there.
+    func testNoTwinShadowsANativeSelector() {
+        let classes: [AnyClass] = [UIFont.self, CALayer.self, UIColor.self, UIView.self, UIControl.self,
+                                   UIButton.self, UILabel.self, UIImage.self, UIScreen.self,
+                                   UIVisualEffectView.self, UIBlurEffect.self, NSLayoutConstraint.self,
+                                   UIApplication.self, UITextField.self, UITextView.self]
+        for cls in classes {
+            for target in [cls, object_getClass(cls)!] {
+                var count: UInt32 = 0
+                guard let methods = class_copyMethodList(target, &count) else { continue }
+                defer { free(methods) }
+                var seen: [String: Int] = [:]
+                for i in 0..<Int(count) { seen[NSStringFromSelector(method_getName(methods[i])), default: 0] += 1 }
+                XCTAssertEqual(seen.filter { $0.value > 1 }.keys.sorted(), [],
+                               "\(NSStringFromClass(target)): selectors implemented twice")
+            }
+        }
+    }
+
     /// UIFont is final: its one slot is its own designated initializer, which
     /// Swift calls statically; nothing reads it through an Objective-C
     /// subclass (UIKit apps do not subclass UIFont).

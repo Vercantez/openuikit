@@ -81,5 +81,13 @@ systemFontOfSize:17 twice identical=YES concrete=UICTFont
 copy identical=YES
 preferredFontForTextStyle:body isEqual systemFontOfSize:17=NO pointSize=17 fontName=.SFUI-Regular
 italicSystemFontOfSize:17 fontName=.SFUI-RegularItalic
+systemFontOfSize:17 weight:-0.7 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght46D333
+systemFontOfSize:17 weight:-0.1 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght1709425
+systemFontOfSize:17 weight:0.1 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght1BFD37A
+systemFontOfSize:17 weight:0.12 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght1C9642C
+systemFontOfSize:17 weight:0.26 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght2204923
+systemFontOfSize:17 weight:0.35 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght284FFF9
+systemFontOfSize:17 weight:0.48 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght30BFFF9
+systemFontOfSize:17 weight:0.6 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght3B95553
 hash sys17=9991910166145525527 sys18=13513601929446942487 bold17=7467111189713229037
 UIView.layer class=CALayer CAShapeLayer:CALayer CAGradientLayer:CALayer

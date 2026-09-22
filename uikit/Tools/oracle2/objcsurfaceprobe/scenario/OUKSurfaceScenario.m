@@ -10,7 +10,11 @@
 #include <string.h>
 
 #if OUK_OPENUIKIT
-#ifndef OUK_NO_FOUNDATION
+#ifdef OUK_NO_FOUNDATION
+/* The Foundation-hidden guest has objc4's headers and no CoreGraphics; the
+ * generated header spells CGFloat members as C double (ObjCSurface.swift). */
+typedef double CGFloat;
+#else
 @import CoreGraphics;
 #import "UIKitObjCSupport.h"
 #endif
@@ -36,6 +40,8 @@ static void emit(const char *format, ...) {
 }
 
 static const char *B(BOOL b) { return b ? "YES" : "NO"; }
+static const char *C(id _Nullable o) { return o ? class_getName(object_getClass(o)) : "nil"; }
+#ifndef OUK_NO_FOUNDATION
 /* Four rotating buffers so one emit() can format several geometries. */
 static const char *R(CGRect r) {
     static char buf[4][96];
@@ -51,25 +57,33 @@ static const char *P(CGPoint p) {
     snprintf(s, 64, "{%g, %g}", p.x, p.y);
     return s;
 }
-static const char *C(id _Nullable o) { return o ? class_getName(object_getClass(o)) : "nil"; }
+#endif
 
 // MARK: - A category on UIFont (Artsy+UIFonts shape: class factories)
 
 @interface UIFont (OUKSurfaceProbe)
 + (UIFont *)ouk_serifFontWithSize:(CGFloat)size;
+#ifndef OUK_NO_FOUNDATION
 + (UIFont *)ouk_missingFontWithSize:(CGFloat)size;
+#endif
 - (UIFont *)ouk_doubledFont;
 @end
 
 @implementation UIFont (OUKSurfaceProbe)
 + (UIFont *)ouk_serifFontWithSize:(CGFloat)size {
+#ifndef OUK_NO_FOUNDATION
     // Artsy+OSSUIFonts falls back the same way when its face is absent.
     UIFont *font = [self fontWithName:@"OUKNoSuchSerif" size:size];
     return font ?: [self boldSystemFontOfSize:size];
+#else
+    return [self boldSystemFontOfSize:size];
+#endif
 }
+#ifndef OUK_NO_FOUNDATION
 + (UIFont *)ouk_missingFontWithSize:(CGFloat)size {
     return [self fontWithName:@"OUKNoSuchSerif" size:size];
 }
+#endif
 - (UIFont *)ouk_doubledFont {
     return [self fontWithSize:self.pointSize * 2];
 }
@@ -112,10 +126,14 @@ void OUKSurfaceFontScenario(OUKSurfaceSink sink, void *context) {
     equalityLine("sys17~sys18", sys17, sys18);
     equalityLine("sys17~[sys18 fontWithSize:17]", sys17, [sys18 fontWithSize:17]);
     equalityLine("sys17~[sys17 fontWithSize:17]", sys17, [sys17 fontWithSize:17]);
+#ifndef OUK_NO_FOUNDATION
     emit("fontWithName:OUKNoSuchSerif -> %s", C([UIFont fontWithName:@"OUKNoSuchSerif" size:12]));
+#endif
     // The category's class methods are found on UIFont and on its instances' class.
     fontLine("+ouk_serifFontWithSize:21", [UIFont ouk_serifFontWithSize:21]);
+#ifndef OUK_NO_FOUNDATION
     emit("+ouk_missingFontWithSize:21 -> %s", C([UIFont ouk_missingFontWithSize:21]));
+#endif
     fontLine("-ouk_doubledFont(10)", [[UIFont systemFontOfSize:10] ouk_doubledFont]);
     emit("respondsToSelector ouk_serifFontWithSize: %s",
          B([UIFont respondsToSelector:@selector(ouk_serifFontWithSize:)]));
@@ -143,11 +161,14 @@ void OUKSurfaceLayerScenario(OUKSurfaceSink sink, void *context) {
     gSink = sink; gContext = context;
     CALayer *layer = [CALayer layer];
     emit("+layer class=%s", C(layer));
+#ifndef OUK_NO_FOUNDATION
     emit("defaults bounds=%s position=%s anchorPoint=%s frame=%s", R(layer.bounds), P(layer.position),
          P(layer.anchorPoint), R(layer.frame));
+#endif
     emit("defaults cornerRadius=%g borderWidth=%g opacity=%g hidden=%s masksToBounds=%s opaque=%s",
          layer.cornerRadius, layer.borderWidth, layer.opacity, B(layer.hidden), B(layer.masksToBounds),
          B(layer.opaque));
+#ifndef OUK_NO_FOUNDATION
     emit("defaults contentsScale=%g shadowOpacity=%g shadowRadius=%g shadowOffset={%g, %g}",
          layer.contentsScale, layer.shadowOpacity, layer.shadowRadius, layer.shadowOffset.width,
          layer.shadowOffset.height);
@@ -160,6 +181,12 @@ void OUKSurfaceLayerScenario(OUKSurfaceSink sink, void *context) {
     layer.bounds = CGRectMake(0, 0, 50, 60);
     layer.position = CGPointMake(5, 6);
     emit("bounds/position set frame=%s", R(layer.frame));
+#else
+    emit("defaults contentsScale=%g shadowOpacity=%g shadowRadius=%g", layer.contentsScale,
+         layer.shadowOpacity, layer.shadowRadius);
+    emit("defaults superlayer=%s mask=%s needsLayout=%s", C(layer.superlayer), C(layer.mask),
+         B([layer needsLayout]));
+#endif
     layer.cornerRadius = 4;
     layer.borderWidth = 1.5;
     layer.opacity = 0.25f;
@@ -171,11 +198,19 @@ void OUKSurfaceLayerScenario(OUKSurfaceSink sink, void *context) {
     CALayer *b = [[CALayer alloc] init];
     [layer addSublayer:a];
     [layer insertSublayer:b atIndex:0];
+#ifndef OUK_NO_FOUNDATION
     emit("sublayers count=%lu first=%s superlayer=%s", (unsigned long)layer.sublayers.count,
          B(layer.sublayers.firstObject == b), B(a.superlayer == layer));
+#else
+    emit("superlayer a=%s b=%s", B(a.superlayer == layer), B(b.superlayer == layer));
+#endif
     [a removeFromSuperlayer];
     [b removeFromSuperlayer];
+#ifndef OUK_NO_FOUNDATION
     emit("after remove sublayers=%s a.superlayer=%s", (layer.sublayers ? "array" : "nil"), C(a.superlayer));
+#else
+    emit("after remove a.superlayer=%s", C(a.superlayer));
+#endif
 }
 
 // MARK: - An Objective-C CALayer subclass
@@ -192,7 +227,11 @@ void OUKSurfaceLayerScenario(OUKSurfaceSink sink, void *context) {
 }
 - (void)layoutSublayers {
     self.layoutCount += 1;
+#ifndef OUK_NO_FOUNDATION
     emit("OUKTraceLayer -layoutSublayers #%d bounds=%s", self.layoutCount, R(self.bounds));
+#else
+    emit("OUKTraceLayer -layoutSublayers #%d", self.layoutCount);
+#endif
     [super layoutSublayers];
 }
 @end
@@ -220,9 +259,11 @@ void OUKSurfaceLayerSubclassScenario(OUKSurfaceSink sink, void *context) {
     emit("needsLayout=%s", B([layer needsLayout]));
     [layer layoutIfNeeded];
     [layer layoutIfNeeded];
+#ifndef OUK_NO_FOUNDATION
     layer.bounds = CGRectMake(0, 0, 20, 10);
     emit("after bounds change needsLayout=%s", B([layer needsLayout]));
     [layer layoutIfNeeded];
+#endif
     [layer setNeedsLayout];
     [layer layoutIfNeeded];
     emit("-- 3 sublayers");

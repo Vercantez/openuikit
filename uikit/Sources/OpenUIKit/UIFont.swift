@@ -40,7 +40,7 @@ import class ObjectiveC.NSObject
 #if _runtime(_ObjC) && !canImport(Foundation)
 @objc(UIFont)
 #endif
-public final class UIFont: NSObject, Sendable {
+public final class UIFont: NSObject, @unchecked Sendable {
     public enum Weight: Hashable, Sendable {
         case ultraLight, thin, light, regular, medium, semibold, bold, heavy, black
         public var name: String {
