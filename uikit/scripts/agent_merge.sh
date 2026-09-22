@@ -495,6 +495,7 @@ frames_complete() { # <dir> <skip> <flow args...>
   echo "   $d: golden $g frame(s) vs ours $o — recapturing once"
   rm -rf "$d"
   CONFORMANCE_PREBUILT=1 bash scripts/conformance_flow.sh "$d" "$@" > "$d.log" 2>&1 || { echo "CONFORMANCE FLOW FAILED on retry: $d"; return 1; }
+  touch "$d.retried"
   g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
   [ "$g" = "$o" ] || { echo "RECAPTURE INCOMPLETE: $d golden $g frame(s) vs ours $o"; return 1; }
 }
@@ -536,8 +537,12 @@ if [ -s $S/plan.txt ]; then
   # verdicts in the serial gate's order: first failing set decides the message
   while read -r set app skip flag; do
     d=$S/conf-${set#hc-conformance-}
-    [ "$(cat "$d.rc" 2>/dev/null)" = 0 ] || { echo "CONFORMANCE FLOW FAILED: $app${flag:+ $flag} (see $d.log)"; exit 9; }
+    rc=$(cat "$d.rc" 2>/dev/null || echo 1)
+    # rc 4 = a short set (conformance_flow.sh SHORT CAPTURE): the frame-count
+    # check below retries a short recapture once or refuses it by name
+    case $rc in 0|4) ;; *) echo "CONFORMANCE FLOW FAILED: $app${flag:+ $flag} (see $d.log)"; exit 9 ;; esac
     frames_complete "$d" "$([ "$skip" = 1 ] && echo 1)" $app $flag || exit 9
+    if [ "$rc" = 4 ] && ! [ -f "$d.retried" ]; then grep -h 'SHORT CAPTURE' "$d.log" | tail -1; echo "CONFORMANCE FLOW SHORT: $app${flag:+ $flag} (see $d.log)"; exit 9; fi
   done < $S/plan.txt
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; HAVE_SIM=""; fi
 fi
