@@ -107,7 +107,6 @@ Every set was captured on its first attempt.
 | other Tabs .dark rows | | | 0 |
 | Tabs (base) t1000 / t2000 | 99.409 / 84.946 | 99.440 / 84.925 | +0.03 / -0.02 |
 | Tabs (base) other 6 rows | | | 0 |
-
 | Forms (base) t3000 / t3900 | 96.751 / 96.721 | 96.733 / 96.730 | -0.02 / +0.01 |
 | Forms (base) other 5 rows | | | 0 |
 
