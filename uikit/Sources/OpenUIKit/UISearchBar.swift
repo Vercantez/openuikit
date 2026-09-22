@@ -329,10 +329,10 @@ open class UISearchTextField: UITextField {
     /// The search field's clear glyph is `secondaryLabel` on the pill, not
     /// `tertiaryLabel` on `systemBackground` (measured ink (137, 137, 141)
     /// light / (149, 149, 155) dark — file header).
-    override var clearButtonPalette: (circle: UIColor, knockout: UIColor) {
+    final var _searchClearButtonPalette: (circle: UIColor, knockout: UIColor) {
         _UISearchFieldMetrics.isIOS
             ? (_UISearchFieldMetrics.glyphColor, _UISearchFieldMetrics.pillFill)
-            : super.clearButtonPalette
+            : _fieldClearButtonPalette
     }
 
     /// Measured: the filled circle is 17 pt across inside the 20 pt box.

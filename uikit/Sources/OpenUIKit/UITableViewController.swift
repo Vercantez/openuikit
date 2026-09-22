@@ -7,24 +7,42 @@
 // through the protocol witnesses — the classic Swift protocol-extension
 // dispatch pitfall.
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITableViewController)
+#endif
 @preconcurrency @MainActor
 open class UITableViewController: UIViewController, UITableViewDataSource,
                                   UITableViewDelegate {
-    let style: UITableView.Style
+    final let style: UITableView.Style
 
     /// The controller's table (same object as `view`).
-    public var tableView: UITableView! {
+    public final var tableView: UITableView! {
         view as? UITableView
     }
 
-    public init(style: UITableView.Style = .plain) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic init(style: UITableView.Style = .plain) {
         self.style = style
         super.init()
     }
 
     /// MEASURED `table.coder` (viewcontrollercoderprobe): an empty archive
     /// yields a plain-style, unloaded controller; the coder is not read.
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         style = .plain
         super.init(coder: coder)
     }
@@ -40,82 +58,157 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
 
     // MARK: UITableViewDataSource (override in subclasses)
 
-    open func numberOfSections(in tableView: UITableView) -> Int { 1 }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(numberOfSectionsInTableView:)
+#endif
+    open dynamic func numberOfSections(in tableView: UITableView) -> Int { 1 }
 
-    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         0
     }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:cellForRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         fatalError("UITableViewController subclasses must override tableView(_:cellForRowAt:)")
     }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         titleForHeaderInSection section: Int) -> String? { nil }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         titleForFooterInSection section: Int) -> String? { nil }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:canEditRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         canEditRowAt indexPath: IndexPath) -> Bool { true }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:editingStyleForRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         editingStyleForRowAt indexPath: IndexPath)
         -> UITableViewCell.EditingStyle { .delete }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:commitEditingStyle:forRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         commit editingStyle: UITableViewCell.EditingStyle,
                         forRowAt indexPath: IndexPath) {}
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:canMoveRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         canMoveRowAt indexPath: IndexPath) -> Bool { false }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:moveRowAtIndexPath:toIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         moveRowAt sourceIndexPath: IndexPath,
                         to destinationIndexPath: IndexPath) {}
 
     // MARK: UITableViewDelegate (override in subclasses)
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:heightForRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         heightForHeaderInSection section: Int) -> CGFloat {
         UITableView.automaticDimension
     }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         heightForFooterInSection section: Int) -> CGFloat {
         UITableView.automaticDimension
     }
 
-    open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:willDisplayCell:forRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                         forRowAt indexPath: IndexPath) {}
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         viewForHeaderInSection section: Int) -> UIView? { nil }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         viewForFooterInSection section: Int) -> UIView? { nil }
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:didHighlightRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         didHighlightRowAt indexPath: IndexPath) {}
 
-    open func tableView(_ tableView: UITableView,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:didUnhighlightRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
                         didUnhighlightRowAt indexPath: IndexPath) {}
 
-    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:didSelectRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
 
-    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:didDeselectRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {}
 
     // MARK: UIScrollViewDelegate (override in subclasses)
 
-    open func scrollViewDidScroll(_ scrollView: UIScrollView) {}
-    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {}
-    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate: Bool) {}
-    open func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {}
-    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func scrollViewDidScroll(_ scrollView: UIScrollView) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate: Bool) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {}
 }
