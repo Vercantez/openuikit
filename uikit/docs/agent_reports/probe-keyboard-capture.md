@@ -108,6 +108,15 @@ Every set was captured on its first attempt.
 | Tabs (base) t1000 / t2000 | 99.409 / 84.946 | 99.440 / 84.925 | +0.03 / -0.02 |
 | Tabs (base) other 6 rows | | | 0 |
 
+| Forms (base) t3000 / t3900 | 96.751 / 96.721 | 96.733 / 96.730 | -0.02 / +0.01 |
+| Forms (base) other 5 rows | | | 0 |
+
+The committed Forms base set was the Sep 5 golden from before commit
+58b86916 introduced the keyboard capture, so its t1200-t4800 frames have no
+keyboard. The port now draws one, so the gate graded those frames at about
+62.4 against the old golden, compared with 96.8 on the board. The refresh
+brings them back to their board values.
+
 The gate flagged Tabs base as stale (the Tabs sources changed after its Sep 5
 capture), so it was refreshed as well. It captured 8/8 on the first attempt.
 
