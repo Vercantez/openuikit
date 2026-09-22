@@ -413,9 +413,19 @@ extension NibDecoder {
         for pair in object.values {
             switch pair.key {
             case "UINibName", "UIClassName", "UIOriginalClassName", "UIParentViewController",
-                 "UIChildViewControllers", "UINavigationBar", "UITabBar",
-                 "UICustomizableViewControllers":
+                 "UIChildViewControllers", "UICustomizableViewControllers":
                 continue
+            case "UINavigationBar", "UITabBar":
+                // The container's own bar: the archived bar object (also named
+                // by the navigation items / tab bar items) is bound to the
+                // live one rather than built as a second, unattached bar.
+                if case .reference(let i) = pair.value, built[i] == nil {
+                    if let nav = controller as? UINavigationController, pair.key == "UINavigationBar" {
+                        built[i] = nav.navigationBar
+                    } else if let tabs = controller as? UITabBarController, pair.key == "UITabBar" {
+                        built[i] = tabs.tabBar
+                    }
+                }
             case "UITabBarItem":
                 if let item = self.object(pair.value) as? UITabBarItem { controller.tabBarItem = item }
             case "UITitle":
