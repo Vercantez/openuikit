@@ -182,6 +182,19 @@ class MiniAppFixtureTests(unittest.TestCase):
         )
         self.assertNotIn('.product(name: "SimplenoteSearch"', text)
 
+    def test_mobilecoreservices_import_links_the_port_on_every_platform(self) -> None:
+        # Simplenote 9b1bb17 CSSearchable+Helpers.swift imports it; macOS has
+        # no SDK module of that name (simplenote-objc-core).
+        row = ingest.classify_module("MobileCoreServices")
+        self.assertEqual(row["port"], "MobileCoreServices")
+        self.assertNotIn("port_platforms", row)
+        self.manifest["imports"].append(row)
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "pkg"
+            ingest.emit_tree(self.graph, self.manifest, out, UIKIT)
+            text = (out / "Package.swift").read_text()
+        self.assertIn('.product(name: "MobileCoreServices", package: "OpenUIKit")', text)
+
     def test_emit_package_layout(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "pkg"
@@ -345,6 +358,18 @@ class MiniAppFixtureTests(unittest.TestCase):
             self.assertIn('.product(name: "OpenUIKitObjCBridge", package: "OpenUIKit"', objc_block)
             self.assertIn('.headerSearchPath("include/UIKit")', objc_block)
             self.assertIn('.define("OPENUIKIT_OBJC_SIDE", to: "1")', objc_block)
+            # simplenote-objc-core: every consumer of OpenUIKit-Swift.h carries
+            # the SWIFT_CLASS / SWIFT_CLASS_NAMED pair that makes exactly the
+            # vtable-free chain subclassable -- the Clang target, main.m's
+            # target, and the Swift target's Clang importer. The pair must be
+            # the one OpenUIKit's own Package.swift passes its fixtures.
+            uikit_manifest = (UIKIT / "Package.swift").read_text(encoding="utf-8")
+            for define in ingest.OBJC_SUBCLASSING_DEFINES:
+                self.assertIn(json.dumps(define), uikit_manifest)
+                self.assertIn(json.dumps(define), objc_block)
+                self.assertIn(f'"-Xcc", "{define}"', swift_block)
+            main_block = package[package.index(".executableTarget("):]
+            self.assertIn(json.dumps(ingest.OBJC_SUBCLASSING_DEFINES[1]), main_block)
 
     def test_missing_source_with_demo_sibling_is_emitted_from_the_demo(self) -> None:
         # Simplenote 9b1bb17: Simplenote/Credentials/SPCredentials.swift is a

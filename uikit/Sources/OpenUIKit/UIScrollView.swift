@@ -56,6 +56,12 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -278,6 +284,12 @@ public enum UIScrollPhysics {
 
 // MARK: - UIScrollView
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIScrollView)
+#endif
 @preconcurrency @MainActor
 open class UIScrollView: UIView {
     public enum KeyboardDismissMode: Sendable {
@@ -290,7 +302,7 @@ open class UIScrollView: UIView {
     // MARK: Content geometry
 
     /// The scroll position — literally the layer's bounds origin (UIKit/CA).
-    public var contentOffset: CGPoint {
+    public final var contentOffset: CGPoint {
         get { bounds.origin }
         set {
             // MEASURED 2026-09-10 (Tools/oracle2/signalrowsprobe/offset.swift,
@@ -305,7 +317,7 @@ open class UIScrollView: UIView {
             bounds.origin = newValue
         }
     }
-    private var settingContentOffset = false
+    private final var settingContentOffset = false
 
     /// Called by `setContentOffset(_:animated:)` with the final target
     /// before anything moves. UICollectionView runs its bounds-change
@@ -315,13 +327,19 @@ open class UIScrollView: UIView {
     /// observe the OLD bounds with the target as the argument, then the
     /// bounds move, then scrollViewDidScroll. A direct `contentOffset` /
     /// `bounds` set differs: there invalidateLayout sees the NEW bounds.
-    func _willSetContentOffset(_ offset: CGPoint, animated: Bool) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    dynamic func _willSetContentOffset(_ offset: CGPoint, animated: Bool) {}
 
     /// Origin-change tail of the bounds setter (indicators, refresh control,
     /// delegate). UICollectionView overrides it to invalidate its layout
     /// BEFORE calling super: on every measured entry point
     /// invalidateLayout(with:) precedes scrollViewDidScroll.
-    func _boundsOriginDidChange(from oldValue: CGRect) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    dynamic func _boundsOriginDidChange(from oldValue: CGRect) {
         _layoutRefreshControl()
         if let rc = _refreshControl, isDragging {
             rc._scrollDidDrag(to: bounds.origin.y, topEdge: _refreshTopEdge)
@@ -340,7 +358,7 @@ open class UIScrollView: UIView {
     /// collection view, (0,300,200,44) on 44 for a table, and the callback
     /// order is exactly setContentOffset's. The inset adjustment is UIKit's
     /// documented visible area, not separately measured.
-    public func scrollRectToVisible(_ rect: CGRect, animated: Bool) {
+    public final func scrollRectToVisible(_ rect: CGRect, animated: Bool) {
         let inset = adjustedContentInset
         let visible = CGRect(origin: contentOffset, size: bounds.size).inset(by: inset)
         var target = contentOffset
@@ -367,7 +385,7 @@ open class UIScrollView: UIView {
         OpenUIKitRuntime.systemFontCut == .iOS ? 0.3 : 0.25
     }
 
-    public func setContentOffset(_ offset: CGPoint, animated: Bool) {
+    public final func setContentOffset(_ offset: CGPoint, animated: Bool) {
         stopScrollAnimation()
         var offset = offset
         // MEASURED Tabs t7000 / t7000.xxxl / t7000.ax1: see
@@ -397,10 +415,10 @@ open class UIScrollView: UIView {
         }
     }
 
-    public var contentSize: CGSize = .zero {
+    public final var contentSize: CGSize = .zero {
         didSet { if contentSize != oldValue { setNeedsLayout() } }
     }
-    public var contentInset: UIEdgeInsets = .zero {
+    public final var contentInset: UIEdgeInsets = .zero {
         didSet {
             guard contentInset != oldValue else { return }
             // MEASURED 2026-09-04 (Tools/oracle2/realappprobe, iOS 26.1): a
@@ -427,7 +445,7 @@ open class UIScrollView: UIView {
     /// 0 → **260**. The software keyboard is a separate window (the app
     /// window's drawHierarchy does not include it); 260 pt is the overlap
     /// onto this 667 pt window. t200 (unfocused) reads bottom 0.
-    public var adjustedContentInset: UIEdgeInsets {
+    public final var adjustedContentInset: UIEdgeInsets {
         UIEdgeInsets(
             top: contentInset.top + safeAreaInsets.top,
             left: contentInset.left + safeAreaInsets.left,
@@ -451,7 +469,7 @@ open class UIScrollView: UIView {
         return _UIKeyboardChrome.currentOverlap
     }
 
-    var iOSKeyboardAvoidanceBottom: CGFloat {
+    final var iOSKeyboardAvoidanceBottom: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
         guard let responder = window?.firstResponder else { return 0 }
         guard responder is UIKeyInput else { return 0 }
@@ -471,40 +489,40 @@ open class UIScrollView: UIView {
         // separate window (docs/ORACLE_FLOW.md). Do not apply 260 here.
         return 0
     }
-    public var verticalScrollIndicatorInsets: UIEdgeInsets = .zero {
+    public final var verticalScrollIndicatorInsets: UIEdgeInsets = .zero {
         didSet { if verticalScrollIndicatorInsets != oldValue { updateIndicators() } }
     }
-    public var horizontalScrollIndicatorInsets: UIEdgeInsets = .zero {
+    public final var horizontalScrollIndicatorInsets: UIEdgeInsets = .zero {
         didSet { if horizontalScrollIndicatorInsets != oldValue { updateIndicators() } }
     }
 
     /// Storage for `refreshControl` (the API lives in UIRefreshControl.swift,
     /// which owns the control's whole measured model).
-    var _refreshControl: UIRefreshControl?
+    final var _refreshControl: UIRefreshControl?
 
     // MARK: Behavior flags (UIKit defaults)
 
-    public var isScrollEnabled = true {
+    public final var isScrollEnabled = true {
         didSet { panGestureRecognizer.isEnabled = isScrollEnabled }
     }
-    public var bounces = true
-    public var alwaysBounceVertical = false
-    public var alwaysBounceHorizontal = false
+    public final var bounces = true
+    public final var alwaysBounceVertical = false
+    public final var alwaysBounceHorizontal = false
     /// When true, a finger-flick lands on a multiple of `bounds.width`
     /// (horizontal) / `bounds.height` (vertical). Programmatic
     /// `setContentOffset(animated:)` still goes to the requested offset;
     /// the paging snap is the deceleration target. Default false, matching
     /// UIKit. The curve itself is measured from Pager `fling` (iPhone SE 2x).
-    public var isPagingEnabled = false
-    public var showsVerticalScrollIndicator = true
-    public var showsHorizontalScrollIndicator = true
+    public final var isPagingEnabled = false
+    public final var showsVerticalScrollIndicator = true
+    public final var showsHorizontalScrollIndicator = true
 
     public enum IndicatorStyle: Int, Sendable { case `default`, black, white }
     /// `.default` follows the trait collection (what ``makeIndicator`` did
     /// unconditionally before); `.black`/`.white` pin the bar's colour, which
     /// is how an app with its own theme system keeps the indicator legible
     /// over a background UIKit cannot see.
-    public var indicatorStyle: IndicatorStyle = .default {
+    public final var indicatorStyle: IndicatorStyle = .default {
         didSet {
             guard indicatorStyle != oldValue else { return }
             for bar in [verticalIndicator, horizontalIndicator].compactMap({ $0 }) {
@@ -514,9 +532,9 @@ open class UIScrollView: UIView {
     }
     /// Wait ~150 ms (or until the scroll pan claims the gesture) before
     /// delivering touch-down to content subviews.
-    public var delaysContentTouches = true
-    public var canCancelContentTouches = true
-    public var keyboardDismissMode: KeyboardDismissMode = .none
+    public final var delaysContentTouches = true
+    public final var canCancelContentTouches = true
+    public final var keyboardDismissMode: KeyboardDismissMode = .none
     /// UIKit's `NS_TYPED_ENUM` over the per-millisecond deceleration factor.
     /// MEASURED iPhone 16 / iOS 26.1: `.normal.rawValue` 0.998, `.fast.rawValue`
     /// 0.99, a fresh scroll view reads `.normal` (ios-oss-launch.md probe).
@@ -527,12 +545,12 @@ open class UIScrollView: UIView {
         public static let fast = DecelerationRate(rawValue: 0.99)
     }
     /// Per-millisecond deceleration factor (UIKit .normal).
-    public var decelerationRate: DecelerationRate = .normal
+    public final var decelerationRate: DecelerationRate = .normal
 
     /// Bounds for programmatic zoom. OpenUIKit currently provides the
     /// delegate-selected zoom view and programmatic scaling path; pinch input
     /// is a separate gesture surface.
-    public var minimumZoomScale: CGFloat = 1 {
+    public final var minimumZoomScale: CGFloat = 1 {
         didSet {
             if minimumZoomScale > maximumZoomScale {
                 maximumZoomScale = minimumZoomScale
@@ -540,7 +558,7 @@ open class UIScrollView: UIView {
             if _zoomScale < minimumZoomScale { setZoomScale(minimumZoomScale, animated: false) }
         }
     }
-    public var maximumZoomScale: CGFloat = 1 {
+    public final var maximumZoomScale: CGFloat = 1 {
         didSet {
             if maximumZoomScale < minimumZoomScale {
                 minimumZoomScale = maximumZoomScale
@@ -548,14 +566,14 @@ open class UIScrollView: UIView {
             if _zoomScale > maximumZoomScale { setZoomScale(maximumZoomScale, animated: false) }
         }
     }
-    private var _zoomScale: CGFloat = 1
-    public var zoomScale: CGFloat {
+    private final var _zoomScale: CGFloat = 1
+    public final var zoomScale: CGFloat {
         get { _zoomScale }
         set { setZoomScale(newValue, animated: false) }
     }
-    public private(set) var isZooming = false
+    public private(set) final var isZooming = false
 
-    public weak var delegate: UIScrollViewDelegate?
+    public weak final var delegate: UIScrollViewDelegate?
 
     /// UIKit-internal scroll observation, alongside (never instead of) the
     /// app's `delegate`. UIKit's own chrome — the large-title navigation bar
@@ -566,7 +584,7 @@ open class UIScrollView: UIView {
     /// real iOS honours `heightForRowAt` (44 pt rows) inside a large-title
     /// nav controller; the port fell back to the 53 pt default because the
     /// bar had taken the delegate.
-    weak var _scrollObserver: UIScrollViewDelegate?
+    weak final var _scrollObserver: UIScrollViewDelegate?
 
     /// The content-touch delay (UIKit's is ~150 ms). Static + tunable for
     /// tests, like UIWindow.multiTapInterval.
@@ -586,12 +604,12 @@ open class UIScrollView: UIView {
     // MARK: State
 
     /// A touch has landed and the pan may still claim it.
-    public private(set) var isTracking = false
+    public private(set) final var isTracking = false
     /// The pan is actively moving the content.
-    public private(set) var isDragging = false
-    public private(set) var isDecelerating = false
+    public private(set) final var isDragging = false
+    public private(set) final var isDecelerating = false
 
-    public let panGestureRecognizer: UIPanGestureRecognizer
+    public final let panGestureRecognizer: UIPanGestureRecognizer
 
     public override init(frame: CGRect) {
         let pan = UIScrollViewPanGestureRecognizer()
@@ -600,14 +618,17 @@ open class UIScrollView: UIView {
         configurePanGesture(pan)
     }
 
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         let pan = UIScrollViewPanGestureRecognizer()
         panGestureRecognizer = pan
         super.init(coder: coder)
         configurePanGesture(pan)
     }
 
-    private func configurePanGesture(_ pan: UIScrollViewPanGestureRecognizer) {
+    private final func configurePanGesture(_ pan: UIScrollViewPanGestureRecognizer) {
         clipsToBounds = true // UIKit default for scroll views
         pan.scrollView = self
         pan.addTarget { [weak self] r in
@@ -619,7 +640,7 @@ open class UIScrollView: UIView {
 
     /// Scale the delegate's zoom view. Animated changes are genuine UIView
     /// transform animations and therefore advance on `UIWindow.tick`.
-    public func setZoomScale(_ scale: CGFloat, animated: Bool) {
+    public final func setZoomScale(_ scale: CGFloat, animated: Bool) {
         let lower = min(minimumZoomScale, maximumZoomScale)
         let upper = max(minimumZoomScale, maximumZoomScale)
         let target = min(upper, max(lower, scale))
@@ -653,24 +674,24 @@ open class UIScrollView: UIView {
     // MARK: Scrollable range
 
     /// Legal contentOffset range per axis (inset-adjusted, UIKit rules).
-    public var minContentOffset: CGPoint {
+    public final var minContentOffset: CGPoint {
         CGPoint(x: -contentInset.left, y: -contentInset.top)
     }
-    public var maxContentOffset: CGPoint {
+    public final var maxContentOffset: CGPoint {
         CGPoint(x: max(-contentInset.left,
                        contentSize.width + contentInset.right - bounds.width),
                 y: max(-contentInset.top,
                        contentSize.height + contentInset.bottom - bounds.height))
     }
 
-    var canScrollX: Bool { maxContentOffset.x > minContentOffset.x }
-    var canScrollY: Bool { maxContentOffset.y > minContentOffset.y }
+    final var canScrollX: Bool { maxContentOffset.x > minContentOffset.x }
+    final var canScrollY: Bool { maxContentOffset.y > minContentOffset.y }
     /// Axis participates in dragging at all.
-    var dragsX: Bool { canScrollX || (bounces && alwaysBounceHorizontal) }
-    var dragsY: Bool { canScrollY || (bounces && alwaysBounceVertical) }
+    final var dragsX: Bool { canScrollX || (bounces && alwaysBounceHorizontal) }
+    final var dragsY: Bool { canScrollY || (bounces && alwaysBounceVertical) }
     /// Axis rubber-bands/bounces past its edges.
-    var bouncesX: Bool { bounces && (canScrollX || alwaysBounceHorizontal) }
-    var bouncesY: Bool { bounces && (canScrollY || alwaysBounceVertical) }
+    final var bouncesX: Bool { bounces && (canScrollX || alwaysBounceHorizontal) }
+    final var bouncesY: Bool { bounces && (canScrollY || alwaysBounceVertical) }
 
     // MARK: Content-touch semantics
 
@@ -678,7 +699,10 @@ open class UIScrollView: UIView {
     /// to `view`. Modern UIKit cancels control touches too (rows/buttons in
     /// scroll views stop tracking when the scroll starts); override to
     /// protect a control from cancellation.
-    open func touchesShouldCancel(in view: UIView) -> Bool { true }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesShouldCancelInContentView:)
+#endif
+    open dynamic func touchesShouldCancel(in view: UIView) -> Bool { true }
 
     // MARK: Offset application (single funnel)
 
@@ -694,8 +718,8 @@ open class UIScrollView: UIView {
 
     // MARK: Auto Layout guides (M14)
 
-    var _contentLayoutGuide: UILayoutGuide?
-    var _frameLayoutGuide: UILayoutGuide?
+    final var _contentLayoutGuide: UILayoutGuide?
+    final var _frameLayoutGuide: UILayoutGuide?
 
     /// UIKit's `contentLayoutGuide`. Constraints from the scroll view's
     /// subviews to this guide are what size `contentSize` — the modern
@@ -703,7 +727,7 @@ open class UIScrollView: UIView {
     /// scrolling screen has any content height at all. The guide's origin is
     /// the content origin and its size is solved; `layoutSubviews` adopts the
     /// solved size (see AutoLayout/LayoutEngine.swift).
-    public var contentLayoutGuide: UILayoutGuide {
+    public final var contentLayoutGuide: UILayoutGuide {
         if let g = _contentLayoutGuide { return g }
         let g = UILayoutGuide(kind: .scrollContent, owningView: self)
         _contentLayoutGuide = g
@@ -713,7 +737,7 @@ open class UIScrollView: UIView {
     /// UIKit's `frameLayoutGuide`: the scroll view's own frame, in content
     /// coordinates. Pinning a subview's width to it is how apps say "as wide
     /// as the scroll view, however tall the content is".
-    public var frameLayoutGuide: UILayoutGuide {
+    public final var frameLayoutGuide: UILayoutGuide {
         if let g = _frameLayoutGuide { return g }
         let g = UILayoutGuide(kind: .scrollFrame, owningView: self)
         _frameLayoutGuide = g
@@ -771,18 +795,18 @@ open class UIScrollView: UIView {
 
     /// `safeAreaInsets.top` as of the last `safeAreaInsetsDidChange`, so the
     /// hook can tell whether the content was resting against the old inset.
-    private var adjustedSafeAreaTop: CGFloat = 0
+    private final var adjustedSafeAreaTop: CGFloat = 0
 
     // MARK: Drag handling
 
     /// Baseline offset at pan recognition.
-    private var dragStartOffset: CGPoint = .zero
+    private final var dragStartOffset: CGPoint = .zero
     /// (timestamp, applied offset) samples from the last ~100 ms of drag.
-    private var dragSamples: [(t: TimeInterval, offset: CGPoint)] = []
+    private final var dragSamples: [(t: TimeInterval, offset: CGPoint)] = []
     /// Release-velocity window (UIKit uses the trailing ~100 ms of samples).
     static let velocityWindow: TimeInterval = 0.1
 
-    func handlePan(_ pan: UIScrollViewPanGestureRecognizer) {
+    final func handlePan(_ pan: UIScrollViewPanGestureRecognizer) {
         switch pan.state {
         case .began:
             stopScrollAnimation()
@@ -839,7 +863,7 @@ open class UIScrollView: UIView {
     }
 
     /// Clamp + rubber-band the raw (finger-tracking) offset per axis.
-    func appliedDragOffset(_ raw: CGPoint) -> CGPoint {
+    final func appliedDragOffset(_ raw: CGPoint) -> CGPoint {
         let lo = minContentOffset, hi = maxContentOffset
         func axis(_ x: CGFloat, _ lo: CGFloat, _ hi: CGFloat,
                   bounces: Bool, dim: CGFloat) -> CGFloat {
@@ -852,7 +876,7 @@ open class UIScrollView: UIView {
                        y: axis(raw.y, lo.y, hi.y, bounces: bouncesY, dim: bounds.height))
     }
 
-    func recordDragSample(t: TimeInterval, offset: CGPoint) {
+    final func recordDragSample(t: TimeInterval, offset: CGPoint) {
         dragSamples.append((t, offset))
         let cutoff = t - UIScrollView.velocityWindow - 0.02
         while dragSamples.count > 2, dragSamples[0].t < cutoff {
@@ -861,7 +885,7 @@ open class UIScrollView: UIView {
     }
 
     /// Offset velocity (pt/s) over the trailing ~100 ms of samples.
-    func releaseVelocity() -> CGPoint {
+    final func releaseVelocity() -> CGPoint {
         guard let last = dragSamples.last else { return .zero }
         // Oldest sample still inside the window.
         var first = dragSamples[0]
@@ -875,7 +899,7 @@ open class UIScrollView: UIView {
                        y: (last.offset.y - first.offset.y) / CGFloat(dt))
     }
 
-    func endDragging(velocity v: CGPoint, at time: TimeInterval? = nil) {
+    final func endDragging(velocity v: CGPoint, at time: TimeInterval? = nil) {
         let now = time ?? dragSamples.last?.t ?? OpenUIKitRuntime.animationTime
         dragSamples.removeAll()
         // Pull-to-refresh arms on the drag and fires on the release
@@ -935,7 +959,7 @@ open class UIScrollView: UIView {
         }
     }
 
-    func makeReleaseAxisAnim(x: CGFloat, v: CGFloat, lo: CGFloat, hi: CGFloat,
+    final func makeReleaseAxisAnim(x: CGFloat, v: CGFloat, lo: CGFloat, hi: CGFloat,
                              scrolls: Bool, bouncesAxis: Bool,
                              at now: TimeInterval) -> AxisAnim? {
         guard scrolls else { return nil }
@@ -967,8 +991,8 @@ open class UIScrollView: UIView {
         var bounces: Bool
     }
 
-    var xAnim: AxisAnim?
-    var yAnim: AxisAnim?
+    final var xAnim: AxisAnim?
+    final var yAnim: AxisAnim?
 
     /// Deceleration/bounce is over when the spring displacement AND velocity
     /// are visually zero.
@@ -1015,7 +1039,7 @@ open class UIScrollView: UIView {
 
     /// Advance the scroll animation to `time` (host clock — the same clock
     /// as UIView.animate). Called from UIWindow.tick via _stepScrollAnimations.
-    func stepScrollAnimation(to time: TimeInterval) {
+    final func stepScrollAnimation(to time: TimeInterval) {
         guard xAnim != nil || yAnim != nil else { return }
         var off = contentOffset
         if var a = xAnim {
@@ -1038,7 +1062,7 @@ open class UIScrollView: UIView {
     }
 
     /// Cancel any momentum/bounce, freezing the offset where it is.
-    public func stopScrollAnimation() {
+    public final func stopScrollAnimation() {
         if xAnim != nil || yAnim != nil {
             xAnim = nil
             yAnim = nil
@@ -1046,7 +1070,7 @@ open class UIScrollView: UIView {
         }
     }
 
-    func settle() {
+    final func settle() {
         fadeIndicators()
     }
 
@@ -1101,7 +1125,7 @@ open class UIScrollView: UIView {
     /// A touch landed inside the scroll view (on it or a descendant).
     /// Returns true when the touch was a scroll-catch (finger stopping a
     /// deceleration) — such touches are consumed and never reach content.
-    func touchBeganInContent() -> Bool {
+    final func touchBeganInContent() -> Bool {
         isTracking = true
         let wasAnimating = xAnim != nil || yAnim != nil
         if wasAnimating {
@@ -1111,7 +1135,7 @@ open class UIScrollView: UIView {
         return wasAnimating
     }
 
-    func touchSequenceEnded() {
+    final func touchSequenceEnded() {
         isTracking = false
     }
 
@@ -1125,14 +1149,14 @@ open class UIScrollView: UIView {
     /// Indicator fade-out duration after the scroll settles.
     static let indicatorFadeDuration: Double = 0.4
 
-    var verticalIndicator: UIView?
-    var horizontalIndicator: UIView?
+    final var verticalIndicator: UIView?
+    final var horizontalIndicator: UIView?
     /// True between flashIndicators() and fadeIndicators().
-    var indicatorsVisible = false
+    final var indicatorsVisible = false
 
     /// Lazily create an indicator bar (lazy so static scenes never gain
     /// extra subviews — layout dumps stay clean, like UIKit's lazy ones).
-    func makeIndicator() -> UIView {
+    final func makeIndicator() -> UIView {
         let bar = UIView()
         bar.isUserInteractionEnabled = false
         bar.layer.cornerRadius = UIScrollView.indicatorThickness / 2
@@ -1142,7 +1166,7 @@ open class UIScrollView: UIView {
         return bar
     }
 
-    private func indicatorColor() -> UIColor {
+    private final func indicatorColor() -> UIColor {
         let light: Bool
         switch indicatorStyle {
         case .default: light = traitCollection.userInterfaceStyle == .dark
@@ -1159,12 +1183,12 @@ open class UIScrollView: UIView {
     /// reuses the settle-time show/fade pair: bars appear only for a
     /// scrollable axis and fade over `indicatorFadeDuration`. The hold time
     /// before UIKit's fade is not measured; nothing observable depends on it.
-    public func flashScrollIndicators() {
+    public final func flashScrollIndicators() {
         flashIndicators()
         fadeIndicators()
     }
 
-    func flashIndicators() {
+    final func flashIndicators() {
         indicatorsVisible = true
         if showsVerticalScrollIndicator, canScrollY, verticalIndicator == nil {
             verticalIndicator = makeIndicator()
@@ -1180,7 +1204,7 @@ open class UIScrollView: UIView {
         updateIndicators()
     }
 
-    func fadeIndicators() {
+    final func fadeIndicators() {
         guard indicatorsVisible else { return }
         indicatorsVisible = false
         for bar in [verticalIndicator, horizontalIndicator] {
@@ -1199,16 +1223,16 @@ open class UIScrollView: UIView {
     /// Four distinct, stable effect objects, created on first access so an
     /// untouched scroll view carries none (MEASURED: distinct per edge, never
     /// shared across scroll views, `.automatic` / shown by default).
-    var _topEdgeEffect: UIScrollEdgeEffect?
-    var _bottomEdgeEffect: UIScrollEdgeEffect?
-    var _leftEdgeEffect: UIScrollEdgeEffect?
-    var _rightEdgeEffect: UIScrollEdgeEffect?
+    final var _topEdgeEffect: UIScrollEdgeEffect?
+    final var _bottomEdgeEffect: UIScrollEdgeEffect?
+    final var _leftEdgeEffect: UIScrollEdgeEffect?
+    final var _rightEdgeEffect: UIScrollEdgeEffect?
     /// The `.hard` plate under a navigation bar / toolbar / tab bar.
-    var _topEdgePocket: _UIScrollEdgeEffectView?
-    var _bottomEdgePocket: _UIScrollEdgeEffectView?
+    final var _topEdgePocket: _UIScrollEdgeEffectView?
+    final var _bottomEdgePocket: _UIScrollEdgeEffectView?
 
     /// The effect for the top edge of the scroll view.
-    public var topEdgeEffect: UIScrollEdgeEffect {
+    public final var topEdgeEffect: UIScrollEdgeEffect {
         if let e = _topEdgeEffect { return e }
         let e = UIScrollEdgeEffect(edge: .top, scrollView: self)
         _topEdgeEffect = e
@@ -1216,7 +1240,7 @@ open class UIScrollView: UIView {
     }
 
     /// The effect for the left edge of the scroll view (store-only).
-    public var leftEdgeEffect: UIScrollEdgeEffect {
+    public final var leftEdgeEffect: UIScrollEdgeEffect {
         if let e = _leftEdgeEffect { return e }
         let e = UIScrollEdgeEffect(edge: .left, scrollView: self)
         _leftEdgeEffect = e
@@ -1224,7 +1248,7 @@ open class UIScrollView: UIView {
     }
 
     /// The effect for the bottom edge of the scroll view.
-    public var bottomEdgeEffect: UIScrollEdgeEffect {
+    public final var bottomEdgeEffect: UIScrollEdgeEffect {
         if let e = _bottomEdgeEffect { return e }
         let e = UIScrollEdgeEffect(edge: .bottom, scrollView: self)
         _bottomEdgeEffect = e
@@ -1232,7 +1256,7 @@ open class UIScrollView: UIView {
     }
 
     /// The effect for the right edge of the scroll view (store-only).
-    public var rightEdgeEffect: UIScrollEdgeEffect {
+    public final var rightEdgeEffect: UIScrollEdgeEffect {
         if let e = _rightEdgeEffect { return e }
         let e = UIScrollEdgeEffect(edge: .right, scrollView: self)
         _rightEdgeEffect = e
@@ -1243,20 +1267,20 @@ open class UIScrollView: UIView {
 
     /// Interactions whose `scrollView` is this view. Weak: the interaction
     /// is owned by its container view, like UIKit's.
-    var _scrollEdgeInteractions: [_UIScrollEdgeInteractionRef] = []
+    final var _scrollEdgeInteractions: [_UIScrollEdgeInteractionRef] = []
 
-    func _addScrollEdgeInteraction(_ interaction: UIScrollEdgeElementContainerInteraction) {
+    final func _addScrollEdgeInteraction(_ interaction: UIScrollEdgeElementContainerInteraction) {
         _scrollEdgeInteractions.removeAll { $0.interaction == nil || $0.interaction === interaction }
         _scrollEdgeInteractions.append(_UIScrollEdgeInteractionRef(interaction))
     }
 
-    func _removeScrollEdgeInteraction(_ interaction: UIScrollEdgeElementContainerInteraction) {
+    final func _removeScrollEdgeInteraction(_ interaction: UIScrollEdgeElementContainerInteraction) {
         _scrollEdgeInteractions.removeAll { $0.interaction == nil || $0.interaction === interaction }
     }
 
     /// Every scroll step and layout pass re-evaluates pocket engagement
     /// (measured: off at rest, on once content passes under the container).
-    func _updateScrollEdgeInteractions() {
+    final func _updateScrollEdgeInteractions() {
         guard !_scrollEdgeInteractions.isEmpty else { return }
         _scrollEdgeInteractions.removeAll { $0.interaction == nil }
         for ref in _scrollEdgeInteractions { ref.interaction?._update() }
@@ -1264,14 +1288,14 @@ open class UIScrollView: UIView {
 
     /// Pockets sit above content and below the indicators, like Apple's
     /// `_UITouchPassthroughView`s ahead of `_UIScrollViewScrollIndicator`.
-    func _frontIndicatorsOverPockets() {
+    final func _frontIndicatorsOverPockets() {
         if let bar = verticalIndicator { bringSubviewToFront(bar) }
         if let bar = horizontalIndicator { bringSubviewToFront(bar) }
     }
 
     /// Table and collection views add cells after the scroll step ran; they
     /// call this after tiling so the pockets stay above the new cells.
-    func _frontScrollEdgePockets() {
+    final func _frontScrollEdgePockets() {
         for pocket in [_topEdgePocket, _bottomEdgePocket] {
             if let pocket, pocket.superview === self, !pocket.isHidden {
                 bringSubviewToFront(pocket)
@@ -1285,7 +1309,7 @@ open class UIScrollView: UIView {
         }
     }
 
-    func updateIndicators() {
+    final func updateIndicators() {
         _updateScrollEdgeEffects()
         _updateScrollEdgeInteractions()
         let inset = UIScrollView.indicatorInset

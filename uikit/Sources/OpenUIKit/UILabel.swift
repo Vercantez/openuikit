@@ -161,7 +161,7 @@ open class UILabel: UIView {
     /// rounding the draw path uses (`baselineInLine` in drawContent); the
     /// last baseline of a single-line label is measured back from the
     /// line-box bottom. Verified against golden/constraints_baseline.
-    override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
+    final func _labelConstraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
         let ascender = FontEngine.metrics(for: font).ascender
         var first: CGFloat = (ascender + 0.5).rounded(.down)
         if let s = LayoutEngine.iOSPixelScale {

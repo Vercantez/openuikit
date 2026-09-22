@@ -24,6 +24,12 @@
 /// Container-controller view class (same name real UIKit dumps for
 /// UINavigationController / UITabBarController — compare.py treats it as
 /// private and prunes the subtree on both sides).
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 @preconcurrency @MainActor
 final class UILayoutContainerView: UIView {
     /// Last size `UINavigationController.updateContainerLayout` ran at.
@@ -71,10 +77,19 @@ public protocol UIContentContainer: AnyObject {
         with coordinator: UIViewControllerTransitionCoordinator)
 }
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIViewController)
+#endif
 @preconcurrency @MainActor
 open class UIViewController: UIResponder, UIContentContainer {
 #if !canImport(Foundation)
-    open func observeValue(forKeyPath keyPath: String?, of object: Any?,
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func observeValue(forKeyPath keyPath: String?, of object: Any?,
                            change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {}
 #endif
 #if !(canImport(ObjectiveC) && canImport(Foundation))
@@ -90,17 +105,17 @@ open class UIViewController: UIResponder, UIContentContainer {
     open func prepare(for segue: UIStoryboardSegue, sender: Any?) {}
 #endif
 
-    private let _nibName: String?
-    private let _nibBundle: Bundle
-    private let _hasExplicitNibRequest: Bool
+    private final let _nibName: String?
+    private final let _nibBundle: Bundle
+    private final let _hasExplicitNibRequest: Bool
 
     /// Handler-form trait registrations are owned by the observable, as in
     /// UIKit. Keeping them here (rather than on the root view) makes a token
     /// survive lazy view loading and root-view replacement without forcing a
     /// view load at registration time.
-    var _traitRegistrations: [UITraitChangeRegistration] = []
-    var _legacyTopLayoutGuide: _UILegacyLayoutSupportView?
-    var _legacyBottomLayoutGuide: _UILegacyLayoutSupportView?
+    final var _traitRegistrations: [UITraitChangeRegistration] = []
+    final var _legacyTopLayoutGuide: _UILegacyLayoutSupportView?
+    final var _legacyBottomLayoutGuide: _UILegacyLayoutSupportView?
 
     /// Designated initializer for UIKit source compatibility. Defaulted
     /// arguments keep `UIViewController()` and `super.init()` working
@@ -111,7 +126,10 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// ordinary programmatic path, while an explicit nib request remains
     /// lazy and is rejected only if this class's default `loadView()` is
     /// ultimately used.
-    public init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil) {
         _nibName = nibNameOrNil
         _nibBundle = nibBundleOrNil ?? .main
         _hasExplicitNibRequest = nibNameOrNil != nil || nibBundleOrNil != nil
@@ -136,7 +154,10 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// `roo-00-001-view-rtv-00-001` for the probe's root), and `title`, the
     /// navigation item, segue templates and child controllers are set before
     /// this returns (UIStoryboard.swift).
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         _nibName = UINibCoder.archivedString(coder, "UINibName")
         _nibBundle = .main
         _hasExplicitNibRequest = false
@@ -146,15 +167,21 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     /// The requested nib name, retained even though the portable core cannot
     /// decode nib archives.
-    open var nibName: String? { _nibName }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var nibName: String? { _nibName }
 
     /// UIKit normalizes a nil initializer argument to `Bundle.main`; a
     /// Catalyst 26.1 oracle reports that value for both `init()` and nil/nil.
-    open var nibBundle: Bundle? { _nibBundle }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var nibBundle: Bundle? { _nibBundle }
 
     // MARK: View loading (lazy loadView/viewDidLoad)
 
-    var _view: UIView? {
+    final var _view: UIView? {
         didSet {
             _legacyTopLayoutGuide = nil
             _legacyBottomLayoutGuide = nil
@@ -164,7 +191,7 @@ open class UIViewController: UIResponder, UIContentContainer {
     }
 
     /// The controller's view. First access loads it (loadView + viewDidLoad).
-    public var view: UIView! {
+    public final var view: UIView! {
         get {
             loadViewIfNeeded()
             return _view
@@ -172,14 +199,14 @@ open class UIViewController: UIResponder, UIContentContainer {
         set { _view = newValue }
     }
 
-    public var isViewLoaded: Bool { _view != nil }
-    public var viewIfLoaded: UIView? { _view }
+    public final var isViewLoaded: Bool { _view != nil }
+    public final var viewIfLoaded: UIView? { _view }
 
     /// Deprecated iOS 7–10 layout guides. iOS 11 maps them onto the safe-area
     /// band (`UIViewController.h`: use `safeAreaLayoutGuide`). SnapKit 5.7.0
     /// Tests.swift:722 pins `make.top.equalTo(vc.topLayoutGuide.snp.bottom)`.
     /// Length is `safeAreaInsets.top` / `.bottom` (0 for an unattached VC).
-    public var topLayoutGuide: UILayoutSupport {
+    public final var topLayoutGuide: UILayoutSupport {
         if let g = _legacyTopLayoutGuide { return g }
         let g = _UILegacyLayoutSupportView()
         g.translatesAutoresizingMaskIntoConstraints = false
@@ -194,7 +221,7 @@ open class UIViewController: UIResponder, UIContentContainer {
         return g
     }
 
-    public var bottomLayoutGuide: UILayoutSupport {
+    public final var bottomLayoutGuide: UILayoutSupport {
         if let g = _legacyBottomLayoutGuide { return g }
         let g = _UILegacyLayoutSupportView()
         g.translatesAutoresizingMaskIntoConstraints = false
@@ -209,7 +236,7 @@ open class UIViewController: UIResponder, UIContentContainer {
         return g
     }
 
-    public func loadViewIfNeeded() {
+    public final func loadViewIfNeeded() {
         guard _view == nil else { return }
         loadView()
         if _view == nil { _view = UIView() } // loadView() that set nothing
@@ -245,7 +272,10 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// Create `self.view`. Default: a plain UIView with a portrait-phone
     /// frame and nil (transparent) background — the same as a programmatic
     /// UIViewController without a nib. Containers re-frame the view anyway.
-    open func loadView() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func loadView() {
         // A storyboard controller's view is its scene's view nib.
         if _loadStoryboardView() { return }
         // UIKit's rule: a controller with a nib gets its view from the nib's
@@ -270,7 +300,10 @@ open class UIViewController: UIResponder, UIContentContainer {
     }
 
     /// Called exactly once, right after loadView().
-    open func viewDidLoad() {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewDidLoad() {}
 
     // MARK: Safe area (app-compat cluster — AutoLayout/UILayoutGuide.swift)
 
@@ -281,7 +314,7 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// Note the divergence documented in docs/KNOWN_GAPS.md: OpenUIKit's own
     /// nav/tab chrome does NOT set this yet — screens under a
     /// `UITabBarController` are still told their bottom inset explicitly.
-    public var additionalSafeAreaInsets: UIEdgeInsets = .zero {
+    public final var additionalSafeAreaInsets: UIEdgeInsets = .zero {
         didSet {
             guard additionalSafeAreaInsets != oldValue else { return }
             _view?._additionalSafeAreaInsets = additionalSafeAreaInsets
@@ -298,7 +331,7 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// reports `tabBarItem.title == "Library"`; `navigationItem.title`
     /// alone does not. Creating the item if it was nil matches the probe
     /// (`child.tabBarItem` is nil before the set, non-nil after).
-    public var title: String? {
+    public final var title: String? {
         didSet {
             _navigationItem?.title = title
             if let item = tabBarItem {
@@ -312,11 +345,11 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     // MARK: Navigation item (M13 — bars & appearance)
 
-    var _navigationItem: UINavigationItem?
+    final var _navigationItem: UINavigationItem?
     /// The bar configuration a parent `UINavigationController` displays for
     /// this controller. Created on first access, like UIKit, and seeded from
     /// `title`.
-    public var navigationItem: UINavigationItem {
+    public final var navigationItem: UINavigationItem {
         if let item = _navigationItem { return item }
         let item = UINavigationItem(title: title)
         _navigationItem = item
@@ -324,7 +357,7 @@ open class UIViewController: UIResponder, UIContentContainer {
     }
 
     /// Items for the parent navigation controller's toolbar.
-    public var toolbarItems: [UIBarButtonItem]? {
+    public final var toolbarItems: [UIBarButtonItem]? {
         didSet { navigationController?._toolbarItemsDidChange(self) }
     }
 
@@ -332,14 +365,17 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     /// Style used the next time this controller is PRESENTED.
     /// `.automatic` resolves to `.pageSheet` (the iOS default).
-    public var modalPresentationStyle: UIModalPresentationStyle = .automatic
+    public final var modalPresentationStyle: UIModalPresentationStyle = .automatic
 
     /// Transition requested for the next modal presentation. UIKit defaults
     /// this to `.coverVertical`; OpenUIKit retains the exact public state while
     /// its built-in presenter continues to use the measured transitions in
     /// UIPresentation.swift.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
     @available(iOS 3.0, *)
-    open var modalTransitionStyle: UIModalTransitionStyle = .coverVertical
+    open dynamic var modalTransitionStyle: UIModalTransitionStyle = .coverVertical
 
     /// UIKit's accessor. Creating it is what an app's
     /// `vc.popoverPresentationController?.sourceView = v` line does; the
@@ -351,6 +387,9 @@ open class UIViewController: UIResponder, UIContentContainer {
     @available(iOS 8.0, *)
     @available(tvOS, unavailable)
     @available(watchOS, unavailable)
+    ///
+    /// Keeps a Swift vtable slot (UIPopoverPresentationController is not an
+    /// Objective-C class here); apps override it, so it stays `open`.
     open var popoverPresentationController: UIPopoverPresentationController? {
         if let existing = _popoverController { return existing }
         let controller = UIPopoverPresentationController(
@@ -366,68 +405,91 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// interactive drag-to-dismiss (the sheet tracks the finger and always
     /// springs back), matching UIKit's intent; UIKit additionally stiffens
     /// the drag itself, which is not measured here.
-    public var isModalInPresentation = false
+    public final var isModalInPresentation = false
 
     /// Orientations this controller allows. UIKit's base implementation is
     /// device-family dependent: phones exclude upside-down portrait while
     /// iPads permit all four interface orientations.
+    ///
+    /// Keeps a Swift vtable slot (UIInterfaceOrientationMask is a Swift
+    /// option set, not Objective-C); OpenUIKit reads it through
+    /// `_supportedInterfaceOrientationsDispatch` (ObjCSubclassing.swift).
     open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        _baseSupportedInterfaceOrientations
+    }
+    final var _baseSupportedInterfaceOrientations: UIInterfaceOrientationMask {
         UIDevice.current.userInterfaceIdiom == .pad ? .all : .allButUpsideDown
     }
 
     /// UIKit's legacy rotation gate defaults to enabled. Modern hosts should
     /// primarily consult `supportedInterfaceOrientations`, but open-source
     /// controllers still commonly override both surfaces.
-    open var shouldAutorotate: Bool { true }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var shouldAutorotate: Bool { true }
 
     /// Foreground treatment requested for host-owned status-bar content.
     /// OpenUIKit itself draws no system status bar; hosts may consume this
     /// policy when presenting a controller.
-    open var preferredStatusBarStyle: UIStatusBarStyle { .default }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var preferredStatusBarStyle: UIStatusBarStyle { .default }
 
     /// The controller this one is currently presenting.
-    public internal(set) var presentedViewController: UIViewController?
+    public internal(set) final var presentedViewController: UIViewController?
     /// The controller that presented this one.
-    public internal(set) weak var presentingViewController: UIViewController?
+    public internal(set) weak final var presentingViewController: UIViewController?
 
     /// The object that owns this presentation's chrome and geometry while
     /// this controller is presented (M12 — UIPresentationController.swift).
     /// UIKit exposes it under the same name.
-    public internal(set) var presentationController: UIPresentationController? {
+    public internal(set) final var presentationController: UIPresentationController? {
         get { _presentationController }
         set { _presentationController = newValue }
     }
-    var _presentationController: UIPresentationController?
+    final var _presentationController: UIPresentationController?
     /// The in-flight modal transition's context (kept alive for the duration
     /// of the animation; a custom animator may hold onto it).
-    var _activeTransitionContext: UIViewControllerContextTransitioning?
+    final var _activeTransitionContext: UIViewControllerContextTransitioning?
     /// Public `transitionCoordinator` while a push/pop/present/dismiss is in
     /// flight. MEASURED animprobe, iPhone SE 2x / iOS 26.1.
-    var _transitionCoordinator: UIViewControllerTransitionCoordinator?
+    final var _transitionCoordinator: UIViewControllerTransitionCoordinator?
 
     /// UIKit returns a local coordinator while a presentation, navigation
     /// transition or size change is active, then asks the containing
     /// controller. MEASURED animprobe, iPhone SE 2x / iOS 26.1: non-nil on
     /// from, to and the navigation controller during an animated push
     /// through viewDidAppear, then nil.
+    ///
+    /// Keeps a Swift vtable slot (a Swift protocol type); read through
+    /// `_transitionCoordinatorDispatch` inside OpenUIKit.
     open var transitionCoordinator: UIViewControllerTransitionCoordinator? {
-        _transitionCoordinator ?? parent?.transitionCoordinator
+        _transitionCoordinator ?? parent?._transitionCoordinatorDispatch
     }
 
     /// App hook for custom present/dismiss animations and a custom
     /// presentation controller (M12 — UIViewControllerTransitioning.swift).
-    public weak var transitioningDelegate: UIViewControllerTransitioningDelegate?
+    public weak final var transitioningDelegate: UIViewControllerTransitioningDelegate?
 
     /// Lazily created by `sheetPresentationController` (UIPresentation.swift).
-    var _sheetController: UISheetPresentationController?
+    final var _sheetController: UISheetPresentationController?
     /// Lazily created by `popoverPresentationController`
     /// (UIAdaptivePresentation.swift).
-    var _popoverController: UIPopoverPresentationController?
+    final var _popoverController: UIPopoverPresentationController?
 
     /// The presentation controller `present(_:animated:)` uses when no
     /// transitioning delegate supplies one. Overridden by UIAlertController.
-    func _makeDefaultPresentationController(presenting: UIViewController)
+    ///
+    /// Vtable-free (OPENUIKIT_OBJC_SUBCLASSING): UIPresentationController and
+    /// the animator protocol are not Objective-C types, so the one override
+    /// (UIAlertController) is reached by type checks, here and below.
+    final func _makeDefaultPresentationController(presenting: UIViewController)
         -> UIPresentationController {
+        if let alert = self as? UIAlertController {
+            return alert._alertPresentationController(presenting: presenting)
+        }
         // Pad regular-width `.popover` stays a popover (Modal-ipad t9200).
         // Compact width still goes through the sheet (adaptedStyle).
         if _resolvedPresentationStyle == .popover {
@@ -450,16 +512,18 @@ open class UIViewController: UIResponder, UIContentContainer {
     }
 
     /// The built-in modal animators. Overridden by UIAlertController.
-    func _makeDefaultPresentAnimator() -> UIViewControllerAnimatedTransitioning {
-        _UIPageSheetAnimator(presenting: true)
+    final func _makeDefaultPresentAnimator() -> UIViewControllerAnimatedTransitioning {
+        if self is UIAlertController { return _UIAlertAnimator(presenting: true) }
+        return _UIPageSheetAnimator(presenting: true)
     }
-    func _makeDefaultDismissAnimator() -> UIViewControllerAnimatedTransitioning {
-        _UIPageSheetAnimator(presenting: false)
+    final func _makeDefaultDismissAnimator() -> UIViewControllerAnimatedTransitioning {
+        if self is UIAlertController { return _UIAlertAnimator(presenting: false) }
+        return _UIPageSheetAnimator(presenting: false)
     }
 
     /// True while a disappearance transition is in flight (the interactive
     /// dismissal teardown uses it to keep will/did appearance calls paired).
-    var _isDisappearing: Bool { _appearanceState == .disappearing }
+    final var _isDisappearing: Bool { _appearanceState == .disappearing }
 
     // MARK: Content scroll view (M10 large titles)
 
@@ -467,9 +531,9 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// large-title expansion/collapse (analog of UIKit's
     /// `setContentScrollView(_:for:)`). Explicit binding only — there is no
     /// automatic detection.
-    public internal(set) weak var _contentScrollView: UIScrollView?
+    public internal(set) weak final var _contentScrollView: UIScrollView?
 
-    public func setContentScrollView(_ scrollView: UIScrollView?) {
+    public final func setContentScrollView(_ scrollView: UIScrollView?) {
         _contentScrollView = scrollView
         navigationController?._contentScrollViewDidChange(self)
     }
@@ -479,16 +543,16 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// The item representing this controller in a parent UITabBarController.
     /// Lazily defaulted from `title` when the controller joins a tab
     /// controller without one.
-    public var tabBarItem: UITabBarItem?
+    public final var tabBarItem: UITabBarItem?
 
     /// iOS 18: the `UITab` whose provider produced this controller. MEASURED
     /// (signallastrowsprobe) set as soon as the provider returns, before the
     /// tab joins a controller; nil for legacy `viewControllers` children.
-    public var tab: UITab? { _tab }
-    weak var _tab: UITab?
+    public final var tab: UITab? { _tab }
+    weak final var _tab: UITab?
 
     /// Nearest ancestor tab bar controller (UIKit semantics).
-    public var tabBarController: UITabBarController? {
+    public final var tabBarController: UITabBarController? {
         var p = parent
         while let cur = p {
             if let tab = cur as? UITabBarController { return tab }
@@ -499,10 +563,22 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     // MARK: Appearance callbacks
 
-    open func viewWillAppear(_ animated: Bool) {}
-    open func viewDidAppear(_ animated: Bool) {}
-    open func viewWillDisappear(_ animated: Bool) {}
-    open func viewDidDisappear(_ animated: Bool) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewWillAppear(_ animated: Bool) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewDidAppear(_ animated: Bool) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewWillDisappear(_ animated: Bool) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewDidDisappear(_ animated: Bool) {}
 
     // MARK: Layout callbacks (app-compat, 2026-08-28)
     //
@@ -513,14 +589,23 @@ open class UIViewController: UIResponder, UIContentContainer {
     // rather than being declared and silent, which would be the failure this
     // whole surface exists to avoid.
 
-    open func viewWillLayoutSubviews() {}
-    open func viewDidLayoutSubviews() {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewWillLayoutSubviews() {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewDidLayoutSubviews() {}
 
     /// The controller's half of the update-constraints pass. Runs before
     /// layout, once per pass, when something has called
     /// `view.setNeedsUpdateConstraints()` — see `UIView.updateConstraints()`.
     /// An override must call `super`, as in UIKit.
-    open func updateViewConstraints() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func updateViewConstraints() {
         _view?.updateConstraints()
     }
 
@@ -532,10 +617,13 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// the parent through `preferredContentSizeDidChange(forChildContentContainer:)`,
     /// which is the part app code observes. `.zero` means "no preference",
     /// as in UIKit.
-    open var preferredContentSize: CGSize = .zero {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var preferredContentSize: CGSize = .zero {
         didSet {
             guard preferredContentSize != oldValue else { return }
-            parent?.preferredContentSizeDidChange(forChildContentContainer: self)
+            parent?._preferredContentSizeDidChangeDispatch(forChildContentContainer: self)
         }
     }
 
@@ -566,15 +654,23 @@ open class UIViewController: UIResponder, UIContentContainer {
         to size: CGSize,
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
+        _viewWillTransitionBase(to: size, with: coordinator)
+    }
+
+    /// UIViewController's own `viewWillTransition(to:with:)` body.
+    final func _viewWillTransitionBase(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
         // UIKit's base implementation forwards top-down through containment.
         // A custom container can override `size(forChild…:)`; if the child is
         // already at that size UIKit suppresses the redundant callback.
         for child in children {
-            let childSize = self.size(
+            let childSize = _sizeDispatch(
                 forChildContentContainer: child,
                 withParentContainerSize: size)
             if child.viewIfLoaded?.bounds.size != childSize {
-                child.viewWillTransition(to: childSize, with: coordinator)
+                child._viewWillTransitionDispatch(to: childSize, with: coordinator)
             }
         }
     }
@@ -585,21 +681,32 @@ open class UIViewController: UIResponder, UIContentContainer {
         to newCollection: UITraitCollection,
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
+        _willTransitionBase(to: newCollection, with: coordinator)
+    }
+
+    /// UIViewController's own `willTransition(to:with:)` body.
+    final func _willTransitionBase(
+        to newCollection: UITraitCollection,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
         for child in children {
-            child.willTransition(to: newCollection, with: coordinator)
+            child._willTransitionDispatch(to: newCollection, with: coordinator)
         }
     }
 
     /// Legacy iOS 8–16 trait-change override still used by focus-ios. Hosts
     /// deliver it through `UIView._traitsDidChange(previous:)`; the modern
     /// registration callbacks use that same delivery path.
-    open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {}
 
     /// A controller inherits traits from its loaded root view, then its
     /// containing controller. Before either relationship exists, the main
     /// screen completes any process-wide unspecified size axes so view-load
     /// code observes the same portable environment as a detached UIView.
-    public var traitCollection: UITraitCollection {
+    public final var traitCollection: UITraitCollection {
         viewIfLoaded?.traitCollection
             ?? parent?.traitCollection
             ?? UIScreen.main._currentTraitsResolvingSizeClasses
@@ -608,19 +715,22 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// Which edges a full-screen child extends under. Stored; OpenUIKit's
     /// containers inset their children explicitly rather than consulting it
     /// (docs/KNOWN_GAPS.md, "App compatibility").
-    open var edgesForExtendedLayout: UIRectEdge = .all
-    open var extendedLayoutIncludesOpaqueBars = false
+    public final var edgesForExtendedLayout: UIRectEdge = .all
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var extendedLayoutIncludesOpaqueBars = false
 
     enum AppearanceState { case disappeared, appearing, appeared, disappearing }
-    var _appearanceState: AppearanceState = .disappeared
-    var _appearanceAnimated = false
+    final var _appearanceState: AppearanceState = .disappeared
+    final var _appearanceAnimated = false
 
     /// Container-VC primitive (public in UIKit): start an appearance
     /// transition. Loads the view and calls viewWillAppear/viewWillDisappear.
     /// Idempotent while a transition in the same direction is in flight;
     /// reversing an in-flight transition (interactive-pop cancel) issues the
     /// opposite "will" callback, like UIKit.
-    public func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
+    public final func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
         if isAppearing {
             guard _appearanceState != .appeared, _appearanceState != .appearing
             else { return }
@@ -645,7 +755,7 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     /// Finish the in-flight appearance transition: calls viewDidAppear /
     /// viewDidDisappear to match the pending "will" callback.
-    public func endAppearanceTransition() {
+    public final func endAppearanceTransition() {
         switch _appearanceState {
         case .appearing:
             // Animated collection returns retain selection during appearance,
@@ -665,13 +775,13 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     // MARK: Containment
 
-    public private(set) var children: [UIViewController] = []
-    public internal(set) weak var parent: UIViewController?
+    public private(set) final var children: [UIViewController] = []
+    public internal(set) weak final var parent: UIViewController?
 
     /// UIKit: automatically calls child.willMove(toParent: self). The caller
     /// (container) calls child.didMove(toParent:) once the child's view is
     /// installed.
-    public func addChild(_ child: UIViewController) {
+    public final func addChild(_ child: UIViewController) {
         guard child.parent !== self else { return }
         child.removeFromParent()
         child.willMove(toParent: self)
@@ -681,18 +791,24 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     /// UIKit: the container calls willMove(toParent: nil) first; this method
     /// then automatically calls didMove(toParent: nil).
-    public func removeFromParent() {
+    public final func removeFromParent() {
         guard let p = parent else { return }
         p.children.removeAll { $0 === self }
         parent = nil
         didMove(toParent: nil)
     }
 
-    open func willMove(toParent parent: UIViewController?) {}
-    open func didMove(toParent parent: UIViewController?) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(willMoveToParentViewController:)
+#endif
+    open dynamic func willMove(toParent parent: UIViewController?) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(didMoveToParentViewController:)
+#endif
+    open dynamic func didMove(toParent parent: UIViewController?) {}
 
     /// Nearest ancestor navigation controller (UIKit semantics).
-    public var navigationController: UINavigationController? {
+    public final var navigationController: UINavigationController? {
         var p = parent
         while let cur = p {
             if let nav = cur as? UINavigationController { return nav }
@@ -704,7 +820,10 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// Split-view detail routing; standalone controllers use presentation.
     /// The split-specific delegate and column behavior is measured in
     /// Tools/oracle2/splitviewprobe (iOS 26.1, iPad A16 and SE).
-    open func showDetailViewController(_ vc: UIViewController, sender: Any?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func showDetailViewController(_ vc: UIViewController, sender: Any?) {
         if let split = splitViewController {
             split.showDetailViewController(vc, sender: sender)
         } else {
@@ -714,7 +833,10 @@ open class UIViewController: UIResponder, UIContentContainer {
 
     /// Display a controller using the receiver's containing navigation stack
     /// when one exists, otherwise use the ordinary modal presentation path.
-    open func show(_ vc: UIViewController, sender: Any?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(showViewController:sender:)
+#endif
+    open dynamic func show(_ vc: UIViewController, sender: Any?) {
         _ = sender
         if let nav = self as? UINavigationController ?? navigationController {
             nav.pushViewController(vc, animated: true)

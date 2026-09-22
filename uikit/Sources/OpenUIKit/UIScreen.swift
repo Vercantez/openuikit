@@ -61,9 +61,8 @@ public final class UIScreen: NSObject {
     /// otherwise the host surface supplies OpenUIKit's documented 600 pt
     /// per-axis approximation. This read does not mutate process-wide traits.
     public var traitCollection: UITraitCollection {
-        var traits = _currentTraitsResolvingSizeClasses
-        traits.displayScale = scale
-        return traits
+        let scale = self.scale
+        return _currentTraitsResolvingSizeClasses._with { $0.displayScale = scale }
     }
 
     /// Complete only the axes missing from the process environment. Detached
@@ -71,9 +70,7 @@ public final class UIScreen: NSObject {
     /// Dynamic Type category; UIScreen.traitCollection separately substitutes
     /// the physical screen scale above.
     var _currentTraitsResolvingSizeClasses: UITraitCollection {
-        var traits = UITraitCollection.current
-        traits._resolveUnspecifiedSizeClasses(for: bounds.size)
-        return traits
+        UITraitCollection.current._resolvingUnspecifiedSizeClasses(for: bounds.size)
     }
 
     init(bounds: CGRect, scale: CGFloat) {
