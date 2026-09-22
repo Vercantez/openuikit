@@ -43,6 +43,9 @@ timeout 180 xcrun simctl boot "$DEV"
 timeout 180 xcrun simctl bootstatus "$DEV" -b >/dev/null 2>&1
 timeout 60 xcrun simctl spawn "$DEV" "$EXE" > "$WORK/probe.txt"
 head -1 "$WORK/probe.txt"
+# attrstring-unify: on the iOS triple (no AppKit) the class is UIKit's NSTextStorage
+# and the keys are declared by OpenUIKit on Foundation's NSAttributedString.
+head -1 "$WORK/probe.txt" | grep -q "textstorage=NSTextStorage font-key=NSFont"
 grep -qx 'IOS_TARGET_PROBE_OK' "$WORK/probe.txt"
 diff <(tail -n +2 "$UIKIT/Tools/oracle2/objcsubclassprobe/transcript-ios26.1.txt") \
      <(sed -e 1d -e '/^IOS_TARGET_PROBE_OK$/d' "$WORK/probe.txt")

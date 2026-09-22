@@ -34,7 +34,7 @@ let environment = "device"
 
 @MainActor func runProbe() {
     _ = stringDrawingCompiles()
-    print("# iostarget-probe os=iOS environment=\(environment) UIView=\(String(reflecting: UIView.self)) runtime-name=\(NSStringFromClass(UIView.self))")
+    print("# iostarget-probe os=iOS environment=\(environment) UIView=\(String(reflecting: UIView.self)) runtime-name=\(NSStringFromClass(UIView.self)) textstorage=\(NSStringFromClass(NSTextStorage.self)) font-key=\(NSAttributedString.Key.font.rawValue)")
     _ = ProbeViewController()
     print("## superclasses")
     for line in OUKSuperclassFacts() { print(line) }
