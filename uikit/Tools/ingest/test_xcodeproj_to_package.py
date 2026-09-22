@@ -182,9 +182,11 @@ class MiniAppFixtureTests(unittest.TestCase):
         )
         self.assertNotIn('.product(name: "SimplenoteSearch"', text)
 
-    def test_mobilecoreservices_import_links_the_port_on_every_platform(self) -> None:
+    def test_mobilecoreservices_import_links_the_port_where_the_sdk_has_none(self) -> None:
         # Simplenote 9b1bb17 CSSearchable+Helpers.swift imports it; macOS has
-        # no SDK module of that name (simplenote-objc-core).
+        # no SDK module of that name (simplenote-objc-core). The iOS SDK has
+        # the real one (kUTType*, UTTypeCreatePreferredIdentifierForTag; the
+        # port's shadowed it: ios-target-route, Kickstarter KsApi MimeType).
         row = ingest.classify_module("MobileCoreServices")
         self.assertEqual(row["port"], "MobileCoreServices")
         self.assertNotIn("port_platforms", row)
@@ -193,7 +195,8 @@ class MiniAppFixtureTests(unittest.TestCase):
             out = Path(tmp) / "pkg"
             ingest.emit_tree(self.graph, self.manifest, out, UIKIT)
             text = (out / "Package.swift").read_text()
-        self.assertIn('.product(name: "MobileCoreServices", package: "OpenUIKit")', text)
+        self.assertIn('.product(name: "MobileCoreServices", package: "OpenUIKit", '
+                      'condition: .when(platforms: [.macOS, .linux]))', text)
 
     def test_emit_package_layout(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -42,6 +42,10 @@ import shutil
 import sys
 
 ROOTS = ("corpus", "checkouts", "openuikit")
+# Port products whose Apple module the curated iOS SDK keeps
+# (Tools/ingest/ios_target_sdk.py): linked off iOS only, so the iOS triple
+# sees Apple's declarations. Same set as xcodeproj_to_package.py.
+IOS_SDK_SUPPLIED_PRODUCTS = {"MobileCoreServices"}
 
 
 def sha256(path: str) -> str:
@@ -61,7 +65,9 @@ def render_target(t: dict, shims: set[str]) -> str:
     for d in t.get("deps", []):
         deps.append(json.dumps(d))
     for p in t.get("openuikit", []):
-        deps.append(f'.product(name: {json.dumps(p)}, package: "OpenUIKit")')
+        condition = (", condition: .when(platforms: [.macOS, .linux])"
+                     if p in IOS_SDK_SUPPLIED_PRODUCTS else "")
+        deps.append(f'.product(name: {json.dumps(p)}, package: "OpenUIKit"{condition})')
     lines = [
         "        .target(",
         f"            name: {json.dumps(t['name'])},",

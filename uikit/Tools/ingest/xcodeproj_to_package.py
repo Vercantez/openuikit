@@ -387,8 +387,17 @@ PORTED_PRODUCTS = {
     "LinkPresentation": "LinkPresentation",
     "PhotosUI": "PhotosUI",
 }
-# Ported products emitted only when the app demands them, on every platform.
+# Ported products emitted only when the app demands them, where the SDK has no
+# module of that name (macOS, Linux). The iOS SDK has the real
+# MobileCoreServices (kUTType*, UTTypeCreatePreferredIdentifierForTag), which
+# the port's product would shadow (MEASURED ios-target-route: Kickstarter
+# KsApi MimeType.swift, 8 errors on the iOS triple with the port's module).
 DEMANDED_ALL_PLATFORM_PRODUCTS = {"MobileCoreServices"}
+# Port products whose Apple module the curated iOS SDK keeps (not UI-coupled):
+# on the iOS triple the app gets Apple's iOS declarations, as on a device.
+# Mirrored by spm_app_chain.IOS_SDK_SUPPLIED_PRODUCTS; test_ios_target checks
+# both against the live SDK scan.
+IOS_SDK_SUPPLIED_PRODUCTS = {"MobileCoreServices"}
 
 # Route (b) iOS target (docs/agent_reports/ios-target-route.md). The app
 # package builds for `arm64-apple-ios26.1-simulator` against the curated SDK
@@ -1791,7 +1800,9 @@ def emit_package_swift(
     # resolves a product name before evaluating its platform condition).
     demanded = {r["name"] for r in manifest["spm"] + manifest["imports"]}
     for name in sorted(DEMANDED_ALL_PLATFORM_PRODUCTS & demanded):
-        products.append(f'                .product(name: "{name}", package: "OpenUIKit")')
+        condition = (', condition: .when(platforms: [.macOS, .linux])'
+                     if name in IOS_SDK_SUPPLIED_PRODUCTS else '')
+        products.append(f'                .product(name: "{name}", package: "OpenUIKit"{condition})')
     static_ios = {"IntentsUI", "PassKit", "SafariServices"}
     for name in sorted((IOS_LINKED_PORT_PRODUCTS - static_ios) & demanded):
         products.append(

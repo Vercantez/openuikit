@@ -156,6 +156,13 @@ class CuratedSDKLiveTests(unittest.TestCase):
             self.assertIn(name, self.graph, name)
             self.assertNotIn(name, self.removed, name)
 
+    def test_sdk_supplied_products_exist_in_the_curated_sdk(self) -> None:
+        import spm_app_chain
+        self.assertEqual(spm_app_chain.IOS_SDK_SUPPLIED_PRODUCTS, ingest.IOS_SDK_SUPPLIED_PRODUCTS)
+        for name in ingest.IOS_SDK_SUPPLIED_PRODUCTS:
+            self.assertIn(name, self.graph, name)
+            self.assertNotIn(name, self.removed, name)
+
     def test_every_removed_framework_the_port_supplies_is_linked_on_ios(self) -> None:
         ported_and_removed = {
             name for name, product in ingest.PORTED_PRODUCTS.items()
@@ -221,6 +228,23 @@ class ChainPlumbingTests(unittest.TestCase):
             self.assertEqual(p.returncode, 0, p.stderr)
             manifest = (root / "out/Package.swift").read_text()
         self.assertIn(ingest.IOS_PLATFORM_FLOOR, manifest)
+
+    def test_chain_links_sdk_supplied_products_only_off_ios(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "corpus/App").mkdir(parents=True)
+            (root / "checkouts").mkdir()
+            spec = root / "chain.json"
+            spec.write_text(json.dumps({"name": "Chain", "targets": [
+                {"name": "App", "root": "corpus", "path": "App", "openuikit": ["UIKit", "MobileCoreServices"]}]}))
+            subprocess.run([sys.executable, str(HERE / "spm_app_chain.py"), str(spec),
+                            "--out", str(root / "out"), "--corpus", str(root / "corpus"),
+                            "--checkouts", str(root / "checkouts"), "--openuikit", str(UIKIT)],
+                           check=True, capture_output=True)
+            manifest = (root / "out/Package.swift").read_text()
+        self.assertIn('.product(name: "UIKit", package: "OpenUIKit")', manifest)
+        self.assertIn('.product(name: "MobileCoreServices", package: "OpenUIKit", '
+                      'condition: .when(platforms: [.macOS, .linux]))', manifest)
 
     def test_census_passes_the_ios_build_flags(self) -> None:
         import chain_census
