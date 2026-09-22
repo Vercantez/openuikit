@@ -312,7 +312,24 @@ open class UILabel: UIView {
         return candidate
     }
 
+    /// UIKit's drawing hook. iOS 26.1 (iososslibraryprobe
+    /// `label.*.drawTextRects`): rendering a label calls `drawText(in:)`
+    /// exactly once with the label's bounds; a subclass (ios-oss
+    /// PaddingLabel) insets the rect and calls super, and the text is laid
+    /// out in the rect it receives.
     open override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        UIGraphicsPushContext(canvas)
+        drawText(in: bounds)
+        UIGraphicsPopContext()
+    }
+
+    /// Draws the label's text in `rect` into the current context.
+    open func drawText(in rect: CGRect) {
+        guard let canvas = UIGraphicsGetCurrentContext() else { return }
+        _drawText(in: canvas, bounds: rect)
+    }
+
+    func _drawText(in canvas: Canvas, bounds: CGRect) {
         if let t = attributedLayoutText {
             let lines = attributedDrawLines(t, width: bounds.width)
             canvas.save()

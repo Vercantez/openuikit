@@ -21,27 +21,34 @@
 // test asserting `accessibilityLabel` needs), and nothing in the renderer
 // consults them. Stated as a divergence in docs/KNOWN_GAPS.md.
 
+/// Raw values MEASURED on iPhone 16 / iOS 26.1 (Tools/oracle2/
+/// swiftuia11yprobe `uikit.*`, ios-oss-launch3). They are not the sequential
+/// bits the declaration order suggests: header is 1 << 16, searchField
+/// 1 << 10, image 1 << 2 … (the port used 1 << n in declaration order until
+/// this pass, so only `button` and `link` matched).
 public struct UIAccessibilityTraits: OptionSet, Sendable {
     public let rawValue: UInt64
     public init(rawValue: UInt64) { self.rawValue = rawValue }
     public static let none = UIAccessibilityTraits([])
-    public static let button = UIAccessibilityTraits(rawValue: 1 << 0)
-    public static let link = UIAccessibilityTraits(rawValue: 1 << 1)
-    public static let header = UIAccessibilityTraits(rawValue: 1 << 2)
-    public static let searchField = UIAccessibilityTraits(rawValue: 1 << 3)
-    public static let image = UIAccessibilityTraits(rawValue: 1 << 4)
-    public static let selected = UIAccessibilityTraits(rawValue: 1 << 5)
-    public static let playsSound = UIAccessibilityTraits(rawValue: 1 << 6)
-    public static let keyboardKey = UIAccessibilityTraits(rawValue: 1 << 7)
-    public static let staticText = UIAccessibilityTraits(rawValue: 1 << 8)
-    public static let summaryElement = UIAccessibilityTraits(rawValue: 1 << 9)
-    public static let notEnabled = UIAccessibilityTraits(rawValue: 1 << 10)
-    public static let updatesFrequently = UIAccessibilityTraits(rawValue: 1 << 11)
-    public static let startsMediaSession = UIAccessibilityTraits(rawValue: 1 << 12)
-    public static let adjustable = UIAccessibilityTraits(rawValue: 1 << 13)
-    public static let allowsDirectInteraction = UIAccessibilityTraits(rawValue: 1 << 14)
-    public static let causesPageTurn = UIAccessibilityTraits(rawValue: 1 << 15)
-    public static let tabBar = UIAccessibilityTraits(rawValue: 1 << 16)
+    public static let button = UIAccessibilityTraits(rawValue: 1)
+    public static let link = UIAccessibilityTraits(rawValue: 2)
+    public static let image = UIAccessibilityTraits(rawValue: 4)
+    public static let selected = UIAccessibilityTraits(rawValue: 8)
+    public static let playsSound = UIAccessibilityTraits(rawValue: 16)
+    public static let keyboardKey = UIAccessibilityTraits(rawValue: 32)
+    public static let staticText = UIAccessibilityTraits(rawValue: 64)
+    public static let summaryElement = UIAccessibilityTraits(rawValue: 128)
+    public static let notEnabled = UIAccessibilityTraits(rawValue: 256)
+    public static let updatesFrequently = UIAccessibilityTraits(rawValue: 512)
+    public static let searchField = UIAccessibilityTraits(rawValue: 1024)
+    public static let startsMediaSession = UIAccessibilityTraits(rawValue: 2048)
+    public static let adjustable = UIAccessibilityTraits(rawValue: 4096)
+    public static let allowsDirectInteraction = UIAccessibilityTraits(rawValue: 8192)
+    public static let causesPageTurn = UIAccessibilityTraits(rawValue: 16384)
+    public static let tabBar = UIAccessibilityTraits(rawValue: 32768)
+    public static let header = UIAccessibilityTraits(rawValue: 65536)
+    public static let supportsZoom = UIAccessibilityTraits(rawValue: 70_368_744_177_664)
+    public static let toggleButton = UIAccessibilityTraits(rawValue: 9_007_199_254_740_992)
 }
 
 // The nine NSObject-level attributes moved to NSObjectAccessibility.swift,

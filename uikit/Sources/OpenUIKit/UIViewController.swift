@@ -586,6 +586,14 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// containers inset their children explicitly rather than consulting it
     /// (docs/KNOWN_GAPS.md, "App compatibility").
     open var edgesForExtendedLayout: UIRectEdge = .all
+
+    /// UIKit's `shouldAutomaticallyForwardAppearanceMethods` (iOS 26.1
+    /// default true — iososslibraryprobe). A custom container that returns
+    /// false forwards with begin/endAppearanceTransition itself (ios-oss
+    /// PagedContainerViewController). OpenUIKit's built-in containers drive
+    /// their children explicitly and custom containers are not auto-forwarded
+    /// either way, so the value is read by nothing yet (docs/KNOWN_GAPS.md).
+    open var shouldAutomaticallyForwardAppearanceMethods: Bool { true }
     open var extendedLayoutIncludesOpaqueBars = false
 
     enum AppearanceState { case disappeared, appearing, appeared, disappearing }
