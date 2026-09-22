@@ -137,5 +137,13 @@ what the frame means, so it is left as a separate decision.
 
 ## Gate
 
-See the final status in the handback. The run was
-`CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/probe-keyboard-capture`.
+`CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/probe-keyboard-capture`
+passed with rc=0 ("checks passed (CHECK_ONLY)"), and the verdict was stamped
+for reuse. The two earlier runs failed for these reasons:
+
+1. Tabs base goldens were stale. Fixed by refreshing them.
+2. Forms base goldens had no keyboard, so its rows dropped to 62. Fixed by
+   refreshing them.
+
+No simulator was booted by this work: OpenUIKit-2x and OpenUIKit-iPad-A16
+were already booted and shared, so they were left running.
