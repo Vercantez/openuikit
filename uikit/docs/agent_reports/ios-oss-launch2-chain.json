@@ -2,7 +2,7 @@
  "name": "KickstarterChain",
  "app": "kickstarter/ios-oss",
  "corpus_revision": "2f2dabb40b74dd1e7a7511a0dedb47d967ab08a0",
- "note": "Targets point at unchanged upstream directories. 'checkouts' is the SwiftPM checkout dir Xcode resolved from the app's own Package.resolved (41 pins, revisions verified equal). Order is dependency order; the census stops at the first module that does not compile. Pass 2: macos_deployment 15.0 is the macOS release paired with the app packages' iOS 18 deployment (KDS/Library/Kickstarter-Framework Package.swift); KsApi gains the MobileCoreServices product and the generated Secrets.swift (Makefile secrets target, public example, isOSS = true as in the oracle build).",
+ "note": "Targets point at unchanged upstream directories. 'checkouts' is the SwiftPM checkout dir Xcode resolved from the app's own Package.resolved (41 pins, revisions verified equal). Order is dependency order; the census stops at the first module that does not compile. Pass 2: macos_deployment 15.0 is the macOS release paired with the app packages' iOS 18 deployment (KDS/Library/Kickstarter-Framework Package.swift); KsApi gains the MobileCoreServices product and the generated Secrets.swift (Makefile secrets target, public example, isOSS = true as in the oracle build). Pass 2 service shims are local targets over Sources/KickstarterServiceShims; the chain depends on a filtered view of the OpenUIKit manifest without Eidolon's Stripe shim target (and its product / test dependency), because Kickstarter's own Stripe module would otherwise collide with Eidolon's Stripe shim target (SwiftPM target names are graph-unique).",
  "shims": [
   {
    "name": "Statsig",
@@ -10,6 +10,171 @@
    "path": "Sources/KickstarterServiceShims/Statsig",
    "deps": [],
    "openuikit": []
+  },
+  {
+   "name": "FirebaseCore",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/FirebaseCore",
+   "deps": [],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "FirebaseAnalytics",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/FirebaseAnalytics",
+   "deps": [
+    "FirebaseCore"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "FirebaseCrashlytics",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/FirebaseCrashlytics",
+   "deps": [
+    "FirebaseCore"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "FirebaseRemoteConfig",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/FirebaseRemoteConfig",
+   "deps": [
+    "FirebaseCore"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Firebase",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/Firebase",
+   "deps": [
+    "FirebaseCore",
+    "FirebaseAnalytics",
+    "FirebaseCrashlytics",
+    "FirebaseRemoteConfig"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "FacebookCore",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/FacebookCore",
+   "deps": [],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "FacebookLogin",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/FacebookLogin",
+   "deps": [
+    "FacebookCore"
+   ],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "StripePayments",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/StripePayments",
+   "deps": [],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "StripeApplePay",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/StripeApplePay",
+   "deps": [
+    "StripePayments"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Stripe",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/Stripe",
+   "deps": [
+    "StripePayments",
+    "StripeApplePay"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "StripePaymentSheet",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/StripePaymentSheet",
+   "deps": [
+    "StripePayments",
+    "StripeApplePay"
+   ],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "BrazeKit",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/BrazeKit",
+   "deps": [],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "BrazeUI",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/BrazeUI",
+   "deps": [
+    "BrazeKit"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Segment",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/Segment",
+   "deps": [],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "SegmentBrazeUI",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/SegmentBrazeUI",
+   "deps": [
+    "Segment",
+    "BrazeKit",
+    "BrazeUI"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "AlamofireImage",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/AlamofireImage",
+   "deps": [],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
   }
  ],
  "targets": [
@@ -173,19 +338,36 @@
   },
   {
    "name": "Kingfisher",
-   "root": "checkouts",
-   "path": "Kingfisher/Sources",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/Kingfisher",
    "deps": [],
    "openuikit": [
     "UIKit",
     "SwiftUI"
    ],
-   "exclude": [
-    "PrivacyInfo.xcprivacy",
-    "Documentation.docc",
-    "Info.plist"
+   "swift_language_mode": "5",
+   "note": "fail-closed stand-in: the pinned Kingfisher 8.5.0 selects its AppKit branch with #if os(macOS)"
+  },
+  {
+   "name": "KingfisherWebP",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/KingfisherWebP",
+   "deps": [
+    "Kingfisher"
    ],
+   "openuikit": [],
    "swift_language_mode": "5"
+  },
+  {
+   "name": "Lottie",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/Lottie",
+   "deps": [],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5",
+   "note": "fail-closed stand-in: the pinned lottie-ios 4.5.1 stops at 169 errors against OpenUIKit (CALayer/CAAnimation surface); census-5 in ios-oss-launch2-walls.md"
   },
   {
    "name": "ServerDrivenUI",
@@ -199,7 +381,8 @@
    ],
    "openuikit": [
     "UIKit",
-    "SwiftUI"
+    "SwiftUI",
+    "WebKit"
    ],
    "swift_language_mode": "5"
   },
@@ -219,11 +402,24 @@
     "Apollo",
     "GraphAPI",
     "SwiftSoup",
-    "Kingfisher"
+    "Kingfisher",
+    "FacebookCore",
+    "FacebookLogin",
+    "FirebaseCrashlytics",
+    "FirebaseRemoteConfig",
+    "StripePaymentSheet",
+    "Stripe",
+    "Segment",
+    "SegmentBrazeUI",
+    "Lottie"
    ],
    "openuikit": [
     "UIKit",
-    "SwiftUI"
+    "SwiftUI",
+    "PassKit",
+    "WebKit",
+    "MessageUI",
+    "SafariServices"
    ],
    "resources": [
     "Resources"
@@ -246,11 +442,22 @@
     "ReactiveExtensions",
     "Apollo",
     "GraphAPI",
-    "Kingfisher"
+    "Kingfisher",
+    "AlamofireImage",
+    "KingfisherWebP",
+    "FirebaseCrashlytics",
+    "StripePaymentSheet",
+    "Stripe",
+    "FacebookLogin",
+    "Lottie"
    ],
    "openuikit": [
     "UIKit",
-    "SwiftUI"
+    "SwiftUI",
+    "PassKit",
+    "WebKit",
+    "MessageUI",
+    "SafariServices"
    ],
    "resources": [
     "Resources"
@@ -269,7 +476,12 @@
     "Experimentation",
     "Prelude",
     "ReactiveSwift",
-    "ReactiveExtensions"
+    "ReactiveExtensions",
+    "Firebase",
+    "BrazeKit",
+    "BrazeUI",
+    "Segment",
+    "SegmentBrazeUI"
    ],
    "openuikit": [
     "UIKit",
@@ -296,5 +508,19 @@
    "swift_language_mode": "5"
   }
  ],
- "macos_deployment": "15.0"
+ "macos_deployment": "15.0",
+ "openuikit_manifest_filter": [
+  [
+   "let eidolonServiceProducts: [Product] = [\"Keys\", \"ARAnalytics\", \"Stripe\", \"EidolonLaunchCompat\"]",
+   "let eidolonServiceProducts: [Product] = [\"Keys\", \"ARAnalytics\", \"EidolonLaunchCompat\"]"
+  ],
+  [
+   "    .target(name: \"Stripe\", path: \"Sources/EidolonServiceShims/Stripe\"),\n",
+   ""
+  ],
+  [
+   "dependencies: [\"Keys\", \"ARAnalytics\", \"Stripe\", \"EidolonLaunchCompat\"],",
+   "dependencies: [\"Keys\", \"ARAnalytics\", \"EidolonLaunchCompat\"],"
+  ]
+ ]
 }
