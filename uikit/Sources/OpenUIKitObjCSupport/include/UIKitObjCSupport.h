@@ -232,6 +232,24 @@ typedef NS_OPTIONS(NSUInteger, NSTextStorageEditActions) {
     NSTextStorageEditedAttributes = (1 << 0), NSTextStorageEditedCharacters = (1 << 1),
 } NS_SWIFT_NAME(NSTextStorageEditActionsObjC);
 
+#pragma mark - Font weights (UIFontDescriptor.h)
+
+/* `typedef CGFloat UIFontWeight NS_TYPED_EXTENSIBLE_ENUM` (UIFontDescriptor.h).
+ * Values: iOS 26.1, objcsurfaceprobe `## font` (regular 0, medium 0.23,
+ * semibold 0.3, bold 0.4, heavy 0.56) and fontdesc.weight.raws
+ * (UIFontDescriptor.swift: ultraLight -0.8, thin -0.6, light -0.4,
+ * black 0.62). */
+typedef CGFloat UIFontWeight NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UIFontWeightObjC);
+extern const UIFontWeight UIFontWeightUltraLight;
+extern const UIFontWeight UIFontWeightThin;
+extern const UIFontWeight UIFontWeightLight;
+extern const UIFontWeight UIFontWeightRegular;
+extern const UIFontWeight UIFontWeightMedium;
+extern const UIFontWeight UIFontWeightSemibold;
+extern const UIFontWeight UIFontWeightBold;
+extern const UIFontWeight UIFontWeightHeavy;
+extern const UIFontWeight UIFontWeightBlack;
+
 #pragma mark - Typed strings, keys and notification names
 
 typedef NSString * UIApplicationLaunchOptionsKey NS_TYPED_ENUM NS_SWIFT_NAME(UIApplicationLaunchOptionsKeyObjC);

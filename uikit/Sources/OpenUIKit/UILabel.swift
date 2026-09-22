@@ -295,8 +295,7 @@ open class UILabel: UIView {
         let minimum = Swift.min(Swift.max(minimumScaleFactor, 0), 1)
         var lower = Swift.max(_font.pointSize * minimum, 0.1)
         var upper = _font.pointSize
-        var candidate = _font
-        candidate.pointSize = lower
+        var candidate = _font._withPointSize(lower)
 
         // If even the minimum is too wide, use it and let the existing
         // truncation/clip path handle the remaining overflow.
@@ -309,15 +308,14 @@ open class UILabel: UIView {
         // required scale is above the minimum is never needlessly ellipsized.
         for _ in 0..<28 {
             let mid = (lower + upper) / 2
-            var probe = _font
-            probe.pointSize = mid
+            let probe = _font._withPointSize(mid)
             if FontEngine.measure(text, font: probe) <= width + 1e-6 {
                 lower = mid
             } else {
                 upper = mid
             }
         }
-        candidate.pointSize = lower
+        candidate = _font._withPointSize(lower)
         return candidate
     }
 

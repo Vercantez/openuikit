@@ -965,6 +965,25 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSubclassingTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // The Objective-C surface of UIFont / CALayer / CGColorRef
+    // (docs/agent_reports/objc-surface.md). The scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcsurfaceprobe/run.sh) and the
+    // machorun guest probe compiles. CALayer keeps its mangled runtime name
+    // on the macOS host (QuartzCore's CALayer is in the process), so its
+    // generated interface is SWIFT_CLASS; this fixture lifts
+    // objc_subclassing_restricted to exercise the vtable-free CALayer from
+    // an Objective-C subclass (the guest names it CALayer and needs no lift).
+    .target(name: "OpenUIKitObjCSurfaceFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcsurfaceprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), .unsafeFlags([
+                "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+                "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+            ])]),
+    .testTarget(name: "ObjCSurfaceTests",
+                dependencies: ["OpenUIKitObjCSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCSurfaceTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

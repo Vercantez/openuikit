@@ -92,7 +92,7 @@ static void fontLine(const char *label, UIFont *font) {
 #endif
 }
 
-static void relation(const char *label, UIFont *a, UIFont *b) {
+static void equalityLine(const char *label, UIFont *a, UIFont *b) {
     BOOL equal = [a isEqual:b];
     emit("%s isEqual=%s sameHash=%s", label, B(equal), B(equal ? [a hash] == [b hash] : YES));
 }
@@ -107,11 +107,11 @@ void OUKSurfaceFontScenario(OUKSurfaceSink sink, void *context) {
     fontLine("boldSystemFontOfSize:17", bold17);
     fontLine("systemFontOfSize:18", sys18);
     fontLine("fontWithSize:34", [sys17 fontWithSize:34]);
-    relation("sys17~sys17", sys17, sys17b);
-    relation("sys17~bold17", sys17, bold17);
-    relation("sys17~sys18", sys17, sys18);
-    relation("sys17~[sys18 fontWithSize:17]", sys17, [sys18 fontWithSize:17]);
-    relation("sys17~[sys17 fontWithSize:17]", sys17, [sys17 fontWithSize:17]);
+    equalityLine("sys17~sys17", sys17, sys17b);
+    equalityLine("sys17~bold17", sys17, bold17);
+    equalityLine("sys17~sys18", sys17, sys18);
+    equalityLine("sys17~[sys18 fontWithSize:17]", sys17, [sys18 fontWithSize:17]);
+    equalityLine("sys17~[sys17 fontWithSize:17]", sys17, [sys17 fontWithSize:17]);
     emit("fontWithName:OUKNoSuchSerif -> %s", C([UIFont fontWithName:@"OUKNoSuchSerif" size:12]));
     // The category's class methods are found on UIFont and on its instances' class.
     fontLine("+ouk_serifFontWithSize:21", [UIFont ouk_serifFontWithSize:21]);
@@ -122,18 +122,18 @@ void OUKSurfaceFontScenario(OUKSurfaceSink sink, void *context) {
 #ifndef OUK_NO_FOUNDATION
     UIFont *semibold = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
     fontLine("systemFontOfSize:17 weight:Semibold", semibold);
-    relation("sys17~weight:Regular", sys17, [UIFont systemFontOfSize:17 weight:UIFontWeightRegular]);
-    relation("bold17~weight:Bold", bold17, [UIFont systemFontOfSize:17 weight:UIFontWeightBold]);
-    relation("bold17~weight:Semibold", bold17, semibold);
+    equalityLine("sys17~weight:Regular", sys17, [UIFont systemFontOfSize:17 weight:UIFontWeightRegular]);
+    equalityLine("bold17~weight:Bold", bold17, [UIFont systemFontOfSize:17 weight:UIFontWeightBold]);
+    equalityLine("bold17~weight:Semibold", bold17, semibold);
     emit("UIFontWeight regular=%g medium=%g semibold=%g bold=%g heavy=%g",
          UIFontWeightRegular, UIFontWeightMedium, UIFontWeightSemibold, UIFontWeightBold, UIFontWeightHeavy);
-    relation("copy", sys17, [sys17 copy]);
+    equalityLine("copy", sys17, [sys17 copy]);
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     fontLine("UILabel.font default", label.font);
     label.font = bold17;
-    relation("UILabel.font set", label.font, bold17);
+    equalityLine("UILabel.font set", label.font, bold17);
     NSDictionary *attributes = @{NSFontAttributeName: sys17};
-    relation("attributes[NSFontAttributeName]", attributes[NSFontAttributeName], sys17);
+    equalityLine("attributes[NSFontAttributeName]", attributes[NSFontAttributeName], sys17);
 #endif
 }
 
