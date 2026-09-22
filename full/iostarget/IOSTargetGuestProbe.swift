@@ -72,4 +72,9 @@ func fmt(_ v: CGFloat) -> String {
     print("IOS_TARGET_GUEST_PROBE_OK")
 }
 
-MainActor.assumeIsolated { runProbe() }
+@main
+struct IOSTargetGuestProbeMain {
+    static func main() {
+        MainActor.assumeIsolated { runProbe() }
+    }
+}
