@@ -192,7 +192,7 @@
    },
    "ServerDrivenUI": {
     "status": "failed",
-    "own_errors": 12,
+    "own_errors": 20,
     "dependency_errors": 0,
     "errors": [
      {
@@ -254,8 +254,49 @@
       "file": "ServerDrivenUI/Blocks/TextBlock.swift",
       "line": 58,
       "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'AVAudioSession' is unavailable in macOS"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'sharedInstance()' is unavailable in macOS"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'setCategory(_:mode:options:)' is unavailable in macOS"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'playback' is unavailable in macOS"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'default' is unavailable in macOS"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 70,
+      "msg": "instance method 'clipShape(_:style:)' requires that 'RoundedRectangle' (aka '_OpenRoundedRectangle') conform to 'Shape'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 71,
+      "msg": "value of type 'some View' has no member 'accessibilityLabel'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/AudioVideoBlock.swift",
+      "line": 72,
+      "msg": "cannot infer contextual base in reference to member 'startsMediaSession'"
      }
-    ]
+    ],
+    "note": "census-9: rerun after deleting stale AVFoundation/AVKit/MediaPlayer modules (from withdrawn, never-committed media ports) from the chain .build; the earlier 12 was contaminated."
    },
    "Library": {
     "status": "blocked by dependency",
@@ -377,6 +418,7 @@
      "msg": "method does not override any method from its superclass"
     }
    ]
-  }
+  },
+  "contaminated": "These runs had stale AVFoundation/AVKit/MediaPlayer modules in the chain .build shadowing Apple's; ServerDrivenUI 0 and Library 1 are lower bounds, not results."
  }
 }

@@ -2,7 +2,9 @@
 
 **Date:** 2026-09-22. **Branch:** `agent/ios-oss-walls` (continues [ios-oss-launch2-walls.md](ios-oss-launch2-walls.md)); commits `f582062d`, `e9ca7c76`, `9d35ff3e`, `b5496afe` and this report.
 **Route:** (b), Apple toolchain on the macOS target, the same chain spec and checkouts as pass 2.
-**Status:** first screen **not reached**. Apple Pay is closed. ServerDrivenUI is down to one family of errors, and that family is the macOS AppKit leak, which the `ios-target` pass now owns. Library has been type-checked once, as an uncommitted experiment with the leak removed: its own errors then fell to **1**, an `NSAttributedString` identity wall in the port. Kickstarter-Framework is **not reached**.
+**Status:** first screen **not reached**. Apple Pay is closed. ServerDrivenUI's remaining **20** errors are all macOS leaks (AppKit→SwiftUICore; Apple's macOS AVFoundation/AVKit), which the `ios-target` pass now owns. Library has been type-checked once, as an uncommitted experiment; **that experiment was contaminated** (see "Correction" below), so its low error count is a lower bound, not a result. Kickstarter-Framework is **not reached**.
+
+> **Correction (after `66fbfb82`).** The chain package's `.build/debug/Modules` still held `AVFoundation` / `AVKit` / `MediaPlayer` modules from my withdrawn media ports (they were never committed). SwiftPM puts that directory on every target's search path, so those stale modules shadowed Apple's in every census run after the withdrawal. With the stale modules deleted, committed ServerDrivenUI has **20** own errors: 12 in TextBlock (AppKit→SwiftUICore) plus 8 in AudioVideoBlock (5 × AVAudioSession unavailable on macOS; `clipShape`, `accessibilityLabel`, `startsMediaSession` against Apple's SwiftUI via Apple's AVKit). This is census-9 in the JSON. The experiment-E rows below also ran with the stale modules, so Library's AVFoundation users (VideoFeedAudioController and others) were not measured against Apple's module either. attrstring-unify found this when re-running.
 
 ## Census
 
@@ -12,8 +14,8 @@ Machine-readable file: [ios-oss-launch3-census.json](ios-oss-launch3-census.json
 |---|---:|---:|---:|
 | StripeApplePay / Stripe / StripePaymentSheet | 3 / blocked / blocked | **0 / 0 / 0** | — |
 | all other shims, Prelude…Lottie (30 targets) | 0 | 0 | — |
-| ServerDrivenUI | 24 own | **12 own** (all TextBlock.swift:41-58, leak) | **0** |
-| Library (372 files) | blocked | blocked by ServerDrivenUI | 16, then 1 after the member fixes below (with a generated alias, see (4)) |
+| ServerDrivenUI | 24 own | **20 own** (TextBlock 12 + AudioVideoBlock 8, all leak) | 0 *(contaminated: stale AV modules)* |
+| Library (372 files) | blocked | blocked by ServerDrivenUI | 16, then 1 after the member fixes below, with a generated alias (see (4)) *(lower bound, contaminated)* |
 | Kickstarter-Framework / App | blocked | blocked | blocked by Library |
 
 Experiment E dropped `import AppKit` from OpenUIKit and removed the `!canImport(SwiftUICore)` guard in SwiftUI's TextAttributes. In the working tree only, it:
@@ -107,4 +109,4 @@ Also noted and not changed: `UIContentSizeCategory` raw values in the port are `
 | broad filter (IosOss / SwiftUI / buttons / labels / text / fonts / navigation / accessibility) | only the base-commit failures remain: TextFieldDelegateTests, IOSNavigationBarTransitionTests, UIScrollEdgeEffectTests |
 | simulators | the 4 probe devices were created and deleted |
 | corpus / pins | untouched |
-| gate / guest | recorded in the hand-off message |
+| gate / guest | recorded in the hand-off message; after the Simplenote merge the Linux stage caught two main-actor calls in UIButtonConfigurationTests (fixed with `MainActor.assumeIsolated`) |

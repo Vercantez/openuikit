@@ -619,7 +619,9 @@ final class UIButtonConfigurationTests: XCTestCase {
         button.frame = CGRect(x: 0, y: 0, width: 160, height: 44)
         button.layoutIfNeeded()
 
-        let normal = configuration.updated(for: button)
+        // assumeIsolated: on Linux the test class is not @MainActor (see the
+        // file header) and `updated(for:)` is.
+        let normal = MainActor.assumeIsolated { configuration.updated(for: button) }
         assertColor(normal.background.backgroundColor, rgba(.systemBlue)!, "normal fill")
         assertColor(normal.baseForegroundColor, rgba(.systemGreen)!, "baseForeground kept")
         assertColor(normal.baseBackgroundColor, rgba(.systemBlue)!, "baseBackground kept")
@@ -628,7 +630,7 @@ final class UIButtonConfigurationTests: XCTestCase {
 
         button.isEnabled = false
         button.layoutIfNeeded()
-        assertColor(configuration.updated(for: button).background.backgroundColor,
+        assertColor(MainActor.assumeIsolated { configuration.updated(for: button) }.background.backgroundColor,
                     Self.gray(0.12), "disabled fill")
     }
 
