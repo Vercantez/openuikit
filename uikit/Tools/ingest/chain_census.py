@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-DIAG = re.compile(r"^(?P<file>/[^:\n]+\.swift):(?P<line>\d+):(?P<col>\d+): (?P<kind>error|warning|note): (?P<msg>.*)$")
+DIAG = re.compile(r"^(?P<file>/[^:\n]+\.(?:swift|mm|m|h|c)):(?P<line>\d+):(?P<col>\d+): (?P<kind>error|warning|note): (?P<msg>.*)$")
 QUOTED = re.compile(r"'([^']*)'")
 
 
@@ -47,8 +47,34 @@ def member_of(msg: str) -> str | None:
     return None
 
 
+_own_cache: dict[tuple[str, str], tuple[str, set[str]]] = {}
+
+
+def is_own(file: str, pkg: str, name: str) -> bool:
+    """True when a diagnostic's file belongs to target `name`.
+
+    A directory-symlink target resolves to its upstream directory; a
+    file-list target (spm_app_chain `files`) is a real directory of
+    per-file symlinks, so the compiler may report either the link under
+    Sources/<name> or the resolved upstream path.
+    """
+    key = (os.path.abspath(pkg), name)
+    if key not in _own_cache:
+        root = os.path.join(pkg, "Sources", name)
+        resolved = set()
+        if not os.path.islink(root) and os.path.isdir(root):
+            for dp, _, fns in os.walk(root):
+                for fn in fns:
+                    resolved.add(os.path.realpath(os.path.join(dp, fn)))
+        _own_cache[key] = (os.path.realpath(root), resolved)
+    own_dir, resolved = _own_cache[key]
+    real = os.path.realpath(file)
+    if real.startswith(own_dir + os.sep) or real in resolved:
+        return True
+    return os.path.abspath(file).startswith(os.path.abspath(os.path.join(pkg, "Sources", name)) + os.sep)
+
+
 def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
-    own_dir = os.path.realpath(os.path.join(pkg, "Sources", name))
     cmd = ["swift", "build", "--target", name, "-j", str(jobs)]
     t0 = time.time()
     try:
@@ -68,7 +94,7 @@ def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
             continue
         seen.add(key)
         rec = {"file": m.group("file"), "line": int(m.group("line")), "col": int(m.group("col")),
-               "msg": m.group("msg"), "own": os.path.realpath(m.group("file")).startswith(own_dir + os.sep)}
+               "msg": m.group("msg"), "own": is_own(m.group("file"), pkg, name)}
         if m.group("kind") == "error":
             errors.append(rec)
         elif m.group("kind") == "note" and "protocol requires" in m.group("msg"):
