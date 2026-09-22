@@ -770,6 +770,12 @@ let testTargets: [Target] = [
             ], .when(platforms: [.linux])),
         ]
     ),
+    // ios-oss launch pass 3: the fail-closed Apple Pay surface in PassKit,
+    // checked against the iOS 26.1 applepayprobe transcript.
+    .testTarget(
+        name: "PassKitTests",
+        dependencies: ["PassKit", "OpenUIKit"]
+    ),
     .testTarget(
         name: "FuziTests",
         dependencies: ["Fuzi"],

@@ -101,7 +101,9 @@
    "deps": [
     "StripePayments"
    ],
-   "openuikit": [],
+   "openuikit": [
+    "PassKit"
+   ],
    "swift_language_mode": "5"
   },
   {

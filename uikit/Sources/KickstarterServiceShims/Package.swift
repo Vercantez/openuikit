@@ -51,7 +51,9 @@ let package = Package(
         .target(name: "FacebookCore", dependencies: ui, path: "FacebookCore"),
         .target(name: "FacebookLogin", dependencies: ["FacebookCore"] + ui, path: "FacebookLogin"),
         .target(name: "StripePayments", dependencies: ui, path: "StripePayments"),
-        .target(name: "StripeApplePay", dependencies: ["StripePayments"], path: "StripeApplePay"),
+        .target(name: "StripeApplePay",
+                dependencies: ["StripePayments", .product(name: "PassKit", package: "OpenUIKit")],
+                path: "StripeApplePay"),
         .target(name: "StripePaymentSheet", dependencies: ["StripePayments", "StripeApplePay"] + ui,
                 path: "StripePaymentSheet"),
         .target(name: "BrazeKit", path: "BrazeKit"),
@@ -72,7 +74,7 @@ let package = Package(
                 "Statsig", "Firebase", "FacebookCore", "FacebookLogin", "StripeApplePay", "StripePaymentSheet",
                 "BrazeKit", "BrazeUI", "Segment", "SegmentBrazeUI", "AlamofireImage",
                 "KickstarterStripe", "Kingfisher", "KingfisherWebP", "Lottie",
-            ] + ui,
+            ] + ui + [.product(name: "PassKit", package: "OpenUIKit")],
             path: "Tests/KickstarterServiceShimTests"
         ),
     ]

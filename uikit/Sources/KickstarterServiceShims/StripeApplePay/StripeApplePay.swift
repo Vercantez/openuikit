@@ -12,8 +12,8 @@
 // initializer always returns nil — the app's own `guard ... else {
 // checkoutTerminated() }` path (PostCampaignCheckout:394-397). Token creation
 // completes once, on the main queue, with a nil token and an error. PassKit
-// is Apple's framework on the Darwin host; on a platform without PassKit the
-// PassKit-typed members are absent.
+// is OpenUIKit's (Sources/PassKit, fail-closed Apple Pay measured on iOS
+// 26.1); the `canImport` guard keeps the file building where it is absent.
 import Foundation
 @_exported import StripePayments
 #if canImport(PassKit)
