@@ -1,0 +1,443 @@
+# textstorageprobe — iOS 26.1
+## attributed
+coalesce identical: "abcdefgh" {0, 4}[OUKKey=1] {4, 4}[]
+coalesce 1 vs 1.0: "abcdefgh" {0, 6}[OUKKey=1] {6, 2}[]
+coalesce equal strings: "abcdefgh" {0, 8}[OUKKey=v]
+add other: "abcdefgh" {0, 2}[OUKKey=v] {2, 3}[OUKKey=v,OUKOther=x] {5, 3}[OUKKey=v]
+remove other: "abcdefgh" {0, 8}[OUKKey=v]
+add empty: "abcdefgh" {0, 8}[OUKKey=v]
+enum base: "0123456789" {0, 2}[OUKKey=A] {2, 2}[OUKKey=A,OUKOther=1] {4, 2}[OUKKey=A] {6, 2}[] {8, 2}[OUKKey=B]
+enumerateAttribute K all: {0, 6}=A {6, 2}=nil {8, 2}=B
+enumerateAttribute K {1,8}: {1, 5}=A {6, 2}=nil {8, 1}=B
+enumerateAttribute K notRequired: {0, 2}=A {2, 2}=A {4, 2}=A {6, 2}=nil {8, 2}=B
+enumerateAttribute K reverse: {8, 2}=B {6, 2}=nil {0, 6}=A
+enumerateAttribute K stop: {0, 6}
+enumerateAttributes all: {0, 2}[OUKKey=A] {2, 2}[OUKKey=A,OUKOther=1] {4, 2}[OUKKey=A] {6, 2}[] {8, 2}[OUKKey=B]
+enumerateAttributes empty range: 0 calls
+longestEffectiveRange K at 3: A {0, 6}
+longestEffectiveRange K at 3 in {1,4}: A {1, 4}
+longestEffectiveRange K at 7: nil {6, 2}
+effectiveRange K at 3: A {2, 2}
+insert at 0: "<abc" {0, 2}[OUKKey=first] {2, 2}[OUKKey=last]
+insert at 2: "<a|bc" {0, 3}[OUKKey=first] {3, 2}[OUKKey=last]
+insert at end: "<a|bc>" {0, 3}[OUKKey=first] {3, 3}[OUKKey=last]
+replace {1,3}: "<XYc>" {0, 3}[OUKKey=first] {3, 2}[OUKKey=last]
+delete all: "" 
+insert into empty: "new" {0, 3}[]
+insert attributed plain: "a--b" {0, 1}[OUKKey=k] {1, 2}[] {3, 1}[OUKKey=k]
+append equal attrs: "a--b!" {0, 1}[OUKKey=k] {1, 2}[] {3, 2}[OUKKey=k]
+insert attributed at 0: "^a--b!" {0, 1}[OUKOther=2] {1, 1}[OUKKey=k] {2, 2}[] {4, 2}[OUKKey=k]
+delete {0,1}: "a--b!" {0, 1}[OUKKey=k] {1, 2}[] {3, 2}[OUKKey=k]
+setAttributedString: "z" {0, 1}[OUKOther=3]
+mutableString append: "zzz" {0, 3}[OUKOther=3]
+mutableString insert at 0: "qzzz" {0, 4}[OUKOther=3]
+utf16 length: 5
+utf16 runs: "a😀bé" {0, 1}[] {1, 2}[OUKKey=emoji] {3, 2}[]
+utf16 attributes at 2 (low surrogate): {1, 2}
+utf16 substring {1,2}: "😀" len 2
+combining length: 3
+attributesAtIndex:length: raises NSRangeException
+attribute:atIndex:length: raises NSRangeException
+attributesAtIndex: on empty: ok
+substring past end: raises NSRangeException
+enumerate past end: raises NSRangeException
+addAttribute past end: raises NSRangeException
+replace past end: raises NSRangeException
+isEqualToAttributedString split-equal: 1
+isEqual: split-equal: 1
+copy of mutable is mutable: 0
+mutableCopy is mutable: 1
+## textstorage
+superclass NSTextStorage: NSMutableAttributedString
+NSTextStorage isKindOf NSMutableAttributedString: 1
+NSTextStorage isKindOf NSAttributedString: 1
+initWithString:attributes: runs="init" {0, 4}[OUKKey=0] mask=none range={NSNotFound, 4} delta=0
+initWithAttributedString: runs="init" {0, 4}[OUKKey=0]
+layoutManagers initially: 0
+delegate initially: nil
+string is NSString: 1
+### base NSTextStorage
+replace {0,0} "Hello world"
+  note will mask=chars range={0, 11} delta=11 userInfo=0
+  delegate will mask=chars range={0, 11} delta=11 | ts.mask=chars ts.range={0, 11} ts.delta=11 len=11
+  note did mask=attr|chars range={0, 11} delta=11 userInfo=0
+  delegate did mask=attr|chars range={0, 11} delta=11 | ts.mask=attr|chars ts.range={0, 11} ts.delta=11
+  after mask=none range={NSNotFound, 11} delta=0 runs="Hello world" {0, 11}[]
+addAttribute {6,5}
+  note will mask=attr range={6, 5} delta=0 userInfo=0
+  delegate will mask=attr range={6, 5} delta=0 | ts.mask=attr ts.range={6, 5} ts.delta=0 len=11
+  note did mask=attr range={6, 5} delta=0 userInfo=0
+  delegate did mask=attr range={6, 5} delta=0 | ts.mask=attr ts.range={6, 5} ts.delta=0
+  after mask=none range={NSNotFound, 5} delta=0 runs="Hello world" {0, 6}[] {6, 5}[OUKKey=w]
+setAttributes {0,5}
+  note will mask=attr range={0, 5} delta=0 userInfo=0
+  delegate will mask=attr range={0, 5} delta=0 | ts.mask=attr ts.range={0, 5} ts.delta=0 len=11
+  note did mask=attr range={0, 5} delta=0 userInfo=0
+  delegate did mask=attr range={0, 5} delta=0 | ts.mask=attr ts.range={0, 5} ts.delta=0
+  after mask=none range={NSNotFound, 5} delta=0 runs="Hello world" {0, 5}[OUKKey=h] {5, 1}[] {6, 5}[OUKKey=w]
+removeAttribute {0,11}
+  note will mask=attr range={0, 11} delta=0 userInfo=0
+  delegate will mask=attr range={0, 11} delta=0 | ts.mask=attr ts.range={0, 11} ts.delta=0 len=11
+  note did mask=attr range={0, 11} delta=0 userInfo=0
+  delegate did mask=attr range={0, 11} delta=0 | ts.mask=attr ts.range={0, 11} ts.delta=0
+  after mask=none range={NSNotFound, 11} delta=0 runs="Hello world" {0, 11}[]
+begin; insert 0 "A"; addAttribute {3,2}; delete {1,1}; end
+  inside mask=chars range={0, 1} delta=1
+  inside mask=attr|chars range={0, 5} delta=1
+  inside mask=attr|chars range={0, 4} delta=0
+  note will mask=attr|chars range={0, 4} delta=0 userInfo=0
+  delegate will mask=attr|chars range={0, 4} delta=0 | ts.mask=attr|chars ts.range={0, 4} ts.delta=0 len=11
+  note did mask=attr|chars range={0, 4} delta=0 userInfo=0
+  delegate did mask=attr|chars range={0, 4} delta=0 | ts.mask=attr|chars ts.range={0, 4} ts.delta=0
+  after mask=none range={NSNotFound, 4} delta=0 runs="Aello world" {0, 2}[] {2, 2}[OUKKey=1] {4, 7}[]
+begin; insert 8 "xyz"; delete {0,2}; end
+  inside mask=attr|chars range={0, 9} delta=1
+  note will mask=attr|chars range={0, 9} delta=1 userInfo=0
+  delegate will mask=attr|chars range={0, 9} delta=1 | ts.mask=attr|chars ts.range={0, 9} ts.delta=1 len=12
+  note did mask=attr|chars range={0, 9} delta=1 userInfo=0
+  delegate did mask=attr|chars range={0, 9} delta=1 | ts.mask=attr|chars ts.range={0, 9} ts.delta=1
+  after mask=none range={NSNotFound, 9} delta=0 runs="llo woxyzrld" {0, 2}[OUKKey=1] {2, 10}[]
+begin; begin; addAttribute {0,1}; end; end
+  after inner end mask=attr range={0, 1}
+  note will mask=attr range={0, 1} delta=0 userInfo=0
+  delegate will mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0 len=12
+  note did mask=attr range={0, 1} delta=0 userInfo=0
+  delegate did mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+begin; end (nothing edited)
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+processEditing (nothing edited)
+  note will mask=none range={NSNotFound, 1} delta=0 userInfo=0
+  delegate will mask=none range={NSNotFound, 1} delta=0 | ts.mask=none ts.range={NSNotFound, 1} ts.delta=0 len=12
+  note did mask=none range={NSNotFound, 1} delta=0 userInfo=0
+  delegate did mask=none range={NSNotFound, 1} delta=0 | ts.mask=none ts.range={NSNotFound, 1} ts.delta=0
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+edited:attr {2,3} 0 (direct)
+  note will mask=attr range={2, 3} delta=0 userInfo=0
+  delegate will mask=attr range={2, 3} delta=0 | ts.mask=attr ts.range={2, 3} ts.delta=0 len=12
+  note did mask=attr range={2, 3} delta=0 userInfo=0
+  delegate did mask=attr range={2, 3} delta=0 | ts.mask=attr ts.range={2, 3} ts.delta=0
+  after mask=none range={NSNotFound, 3} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+begin; edited:attr {0,1}; processEditing; end
+  note will mask=attr range={0, 1} delta=0 userInfo=0
+  delegate will mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0 len=12
+  note did mask=attr range={0, 1} delta=0 userInfo=0
+  delegate did mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0
+  after explicit processEditing mask=attr range={0, 1} delta=0
+  note will mask=attr range={0, 1} delta=0 userInfo=0
+  delegate will mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0 len=12
+  note did mask=attr range={0, 1} delta=0 userInfo=0
+  delegate did mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+delegate edits during will
+  note will mask=attr range={4, 1} delta=0 userInfo=0
+  delegate will mask=attr range={4, 1} delta=0 | ts.mask=attr ts.range={4, 1} ts.delta=0 len=12
+  delegate will after edit: ts.mask=attr ts.range={0, 5} ts.delta=0
+  note did mask=attr range={0, 5} delta=0 userInfo=0
+  delegate did mask=attr range={0, 5} delta=0 | ts.mask=attr ts.range={0, 5} ts.delta=0
+  after mask=none range={NSNotFound, 5} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2,OUKWill=1] {1, 1}[OUKKey=1] {2, 2}[] {4, 1}[OUKKey=3] {5, 7}[]
+setAttributedString
+  note will mask=attr|chars range={0, 3} delta=-9 userInfo=0
+  delegate will mask=attr|chars range={0, 3} delta=-9 | ts.mask=attr|chars ts.range={0, 3} ts.delta=-9 len=3
+  note did mask=attr|chars range={0, 3} delta=-9 userInfo=0
+  delegate did mask=attr|chars range={0, 3} delta=-9 | ts.mask=attr|chars ts.range={0, 3} ts.delta=-9
+  after mask=none range={NSNotFound, 3} delta=0 runs="new" {0, 3}[OUKKey=n]
+appendAttributedString
+  note will mask=attr|chars range={3, 2} delta=2 userInfo=0
+  delegate will mask=attr|chars range={3, 2} delta=2 | ts.mask=attr|chars ts.range={3, 2} ts.delta=2 len=5
+  note did mask=attr|chars range={3, 2} delta=2 userInfo=0
+  delegate did mask=attr|chars range={3, 2} delta=2 | ts.mask=attr|chars ts.range={3, 2} ts.delta=2
+  after mask=none range={NSNotFound, 2} delta=0 runs="new++" {0, 3}[OUKKey=n] {3, 2}[]
+mutableString appendString
+  note will mask=chars range={5, 1} delta=1 userInfo=0
+  delegate will mask=chars range={5, 1} delta=1 | ts.mask=chars ts.range={5, 1} ts.delta=1 len=6
+  note did mask=chars range={5, 1} delta=1 userInfo=0
+  delegate did mask=chars range={5, 1} delta=1 | ts.mask=chars ts.range={5, 1} ts.delta=1
+  after mask=none range={NSNotFound, 1} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+replace with same attrs no-op range {0,0} ""
+  note will mask=chars range={0, 0} delta=0 userInfo=0
+  delegate will mask=chars range={0, 0} delta=0 | ts.mask=chars ts.range={0, 0} ts.delta=0 len=6
+  note did mask=chars range={0, 0} delta=0 userInfo=0
+  delegate did mask=chars range={0, 0} delta=0 | ts.mask=chars ts.range={0, 0} ts.delta=0
+  after mask=none range={NSNotFound, 0} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+addAttribute zero-length {1,0}
+  after mask=none range={NSNotFound, 0} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+### edit masks (base NSTextStorage)
+insert mid-run: mask=chars range={4, 1} delta=1
+insert at run start: mask=chars range={2, 1} delta=1
+insert at run end: mask=chars range={4, 1} delta=1
+insert at 0: mask=chars range={0, 1} delta=1
+insert at end: mask=chars range={8, 1} delta=1
+delete inside run: mask=chars range={5, 0} delta=-1
+delete whole first run: mask=chars range={0, 0} delta=-2
+delete whole middle run: mask=chars range={2, 0} delta=-2
+delete whole last run: mask=chars range={4, 0} delta=-4
+delete across runs: mask=chars range={1, 0} delta=-2
+replace inside run: mask=chars range={5, 2} delta=1
+replace whole middle run: mask=chars range={2, 2} delta=0
+delete all: mask=chars range={0, 0} delta=-8
+two edits, 1: mask=chars range={6, 1} delta=1
+two edits, 2: mask=attr|chars range={0, 5} delta=-1
+single-run delete prefix: mask=attr|chars range={0, 0} delta=-2
+### Objective-C subclass
+subclass superclass: NSTextStorage
+subclass length initially: 0
+replace {0,0} "Hello world"
+  sub processEditing (enter) mask=attr|chars range={0, 11} delta=11
+  note will mask=attr|chars range={0, 11} delta=11 userInfo=0
+  delegate will mask=attr|chars range={0, 11} delta=11 | ts.mask=attr|chars ts.range={0, 11} ts.delta=11 len=11
+  note did mask=attr|chars range={0, 11} delta=11 userInfo=0
+  delegate did mask=attr|chars range={0, 11} delta=11 | ts.mask=attr|chars ts.range={0, 11} ts.delta=11
+  sub processEditing (exit) mask=attr|chars range={0, 11} delta=11
+  after mask=none range={NSNotFound, 11} delta=0 runs="Hello world" {0, 11}[]
+addAttribute {6,5}
+  sub processEditing (enter) mask=attr range={6, 5} delta=0
+  note will mask=attr range={6, 5} delta=0 userInfo=0
+  delegate will mask=attr range={6, 5} delta=0 | ts.mask=attr ts.range={6, 5} ts.delta=0 len=11
+  note did mask=attr range={6, 5} delta=0 userInfo=0
+  delegate did mask=attr range={6, 5} delta=0 | ts.mask=attr ts.range={6, 5} ts.delta=0
+  sub processEditing (exit) mask=attr range={6, 5} delta=0
+  after mask=none range={NSNotFound, 5} delta=0 runs="Hello world" {0, 6}[] {6, 5}[OUKKey=w]
+setAttributes {0,5}
+  sub processEditing (enter) mask=attr range={0, 5} delta=0
+  note will mask=attr range={0, 5} delta=0 userInfo=0
+  delegate will mask=attr range={0, 5} delta=0 | ts.mask=attr ts.range={0, 5} ts.delta=0 len=11
+  note did mask=attr range={0, 5} delta=0 userInfo=0
+  delegate did mask=attr range={0, 5} delta=0 | ts.mask=attr ts.range={0, 5} ts.delta=0
+  sub processEditing (exit) mask=attr range={0, 5} delta=0
+  after mask=none range={NSNotFound, 5} delta=0 runs="Hello world" {0, 5}[OUKKey=h] {5, 1}[] {6, 5}[OUKKey=w]
+removeAttribute {0,11}
+  sub processEditing (enter) mask=attr range={0, 11} delta=0
+  note will mask=attr range={0, 11} delta=0 userInfo=0
+  delegate will mask=attr range={0, 11} delta=0 | ts.mask=attr ts.range={0, 11} ts.delta=0 len=11
+  note did mask=attr range={0, 11} delta=0 userInfo=0
+  delegate did mask=attr range={0, 11} delta=0 | ts.mask=attr ts.range={0, 11} ts.delta=0
+  sub processEditing (exit) mask=attr range={0, 11} delta=0
+  after mask=none range={NSNotFound, 11} delta=0 runs="Hello world" {0, 11}[]
+begin; insert 0 "A"; addAttribute {3,2}; delete {1,1}; end
+  inside mask=attr|chars range={0, 1} delta=1
+  inside mask=attr|chars range={0, 5} delta=1
+  inside mask=attr|chars range={0, 4} delta=0
+  sub processEditing (enter) mask=attr|chars range={0, 4} delta=0
+  note will mask=attr|chars range={0, 4} delta=0 userInfo=0
+  delegate will mask=attr|chars range={0, 4} delta=0 | ts.mask=attr|chars ts.range={0, 4} ts.delta=0 len=11
+  note did mask=attr|chars range={0, 4} delta=0 userInfo=0
+  delegate did mask=attr|chars range={0, 4} delta=0 | ts.mask=attr|chars ts.range={0, 4} ts.delta=0
+  sub processEditing (exit) mask=attr|chars range={0, 4} delta=0
+  after mask=none range={NSNotFound, 4} delta=0 runs="Aello world" {0, 2}[] {2, 2}[OUKKey=1] {4, 7}[]
+begin; insert 8 "xyz"; delete {0,2}; end
+  inside mask=attr|chars range={0, 9} delta=1
+  sub processEditing (enter) mask=attr|chars range={0, 9} delta=1
+  note will mask=attr|chars range={0, 9} delta=1 userInfo=0
+  delegate will mask=attr|chars range={0, 9} delta=1 | ts.mask=attr|chars ts.range={0, 9} ts.delta=1 len=12
+  note did mask=attr|chars range={0, 9} delta=1 userInfo=0
+  delegate did mask=attr|chars range={0, 9} delta=1 | ts.mask=attr|chars ts.range={0, 9} ts.delta=1
+  sub processEditing (exit) mask=attr|chars range={0, 9} delta=1
+  after mask=none range={NSNotFound, 9} delta=0 runs="llo woxyzrld" {0, 2}[OUKKey=1] {2, 10}[]
+begin; begin; addAttribute {0,1}; end; end
+  after inner end mask=attr range={0, 1}
+  sub processEditing (enter) mask=attr range={0, 1} delta=0
+  note will mask=attr range={0, 1} delta=0 userInfo=0
+  delegate will mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0 len=12
+  note did mask=attr range={0, 1} delta=0 userInfo=0
+  delegate did mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0
+  sub processEditing (exit) mask=attr range={0, 1} delta=0
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+begin; end (nothing edited)
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+edited:attr {2,3} 0 (direct)
+  sub processEditing (enter) mask=attr range={2, 3} delta=0
+  note will mask=attr range={2, 3} delta=0 userInfo=0
+  delegate will mask=attr range={2, 3} delta=0 | ts.mask=attr ts.range={2, 3} ts.delta=0 len=12
+  note did mask=attr range={2, 3} delta=0 userInfo=0
+  delegate did mask=attr range={2, 3} delta=0 | ts.mask=attr ts.range={2, 3} ts.delta=0
+  sub processEditing (exit) mask=attr range={2, 3} delta=0
+  after mask=none range={NSNotFound, 3} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+begin; edited:attr {0,1}; processEditing; end
+  sub processEditing (enter) mask=attr range={0, 1} delta=0
+  note will mask=attr range={0, 1} delta=0 userInfo=0
+  delegate will mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0 len=12
+  note did mask=attr range={0, 1} delta=0 userInfo=0
+  delegate did mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0
+  sub processEditing (exit) mask=attr range={0, 1} delta=0
+  after explicit processEditing mask=attr range={0, 1} delta=0
+  sub processEditing (enter) mask=attr range={0, 1} delta=0
+  note will mask=attr range={0, 1} delta=0 userInfo=0
+  delegate will mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0 len=12
+  note did mask=attr range={0, 1} delta=0 userInfo=0
+  delegate did mask=attr range={0, 1} delta=0 | ts.mask=attr ts.range={0, 1} ts.delta=0
+  sub processEditing (exit) mask=attr range={0, 1} delta=0
+  after mask=none range={NSNotFound, 1} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2] {1, 1}[OUKKey=1] {2, 10}[]
+delegate edits during will
+  sub processEditing (enter) mask=attr range={4, 1} delta=0
+  note will mask=attr range={4, 1} delta=0 userInfo=0
+  delegate will mask=attr range={4, 1} delta=0 | ts.mask=attr ts.range={4, 1} ts.delta=0 len=12
+  delegate will after edit: ts.mask=attr ts.range={0, 5} ts.delta=0
+  note did mask=attr range={0, 5} delta=0 userInfo=0
+  delegate did mask=attr range={0, 5} delta=0 | ts.mask=attr ts.range={0, 5} ts.delta=0
+  sub processEditing (exit) mask=attr range={0, 5} delta=0
+  after mask=none range={NSNotFound, 5} delta=0 runs="llo woxyzrld" {0, 1}[OUKKey=2,OUKWill=1] {1, 1}[OUKKey=1] {2, 2}[] {4, 1}[OUKKey=3] {5, 7}[]
+setAttributedString
+  sub processEditing (enter) mask=attr|chars range={0, 3} delta=-9
+  note will mask=attr|chars range={0, 3} delta=-9 userInfo=0
+  delegate will mask=attr|chars range={0, 3} delta=-9 | ts.mask=attr|chars ts.range={0, 3} ts.delta=-9 len=3
+  note did mask=attr|chars range={0, 3} delta=-9 userInfo=0
+  delegate did mask=attr|chars range={0, 3} delta=-9 | ts.mask=attr|chars ts.range={0, 3} ts.delta=-9
+  sub processEditing (exit) mask=attr|chars range={0, 3} delta=-9
+  after mask=none range={NSNotFound, 3} delta=0 runs="new" {0, 3}[OUKKey=n]
+appendAttributedString
+  sub processEditing (enter) mask=attr|chars range={3, 2} delta=2
+  note will mask=attr|chars range={3, 2} delta=2 userInfo=0
+  delegate will mask=attr|chars range={3, 2} delta=2 | ts.mask=attr|chars ts.range={3, 2} ts.delta=2 len=5
+  note did mask=attr|chars range={3, 2} delta=2 userInfo=0
+  delegate did mask=attr|chars range={3, 2} delta=2 | ts.mask=attr|chars ts.range={3, 2} ts.delta=2
+  sub processEditing (exit) mask=attr|chars range={3, 2} delta=2
+  after mask=none range={NSNotFound, 2} delta=0 runs="new++" {0, 3}[OUKKey=n] {3, 2}[]
+mutableString appendString
+  sub processEditing (enter) mask=attr|chars range={5, 1} delta=1
+  note will mask=attr|chars range={5, 1} delta=1 userInfo=0
+  delegate will mask=attr|chars range={5, 1} delta=1 | ts.mask=attr|chars ts.range={5, 1} ts.delta=1 len=6
+  note did mask=attr|chars range={5, 1} delta=1 userInfo=0
+  delegate did mask=attr|chars range={5, 1} delta=1 | ts.mask=attr|chars ts.range={5, 1} ts.delta=1
+  sub processEditing (exit) mask=attr|chars range={5, 1} delta=1
+  after mask=none range={NSNotFound, 1} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+replace with same attrs no-op range {0,0} ""
+  sub processEditing (enter) mask=attr|chars range={0, 0} delta=0
+  note will mask=attr|chars range={0, 0} delta=0 userInfo=0
+  delegate will mask=attr|chars range={0, 0} delta=0 | ts.mask=attr|chars ts.range={0, 0} ts.delta=0 len=6
+  note did mask=attr|chars range={0, 0} delta=0 userInfo=0
+  delegate did mask=attr|chars range={0, 0} delta=0 | ts.mask=attr|chars ts.range={0, 0} ts.delta=0
+  sub processEditing (exit) mask=attr|chars range={0, 0} delta=0
+  after mask=none range={NSNotFound, 0} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+addAttribute zero-length {1,0}
+  after mask=none range={NSNotFound, 0} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+### subclass primitives
+appendAttributedString (attrs)
+  prim replaceCharactersInRange:{0, 0} withString:"ab"
+  prim setAttributes:[OUKKey=1] range:{0, 2}
+  sub processEditing (enter) mask=attr|chars range={0, 2} delta=2
+  sub fixAttributesInRange:{0, 2}
+  prim setAttributes:[OUKKey=1] range:{0, 2}
+  sub processEditing (exit) mask=attr|chars range={0, 2} delta=2
+addAttribute
+  prim setAttributes:[OUKKey=1,OUKOther=2] range:{0, 1}
+  sub processEditing (enter) mask=attr range={0, 1} delta=0
+  sub fixAttributesInRange:{0, 1}
+  sub processEditing (exit) mask=attr range={0, 1} delta=0
+addAttributes
+  prim setAttributes:[OUKKey=4,OUKOther=3] range:{1, 1}
+  sub processEditing (enter) mask=attr range={1, 1} delta=0
+  sub fixAttributesInRange:{1, 1}
+  sub processEditing (exit) mask=attr range={1, 1} delta=0
+removeAttribute
+  prim setAttributes:[OUKKey=1] range:{0, 1}
+  prim setAttributes:[OUKKey=4] range:{1, 1}
+  sub processEditing (enter) mask=attr range={0, 2} delta=0
+  sub fixAttributesInRange:{0, 2}
+  sub processEditing (exit) mask=attr range={0, 2} delta=0
+insertAttributedString
+  prim replaceCharactersInRange:{0, 0} withString:"<"
+  prim setAttributes:[] range:{0, 1}
+  sub processEditing (enter) mask=attr|chars range={0, 1} delta=1
+  sub fixAttributesInRange:{0, 1}
+  prim setAttributes:[] range:{0, 1}
+  sub processEditing (exit) mask=attr|chars range={0, 1} delta=1
+deleteCharactersInRange
+  prim replaceCharactersInRange:{0, 1} withString:""
+  sub processEditing (enter) mask=attr|chars range={0, 0} delta=-1
+  sub fixAttributesInRange:{0, 0}
+  sub processEditing (exit) mask=attr|chars range={0, 0} delta=-1
+replaceCharactersInRange:withAttributedString:
+  prim replaceCharactersInRange:{0, 1} withString:"XY"
+  prim setAttributes:[OUKKey=5] range:{0, 2}
+  sub processEditing (enter) mask=attr|chars range={0, 2} delta=1
+  sub fixAttributesInRange:{0, 2}
+  prim setAttributes:[OUKKey=5] range:{0, 2}
+  sub processEditing (exit) mask=attr|chars range={0, 2} delta=1
+setAttributedString
+  prim replaceCharactersInRange:{0, 3} withString:"s"
+  prim setAttributes:[] range:{0, 1}
+  sub processEditing (enter) mask=attr|chars range={0, 1} delta=-2
+  sub fixAttributesInRange:{0, 1}
+  prim setAttributes:[] range:{0, 1}
+  sub processEditing (exit) mask=attr|chars range={0, 1} delta=-2
+mutableString appendString
+  prim replaceCharactersInRange:{1, 0} withString:"t"
+  sub processEditing (enter) mask=attr|chars range={1, 1} delta=1
+  sub fixAttributesInRange:{1, 1}
+  sub processEditing (exit) mask=attr|chars range={1, 1} delta=1
+final runs="st" {0, 2}[]
+attributedSubstring {0,1}: "s" {0, 1}[]
+isEqualToAttributedString self copy: 1
+### processEditing restyle
+replace {0,0} "Title\nbody"
+  sub processEditing (enter) mask=attr|chars range={0, 10} delta=10
+  sub processEditing after restyle mask=attr|chars range={0, 10} delta=10
+  note will mask=attr|chars range={0, 10} delta=10 userInfo=0
+  delegate will mask=attr|chars range={0, 10} delta=10 | ts.mask=attr|chars ts.range={0, 10} ts.delta=10 len=10
+  note did mask=attr|chars range={0, 10} delta=10 userInfo=0
+  delegate did mask=attr|chars range={0, 10} delta=10 | ts.mask=attr|chars ts.range={0, 10} ts.delta=10
+  sub processEditing (exit) mask=attr|chars range={0, 10} delta=10
+  after mask=none range={NSNotFound, 10} delta=0 runs="Title
+body" {0, 2}[OUKStyle=head] {2, 8}[]
+insert 7 "X"
+  sub processEditing (enter) mask=attr|chars range={7, 1} delta=1
+  sub processEditing after restyle mask=attr|chars range={0, 8} delta=1
+  note will mask=attr|chars range={0, 8} delta=1 userInfo=0
+  delegate will mask=attr|chars range={0, 8} delta=1 | ts.mask=attr|chars ts.range={0, 8} ts.delta=1 len=11
+  note did mask=attr|chars range={0, 8} delta=1 userInfo=0
+  delegate did mask=attr|chars range={0, 8} delta=1 | ts.mask=attr|chars ts.range={0, 8} ts.delta=1
+  sub processEditing (exit) mask=attr|chars range={0, 8} delta=1
+  after mask=none range={NSNotFound, 8} delta=0 runs="Title
+bXody" {0, 2}[OUKStyle=head] {2, 9}[]
+## oracle-only
+[NSTextStorage alloc] class: NSConcreteTextStorage
+[[NSTextStorage alloc] init] class: NSConcreteTextStorage
+superclass chain: NSMutableAttributedString < NSAttributedString < NSObject
+NSParagraphStyle superclass: NSObject
+NSTextAttachment superclass: NSObject
+NSTextStorage fixesAttributesLazily: 1
+subclass fixesAttributesLazily: 0
+### fixAttributes (Helvetica 17 over a, emoji, CJK)
+NSMutableAttributedString no fix: {0, 5}=Helvetica 17
+NSMutableAttributedString after fixAttributesInRange: {0, 1}=Helvetica 17 {1, 2}=AppleColorEmoji 17 {3, 1}=PingFangSC-Regular 17 {4, 1}=Helvetica 17
+NSTextStorage initWithString: {0, 1}=Helvetica 17 {1, 2}=AppleColorEmoji 17 {3, 1}=PingFangSC-Regular 17 {4, 1}=Helvetica 17
+NSTextStorage after edit (no layout manager): {0, 1}=Helvetica 17 {1, 2}=AppleColorEmoji 17 {3, 1}=PingFangSC-Regular 17 {4, 1}=Helvetica 17 {5, 1}=PingFangSC-Regular 17
+NSTextStorage after ensureAttributesAreFixedInRange: {0, 1}=Helvetica 17 {1, 2}=AppleColorEmoji 17 {3, 1}=PingFangSC-Regular 17 {4, 1}=Helvetica 17 {5, 1}=PingFangSC-Regular 17
+subclass edit with fixAttributes logging:
+  invalidateAttributesInRange:{0, 5}
+  fixAttributesInRange:{0, 5}
+  invalidateAttributesInRange:{0, 5}
+  fixAttributesInRange:{0, 5}
+subclass after edits: {0, 1}=Helvetica 17 {1, 2}=AppleColorEmoji 17 {3, 1}=PingFangSC-Regular 17 {4, 1}=Helvetica 17
+### edit masks with and without a covering font
+font=0 fresh delete prefix: mask=3
+font=0 insert then delete prefix: mask=3
+font=0 insert: did-notification mask=2
+font=1 fresh delete prefix: mask=3
+font=1 insert then delete prefix: mask=3
+font=1 insert: did-notification mask=2
+### layout manager ordering
+after addLayoutManager: layoutManagers=1 lm.textStorage==ts 1
+replace {0,0} "Hello"
+  note will
+  delegate will {0, 5}
+  note did
+  delegate did {0, 5}
+  layoutManager processEditing mask=3 range={0, 5} delta=5 invalidated={0, 5}
+addAttribute {1,2}
+  note will
+  delegate will {1, 2}
+  note did
+  delegate did {1, 2}
+  layoutManager processEditing mask=1 range={1, 2} delta=0 invalidated={1, 2}
+removeLayoutManager
+after removeLayoutManager: layoutManagers=0 lm.textStorage=nil
+  note will
+  delegate will {0, 1}
+  note did
+  delegate did {0, 1}
+### UITextView
+UITextView.textStorage class: NSConcreteTextStorage isKindOf NSTextStorage 1 delegate=nil
+after text=abc: textStorage.string=abc length=3
+after textStorage edit: tv.text=abcd attributedText.length=4

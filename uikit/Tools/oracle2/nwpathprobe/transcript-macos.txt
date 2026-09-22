@@ -1,0 +1,13 @@
+# swiftc main.swift -o main && ./main ; swiftc prestart.swift -o prestart && ./prestart
+# host macOS 27.0 (26A428), Xcode 26.1, real Network.framework, 2026-09-22
+before start: status=unsatisfied interfaces=[] expensive=false constrained=false
+queue before start: nil
+handler #1 on=probe status=satisfied interfaces=["wifi", "wifi", "wiredEthernet", "other"] expensive=false constrained=false
+calls after 1.5s: 1
+after start: status=satisfied interfaces=["wifi", "wifi", "wiredEthernet", "other"] expensive=false constrained=false queue=probe
+calls after cancel: 1
+after cancel: status=satisfied interfaces=["wifi", "wifi", "wiredEthernet", "other"] expensive=false constrained=false
+unsatisfied==unsatisfied: true
+interface types: ["other", "wifi", "cellular", "wiredEthernet", "loopback"]
+reason=notAvailable v4=false v6=false dns=false usesWifi=false eq=true
+required-cellular before start: unsatisfied notAvailable

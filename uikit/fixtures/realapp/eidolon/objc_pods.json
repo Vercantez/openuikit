@@ -1,0 +1,29 @@
+{
+  "_comment": "Eidolon's absent Objective-C pods at their Podfile.lock versions (commit resolved by tag, 2026-09-22), and the source subdirectory objc_pod_census.py compiles. Artsy+UIFonts 3.1.3 is private (licensed fonts); its OSS twin Artsy+OSSUIFonts is checked at master because its lock tag was not found. CardFlight-v4 4.3.1: repository not found (eidolon-launch-oracle.md). The sources are not vendored.",
+  "versions": {
+    "ARCollectionViewMasonryLayout": ["2.0.0", "https://github.com/AshFurrow/ARCollectionViewMasonryLayout.git", "6f6908268011b9a6fd623f5dfb538bcb58f115b5"],
+    "ARTiledImageView": ["1.1.1", "https://github.com/dblock/ARTiledImageView.git", "466c0f25168dc99729af935fead0ac46953ad73b"],
+    "Artsy-UILabels": ["2.2.0", "https://github.com/artsy/Artsy-UILabels.git", "d3363043cfa2025c6ec92a1b878ef27488fbf13e"],
+    "Artsy-UIButtons": ["2.1.0", "https://github.com/artsy/Artsy-UIButtons.git", "c12745a7d1578df6a58781fabe5acc7c4ac5b0b4"],
+    "Artsy-UIColors": ["3.1.0", "https://github.com/artsy/Artsy-UIColors.git", "a80556b7d5fc9a30f962fcba747888d46657ff20"],
+    "Artsy-OSSUIFonts": ["master (lock names private Artsy+UIFonts 3.1.3)", "https://github.com/artsy/Artsy-OSSUIFonts.git", null],
+    "DZNWebViewController": ["checkout", "https://github.com/orta/DZNWebViewController.git", "9121386901af95072fb19eaa3df7060ca46fc337"],
+    "ECPhoneNumberFormatter": ["0.1.1", "https://github.com/enriquez/ECPhoneNumberFormatter.git", "c70d50d8ba6dfd1299120a209cc105b6847d90b4"],
+    "FLKAutoLayout": ["0.1.1", "https://github.com/floriankugler/FLKAutoLayout.git", "bc5b351bfe0f6cf9062b6e685ec665b35a60bb24"],
+    "ORStackView": ["2.0.0", "https://github.com/orta/ORStackView.git", "3add7869c2c541846ce8a97a88136699f13f0da9"],
+    "SDWebImage": ["3.8.2", "https://github.com/SDWebImage/SDWebImage.git", "42a5e6f6ec513e57987ea9544ac8a969cf586c3c"],
+    "SVProgressHUD": ["2.2.3", "https://github.com/SVProgressHUD/SVProgressHUD.git", "fa00b0d1af8475eb63101002a261224b61e2d353"],
+    "UIImageViewAligned": ["checkout", "https://github.com/ashfurrow/UIImageViewAligned.git", "6f8cb5669b219ef08c90c2e2e5a082cadfe7565b"],
+    "XNGMarkdownParser": ["0.3.2", "https://github.com/xing/XNGMarkdownParser.git", "147e22b5be0c879c909c6f2e870464ed4ea8ee38"],
+    "UIView-BooleanAnimations": ["1.0.2", "https://github.com/ashfurrow/UIView-BooleanAnimations.git", "e80e7bb6c57565ac41da8fbfb1b45c46fa1fda22"]
+  },
+  "spec": {
+    "ARCollectionViewMasonryLayout": ".", "ARTiledImageView": "Classes",
+    "Artsy-UILabels": "Pod/Classes", "Artsy-UIButtons": "Pod/Classes", "Artsy-UIColors": "Classes",
+    "Artsy-OSSUIFonts": "Pod/Classes",
+    "DZNWebViewController": "Source/Classes", "ECPhoneNumberFormatter": "ECPhoneNumberFormatter",
+    "FLKAutoLayout": "FLKAutoLayout", "ORStackView": "Classes/ios", "SDWebImage": "SDWebImage",
+    "SVProgressHUD": "SVProgressHUD", "UIImageViewAligned": "UIImageViewAligned",
+    "XNGMarkdownParser": "src", "UIView-BooleanAnimations": "."
+  }
+}

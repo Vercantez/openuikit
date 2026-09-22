@@ -1040,6 +1040,40 @@ open class UITableView: UIScrollView {
         return nil
     }
 
+    /// The rows a rect covers, in section/row order; never nil (an empty
+    /// array when none). MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/indexpathsforrowsprobe/transcript-ios26.1.txt):
+    /// vertically a row counts when its bottom is below `minY` and its top is
+    /// at or above `lastY`, where `lastY` is `maxY` for an empty rect (zero
+    /// width or height) and otherwise `max(minY, maxY - 1)` — a 0.99 pt
+    /// overlap with the next row leaves it out, 1 pt takes it. Horizontally
+    /// the rect must overlap the bounds (`maxX > minX(bounds)`,
+    /// `minX < maxX(bounds)`); a zero-width rect must start inside them.
+    /// `.null` covers nothing, `.infinite` every row.
+    public final func indexPathsForRows(in rect: CGRect) -> [IndexPath]? {
+        metricsIfNeeded()
+        guard !rect.isNull else { return [] }
+        let b = bounds
+        if rect.width == 0 {
+            guard rect.minX >= b.minX, rect.minX < b.maxX else { return [] }
+        } else {
+            guard rect.maxX > b.minX, rect.minX < b.maxX else { return [] }
+        }
+        let empty = rect.width == 0 || rect.height == 0
+        let top = rect.minY
+        let lastY = empty ? rect.maxY : max(rect.minY, rect.maxY - 1)
+        var out: [IndexPath] = []
+        for (s, m) in metrics.enumerated() {
+            for r in 0..<m.rowEnds.count {
+                let rowTop = m.rowY(r)
+                if m.rowEnds[r] > top && rowTop <= lastY {
+                    out.append(IndexPath(row: r, section: s))
+                }
+            }
+        }
+        return out
+    }
+
     public final func cellForRow(at indexPath: IndexPath) -> UITableViewCell? {
         visibleCellsByPath[indexPath]
     }

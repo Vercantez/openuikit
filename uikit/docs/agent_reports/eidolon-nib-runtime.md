@@ -93,6 +93,66 @@ controller's archived stack is parented without containment callbacks.
 | CardFlight / Stripe | Unchanged. The locked CardFlight source is unavailable and its API cannot be recovered from call sites, so no shim is written; Stripe stays the fail-closed 12.1.0 adapter. No payment, account or network success is produced anywhere. |
 | First-screen score | **N/A** — not reached. |
 
+## After merging main: the Objective-C pods, re-censused
+
+Main's Simplenote change (vtable-free UIKit chain, `SWIFT_CLASS_NAMED`) is
+merged (5d03dea4). `objc_subclassing_restricted` is gone for the chain
+classes. I then fetched the Podfile.lock versions of the absent pods
+(`fixtures/realapp/eidolon/objc_pods.json` lists URL, tag and resolved commit;
+the sources are not vendored) and syntax-checked every translation unit.
+`Tools/ingest/objc_pod_census.py` runs the check against the ingest tool's
+route-(b) `<UIKit/UIKit.h>` (generated header + support header + bridge
+header, with the subclassing defines) under `-include UIKit/UIKit.h`, which is
+what CocoaPods' Pod-prefix.pch does. Full per-TU errors:
+`eidolon-objc-pods-census.json`.
+
+| | errors |
+|---|---:|
+| 15 pods, 51 translation units (9 clean) | **1,025 → 899** |
+| of which macOS-branch leakage | 137 |
+| of which OpenUIKit Objective-C surface | 331 |
+| of which pod-internal / cascade | 431 |
+
+The one fix in this step is `UI_APPEARANCE_SELECTOR` in `UIKitObjCSupport.h`,
+copied verbatim from the iOS 26.1 SDK (`UIAppearance.h:22`). It clears 126
+parse errors: SVProgressHUD 2.2.3's 42 annotated properties, 3 errors each.
+A build-time check in `UIKitObjCSupport.m` does not compile without the macro.
+
+**macOS-branch leakage (137)**, recorded as found and not worked around.
+Another agent (ios-target) is moving route (b) to an iOS triple:
+- SDWebImage 3.8.2 (118): `TARGET_OS_IPHONE` is false, so it takes its
+  `NSImage`/`NSImageView`/`MKAnnotationView` branches, and `SDWebImageCompat.h`
+  fires `SDWebImage doesn't support Deployment Target version < 5.0`.
+- Clang reports `has different definitions in different modules` for
+  `CALayer` (QuartzCore), `NSTextContainer`/`NSLayoutManager` (AppKit) and
+  `NSLayoutConstraint`/`CAGradientLayer`/`NSParagraphStyle`/`NSTextAttachment`
+  (OpenUIKit). The macOS SDK's modules and OpenUIKit's generated header
+  declare the same names.
+- XNGMarkdownParser (13) and Artsy+OSSUIFonts (4) resolve `NSFont` /
+  `NSFontDescriptor` where iOS has `UIFont` / `UIFontDescriptor`.
+
+**OpenUIKit Objective-C surface (331)**, by symbol: CALayer 36 (bounds,
+borderColor, backgroundColor), UIVisualEffectView 23, UIFont 20, UIColor 16
+(`CGColor`), UIImage 13, UIApplication 11, UIView 9, UICollectionViewLayoutAttributes 8,
+CABasicAnimation 8, UIButton 8, UIImageView 7, CAShapeLayer 6,
+NSLayoutRelation / UILayoutPriority / NSLayoutAttribute* 25, UIImageOrientation 9,
+UIBezierPath 4, UIInterpolatingMotionEffect 4.
+
+The structural one is **UIFont, a Swift struct in the port**. It has no
+Objective-C class, so the categories `Artsy+UIFonts` / `Artsy+OSSUIFonts`
+(`+[UIFont serifFontWithSize:]`) cannot exist. `Artsy+UILabels` and
+`Artsy-UIButtons` call them 18 times (`receiver 'UIFont' for class message is
+a forward declaration`). These three pods cover 20 of the 24 app files that
+import an absent module.
+
+Where Eidolon stops now:
+- **First screen: not reached; score N/A.**
+- Next wall: the macOS-triple leakage above, which the iOS-target work
+  addresses, plus an Objective-C `UIFont` class and CALayer / UIColor
+  `CGColor` surface for the Artsy pods.
+- CardFlight stays unavailable (no shim: its API cannot be recovered from the
+  call sites); Stripe stays the fail-closed adapter.
+
 ## Not supported (open)
 
 Unwind segues and custom `UIStoryboardSegue` subclasses; popover templates;

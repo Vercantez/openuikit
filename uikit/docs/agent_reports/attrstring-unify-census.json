@@ -1,0 +1,295 @@
+{
+ "date": "2026-09-22",
+ "kickstarter_library": {
+  "spec": "origin/agent/ios-oss-walls docs/agent_reports/ios-oss-launch2-chain.json (66fbfb82)",
+  "commands": [
+   "python3 uikit/Tools/ingest/spm_app_chain.py uikit/docs/agent_reports/ios-oss-launch2-chain.json --out <chain> --corpus <ladder-corpus>/ios-oss --checkouts <resolve>/.build/checkouts --openuikit uikit",
+   "python3 uikit/Tools/ingest/chain_census.py ... --only ServerDrivenUI Library --continue (ServerDrivenUI passes, Library fails)",
+   "swift build --target Library -j 8 -Xswiftc -disable-batch-mode (one frontend per file; a signal-4 compiler crash in batch mode hides other files' diagnostics, differently per run)"
+  ],
+  "scratch_only_changes_applied_to_both": [
+   "experiment E (iososs-walls): OpenUIKit without import AppKit (IndexPath / NSIndexPath members @_disfavoredOverload, awakeFromNib not an override), SwiftUI TextAttributes without the !canImport(SwiftUICore) guard",
+   "ServerDrivenUI AudioVideoBlock.swift excluded and replaced by a body-less stub of the same type (Apple's macOS AVFoundation is unavailable on this triple; iososs-walls confirmed their earlier ServerDrivenUI 0 came from stale uncommitted AV modules)",
+   "after only: attrstring-unify merged, and its canImport(AppKit) branches forced to the no-AppKit (iOS-triple) form, because experiment E removes the AppKit import they depend on"
+  ],
+  "before": {
+   "unique_errors": 72,
+   "files_with_errors": 24,
+   "nsattributedstring_ambiguous": 18,
+   "nsattributedstring_ambiguous_files": [
+    "Library/SharedFunctions.swift",
+    "Library/String+Attributed.swift",
+    "Library/String+SimpleHTML.swift",
+    "Library/ViewModels/BackerDashboardProjectCellViewModel+Utilities.swift",
+    "Library/ViewModels/BackerDashboardProjectCellViewModel.swift",
+    "Library/ViewModels/ProjectPamphletCreatorHeaderCellViewModel.swift"
+   ],
+   "numberformatter_errors": [],
+   "by_message": [
+    [
+     "'NSAttributedString' is ambiguous for type lookup in this context",
+     18
+    ],
+    [
+     "cannot infer key path type from context; consider explicitly specifying a root type",
+     7
+    ],
+    [
+     "'AVAudioSession' is unavailable in macOS",
+     6
+    ],
+    [
+     "cannot find type 'UIApplication' in scope",
+     4
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Lens<UITextView, Bool>'",
+     3
+    ],
+    [
+     "cannot find 'UIApplication' in scope",
+     3
+    ],
+    [
+     "cannot find type 'UIAlertController' in scope",
+     3
+    ],
+    [
+     "'CTTelephonyNetworkInfo' is unavailable in macOS",
+     2
+    ],
+    [
+     "declaration 'awakeFromNib()' cannot override more than one superclass declaration",
+     2
+    ],
+    [
+     "the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions",
+     2
+    ],
+    [
+     "property 'onTintColor' requires that 'UISwitch' conform to 'UISwitchProtocol'",
+     2
+    ],
+    [
+     "value of type 'LensHolder<UITableView>' has no member 'separatorStyle'",
+     2
+    ],
+    [
+     "cannot find type 'Notification' in scope",
+     2
+    ],
+    [
+     "cannot find type 'UIView' in scope",
+     2
+    ],
+    [
+     "cannot find 'UIDevice' in scope",
+     1
+    ],
+    [
+     "cannot find 'UIAccessibility' in scope",
+     1
+    ],
+    [
+     "cannot find type 'NSObject' in scope",
+     1
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Lens<UIImageView, Bool>'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'link'",
+     1
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Lens<UITextView, Part>'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'singleLine'",
+     1
+    ],
+    [
+     "binary operator '.~' cannot be applied to operands of type 'KeyPath<_, _>' and 'UIColor'",
+     1
+    ],
+    [
+     "generic parameter 'A' could not be inferred",
+     1
+    ],
+    [
+     "binary operator '.~' cannot be applied to operands of type 'KeyPath<_, _>' and '_'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'zero'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'none'",
+     1
+    ],
+    [
+     "type 'UIApplication' does not conform to protocol 'UIApplicationType'",
+     1
+    ],
+    [
+     "cannot find type 'UIBarButtonItem' in scope",
+     1
+    ]
+   ]
+  },
+  "after": {
+   "unique_errors": 54,
+   "files_with_errors": 18,
+   "nsattributedstring_ambiguous": 0,
+   "nsattributedstring_ambiguous_files": [],
+   "numberformatter_errors": [],
+   "by_message": [
+    [
+     "cannot infer key path type from context; consider explicitly specifying a root type",
+     7
+    ],
+    [
+     "'AVAudioSession' is unavailable in macOS",
+     6
+    ],
+    [
+     "cannot find type 'UIApplication' in scope",
+     4
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Lens<UITextView, Bool>'",
+     3
+    ],
+    [
+     "cannot find 'UIApplication' in scope",
+     3
+    ],
+    [
+     "cannot find type 'UIAlertController' in scope",
+     3
+    ],
+    [
+     "'CTTelephonyNetworkInfo' is unavailable in macOS",
+     2
+    ],
+    [
+     "declaration 'awakeFromNib()' cannot override more than one superclass declaration",
+     2
+    ],
+    [
+     "the compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions",
+     2
+    ],
+    [
+     "property 'onTintColor' requires that 'UISwitch' conform to 'UISwitchProtocol'",
+     2
+    ],
+    [
+     "value of type 'LensHolder<UITableView>' has no member 'separatorStyle'",
+     2
+    ],
+    [
+     "cannot find type 'Notification' in scope",
+     2
+    ],
+    [
+     "cannot find type 'UIView' in scope",
+     2
+    ],
+    [
+     "cannot find 'UIDevice' in scope",
+     1
+    ],
+    [
+     "cannot find 'UIAccessibility' in scope",
+     1
+    ],
+    [
+     "cannot find type 'NSObject' in scope",
+     1
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Lens<UIImageView, Bool>'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'link'",
+     1
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Lens<UITextView, Part>'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'singleLine'",
+     1
+    ],
+    [
+     "binary operator '.~' cannot be applied to operands of type 'KeyPath<_, _>' and 'UIColor'",
+     1
+    ],
+    [
+     "generic parameter 'A' could not be inferred",
+     1
+    ],
+    [
+     "binary operator '.~' cannot be applied to operands of type 'KeyPath<_, _>' and '_'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'zero'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'none'",
+     1
+    ],
+    [
+     "type 'UIApplication' does not conform to protocol 'UIApplicationType'",
+     1
+    ],
+    [
+     "cannot find type 'UIBarButtonItem' in scope",
+     1
+    ]
+   ]
+  },
+  "removed": [
+   "{\"file\": \"Library/SharedFunctions.swift\", \"line\": 826, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/String+Attributed.swift\", \"line\": 15, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/String+Attributed.swift\", \"line\": 17, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/String+Attributed.swift\", \"line\": 4, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/String+SimpleHTML.swift\", \"line\": 26, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/String+SimpleHTML.swift\", \"line\": 8, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/String+SimpleHTML.swift\", \"line\": 93, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/BackerDashboardProjectCellViewModel+Utilities.swift\", \"line\": 25, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/BackerDashboardProjectCellViewModel+Utilities.swift\", \"line\": 61, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/BackerDashboardProjectCellViewModel.swift\", \"line\": 110, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/BackerDashboardProjectCellViewModel.swift\", \"line\": 114, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/BackerDashboardProjectCellViewModel.swift\", \"line\": 23, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/BackerDashboardProjectCellViewModel.swift\", \"line\": 35, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/ProjectPamphletCreatorHeaderCellViewModel.swift\", \"line\": 12, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/ProjectPamphletCreatorHeaderCellViewModel.swift\", \"line\": 33, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}",
+   "{\"file\": \"Library/ViewModels/ProjectPamphletCreatorHeaderCellViewModel.swift\", \"line\": 39, \"msg\": \"'NSAttributedString' is ambiguous for type lookup in this context\"}"
+  ],
+  "added": []
+ },
+ "simplenote": {
+  "command": "python3 uikit/Tools/ingest/xcodeproj_to_package.py <corpus>/simplenote-ios/Simplenote.xcodeproj --target Simplenote --out <out> --openuikit <uikit> --allow-gaps; swift build --target Simplenote",
+  "before": {
+   "base": "origin/main d48096f4",
+   "bridging_header_pch_errors": 1,
+   "error": "SPInteractiveTextStorage.h:4:39: cannot find interface declaration for 'NSTextStorage', superclass of 'SPInteractiveTextStorage'"
+  },
+  "after": {
+   "bridging_header_pch_errors": 0,
+   "swift_half_unique_errors": 422,
+   "swift_half_files_with_errors": 73,
+   "nsattributedstring_ambiguous": 0,
+   "note": "simplenote-objc-core measured 488 unique errors in 85 files behind the PCH with an uncommitted fake NSTextStorage, 22 of them NSAttributedString ambiguity; the remaining groups are the macOS triple (@IBAction arity, AppKit class-name collisions) and API gaps; an NSTextStorageDelegate collision this branch introduced was removed (OUKTextStorageDelegate on the host)."
+  }
+ }
+}

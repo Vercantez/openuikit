@@ -259,6 +259,18 @@ class ChainPlumbingTests(unittest.TestCase):
         self.assertIn('.product(name: "MobileCoreServices", package: "OpenUIKit", '
                       'condition: .when(platforms: [.macOS, .linux]))', manifest)
 
+    def test_spec_platforms_compose_with_the_ios_floor(self) -> None:
+        import spm_app_chain
+        self.assertEqual(spm_app_chain.IOS_PLATFORM_FLOOR, ingest.IOS_PLATFORM_FLOOR)
+        pe = spm_app_chain.platform_entries
+        self.assertEqual(pe({}), ['.macOS("13.0")', '.iOS("26.0")'])
+        self.assertEqual(pe({"macos_deployment": "15.0"}), ['.macOS("15.0")', '.iOS("26.0")'])
+        # netnewswire-launch's spec platforms are kept; a lower iOS floor is raised
+        self.assertEqual(pe({"platforms": [".macOS(.v15)", ".iOS(.v17)"]}), [".macOS(.v15)", '.iOS("26.0")'])
+        self.assertEqual(pe({"platforms": [".macOS(.v15)", '.iOS("26.1")']}), [".macOS(.v15)", '.iOS("26.1")'])
+        self.assertEqual(pe({"platforms": [".macOS(.v14)", ".visionOS(.v1)"]}),
+                         [".macOS(.v14)", ".visionOS(.v1)", '.iOS("26.0")'])
+
     def test_census_passes_the_ios_build_flags(self) -> None:
         import chain_census
         cmd = chain_census.build_command("App", 4, ["--triple", "arm64-apple-ios26.1-simulator", "--sdk", "/x"])
