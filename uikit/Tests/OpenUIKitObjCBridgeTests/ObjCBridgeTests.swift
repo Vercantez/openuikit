@@ -8,6 +8,7 @@ import ObjectiveC
 import XCTest
 @testable import OpenUIKit
 @testable import OpenUIKitObjCBridge
+import OpenUIKitObjCSupport
 
 final class ObjCBridgeTests: XCTestCase {
     @MainActor
@@ -30,8 +31,12 @@ final class ObjCBridgeTests: XCTestCase {
 
     @MainActor
     func testInitWithStyleReuseIdentifierMapsSDKRawValues() {
-        // UITableViewCellStyleValue1 = 1 (UITableViewCell.h)
-        let cell = UITableViewCell(__objcStyle: 1, reuseIdentifier: "v1")
+        // UITableViewCellStyleValue1 = 1 (UITableViewCell.h). The designated
+        // initializer is UITableViewCell's own `@objc dynamic`
+        // `initWithStyle:reuseIdentifier:` now (OPENUIKIT_OBJC_SUBCLASSING),
+        // and CellStyle carries the SDK raw values.
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle(rawValue: 1)!, reuseIdentifier: "v1")
+        XCTAssertEqual(cell.style, .value1)
         XCTAssertEqual(cell.reuseIdentifier, "v1")
         XCTAssertTrue(cell.responds(to: NSSelectorFromString("initWithStyle:reuseIdentifier:")))
     }
@@ -55,7 +60,10 @@ final class ObjCBridgeTests: XCTestCase {
     @MainActor
     func testViewSelectorsForwardToOpenUIKit() {
         let host = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        let child = UIView(__objcFrame: CGRect(x: 1, y: 2, width: 3, height: 4))
+        // `initWithFrame:` is UIView's own `@objc dynamic` initializer now
+        // (OPENUIKIT_OBJC_SUBCLASSING), no longer a bridge twin.
+        XCTAssertTrue(UIView.instancesRespond(to: NSSelectorFromString("initWithFrame:")))
+        let child = UIView(frame: CGRect(x: 1, y: 2, width: 3, height: 4))
         XCTAssertEqual(child.frame, CGRect(x: 1, y: 2, width: 3, height: 4))
         host.perform(NSSelectorFromString("addSubview:"), with: child)
         XCTAssertTrue(host.subviews.contains { $0 === child })
@@ -69,12 +77,56 @@ final class ObjCBridgeTests: XCTestCase {
     @MainActor
     func testNavigationControllerSelectors() {
         let root = UIViewController()
-        let nav = UINavigationController(__objcRoot: root)
+        XCTAssertTrue(UINavigationController.instancesRespond(to: NSSelectorFromString("initWithRootViewController:")))
+        let nav = UINavigationController(rootViewController: root)
         XCTAssertTrue(nav.topViewController === root)
         let next = UIViewController()
         nav.perform(NSSelectorFromString("pushViewController:animated:"), with: next, with: false)
         XCTAssertTrue(nav.topViewController === next)
         XCTAssertEqual((nav.perform(NSSelectorFromString("viewControllers"))?.takeUnretainedValue() as? [UIViewController])?.count, 2)
+    }
+
+    /// simplenote-objc-core: the support header's C structs and protocols
+    /// reach an app's Swift half through its bridging header, next to
+    /// OpenUIKit's own Swift types of the same UIKit names. Distinct Swift
+    /// names keep both usable (Simplenote's Swift half reported 13
+    /// `ambiguous use of 'init(top:left:bottom:right:)'` and 8+8
+    /// `'UITableViewDelegate'/'UITableViewDataSource' is ambiguous` without
+    /// them), and NSDirectionalEdgeInsets now exists on the Swift side at all
+    /// (SPTextField.h:13 stopped Simplenote's bridging-header precompile).
+    func testSupportDeclarationsHaveDistinctSwiftNames() {
+        let directional = NSDirectionalEdgeInsetsObjC(top: 1, leading: 2, bottom: 3, trailing: 4)
+        XCTAssertEqual(directional.leading, 2)
+        XCTAssertEqual(MemoryLayout<NSDirectionalEdgeInsetsObjC>.size, 4 * MemoryLayout<CGFloat>.size)
+        let c = UIEdgeInsetsObjC(top: 1, left: 2, bottom: 3, right: 4)
+        let swift = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)   // OpenUIKit's, unambiguous
+        XCTAssertEqual(c.left, swift.left)
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDelegateObjC.self), "UITableViewDelegate")
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDataSourceObjC.self), "UITableViewDataSource")
+    }
+
+    /// UIColor is NSObject-derived now (simplenote-objc-core), so the color
+    /// surface an Objective-C app uses exists: SDK selectors, sent through
+    /// the runtime, reaching OpenUIKit's own colors and properties.
+    @MainActor
+    func testColorSelectorsReachOpenUIKit() throws {
+        let clear = UIColor.perform(NSSelectorFromString("clearColor"))?.takeUnretainedValue() as? UIColor
+        XCTAssertEqual(clear, UIColor.clear)
+        let label = UIColor.perform(NSSelectorFromString("labelColor"))?.takeUnretainedValue() as? UIColor
+        XCTAssertTrue(label === UIColor.label)
+        let sel = NSSelectorFromString("colorWithRed:green:blue:alpha:")
+        let method = try XCTUnwrap(class_getClassMethod(UIColor.self, sel))
+        typealias Factory = @convention(c) (AnyClass, Selector, CGFloat, CGFloat, CGFloat, CGFloat) -> UIColor
+        let made = unsafeBitCast(method_getImplementation(method), to: Factory.self)(UIColor.self, sel, 1, 0, 0, 1)
+        XCTAssertEqual(made, UIColor(red: 1, green: 0, blue: 0, alpha: 1))
+
+        let view = UIView(frame: .zero)
+        view.perform(NSSelectorFromString("setBackgroundColor:"), with: UIColor.red)
+        XCTAssertEqual(view.backgroundColor, .red)
+        let labelView = UILabel()
+        labelView.perform(NSSelectorFromString("setTextColor:"), with: UIColor.blue)
+        XCTAssertEqual(labelView.textColor, .blue)
+        XCTAssertTrue(UIView.instancesRespond(to: NSSelectorFromString("setTintColor:")))  // native @objc
     }
 
     @MainActor

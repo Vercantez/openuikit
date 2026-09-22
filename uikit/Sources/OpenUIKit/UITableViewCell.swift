@@ -34,6 +34,12 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -77,11 +83,11 @@ final class UITableViewCellContentView: UIView {
     /// same 8 pt on a disclosure title `[16, 15, 292.5, 20.5]` (LTR) /
     /// `[8, 15, 292.5]` (RTL, physical left is trailing) in a 316.5
     /// content view.
-    override var _defaultBaseLayoutMargins: UIEdgeInsets {
-        guard let cell else { return super._defaultBaseLayoutMargins }
+    final var _contentDefaultBaseLayoutMargins: UIEdgeInsets {
+        guard let cell else { return _viewDefaultBaseLayoutMargins }
         var m = cell.layoutMargins
         if cell.accessoryView != nil || cell.accessoryType != .none {
-            let tight = super._defaultBaseLayoutMargins.right
+            let tight = _viewDefaultBaseLayoutMargins.right
             if cell._layoutIsRTL {
                 m.left = tight
             } else {
@@ -385,10 +391,20 @@ final class UITableViewCellReorderControl: UIView {
 
 // MARK: - UITableViewCell
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITableViewCell)
+#endif
 @preconcurrency @MainActor
 open class UITableViewCell: UIView, ReusableView {
-    public enum CellStyle: Sendable {
-        case `default`, subtitle, value1, value2
+    /// Raw values: iOS 26.1 SDK `UITableViewCellStyle` (UITableViewCell.h).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UITableViewCellStyle)
+#endif
+    public enum CellStyle: Int, Sendable {
+        case `default` = 0, subtitle = 3, value1 = 1, value2 = 2
     }
 
     public enum AccessoryType: Sendable {
@@ -399,8 +415,12 @@ open class UITableViewCell: UIView, ReusableView {
         case none, blue, gray, `default`
     }
 
-    public enum EditingStyle: Sendable {
-        case none, delete, insert
+    /// Raw values: iOS 26.1 SDK `UITableViewCellEditingStyle`.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UITableViewCellEditingStyle)
+#endif
+    public enum EditingStyle: Int, Sendable {
+        case none = 0, delete = 1, insert = 2
     }
 
     // MARK: Measured metrics (see file header)
@@ -528,27 +548,27 @@ open class UITableViewCell: UIView, ReusableView {
     static let xxxxlEditControlY: CGFloat = 21
     /// iOS: the window's system layout margin (20 on the iPhone 16, 16 on
     /// the SE — see UITableView.iOSSystemMargin).
-    var trailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin : 16 }
+    final var trailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin : 16 }
 
     /// Window `traitOverrides` `.accessibilityLarge` grows the edit chrome.
     /// Guarded by the iOS cut; Catalyst keeps the `.large` 26/40/27 numbers.
-    var usesAccessibilityEditChrome: Bool {
+    final var usesAccessibilityEditChrome: Bool {
         UITableViewCell.isIOSChrome
             && traitCollection.preferredContentSizeCategory.isAccessibilityCategory
     }
     /// MEASURED TableEditor t900.xxxl: `.extraExtraExtraLarge` is not an
     /// accessibility category, so the ax1 39/55/41 chrome must not fire;
     /// the 34.5/47.5/36.5 numbers apply instead.
-    var usesXxxxlEditChrome: Bool {
+    final var usesXxxxlEditChrome: Bool {
         UITableViewCell.isIOSChrome
             && traitCollection.preferredContentSizeCategory == .extraExtraExtraLarge
     }
-    var effectiveEditLeadingGutter: CGFloat {
+    final var effectiveEditLeadingGutter: CGFloat {
         if usesAccessibilityEditChrome { return UITableViewCell.accessibilityEditLeadingGutter }
         if usesXxxxlEditChrome { return UITableViewCell.xxxxlEditLeadingGutter }
         return UITableViewCell.editLeadingGutter
     }
-    var effectiveReorderWidth: CGFloat {
+    final var effectiveReorderWidth: CGFloat {
         if usesAccessibilityEditChrome { return UITableViewCell.accessibilityReorderWidth }
         if usesXxxxlEditChrome { return UITableViewCell.xxxxlReorderWidth }
         return UITableViewCell.reorderWidth
@@ -571,7 +591,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// flipping this default to 20 dropped `realapp_storage_light_ipad`
     /// 99.689 → 99.554. Two samples disagree; the xib oracle wins and
     /// Forms-ipad x=20 stays OPEN.
-    override var _defaultBaseLayoutMargins: UIEdgeInsets {
+    final var _cellDefaultBaseLayoutMargins: UIEdgeInsets {
         UIEdgeInsets(top: 15, left: contentMargin, bottom: 15, right: contentMargin)
     }
     /// The horizontal layout margin of the cell and its content view. MEASURED
@@ -583,7 +603,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// margin (realapp_storage_light SwitchCell [15, 20, 15, 20]). Accessories
     /// keep `trailingMargin` (20): the same probe puts a custom accessory's
     /// right edge at 353 - 20 and the PaddedSwitch at x 262.
-    var contentMargin: CGFloat {
+    final var contentMargin: CGFloat {
         if UITableViewCell.isIOSChrome, !UITableView.isPadChrome, tableView?.style == .insetGrouped {
             // MEASURED both ways: iPhone 16 portrait (393 pt) labels at 36 =
             // card 20 + 16; SE landscape (667 pt, Ledger.t200.landscape golden)
@@ -607,7 +627,7 @@ open class UITableViewCell: UIView, ReusableView {
         }
         return trailingMargin
     }
-    var iOSMargin: CGFloat {
+    final var iOSMargin: CGFloat {
         if UITableView.isPadChrome {
             // MEASURED `/tmp/ipad-open-cap` table_inset / table_grouped,
             // iPad (A16) 820×1180 @2x / iOS 26.1: inset-grouped
@@ -644,7 +664,7 @@ open class UITableViewCell: UIView, ReusableView {
         if cat == .extraExtraExtraLarge { return CGSize(width: 14, height: 19.5) }
         return disclosureSize
     }
-    var effectiveDisclosureSize: CGSize {
+    final var effectiveDisclosureSize: CGSize {
         UITableViewCell.disclosureSize(compatibleWith: traitCollection)
     }
     /// iOS: 19 x 17.333 at 3x, 19 x 18 at 2x (measured; no single rounding
@@ -653,11 +673,11 @@ open class UITableViewCell: UIView, ReusableView {
         isIOSChrome ? CGSize(width: 19, height: UIScreen.main.scale >= 3 ? 17.333333 : 18) : CGSize(width: 19, height: 18)
     }
     /// Leading text inset (16; the table sets 20 for plain cells on iOS).
-    var _textInset: CGFloat = 16
+    final var _textInset: CGFloat = 16
     /// Extra top padding of a grouped section's first row on iOS (2 pt).
-    var _leadingPadding: CGFloat = 0
+    final var _leadingPadding: CGFloat = 0
     /// Checkmark trailing margin (measured 18.5, vs 16 for the chevron).
-    var checkmarkTrailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin + 2.5 : 18.5 }
+    final var checkmarkTrailingMargin: CGFloat { UITableViewCell.isIOSChrome ? iOSMargin + 2.5 : 18.5 }
     /// Content-edge gap between the content view and a checkmark accessory.
     static let checkmarkContentGap: CGFloat = 2.5
     /// value1 detail gap from the content edge when an accessory is present.
@@ -691,35 +711,35 @@ open class UITableViewCell: UIView, ReusableView {
     /// so publishing one here breaks any app class that declares its own.
     /// pocket-casts' ThemeableCell declares `var style: ThemeStyle`, which
     /// collided with this until it went internal.
-    let style: CellStyle
+    final let style: CellStyle
     /// UIKit declares this read-only; a cell built from a nib has no
     /// `init(style:reuseIdentifier:)` to carry it, so the table stamps it on
     /// after instantiation (`_setNibReuseIdentifier`), which is what UIKit
     /// does too.
-    public private(set) var reuseIdentifier: String?
+    public private(set) final var reuseIdentifier: String?
 
-    public let contentView: UIView = UITableViewCellContentView()
+    public final let contentView: UIView = UITableViewCellContentView()
     /// UIKit exposes these legacy cell views as optionals.  The stock styles
     /// create them eagerly, so an implicitly-unwrapped optional preserves both
     /// source shapes used by applications: `textLabel.text` and
     /// `textLabel?.text`.
-    public let textLabel: UILabel! = UILabel()
+    public final let textLabel: UILabel! = UILabel()
     /// Present for subtitle/value1/value2 cells, nil for `.default` (UIKit).
-    public private(set) var detailTextLabel: UILabel?
-    public private(set) var imageView: UIImageView? = UIImageView()
+    public private(set) final var detailTextLabel: UILabel?
+    public private(set) final var imageView: UIImageView? = UIImageView()
 
     /// Per-cell separator override. The untouched initial value uses the
     /// table's measured style inset; assigning any value (including `.zero`)
     /// establishes an explicit cell override, matching common UIKit code.
-    public var separatorInset: UIEdgeInsets = .zero {
+    public final var separatorInset: UIEdgeInsets = .zero {
         didSet {
             _hasExplicitSeparatorInset = true
             setNeedsLayout()
         }
     }
-    var _hasExplicitSeparatorInset = false
+    final var _hasExplicitSeparatorInset = false
 
-    public var accessoryType: AccessoryType = .none {
+    public final var accessoryType: AccessoryType = .none {
         didSet {
             if accessoryType != oldValue {
                 _accessoryGlyphView.accessoryType = accessoryType
@@ -732,7 +752,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// A custom trailing view for the cell. As in UIKit, a custom accessory
     /// takes visual precedence over `accessoryType`; removing it restores the
     /// configured stock glyph.
-    public var accessoryView: UIView? {
+    public final var accessoryView: UIView? {
         didSet {
             guard accessoryView !== oldValue else { return }
             oldValue?.removeFromSuperview()
@@ -743,26 +763,26 @@ open class UITableViewCell: UIView, ReusableView {
         }
     }
 
-    public var selectionStyle: SelectionStyle = .default
+    public final var selectionStyle: SelectionStyle = .default
 
-    public private(set) var isSelected = false
-    public private(set) var isHighlighted = false
-    public private(set) var isEditing = false
+    public private(set) final var isSelected = false
+    public private(set) final var isHighlighted = false
+    public private(set) final var isEditing = false
 
     /// The table currently displaying this cell (set while bound).
-    weak var tableView: UITableView?
+    weak final var tableView: UITableView?
     /// Managed by the table's tiling pass.
-    let separatorView = UIView()
+    final let separatorView = UIView()
     /// The line above the row. Only `.grouped` uses it, and only on the first
     /// row of a section — see `UITableView.updateSeparators`.
-    let topSeparatorView = UIView()
+    final let topSeparatorView = UIView()
     /// The portable vector backing for `accessoryType`. Keep it separate from
     /// UIKit's public `accessoryView`, which is application-owned content.
-    let _accessoryGlyphView = UITableCellAccessoryView()
+    final let _accessoryGlyphView = UITableCellAccessoryView()
     /// iOS edit-mode chrome (nil until the cell first enters editing).
-    var _editControl: UITableViewCellEditControl?
-    var _reorderControl: UITableViewCellReorderControl?
-    public var selectedBackgroundView: UIView? {
+    final var _editControl: UITableViewCellEditControl?
+    final var _reorderControl: UITableViewCellReorderControl?
+    public final var selectedBackgroundView: UIView? {
         didSet {
             guard selectedBackgroundView !== oldValue else { return }
             oldValue?.removeFromSuperview()
@@ -777,7 +797,10 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: Init
 
-    public init(style: CellStyle, reuseIdentifier: String?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic init(style: CellStyle, reuseIdentifier: String?) {
         self.style = style
         self.reuseIdentifier = reuseIdentifier
         super.init(frame: CGRect(x: 0, y: 0, width: 320,
@@ -796,7 +819,10 @@ open class UITableViewCell: UIView, ReusableView {
         self.init(style: .default, reuseIdentifier: nil)
     }
 
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         style = .default
         reuseIdentifier = nil
         super.init(coder: coder)
@@ -805,11 +831,11 @@ open class UITableViewCell: UIView, ReusableView {
 
     /// Stamp the reuse identifier onto a cell a `UINib` produced (see
     /// `UITableView.register(_:forCellReuseIdentifier:)`).
-    func _setNibReuseIdentifier(_ identifier: String) {
+    final func _setNibReuseIdentifier(_ identifier: String) {
         reuseIdentifier = identifier
     }
 
-    private func configureCell(for style: CellStyle) {
+    private final func configureCell(for style: CellStyle) {
         textLabel.font = .systemFont(ofSize: 17)
         textLabel.textColor = .label
 
@@ -854,7 +880,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// subheadline) even though `UIFont.preferredFont(forTextStyle:)` at
     /// construction still reads process `.large` (Forms/Feed custom
     /// labels stay 17). `.large` is 17/15 — the previous hardcoded sizes.
-    func applyIOSPreferredFonts() {
+    final func applyIOSPreferredFonts() {
         guard UITableViewCell.isIOSChrome else { return }
         let traits = traitCollection
         switch style {
@@ -882,7 +908,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// Self-sized height of a plain subtitle cell. `.large` stays **62**.
     /// Accessibility: 15 + primaryH + 6 + detailH + 20.5 (**117** at ax1).
     /// xxxl: 11 + primaryH + 4 + detailH + 15 (**83** at 27.5/25.5).
-    func iOSPlainSubtitleFittingHeight() -> CGFloat {
+    final func iOSPlainSubtitleFittingHeight() -> CGFloat {
         applyIOSPreferredFonts()
         let cat = traitCollection.preferredContentSizeCategory
         if cat.isAccessibilityCategory {
@@ -904,7 +930,10 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: Reuse
 
-    open func prepareForReuse() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func prepareForReuse() {
         setSelected(false, animated: false)
         setHighlighted(false, animated: false)
         setEditing(false, animated: false)
@@ -912,36 +941,42 @@ open class UITableViewCell: UIView, ReusableView {
         topSeparatorView.isHidden = true
     }
 
-    public func setEditing(_ editing: Bool, animated: Bool) {
+    public final func setEditing(_ editing: Bool, animated: Bool) {
         guard editing != isEditing else { return }
         isEditing = editing
         setNeedsLayout()
     }
 
-    private var showsDeleteControl: Bool {
+    private final var showsDeleteControl: Bool {
         isEditing && UITableViewCell.isIOSChrome
             && (tableView?._editingStyle(for: self) == .delete)
     }
-    private var showsReorderControlNow: Bool {
+    private final var showsReorderControlNow: Bool {
         isEditing && UITableViewCell.isIOSChrome
             && (tableView?._canMove(self) ?? false)
     }
 
     // MARK: Selection / highlight
 
-    open func setSelected(_ selected: Bool, animated: Bool) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func setSelected(_ selected: Bool, animated: Bool) {
         guard selected != isSelected else { return }
         isSelected = selected
         updateSelectionOverlay(animated: animated)
     }
 
-    open func setHighlighted(_ highlighted: Bool, animated: Bool) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func setHighlighted(_ highlighted: Bool, animated: Bool) {
         guard highlighted != isHighlighted else { return }
         isHighlighted = highlighted
         updateSelectionOverlay(animated: animated)
     }
 
-    private func ensureSelectedBackgroundView() -> UIView {
+    private final func ensureSelectedBackgroundView() -> UIView {
         if let v = selectedBackgroundView { return v }
         let v = UIView()
         v.backgroundColor = UITableViewCell.selectionColor
@@ -951,7 +986,7 @@ open class UITableViewCell: UIView, ReusableView {
         return v
     }
 
-    private func updateSelectionOverlay(animated: Bool) {
+    private final func updateSelectionOverlay(animated: Bool) {
         let on = (isSelected || isHighlighted) && selectionStyle != .none
         if on {
             let v = ensureSelectedBackgroundView()
@@ -1000,7 +1035,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// image occupies a fixed 24 pt slot (see the accessory layout below
     /// for the measurement). Nil for every other accessory / the Catalyst cut.
     static let symbolAccessorySlotWidth: CGFloat = 24
-    var symbolAccessorySlotWidth: CGFloat? {
+    final var symbolAccessorySlotWidth: CGFloat? {
         guard UITableViewCell.isIOSChrome,
               let iv = accessoryView as? UIImageView,
               iv.image?.isSymbolImage == true else { return nil }
@@ -1008,7 +1043,7 @@ open class UITableViewCell: UIView, ReusableView {
     }
 
     /// Width of the content region for the current accessory / edit chrome.
-    var contentWidth: CGFloat {
+    final var contentWidth: CGFloat {
         var leading: CGFloat = 0
         var trailing: CGFloat = 0
         if showsDeleteControl { leading = effectiveEditLeadingGutter }
@@ -1054,7 +1089,7 @@ open class UITableViewCell: UIView, ReusableView {
         return (v * 2).rounded(.up) / 2
     }
 
-    private func layoutEditChrome(pad: CGFloat, height h: CGFloat, width w: CGFloat) {
+    private final func layoutEditChrome(pad: CGFloat, height h: CGFloat, width w: CGFloat) {
         if showsDeleteControl {
             let control: UITableViewCellEditControl
             if let existing = _editControl {
@@ -1389,7 +1424,7 @@ open class UITableViewCell: UIView, ReusableView {
         }
     }
 
-    open func defaultContentConfiguration() -> UIListContentConfiguration {
+    public final func defaultContentConfiguration() -> UIListContentConfiguration {
         switch style {
         case .subtitle: return .subtitleCell()
         case .value1, .value2: return .valueCell()

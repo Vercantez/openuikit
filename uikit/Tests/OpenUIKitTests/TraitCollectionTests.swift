@@ -462,8 +462,8 @@ final class TraitCollectionTests: XCTestCase {
         XCTAssertEqual(styleCount, 0)
         XCTAssertEqual(horizontalCount, 0)
 
-        var previous = view.traitCollection
-        previous.userInterfaceStyle = .light
+        // UITraitCollection is an immutable class now (UIKit's shape).
+        let previous = view.traitCollection._with { $0.userInterfaceStyle = .light }
         view._traitsDidChange(previous: previous)
         XCTAssertEqual(styleCount, 1)
         XCTAssertEqual(horizontalCount, 0)

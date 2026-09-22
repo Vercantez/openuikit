@@ -33,6 +33,12 @@
 // MODEL values directly (no animation context), so it composes with the
 // UIView.animate-driven completion/cancel tail.
 
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 extension UIRectEdge {
     public static let top = UIRectEdge(rawValue: 1 << 0)
     public static let left = UIRectEdge(rawValue: 1 << 1)
@@ -97,6 +103,12 @@ public final class UIScreenEdgePanGestureRecognizer: UIPanGestureRecognizer {
     }
 }
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UINavigationController)
+#endif
 @preconcurrency @MainActor
 open class UINavigationController: UIViewController {
     // MARK: Constants (docs/APP_FEEL.md "Navigation transitions")
@@ -117,38 +129,58 @@ open class UINavigationController: UIViewController {
 
     // MARK: Stack
 
-    public private(set) var viewControllers: [UIViewController] = []
-    public var topViewController: UIViewController? { viewControllers.last }
+    public private(set) final var viewControllers: [UIViewController] = []
+    public final var topViewController: UIViewController? { viewControllers.last }
 
     /// The controller whose view is currently in front of the navigation
     /// interface. This is normally the stack's top controller, but a modal
     /// presented over the navigation controller (or, on the portable path,
     /// directly by its top child) is the visible controller until dismissal.
-    public var visibleViewController: UIViewController? {
+    public final var visibleViewController: UIViewController? {
         if let presentedViewController { return presentedViewController }
         guard let topViewController else { return nil }
         return topViewController.presentedViewController ?? topViewController
     }
 
-    public let navigationBar = UINavigationBar()
+    public final let navigationBar = UINavigationBar()
     /// The controller's toolbar (M13). Hidden by default, exactly like
     /// UIKit; shown by `setToolbarHidden(false, animated:)` and filled from
     /// the top controller's `toolbarItems`.
-    public let toolbar = UIToolbar()
+    public final let toolbar = UIToolbar()
     /// Whether the navigation bar is removed from the container's layout.
     /// Hidden bars give the top controller the full height above any toolbar.
-    open var isNavigationBarHidden: Bool = false {
-        didSet {
-            guard isNavigationBarHidden != oldValue,
-                  !_isAnimatingNavigationBarVisibility else { return }
-            navigationBar.isHidden = isNavigationBarHidden
-            navigationBar.alpha = 1
-            updateContainerLayout()
+    /// Backing store; the property below carries UIKit's Objective-C
+    /// spelling (`getter=isNavigationBarHidden`, `setNavigationBarHidden:`) so an Objective-C
+    /// subclass's `-setNavigationBarHidden:` override is what Swift-side sets reach.
+    final var _isNavigationBarHiddenStorage: Bool = false
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(navigationBarHidden)
+#endif
+    open dynamic var isNavigationBarHidden: Bool {
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(isNavigationBarHidden)
+#endif
+        get { _isNavigationBarHiddenStorage }
+#if OPENUIKIT_OBJC_SUBCLASSING
+        @objc(setNavigationBarHidden:)
+#endif
+        set {
+            let oldValue = _isNavigationBarHiddenStorage
+            _isNavigationBarHiddenStorage = newValue
+                guard isNavigationBarHidden != oldValue,
+                      !_isAnimatingNavigationBarVisibility else { return }
+                navigationBar.isHidden = isNavigationBarHidden
+                navigationBar.alpha = 1
+                updateContainerLayout()
+        
         }
     }
-    private var _isAnimatingNavigationBarVisibility = false
+    private final var _isAnimatingNavigationBarVisibility = false
 
-    open func setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func setNavigationBarHidden(_ hidden: Bool, animated: Bool) {
         guard hidden != isNavigationBarHidden else { return }
         guard animated, isViewLoaded else {
             isNavigationBarHidden = hidden
@@ -179,7 +211,7 @@ open class UINavigationController: UIViewController {
             self.navigationBar.alpha = 1
         })
     }
-    public var isToolbarHidden: Bool = true {
+    public final var isToolbarHidden: Bool = true {
         didSet {
             guard isToolbarHidden != oldValue else { return }
             toolbar.isHidden = isToolbarHidden
@@ -188,38 +220,47 @@ open class UINavigationController: UIViewController {
             updateContainerLayout()
         }
     }
-    public func setToolbarHidden(_ hidden: Bool, animated: Bool) {
+    public final func setToolbarHidden(_ hidden: Bool, animated: Bool) {
         isToolbarHidden = hidden
     }
     /// Clipped area below the bar that hosts child VC views.
-    let contentView = UIView()
+    final let contentView = UIView()
     /// Phone bottom-docked search (Ledger). Nil until first layout of a
     /// `usesBottomSearch` bar.
-    var floatingSearchContainer: UIView?
-    var floatingSearchPlatter: UIView?
-    var floatingSearchDismissPlatter: UIView?
-    var floatingSearchDismissButton: UIButton?
-    public private(set) var interactivePopGestureRecognizer: UIGestureRecognizer?
+    final var floatingSearchContainer: UIView?
+    final var floatingSearchPlatter: UIView?
+    final var floatingSearchDismissPlatter: UIView?
+    final var floatingSearchDismissButton: UIButton?
+    public private(set) final var interactivePopGestureRecognizer: UIGestureRecognizer?
     /// iOS 26's content-pop recognizer. OpenUIKit's measured edge recognizer
     /// drives the same interactive transition, so both public routes expose
     /// the identical retained recognizer rather than competing for touches.
-    public var interactiveContentPopGestureRecognizer: UIGestureRecognizer? {
+    public final var interactiveContentPopGestureRecognizer: UIGestureRecognizer? {
         interactivePopGestureRecognizer
     }
 
-    public init(rootViewController: UIViewController) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic init(rootViewController: UIViewController) {
         super.init()
         addChild(rootViewController)
         viewControllers = [rootViewController]
         rootViewController.didMove(toParent: self)
     }
 
-    public init() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic init() {
         super.init()
     }
 
     /// MEASURED `navigation.coder`: non-nil, unloaded, no view controllers.
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         super.init(coder: coder)
     }
 
@@ -277,7 +318,7 @@ open class UINavigationController: UIViewController {
         }
     }
 
-    func installTopView(_ vc: UIViewController) {
+    final func installTopView(_ vc: UIViewController) {
         let cv = vc.view!
         cv.frame = contentView.bounds
         cv.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -292,7 +333,7 @@ open class UINavigationController: UIViewController {
     /// (iOS 26.1) underlaps a translucent bar (Forms / NavFlow); an opaque
     /// bar (`isTranslucent == false`) insets the child below it, matching
     /// realapp_focus_settings_light.
-    func updateContainerLayout() {
+    final func updateContainerLayout() {
         guard isViewLoaded else { return }
         let v = view!
         let w = v.bounds.width, h = v.bounds.height
@@ -374,7 +415,7 @@ open class UINavigationController: UIViewController {
 
     /// iOS 26.1 bar origin: `max(safeArea.top, 10)` portrait, `max(safeArea.top, 24)`
     /// compact height. See updateContainerLayout.
-    var iOSBarTop: CGFloat {
+    final var iOSBarTop: CGFloat {
         let floor = UINavigationBar.isCompactHeight
             ? UINavigationBar.iOSCompactHeightBarTop
             : UINavigationBar.iOSMinimumBarTop
@@ -391,7 +432,7 @@ open class UINavigationController: UIViewController {
     /// area at zero, so a controller whose Auto Layout hangs off
     /// `view.safeAreaLayoutGuide.topAnchor` (the normal spelling) drew its
     /// content 116 pt too high, under the bar.
-    func updateContentSafeArea() {
+    final func updateContentSafeArea() {
         guard isViewLoaded else { return }
         let v = view!
         let inherited = v.safeAreaInsets
@@ -431,7 +472,7 @@ open class UINavigationController: UIViewController {
     /// Place the phone bottom-docked search. MEASURED Ledger t200 / t3000 /
     /// t200.landscape, iPhone SE 2x / iOS 26.1. Hidden when `topItem` has
     /// no searchController (t1200 pushed detail).
-    func layoutFloatingSearch() {
+    final func layoutFloatingSearch() {
         guard isViewLoaded else { return }
         let v = view!
         guard navigationBar.usesBottomSearch,
@@ -546,7 +587,7 @@ open class UINavigationController: UIViewController {
         v.bringSubviewToFront(container)
     }
 
-    func styleBottomSearchPlatter(_ platter: UIView) {
+    final func styleBottomSearchPlatter(_ platter: UIView) {
         platter._usesIOSGlass = OpenUIKitRuntime.systemFontCut == .iOS
         platter._usesIOSDarkBarGlass = platter._usesIOSGlass
         platter.backgroundColor = platter._usesIOSGlass ? nil : _UIBarMetrics.platterFill
@@ -575,7 +616,7 @@ open class UINavigationController: UIViewController {
     /// toolbarheightprobe: `isToolbarHidden = false` with nil `toolbarItems`
     /// shows no bar and leaves the child's safeAreaInsets.bottom at the
     /// window's (34 / 20 / 0 / 25). Classic cut: the bar's intrinsic height.
-    var toolbarHeight: CGFloat {
+    final var toolbarHeight: CGFloat {
         guard !isToolbarHidden else { return 0 }
         if UINavigationBar.isIOS {
             return (toolbar.items?.isEmpty ?? true) ? 0 : _UIBarMetrics.toolbarSlotHeight
@@ -586,7 +627,7 @@ open class UINavigationController: UIViewController {
     /// Fill the toolbar from the top controller's `toolbarItems` (M13).
     /// Under the iOS cut the slot exists only while there are items, so a
     /// change between none and some re-frames the container.
-    func updateToolbar() {
+    final func updateToolbar() {
         guard isViewLoaded else { return }
         let hadItems = !(toolbar.items?.isEmpty ?? true)
         toolbar.items = topViewController?.toolbarItems
@@ -597,14 +638,14 @@ open class UINavigationController: UIViewController {
     }
 
     /// A child's `toolbarItems` changed while it is on screen.
-    func _toolbarItemsDidChange(_ vc: UIViewController) {
+    final func _toolbarItemsDidChange(_ vc: UIViewController) {
         guard vc === topViewController else { return }
         updateToolbar()
     }
 
     /// navigationBar.prefersLargeTitles flipped: re-frame the container and
     /// re-bind the top controller's content scroll view.
-    func _largeTitlesModeChanged() {
+    final func _largeTitlesModeChanged() {
         updateContainerLayout()
         if let top = topViewController, top.isViewLoaded,
            top.view.superview === contentView {
@@ -613,7 +654,7 @@ open class UINavigationController: UIViewController {
     }
 
     /// A child's setContentScrollView(_:) changed while it is on screen.
-    func _contentScrollViewDidChange(_ vc: UIViewController) {
+    final func _contentScrollViewDidChange(_ vc: UIViewController) {
         guard vc === topViewController, isViewLoaded,
               vc.viewIfLoaded?.superview === contentView else { return }
         bindContentScrollView(of: vc)
@@ -622,7 +663,7 @@ open class UINavigationController: UIViewController {
     /// Bind the bar's large-title tracking to `vc`'s content scroll view:
     /// reserve the expanded inset, settle at the expanded rest offset when
     /// the scroll view was still at its default offset, and observe it.
-    func bindContentScrollView(of vc: UIViewController) {
+    final func bindContentScrollView(of vc: UIViewController) {
         let previous = navigationBar.trackedScrollView
         let wantsSearch = vc.navigationItem.searchController != nil
         guard navigationBar.displaysLargeTitles || wantsSearch,
@@ -655,7 +696,7 @@ open class UINavigationController: UIViewController {
 
     /// Snap a release inside the large-title zone to the nearest rest state
     /// (fully expanded / fully collapsed), like UIKit.
-    func snapLargeTitleIfNeeded(_ scroll: UIScrollView) {
+    final func snapLargeTitleIfNeeded(_ scroll: UIScrollView) {
         guard navigationBar.displaysLargeTitles,
               scroll === navigationBar.trackedScrollView else { return }
         let d = scroll.contentOffset.y + navigationBar.effectiveLargeTitleExpandedInset
@@ -676,7 +717,7 @@ open class UINavigationController: UIViewController {
     /// Back-button label for the stack position `index` on top: the previous
     /// VC's `backBarButtonItem` / `backButtonTitle` if it set one, otherwise
     /// its title, "Back" when it has none, nil at the root (no button).
-    func backTitle(forTopIndex index: Int) -> String? {
+    final func backTitle(forTopIndex index: Int) -> String? {
         guard index > 0 else { return nil }
         let previous = viewControllers[index - 1]
         if viewControllers[index]._navigationItem?.hidesBackButton == true { return nil }
@@ -691,7 +732,7 @@ open class UINavigationController: UIViewController {
     /// bar (M13). `setState` still owns the title label and back button
     /// (they take part in the push/pop cross-fade); the item stack drives
     /// the bar-button platters, title view, prompt and per-item appearance.
-    func updateBarState() {
+    final func updateBarState() {
         navigationBar.setState(title: topViewController?.title,
                                backTitle: backTitle(forTopIndex: viewControllers.count - 1))
         navigationBar.setItems(viewControllers.map { $0.navigationItem })
@@ -703,7 +744,7 @@ open class UINavigationController: UIViewController {
         updateContainerLayout()
     }
 
-    func _titleDidChange(_ vc: UIViewController) {
+    final func _titleDidChange(_ vc: UIViewController) {
         // MEASURED /tmp/tabs-t2000-probe, iPhone SE 2x / iOS 26.1: after
         // `nav.tabBarItem = UITabBarItem(title: "Search", …)` then
         // `child.title = "Library"`, `nav.tabBarItem.title` is "Library"
@@ -743,11 +784,11 @@ open class UINavigationController: UIViewController {
         /// snaps back (false).
         var completing: Bool = true
     }
-    var activeTransition: Transition?
+    final var activeTransition: Transition?
 
     // MARK: Push
 
-    public func pushViewController(_ vc: UIViewController, animated: Bool) {
+    public final func pushViewController(_ vc: UIViewController, animated: Bool) {
         guard !viewControllers.contains(where: { $0 === vc }) else { return }
         finishActiveTransition()
         let from = topViewController
@@ -808,7 +849,7 @@ open class UINavigationController: UIViewController {
     /// `popViewController` asks nothing. Calling `popItem` on a managed bar
     /// raises in UIKit (crash report in the probe source) and is not a path
     /// here.
-    func _backButtonTapped() {
+    final func _backButtonTapped() {
         guard let item = navigationBar.topItem ?? topViewController?.navigationItem else {
             popViewController(animated: true)
             return
@@ -819,7 +860,7 @@ open class UINavigationController: UIViewController {
     }
 
     @discardableResult
-    public func popViewController(animated: Bool) -> UIViewController? {
+    public final func popViewController(animated: Bool) -> UIViewController? {
         finishActiveTransition()
         guard viewControllers.count > 1 else { return nil }
         let from = viewControllers.removeLast()
@@ -859,14 +900,14 @@ open class UINavigationController: UIViewController {
     }
 
     /// App hook for custom push/pop animations.
-    public weak var delegate: UINavigationControllerDelegate?
+    public weak final var delegate: UINavigationControllerDelegate?
 
     /// Run one ANIMATED push or pop through the transitioning API. The
     /// built-in `_UINavigationSlideAnimator` reproduces the M7.5 behaviour
     /// exactly (and stays scrubbable through `activeTransition`); a delegate
     /// animator gets the standard context and finishes it through
     /// `completeTransition(_:)`.
-    func _runTransition(push: Bool, from: UIViewController, to: UIViewController) {
+    final func _runTransition(push: Bool, from: UIViewController, to: UIViewController) {
         let op: Operation = push ? .push : .pop
         let custom = delegate?.navigationController(self, animationControllerFor: op,
                                                     from: from, to: to)
@@ -929,7 +970,7 @@ open class UINavigationController: UIViewController {
 
     /// MEASURED animprobe, iPhone SE 2x / iOS 26.1: push duration 0.35,
     /// completionCurve rawValue 7, presentationStyle .none.
-    func installPushPopCoordinator(push: Bool, from: UIViewController, to: UIViewController) {
+    final func installPushPopCoordinator(push: Bool, from: UIViewController, to: UIViewController) {
         let coord = _UITransitionCoordinator(
             animated: true,
             presentationStyle: .none,
@@ -946,7 +987,7 @@ open class UINavigationController: UIViewController {
     /// Teardown for a delegate-supplied animator: the same bookkeeping
     /// `completeTransition(_:)` does for the built-in slide, minus the
     /// scrim/shadow/bar cross-fade the custom animator never created.
-    func _finishCustomTransition(push: Bool, from: UIViewController, to: UIViewController) {
+    final func _finishCustomTransition(push: Bool, from: UIViewController, to: UIViewController) {
         // The outgoing controller's view leaves either way (a push covers it,
         // a pop discards it).
         from.viewIfLoaded?.removeFromSuperview()
@@ -969,7 +1010,7 @@ open class UINavigationController: UIViewController {
     }
 
     @discardableResult
-    public func popToRootViewController(animated: Bool) -> [UIViewController]? {
+    public final func popToRootViewController(animated: Bool) -> [UIViewController]? {
         guard viewControllers.count > 1 else { return nil }
         finishActiveTransition()
         // Collapse the middle of the stack, then pop the top normally.
@@ -985,7 +1026,7 @@ open class UINavigationController: UIViewController {
 
     // MARK: Shared transition mechanics
 
-    func makeScrim() -> UIView {
+    final func makeScrim() -> UIView {
         let s = UIView(frame: contentView.bounds)
         s.backgroundColor = .black
         s.alpha = 0
@@ -994,7 +1035,7 @@ open class UINavigationController: UIViewController {
         return s
     }
 
-    func setShadow(on v: UIView, enabled: Bool) {
+    final func setShadow(on v: UIView, enabled: Bool) {
         let l = v.layer
         if enabled {
             l.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
@@ -1010,7 +1051,7 @@ open class UINavigationController: UIViewController {
     /// of the width the FRONT view has entered (push animates q 0 -> 1, pop
     /// 1 -> 0). Pure property sets: inside a UIView.animate block they
     /// record animations; outside (interactive scrub) they move the model.
-    func applyTransition(_ t: Transition, coverage q: CGFloat) {
+    final func applyTransition(_ t: Transition, coverage q: CGFloat) {
         let mid = contentView.bounds.midX
         t.frontVC.view.center.x = mid + t.width * (1 - q)
         t.backVC.view.center.x = mid - UINavigationController.parallaxFraction * t.width * q
@@ -1019,7 +1060,7 @@ open class UINavigationController: UIViewController {
 
     /// Finish the active transition NOW (used when a new push/pop preempts
     /// one in flight): snap models to the destination and run the cleanup.
-    func finishActiveTransition() {
+    final func finishActiveTransition() {
         guard let t = activeTransition else { return }
         // Destination coverage: push -> 1, completing pop -> 0, cancelled
         // (or still-scrubbing) interactive pop -> 1.
@@ -1028,13 +1069,13 @@ open class UINavigationController: UIViewController {
     }
 
     /// Host-clock step: complete the transition when its end time passes.
-    func stepTransition(to time: Double) {
+    final func stepTransition(to time: Double) {
         guard let t = activeTransition, let end = t.endTime,
               time >= end - 1e-9 else { return }
         completeTransition(t)
     }
 
-    func completeTransition(_ t: Transition) {
+    final func completeTransition(_ t: Transition) {
         let coordinator = _transitionCoordinator as? _UITransitionCoordinator
         activeTransition = nil
         t.scrim.removeFromSuperview()
@@ -1102,20 +1143,20 @@ open class UINavigationController: UIViewController {
     /// shows the pushed "About" as the LARGE title, `navprobe.large`
     /// rest_pushed — `_UINavigationBarLargeTitleView`'s label reads "About"
     /// at [16, 3.67, 97, 40.67] while the inline title stays at alpha 0).
-    func settleBarAfterTransition(on vc: UIViewController) {
+    final func settleBarAfterTransition(on vc: UIViewController) {
         guard vc === topViewController else { return }
         updateBarState()
         if vc.viewIfLoaded?.superview === contentView { bindContentScrollView(of: vc) }
     }
 
-    func detachFromParent(_ vc: UIViewController) {
+    final func detachFromParent(_ vc: UIViewController) {
         // removeFromParent() itself issues didMove(toParent: nil) (UIKit).
         vc.removeFromParent()
     }
 
     // MARK: Interactive back-swipe
 
-    func handleEdgePan(_ r: UIScreenEdgePanGestureRecognizer) {
+    final func handleEdgePan(_ r: UIScreenEdgePanGestureRecognizer) {
         switch r.state {
         case .began:
             guard activeTransition == nil, viewControllers.count > 1,
@@ -1188,7 +1229,7 @@ open class UINavigationController: UIViewController {
 
     /// Scrub the interactive pop to swipe progress `p` (0 = fully covered /
     /// top in place, 1 = pop complete). Direct model sets — no animations.
-    func scrub(progress p: CGFloat) {
+    final func scrub(progress p: CGFloat) {
         guard let t = activeTransition else { return }
         applyTransition(t, coverage: 1 - p)
         navigationBar.setTransitionProgress(p)
@@ -1196,7 +1237,7 @@ open class UINavigationController: UIViewController {
 
     /// Animate the remainder with a critically-damped spring and schedule
     /// the completion on the host clock.
-    func endInteractivePop(_ t: Transition, completes: Bool) {
+    final func endInteractivePop(_ t: Transition, completes: Bool) {
         var t = t
         t.completing = completes
         t.endTime = OpenUIKitRuntime.animationTime

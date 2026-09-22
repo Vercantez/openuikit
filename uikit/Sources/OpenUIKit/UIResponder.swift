@@ -65,8 +65,11 @@ import class ObjectiveC.NSObject
 /// HID stack — the host synthesizes presses from its own key events, the
 /// same way it synthesizes touches (see `UIWindow.sendKey`, which stays the
 /// text-input path and is deliberately NOT routed through presses).
+// UIKit: `@interface UIPress : NSObject` (MEASURED
+// Tools/oracle2/objcsubclassprobe); NSObject-derived so the presses*
+// override points can be `@objc`.
 @preconcurrency @MainActor
-public final class UIPress {
+public final class UIPress: NSObject {
     public enum Phase: Sendable { case began, changed, ended, cancelled }
     public let phase: Phase
     /// The editing key this press carries, when it maps to one.
@@ -81,26 +84,20 @@ public final class UIPress {
         self.key = key
         self.responder = responder
         self.timestamp = timestamp
-    }
-}
-
-// `nonisolated` for the same reason as UIView's below: identity only, and
-// Hashable is a nonisolated protocol (see UIViewCompat.swift).
-extension UIPress: Hashable {
-    nonisolated public static func == (a: UIPress, b: UIPress) -> Bool { a === b }
-    nonisolated public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
+        super.init()
     }
 }
 
 /// Event carrying a set of `UIPress`es (UIKit's UIPressesEvent).
+///
+/// UIKit: `@interface UIPressesEvent : UIEvent` (MEASURED
+/// Tools/oracle2/objcsubclassprobe: class_getSuperclass == UIEvent).
 @preconcurrency @MainActor
-public final class UIPressesEvent {
-    public let timestamp: TimeInterval
+public final class UIPressesEvent: UIEvent {
     public let allPresses: Set<UIPress>
     public init(presses: Set<UIPress>, timestamp: TimeInterval = 0) {
         self.allPresses = presses
-        self.timestamp = timestamp
+        super.init(timestamp: timestamp)
     }
     public func presses(for responder: UIResponder) -> Set<UIPress> {
         allPresses.filter { $0.responder === responder }
@@ -109,6 +106,12 @@ public final class UIPressesEvent {
 
 // MARK: - UIResponder
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIResponder)
+#endif
 @preconcurrency @MainActor
 open class UIResponder: NSObject {
     public override init() { super.init() }
@@ -133,7 +136,10 @@ open class UIResponder: NSObject {
 #if canImport(AppKit)
     open override func awakeFromNib() {}
 #else
-    open func awakeFromNib() {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func awakeFromNib() {}
 #endif
 
     /// UIKit's `UIAccessibilityAction` hook (declared on NSObject there).
@@ -141,7 +147,10 @@ open class UIResponder: NSObject {
     /// docs/REAL_APP_TEST.md blocker 10 — but a real cell overrides it
     /// (pocket-casts' `SwitchCell` returns its locked state), so the
     /// declaration has to exist for that source to compile.
-    open func accessibilityActivate() -> Bool { false }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func accessibilityActivate() -> Bool { false }
 
     // Accessibility attributes are NOT stored here any more. The iOS 26.1 SDK
     // declares them on NSObject (`@interface NSObject (UIAccessibility)`,
@@ -151,12 +160,15 @@ open class UIResponder: NSObject {
     // side-table storage live in NSObjectAccessibility.swift; `_accessibility`
     // below resolves to the computed property on `extension NSObject` there,
     // so this file's spelling is unchanged and one object has one state.
-    private var _inputAssistantItemStorage: UITextInputAssistantItem?
+    private final var _inputAssistantItemStorage: UITextInputAssistantItem?
 
     /// Stable keyboard-shortcut-bar configuration for this responder.
     /// OpenUIKit hosts do not draw that bar; the object and its mutations are
     /// nevertheless observable with UIKit's lifetime semantics.
-    open var inputAssistantItem: UITextInputAssistantItem {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var inputAssistantItem: UITextInputAssistantItem {
         if let item = _inputAssistantItemStorage { return item }
         let item = UITextInputAssistantItem()
         _inputAssistantItemStorage = item
@@ -168,13 +180,16 @@ open class UIResponder: NSObject {
     /// The next responder, or nil at the end of the chain. Overridden by
     /// UIView / UIViewController / UIWindow / UIApplication (see the file
     /// header for the exact rules).
-    open var next: UIResponder? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(nextResponder)
+#endif
+    open dynamic var next: UIResponder? { nil }
 
     /// This responder followed by every responder after it, in chain order.
     /// Not UIKit API (UIKit makes you walk `next`); provided because the
     /// walk is needed by `sendAction` and is the natural thing to assert in
     /// a test. Cycle-guarded, so a malformed hierarchy cannot hang a host.
-    public var _responderChain: [UIResponder] {
+    public final var _responderChain: [UIResponder] {
         var chain: [UIResponder] = []
         var r: UIResponder? = self
         while let cur = r {
@@ -190,16 +205,25 @@ open class UIResponder: NSObject {
     /// The window this responder takes first-responder status in, or nil if
     /// it is not currently attached to one. UIView returns its `window`,
     /// UIViewController its view's window, UIApplication its key window.
-    var _firstResponderWindow: UIWindow? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    dynamic var _firstResponderWindow: UIWindow? { nil }
 
     /// Whether this responder can take focus. Default false, like UIKit;
     /// UITextField/UITextView override.
-    open var canBecomeFirstResponder: Bool { false }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var canBecomeFirstResponder: Bool { false }
 
     /// Whether this responder will give focus up. Default true, like UIKit.
-    open var canResignFirstResponder: Bool { true }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var canResignFirstResponder: Bool { true }
 
-    public var isFirstResponder: Bool {
+    public final var isFirstResponder: Bool {
         _firstResponderWindow?.firstResponder === self
     }
 
@@ -207,8 +231,11 @@ open class UIResponder: NSObject {
     /// `canBecomeFirstResponder` is false, when the responder is not in a
     /// window, or when the current first responder refuses to resign. The
     /// previous first responder resigns first.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
     @discardableResult
-    open func becomeFirstResponder() -> Bool {
+    open dynamic func becomeFirstResponder() -> Bool {
         guard canBecomeFirstResponder, let w = _firstResponderWindow else {
             return false
         }
@@ -223,8 +250,11 @@ open class UIResponder: NSObject {
     }
 
     /// Give up first-responder status. Returns true (UIKit's default).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
     @discardableResult
-    open func resignFirstResponder() -> Bool {
+    open dynamic func resignFirstResponder() -> Bool {
         if let w = _firstResponderWindow, w.firstResponder === self {
             w.firstResponder = nil
             _UIKeyboardChrome.sync(from: w)
@@ -236,23 +266,38 @@ open class UIResponder: NSObject {
 
     /// Default standard-edit action. Text editors override this; ordinary
     /// responders ignore it, matching UIKit's responder-chain surface.
-    open func selectAll(_ sender: Any?) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func selectAll(_ sender: Any?) {}
 
     // MARK: Touch entry points
 
     /// UIKit's default: forward the touches to the next responder. A
     /// responder that handles a phase overrides WITHOUT calling super
     /// (UIControl, UITableViewCell, …) so the touch stops there.
-    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesBegan:withEvent:)
+#endif
+    open dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         next?.touchesBegan(touches, with: event)
     }
-    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesMoved:withEvent:)
+#endif
+    open dynamic func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         next?.touchesMoved(touches, with: event)
     }
-    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesEnded:withEvent:)
+#endif
+    open dynamic func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         next?.touchesEnded(touches, with: event)
     }
-    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesCancelled:withEvent:)
+#endif
+    open dynamic func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         next?.touchesCancelled(touches, with: event)
     }
 
@@ -262,7 +307,10 @@ open class UIResponder: NSObject {
     /// while it is in the responder chain. Default nil, like UIKit. The
     /// window walks the chain collecting these in
     /// `UIWindow.performKeyCommand(input:modifierFlags:)`.
-    open var keyCommands: [UIKeyCommand]? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var keyCommands: [UIKeyCommand]? { nil }
 
     /// UIKit's `buildMenuWithBuilder:` — firefox-ios overrides it on its
     /// AppDelegate to add its File/View/History/Bookmarks/Tools menus.
@@ -275,6 +323,13 @@ open class UIResponder: NSObject {
     /// nothing. The main system's walk starts at `UIApplication.shared`
     /// (application, then delegate; never the window or a controller) and
     /// runs on the FIRST hardware key event (UIMenuBuilder.swift).
+    ///
+    /// Not `@objc`: `UIMenuBuilder` is a Swift protocol whose requirements
+    /// take Swift structs (`UIMenu.Identifier`), so this is the one
+    /// UIResponder member that keeps a Swift vtable slot. An Objective-C
+    /// subclass cannot override it, and the only OpenUIKit caller
+    /// (`UIMenuSystem._rebuild`) goes through `_buildMenuDispatch`, which
+    /// never reads the slot from a class object that lacks it.
     open func buildMenu(with builder: UIMenuBuilder) {}
 
     /// UIKit's `validateCommand:`. MEASURED: sent exactly once per performed
@@ -283,16 +338,25 @@ open class UIResponder: NSObject {
     /// (for an alternate, the synthesized one), just before its action.
     /// `UIMenuSystem.setNeedsRevalidate()` produced no calls within 8 s on
     /// either device, so nothing else drives it. Default: nothing.
-    open func validate(_ command: UICommand) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(validateCommand:)
+#endif
+    open dynamic func validate(_ command: UICommand) {}
 
     /// UIKit's `userActivity` on every responder (UIResponder.h). Focus
     /// BrowserViewController assigns Siri NSUserActivity here
     /// (a2832521 BrowserViewController.swift:805).
-    open var userActivity: NSUserActivity?
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var userActivity: NSUserActivity?
 
     /// UIKit's `canPerformAction:withSender:` (UIResponderStandardEditActions).
     /// URLBar.swift:701 overrides it for the paste-and-go menu.
-    open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         _ = (action, sender)
         return next?.canPerformAction(action, withSender: sender) ?? false
     }
@@ -308,12 +372,15 @@ open class UIResponder: NSObject {
     /// scripts/guest_route_check.sh: `property cannot be marked '@objc'
     /// because its type cannot be represented in Objective-C`.
 #if canImport(ObjectiveC) && canImport(Foundation)
-    @objc open var accessibilityValue: String? {
+    @objc open dynamic var accessibilityValue: String? {
         get { _accessibility.value }
         set { _accessibility.value = newValue }
     }
 #else
-    open var accessibilityValue: String? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var accessibilityValue: String? {
         get { _accessibility.value }
         set { _accessibility.value = newValue }
     }
@@ -321,16 +388,28 @@ open class UIResponder: NSObject {
 
     // MARK: Press entry points
 
-    open func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(pressesBegan:withEvent:)
+#endif
+    open dynamic func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         next?.pressesBegan(presses, with: event)
     }
-    open func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(pressesChanged:withEvent:)
+#endif
+    open dynamic func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         next?.pressesChanged(presses, with: event)
     }
-    open func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(pressesEnded:withEvent:)
+#endif
+    open dynamic func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         next?.pressesEnded(presses, with: event)
     }
-    open func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(pressesCancelled:withEvent:)
+#endif
+    open dynamic func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         next?.pressesCancelled(presses, with: event)
     }
 }

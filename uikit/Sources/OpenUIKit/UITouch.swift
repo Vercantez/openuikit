@@ -9,8 +9,22 @@
 // `TimeInterval` used to be declared here as `= Double`. It is Foundation's
 // now (M15, FoundationTypes.swift) — same underlying type, one name.
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
+// UIKit's UITouch is an NSObject (UITouch.h `@interface UITouch : NSObject`;
+// MEASURED Tools/oracle2/objcsubclassprobe: class_getSuperclass == NSObject).
+// Deriving from it is what makes `Set<UITouch>` Objective-C-representable,
+// so UIResponder's touches* override points can be `@objc` and an
+// Objective-C subclass's `touchesBegan:withEvent:` is reached. Identity
+// equality and hashing are NSObject's defaults, as they were here.
 @preconcurrency @MainActor
-public final class UITouch: Hashable {
+public final class UITouch: NSObject {
     public enum Phase: Sendable {
         case began, moved, stationary, ended, cancelled
     }
@@ -57,6 +71,7 @@ public final class UITouch: Hashable {
 
     init(touchID: Int) {
         self.touchID = touchID
+        super.init()
     }
 
     public func location(in view: UIView?) -> CGPoint {
@@ -67,14 +82,5 @@ public final class UITouch: Hashable {
     public func previousLocation(in view: UIView?) -> CGPoint {
         guard let view else { return previousLocationInWindow }
         return view.convert(previousLocationInWindow, from: window)
-    }
-
-    // MARK: Hashable (identity)
-
-    // `nonisolated`: identity only, and Hashable is a nonisolated protocol
-    // (see the note in UIViewCompat.swift).
-    nonisolated public static func == (lhs: UITouch, rhs: UITouch) -> Bool { lhs === rhs }
-    nonisolated public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
     }
 }
