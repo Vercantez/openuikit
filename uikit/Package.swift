@@ -949,7 +949,8 @@ let simplenoteTargets: [Target] = [
     // (enums, structs, protocols, typed strings). Pure declarations; values
     // read off the iOS 26.1 SDK and OpenUIKit's Swift raw values
     // (simplenote-launch3).
-    .target(name: "OpenUIKitObjCSupport", path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
+    .target(name: "OpenUIKitObjCSupport", dependencies: ["CPortableIO"],
+            path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
             cSettings: [.define("OPENUIKIT_OBJC_SIDE", to: "1")]),
     // Route (b) `@objc(selector)` twins of existing OpenUIKit members; the
     // generated OpenUIKitObjCBridge-Swift.h adds them as categories. Chosen
@@ -967,6 +968,16 @@ let simplenoteTargets: [Target] = [
     .testTarget(name: "ObjCSubclassingTests",
                 dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSubclassingTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // Foundation attributed strings and the Objective-C NSTextStorage
+    // (attrstring-unify). The scenario is the SAME .m the iOS 26.1 oracle
+    // runs (Tools/oracle2/textstorageprobe/run.sh); the test compares traces.
+    .target(name: "OpenUIKitTextStorageFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/textstorageprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "AttributedStringUnifyTests",
+                dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
+                path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),

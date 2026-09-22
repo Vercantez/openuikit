@@ -37,6 +37,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
+#include <TargetConditionals.h>
+#include "cportableio.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -228,9 +230,26 @@ typedef NS_ENUM(NSInteger, NSTextAlignment) {
     NSTextAlignmentLeft = 0, NSTextAlignmentCenter = 1, NSTextAlignmentRight = 2,
     NSTextAlignmentJustified = 3, NSTextAlignmentNatural = 4,
 } NS_SWIFT_NAME(NSTextAlignmentObjC);
-typedef NS_OPTIONS(NSUInteger, NSTextStorageEditActions) {
-    NSTextStorageEditedAttributes = (1 << 0), NSTextStorageEditedCharacters = (1 << 1),
-} NS_SWIFT_NAME(NSTextStorageEditActionsObjC);
+/* NSTextStorage's edit mask is OpenUIKit's Objective-C option set
+ * (cportableio.h, the C type the Swift NSTextStorage's @objc members use);
+ * UIKit's names spell it here, so an Objective-C delegate or subclass
+ * written against the SDK matches the generated header exactly. */
+typedef OUKTextStorageEditActions NSTextStorageEditActions NS_SWIFT_NAME(NSTextStorageEditActionsObjC);
+#define NSTextStorageEditedAttributes OUKTextStorageEditedAttributes
+#define NSTextStorageEditedCharacters OUKTextStorageEditedCharacters
+/* OpenUIKit's NSTextStorage (NSTextStorage.swift) is an Objective-C subclass of
+ * Foundation's NSMutableAttributedString. Its runtime and interface name is
+ * UIKit's `NSTextStorage` except on the macOS host, where AppKit's class of
+ * that name is loaded in the same process; there it is `OUKTextStorage` and
+ * this alias gives Objective-C source the UIKit spelling
+ * (`@interface SPInteractiveTextStorage : NSTextStorage`). Swift imports it as
+ * a typealias to the same class. */
+#if TARGET_OS_OSX
+@class OUKTextStorage;
+@compatibility_alias NSTextStorage OUKTextStorage;
+/* Same for the delegate protocol (Objective-C has no protocol alias). */
+#define NSTextStorageDelegate OUKTextStorageDelegate
+#endif
 
 #pragma mark - Typed strings, keys and notification names
 
@@ -260,6 +279,8 @@ extern NSNotificationName const UIApplicationDidEnterBackgroundNotification;
 extern NSNotificationName const UIApplicationWillEnterForegroundNotification;
 extern NSNotificationName const UIContentSizeCategoryDidChangeNotification;
 extern NSNotificationName const UIKeyboardWillShowNotification;
+extern NSNotificationName const NSTextStorageWillProcessEditingNotification;
+extern NSNotificationName const NSTextStorageDidProcessEditingNotification;
 extern NSNotificationName const UIKeyboardWillChangeFrameNotification;
 extern NSNotificationName const UITextViewTextDidEndEditingNotification;
 extern NSString * const UIKeyboardFrameEndUserInfoKey;
