@@ -21,6 +21,11 @@
 // PKPayment is ever authorised. Everything else (request / summary-item
 // models, raw values, the button's geometry) is the measured value.
 
+// Not on the Linux-hosted Mach-O guest route: its Foundation has no
+// NSDecimalNumber (local_guest_verify build_full, ios-oss-launch3), and no
+// guest app uses Apple Pay. The Apple host (AppKit present) and native Linux
+// corelibs both build it.
+#if canImport(AppKit) || os(Linux)
 import Foundation
 import OpenUIKit
 
@@ -258,3 +263,5 @@ open class PKPaymentButton: UIButton {
         CGSize(width: paymentButtonType == .plain ? 100 : 140, height: 30)
     }
 }
+
+#endif
