@@ -120,6 +120,7 @@ place in the verdict order.
 | baseline (old stages, serial; only the scratch-root change) | **1316 s** to the conformance verdict (refused; Linux not reached) | 606 s | 53 s | 180 s | 126 s | 65 s | 263 s | not run; est. ≥ 650 s |
 | + background stages + parallel replays (par1) | 504 s (refused: UserDefaults leak) | ~380 s | 20 s | bg 166 s | bg 122 s | 20 s | 72 s | bg, done at +454 s |
 | + per-replay openhost name (par2, final) | **506 s, passed** | ~395 s | 20 s | bg 196 s | bg 107 s | 15 s | 70 s | bg, done at +460 s |
+| final branch head e771f467 (par3) | **435 s, passed** | ~335 s | 18 s | bg | bg | 19 s | 60 s | bg, joined at +432 s |
 | verdict reuse (same merged tree and knobs) | **2 s** | – | – | – | – | – | – | – |
 
 Notes on the numbers:
