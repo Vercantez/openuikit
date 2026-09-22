@@ -1,0 +1,4403 @@
+{
+ "app": "Ranchero-Software/NetNewsWire, target NetNewsWire-iOS",
+ "corpus_revision": "3b378e72f877f86258b2d04e1601719f9d0036a7",
+ "spec": "netnewswire-launch-chain.json",
+ "route": "(b) Darwin SwiftPM, Xcode 26.1 / Swift 6.2.1",
+ "before": {
+  "note": "macOS triple, branch base (after the two platform merges), before this branch's port fixes",
+  "targets": [
+   {
+    "target": "Tidemark",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Minizip",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Zip",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSCoreObjC",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSCore",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSDatabaseObjC",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSDatabase",
+    "status": "failed",
+    "unique_errors": 2,
+    "own_errors": 2,
+    "dependency_errors": 0,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ],
+    "errors": [
+     {
+      "file": "/Sources/RSDatabase/FMDatabase+Extras.swift",
+      "line": 43,
+      "msg": "extra argument 'format' in call"
+     },
+     {
+      "file": "/Sources/RSDatabase/FMDatabase+Extras.swift",
+      "line": 43,
+      "msg": "cannot infer contextual base in reference to member 'fixed'"
+     }
+    ]
+   },
+   {
+    "target": "RSParser",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSWeb",
+    "status": "failed",
+    "unique_errors": 7,
+    "own_errors": 7,
+    "dependency_errors": 0,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "cannot find type 'NWInterface' in scope",
+      2
+     ],
+     [
+      "cannot find type 'NWPathMonitor' in scope",
+      1
+     ],
+     [
+      "cannot find type 'NWPath' in scope",
+      1
+     ],
+     [
+      "cannot find 'NWPathMonitor' in scope",
+      1
+     ],
+     [
+      "cannot infer type of closure parameter 'path' without a type annotation",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'satisfied'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "NetworkMonitor.swift",
+      7
+     ]
+    ],
+    "errors": [
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 15,
+      "msg": "cannot find type 'NWPathMonitor' in scope"
+     },
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 20,
+      "msg": "cannot find type 'NWInterface' in scope"
+     },
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 31,
+      "msg": "cannot find type 'NWInterface' in scope"
+     },
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 68,
+      "msg": "cannot find type 'NWPath' in scope"
+     },
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 48,
+      "msg": "cannot find 'NWPathMonitor' in scope"
+     },
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 50,
+      "msg": "cannot infer type of closure parameter 'path' without a type annotation"
+     },
+     {
+      "file": "/Sources/RSWeb/NetworkMonitor.swift",
+      "line": 70,
+      "msg": "cannot infer contextual base in reference to member 'satisfied'"
+     }
+    ]
+   },
+   {
+    "target": "RSTree",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "ActivityLog",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Articles",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "ArticlesDatabase",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "ErrorLog",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "Secrets",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "SyncDatabase",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "CloudKitSync",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "FeedFinder",
+    "status": "blocked by dependency",
+    "unique_errors": 7,
+    "own_errors": 0,
+    "dependency_errors": 7,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "cannot find type 'NWInterface' in scope",
+      2
+     ],
+     [
+      "cannot find type 'NWPathMonitor' in scope",
+      1
+     ],
+     [
+      "cannot find type 'NWPath' in scope",
+      1
+     ],
+     [
+      "cannot find 'NWPathMonitor' in scope",
+      1
+     ],
+     [
+      "cannot infer type of closure parameter 'path' without a type annotation",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'satisfied'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "NetworkMonitor.swift",
+      7
+     ]
+    ]
+   },
+   {
+    "target": "NewsBlur",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "HTMLMetadata",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "Account",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "Images",
+    "status": "blocked by dependency",
+    "unique_errors": 2,
+    "own_errors": 0,
+    "dependency_errors": 2,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "extra argument 'format' in call",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fixed'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "FMDatabase+Extras.swift",
+      2
+     ]
+    ]
+   },
+   {
+    "target": "NetNewsWireObjC",
+    "status": "failed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "errors_by_file": []
+   },
+   {
+    "target": "NetNewsWire",
+    "status": "failed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "errors_by_file": []
+   }
+  ]
+ },
+ "after": {
+  "note": "macOS triple, after os formatting, OSSignposter, Network NWPathMonitor; app target no longer depends on the ObjC category target so its own errors are measured",
+  "targets": [
+   {
+    "target": "Tidemark",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Minizip",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Zip",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSCoreObjC",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSCore",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSDatabaseObjC",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSDatabase",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSParser",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSWeb",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSTree",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "ActivityLog",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Articles",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "ArticlesDatabase",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "ErrorLog",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Secrets",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "SyncDatabase",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "CloudKitSync",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "FeedFinder",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "NewsBlur",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "HTMLMetadata",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Account",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Images",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "NetNewsWireObjC",
+    "status": "failed",
+    "unique_errors": 7,
+    "own_errors": 7,
+    "dependency_errors": 0,
+    "files_with_errors": 2,
+    "errors_by_message": [
+     [
+      "expected a type",
+      2
+     ],
+     [
+      "unknown type name 'NS_ASSUME_NONNULL_BEGIN'",
+      1
+     ],
+     [
+      "unknown type name 'NS_ASSUME_NONNULL_END'",
+      1
+     ],
+     [
+      "no visible @interface for 'SFSafariViewController' declares the selector 'initWithURL:'",
+      1
+     ],
+     [
+      "declaration of 'NSException' must be imported from module 'Foundation.NSException' before it is required",
+      1
+     ],
+     [
+      "use of undeclared identifier 'nil'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "SFSafariViewController+Extras.m",
+      4
+     ],
+     [
+      "SFSafariViewController+Extras.h",
+      3
+     ]
+    ],
+    "errors": [
+     {
+      "file": "/Sources/NetNewsWireObjC/include/SFSafariViewController+Extras.h",
+      "line": 11,
+      "msg": "unknown type name 'NS_ASSUME_NONNULL_BEGIN'"
+     },
+     {
+      "file": "/Sources/NetNewsWireObjC/include/SFSafariViewController+Extras.h",
+      "line": 15,
+      "msg": "expected a type"
+     },
+     {
+      "file": "/Sources/NetNewsWireObjC/include/SFSafariViewController+Extras.h",
+      "line": 19,
+      "msg": "unknown type name 'NS_ASSUME_NONNULL_END'"
+     },
+     {
+      "file": "/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 18,
+      "msg": "expected a type"
+     },
+     {
+      "file": "/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 21,
+      "msg": "no visible @interface for 'SFSafariViewController' declares the selector 'initWithURL:'"
+     },
+     {
+      "file": "/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 23,
+      "msg": "declaration of 'NSException' must be imported from module 'Foundation.NSException' before it is required"
+     },
+     {
+      "file": "/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 25,
+      "msg": "use of undeclared identifier 'nil'"
+     }
+    ]
+   },
+   {
+    "target": "NetNewsWire",
+    "status": "failed",
+    "unique_errors": 484,
+    "own_errors": 484,
+    "dependency_errors": 0,
+    "files_with_errors": 68,
+    "errors_by_message": [
+     [
+      "cannot convert value of type 'RSImage' (aka 'NSImage') to expected argument type 'UIImage'",
+      16
+     ],
+     [
+      "method does not override any method from its superclass",
+      14
+     ],
+     [
+      "cannot find 'ImageHeaderView' in scope",
+      13
+     ],
+     [
+      "cannot infer contextual base in reference to member 'currentContext'",
+      10
+     ],
+     [
+      "type 'UIStoryboard' has no member 'account'",
+      9
+     ],
+     [
+      "extra argument 'message' in call",
+      8
+     ],
+     [
+      "argument type 'String' does not conform to expected type 'Error'",
+      8
+     ],
+     [
+      "type 'Assets.Colors' has no member 'secondaryAccent'",
+      8
+     ],
+     [
+      "cannot infer contextual base in reference to member 'formSheet'",
+      8
+     ],
+     [
+      "extra argument 'comment' in call",
+      7
+     ],
+     [
+      "cannot find 'SafariView' in scope",
+      7
+     ],
+     [
+      "type 'Assets.Colors' has no member 'vibrantText'",
+      7
+     ],
+     [
+      "cannot assign value of type 'RSImage' (aka 'NSImage') to type 'UIImage'",
+      7
+     ],
+     [
+      "cannot use optional chaining on non-optional value of type '@MainActor (UIScrollView) -> ()'",
+      7
+     ],
+     [
+      "cannot find type 'ImageHeaderView' in scope",
+      6
+     ],
+     [
+      "property does not override any property from its superclass",
+      6
+     ],
+     [
+      "value of type 'UIBarButtonItem' has no member 'accLabelText'",
+      6
+     ],
+     [
+      "type of expression is ambiguous without a type annotation",
+      5
+     ],
+     [
+      "cannot convert value of type 'NSImage?' to expected argument type 'UIImage?'",
+      5
+     ],
+     [
+      "cannot find 'UIBackgroundTaskIdentifier' in scope",
+      5
+     ],
+     [
+      "type 'UIStoryboard' has no member 'settings'",
+      5
+     ],
+     [
+      "value of type 'UINavigationItem' has no member 'subtitle'",
+      5
+     ],
+     [
+      "cannot find 'NSColor' in scope",
+      4
+     ],
+     [
+      "cannot convert return expression of type 'RSImage' (aka 'NSImage') to return type 'UIImage'",
+      4
+     ],
+     [
+      "type 'UIStoryboard' has no member 'add'",
+      4
+     ],
+     [
+      "value of type 'UICollectionView' has no member 'selectItemAndScrollIfNotVisible'",
+      4
+     ],
+     [
+      "type 'UIBarButtonItem' has no member 'flexibleSpace'",
+      4
+     ],
+     [
+      "cannot find 'layoutMarginsGuide' in scope",
+      4
+     ],
+     [
+      "value of type 'UICollectionViewCell' has no member 'backgroundConfiguration'",
+      4
+     ],
+     [
+      "cannot find 'UIAccessibility' in scope",
+      4
+     ],
+     [
+      "cannot infer contextual base in reference to member 'announcement'",
+      4
+     ],
+     [
+      "no exact matches in call to initializer",
+      4
+     ],
+     [
+      "value of type 'UIApplication' has no member 'registerForRemoteNotifications'",
+      3
+     ],
+     [
+      "cannot convert value of type 'RSColor?' (aka 'Optional<NSColor>') to expected argument type 'UIColor?'",
+      3
+     ],
+     [
+      "overriding non-open property outside of its defining module",
+      3
+     ],
+     [
+      "'UTType' is ambiguous for type lookup in this context",
+      3
+     ],
+     [
+      "cannot find 'LabeledContent' in scope",
+      3
+     ],
+     [
+      "cannot find 'NonIntrinsicLabel' in scope",
+      3
+     ],
+     [
+      "type 'UIStoryboard' has no member 'inspector'",
+      3
+     ],
+     [
+      "value of type 'UILabel' has no member 'setFrameIfNotEqual'",
+      3
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "MainTimelineModernViewController.swift",
+      54
+     ],
+     [
+      "MainFeedCollectionViewController.swift",
+      41
+     ],
+     [
+      "AppDelegate.swift",
+      36
+     ],
+     [
+      "SceneCoordinator.swift",
+      24
+     ],
+     [
+      "ImageScrollView.swift",
+      21
+     ],
+     [
+      "SettingsViewController.swift",
+      20
+     ],
+     [
+      "AddAccountViewController.swift",
+      17
+     ],
+     [
+      "WebViewController.swift",
+      16
+     ],
+     [
+      "MainTimelineCell.swift",
+      16
+     ],
+     [
+      "TimelineHeaderView.swift",
+      14
+     ],
+     [
+      "ArticleViewController.swift",
+      13
+     ],
+     [
+      "DinosaursView.swift",
+      13
+     ],
+     [
+      "MainFeedCollectionViewFolderCell.swift",
+      11
+     ],
+     [
+      "AccountInspectorViewController.swift",
+      10
+     ],
+     [
+      "ActivityLogView.swift",
+      10
+     ],
+     [
+      "ReaderAPIAccountViewController.swift",
+      9
+     ],
+     [
+      "ErrorLogView.swift",
+      9
+     ],
+     [
+      "AccountStatsView.swift",
+      7
+     ],
+     [
+      "MainFeedCollectionViewCell.swift",
+      7
+     ],
+     [
+      "Assets.swift",
+      6
+     ],
+     [
+      "AccountNotificationInspectorView.swift",
+      6
+     ],
+     [
+      "ArticleThemesTableViewController.swift",
+      6
+     ],
+     [
+      "CloudKitStatsView.swift",
+      6
+     ],
+     [
+      "TimelineCustomizerCell.swift",
+      6
+     ],
+     [
+      "SceneDelegate.swift",
+      6
+     ],
+     [
+      "FeedbinAccountViewController.swift",
+      5
+     ],
+     [
+      "NewsBlurAccountViewController.swift",
+      5
+     ],
+     [
+      "FeedInspectorViewController.swift",
+      5
+     ],
+     [
+      "CurrentActivityView.swift",
+      4
+     ],
+     [
+      "IconView.swift",
+      4
+     ]
+    ]
+   }
+  ]
+ },
+ "app_macos_leakage": {
+  "target": "NetNewsWire",
+  "total": 484,
+  "leakage": 160,
+  "rest": 324,
+  "leakage_by_rule": [
+   [
+    "L3 defined only under a dropped branch",
+    85
+   ],
+   [
+    "L1 AppKit type via the macOS branch (RSImage)",
+    27
+   ],
+   [
+    "L4 member defined only in a dropped extension of the type",
+    27
+   ],
+   [
+    "L1 AppKit type via the macOS branch (NSColor)",
+    7
+   ],
+   [
+    "L1 AppKit type via the macOS branch (NSImage)",
+    6
+   ],
+   [
+    "L2 unavailable in macOS",
+    5
+   ],
+   [
+    "L1 AppKit type via the macOS branch (RSColor)",
+    3
+   ]
+  ],
+  "leakage_definitions": [
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/ImageHeaderView.swift:13 [os(iOS)] ImageHeaderView",
+    19
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIStoryboard+RSCore.swift:32 [os(iOS)] UIStoryboard.account",
+    9
+   ],
+   [
+    "Shared/Assets.swift:176 [!(os(macOS))] secondaryAccent",
+    8
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/SafariView+RSCore.swift:13 [os(iOS)] SafariView",
+    7
+   ],
+   [
+    "Shared/Assets.swift:178 [!(os(macOS))] vibrantText",
+    7
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIBarButtonItem+RSCore.swift:23 [os(iOS)] accLabelText",
+    6
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIStoryboard+RSCore.swift:24 [os(iOS)] UIStoryboard.settings",
+    5
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIStoryboard+RSCore.swift:20 [os(iOS)] UIStoryboard.add",
+    4
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UICollectionView+RSCore.swift:17 [os(iOS)] selectItemAndScrollIfNotVisible",
+    4
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/NonIntrinsicLabel.swift:13 [os(iOS)] NonIntrinsicLabel",
+    3
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIStoryboard+RSCore.swift:28 [os(iOS)] inspector",
+    3
+   ],
+   [
+    "Shared/Assets.swift:102 [!(os(macOS))] circleClosed",
+    3
+   ],
+   [
+    "Shared/Assets.swift:107 [!(os(macOS))] circleOpen",
+    3
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIResponder+RSCore.swift:25 [os(iOS)] currentFirstResponder",
+    2
+   ],
+   [
+    "Shared/Assets.swift:118 [!(os(macOS))] Images.safari",
+    2
+   ],
+   [
+    "Shared/Assets.swift:120 [!(os(macOS))] trash",
+    2
+   ],
+   [
+    "Shared/Assets.swift:114 [!(os(macOS))] Images.info",
+    2
+   ],
+   [
+    "Shared/Activity/ActivityManager.swift:142 [os(iOS)] ActivityManager.cleanUp",
+    2
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIStoryboard+RSCore.swift:16 [os(iOS)] main",
+    2
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/NonIntrinsicImageView.swift:13 [os(iOS)] NonIntrinsicImageView",
+    1
+   ],
+   [
+    "Shared/Assets.swift:180 [!(os(macOS))] iconBackground",
+    1
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIResponder+RSCore.swift:16 [os(iOS)] isFirstResponderTextField",
+    1
+   ],
+   [
+    "Shared/Assets.swift:110 [!(os(macOS))] currentActivity",
+    1
+   ],
+   [
+    "Shared/Assets.swift:115 [!(os(macOS))] plus",
+    1
+   ],
+   [
+    "Shared/Assets.swift:113 [!(os(macOS))] folderOutlinePlus",
+    1
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/CroppingPreviewParameters.swift:13 [os(iOS)] CroppingPreviewParameters",
+    1
+   ],
+   [
+    "Shared/Assets.swift:111 [!(os(macOS))] edit",
+    1
+   ],
+   [
+    "Shared/Assets.swift:109 [!(os(macOS))] deactivate",
+    1
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/PoppableGestureRecognizerDelegate.swift:14 [os(iOS)] PoppableGestureRecognizerDelegate",
+    1
+   ],
+   [
+    "Shared/Assets.swift:112 [!(os(macOS))] filter",
+    1
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIFont+RSCore.swift:23 [os(iOS)] UIFont.bold",
+    1
+   ],
+   [
+    "Shared/Assets.swift:130 [!(os(macOS))] unreadCellIndicator",
+    1
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UICollectionView+RSCore.swift:37 [os(iOS)] middleVisibleRow",
+    1
+   ],
+   [
+    "Shared/Assets.swift:117 [!(os(macOS))] openInSidebar",
+    1
+   ],
+   [
+    "Modules/RSCore/Sources/RSCore/UIKit/UIPageViewController+RSCore.swift:14 [os(iOS)] scrollViewInsidePageControl",
+    1
+   ],
+   [
+    "Shared/Assets.swift:181 [!(os(macOS))] fullScreenBackground",
+    1
+   ],
+   [
+    "Shared/Assets.swift:116 [!(os(macOS))] Images.prevArticle",
+    1
+   ],
+   [
+    "Shared/Assets.swift:106 [!(os(macOS))] Images.nextArticle",
+    1
+   ]
+  ],
+  "leakage_by_file": [
+   [
+    "MainFeedCollectionViewController.swift",
+    21
+   ],
+   [
+    "MainTimelineModernViewController.swift",
+    18
+   ],
+   [
+    "ArticleViewController.swift",
+    11
+   ],
+   [
+    "AddAccountViewController.swift",
+    9
+   ],
+   [
+    "WebViewController.swift",
+    9
+   ],
+   [
+    "SettingsViewController.swift",
+    8
+   ],
+   [
+    "ReaderAPIAccountViewController.swift",
+    7
+   ],
+   [
+    "Assets.swift",
+    6
+   ],
+   [
+    "AccountInspectorViewController.swift",
+    6
+   ],
+   [
+    "SceneCoordinator.swift",
+    6
+   ],
+   [
+    "AppDelegate.swift",
+    5
+   ],
+   [
+    "MainFeedCollectionViewCell.swift",
+    4
+   ],
+   [
+    "MainTimelineCell.swift",
+    4
+   ],
+   [
+    "CloudKitAccountViewController.swift",
+    3
+   ],
+   [
+    "FeedbinAccountViewController.swift",
+    3
+   ],
+   [
+    "LocalAccountViewController.swift",
+    3
+   ],
+   [
+    "NewsBlurAccountViewController.swift",
+    3
+   ],
+   [
+    "ArticleExtractorButton.swift",
+    3
+   ],
+   [
+    "VibrantButton.swift",
+    3
+   ],
+   [
+    "VibrantTableViewCell.swift",
+    3
+   ],
+   [
+    "AddComboTableViewCell.swift",
+    2
+   ],
+   [
+    "IconView.swift",
+    2
+   ],
+   [
+    "FeedInspectorViewController.swift",
+    2
+   ],
+   [
+    "MainFeedCollectionViewFolderCell.swift",
+    2
+   ],
+   [
+    "DinosaursView.swift",
+    2
+   ],
+   [
+    "ErrorLogView.swift",
+    2
+   ],
+   [
+    "ActivityLogView.swift",
+    2
+   ],
+   [
+    "AccountStatsView.swift",
+    1
+   ],
+   [
+    "AddFeedViewController.swift",
+    1
+   ],
+   [
+    "CurrentActivityView.swift",
+    1
+   ],
+   [
+    "KeyboardManager.swift",
+    1
+   ],
+   [
+    "ArticleThemesTableViewController.swift",
+    1
+   ],
+   [
+    "CloudKitStatsView.swift",
+    1
+   ],
+   [
+    "SettingsComboTableViewCell.swift",
+    1
+   ],
+   [
+    "UIViewController+Extras.swift",
+    1
+   ],
+   [
+    "VibrantLabel.swift",
+    1
+   ],
+   [
+    "SelectComboTableViewCell.swift",
+    1
+   ],
+   [
+    "ImageTransition.swift",
+    1
+   ]
+  ],
+  "rest_by_message": [
+   [
+    "method does not override any method from its superclass",
+    14
+   ],
+   [
+    "cannot infer contextual base in reference to member 'currentContext'",
+    10
+   ],
+   [
+    "extra argument 'message' in call",
+    8
+   ],
+   [
+    "argument type 'String' does not conform to expected type 'Error'",
+    8
+   ],
+   [
+    "cannot infer contextual base in reference to member 'formSheet'",
+    8
+   ],
+   [
+    "extra argument 'comment' in call",
+    7
+   ],
+   [
+    "cannot use optional chaining on non-optional value of type '@MainActor (UIScrollView) -> ()'",
+    7
+   ],
+   [
+    "property does not override any property from its superclass",
+    6
+   ],
+   [
+    "type of expression is ambiguous without a type annotation",
+    5
+   ],
+   [
+    "cannot find 'UIBackgroundTaskIdentifier' in scope",
+    5
+   ],
+   [
+    "value of type 'UINavigationItem' has no member 'subtitle'",
+    5
+   ],
+   [
+    "type 'UIBarButtonItem' has no member 'flexibleSpace'",
+    4
+   ],
+   [
+    "cannot find 'layoutMarginsGuide' in scope",
+    4
+   ],
+   [
+    "value of type 'UICollectionViewCell' has no member 'backgroundConfiguration'",
+    4
+   ],
+   [
+    "cannot find 'UIAccessibility' in scope",
+    4
+   ],
+   [
+    "cannot infer contextual base in reference to member 'announcement'",
+    4
+   ],
+   [
+    "no exact matches in call to initializer",
+    4
+   ],
+   [
+    "value of type 'UIApplication' has no member 'registerForRemoteNotifications'",
+    3
+   ],
+   [
+    "overriding non-open property outside of its defining module",
+    3
+   ],
+   [
+    "'UTType' is ambiguous for type lookup in this context",
+    3
+   ],
+   [
+    "cannot find 'LabeledContent' in scope",
+    3
+   ],
+   [
+    "value of type 'UILabel' has no member 'setFrameIfNotEqual'",
+    3
+   ],
+   [
+    "value of type 'UIScene.ConnectionOptions' (aka 'UISceneConnectionOptions') has no member 'urlContexts'",
+    3
+   ],
+   [
+    "cannot find 'UNUserNotificationCenter' in scope",
+    3
+   ],
+   [
+    "ambiguous use of 'frame'",
+    3
+   ],
+   [
+    "cannot convert value of type 'Text' (aka '_OpenText') to expected argument type 'String'",
+    2
+   ],
+   [
+    "missing argument for parameter #1 in call",
+    2
+   ],
+   [
+    "type 'ButtonRole?' (aka 'Optional<_OpenButtonRole>') has no member 'close'",
+    2
+   ],
+   [
+    "cannot find 'AnyShapeStyle' in scope",
+    2
+   ],
+   [
+    "ambiguous use of 'init(rotationAngle:)'",
+    2
+   ],
+   [
+    "converting non-escaping value to '() -> Void' may allow it to escape",
+    2
+   ],
+   [
+    "value of type 'UICollectionView' has no member 'setCollectionViewLayout'",
+    2
+   ],
+   [
+    "type 'SFSafariViewController' has no member 'safeSafariViewController'",
+    2
+   ],
+   [
+    "cannot find type 'UNUserNotificationCenter' in scope",
+    2
+   ],
+   [
+    "cannot find type 'UNNotificationResponse' in scope",
+    2
+   ],
+   [
+    "property overrides a 'final' property",
+    2
+   ],
+   [
+    "value of type 'TickMarkSlider' has no member 'trackConfiguration'",
+    2
+   ],
+   [
+    "cannot infer contextual base in reference to member 'init'",
+    2
+   ],
+   [
+    "type 'Color' (aka '_OpenColor') has no member 'yellow'",
+    2
+   ],
+   [
+    "missing argument label 'size:' in call",
+    2
+   ],
+   [
+    "type 'CGFloat' has no member 'body'",
+    2
+   ],
+   [
+    "value of type 'some _OpenView' has no member 'textSelection'",
+    2
+   ],
+   [
+    "cannot infer contextual base in reference to member 'enabled'",
+    2
+   ],
+   [
+    "cannot infer contextual base in reference to member 'infinity'",
+    2
+   ],
+   [
+    "cannot infer contextual base in reference to member 'leading'",
+    2
+   ],
+   [
+    "cannot infer contextual base in reference to member 'label'",
+    2
+   ],
+   [
+    "value of type 'IconView' has no member 'setFrameIfNotEqual'",
+    2
+   ],
+   [
+    "cannot infer contextual base in reference to member 'byTruncatingTail'",
+    2
+   ],
+   [
+    "value of type 'UINavigationItem' has no member 'subtitleView'",
+    2
+   ],
+   [
+    "type 'Array<UIBarButtonItem>.ArrayLiteralElement' (aka 'UIBarButtonItem') has no member 'flexibleSpace'",
+    2
+   ],
+   [
+    "extra arguments at positions #1, #2 in call",
+    2
+   ],
+   [
+    "missing argument for parameter 'activityItems' in call",
+    2
+   ],
+   [
+    "value of type 'RootSplitViewController' has no member 'setNeedsStatusBarAppearanceUpdate'",
+    2
+   ],
+   [
+    "value of type 'UIScene.ConnectionOptions' (aka 'UISceneConnectionOptions') has no member 'notificationResponse'",
+    2
+   ],
+   [
+    "value of type 'UILabel' has no member 'isEnabled'",
+    2
+   ],
+   [
+    "reference to member 'badge' cannot be resolved without a contextual type",
+    2
+   ],
+   [
+    "reference to member 'sound' cannot be resolved without a contextual type",
+    2
+   ],
+   [
+    "value of type 'UIApplication' has no member 'beginBackgroundTask'",
+    2
+   ],
+   [
+    "value of type 'UIApplication' has no member 'endBackgroundTask'",
+    2
+   ],
+   [
+    "extraneous argument label 'rawValue:' in call",
+    2
+   ],
+   [
+    "conformance of 'SearchFeedDelegate' to protocol 'SmartFeedDelegate' crosses into main actor-isolated code and can cause data races [#ConformanceIsolation]",
+    1
+   ],
+   [
+    "conformance of 'SearchTimelineFeedDelegate' to protocol 'SmartFeedDelegate' crosses into main actor-isolated code and can cause data races [#ConformanceIsolation]",
+    1
+   ],
+   [
+    "cannot find type 'NSPasteboardWriting' in scope",
+    1
+   ],
+   [
+    "conformance of 'SmartFeed' to protocol 'PseudoFeed' crosses into main actor-isolated code and can cause data races [#ConformanceIsolation]",
+    1
+   ],
+   [
+    "conformance of 'StarredFeedDelegate' to protocol 'SmartFeedDelegate' crosses into main actor-isolated code and can cause data races [#ConformanceIsolation]",
+    1
+   ],
+   [
+    "conformance of 'TodayFeedDelegate' to protocol 'SmartFeedDelegate' crosses into main actor-isolated code and can cause data races [#ConformanceIsolation]",
+    1
+   ],
+   [
+    "conformance of 'UnreadFeed' to protocol 'PseudoFeed' crosses into main actor-isolated code and can cause data races [#ConformanceIsolation]",
+    1
+   ],
+   [
+    "cannot find 'SmartFeedPasteboardWriter' in scope",
+    1
+   ],
+   [
+    "value of type 'Self' has no member 'navigationSubtitle'",
+    1
+   ],
+   [
+    "incorrect argument label in call (have '_:header:', expected 'header:content:')",
+    1
+   ],
+   [
+    "type '() -> ()' cannot conform to '_OpenView' [#ProtocolTypeNonConformance]",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'primary'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'secondary'",
+    1
+   ],
+   [
+    "cannot find type 'UNUserNotificationCenterDelegate' in scope",
+    1
+   ],
+   [
+    "value of type 'AppDefaults' has no member 'articleTextSize'",
+    1
+   ],
+   [
+    "type 'VerticalAlignment' (aka '_OpenVerticalAlignment') has no member 'firstTextBaseline'",
+    1
+   ],
+   [
+    "value of type 'UIImageView' has no member 'setFrameIfNotEqual'",
+    1
+   ],
+   [
+    "declaration 'tableView(_:shouldHighlightRowAt:)' has different argument labels from any potential overrides",
+    1
+   ],
+   [
+    "value of type 'MainFeedCollectionViewCell' has no member 'backgroundConfiguration'",
+    1
+   ],
+   [
+    "@IBAction methods must have 1 argument",
+    1
+   ],
+   [
+    "missing argument for parameter 'delegate' in call",
+    1
+   ],
+   [
+    "missing argument for parameter 'withDuration' in call",
+    1
+   ],
+   [
+    "value of type 'MainFeedCollectionViewFolderCell' has no member 'backgroundConfiguration'",
+    1
+   ],
+   [
+    "declaration 'collectionView(_:performPrimaryActionForItemAt:)' has different argument labels from any potential overrides",
+    1
+   ],
+   [
+    "argument labels for method 'collectionView(_:canPerformPrimaryActionForItemAt:)' do not match those of overridden method 'collectionView(_:shouldSelectItemAt:)'",
+    1
+   ],
+   [
+    "argument labels for method 'collectionView(_:shouldShowMenuForItemAt:)' do not match those of overridden method 'collectionView(_:shouldSelectItemAt:)'",
+    1
+   ],
+   [
+    "type 'MainFeedCollectionViewController' does not conform to protocol 'UndoableCommandRunner'",
+    1
+   ],
+   [
+    "extra arguments at positions #2, #3 in call",
+    1
+   ],
+   [
+    "missing argument for parameter 'handler' in call",
+    1
+   ],
+   [
+    "value of type 'UIContextualAction' has no member 'accessibilityLabel'",
+    1
+   ],
+   [
+    "value of type 'NSDiffableDataSourceSnapshot<String, SidebarItemNode>' has no member 'reconfigureItems'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'overFullScreen'",
+    1
+   ],
+   [
+    "value of type 'UIBarButtonItem' has no member 'menu'",
+    1
+   ],
+   [
+    "cannot find 'undoManager' in scope",
+    1
+   ],
+   [
+    "'AppDelegate' is annotated with '@main' and must provide a main static function of type () -> Void, () throws -> Void, () async -> Void, or () async throws -> Void",
+    1
+   ],
+   [
+    "cannot find type 'UIBackgroundFetchResult' in scope",
+    1
+   ],
+   [
+    "cannot find type 'UNNotification' in scope",
+    1
+   ],
+   [
+    "cannot find type 'UNNotificationPresentationOptions' in scope",
+    1
+   ],
+   [
+    "'@objc' protocol 'ImageScrollViewDelegate' cannot refine non-'@objc' protocol 'UIScrollViewDelegate'",
+    1
+   ],
+   [
+    "property cannot be marked '@objc' because its type cannot be represented in Objective-C",
+    1
+   ],
+   [
+    "cannot convert value of type 'String.Type' to expected dictionary key type 'AnyHashable'",
+    1
+   ],
+   [
+    "cannot call value of non-function type '[AnyHashable : CGSize.Type]' (aka 'Dictionary<AnyHashable, CGSize.Type>')",
+    1
+   ],
+   [
+    "type 'MainTimelineModernViewController' does not conform to protocol 'UndoableCommandRunner'",
+    1
+   ],
+   [
+    "cannot find type 'UIStatusBarAnimation' in scope",
+    1
+   ],
+   [
+    "overriding non-open instance method outside of its defining module",
+    1
+   ],
+   [
+    "cannot find type 'AnyShapeStyle' in scope",
+    1
+   ],
+   [
+    "cannot find type 'UICollectionReusableView' in scope",
+    1
+   ],
+   [
+    "cannot find 'UILabel' in scope",
+    1
+   ],
+   [
+    "cannot find type 'CGRect' in scope",
+    1
+   ],
+   [
+    "cannot find type 'NSCoder' in scope",
+    1
+   ],
+   [
+    "reference to member 'netNewsWireTheme' cannot be resolved without a contextual type",
+    1
+   ],
+   [
+    "cannot find 'ShareLink' in scope",
+    1
+   ],
+   [
+    "value of type 'some _OpenView' has no member 'baselineOffset'",
+    1
+   ],
+   [
+    "value of type 'some _OpenView' has no member 'monospaced'",
+    1
+   ],
+   [
+    "incorrect argument labels in call (have '_:header:footer:', expected 'header:footer:content:')",
+    1
+   ],
+   [
+    "type '() -> Void' cannot conform to '_OpenView' [#ProtocolTypeNonConformance]",
+    1
+   ],
+   [
+    "type '() -> VStack<Content>' (aka '() -> _OpenVStack<Content>') cannot conform to '_OpenView' [#ProtocolTypeNonConformance]",
+    1
+   ],
+   [
+    "value of type 'some _OpenView' has no member 'help'",
+    1
+   ],
+   [
+    "incorrect argument label in call (have 'item:_:', expected 'isPresented:_:')",
+    1
+   ],
+   [
+    "cannot convert value of type '_OpenBinding<HomePageURL?>' to expected argument type 'Binding<Bool>' (aka '_OpenBinding<Bool>')",
+    1
+   ],
+   [
+    "contextual closure type '@MainActor () -> SheetContent' expects 0 arguments, but 1 was used in closure body",
+    1
+   ],
+   [
+    "reference to member 'foregroundColor' cannot be resolved without a contextual type",
+    1
+   ],
+   [
+    "cannot call value of non-function type 'UITableView?'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'xml'",
+    1
+   ],
+   [
+    "value of type 'TimelineCustomizerCell' has no member 'backgroundConfiguration'",
+    1
+   ],
+   [
+    "cannot convert value of type 'TimelineHeaderView.Type' to expected argument type 'UICollectionReusableView.Type'",
+    1
+   ],
+   [
+    "cannot convert return expression of type 'TimelineHeaderView' to return type 'UICollectionReusableView'",
+    1
+   ],
+   [
+    "'super' cannot be used in class 'TimelineHeaderView' because it has no superclass",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'preferredFont'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'headline'",
+    1
+   ],
+   [
+    "cannot find 'addSubview' in scope",
+    1
+   ],
+   [
+    "cannot find 'NSLayoutConstraint' in scope",
+    1
+   ],
+   [
+    "cannot find 'highlightedTextColor' in scope",
+    1
+   ],
+   [
+    "value of type 'UICollectionViewCell' has no member 'updateConfiguration'",
+    1
+   ],
+   [
+    "cannot find 'backgroundConfiguration' in scope",
+    1
+   ],
+   [
+    "value of type 'NSAttributedString' has no member 'applyingBaseFont'",
+    1
+   ],
+   [
+    "cannot find 'configurationState' in scope",
+    1
+   ],
+   [
+    "cannot assign value of type 'Foundation.NSAttributedString' to type 'UIKit.NSAttributedString' (aka 'OpenUIKit.NSAttributedString')",
+    1
+   ],
+   [
+    "missing argument for parameter 'string' in call",
+    1
+   ],
+   [
+    "cannot find 'definesPresentationContext' in scope",
+    1
+   ],
+   [
+    "value of type 'UIPanGestureRecognizer' has no member 'allowedScrollTypesMask'",
+    1
+   ],
+   [
+    "value of type 'UICollectionViewCell' has no member 'setNeedsUpdateConfiguration'",
+    1
+   ],
+   [
+    "value of type 'UISearchBar' has no member 'barTintColor'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'clear'",
+    1
+   ],
+   [
+    "value of type 'UISearchBar' has no member 'scopeBarBackgroundImage'",
+    1
+   ],
+   [
+    "value of type 'UISearchBar' has no member 'autocapitalizationType'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'none'",
+    1
+   ],
+   [
+    "value of type 'UICollectionView' has no member 'contentInsetAdjustmentBehavior'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'automatic'",
+    1
+   ],
+   [
+    "value of type 'UICollectionViewCompositionalLayoutConfiguration' has no member 'contentInsetsReference'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'safeArea'",
+    1
+   ],
+   [
+    "cannot find 'setToolbarItems' in scope",
+    1
+   ],
+   [
+    "value of type 'RootSplitViewController' has no member 'undoManager'",
+    1
+   ],
+   [
+    "value of type 'UINavigationController' has no member 'popToViewController'",
+    1
+   ],
+   [
+    "incorrect argument label in call (have 'id:hidingReadArticlesState:fetchers:_:', expected 'id:readFilterEnabledTable:fetchers:_:')",
+    1
+   ],
+   [
+    "cannot convert value of type 'HidingReadArticlesState' to expected argument type '[SidebarItemIdentifier : Bool]'",
+    1
+   ],
+   [
+    "value of type 'UISceneSession' has no member 'stateRestorationActivity'",
+    1
+   ],
+   [
+    "type '_OpenShapeStyle' has no member 'link'",
+    1
+   ],
+   [
+    "generic parameter 'Content' could not be inferred",
+    1
+   ],
+   [
+    "extra trailing closure passed in call",
+    1
+   ],
+   [
+    "type '() -> _' has no member 'vertical'",
+    1
+   ],
+   [
+    "missing argument label 'dynamicProvider:' in call",
+    1
+   ],
+   [
+    "cannot assign value of type 'UIWindow' to type 'ASPresentationAnchor' (aka 'NSWindow')",
+    1
+   ],
+   [
+    "reference to member 'alert' cannot be resolved without a contextual type",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'newData'",
+    1
+   ],
+   [
+    "reference to member 'list' cannot be resolved without a contextual type",
+    1
+   ],
+   [
+    "reference to member 'banner' cannot be resolved without a contextual type",
+    1
+   ],
+   [
+    "reference to member 'isSyncArticleStatusRunning' cannot be resolved without a contextual type",
+    1
+   ],
+   [
+    "value of type 'IconView' has no member 'asImage'",
+    1
+   ],
+   [
+    "type 'UIFont' has no member 'smallSystemFontSize'",
+    1
+   ],
+   [
+    "cannot find 'bouncesZoom' in scope",
+    1
+   ],
+   [
+    "cannot find 'zoom' in scope",
+    1
+   ],
+   [
+    "cannot use optional chaining on non-optional value of type '@MainActor (UIScrollView, CGPoint, UnsafeMutablePointer<CGPoint>) -> ()'",
+    1
+   ],
+   [
+    "cannot use optional chaining on non-optional value of type '@MainActor (UIScrollView, Bool) -> ()'",
+    1
+   ],
+   [
+    "cannot use optional chaining on non-optional value of type '@MainActor (UIScrollView, UIView?) -> ()'",
+    1
+   ],
+   [
+    "cannot use optional chaining on non-optional value of type '@MainActor (UIScrollView, UIView?, CGFloat) -> ()'",
+    1
+   ],
+   [
+    "cannot find 'CAShapeLayer' in scope",
+    1
+   ],
+   [
+    "value of type 'ImageScrollView' has no member 'contentInsetAdjustmentBehavior'",
+    1
+   ],
+   [
+    "cannot infer contextual base in reference to member 'never'",
+    1
+   ],
+   [
+    "type 'UIScene' has no member 'didEnterBackgroundNotification'",
+    1
+   ],
+   [
+    "value of type 'UIViewController' has no member 'viewSafeAreaInsetsDidChange'",
+    1
+   ],
+   [
+    "type 'UIFont' has no member 'systemFontSize'",
+    1
+   ],
+   [
+    "cannot find 'Browser' in scope",
+    1
+   ]
+  ]
+ },
+ "ios_triple_experiment": {
+  "note": "NOT a gate: ios-target's unmerged ios_target_sdk.py (origin/agent/ios-target-route) curated SDK + arm64-apple-ios26.1-simulator, against a scratch copy of this branch's uikit with only platforms .iOS(\"26.0\") added. Taken before af201735 (indexPathsForRows).",
+  "targets": [
+   {
+    "target": "Tidemark",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Minizip",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Zip",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSCoreObjC",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSCore",
+    "status": "failed",
+    "unique_errors": 35,
+    "own_errors": 35,
+    "dependency_errors": 0,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ],
+    "errors": [
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UICollectionView+RSCore.swift",
+      "line": 19,
+      "msg": "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 38,
+      "msg": "value of type 'String' has no member 'boundingRect'"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 38,
+      "msg": "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 38,
+      "msg": "reference to member 'usesFontLeading' cannot be resolved without a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 38,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 44,
+      "msg": "value of type 'String' has no member 'boundingRect'"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 44,
+      "msg": "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 44,
+      "msg": "reference to member 'usesFontLeading' cannot be resolved without a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIFont+RSCore.swift",
+      "line": 44,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UIResponder+RSCore.swift",
+      "line": 27,
+      "msg": "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UITableView+RSCore.swift",
+      "line": 18,
+      "msg": "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UITableView+RSCore.swift",
+      "line": 26,
+      "msg": "cannot find 'indexPathsForRows' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/UIKit/UITableView+RSCore.swift",
+      "line": 39,
+      "msg": "cannot find 'indexPathsForRows' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 38,
+      "msg": "cannot find 'cgImage' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 46,
+      "msg": "cannot find 'CGBitmapInfo' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 47,
+      "msg": "cannot find 'CGContext' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 47,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 57,
+      "msg": "no exact matches in call to initializer"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 105,
+      "msg": "cannot convert return expression of type '[UInt8]?' to return type 'Data?'"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 140,
+      "msg": "cannot find 'CGImageSourceCreateWithData' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 140,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 144,
+      "msg": "cannot find 'CGImageSourceGetCount' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 156,
+      "msg": "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 156,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 157,
+      "msg": "cannot find 'kCGImagePropertyPixelWidth' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 158,
+      "msg": "cannot find 'kCGImagePropertyPixelHeight' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 189,
+      "msg": "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 190,
+      "msg": "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 191,
+      "msg": "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 193,
+      "msg": "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 200,
+      "msg": "cannot find 'CGImageDestinationCreateWithData' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 200,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 203,
+      "msg": "cannot find 'CGImageDestinationAddImage' in scope"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 203,
+      "msg": "'nil' requires a contextual type"
+     },
+     {
+      "file": "-ios/Sources/RSCore/RSImage.swift",
+      "line": 204,
+      "msg": "cannot find 'CGImageDestinationFinalize' in scope"
+     }
+    ]
+   },
+   {
+    "target": "RSDatabaseObjC",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSDatabase",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "RSParser",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "RSWeb",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "RSTree",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "ActivityLog",
+    "status": "passed",
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0
+   },
+   {
+    "target": "Articles",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "ArticlesDatabase",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "ErrorLog",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "Secrets",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "SyncDatabase",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "CloudKitSync",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "FeedFinder",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "NewsBlur",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "HTMLMetadata",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "Account",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "Images",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   },
+   {
+    "target": "NetNewsWireObjC",
+    "status": "failed",
+    "unique_errors": 7,
+    "own_errors": 7,
+    "dependency_errors": 0,
+    "files_with_errors": 2,
+    "errors_by_message": [
+     [
+      "expected a type",
+      2
+     ],
+     [
+      "unknown type name 'NS_ASSUME_NONNULL_BEGIN'",
+      1
+     ],
+     [
+      "unknown type name 'NS_ASSUME_NONNULL_END'",
+      1
+     ],
+     [
+      "no visible @interface for 'SFSafariViewController' declares the selector 'initWithURL:'",
+      1
+     ],
+     [
+      "declaration of 'NSException' must be imported from module 'Foundation.NSException' before it is required",
+      1
+     ],
+     [
+      "use of undeclared identifier 'nil'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "SFSafariViewController+Extras.m",
+      4
+     ],
+     [
+      "SFSafariViewController+Extras.h",
+      3
+     ]
+    ],
+    "errors": [
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/include/SFSafariViewController+Extras.h",
+      "line": 11,
+      "msg": "unknown type name 'NS_ASSUME_NONNULL_BEGIN'"
+     },
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/include/SFSafariViewController+Extras.h",
+      "line": 15,
+      "msg": "expected a type"
+     },
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/include/SFSafariViewController+Extras.h",
+      "line": 19,
+      "msg": "unknown type name 'NS_ASSUME_NONNULL_END'"
+     },
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 18,
+      "msg": "expected a type"
+     },
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 21,
+      "msg": "no visible @interface for 'SFSafariViewController' declares the selector 'initWithURL:'"
+     },
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 23,
+      "msg": "declaration of 'NSException' must be imported from module 'Foundation.NSException' before it is required"
+     },
+     {
+      "file": "-ios/Sources/NetNewsWireObjC/NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m",
+      "line": 25,
+      "msg": "use of undeclared identifier 'nil'"
+     }
+    ]
+   },
+   {
+    "target": "NetNewsWire",
+    "status": "blocked by dependency",
+    "unique_errors": 35,
+    "own_errors": 0,
+    "dependency_errors": 35,
+    "files_with_errors": 5,
+    "errors_by_message": [
+     [
+      "'nil' requires a contextual type",
+      7
+     ],
+     [
+      "value of type 'String' has no member 'boundingRect'",
+      2
+     ],
+     [
+      "reference to member 'usesLineFragmentOrigin' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'usesFontLeading' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'indexPathsForRows' in scope",
+      2
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UICollectionView) -> Int'",
+      1
+     ],
+     [
+      "cannot find 'cgImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGBitmapInfo' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGContext' in scope",
+      1
+     ],
+     [
+      "no exact matches in call to initializer",
+      1
+     ],
+     [
+      "cannot convert return expression of type '[UInt8]?' to return type 'Data?'",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceGetCount' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCopyPropertiesAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelWidth' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImagePropertyPixelHeight' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailWithTransform' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceCreateThumbnailFromImageIfAbsent' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCGImageSourceThumbnailMaxPixelSize' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageSourceCreateThumbnailAtIndex' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationCreateWithData' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationAddImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'CGImageDestinationFinalize' in scope",
+      1
+     ],
+     [
+      "initializer for conditional binding must have Optional type, not '@MainActor (UITableView) -> Int'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "RSImage.swift",
+      22
+     ],
+     [
+      "UIFont+RSCore.swift",
+      8
+     ],
+     [
+      "UITableView+RSCore.swift",
+      3
+     ],
+     [
+      "UICollectionView+RSCore.swift",
+      1
+     ],
+     [
+      "UIResponder+RSCore.swift",
+      1
+     ]
+    ]
+   }
+  ]
+ }
+}

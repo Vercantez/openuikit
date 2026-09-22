@@ -52,5 +52,17 @@ class DiagnosticParseTests(unittest.TestCase):
         self.assertIsNotNone(chain_census.DIAG.match("/p/x.swift:1:2: error: e"))
 
 
+class ResumeTests(unittest.TestCase):
+    def test_only_rows_of_the_same_spec_and_order_are_resumed(self):
+        prev = {"spec": "/a/spec.json", "targets": [
+            {"target": "A", "status": "passed"}, {"target": "B", "status": "failed"},
+            {"target": "Statsig", "status": "passed"}]}
+        self.assertEqual([r["target"] for r in chain_census.resumable(prev, "/a/spec.json", ["A", "B"], None)], ["A"])
+        # another spec's out file (a shared scratch dir) contributes nothing
+        self.assertEqual(chain_census.resumable(prev, "/b/other.json", ["A", "B", "Statsig"], None), [])
+        # --only re-runs the named targets
+        self.assertEqual(chain_census.resumable(prev, "/a/spec.json", ["A", "B"], ["A"]), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -123,6 +123,15 @@ def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
     }
 
 
+def resumable(prev: dict, spec_path: str, order: list[str], only: list[str] | None) -> list[dict]:
+    """Passed rows of a previous run that may be reused: same spec, still in the order,
+    not named by --only. (A shared scratch dir can hold another app's out file.)"""
+    if prev.get("spec") != spec_path:
+        return []
+    return [r for r in prev.get("targets", [])
+            if r.get("status") == "passed" and r.get("target") in order and r.get("target") not in (only or [])]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -140,7 +149,7 @@ def main() -> int:
     results = []
     if os.path.exists(args.out):
         try:
-            results = [r for r in json.load(open(args.out))["targets"] if r["status"] == "passed" and r["target"] not in (args.only or [])]
+            results = resumable(json.load(open(args.out)), os.path.abspath(args.spec), order, args.only)
         except Exception:
             results = []
     done = {r["target"] for r in results}
