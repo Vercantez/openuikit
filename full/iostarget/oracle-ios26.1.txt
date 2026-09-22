@@ -1,0 +1,14 @@
+# iostarget-guest-probe os=iOS environment=simulator UIView=UIView
+available iOS 26.0: yes
+available iOS 26.1: yes
+available iOS 26.2: no
+available iOS 27.0: no
+frame={{1, 2}, {30, 40}} bounds={{0, 0}, {30, 40}}
+after first layoutIfNeeded layouts=1
+after second layoutIfNeeded layouts=1
+after setNeedsLayout+layoutIfNeeded layouts=2
+after bounds change layouts=3
+after sizeToFit frame={{-9, -8}, {77, 33}}
+superview is host: true subviews=1
+after removal superview=nil
+IOS_TARGET_GUEST_PROBE_OK

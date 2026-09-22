@@ -1561,6 +1561,15 @@ for probe in GuestBoundaryTests LaunchProbe FuziProbe; do
     compile_app_module "$probe" "$OUT/$probe.o" "$W/full/focus-ios/$probe.swift"
     link_app_executable "$OUT/$probe" "$OUT/$probe.o"
 done
+# iOS-target guest probe (docs/agent_reports/ios-target-route.md). Only an
+# iOS-simulator TARGET compiles it: the source #errors unless os(iOS), which
+# is the point. full/iostarget/run_guest_probe.sh runs it under machorun and
+# diffs it against the iOS 26.1 simulator transcript.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    compile_app_module IOSTargetGuestProbe "$OUT/IOSTargetGuestProbe.o" \
+        "$W/full/iostarget/IOSTargetGuestProbe.swift"
+    link_app_executable "$OUT/IOSTargetGuestProbe" "$OUT/IOSTargetGuestProbe.o"
+fi
 
 
 compile_app_module BrowserInkProbe "$OUT/BrowserInkProbe.o" \

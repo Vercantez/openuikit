@@ -13,6 +13,9 @@
 // here. NSAttributedString.boundingRect is Focus AutocompleteTextField.swift:250
 // (Blockzilla a2832521); String.boundingRect stays Linux/guest-only so Darwin
 // host keeps the SDK String overlay (TooltipView.swift:112 already compiles).
+// That overlay is AppKit's on the macOS triple; on the iOS triple, whose
+// curated SDK has no Apple UIKit (docs/agent_reports/ios-target-route.md),
+// nothing else supplies it, hence `!canImport(AppKit)`.
 
 public struct NSStringDrawingOptions: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
@@ -31,7 +34,7 @@ public final class NSStringDrawingContext: @unchecked Sendable {
     public init() {}
 }
 
-#if os(Linux) || !canImport(Foundation)
+#if os(Linux) || !canImport(Foundation) || !canImport(AppKit)
 extension String {
     public func boundingRect(
         with size: CGSize,

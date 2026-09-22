@@ -23,7 +23,17 @@ let environment = "simulator"
 let environment = "device"
 #endif
 
+// UIKit's NSString drawing addition. On the macOS triple AppKit supplies it;
+// on the iOS triple with Apple's UIKit removed only the port can
+// (NetNewsWire RSCore UIFont+RSCore.swift:38, measured by netnewswire-launch).
+@MainActor func stringDrawingCompiles() -> Bool {
+    let r = "probe".boundingRect(with: CGSize(width: 200, height: 100), options: [.usesLineFragmentOrigin],
+                                 attributes: [.font: UIFont.systemFont(ofSize: 17)], context: nil)
+    return r.width > 0
+}
+
 @MainActor func runProbe() {
+    _ = stringDrawingCompiles()
     print("# iostarget-probe os=iOS environment=\(environment) UIView=\(String(reflecting: UIView.self)) runtime-name=\(NSStringFromClass(UIView.self))")
     _ = ProbeViewController()
     print("## superclasses")
