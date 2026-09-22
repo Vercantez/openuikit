@@ -204,6 +204,19 @@ class GeneratedManifestTests(unittest.TestCase):
                 f'.product(name: "{name}", package: "OpenUIKit", condition: .when(platforms: [.linux, .iOS]))',
                 text, name)
 
+    def test_availability_checking_is_not_disabled_on_ios(self) -> None:
+        # MEASURED (Xcode 26.1, arm64-apple-ios26.0-simulator, `swiftc -emit-ir`
+        # of `if #available(iOS 27.0, *)`): 4 references to the runtime
+        # version check without the flag, 0 with -disable-availability-checking,
+        # i.e. the flag folds every #available to true. On the iOS triple the
+        # app must take the branch a 26.1 device takes.
+        text = self._emit()
+        unconditional = text[text.index(".unsafeFlags(["):text.index("] + platformModuleAliases)")]
+        self.assertNotIn("-disable-availability-checking", unconditional)
+        macos = text[text.index("] + platformModuleAliases)"):]
+        self.assertIn('"-disable-availability-checking"', macos)
+        self.assertIn('"-disable-availability-checking",\n                ], .when(platforms: [.macOS, .linux]))', macos)
+
     def test_generated_header_dirs_cover_the_ios_simulator_triple(self) -> None:
         self.assertIn(".build/arm64-apple-ios-simulator/debug/OpenUIKit.build/include", ingest.GENERATED_HEADER_DIRS)
         self.assertIn(".build/arm64-apple-ios-simulator/release/OpenUIKit.build/include", ingest.GENERATED_HEADER_DIRS)

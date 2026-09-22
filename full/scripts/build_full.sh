@@ -1398,6 +1398,12 @@ for i in "${!OBS_SOURCES[@]}"; do OBS_SOURCES[$i]="$W/${OBS_SOURCES[$i]}"; done
     -L"$SYS/usr/lib" -lSystem -lobjc "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
 cp "$OBS_OUT/Observation.swiftmodule" "$APPINC/"
 
+# -disable-availability-checking folds every `#available` to true (MEASURED:
+# Xcode 26.1 emit-ir, 4 runtime-check references without it, 0 with it). An
+# iOS-triple guest presents iOS 26.1, so its app modules keep the real check
+# (docs/agent_reports/ios-target-route.md); the macOS-triple guest is unchanged.
+APP_AVAILABILITY_FLAGS=(-disable-availability-checking)
+[ "$LINK_PLATFORM" = ios-simulator ] && APP_AVAILABILITY_FLAGS=()
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
     echo "   module $name"
@@ -1408,7 +1414,7 @@ compile_app_module() {
     "${SWIFTC[@]}" -D OPENUIKIT_GUEST -parse-as-library "${FEMODULES[@]}" \
         "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
         -I "$OUT" -I "$APPINC" -I "$APPMODS" \
-        -disable-availability-checking \
+        "${APP_AVAILABILITY_FLAGS[@]}" \
         "${OBSERVATION_PLUGIN_FLAGS[@]}" \
         -module-name "$name" \
         -emit-module -emit-module-path "$APPINC/$name.swiftmodule" \

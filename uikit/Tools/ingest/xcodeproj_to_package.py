@@ -1838,7 +1838,6 @@ def emit_package_swift(
     )
     swift_flags = [
         '"-default-isolation", "MainActor"',
-        '"-disable-availability-checking"',
     ]
     clang_target = ""
     macos_xcc: list[str] = []
@@ -1940,12 +1939,21 @@ def emit_package_swift(
         )
         target_kind = "target"
     swift_flag_lines = ",\n".join(f"                    {flag}" for flag in swift_flags)
-    macos_settings = ""
+    # -disable-availability-checking folds every `#available` to true
+    # (MEASURED Xcode 26.1 emit-ir: 4 runtime-check references without it, 0
+    # with it). It is needed off iOS, where the app's iOS availability does
+    # not describe the triple; on the iOS triple (floor 26.0) the app must
+    # take the branch an iOS 26.1 device takes.
+    macos_settings = (
+        "\n                .unsafeFlags([\n"
+        '                    "-disable-availability-checking",\n'
+        "                ], .when(platforms: [.macOS, .linux])),"
+    )
     if macos_xcc:
         macos_flag_lines = ",\n".join(
             f'                    "{macos_xcc[i]}", "{macos_xcc[i + 1]}"' for i in range(0, len(macos_xcc), 2)
         )
-        macos_settings = (
+        macos_settings += (
             "\n                .unsafeFlags([\n" + macos_flag_lines
             + "\n                ], .when(platforms: [.macOS])),"
         )
