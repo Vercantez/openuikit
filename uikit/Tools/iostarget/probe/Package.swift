@@ -26,8 +26,12 @@ let package = Package(
         // compiled against OpenUIKit's generated header.
         .target(
             name: "IOSTargetProbeObjC",
+            // OpenUIKit, not the UIKit product: a Clang target depending on the
+            // Swift `UIKit` target makes SwiftPM emit a second `module UIKit`
+            // (for UIKit-Swift.h) next to UIKitClangModule's ("redefinition of
+            // module 'UIKit'", measured after main's UIKitClangModule).
             dependencies: [
-                .product(name: "UIKit", package: "OpenUIKit"),
+                .product(name: "OpenUIKit", package: "OpenUIKit"),
                 .product(name: "OpenUIKitObjCBridge", package: "OpenUIKit"),
             ],
             publicHeadersPath: "include",
