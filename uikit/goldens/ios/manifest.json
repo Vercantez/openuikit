@@ -1021,25 +1021,26 @@
   "hc-conformance-Tabs": {
    "dest": "/tmp/hc-conformance-Tabs/golden",
    "device": "iPhone SE (3rd generation) @2x",
-   "captured": "2026-09-05T06:27:03Z",
+   "captured": "2026-09-22T21:38:59Z",
    "pngs": 8,
    "files": {
-    "Tabs.t1000.layout.json": "0792abae682964b9b89fdb1e36099cf351f62bd2e3f068af26e74521b62a6b4e",
-    "Tabs.t1000.png": "e8a3f284620663d537523f334f03352d98d048790851ac3ee033d5d9881ff41a",
-    "Tabs.t200.layout.json": "5eee88df9392ed0d42206bb59583e9389cba9115b012ccb0356f365963ebc83b",
-    "Tabs.t200.png": "463bd539825c3fd29565525a51134cd86cc3ee6ecf32d542a97f912afebb2400",
-    "Tabs.t2000.layout.json": "bef29900438a3a2edcb8c92d5180aef3524e4d6e372fae05a440d5eba70d544d",
-    "Tabs.t2000.png": "3cedcca773af2e0877ffef25d4b162bbdc670c66435789201c209d223f7d086a",
-    "Tabs.t3000.layout.json": "db66f0fa83ce69fc2c29fd0d06d6ad17a36aa4f1314562f2445894cfe972cc9e",
-    "Tabs.t3000.png": "c48bdd09bdab2c25ad9607e45689e1d71e8b028b2af71f095cda26a12913d2fa",
-    "Tabs.t4000.layout.json": "a38c8dc93c76fe9c8ddaba5a32674ec55b3a0d6f8077160a0c3f035e24cb42ba",
-    "Tabs.t4000.png": "9e50bba5967fd7ab46a227c9b09844a7e9643962ca040f1cce65ffcfc1bec5f7",
-    "Tabs.t5000.layout.json": "9a72aac27cf8af80cc0712279b6c8b976562f2d4fc0478d585adfe9044bebd5f",
-    "Tabs.t5000.png": "0422164b25cb7c5c569bc82dbc3d3b660c0af3524c6eaa80d97f333b2bcaf5fc",
-    "Tabs.t6000.layout.json": "32f15bb4182c9e923ec372afaad01b690035da894398b8f9968486552e01ae40",
+    "Tabs.t1000.layout.json": "ea3ac8b6dff913e2f267f271aa1b3183cdc70e657edfc9f5cb54981d4f85310e",
+    "Tabs.t1000.png": "5969fd30bba14d078d49925c9b347e66ed9a0248bdf9af87ebe7810042f766df",
+    "Tabs.t200.layout.json": "4e61ad2cacc098e935589bb88ad595692d216efa5f33017a7bb9087996064244",
+    "Tabs.t200.png": "0662f3d84b83f0cc0ab1ee42b357c43197c8e072e5ad37ced150737898a3d34f",
+    "Tabs.t2000.layout.json": "e56caa739a74ff2af4c9b6e30ece2090dddafcdcd28c39bc3f7e08f3ed93c6ee",
+    "Tabs.t2000.png": "720a1aabe873b20c8ab8cccdeab70585825553293f97ea9aebdd04ca9c4e8b14",
+    "Tabs.t3000.layout.json": "bbe9c3951b9c20147ae49efca8c8abb33e910d31e41eebc51567beef2a550dcb",
+    "Tabs.t3000.png": "1c92ac5c02a59354b876c697aa716eeea92703e2a39f2c14e8f8bf440f5198e7",
+    "Tabs.t4000.layout.json": "1d2663ac0a99e6785f88e89b627514902703b77f78ca54c1f981fd9bc55ec420",
+    "Tabs.t4000.png": "ba91e47db26300d484a80b7876f2f422de46a8fe255d5b4b24dac1ab0bd9e3b8",
+    "Tabs.t5000.layout.json": "5f382ed54cb30cea55b90235f84f806e31e00ada9c35e0e1d9fc983d6cb8b899",
+    "Tabs.t5000.png": "3c973daf2dddae11fb87a5bdd7fb3a5e6e58f8ba142d094a74f8f777487ebbf1",
+    "Tabs.t6000.layout.json": "6eaa0dc48b107cfe560ae2d8de333149bb2136069aaea22719aee431936d1f65",
     "Tabs.t6000.png": "5c8849430852dffe86228f3530d97ff5d3faf1afd43e09c864faa5d525ce5c18",
-    "Tabs.t7000.layout.json": "676e408230a05ab853229b7e30d3cd5008502f95961d407a68bd12b3e59db4b1",
-    "Tabs.t7000.png": "cb7a728495d9483d2d6005d1b522c4773c19244bbe0abe43cb495e34387eb254"
+    "Tabs.t7000.layout.json": "a5d5f8d59f7a790db2e14bae473bf836d6f1a877110d3e7bf1b2855590ea2845",
+    "Tabs.t7000.png": "cb7a728495d9483d2d6005d1b522c4773c19244bbe0abe43cb495e34387eb254",
+    "provenance.json": "b258e4215cd8d9c05b313657065815e7d345a1008bb0972c61550e68973ba40d"
    }
   }
  }

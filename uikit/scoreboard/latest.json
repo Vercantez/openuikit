@@ -439,6 +439,18 @@
    "status": "fail"
   },
   {
+   "scene": "Tabs:t2000",
+   "category": "conformance",
+   "score": 84.925,
+   "blob": 122.5,
+   "layout_issues": 7,
+   "captured": "2026-09-22T16:39",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "golden_sha": "720a1aabe873b20c8ab8cccdeab70585825553293f97ea9aebdd04ca9c4e8b14",
+   "status": "fail"
+  },
+  {
    "scene": "Tabs:t2000.ax1",
    "category": "conformance",
    "score": 84.937,
@@ -456,17 +468,6 @@
    "blob": 139.8,
    "layout_issues": 7,
    "captured": "2026-09-06T21:10",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Tabs:t2000",
-   "category": "conformance",
-   "score": 84.946,
-   "blob": 133.8,
-   "layout_issues": 7,
-   "captured": "2026-09-06T21:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -696,9 +697,10 @@
    "score": 89.519,
    "blob": 42.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T21:07",
+   "captured": "2026-09-22T16:39",
    "verdict": "FAIL",
    "threshold": 97.5,
+   "golden_sha": "5c8849430852dffe86228f3530d97ff5d3faf1afd43e09c864faa5d525ce5c18",
    "status": "fail"
   },
   {
@@ -1261,9 +1263,10 @@
    "score": 93.724,
    "blob": 137.0,
    "layout_issues": 14,
-   "captured": "2026-09-06T21:07",
+   "captured": "2026-09-22T16:39",
    "verdict": "FAIL",
    "threshold": 97.5,
+   "golden_sha": "3c973daf2dddae11fb87a5bdd7fb3a5e6e58f8ba142d094a74f8f777487ebbf1",
    "status": "fail"
   },
   {
@@ -1426,9 +1429,10 @@
    "score": 95.011,
    "blob": 137.0,
    "layout_issues": 10,
-   "captured": "2026-09-06T21:07",
+   "captured": "2026-09-22T16:39",
    "verdict": "FAIL",
    "threshold": 97.5,
+   "golden_sha": "ba91e47db26300d484a80b7876f2f422de46a8fe255d5b4b24dac1ab0bd9e3b8",
    "status": "fail"
   },
   {
@@ -1965,9 +1969,10 @@
    "score": 96.6,
    "blob": 45.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T21:07",
+   "captured": "2026-09-22T16:39",
    "verdict": "FAIL",
    "threshold": 97.5,
+   "golden_sha": "cb7a728495d9483d2d6005d1b522c4773c19244bbe0abe43cb495e34387eb254",
    "status": "fail"
   },
   {
@@ -1998,9 +2003,10 @@
    "score": 96.657,
    "blob": 41.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T21:07",
+   "captured": "2026-09-22T16:39",
    "verdict": "FAIL",
    "threshold": 97.5,
+   "golden_sha": "0662f3d84b83f0cc0ab1ee42b357c43197c8e072e5ad37ced150737898a3d34f",
    "status": "fail"
   },
   {
@@ -2185,9 +2191,10 @@
    "score": 96.898,
    "blob": 41.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T21:07",
+   "captured": "2026-09-22T16:39",
    "verdict": "FAIL",
    "threshold": 97.5,
+   "golden_sha": "1c92ac5c02a59354b876c697aa716eeea92703e2a39f2c14e8f8bf440f5198e7",
    "status": "fail"
   },
   {
@@ -5317,17 +5324,6 @@
    "status": "pass"
   },
   {
-   "scene": "Tabs:t1000",
-   "category": "conformance",
-   "score": 99.409,
-   "blob": 31.2,
-   "layout_issues": 21,
-   "captured": "2026-09-06T21:07",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "corner_radius",
    "category": "geometry",
    "score": 99.411,
@@ -5530,6 +5526,18 @@
    "layout_issues": 0,
    "verdict": "PASS",
    "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Tabs:t1000",
+   "category": "conformance",
+   "score": 99.44,
+   "blob": 9.0,
+   "layout_issues": 21,
+   "captured": "2026-09-22T16:39",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "5969fd30bba14d078d49925c9b347e66ed9a0248bdf9af87ebe7810042f766df",
    "status": "pass"
   },
   {
