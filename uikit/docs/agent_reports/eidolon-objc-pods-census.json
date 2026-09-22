@@ -1,0 +1,1546 @@
+{
+ "classes": {
+  "macos-leakage": 137,
+  "openuikit-objc-surface": 331,
+  "pod-internal-or-cascade": 431
+ },
+ "pods": {
+  "ARCollectionViewMasonryLayout": {
+   "by_tu": {
+    "ARCollectionViewMasonryLayout/ARCollectionViewMasonryLayout.m": [
+     "cannot find protocol declaration for 'UICollectionViewDelegateFlowLayout'",
+     "cannot find interface declaration for 'UICollectionViewFlowLayout', superclass of 'ARCollectionViewMasonryLayout'",
+     "unknown type name 'UICollectionViewLayoutAttributes'",
+     "property with 'retain (or strong)' attribute must be of object type",
+     "unknown type name 'UICollectionViewLayoutAttributes'",
+     "property with 'retain (or strong)' attribute must be of object type",
+     "expected a type",
+     "expected a type",
+     "'ARCollectionViewMasonryLayout' cannot use 'super' because it is a root class",
+     "no visible @interface for 'ARCollectionViewMasonryLayout' declares the selector 'invalidateLayout'",
+     "no visible @interface for 'ARCollectionViewMasonryLayout' declares the selector 'invalidateLayout'",
+     "call to undeclared function 'UIEdgeInsetsEqualToEdgeInsets'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "no visible @interface for 'ARCollectionViewMasonryLayout' declares the selector 'invalidateLayout'",
+     "no visible @interface for 'ARCollectionViewMasonryLayout' declares the selector 'invalidateLayout'",
+     "'ARCollectionViewMasonryLayout' cannot use 'super' because it is a root class",
+     "no visible @interface for 'ARCollectionViewMasonryLayout' declares the selector 'collectionView'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "no known class method for selector 'indexPathForItem:inSection:'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "no visible @interface for 'ARCollectionViewMasonryLayout' declares the selector 'collectionView'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "call to undeclared function 'UIEdgeInsetsEqualToEdgeInsets'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "no known class method for selector 'indexPathForItem:inSection:'",
+     "no known class method for selector 'indexPathForItem:inSection:'",
+     "use of undeclared identifier 'UICollectionViewLayoutAttributes'; did you mean 'kCollectionDefaultAttributes'?",
+     "use of undeclared identifier 'UICollectionViewLayoutAttributes'; did you mean 'kCollectionDefaultAttributes'?",
+     "bad receiver type 'int'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "no type or protocol named 'UICollectionViewDelegateFlowLayout'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "no known instance method for selector 'collectionView:layout:referenceSizeForHeaderInSection:'",
+     "assigning to 'CGSize' (aka 'struct CGSize') from incompatible type 'id'",
+     "no type or protocol named 'UICollectionViewDelegateFlowLayout'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "no known instance method for selector 'collectionView:layout:referenceSizeForFooterInSection:'",
+     "assigning to 'CGSize' (aka 'struct CGSize') from incompatible type 'id'",
+     "use of undeclared identifier 'UICollectionViewLayoutAttributes'; did you mean 'kCollectionDefaultAttributes'?",
+     "use of undeclared identifier 'UICollectionViewLayoutAttributes'; did you mean 'kCollectionDefaultAttributes'?",
+     "bad receiver type 'int'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "use of undeclared identifier 'attributes'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "use of undeclared identifier 'UICollectionElementKindSectionHeader'",
+     "use of undeclared identifier 'UICollectionElementKindSectionHeader'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'UICollectionViewLayoutAttributes'; did you mean 'kCollectionDefaultAttributes'?",
+     "use of undeclared identifier 'UICollectionViewLayoutAttributes'; did you mean 'kCollectionDefaultAttributes'?",
+     "bad receiver type 'int'",
+     "use of undeclared identifier 'attributes'",
+     "use of undeclared identifier 'attributes'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "use of undeclared identifier 'attributes'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "use of undeclared identifier 'UICollectionElementKindSectionFooter'",
+     "use of undeclared identifier 'attributes'",
+     "no known class method for selector 'indexPathForItem:inSection:'",
+     "property 'collectionView' not found on object of type 'ARCollectionViewMasonryLayout *'",
+     "implicit conversion of a non-Objective-C pointer type 'int *' to 'id _Nonnull' is disallowed with ARC",
+     "implicit conversion of a non-Objective-C pointer type 'int *' to 'id _Nonnull' is disallowed with ARC",
+     "use of undeclared identifier 'UICollectionElementKindSectionHeader'",
+     "implicit conversion of a non-Objective-C pointer type 'int *' to 'id' is disallowed with ARC",
+     "use of undeclared identifier 'UICollectionElementKindSectionFooter'",
+     "implicit conversion of a non-Objective-C pointer type 'int *' to 'id' is disallowed with ARC",
+     "use of undeclared identifier 'UICollectionElementKindSectionHeader'",
+     "use of undeclared identifier 'UICollectionElementKindSectionFooter'"
+    ],
+    "ARCollectionViewMasonryLayout/IntegrationTests/ARCollectionViewMasonryLayoutTests.m": [
+     "cannot find protocol declaration for 'UICollectionViewDelegateFlowLayout'",
+     "cannot find interface declaration for 'UICollectionViewFlowLayout', superclass of 'ARCollectionViewMasonryLayout'",
+     "'ARCollectionViewController.h' file not found"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 23,
+    "pod-internal-or-cascade": 60
+   },
+   "clean": 0,
+   "errors": 83,
+   "translation_units": 2
+  },
+  "ARTiledImageView": {
+   "by_tu": {
+    "ARTiledImageView/Classes/ARLocalTiledImageDataSource.m": [
+     "no known class method for selector 'imageWithContentsOfFile:'"
+    ],
+    "ARTiledImageView/Classes/ARTile.m": [
+     "no visible @interface for 'UIImage' declares the selector 'drawInRect:blendMode:alpha:'"
+    ],
+    "ARTiledImageView/Classes/ARTiledImageScrollView.m": [
+     "'SDWebImage/UIImageView+WebCache.h' file not found"
+    ],
+    "ARTiledImageView/Classes/ARTiledImageView.m": [
+     "'SDWebImage/UIImageView+WebCache.h' file not found"
+    ],
+    "ARTiledImageView/Classes/ARWebTiledImageDataSource.m": [
+     "no known class method for selector 'imageWithContentsOfFile:'",
+     "call to undeclared function 'UIImageJPEGRepresentation'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "bad receiver type 'int'"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 4,
+    "pod-internal-or-cascade": 3
+   },
+   "clean": 0,
+   "errors": 7,
+   "translation_units": 5
+  },
+  "Artsy-OSSUIFonts": {
+   "by_tu": {
+    "Artsy-OSSUIFonts/Pod/Classes/UIFont+ArtsyFonts.m": [
+     "cannot define category for undefined class 'UIFont'",
+     "cannot find interface declaration for 'UIFont'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'fontWithName:size:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "no known class method for selector 'serifFontWithSize:'",
+     "use of undeclared identifier 'UIFontFeatureTypeIdentifierKey'; did you mean 'kCTFontFeatureTypeIdentifierKey'?",
+     "use of undeclared identifier 'UIFontFeatureSelectorIdentifierKey'; did you mean 'kCTFontFeatureSelectorIdentifierKey'?",
+     "collection element of type 'CFStringRef' (aka 'const struct __CFString *') is not an Objective-C object",
+     "use of undeclared identifier 'UIFontDescriptorFeatureSettingsAttribute'; did you mean 'kCTFontFeatureSettingsAttribute'?",
+     "use of undeclared identifier 'UIFontDescriptorNameAttribute'; did you mean 'CTFontDescriptorCopyAttribute'?",
+     "use of undeclared identifier 'UIFontDescriptorSizeAttribute'; did you mean 'CTFontDescriptorCopyAttribute'?",
+     "collection element of type 'CFStringRef' (aka 'const struct __CFString *') is not an Objective-C object",
+     "unknown type name 'UIFontDescriptor'; did you mean 'NSFontDescriptor'?",
+     "unknown receiver 'UIFontDescriptor'; did you mean 'NSFontDescriptor'?",
+     "receiver 'NSFontDescriptor' for class message is a forward declaration",
+     "receiver type 'NSFontDescriptor' for instance message is a forward declaration",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'fontWithDescriptor:size:'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'fontWithName:size:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'fontWithName:size:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'fontWithName:size:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'fontWithName:size:'",
+     "no known class method for selector 'ar_LoadAndReturnFont:extension:size:onceToken:fontFileName:'"
+    ]
+   },
+   "classes": {
+    "macos-leakage": 4,
+    "openuikit-objc-surface": 12,
+    "pod-internal-or-cascade": 23
+   },
+   "clean": 0,
+   "errors": 39,
+   "translation_units": 1
+  },
+  "Artsy-UIButtons": {
+   "by_tu": {
+    "Artsy-UIButtons/Pod/Classes/ARButtonSubclasses.m": [
+     "cannot subclass a class that was declared with the 'objc_subclassing_restricted' attribute",
+     "cannot subclass a class that was declared with the 'objc_subclassing_restricted' attribute",
+     "no known class method for selector 'animateIf:duration::'",
+     "no visible @interface for 'ARButton' declares the selector 'setTitle:forState:'",
+     "property 'titleLabel' not found on object of type 'ARUnderlineButton *'",
+     "no visible @interface for 'ARButton' declares the selector 'setTitle:forState:'",
+     "use of undeclared identifier 'NSUnderlineStyleAttributeName'",
+     "use of undeclared identifier 'NSUnderlineStyleNone'",
+     "use of undeclared identifier 'NSUnderlineStyleAttributeName'",
+     "use of undeclared identifier 'NSUnderlineStyleSingle'",
+     "property 'titleLabel' not found on object of type 'ARInquireButton *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'serifFontWithSize:'",
+     "no visible @interface for 'ARInquireButton' declares the selector 'setTitleColor:forState:'",
+     "no known class method for selector 'artsyGrayBold'",
+     "no visible @interface for 'ARInquireButton' declares the selector 'setTitleColor:forState:'",
+     "use of undeclared identifier 'UIViewNoIntrinsicMetric'",
+     "property 'titleLabel' not found on object of type 'ARModalMenuButton *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'",
+     "property 'titleLabel' not found on object of type 'ARFlatButton *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'",
+     "property 'titleLabel' not found on object of type 'ARFlatButton *'",
+     "no known class method for selector 'constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:'",
+     "no visible @interface for 'ARFlatButton' declares the selector 'addConstraint:'",
+     "property 'titleLabel' not found on object of type 'ARFlatButton *'",
+     "no known class method for selector 'constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:'",
+     "no visible @interface for 'ARFlatButton' declares the selector 'addConstraint:'",
+     "no visible @interface for 'ARFlatButton' declares the selector 'layer'",
+     "no visible @interface for 'CALayer' declares the selector 'setMasksToBounds:'",
+     "no visible @interface for 'CALayer' declares the selector 'setCornerRadius:'",
+     "no visible @interface for 'CALayer' declares the selector 'setBorderWidth:'",
+     "property 'state' not found on object of type 'ARFlatButton *'",
+     "property 'state' not found on object of type 'ARFlatButton *'",
+     "property 'layer' not found on object of type 'ARFlatButton *'",
+     "property 'layer' not found on object of type 'ARFlatButton *'",
+     "property 'backgroundColor' not found on object of type 'CALayer *'",
+     "property 'backgroundColor' not found on object of type 'CALayer *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'state' not found on object of type 'ARFlatButton *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'backgroundColor' not found on object of type 'CALayer *'",
+     "property 'backgroundColor' not found on object of type 'CALayer *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'backgroundColor' not found on object of type 'CALayer *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'borderColor' not found on object of type 'CALayer *'",
+     "property 'borderColor' not found on object of type 'CALayer *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'state' not found on object of type 'ARFlatButton *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'borderColor' not found on object of type 'CALayer *'",
+     "property 'borderColor' not found on object of type 'CALayer *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'borderColor' not found on object of type 'CALayer *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'fade'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'fade'",
+     "use of undeclared identifier 'fade'",
+     "use of undeclared identifier 'fade'",
+     "no visible @interface for 'CALayer' declares the selector 'addAnimation:forKey:'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "no known class method for selector 'layer'",
+     "property 'masksToBounds' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "no visible @interface for 'ARMenuButton' declares the selector 'setTitleColor:forState:'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'frame' not found on object of type 'CALayer *'",
+     "property 'cornerRadius' not found on object of type 'CALayer *'",
+     "property 'layer' not found on object of type 'ARMenuButton *'",
+     "property 'imageView' not found on object of type 'ARMenuButton *'",
+     "property 'titleLabel' not found on object of type 'ARMenuButton *'",
+     "no visible @interface for 'ARClearFlatButton' declares the selector 'setTitleColor:forState:'",
+     "no known class method for selector 'artsyPurpleRegular'",
+     "no known class method for selector 'artsyPurpleRegular'",
+     "no visible @interface for 'ARWhiteFlatButton' declares the selector 'setTitleColor:forState:'",
+     "no visible @interface for 'ARWhiteFlatButton' declares the selector 'setTitleColor:forState:'",
+     "property 'layer' not found on object of type 'ARWhiteFlatButton *'",
+     "no visible @interface for 'ARCircularActionButton' declares the selector 'setImage:forState:'",
+     "property 'layer' not found on object of type 'ARCircularActionButton *'",
+     "property 'borderColor' not found on object of type 'CALayer *'",
+     "no known class method for selector 'artsyGrayRegular'",
+     "property 'CGColor' not found on object of type 'id'",
+     "property 'borderWidth' not found on object of type 'CALayer *'",
+     "property 'cornerRadius' not found on object of type 'CALayer *'",
+     "property 'titleLabel' not found on object of type 'ARNavigationTabButton *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'",
+     "no visible @interface for 'ARNavigationTabButton' declares the selector 'setTitleColor:forState:'",
+     "no known class method for selector 'artsyPurpleRegular'",
+     "no visible @interface for 'ARNavigationTabButton' declares the selector 'setTitleColor:forState:'",
+     "property 'imageView' not found on object of type 'ARNavigationTabButton *'",
+     "no known class method for selector 'artsyPurpleRegular'",
+     "property 'layer' not found on object of type 'ARHeroUnitButton *'",
+     "property 'titleLabel' not found on object of type 'ARHeroUnitButton *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'",
+     "property 'contentEdgeInsets' not found on object of type 'ARHeroUnitButton *'",
+     "no visible @interface for 'ARHeroUnitButton' declares the selector 'setTitleColor:forState:'",
+     "no visible @interface for 'ARHeroUnitButton' declares the selector 'setTitleColor:forState:'",
+     "property 'titleLabel' not found on object of type 'ARBlackFlatButton *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'",
+     "property 'layer' not found on object of type 'ARBlackFlatButton *'",
+     "no visible @interface for 'ARBlackFlatButton' declares the selector 'setTitleColor:forState:'",
+     "no known class method for selector 'artsyPurpleRegular'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterX'",
+     "use of undeclared identifier 'NSLayoutRelationEqual'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterX'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterY'",
+     "use of undeclared identifier 'NSLayoutRelationEqual'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterY'",
+     "use of undeclared identifier 'fade'"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 49,
+    "pod-internal-or-cascade": 74
+   },
+   "clean": 0,
+   "errors": 123,
+   "translation_units": 1
+  },
+  "Artsy-UIColors": {
+   "by_tu": {
+    "Artsy-UIColors/Classes/UIColor+ArtsyColors.m": [],
+    "Artsy-UIColors/Classes/UIColor+DebugColours.m": [
+     "no known class method for selector 'colorWithHue:saturation:brightness:alpha:'"
+    ]
+   },
+   "classes": {
+    "pod-internal-or-cascade": 1
+   },
+   "clean": 1,
+   "errors": 1,
+   "translation_units": 2
+  },
+  "Artsy-UILabels": {
+   "by_tu": {
+    "Artsy-UILabels/Pod/Classes/Artsy+UILabels.m": [
+     "cannot subclass a class that was declared with the 'objc_subclassing_restricted' attribute",
+     "property 'opaque' not found on object of type 'ARLabel *'",
+     "no known class method for selector 'imageWithContentsOfFile:'",
+     "call to undeclared function 'UIEdgeInsetsInsetRect'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "assigning to 'CGRect' (aka 'struct CGRect') from incompatible type 'int'",
+     "no visible @interface for 'ARLabel' declares the selector 'drawTextInRect:'",
+     "property 'font' not found on object of type 'ARSerifLabel *'",
+     "property 'font' not found on object of type 'ARSerifLabel *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'serifFontWithSize:'",
+     "property 'font' not found on object of type 'ARItalicsSerifLabel *'",
+     "property 'font' not found on object of type 'ARItalicsSerifLabel *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'serifItalicFontWithSize:'",
+     "property 'font' not found on object of type 'ARSansSerifLabel *'",
+     "property 'font' not found on object of type 'ARSansSerifLabel *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'",
+     "property 'font' not found on object of type 'ARItalicsSerifLabelWithChevron *'",
+     "property 'font' not found on object of type 'ARItalicsSerifLabelWithChevron *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'serifItalicFontWithSize:'",
+     "no visible @interface for 'NSMutableParagraphStyle' declares the selector 'setLineSpacing:'",
+     "property 'textAlignment' not found on object of type 'ARSerifLineHeightLabel *'",
+     "no visible @interface for 'NSMutableParagraphStyle' declares the selector 'setAlignment:'",
+     "property 'attributedText' not found on object of type 'ARSerifLineHeightLabel *'; did you mean 'attributeKeys'?",
+     "assignment to readonly property",
+     "property 'lineBreakMode' not found on object of type 'ARBorderLabel *'",
+     "use of undeclared identifier 'NSLineBreakByWordWrapping'",
+     "call to undeclared function 'UIEdgeInsetsInsetRect'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "no visible @interface for 'ARSerifLineHeightLabel' declares the selector 'drawTextInRect:'",
+     "property 'font' not found on object of type 'ARSerifLabelWithChevron *'",
+     "property 'font' not found on object of type 'ARSerifLabelWithChevron *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'serifFontWithSize:'",
+     "property 'font' not found on object of type 'ARSansSerifLabelWithChevron *'",
+     "property 'font' not found on object of type 'ARSansSerifLabelWithChevron *'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'sansSerifFontWithSize:'"
+    ],
+    "Artsy-UILabels/Pod/Classes/NSNumberFormatter+ARCurrency.m": [],
+    "Artsy-UILabels/Pod/Classes/UIView+ARDrawing.m": [
+     "no known class method for selector 'artsyGrayLight'",
+     "property 'layer' not found on object of type 'UIView *'",
+     "no visible @interface for 'CALayer' declares the selector 'removeFromSuperlayer'",
+     "property 'layer' not found on object of type 'UIView *'",
+     "property 'layer' not found on object of type 'UIView *'",
+     "use of undeclared identifier 'CAShapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'CAShapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'shapeLayer'",
+     "use of undeclared identifier 'shapeLayer'"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 15,
+    "pod-internal-or-cascade": 39
+   },
+   "clean": 1,
+   "errors": 54,
+   "translation_units": 3
+  },
+  "DZNWebViewController": {
+   "by_tu": {
+    "DZNWebViewController/Source/Classes/DZNPolyActivity.m": [
+     "attempting to use the forward class 'UIActivity' as superclass of 'DZNPolyActivity'",
+     "expected a type",
+     "no known class method for selector 'alloc'",
+     "multiple methods named 'initWithActivityType:' found with mismatched result, parameter type or attributes",
+     "'DZNPolyActivity' cannot use 'super' because it is a root class",
+     "use of undeclared identifier 'UIActivityCategoryAction'",
+     "receiver type 'UIActivity' for instance message is a forward declaration",
+     "no visible @interface for 'UIApplication' declares the selector 'canOpenURL:'",
+     "no visible @interface for 'UIApplication' declares the selector 'canOpenURL:'",
+     "no visible @interface for 'UIApplication' declares the selector 'canOpenURL:'",
+     "no visible @interface for 'UIApplication' declares the selector 'canOpenURL:'",
+     "no visible @interface for 'DZNPolyActivity' declares the selector 'activityDidFinish:'",
+     "use of undeclared identifier 'UIPasteboard'",
+     "no visible @interface for 'UIApplication' declares the selector 'openURL:'",
+     "no visible @interface for 'UIApplication' declares the selector 'openURL:'",
+     "no visible @interface for 'UIApplication' declares the selector 'openURL:'",
+     "no visible @interface for 'UIApplication' declares the selector 'openURL:'",
+     "no visible @interface for 'DZNPolyActivity' declares the selector 'activityDidFinish:'"
+    ],
+    "DZNWebViewController/Source/Classes/DZNWebViewController.m": [
+     "unknown type name 'UIWebView'",
+     "property with 'retain (or strong)' attribute must be of object type",
+     "attempting to use the forward class 'UIActivity' as superclass of 'DZNPolyActivity'",
+     "'NJKWebViewProgress/NJKWebViewProgressView.h' file not found"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 14,
+    "pod-internal-or-cascade": 8
+   },
+   "clean": 0,
+   "errors": 22,
+   "translation_units": 2
+  },
+  "ECPhoneNumberFormatter": {
+   "by_tu": {
+    "ECPhoneNumberFormatter/ECPhoneNumberFormatter/ECPhoneNumberFormatter.m": []
+   },
+   "classes": {},
+   "clean": 1,
+   "errors": 0,
+   "translation_units": 1
+  },
+  "FLKAutoLayout": {
+   "by_tu": {
+    "FLKAutoLayout/FLKAutoLayout/FLKAutoLayoutPredicateList.m": [
+     "unknown type name 'NSLayoutRelation'",
+     "unknown type name 'UILayoutPriority'",
+     "unknown type name 'NSLayoutRelation'",
+     "unknown type name 'UILayoutPriority'",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "use of undeclared identifier 'NSLayoutRelationLessThanOrEqual'",
+     "use of undeclared identifier 'NSLayoutRelationGreaterThanOrEqual'",
+     "use of undeclared identifier 'NSLayoutRelationEqual'",
+     "use of undeclared identifier 'NSLayoutRelationEqual'"
+    ],
+    "FLKAutoLayout/FLKAutoLayout/UIView+FLKAutoLayout.m": [
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "unknown type name 'NSLayoutRelation'",
+     "unknown type name 'UILayoutPriority'",
+     "unknown type name 'NSLayoutRelation'",
+     "unknown type name 'UILayoutPriority'",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "use of undeclared identifier 'NSLayoutAttributeLeading'",
+     "use of undeclared identifier 'NSLayoutAttributeTrailing'",
+     "use of undeclared identifier 'NSLayoutAttributeTop'",
+     "use of undeclared identifier 'NSLayoutAttributeBottom'",
+     "use of undeclared identifier 'NSLayoutAttributeBaseline'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterX'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterY'",
+     "use of undeclared identifier 'NSLayoutAttributeWidth'",
+     "use of undeclared identifier 'NSLayoutAttributeHeight'",
+     "use of undeclared identifier 'NSLayoutAttributeWidth'",
+     "use of undeclared identifier 'NSLayoutAttributeHeight'",
+     "use of undeclared identifier 'NSLayoutAttributeLeading'",
+     "use of undeclared identifier 'NSLayoutAttributeTrailing'",
+     "use of undeclared identifier 'NSLayoutAttributeTop'",
+     "use of undeclared identifier 'NSLayoutAttributeBottom'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterX'",
+     "use of undeclared identifier 'NSLayoutAttributeCenterY'",
+     "use of undeclared identifier 'NSLayoutRelationEqual'"
+    ],
+    "FLKAutoLayout/FLKAutoLayout/UIView+FLKAutoLayoutPredicate.m": [
+     "unknown type name 'NSLayoutRelation'",
+     "unknown type name 'UILayoutPriority'",
+     "unknown type name 'NSLayoutRelation'",
+     "unknown type name 'UILayoutPriority'",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "property 'translatesAutoresizingMaskIntoConstraints' not found on object of type 'UIView *'",
+     "no known class method for selector 'constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:'",
+     "property 'priority' not found on object of type 'NSLayoutConstraint *'",
+     "no visible @interface for 'UIView' declares the selector 'addConstraint:'"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 37,
+    "pod-internal-or-cascade": 26
+   },
+   "clean": 0,
+   "errors": 63,
+   "translation_units": 3
+  },
+  "ORStackView": {
+   "by_tu": {
+    "ORStackView/Classes/ios/ORSplitStackView.m": [
+     "'FLKAutoLayout/UIView+FLKAutoLayout.h' file not found"
+    ],
+    "ORStackView/Classes/ios/ORStackScrollView.m": [
+     "'FLKAutoLayout/UIView+FLKAutoLayout.h' file not found"
+    ],
+    "ORStackView/Classes/ios/ORStackView.m": [
+     "no type or protocol named 'UILayoutSupport'",
+     "'FLKAutoLayout/UIView+FLKAutoLayout.h' file not found"
+    ],
+    "ORStackView/Classes/ios/ORTagBasedAutoStackView.m": [
+     "no type or protocol named 'UILayoutSupport'"
+    ],
+    "ORStackView/Classes/ios/private/ORStackView+Private.m": [
+     "no type or protocol named 'UILayoutSupport'"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 6
+   },
+   "clean": 0,
+   "errors": 6,
+   "translation_units": 5
+  },
+  "SDWebImage": {
+   "by_tu": {
+    "SDWebImage/SDWebImage/MKAnnotationView+WebCache.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "no visible @interface for 'MKAnnotationView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'MKAnnotationView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'MKAnnotationView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'MKAnnotationView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'MKAnnotationView' declares the selector 'sd_setImageLoadOperation:forKey:'",
+     "no visible @interface for 'MKAnnotationView' declares the selector 'sd_cancelImageLoadOperationWithKey:'"
+    ],
+    "SDWebImage/SDWebImage/NSData+ImageContentType.m": [],
+    "SDWebImage/SDWebImage/SDImageCache.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with no designated initializer",
+     "use of undeclared identifier 'UIApplicationDidReceiveMemoryWarningNotification'",
+     "use of undeclared identifier 'UIApplicationDidReceiveMemoryWarningNotification'",
+     "property 'scale' not found on object of type 'NSImage *'",
+     "property 'scale' not found on object of type 'NSImage *'",
+     "unknown type name 'UIBackgroundTaskIdentifier'",
+     "no visible @interface for 'UIApplication' declares the selector 'endBackgroundTask:'",
+     "use of undeclared identifier 'UIBackgroundTaskInvalid'",
+     "no visible @interface for 'UIApplication' declares the selector 'beginBackgroundTaskWithExpirationHandler:'",
+     "no visible @interface for 'UIApplication' declares the selector 'endBackgroundTask:'",
+     "use of undeclared identifier 'UIBackgroundTaskInvalid'"
+    ],
+    "SDWebImage/SDWebImage/SDWebImageCompat.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "property 'images' not found on object of type 'NSImage *'",
+     "property 'images' not found on object of type 'NSImage *'",
+     "property 'duration' not found on object of type 'NSImage *'",
+     "no known class method for selector 'animatedImageWithImages:duration:'",
+     "no known class method for selector 'mainScreen'",
+     "property 'CGImage' not found on object of type 'NSImage *'",
+     "property 'imageOrientation' not found on object of type 'NSImage *'",
+     "no visible @interface for 'NSImage' declares the selector 'initWithCGImage:scale:orientation:'"
+    ],
+    "SDWebImage/SDWebImage/SDWebImageDecoder.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "property 'images' not found on object of type 'NSImage *'",
+     "property 'CGImage' not found on object of type 'NSImage *'",
+     "property 'scale' not found on object of type 'NSImage *'",
+     "property 'imageOrientation' not found on object of type 'NSImage *'",
+     "no known class method for selector 'imageWithCGImage:scale:orientation:'"
+    ],
+    "SDWebImage/SDWebImage/SDWebImageDownloader.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with no designated initializer"
+    ],
+    "SDWebImage/SDWebImage/SDWebImageDownloaderOperation.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "unknown type name 'UIImageOrientation'; did you mean 'NSPaperOrientation'?",
+     "expected a type",
+     "incompatible pointer to integer conversion assigning to 'NSPaperOrientation' (aka 'enum NSPaperOrientation') from 'id' [-Wint-conversion]",
+     "no known class method for selector 'imageWithCGImage:scale:orientation:'",
+     "property 'images' not found on object of type 'NSImage *'",
+     "use of undeclared identifier 'UIImageOrientationUp'",
+     "use of undeclared identifier 'UIImageOrientationDown'",
+     "use of undeclared identifier 'UIImageOrientationLeft'",
+     "use of undeclared identifier 'UIImageOrientationRight'",
+     "use of undeclared identifier 'UIImageOrientationUpMirrored'",
+     "use of undeclared identifier 'UIImageOrientationDownMirrored'",
+     "use of undeclared identifier 'UIImageOrientationLeftMirrored'",
+     "use of undeclared identifier 'UIImageOrientationRightMirrored'; did you mean 'kCGImagePropertyOrientationRightMirrored'?",
+     "implicit conversion of 'uint32_t' (aka 'unsigned int') to 'id' is disallowed with ARC",
+     "incompatible integer to pointer conversion returning 'uint32_t' (aka 'unsigned int') from a function with result type 'id' [-Wint-conversion]",
+     "use of undeclared identifier 'UIImageOrientationUp'"
+    ],
+    "SDWebImage/SDWebImage/SDWebImageManager.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "'NSParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with no designated initializer",
+     "property 'images' not found on object of type 'NSImage *'"
+    ],
+    "SDWebImage/SDWebImage/SDWebImagePrefetcher.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "'NSParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with no designated initializer"
+    ],
+    "SDWebImage/SDWebImage/UIButton+WebCache.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "property 'state' not found on object of type 'UIButton *'",
+     "no visible @interface for 'UIButton' declares the selector 'setImage:forState:'",
+     "no visible @interface for 'UIButton' declares the selector 'setImage:forState:'",
+     "no visible @interface for 'UIButton' declares the selector 'setImage:forState:'",
+     "no visible @interface for 'UIButton' declares the selector 'setBackgroundImage:forState:'",
+     "no visible @interface for 'UIButton' declares the selector 'setBackgroundImage:forState:'",
+     "no visible @interface for 'UIButton' declares the selector 'setBackgroundImage:forState:'",
+     "property 'state' not found on object of type 'UIButton *'"
+    ],
+    "SDWebImage/SDWebImage/UIImage+GIF.m": [
+     "no visible @interface for 'UIImage' declares the selector 'initWithData:'",
+     "no known class method for selector 'mainScreen'",
+     "property 'scale' not found on object of type 'id'",
+     "no known class method for selector 'imageWithCGImage:scale:orientation:'",
+     "use of undeclared identifier 'UIImageOrientationUp'",
+     "no known class method for selector 'mainScreen'",
+     "no known class method for selector 'imageWithCGImage:scale:orientation:'",
+     "no known class method for selector 'animatedImageWithImages:duration:'",
+     "no known class method for selector 'mainScreen'",
+     "property 'scale' not found on object of type 'id'",
+     "property 'images' not found on object of type 'UIImage *'",
+     "call to undeclared function 'UIGraphicsBeginImageContextWithOptions'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "call to undeclared function 'UIGraphicsGetImageFromCurrentImageContext'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "implicit conversion of 'int' to 'UIImage *' is disallowed with ARC",
+     "incompatible integer to pointer conversion initializing 'UIImage *__strong' with an expression of type 'int' [-Wint-conversion]",
+     "call to undeclared function 'UIGraphicsEndImageContext'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "property 'duration' not found on object of type 'UIImage *'",
+     "no known class method for selector 'animatedImageWithImages:duration:'"
+    ],
+    "SDWebImage/SDWebImage/UIImage+MultiFormat.m": [
+     "expected a type",
+     "expected a type",
+     "no visible @interface for 'UIImage' declares the selector 'initWithData:'",
+     "use of undeclared identifier 'UIImageOrientation'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationUp'",
+     "property 'CGImage' not found on object of type 'UIImage *'",
+     "no known class method for selector 'imageWithCGImage:scale:orientation:'",
+     "use of undeclared identifier 'orientation'",
+     "no known class method for selector 'imageWithCGImage:scale:orientation:'",
+     "use of undeclared identifier 'UIImageOrientation'",
+     "use of undeclared identifier 'result'",
+     "use of undeclared identifier 'result'",
+     "use of undeclared identifier 'UIImageOrientation'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationUp'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationDown'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationLeft'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationRight'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationUpMirrored'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationDownMirrored'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationLeftMirrored'",
+     "use of undeclared identifier 'orientation'",
+     "use of undeclared identifier 'UIImageOrientationRightMirrored'; did you mean 'kCGImagePropertyOrientationRightMirrored'?",
+     "use of undeclared identifier 'orientation'; did you mean 'relation'?",
+     "implicit conversion of a non-Objective-C pointer type 'relop (*)(double_t, double_t)' (aka 'short (*)(double, double)') to 'id' is disallowed with ARC"
+    ],
+    "SDWebImage/SDWebImage/UIImage+WebP.m": [],
+    "SDWebImage/SDWebImage/UIImageView+HighlightedWebCache.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "property 'highlightedImage' not found on object of type 'NSImageView *'; did you mean 'highlighted'?",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "property 'highlightedImage' not found on object of type 'NSImageView *'; did you mean 'highlighted'?",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'sd_setImageLoadOperation:forKey:'",
+     "no visible @interface for 'NSImageView' declares the selector 'sd_cancelImageLoadOperationWithKey:'"
+    ],
+    "SDWebImage/SDWebImage/UIImageView+WebCache.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'sd_setImageLoadOperation:forKey:'",
+     "no visible @interface for 'NSImageView' declares the selector 'stopAnimating'",
+     "no visible @interface for 'NSImageView' declares the selector 'animationImages'",
+     "property 'animationImages' not found on object of type 'NSImageView *'; did you mean 'animations'?",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'startAnimating'",
+     "no visible @interface for 'NSImageView' declares the selector 'stopAnimating'",
+     "no visible @interface for 'NSImageView' declares the selector 'animationImages'",
+     "property 'animationImages' not found on object of type 'NSImageView *'; did you mean 'animations'?",
+     "no visible @interface for 'NSImageView' declares the selector 'setNeedsLayout'",
+     "no visible @interface for 'NSImageView' declares the selector 'startAnimating'",
+     "no visible @interface for 'NSImageView' declares the selector 'sd_setImageLoadOperation:forKey:'",
+     "no visible @interface for 'NSImageView' declares the selector 'sd_cancelImageLoadOperationWithKey:'",
+     "no visible @interface for 'NSImageView' declares the selector 'sd_cancelImageLoadOperationWithKey:'",
+     "no visible @interface for 'UIActivityIndicatorView' declares the selector 'initWithActivityIndicatorStyle:'",
+     "property 'translatesAutoresizingMaskIntoConstraints' not found on object of type 'UIActivityIndicatorView *'"
+    ],
+    "SDWebImage/SDWebImage/UIView+WebCacheOperation.m": [
+     "SDWebImage doesn't support Deployment Target version < 5.0",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols"
+    ]
+   },
+   "classes": {
+    "macos-leakage": 118,
+    "openuikit-objc-surface": 51,
+    "pod-internal-or-cascade": 35
+   },
+   "clean": 2,
+   "errors": 204,
+   "translation_units": 16
+  },
+  "SVProgressHUD": {
+   "by_tu": {
+    "SVProgressHUD/SVProgressHUD/SVIndefiniteAnimatedView.m": [
+     "unknown type name 'UIOffset'",
+     "unknown type name 'UIWindowLevel'; did you mean 'CGWindowLevel'?",
+     "expected a type",
+     "expected a type",
+     "unknown type name 'CAShapeLayer'",
+     "property with 'retain (or strong)' attribute must be of object type",
+     "expected a type",
+     "unknown receiver '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "no known class method for selector 'removeFromSuperlayer'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "implicit conversion of a non-Objective-C pointer type 'int *' to 'CALayer *' is disallowed with ARC",
+     "property 'layer' not found on object of type 'SVIndefiniteAnimatedView *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'position' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'UIBezierPath'",
+     "use of undeclared identifier 'smoothedPath'",
+     "use of undeclared identifier 'UIBezierPath'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'CAShapeLayer'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "no known class method for selector 'mainScreen'",
+     "multiple methods named 'scale' found with mismatched result, parameter type or attributes",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "no known class method for selector 'mainScreen'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'kCALineCapRound'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'kCALineJoinBevel'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'smoothedPath'",
+     "no known class method for selector 'layer'",
+     "property 'contents' not found on object of type 'CALayer *'",
+     "no known class method for selector 'imageWithContentsOfFile:'",
+     "no known instance method for selector 'CGImage'",
+     "incompatible types casting 'id' to 'id' with a __bridge cast",
+     "property 'frame' not found on object of type 'CALayer *'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "unknown type name '_indefiniteAnimatedLayer'; did you mean 'SVIndefiniteAnimatedView'?",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'CAMediaTimingFunction'",
+     "use of undeclared identifier 'linearCurve'",
+     "use of undeclared identifier 'CAMediaTimingFunction'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'linearCurve'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier 'kCAFillModeForwards'",
+     "use of undeclared identifier 'animation'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier 'CAAnimationGroup'",
+     "use of undeclared identifier 'animationGroup'",
+     "use of undeclared identifier 'CAAnimationGroup'",
+     "use of undeclared identifier 'animationGroup'",
+     "use of undeclared identifier 'animationGroup'",
+     "use of undeclared identifier 'animationGroup'",
+     "use of undeclared identifier 'animationGroup'",
+     "use of undeclared identifier 'linearCurve'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'strokeStartAnimation'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'strokeStartAnimation'",
+     "use of undeclared identifier 'strokeStartAnimation'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'strokeEndAnimation'",
+     "use of undeclared identifier 'CABasicAnimation'",
+     "use of undeclared identifier 'strokeEndAnimation'",
+     "use of undeclared identifier 'strokeEndAnimation'",
+     "use of undeclared identifier 'animationGroup'",
+     "use of undeclared identifier 'strokeStartAnimation'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier '_indefiniteAnimatedLayer'"
+    ],
+    "SVProgressHUD/SVProgressHUD/SVProgressAnimatedView.m": [
+     "unknown type name 'CAShapeLayer'",
+     "property with 'retain (or strong)' attribute must be of object type",
+     "expected a type",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "implicit conversion of a non-Objective-C pointer type 'int *' to 'CALayer *' is disallowed with ARC",
+     "property 'layer' not found on object of type 'SVProgressAnimatedView *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'position' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "property 'bounds' not found on object of type 'CALayer *'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier 'UIBezierPath'",
+     "use of undeclared identifier 'smoothedPath'",
+     "use of undeclared identifier 'UIBezierPath'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier 'CAShapeLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "no known class method for selector 'mainScreen'",
+     "multiple methods named 'scale' found with mismatched result, parameter type or attributes",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier 'kCALineCapRound'; did you mean 'kCGLineCapRound'?",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier 'kCALineJoinBevel'; did you mean 'kCGLineJoinBevel'?",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier 'smoothedPath'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "use of undeclared identifier '_ringAnimatedLayer'",
+     "use of undeclared identifier '_ringAnimatedLayer'"
+    ],
+    "SVProgressHUD/SVProgressHUD/SVProgressHUD.m": [
+     "unknown type name 'UIOffset'",
+     "unknown type name 'UIWindowLevel'; did you mean 'CGWindowLevel'?",
+     "expected a type",
+     "expected a type",
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "expected a type",
+     "no known instance method for selector 'window'",
+     "property 'bounds' not found on object of type 'id'",
+     "property 'layer' not found on object of type 'UIVisualEffectView *'",
+     "property 'CGColor' not found on object of type 'UIColor *'",
+     "property 'layer' not found on object of type 'UIVisualEffectView *'",
+     "incompatible pointer to integer conversion assigning to 'CGWindowLevel' (aka 'int') from '__strong id' [-Wint-conversion]",
+     "incompatible pointer to integer conversion assigning to 'int' from '__strong id' [-Wint-conversion]",
+     "use of undeclared identifier 'UIOffsetZero'",
+     "receiver 'UIFont' for class message is a forward declaration",
+     "no known class method for selector 'preferredFontForTextStyle:'",
+     "no known class method for selector 'imageWithContentsOfFile:'",
+     "no known class method for selector 'imageWithContentsOfFile:'",
+     "no known class method for selector 'imageWithContentsOfFile:'",
+     "use of undeclared identifier 'UIImageRenderingMode'",
+     "no visible @interface for 'UIImage' declares the selector 'imageWithRenderingMode:'",
+     "no visible @interface for 'UIImage' declares the selector 'imageWithRenderingMode:'",
+     "no visible @interface for 'UIImage' declares the selector 'imageWithRenderingMode:'",
+     "use of undeclared identifier 'UIWindowLevelNormal'; did you mean 'CGWindowLevelForKey'?",
+     "property 'accessibilityIdentifier' not found on object of type 'SVProgressHUD *'",
+     "property 'isAccessibilityElement' not found on object of type 'SVProgressHUD *'",
+     "use of undeclared identifier 'NSStringDrawingOptions'",
+     "use of undeclared identifier 'NSStringDrawingUsesFontLeading'",
+     "use of undeclared identifier 'NSStringDrawingTruncatesLastVisibleLine'",
+     "use of undeclared identifier 'NSStringDrawingUsesLineFragmentOrigin'",
+     "use of undeclared identifier 'UIInterpolatingMotionEffect'",
+     "use of undeclared identifier 'effectX'",
+     "use of undeclared identifier 'UIInterpolatingMotionEffect'",
+     "use of undeclared identifier 'effectX'",
+     "use of undeclared identifier 'effectX'",
+     "use of undeclared identifier 'UIInterpolatingMotionEffect'",
+     "use of undeclared identifier 'effectY'",
+     "use of undeclared identifier 'UIInterpolatingMotionEffect'",
+     "use of undeclared identifier 'effectY'",
+     "use of undeclared identifier 'effectY'",
+     "use of undeclared identifier 'UIMotionEffectGroup'",
+     "use of undeclared identifier 'effectGroup'",
+     "use of undeclared identifier 'UIMotionEffectGroup'",
+     "use of undeclared identifier 'effectGroup'",
+     "use of undeclared identifier 'effectX'; did you mean 'ffsctl'?",
+     "use of undeclared identifier 'effectY'; did you mean 'ffsctl'?",
+     "collection element of type 'int (int, unsigned long, void *, unsigned int)' is not an Objective-C object",
+     "property 'motionEffects' not found on object of type 'UIVisualEffectView *'",
+     "no visible @interface for 'UIVisualEffectView' declares the selector 'addMotionEffect:'",
+     "use of undeclared identifier 'UIApplicationDidBecomeActiveNotification'",
+     "use of undeclared identifier 'UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis'",
+     "use of undeclared identifier 'UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis'",
+     "no known class method for selector 'animateWithDuration:delay:options:animations:completion:'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "member reference base type 'int' is not a structure or union",
+     "member reference base type 'int' is not a structure or union",
+     "member reference base type 'int' is not a structure or union",
+     "member reference base type 'int' is not a structure or union",
+     "property 'allTouches' not found on object of type 'UIEvent *'",
+     "no visible @interface for 'UITouch' declares the selector 'locationInView:'",
+     "property 'contentView' not found on object of type 'UIVisualEffectView *'",
+     "property 'contentView' not found on object of type 'UIVisualEffectView *'",
+     "property 'contentView' not found on object of type 'UIVisualEffectView *'",
+     "property 'renderingMode' not found on object of type 'UIImage *'",
+     "use of undeclared identifier 'UIImageRenderingModeAlwaysTemplate'",
+     "no visible @interface for 'UIImage' declares the selector 'imageWithRenderingMode:'",
+     "property 'accessibilityLabel' not found on object of type 'SVProgressHUD *'; did you mean 'accessibilityValue'?",
+     "property 'isAccessibilityElement' not found on object of type 'SVProgressHUD *'",
+     "property 'accessibilityLabel' not found on object of type 'UIVisualEffectView *'",
+     "property 'isAccessibilityElement' not found on object of type 'UIVisualEffectView *'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "call to undeclared function 'UIAccessibilityPostNotification'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "use of undeclared identifier 'UIAccessibilityScreenChangedNotification'",
+     "use of undeclared identifier 'UIAccessibilityAnnouncementNotification'",
+     "use of undeclared identifier 'UIViewAnimationCurveEaseIn'",
+     "call to undeclared function 'UIAccessibilityPostNotification'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]",
+     "use of undeclared identifier 'UIAccessibilityScreenChangedNotification'",
+     "use of undeclared identifier 'UIAccessibilityAnnouncementNotification'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "property 'transform' not found on object of type 'UIVisualEffectView *'",
+     "use of undeclared identifier 'UIViewAnimationCurveEaseOut'",
+     "use of undeclared identifier 'UIActivityIndicatorViewStyleWhiteLarge'",
+     "property 'color' not found on object of type 'UIActivityIndicatorView *'",
+     "property 'layer' not found on object of type 'UIVisualEffectView *'",
+     "no known instance method for selector 'window'",
+     "property 'bounds' not found on object of type 'id'",
+     "no visible @interface for 'SVProgressHUD' declares the selector 'insertSubview:belowSubview:'",
+     "property 'layer' not found on object of type 'UIView *'",
+     "property 'layer' not found on object of type 'UIVisualEffectView *'",
+     "property 'layer' not found on object of type 'UIVisualEffectView *'",
+     "property 'adjustsFontSizeToFitWidth' not found on object of type 'UILabel *'",
+     "property 'textAlignment' not found on object of type 'UILabel *'",
+     "property 'baselineAdjustment' not found on object of type 'UILabel *'",
+     "use of undeclared identifier 'UIBaselineAdjustmentAlignCenters'",
+     "property 'contentView' not found on object of type 'UIVisualEffectView *'",
+     "property 'font' not found on object of type 'UILabel *'",
+     "property 'contentView' not found on object of type 'UIVisualEffectView *'",
+     "property 'screen' not found on object of type 'UIWindow *'",
+     "property 'mainScreen' not found on object of type 'UIScreen'",
+     "property 'windowLevel' not found on object of type 'UIWindow *'",
+     "use of undeclared identifier 'UIWindowLevelNormal'",
+     "property 'windowLevel' not found on object of type 'UIWindow *'",
+     "use of undeclared identifier 'UIBlurEffectStyle'",
+     "use of undeclared identifier 'blurEffectStyle'",
+     "property 'effect' not found on object of type 'UIVisualEffectView *'",
+     "property 'effect' not found on object of type 'UIVisualEffectView *'",
+     "incompatible pointer to integer conversion assigning to 'int' from '__strong id' [-Wint-conversion]",
+     "incompatible pointer to integer conversion assigning to 'CGWindowLevel' (aka 'int') from '__strong id' [-Wint-conversion]",
+     "use of undeclared identifier 'renderingMode'",
+     "use of undeclared identifier 'renderingMode'",
+     "use of undeclared identifier 'renderingMode'",
+     "use of undeclared identifier 'effectGroup'",
+     "use of undeclared identifier 'UIImageRenderingModeAlwaysTemplate'"
+    ],
+    "SVProgressHUD/SVProgressHUD/SVRadialGradientLayer.m": [
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "cannot subclass a class that was declared with the 'objc_subclassing_restricted' attribute"
+    ]
+   },
+   "classes": {
+    "macos-leakage": 2,
+    "openuikit-objc-surface": 110,
+    "pod-internal-or-cascade": 151
+   },
+   "clean": 0,
+   "errors": 263,
+   "translation_units": 4
+  },
+  "UIImageViewAligned": {
+   "by_tu": {
+    "UIImageViewAligned/UIImageViewAligned/UIImageViewAligned.m": [
+     "cannot subclass a class that was declared with the 'objc_subclassing_restricted' attribute",
+     "expected a type",
+     "no visible @interface for 'UIImageView' declares the selector 'initWithImage:highlightedImage:'",
+     "property 'contentMode' not found on object of type 'UIImageView *'",
+     "no getter method for read from property",
+     "no visible @interface for 'UIImageView' declares the selector 'setContentMode:'",
+     "property 'contentMode' not found on object of type 'UIImageView *'",
+     "property 'layer' not found on object of type 'UIImageViewAligned *'",
+     "no getter method for read from property",
+     "use of undeclared identifier 'UIViewContentModeScaleAspectFit'",
+     "use of undeclared identifier 'UIViewContentModeScaleAspectFill'",
+     "use of undeclared identifier 'UIViewContentModeScaleToFill'",
+     "no visible @interface for 'UIImageView' declares the selector 'setHighlighted:'",
+     "property 'layer' not found on object of type 'UIImageViewAligned *'"
+    ]
+   },
+   "classes": {
+    "openuikit-objc-surface": 10,
+    "pod-internal-or-cascade": 4
+   },
+   "clean": 0,
+   "errors": 14,
+   "translation_units": 1
+  },
+  "UIView-BooleanAnimations": {
+   "by_tu": {
+    "UIView-BooleanAnimations/UIView+BooleanAnimations.m": [
+     "no known class method for selector 'animateWithDuration:animations:completion:'",
+     "no known class method for selector 'animateWithDuration:delay:options:animations:completion:'",
+     "no known class method for selector 'animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:'",
+     "no known class method for selector 'animateWithDuration:animations:'",
+     "no known class method for selector 'animateWithDuration:animations:completion:'"
+    ]
+   },
+   "classes": {
+    "pod-internal-or-cascade": 5
+   },
+   "clean": 0,
+   "errors": 5,
+   "translation_units": 1
+  },
+  "XNGMarkdownParser": {
+   "by_tu": {
+    "XNGMarkdownParser/src/XNGMarkdownParser.m": [
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CALayer' found 2 referenced protocols",
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     "'NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     "'NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with no designated initializer",
+     "reference to 'NSLinkAttributeName' is ambiguous",
+     "reference to 'NSParagraphStyleAttributeName' is ambiguous",
+     "reference to 'NSFontAttributeName' is ambiguous",
+     "reference to 'NSFontAttributeName' is ambiguous",
+     "reference to 'NSFontAttributeName' is ambiguous"
+    ],
+    "XNGMarkdownParser/src/XNGMarkdownTokenizer.m": [],
+    "XNGMarkdownParser/src/XNGMarkdownTokens.m": []
+   },
+   "classes": {
+    "macos-leakage": 13,
+    "pod-internal-or-cascade": 2
+   },
+   "clean": 2,
+   "errors": 15,
+   "translation_units": 3
+  }
+ },
+ "surface_by_symbol": [
+  [
+   "CALayer",
+   36
+  ],
+  [
+   "UIVisualEffectView",
+   23
+  ],
+  [
+   "UIFont",
+   20
+  ],
+  [
+   "UIColor",
+   16
+  ],
+  [
+   "UIImage",
+   13
+  ],
+  [
+   "UIApplication",
+   11
+  ],
+  [
+   "UIView",
+   9
+  ],
+  [
+   "UICollectionViewLayoutAttributes",
+   8
+  ],
+  [
+   "CABasicAnimation",
+   8
+  ],
+  [
+   "UIButton",
+   8
+  ],
+  [
+   "UIImageView",
+   7
+  ],
+  [
+   "CAShapeLayer",
+   6
+  ],
+  [
+   "NSLayoutRelation",
+   6
+  ],
+  [
+   "UILayoutPriority",
+   6
+  ],
+  [
+   "NSLayoutRelationEqual",
+   5
+  ],
+  [
+   "UIImageOrientationUp",
+   5
+  ],
+  [
+   "UICollectionViewDelegateFlowLayout",
+   4
+  ],
+  [
+   "UICollectionElementKindSectionHeader",
+   4
+  ],
+  [
+   "NSLayoutAttributeCenterX",
+   4
+  ],
+  [
+   "NSLayoutAttributeCenterY",
+   4
+  ],
+  [
+   "UIImageOrientation",
+   4
+  ],
+  [
+   "UIBezierPath",
+   4
+  ],
+  [
+   "UIInterpolatingMotionEffect",
+   4
+  ],
+  [
+   "UILabel",
+   4
+  ],
+  [
+   "UICollectionElementKindSectionFooter",
+   3
+  ],
+  [
+   "UIActivity",
+   3
+  ],
+  [
+   "UILayoutSupport",
+   3
+  ],
+  [
+   "UIActivityIndicatorView",
+   3
+  ],
+  [
+   "UIWindow",
+   3
+  ],
+  [
+   "UICollectionViewFlowLayout",
+   2
+  ],
+  [
+   "UIEdgeInsetsEqualToEdgeInsets",
+   2
+  ],
+  [
+   "NSUnderlineStyleAttributeName",
+   2
+  ],
+  [
+   "UIEdgeInsetsInsetRect",
+   2
+  ],
+  [
+   "NSLayoutAttributeLeading",
+   2
+  ],
+  [
+   "NSLayoutAttributeTrailing",
+   2
+  ],
+  [
+   "NSLayoutAttributeTop",
+   2
+  ],
+  [
+   "NSLayoutAttributeBottom",
+   2
+  ],
+  [
+   "NSLayoutAttributeWidth",
+   2
+  ],
+  [
+   "NSLayoutAttributeHeight",
+   2
+  ],
+  [
+   "UIApplicationDidReceiveMemoryWarningNotification",
+   2
+  ],
+  [
+   "UIBackgroundTaskInvalid",
+   2
+  ],
+  [
+   "UIImageOrientationDown",
+   2
+  ],
+  [
+   "UIImageOrientationLeft",
+   2
+  ],
+  [
+   "UIImageOrientationRight",
+   2
+  ],
+  [
+   "UIImageOrientationUpMirrored",
+   2
+  ],
+  [
+   "UIImageOrientationDownMirrored",
+   2
+  ],
+  [
+   "UIImageOrientationLeftMirrored",
+   2
+  ],
+  [
+   "UIImageOrientationRightMirrored",
+   2
+  ],
+  [
+   "UIOffset",
+   2
+  ],
+  [
+   "UIWindowLevel",
+   2
+  ],
+  [
+   "CAMediaTimingFunction",
+   2
+  ],
+  [
+   "CAAnimationGroup",
+   2
+  ],
+  [
+   "UIWindowLevelNormal",
+   2
+  ],
+  [
+   "UIMotionEffectGroup",
+   2
+  ],
+  [
+   "UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis",
+   2
+  ],
+  [
+   "UIImageRenderingModeAlwaysTemplate",
+   2
+  ],
+  [
+   "UIAccessibilityPostNotification",
+   2
+  ],
+  [
+   "UIAccessibilityScreenChangedNotification",
+   2
+  ],
+  [
+   "UIAccessibilityAnnouncementNotification",
+   2
+  ],
+  [
+   "UIImageViewAligned",
+   2
+  ],
+  [
+   "UIImageJPEGRepresentation",
+   1
+  ],
+  [
+   "UIFontFeatureTypeIdentifierKey",
+   1
+  ],
+  [
+   "UIFontFeatureSelectorIdentifierKey",
+   1
+  ],
+  [
+   "UIFontDescriptorFeatureSettingsAttribute",
+   1
+  ],
+  [
+   "UIFontDescriptorNameAttribute",
+   1
+  ],
+  [
+   "UIFontDescriptorSizeAttribute",
+   1
+  ],
+  [
+   "NSUnderlineStyleNone",
+   1
+  ],
+  [
+   "NSUnderlineStyleSingle",
+   1
+  ],
+  [
+   "UIViewNoIntrinsicMetric",
+   1
+  ],
+  [
+   "NSLineBreakByWordWrapping",
+   1
+  ],
+  [
+   "UIActivityCategoryAction",
+   1
+  ],
+  [
+   "UIPasteboard",
+   1
+  ],
+  [
+   "UIWebView",
+   1
+  ],
+  [
+   "NSLayoutRelationLessThanOrEqual",
+   1
+  ],
+  [
+   "NSLayoutRelationGreaterThanOrEqual",
+   1
+  ],
+  [
+   "NSLayoutAttributeBaseline",
+   1
+  ],
+  [
+   "NSLayoutConstraint",
+   1
+  ],
+  [
+   "UIBackgroundTaskIdentifier",
+   1
+  ],
+  [
+   "UIGraphicsBeginImageContextWithOptions",
+   1
+  ],
+  [
+   "UIGraphicsGetImageFromCurrentImageContext",
+   1
+  ],
+  [
+   "UIGraphicsEndImageContext",
+   1
+  ],
+  [
+   "UIOffsetZero",
+   1
+  ],
+  [
+   "UIImageRenderingMode",
+   1
+  ],
+  [
+   "UIApplicationDidBecomeActiveNotification",
+   1
+  ],
+  [
+   "UIEvent",
+   1
+  ],
+  [
+   "UITouch",
+   1
+  ],
+  [
+   "UIViewAnimationCurveEaseIn",
+   1
+  ],
+  [
+   "UIViewAnimationCurveEaseOut",
+   1
+  ],
+  [
+   "UIActivityIndicatorViewStyleWhiteLarge",
+   1
+  ],
+  [
+   "UIBaselineAdjustmentAlignCenters",
+   1
+  ],
+  [
+   "UIScreen",
+   1
+  ],
+  [
+   "UIBlurEffectStyle",
+   1
+  ],
+  [
+   "UIViewContentModeScaleAspectFit",
+   1
+  ],
+  [
+   "UIViewContentModeScaleAspectFill",
+   1
+  ],
+  [
+   "UIViewContentModeScaleToFill",
+   1
+  ]
+ ],
+ "total_errors": 899
+}
