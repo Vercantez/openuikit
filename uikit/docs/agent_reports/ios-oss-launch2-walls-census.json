@@ -1,0 +1,1888 @@
+{
+ "date": "2026-09-22",
+ "spec": "docs/agent_reports/ios-oss-launch2-chain.json",
+ "corpus_revision": "2f2dabb40b74dd1e7a7511a0dedb47d967ab08a0",
+ "checkouts": "SwiftPM resolution of the app's Package.resolved pins (10 packages, revisions equal to the pins)",
+ "before": {
+  "base": "9cd38125 (main at branch time) with the pass-1 spec + MobileCoreServices + generated Secrets",
+  "targets": {
+   "Statsig": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Prelude": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ReactiveSwift": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "SwiftSoup": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ApolloAPI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Apollo": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "GraphAPI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ReactiveExtensions": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Prelude_UIKit": {
+    "status": "failed",
+    "own_errors": 20,
+    "dependency_errors": 0,
+    "top": [
+     [
+      "type 'UIButton' does not conform to protocol 'UIButtonProtocol'",
+      2
+     ],
+     [
+      "setter for property 'viewControllers' must be declared public because it matches a requirement in public protocol 'UINavigationControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UIProgressView' does not conform to protocol 'UIProgressViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIScrollView' does not conform to protocol 'UIScrollViewProtocol'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'setBackgroundImage'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'pixel'",
+      1
+     ],
+     [
+      "cannot find 'UIGraphicsBeginImageContext' in scope",
+      1
+     ],
+     [
+      "value of type 'Canvas' has no member 'setFillColor'",
+      1
+     ]
+    ],
+    "errors": [
+     {
+      "file": "UINavigationControllerLenses.swift",
+      "line": 11,
+      "msg": "setter for property 'viewControllers' must be declared public because it matches a requirement in public protocol 'UINavigationControllerProtocol'"
+     },
+     {
+      "file": "UIProgressViewLenses.swift",
+      "line": 9,
+      "msg": "type 'UIProgressView' does not conform to protocol 'UIProgressViewProtocol'"
+     },
+     {
+      "file": "UIScrollViewLenses.swift",
+      "line": 18,
+      "msg": "type 'UIScrollView' does not conform to protocol 'UIScrollViewProtocol'"
+     },
+     {
+      "file": "UIButton.swift",
+      "line": 10,
+      "msg": "type 'UIButton' does not conform to protocol 'UIButtonProtocol'"
+     },
+     {
+      "file": "UIButton.swift",
+      "line": 11,
+      "msg": "value of type 'UIButton' has no member 'setBackgroundImage'"
+     },
+     {
+      "file": "UIButton.swift",
+      "line": 11,
+      "msg": "cannot infer contextual base in reference to member 'pixel'"
+     },
+     {
+      "file": "UIImage.swift",
+      "line": 12,
+      "msg": "cannot find 'UIGraphicsBeginImageContext' in scope"
+     },
+     {
+      "file": "UIImage.swift",
+      "line": 17,
+      "msg": "value of type 'Canvas' has no member 'setFillColor'"
+     },
+     {
+      "file": "UIImage.swift",
+      "line": 18,
+      "msg": "missing argument for parameter 'color' in call"
+     },
+     {
+      "file": "UIImage.swift",
+      "line": 18,
+      "msg": "cannot convert value of type 'CGRect' to expected argument type 'Path'"
+     },
+     {
+      "file": "UIActivityIndicatorViewLenses.swift",
+      "line": 13,
+      "msg": "type 'UIActivityIndicatorView' does not conform to protocol 'UIActivityIndicatorViewProtocol'"
+     },
+     {
+      "file": "UIButtonLenses.swift",
+      "line": 26,
+      "msg": "type 'UIButton' does not conform to protocol 'UIButtonProtocol'"
+     },
+     {
+      "file": "UIControlLenses.swift",
+      "line": 19,
+      "msg": "type 'UIControl' does not conform to protocol 'UIControlProtocol'"
+     },
+     {
+      "file": "UILabelLenses.swift",
+      "line": 16,
+      "msg": "type 'UILabel' does not conform to protocol 'UILabelProtocol'"
+     },
+     {
+      "file": "UITableViewControllerLenses.swift",
+      "line": 8,
+      "msg": "type 'UITableViewController' does not conform to protocol 'UITableViewControllerProtocol'"
+     },
+     {
+      "file": "UITextFieldLenses.swift",
+      "line": 13,
+      "msg": "type 'UITextField' does not conform to protocol 'UITextFieldProtocol'"
+     },
+     {
+      "file": "UIStackViewLenses.swift",
+      "line": 15,
+      "msg": "type 'UIStackView' does not conform to protocol 'UIStackViewProtocol'"
+     },
+     {
+      "file": "UITabBarLenses.swift",
+      "line": 8,
+      "msg": "type 'UITabBar' does not conform to protocol 'UITabBarProtocol'"
+     },
+     {
+      "file": "UITextViewLenses.swift",
+      "line": 16,
+      "msg": "type 'UITextView' does not conform to protocol 'UITextViewProtocol'"
+     },
+     {
+      "file": "UITextViewLenses.swift",
+      "line": 16,
+      "msg": "type 'UITextView' does not conform to protocol 'UITextInputTraitsProtocol'"
+     }
+    ]
+   },
+   "Experimentation": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "KDS": {
+    "status": "failed",
+    "own_errors": 65,
+    "dependency_errors": 0,
+    "top": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ],
+     [
+      "cannot find 'kStylisticAlternativesType' in scope",
+      2
+     ]
+    ],
+    "errors": [
+     {
+      "file": "ColorsView.swift",
+      "line": 207,
+      "msg": "'Preview(_:body:)' is only available in macOS 14.0 or newer"
+     },
+     {
+      "file": "UIColor+Hex.swift",
+      "line": 24,
+      "msg": "value of type 'CGColor' has no member 'components'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 174,
+      "msg": "value of type 'UIFontDescriptor' has no member 'addingAttributes'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 175,
+      "msg": "reference to member 'traits' cannot be resolved without a contextual type"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 175,
+      "msg": "type 'UIFontDescriptor' has no member 'TraitKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 199,
+      "msg": "cannot find 'kNumberSpacingType' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 200,
+      "msg": "cannot find 'kMonospacedNumbersSelector' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 203,
+      "msg": "cannot find 'kStylisticAlternativesType' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 204,
+      "msg": "cannot find 'kStylisticAltTwoOnSelector' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 207,
+      "msg": "cannot find 'kStylisticAlternativesType' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 208,
+      "msg": "cannot find 'kStylisticAltOneOnSelector' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 195,
+      "msg": "value of type 'UIFontDescriptor' has no member 'addingAttributes'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 197,
+      "msg": "type 'UIFontDescriptor' has no member 'AttributeName'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 199,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 200,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 203,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 204,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 207,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 208,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 224,
+      "msg": "cannot find 'kNumberSpacingType' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 225,
+      "msg": "cannot find 'kMonospacedNumbersSelector' in scope"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 220,
+      "msg": "value of type 'UIFontDescriptor' has no member 'addingAttributes'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 222,
+      "msg": "type 'UIFontDescriptor' has no member 'AttributeName'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 224,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "Fonts.swift",
+      "line": 225,
+      "msg": "type 'UIFontDescriptor' has no member 'FeatureKey'"
+     },
+     {
+      "file": "KSRButton.swift",
+      "line": 30,
+      "msg": "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'"
+     },
+     {
+      "file": "KSRButton.swift",
+      "line": 44,
+      "msg": "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'"
+     },
+     {
+      "file": "KSRButton.swift",
+      "line": 50,
+      "msg": "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'"
+     },
+     {
+      "file": "KSRButtonStyle.swift",
+      "line": 116,
+      "msg": "type 'UIButton.Configuration' has no member 'borderless'"
+     },
+     {
+      "file": "ColorsView.swift",
+      "line": 198,
+      "msg": "type '_OpenView' has no member 'white'"
+     },
+     {
+      "file": "CustomFont.swift",
+      "line": 22,
+      "msg": "cannot find 'CTFontManagerRegisterFontsForURL' in scope"
+     },
+     {
+      "file": "CustomFont.swift",
+      "line": 22,
+      "msg": "cannot infer contextual base in reference to member 'process'"
+     },
+     {
+      "file": "CustomFont.swift",
+      "line": 30,
+      "msg": "cannot find 'UIAccessibility' in scope"
+     },
+     {
+      "file": "CustomFont.swift",
+      "line": 35,
+      "msg": "incorrect argument label in call (have 'name:size:', expected 'descriptor:size:')"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 41,
+      "msg": "value of type 'UIButton.Configuration' has no member 'contentInsets'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 43,
+      "msg": "value of type 'UIButton.Configuration' has no member 'background'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 46,
+      "msg": "value of type 'UIButton.Configuration' has no member 'imagePlacement'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 46,
+      "msg": "cannot infer contextual base in reference to member 'leading'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 48,
+      "msg": "value of type 'UIButton.Configuration' has no member 'titleLineBreakMode'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 48,
+      "msg": "cannot infer contextual base in reference to member 'byWordWrapping'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 49,
+      "msg": "value of type 'UIButton.Configuration' has no member 'titleAlignment'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 49,
+      "msg": "cannot infer contextual base in reference to member 'center'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 53,
+      "msg": "value of type 'UIButton' has no member 'configurationUpdateHandler'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 53,
+      "msg": "cannot infer type of closure parameter '_' without a type annotation"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 61,
+      "msg": "cannot find 'UIConfigurationTextAttributesTransformer' in scope"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 60,
+      "msg": "value of type 'UIButton.Configuration' has no member 'titleTextAttributesTransformer'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 61,
+      "msg": "cannot infer type of closure parameter 'config' without a type annotation"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 69,
+      "msg": "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 74,
+      "msg": "value of type 'UIButton.Configuration' has no member 'imageColorTransformer'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 74,
+      "msg": "type 'UIConfigurationColorTransformer' (aka '@Sendable (UIColor) -> UIColor') has no member 'init'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 74,
+      "msg": "cannot infer type of closure parameter '_' without a type annotation"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 79,
+      "msg": "value of type 'UIButton' has no member 'setNeedsUpdateConfiguration'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 85,
+      "msg": "value of type 'UIButton.Configuration' has no member 'contentInsets'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 94,
+      "msg": "value of type 'UIButton.Configuration' has no member 'background'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 95,
+      "msg": "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 96,
+      "msg": "value of type 'UIButton.Configuration' has no member 'background'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 97,
+      "msg": "value of type 'UIButton.Configuration' has no member 'background'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 99,
+      "msg": "value of type 'UIButton.Configuration' has no member 'background'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 100,
+      "msg": "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'"
+     },
+     {
+      "file": "KSRButtonStyleConfiguration.swift",
+      "line": 101,
+      "msg": "value of type 'UIButton.Configuration' has no member 'background'"
+     }
+    ]
+   },
+   "KsApi": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 1,
+    "top": [
+     [
+      "value of type 'UIDevice' has no member 'identifierForVendor'",
+      1
+     ]
+    ],
+    "errors": []
+   },
+   "Kingfisher": {
+    "status": "failed",
+    "own_errors": 69,
+    "dependency_errors": 0,
+    "top": [
+     [
+      "'RunLoop' is ambiguous for type lookup in this context",
+      9
+     ],
+     [
+      "cannot find type 'Context' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CADisplayLink' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CVDisplayLink' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CVTimeStamp' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CVOptionFlags' in scope",
+      2
+     ],
+     [
+      "cannot find 'CVDisplayLinkIsRunning' in scope",
+      2
+     ],
+     [
+      "cannot convert value of type 'UIImage?' to expected argument type 'KFCrossPlatformImage?' (aka 'Optional<NSImage>')",
+      2
+     ]
+    ],
+    "errors": [
+     {
+      "file": "KFAnimatedImage.swift",
+      "line": 61,
+      "msg": "cannot find type 'NSViewRepresentable' in scope"
+     },
+     {
+      "file": "KFAnimatedImage.swift",
+      "line": 79,
+      "msg": "cannot find type 'Context' in scope"
+     },
+     {
+      "file": "KFAnimatedImage.swift",
+      "line": 83,
+      "msg": "cannot find type 'Context' in scope"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 102,
+      "msg": "'ResizingMode' is not a member type of struct 'SwiftUI.Image' (aka 'SwiftUI._OpenImage')"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 107,
+      "msg": "'TemplateRenderingMode' is not a member type of struct 'SwiftUI.Image' (aka 'SwiftUI._OpenImage')"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 111,
+      "msg": "'Interpolation' is not a member type of struct 'SwiftUI.Image' (aka 'SwiftUI._OpenImage')"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 104,
+      "msg": "cannot convert value of type 'some _OpenView' to closure result type 'Image' (aka '_OpenImage')"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 104,
+      "msg": "argument passed to call that takes no arguments"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 108,
+      "msg": "value of type 'Image' (aka '_OpenImage') has no member 'renderingMode'"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 112,
+      "msg": "value of type 'Image' (aka '_OpenImage') has no member 'interpolation'"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 116,
+      "msg": "value of type 'Image' (aka '_OpenImage') has no member 'antialiased'"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 146,
+      "msg": "cannot convert value of type 'Progress' to expected argument type 'String'"
+     },
+     {
+      "file": "KFImage.swift",
+      "line": 149,
+      "msg": "cannot infer contextual base in reference to member 'fit'"
+     },
+     {
+      "file": "KFImageOptions.swift",
+      "line": 262,
+      "msg": "cannot find type 'Transition' in scope"
+     },
+     {
+      "file": "KFImageOptions.swift",
+      "line": 263,
+      "msg": "'_OpenAnyTransition' initializer is inaccessible due to 'private' protection level"
+     },
+     {
+      "file": "KFImageOptions.swift",
+      "line": 263,
+      "msg": "cannot convert value of type 'T' to expected argument type '_OpenAnyTransition.Storage'"
+     },
+     {
+      "file": "KFImageRenderer.swift",
+      "line": 144,
+      "msg": "'Orientation' is not a member type of class 'OpenUIKit.UIImage'"
+     },
+     {
+      "file": "KFImageRenderer.swift",
+      "line": 101,
+      "msg": "missing argument for parameter 'perform' in call"
+     },
+     {
+      "file": "KFImageRenderer.swift",
+      "line": 135,
+      "msg": "conflicting arguments to generic parameter 'T' ('KFCrossPlatformImage' vs. 'NSObject')"
+     },
+     {
+      "file": "HasImageComponent+Kingfisher.swift",
+      "line": 69,
+      "msg": "type 'UIAction' does not conform to protocol 'KingfisherHasImageComponent'"
+     },
+     {
+      "file": "HasImageComponent+Kingfisher.swift",
+      "line": 71,
+      "msg": "type 'UICommand' does not conform to protocol 'KingfisherHasImageComponent'"
+     },
+     {
+      "file": "HasImageComponent+Kingfisher.swift",
+      "line": 72,
+      "msg": "type 'UIBarItem' does not conform to protocol 'KingfisherHasImageComponent'"
+     },
+     {
+      "file": "KF.swift",
+      "line": 184,
+      "msg": "'NSTextAttachment' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 42,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 42,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 43,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 43,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 62,
+      "msg": "cannot find type 'NSView' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 78,
+      "msg": "cannot find type 'CADisplayLink' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 83,
+      "msg": "cannot find type 'CADisplayLink' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 91,
+      "msg": "cannot find type 'CVDisplayLink' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 95,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 122,
+      "msg": "cannot find type 'CVReturn' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 118,
+      "msg": "cannot find type 'CVDisplayLink' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 119,
+      "msg": "cannot find type 'CVTimeStamp' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 120,
+      "msg": "cannot find type 'CVTimeStamp' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 121,
+      "msg": "cannot find type 'CVOptionFlags' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 122,
+      "msg": "cannot find type 'CVOptionFlags' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 144,
+      "msg": "cannot find 'CVDisplayLinkIsRunning' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 145,
+      "msg": "cannot find 'CVDisplayLinkStop' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 148,
+      "msg": "cannot find 'CVDisplayLinkIsRunning' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 149,
+      "msg": "cannot find 'CVDisplayLinkStart' in scope"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 155,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 155,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 160,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "DisplayLink.swift",
+      "line": 160,
+      "msg": "'RunLoop' is ambiguous for type lookup in this context"
+     },
+     {
+      "file": "AnimatedImageView.swift",
+      "line": 67,
+      "msg": "ambiguous use of 'common'"
+     },
+     {
+      "file": "AnimatedImageView.swift",
+      "line": 197,
+      "msg": "value of type 'AnimatedImageView' has no member 'compatibleDisplayLink'"
+     },
+     {
+      "file": "AnimatedImageView.swift",
+      "line": 315,
+      "msg": "cannot find type 'CALayerContentsGravity' in scope"
+     },
+     {
+      "file": "AnimatedImageView.swift",
+      "line": 315,
+      "msg": "cannot find type 'NSImage' in scope"
+     },
+     {
+      "file": "AnimatedImageView.swift",
+      "line": 599,
+      "msg": "cannot find 'NSImageScaling' in scope"
+     },
+     {
+      "file": "Indicator.swift",
+      "line": 182,
+      "msg": "cannot find type 'UIActivityIndicatorView' in scope"
+     },
+     {
+      "file": "ImageDrawing.swift",
+      "line": 710,
+      "msg": "ambiguous use of 'premultipliedLast'"
+     },
+     {
+      "file": "NSTextAttachment+Kingfisher.swift",
+      "line": 223,
+      "msg": "missing argument for parameter #1 in call"
+     },
+     {
+      "file": "UIButton+Kingfisher.swift",
+      "line": 129,
+      "msg": "cannot convert value of type 'UIImage?' to expected argument type 'KFCrossPlatformImage?' (aka 'Optional<NSImage>')"
+     },
+     {
+      "file": "UIButton+Kingfisher.swift",
+      "line": 122,
+      "msg": "cannot convert value of type '@Sendable () -> UIImage?' to expected argument type '@MainActor @Sendable () -> KFCrossPlatformImage?' (aka '@MainActor @Sendable () -> Optional<NSImage>')"
+     },
+     {
+      "file": "UIButton+Kingfisher.swift",
+      "line": 121,
+      "msg": "cannot convert value of type 'KFCrossPlatformImage?' (aka 'Optional<NSImage>') to expected argument type 'UIImage?'"
+     },
+     {
+      "file": "UIButton+Kingfisher.swift",
+      "line": 242,
+      "msg": "cannot convert value of type 'UIImage?' to expected argument type 'KFCrossPlatformImage?' (aka 'Optional<NSImage>')"
+     },
+     {
+      "file": "UIButton+Kingfisher.swift",
+      "line": 231,
+      "msg": "value of type 'Base' has no member 'setBackgroundImage'"
+     },
+     {
+      "file": "UIButton+Kingfisher.swift",
+      "line": 234,
+      "msg": "value of type 'Base' has no member 'backgroundImage'"
+     }
+    ]
+   },
+   "ServerDrivenUI": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 114,
+    "top": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "'RunLoop' is ambiguous for type lookup in this context",
+      9
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ]
+    ],
+    "errors": []
+   },
+   "Library": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 132,
+    "top": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "'RunLoop' is ambiguous for type lookup in this context",
+      9
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ]
+    ],
+    "errors": []
+   },
+   "Kickstarter_Framework": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 88,
+    "top": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ],
+     [
+      "cannot find 'kStylisticAlternativesType' in scope",
+      2
+     ]
+    ],
+    "errors": []
+   },
+   "KickstarterApp": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 85,
+    "top": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ],
+     [
+      "cannot find 'kStylisticAlternativesType' in scope",
+      2
+     ]
+    ],
+    "errors": []
+   }
+  }
+ },
+ "after": {
+  "base": "agent/ios-oss-walls",
+  "targets": {
+   "Statsig": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "FirebaseCore": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "FirebaseAnalytics": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "FirebaseCrashlytics": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "FirebaseRemoteConfig": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Firebase": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "FacebookCore": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "FacebookLogin": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "StripePayments": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "StripeApplePay": {
+    "status": "failed",
+    "own_errors": 3,
+    "dependency_errors": 0,
+    "top": [
+     [
+      "cannot find type 'PKPayment' in scope",
+      2
+     ],
+     [
+      "cannot find type 'PKPaymentRequest' in scope",
+      1
+     ]
+    ],
+    "errors": [
+     {
+      "file": "StripeApplePay.swift",
+      "line": 30,
+      "msg": "cannot find type 'PKPayment' in scope"
+     },
+     {
+      "file": "StripeApplePay.swift",
+      "line": 43,
+      "msg": "cannot find type 'PKPaymentRequest' in scope"
+     },
+     {
+      "file": "StripeApplePay.swift",
+      "line": 51,
+      "msg": "cannot find type 'PKPayment' in scope"
+     }
+    ]
+   },
+   "Stripe": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 3,
+    "top": [
+     [
+      "cannot find type 'PKPayment' in scope",
+      2
+     ],
+     [
+      "cannot find type 'PKPaymentRequest' in scope",
+      1
+     ]
+    ],
+    "errors": []
+   },
+   "StripePaymentSheet": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 3,
+    "top": [
+     [
+      "cannot find type 'PKPayment' in scope",
+      2
+     ],
+     [
+      "cannot find type 'PKPaymentRequest' in scope",
+      1
+     ]
+    ],
+    "errors": []
+   },
+   "BrazeKit": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "BrazeUI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Segment": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "SegmentBrazeUI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "AlamofireImage": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Prelude": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ReactiveSwift": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "SwiftSoup": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ApolloAPI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Apollo": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "GraphAPI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ReactiveExtensions": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Prelude_UIKit": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Experimentation": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "KDS": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "KsApi": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Kingfisher": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "KingfisherWebP": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "Lottie": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "top": [],
+    "errors": []
+   },
+   "ServerDrivenUI": {
+    "status": "failed",
+    "own_errors": 24,
+    "dependency_errors": 0,
+    "top": [
+     [
+      "cannot assign to property: subscript is get-only",
+      5
+     ],
+     [
+      "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'",
+      5
+     ],
+     [
+      "cannot convert value of type 'Font' (aka '_OpenFont') to expected argument type 'AttributeScopes.SwiftUIAttributes.FontAttribute.Value' (aka 'Font')",
+      2
+     ],
+     [
+      "cannot convert value of type 'Color' (aka '_OpenColor') to expected argument type 'UIColor'",
+      1
+     ],
+     [
+      "cannot find type 'AccessibilityHeadingLevel' in scope",
+      1
+     ],
+     [
+      "failed to produce diagnostic for expression",
+      1
+     ],
+     [
+      "value of type 'some _OpenView' has no member 'backgroundStyle'",
+      1
+     ],
+     [
+      "'AVAudioSession' is unavailable in macOS",
+      1
+     ]
+    ],
+    "errors": [
+     {
+      "file": "ImageBlock.swift",
+      "line": 22,
+      "msg": "cannot convert value of type 'Color' (aka '_OpenColor') to expected argument type 'UIColor'"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 41,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 41,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 48,
+      "msg": "cannot convert value of type 'Font' (aka '_OpenFont') to expected argument type 'AttributeScopes.SwiftUIAttributes.FontAttribute.Value' (aka 'Font')"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 50,
+      "msg": "cannot convert value of type 'Font' (aka '_OpenFont') to expected argument type 'AttributeScopes.SwiftUIAttributes.FontAttribute.Value' (aka 'Font')"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 52,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 52,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 54,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 54,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 56,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 56,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 58,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 58,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 79,
+      "msg": "cannot find type 'AccessibilityHeadingLevel' in scope"
+     },
+     {
+      "file": "TextBlock.swift",
+      "line": 75,
+      "msg": "failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)"
+     },
+     {
+      "file": "RichTextView.swift",
+      "line": 18,
+      "msg": "value of type 'some _OpenView' has no member 'backgroundStyle'"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'AVAudioSession' is unavailable in macOS"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'sharedInstance()' is unavailable in macOS"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'setCategory(_:mode:options:)' is unavailable in macOS"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'playback' is unavailable in macOS"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 54,
+      "msg": "'default' is unavailable in macOS"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 70,
+      "msg": "instance method 'clipShape(_:style:)' requires that 'RoundedRectangle' (aka '_OpenRoundedRectangle') conform to 'Shape'"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 71,
+      "msg": "value of type 'some View' has no member 'accessibilityLabel'"
+     },
+     {
+      "file": "AudioVideoBlock.swift",
+      "line": 72,
+      "msg": "cannot infer contextual base in reference to member 'startsMediaSession'"
+     }
+    ]
+   },
+   "Library": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 3,
+    "top": [
+     [
+      "cannot find type 'PKPayment' in scope",
+      2
+     ],
+     [
+      "cannot find type 'PKPaymentRequest' in scope",
+      1
+     ]
+    ],
+    "errors": []
+   },
+   "Kickstarter_Framework": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 3,
+    "top": [
+     [
+      "cannot find type 'PKPayment' in scope",
+      2
+     ],
+     [
+      "cannot find type 'PKPaymentRequest' in scope",
+      1
+     ]
+    ],
+    "errors": []
+   },
+   "KickstarterApp": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 3,
+    "top": [
+     [
+      "cannot find type 'PKPayment' in scope",
+      2
+     ],
+     [
+      "cannot find type 'PKPaymentRequest' in scope",
+      1
+     ]
+    ],
+    "errors": []
+   }
+  }
+ },
+ "real_lottie_4_5_1_against_openuikit": {
+  "status": "failed",
+  "own_errors": 169,
+  "dependency_errors": 0,
+  "top": [
+   [
+    "cannot find 'bounds' in scope",
+    32
+   ],
+   [
+    "method does not override any method from its superclass",
+    7
+   ],
+   [
+    "cannot find type 'CALayerContentsGravity' in scope",
+    7
+   ],
+   [
+    "'BundleImageProvider' is ambiguous for type lookup in this context",
+    6
+   ],
+   [
+    "'FilepathImageProvider' is ambiguous for type lookup in this context",
+    6
+   ],
+   [
+    "cannot find 'setNeedsLayout' in scope",
+    6
+   ],
+   [
+    "'super' cannot be used in class 'LottieAnimationView' because it has no superclass",
+    6
+   ],
+   [
+    "cannot find type 'CGImage' in scope",
+    3
+   ]
+  ],
+  "errors": [
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 93,
+    "msg": "'BundleImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 93,
+    "msg": "'BundleImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 74,
+    "msg": "'FilepathImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 74,
+    "msg": "'FilepathImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "BundleImageProvider.macOS.swift",
+    "line": 84,
+    "msg": "'BundleImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "BundleImageProvider.macOS.swift",
+    "line": 84,
+    "msg": "'BundleImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "FilepathImageProvider.macOS.swift",
+    "line": 73,
+    "msg": "'FilepathImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "FilepathImageProvider.macOS.swift",
+    "line": 73,
+    "msg": "'FilepathImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "MeasuringViewRepresentable.swift",
+    "line": 90,
+    "msg": "cannot find type '_ProposedSize' in scope"
+   },
+   {
+    "file": "MeasuringViewRepresentable.swift",
+    "line": 91,
+    "msg": "cannot find type 'NSViewType' in scope"
+   },
+   {
+    "file": "MeasuringViewRepresentable.swift",
+    "line": 110,
+    "msg": "cannot find type 'NSViewType' in scope"
+   },
+   {
+    "file": "SwiftUIMeasurementContainer.swift",
+    "line": 100,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "SwiftUIMeasurementContainer.swift",
+    "line": 123,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "SwiftUIView.swift",
+    "line": 15,
+    "msg": "type 'SwiftUIView<Content, Storage>' does not conform to protocol '_OpenUIViewRepresentable'"
+   },
+   {
+    "file": "DotLottieImageProvider.swift",
+    "line": 39,
+    "msg": "cannot find type 'CGImage' in scope"
+   },
+   {
+    "file": "DotLottieImageProvider.swift",
+    "line": 54,
+    "msg": "cannot find 'CGImage' in scope"
+   },
+   {
+    "file": "DotLottieImageProvider.swift",
+    "line": 54,
+    "msg": "cannot convert value of type 'String.Type' to expected dictionary key type 'AnyHashable'"
+   },
+   {
+    "file": "DotLottieImageProvider.swift",
+    "line": 54,
+    "msg": "cannot call value of non-function type '[AnyHashable : Any]'"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 156,
+    "msg": "initializer does not override a designated initializer from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 569,
+    "msg": "cannot find 'bounds' in scope"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 570,
+    "msg": "cannot find 'bounds' in scope"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 571,
+    "msg": "cannot find 'bounds' in scope"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 572,
+    "msg": "cannot find 'setNeedsLayout' in scope"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 576,
+    "msg": "property does not override any property from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 737,
+    "msg": "'AnimationSubview' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 840,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 859,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 1015,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 1020,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 1024,
+    "msg": "method does not override any method from its superclass"
+   },
+   {
+    "file": "LottieAnimationView.swift",
+    "line": 92,
+    "msg": "'LottieAnimationViewBase' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "LottieView.swift",
+    "line": 493,
+    "msg": "'SwiftUIView' requires that 'LottieAnimationView' inherit from 'UIView'"
+   },
+   {
+    "file": "LottieView.swift",
+    "line": 493,
+    "msg": "cannot call value of non-function type '[Any]'"
+   },
+   {
+    "file": "LottieView.swift",
+    "line": 548,
+    "msg": "'SwiftUIMeasurementContainer' requires that 'LottieAnimationView' inherit from 'UIView'"
+   },
+   {
+    "file": "LottieView.swift",
+    "line": 10,
+    "msg": "type 'LottieView<Placeholder>' does not conform to protocol 'UIViewConfiguringSwiftUIView'"
+   },
+   {
+    "file": "AnimatedButton.swift",
+    "line": 101,
+    "msg": "property does not override any property from its superclass"
+   },
+   {
+    "file": "AnimatedControl.swift",
+    "line": 165,
+    "msg": "value of type 'LottieAnimationView' has no member 'bounds'"
+   },
+   {
+    "file": "AnimatedSwitch.swift",
+    "line": 124,
+    "msg": "property does not override any property from its superclass"
+   },
+   {
+    "file": "AnimationSubview.swift",
+    "line": 12,
+    "msg": "invalid redeclaration of 'AnimationSubview'"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 26,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 34,
+    "msg": "cannot find type 'CGImage' in scope"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 81,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 89,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 13,
+    "msg": "invalid redeclaration of 'BundleImageProvider'"
+   },
+   {
+    "file": "BundleImageProvider.swift",
+    "line": 92,
+    "msg": "'BundleImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "CompatibleAnimationView.swift",
+    "line": 223,
+    "msg": "overriding non-open property outside of its defining module"
+   },
+   {
+    "file": "CompatibleAnimationView.swift",
+    "line": 223,
+    "msg": "property cannot be marked '@objc' because its type cannot be represented in Objective-C"
+   },
+   {
+    "file": "CompatibleAnimationView.swift",
+    "line": 417,
+    "msg": "method cannot be marked '@objc' because the type of the parameter 1 cannot be represented in Objective-C"
+   },
+   {
+    "file": "CompatibleAnimationView.swift",
+    "line": 441,
+    "msg": "method cannot be marked '@objc' because its result type cannot be represented in Objective-C"
+   },
+   {
+    "file": "CompatibleAnimationView.swift",
+    "line": 456,
+    "msg": "'AnimationSubview' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 22,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 32,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 39,
+    "msg": "cannot find type 'CGImage' in scope"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 63,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 70,
+    "msg": "cannot find type 'CALayerContentsGravity' in scope"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 13,
+    "msg": "invalid redeclaration of 'FilepathImageProvider'"
+   },
+   {
+    "file": "FilepathImageProvider.swift",
+    "line": 73,
+    "msg": "'FilepathImageProvider' is ambiguous for type lookup in this context"
+   },
+   {
+    "file": "LottieAnimationViewBase.swift",
+    "line": 18,
+    "msg": "overriding non-open property outside of its defining module"
+   },
+   {
+    "file": "LottieAnimationViewBase.swift",
+    "line": 14,
+    "msg": "invalid redeclaration of 'LottieAnimationViewBase'"
+   },
+   {
+    "file": "BundleImageProvider.macOS.swift",
+    "line": 83,
+    "msg": "'BundleImageProvider' is ambiguous for type lookup in this context"
+   }
+  ]
+ },
+ "notes": [
+  "Kingfisher, KingfisherWebP and Lottie in 'after' are the fail-closed stand-ins under Sources/KickstarterServiceShims; the real Kingfisher 8.5.0 selects its AppKit branch (69 errors, pass 1) and the real Lottie 4.5.1 stops at 169 errors (recorded above).",
+  "Library, Kickstarter_Framework and KickstarterApp are blocked: StripeApplePay needs PKPayment / PKPaymentRequest, which OpenUIKit's PassKit does not declare, and ServerDrivenUI has 24 own errors."
+ ]
+}

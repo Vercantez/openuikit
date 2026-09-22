@@ -698,6 +698,17 @@ open class UIViewController: UIResponder, UIContentContainer {
 #endif
     open dynamic var extendedLayoutIncludesOpaqueBars = false
 
+    /// UIKit's `shouldAutomaticallyForwardAppearanceMethods` (iOS 26.1
+    /// default true — iososslibraryprobe). A custom container that returns
+    /// false forwards with begin/endAppearanceTransition itself (ios-oss
+    /// PagedContainerViewController). OpenUIKit's built-in containers drive
+    /// their children explicitly and custom containers are not auto-forwarded
+    /// either way, so the value is read by nothing yet (docs/KNOWN_GAPS.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var shouldAutomaticallyForwardAppearanceMethods: Bool { true }
+
     enum AppearanceState { case disappeared, appearing, appeared, disappearing }
     final var _appearanceState: AppearanceState = .disappeared
     final var _appearanceAnimated = false

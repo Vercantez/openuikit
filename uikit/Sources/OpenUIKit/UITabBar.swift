@@ -272,6 +272,11 @@ final class _UITabBarItemView: UIControl {
 
 @preconcurrency @MainActor
 public final class UITabBar: UIView {
+    /// UIKit's `barTintColor` (iOS 26.1 default nil, iososswallsprobe
+    /// lens.tabBar.*). Stored only: the iOS 26 floating platter keeps its
+    /// measured material colour.
+    public var barTintColor: UIColor?
+
     // MARK: Golden-measured metrics (see file header)
 
     /// Height of the bar's region at the bottom of the controller view.

@@ -29,6 +29,9 @@ public struct UIFont: Hashable, Sendable {
     /// 0 at 15 pt). Set only by `UIFont.preferredFont(forTextStyle:)` on
     /// the iOS cut.
     var textStyleLeading: CGFloat? = nil
+    /// PostScript name of a registered (CTFontManager) face, nil for the
+    /// system font. See CTFontManager.swift.
+    var customFontName: String? = nil
 
     public static func systemFont(ofSize size: CGFloat, weight: Weight = .regular) -> UIFont {
         UIFont(pointSize: size, weight: weight, design: .default)
