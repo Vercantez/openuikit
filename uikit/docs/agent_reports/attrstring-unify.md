@@ -1,7 +1,7 @@
 # attrstring-unify: UIKit's attributed strings are Foundation's on the Apple toolchain
 
 **Date:** 2026-09-22
-**Branch:** `agent/attrstring-unify`. It starts from `agent/simplenote-objc-core` and merges `origin/main` d48096f4.
+**Branch:** `agent/attrstring-unify`. It starts from `agent/simplenote-objc-core` and merges `origin/main` (last 1b10648d, which includes ios-oss-walls).
 **Routes:** Apple toolchain (the macOS host, and route (b)'s iOS triple once `ios-target` lands). The portable path is unchanged.
 **Status:** done for both apps' walls.
 * **Kickstarter Library:** the `'NSAttributedString' is ambiguous` errors went 18 → 0 (6 files), and no other error changed. NumberFormatter.swift:14's `Formatter` override now compiles without the module-local alias.
@@ -127,7 +127,7 @@ The chain spec and commands are `agent/ios-oss-walls`' (66fbfb82). I merged that
 
 | check | result |
 |---|---|
-| Catalyst gate (`CHECK_ONLY=1 ALLOW_STALE_GOLDENS="Forms Tabs" agent_merge.sh`) | `124/124 scenes pass`, real-app floors held, `GUEST_ROUTE_CHECK_OK`, conformance re-render passed (Forms/Tabs allowed stale), Linux build complete: `==> checks passed (CHECK_ONLY)` |
+| Catalyst gate (`CHECK_ONLY=1 agent_merge.sh`, after merging main 1b10648d) | `124/124 scenes pass`, real-app floors held, `GUEST_ROUTE_CHECK_OK`, conformance re-render passed (no stale sets allowed), Linux build complete: `==> checks passed (CHECK_ONLY)` |
 | pixels (release `openrender`, same inputs, base vs branch) | 178/178 scene PNGs and 15/15 real-app PNGs **byte-identical** |
 | real-app 3x | 99.137 / 98.535 / 98.548 / 99.74 / 98.72 / 98.334 / 97.549 / 99.65 / 98.823 / 98.558 / 99.86 / 99.734 / 98.235 / 99.61 (same as main) |
 | guest library route (`guest_route_check.sh`) | `GUEST_ROUTE_CHECK_OK` |
