@@ -974,6 +974,36 @@ cp "$W/full/foundation/include/CoreFoundation/CoreFoundation.h" \
     "$APPMODS/include/CoreFoundation/CoreFoundation.h"
 cp "$W/full/foundation/include/CoreFoundation/module.modulemap" \
     "$APPMODS/include/CoreFoundation/module.modulemap"
+# The durable OpenCombine export is a macOS-platform object; LLD refuses it in
+# an iOS-simulator link ("has platform macOS, which is different from target
+# platform iOS Simulator", MEASURED docs/agent_reports/ios-target-route.md).
+# For that platform compile the same attested 103 pinned sources for TARGET,
+# as full/xcodeplan/build_true_ios_platform_frameworks.sh does.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    echo "== pinned OpenCombine from source for $TARGET"
+    OPENCOMBINE_ARTIFACTS=$OUT/opencombine-$LINK_PLATFORM
+    rm -rf "$OPENCOMBINE_ARTIFACTS"
+    mkdir -p "$OPENCOMBINE_ARTIFACTS"
+    perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
+        "$W/full/oracle-opencombine/policy.json" "$OPENCOMBINE_SOURCE" \
+        "$OPENCOMBINE_ARTIFACTS/sources.nul" "$OPENCOMBINE_ARTIFACTS/sources.json"
+    mapfile -d '' -t opencombine_relative_sources < "$OPENCOMBINE_ARTIFACTS/sources.nul"
+    [ "${#opencombine_relative_sources[@]}" -eq 103 ] \
+        || die "OpenCombine source denominator is ${#opencombine_relative_sources[@]}, expected 103"
+    opencombine_sources=()
+    for source in "${opencombine_relative_sources[@]}"; do
+        case "$source" in
+            /*) opencombine_sources+=("$source") ;;
+            *) opencombine_sources+=("$OPENCOMBINE_SOURCE/$source") ;;
+        esac
+    done
+    "${SWIFTC[@]}" -parse-as-library \
+        -Xcc -fmodule-map-file="$APPMODS/include/COpenCombineHelpers/module.modulemap" \
+        -Xcc -I"$APPMODS/include/COpenCombineHelpers" \
+        -module-name OpenCombine \
+        -emit-module -emit-module-path "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
+        -emit-object -o "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "${opencombine_sources[@]}"
+fi
 [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" ] && \
     [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" ] \
     || die "OpenCombine artifacts missing under $OPENCOMBINE_ARTIFACTS"
