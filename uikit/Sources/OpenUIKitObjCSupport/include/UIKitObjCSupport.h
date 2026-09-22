@@ -50,6 +50,16 @@ NS_ASSUME_NONNULL_BEGIN
        UIPercentDrivenInteractiveTransition, UIViewPropertyAnimator, UISpringTimingParameters,
        UIPresentationController, CALayer;
 
+#pragma mark - Appearance (UIAppearance.h)
+
+/* UIAppearance.h:22 of the iOS 26.1 simulator SDK, verbatim. A pure
+ * annotation on property declarations; pods mark their appearance-proxy
+ * properties with it (SVProgressHUD 2.2.3: 42 declarations, each a parse
+ * error while undefined — eidolon-nib-runtime.md). */
+#ifndef UI_APPEARANCE_SELECTOR
+#define UI_APPEARANCE_SELECTOR __attribute__((annotate("ui_appearance_selector")))
+#endif
+
 #pragma mark - Geometry (UIGeometry.h)
 
 /* NS_SWIFT_NAME: the app's Swift half sees this header through its bridging
