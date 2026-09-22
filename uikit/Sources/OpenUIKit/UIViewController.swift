@@ -77,6 +77,18 @@ open class UIViewController: UIResponder, UIContentContainer {
     open func observeValue(forKeyPath keyPath: String?, of object: Any?,
                            change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {}
 #endif
+#if !(canImport(ObjectiveC) && canImport(Foundation))
+    // The storyboard segue hooks (UIStoryboard.swift). Where Objective-C and
+    // Foundation are both present they are `@objc` extension members; a
+    // Foundation-hidden guest library cannot represent a `String` parameter
+    // in Objective-C and a Linux build has no `@objc`, so there they are
+    // declared here, where an app subclass can still override them.
+    open func performSegue(withIdentifier identifier: String, sender: Any?) {
+        _performSegue(withIdentifier: identifier, sender: sender)
+    }
+    open func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool { true }
+    open func prepare(for segue: UIStoryboardSegue, sender: Any?) {}
+#endif
 
     private let _nibName: String?
     private let _nibBundle: Bundle

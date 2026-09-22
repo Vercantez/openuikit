@@ -353,7 +353,7 @@ extension UIViewController {
     }
 }
 
-#if canImport(ObjectiveC)
+#if canImport(ObjectiveC) && canImport(Foundation)
 extension UIViewController {
     /// UIKit raises when no segue has `identifier`; so does this.
     @objc open func performSegue(withIdentifier identifier: String, sender: Any?) {
@@ -367,14 +367,6 @@ extension UIViewController {
     }
 
     @objc open func prepare(for segue: UIStoryboardSegue, sender: Any?) {}
-}
-#else
-extension UIViewController {
-    open func performSegue(withIdentifier identifier: String, sender: Any?) {
-        _performSegue(withIdentifier: identifier, sender: sender)
-    }
-    open func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool { true }
-    open func prepare(for segue: UIStoryboardSegue, sender: Any?) {}
 }
 #endif
 

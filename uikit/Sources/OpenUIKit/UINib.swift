@@ -80,6 +80,9 @@ import ObjectiveC
 #endif
 #if canImport(Foundation)
 import struct Foundation.Data
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 // MARK: - The archive
@@ -948,11 +951,17 @@ final class NibDecoder {
         if let controllerType = cls as? UIViewController.Type {
             return makeWithCoder(controllerType, index: index)
         }
+#if canImport(ObjectiveC)
+        // `init()` is the Objective-C root initializer every NSObject
+        // subclass answers; swift-corelibs' NSObject does not make it
+        // `required`, so a native Linux build cannot call it through a
+        // metatype.
         if let objectType = cls as? NSObject.Type {
             let made = objectType.init()
             register(made, at: index)
             return made
         }
+#endif
         UINib.noteUnhandled("uninstantiable-class:\(name)")
         return nil
     }
