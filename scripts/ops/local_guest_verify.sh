@@ -7,7 +7,8 @@
 #   LOCAL_GUEST_FORCE=1 ...                              # rebuild everything, cold
 #                                                        # (stage cache bypassed)
 #   LOCAL_GUEST_SKIP_VERIFY=1 ...                        # build only
-#   LOCAL_GUEST_CACHE=0 ...                              # no build_full stage cache
+#   LOCAL_GUEST_CACHE=1 ...                              # build_full stage cache (off by default: its store
+#       failed on the main checkout with "cp: ... replaced while being copied")
 #       (default 1: BUILD_FULL_STAGE_CACHE=1 under build/local-guest/stage-cache,
 #       so a uikit/ edit does not recompile FoundationEssentials or
 #       FoundationInternationalization; hits are byte-identical to cold builds)
@@ -98,7 +99,7 @@ if [ "${1:-}" != --inside ]; then
         -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*' \
         -e LOCAL_GUEST_FORCE="${LOCAL_GUEST_FORCE:-0}" \
         -e LOCAL_GUEST_SKIP_VERIFY="${LOCAL_GUEST_SKIP_VERIFY:-0}" \
-        -e LOCAL_GUEST_CACHE="${LOCAL_GUEST_CACHE:-1}" \
+        -e LOCAL_GUEST_CACHE="${LOCAL_GUEST_CACHE:-0}" \
         -e LOCAL_GUEST_JOBS="${LOCAL_GUEST_JOBS:-}" \
         -e LOCAL_GUEST_BUILD_FULL="${LOCAL_GUEST_BUILD_FULL:-}" \
         -e TREE="$TREE" -e MAIN="$MAIN" -e SCRATCH="$SCRATCH" \
