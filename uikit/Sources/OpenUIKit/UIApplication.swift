@@ -934,37 +934,6 @@ open class UIEventAttribution: NSObject {
 }
 #endif
 
-/// A compiling storyboard handle. OpenUIKit does not load `.storyboardc`
-/// archives (docs/REAL_APP_TEST.md xib/storyboard non-goal); this type
-/// exists so `UISceneConfiguration.storyboard` and corpus `UIStoryboard`
-/// call sites type-check.
-open class UIStoryboard: NSObject {
-    public let name: String
-#if canImport(Foundation)
-    public let bundle: Bundle?
-
-    public init(name: String, bundle: Bundle?) {
-        self.name = name
-        self.bundle = bundle
-        super.init()
-    }
-#else
-    public init(name: String, bundle: Any?) {
-        self.name = name
-        _ = bundle
-        super.init()
-    }
-#endif
-
-    open func instantiateInitialViewController() -> UIViewController? { nil }
-
-    open func instantiateViewController(withIdentifier identifier: String)
-        -> UIViewController {
-        _ = identifier
-        return UIViewController()
-    }
-}
-
 /// MEASURED ValuesProbe2, iPhone SE 3rd gen / iOS 26.1: defaults are
 /// `NSPredicate(value: true)` / `NSPredicate(value: false)`
 /// (`TRUEPREDICATE` / `FALSEPREDICATE`).

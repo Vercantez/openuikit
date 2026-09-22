@@ -954,17 +954,20 @@ open class UIView: UIResponder, CALayerDelegate {
         self.init(frame: .zero)
     }
 
-    /// Source-compatible entry point for code-based UIKit views that carry
-    /// the required `init?(coder: NSCoder)` boilerplate.  OpenUIKit does not
-    /// decode Interface Builder archives; this initializer only preserves the
-    /// framework initializer contract and starts with zero geometry.
+    /// UIKit's keyed-archive initializer. Given the `UINibCoder` a nib or
+    /// storyboard hands an archived view (UINibCoder.swift), it decodes the
+    /// archived geometry, colours, flags, subviews and constraints into
+    /// `self` before returning — so an app's `init(coder:)` body after
+    /// `super.init(coder:)` sees them, as on iOS (MEASURED,
+    /// Tools/oracle2/nibruntimeprobe `badgeAtInit`). Any other coder is not
+    /// consulted: the view starts with zero geometry, as before.
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc
 #endif
     public required dynamic init?(coder: NSCoder) {
-        _ = coder
         super.init()
         self.frame = .zero
+        UINibCoder.decodeViewState(self, from: coder)
     }
 
     /// UIKit's NSObject description is a live diagnostic of the concrete

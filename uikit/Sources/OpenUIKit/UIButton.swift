@@ -80,8 +80,11 @@ extension UIColor {
 
 @preconcurrency @MainActor
 open class UIButton: UIControl {
-    public enum ButtonType: Sendable {
-        case custom, system
+    /// UIKit's raw values (UIButton.h: custom = 0, system = 1; MEASURED
+    /// `buttonType` 1 for a storyboard system button in
+    /// fixtures/nibruntime/oracle/nibruntime.json).
+    public enum ButtonType: Int, Sendable {
+        case custom = 0, system = 1
     }
 
     /// UIButton.State is UIControl.State (nested types are not inherited
@@ -246,11 +249,14 @@ open class UIButton: UIControl {
     }
 
     public required init?(coder: NSCoder) {
-        buttonType = .custom
+        // UIKit decodes `UIButtonType` inside initWithCoder: (UIKit raw
+        // values: custom = 0, system = 1).
+        buttonType = UINibCoder.archivedInteger(coder, "UIButtonType") == 1 ? .system : .custom
         _titleLabel = UIButtonLabel()
         _imageView = UIImageView()
         super.init(coder: coder)
         configureButtonViews()
+        UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
     private func configureButtonViews() {

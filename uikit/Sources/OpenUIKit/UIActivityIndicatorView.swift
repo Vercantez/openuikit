@@ -145,9 +145,13 @@ open class UIActivityIndicatorView: UIView {
     }
 
     public required init(coder: NSCoder) {
-        self.style = .medium
+        // UIKit decodes the style in initWithCoder: (medium = 100,
+        // large = 101).
+        self.style = UINibCoder.archivedInteger(coder, "UIActivityIndicatorViewStyle-Modern") == 101
+            ? .large : .medium
         super.init(coder: coder)!
         isUserInteractionEnabled = false
+        UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
     static func metrics(_ style: Style) -> Metrics {

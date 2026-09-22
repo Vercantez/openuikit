@@ -680,6 +680,16 @@ let testTargets: [Target] = [
         ]
     ),
     swiftUITestTarget,
+    // Storyboard / NIB runtime against iOS 26.1 (fixtures/nibruntime). The
+    // module name is load-bearing: the probe storyboard names its classes in
+    // module NibRuntimeTests, and the simulator oracle is built with the same
+    // name from the same scenario sources (scripts/nib_runtime_probe_sim.sh).
+    .testTarget(
+        name: "NibRuntimeTests",
+        dependencies: ["OpenUIKit"],
+        path: "Tests/NibRuntimeTests",
+        swiftSettings: [.unsafeFlags(["-swift-version", "5"])]
+    ),
     .testTarget(
         name: "OpenUIKitCTests",
         dependencies: openUIKitCTestDeps,
