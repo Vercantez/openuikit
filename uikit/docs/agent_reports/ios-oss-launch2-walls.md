@@ -86,4 +86,5 @@ Tooling: SwiftPM target names are unique across a graph, and OpenUIKit's manifes
 | corpus | never written; Secrets.swift exists only in the generated chain directory |
 | pins | no `Package.resolved`, `.app` or vendored file changed |
 | push | `git push` of the branch was denied by the permission system; commits are local |
-| merge check / guest verify | GATE_AND_GUEST_PLACEHOLDER |
+| merge check | `CHECK_ONLY=1 agent_merge.sh agent/ios-oss-walls`: **124/124 scenes pass**, `GUEST_ROUTE_COMPILE_OK openuikit=161 opencoregraphics=12`, `GUEST_ROUTE_CHECK_OK`, real-app floors identical to pass 1 (history 99.137 … ledger 99.61); then stops at conformance apps: `RENDER INCOMPLETE: TableEditor golden 8 frame(s) vs ours 10` (the cached /tmp golden predates script.json's 10 captures; ours is fixed by the unchanged script), and with `RECAPTURE_APPS=TableEditor` `RECAPTURE INCOMPLETE: golden 0 frame(s) vs ours 10` (the oracle recapture produced nothing). Branch-independent, but **no `checks passed` line**; the Linux build stage was not reached |
+| Mach-O guest (`scripts/ops/local_guest_verify.sh`, build_full override) | `FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController`, `rendered 15 screens; existing screens byte-identical 14/14`, `REAL-APP SCREEN VERIFIED ON LINUX` — equal to the main baseline |
