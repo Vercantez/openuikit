@@ -47,34 +47,32 @@ def member_of(msg: str) -> str | None:
     return None
 
 
-_own_cache: dict[tuple[str, str], tuple[str, set[str]]] = {}
+def is_own(path: str, own_roots: list[str]) -> bool:
+    real = os.path.realpath(path)
+    return any(real == r or real.startswith(r + os.sep) for r in own_roots)
 
 
-def is_own(file: str, pkg: str, name: str) -> bool:
-    """True when a diagnostic's file belongs to target `name`.
+def own_roots_for(pkg: str, name: str) -> list[str]:
+    """Sources/<name> plus everything its symlinks resolve to, at any depth.
 
-    A directory-symlink target resolves to its upstream directory; a
-    file-list target (spm_app_chain `files`) is a real directory of
-    per-file symlinks, so the compiler may report either the link under
-    Sources/<name> or the resolved upstream path.
+    A plain target is one directory symlink. A target with generated files
+    (spm_app_chain "generated"/"overlay") or a file-list target ("files") is
+    a real directory of per-entry symlinks, nested for a file list; the
+    compiler may report either the link or the resolved upstream path.
     """
-    key = (os.path.abspath(pkg), name)
-    if key not in _own_cache:
-        root = os.path.join(pkg, "Sources", name)
-        resolved = set()
-        if not os.path.islink(root) and os.path.isdir(root):
-            for dp, _, fns in os.walk(root):
-                for fn in fns:
-                    resolved.add(os.path.realpath(os.path.join(dp, fn)))
-        _own_cache[key] = (os.path.realpath(root), resolved)
-    own_dir, resolved = _own_cache[key]
-    real = os.path.realpath(file)
-    if real.startswith(own_dir + os.sep) or real in resolved:
-        return True
-    return os.path.abspath(file).startswith(os.path.abspath(os.path.join(pkg, "Sources", name)) + os.sep)
+    own_dir = os.path.join(pkg, "Sources", name)
+    roots = [os.path.realpath(own_dir), os.path.abspath(own_dir)]
+    if os.path.isdir(own_dir) and not os.path.islink(own_dir):
+        for dp, dns, fns in os.walk(own_dir):
+            for entry in dns + fns:
+                child = os.path.join(dp, entry)
+                if os.path.islink(child):
+                    roots.append(os.path.realpath(child))
+    return roots
 
 
 def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
+    own_roots = own_roots_for(pkg, name)
     cmd = ["swift", "build", "--target", name, "-j", str(jobs)]
     t0 = time.time()
     try:
@@ -94,7 +92,7 @@ def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
             continue
         seen.add(key)
         rec = {"file": m.group("file"), "line": int(m.group("line")), "col": int(m.group("col")),
-               "msg": m.group("msg"), "own": is_own(m.group("file"), pkg, name)}
+               "msg": m.group("msg"), "own": is_own(m.group("file"), own_roots)}
         if m.group("kind") == "error":
             errors.append(rec)
         elif m.group("kind") == "note" and "protocol requires" in m.group("msg"):

@@ -26,7 +26,10 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
 
     /// The controller's table (same object as `view`).
     public final var tableView: UITableView! {
-        view as? UITableView
+        get { view as? UITableView }
+        // iOS 26.1 (iososswallsprobe lens.tvc.*): assigning a table makes it
+        // both `tableView` and `view`.
+        set { view = newValue }
     }
 
 #if OPENUIKIT_OBJC_SUBCLASSING

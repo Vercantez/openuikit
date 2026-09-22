@@ -1,0 +1,42 @@
+// The Clang half of the `UIKit` module, so unchanged app source can write
+// UIKit SUBMODULE imports: `import UIKit.UIStackView` (Kickstarter Library
+// UIStackView.swift:2), `import UIKit.UIGestureRecognizerSubclass` (10 files
+// in the ladder corpus), `import UIKit.UIActivity`, `UIKit.UIFont`,
+// `UIKit.UIContextMenuConfiguration`. A submodule import needs a Clang module
+// of that name; Swift then loads the Swift module `UIKit`
+// (Sources/UIKitShim) as its overlay, so every declaration still comes from
+// OpenUIKit. The submodules are empty headers.
+//
+// Shape copied from the iOS 26.1 SDK's UIKit.framework/Modules/
+// module.modulemap: UIGestureRecognizerSubclass and UIGraphicsRendererSubclass
+// are explicit submodules there; the other headers are implicit `module *`
+// submodules. Only headers some corpus app imports as a submodule are listed.
+module UIKit {
+  header "UIKitClangModule.h"
+  export *
+
+  module UIStackView {
+    header "UIKit/UIStackView.h"
+    export *
+  }
+  module UIActivity {
+    header "UIKit/UIActivity.h"
+    export *
+  }
+  module UIFont {
+    header "UIKit/UIFont.h"
+    export *
+  }
+  module UIContextMenuConfiguration {
+    header "UIKit/UIContextMenuConfiguration.h"
+    export *
+  }
+  explicit module UIGestureRecognizerSubclass {
+    header "UIKit/UIGestureRecognizerSubclass.h"
+    export *
+  }
+  explicit module UIGraphicsRendererSubclass {
+    header "UIKit/UIGraphicsRendererSubclass.h"
+    export *
+  }
+}

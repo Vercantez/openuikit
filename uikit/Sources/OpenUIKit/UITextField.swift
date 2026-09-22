@@ -309,7 +309,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             if let a = _attributed { return a }
             guard _hasText || !_text.isEmpty else { return nil }
             return NSAttributedString(string: _text,
-                                      attributes: [.font: font, .foregroundColor: _textColor])
+                                      attributes: [.font: _font, .foregroundColor: _textColor])
         }
         set {
             _attributed = newValue
@@ -321,7 +321,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             // that one font, ignoring later runs — see Tools/attrprobe).
             if let a = newValue, a.length > 0 {
                 let attrs = a.attributes(at: 0, effectiveRange: nil)
-                if let f = attrs[.font] as? UIFont { font = f }
+                if let f = attrs[.font] as? UIFont { _font = f }
                 if let c = attrs[.foregroundColor] as? UIColor { textColor = c }
             }
             normalizeTextStateAfterContentAssignment()
@@ -360,7 +360,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
 
-    public final var font: UIFont = .systemFont(ofSize: 17) {
+    /// UIKit declares `font` nullable. MEASURED iPhone 16 / iOS 26.1
+    /// (iososswallsprobe `lens.textField.font.*`): a fresh field reads
+    /// `.SFUI-Regular` 17, and after `= nil` it reads the same font again —
+    /// nil resets to the default.
+    public final var font: UIFont? {
+        get { _font }
+        set { _font = newValue ?? .systemFont(ofSize: 17) }
+    }
+    final var _font: UIFont = .systemFont(ofSize: 17) {
         didSet {
             if placeholderUsesDefaultAttributes, let placeholder = _placeholder {
                 _attributedPlaceholder = makeDefaultAttributedPlaceholder(placeholder)
@@ -380,6 +388,11 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     private final var _textColor: UIColor = .label {
         didSet { refreshContent() }
     }
+
+    /// UIKit's `textAlignment` (iOS 26.1 default `.natural`, raw 4 —
+    /// iososswallsprobe `lens.textField.textAlignment.default`). Stored
+    /// only: the field keeps drawing its text leading-aligned.
+    public final var textAlignment: NSTextAlignment = .natural
 
     public final var borderStyle: UITextFieldBorderStyle = .none {
         didSet { setNeedsLayout() }
@@ -497,8 +510,8 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         backgroundView.isUserInteractionEnabled = false
         canvasView.isUserInteractionEnabled = false
         canvasView.clipsToBounds = true
-        textLabel.font = font
-        placeholderLabel.font = font
+        textLabel.font = _font
+        placeholderLabel.font = _font
         placeholderLabel.textColor = .placeholderText
         addSubview(backgroundView)
         addSubview(canvasView)
@@ -517,7 +530,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     private final func makeDefaultAttributedPlaceholder(_ text: String) -> NSAttributedString {
         NSAttributedString(string: text,
-                           attributes: [.font: font,
+                           attributes: [.font: _font,
                                         .foregroundColor: defaultPlaceholderColor])
     }
 
@@ -910,7 +923,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     }
 
     final func refreshContent() {
-        textLabel.font = font
+        textLabel.font = _font
         textLabel.textColor = _textColor
         if isSecureTextEntry {
             textLabel.text = secureDisplayText
@@ -919,7 +932,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         } else {
             textLabel.text = _text
         }
-        placeholderLabel.font = font
+        placeholderLabel.font = _font
         placeholderLabel.textColor = defaultPlaceholderColor
         placeholderLabel.attributedText = _attributedPlaceholder
         textLabel.isHidden = _text.isEmpty
@@ -937,7 +950,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     // MARK: Geometry (measured)
 
-    final var lineHeight: CGFloat { FontEngine.labelLineHeight(for: font) }
+    final var lineHeight: CGFloat { FontEngine.labelLineHeight(for: _font) }
 
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc
@@ -1040,12 +1053,12 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         if !isSecureTextEntry, _attributed != nil, !_text.isEmpty {
             // Attributed: measured with the field's single `font` (see the
             // attributedText setter), ceiled to the pixel grid.
-            base = Swift.max(FontEngine.ceilToPixel(FontEngine.measure(_text, font: font),
+            base = Swift.max(FontEngine.ceilToPixel(FontEngine.measure(_text, font: _font),
                                                     scale: scale), 5)
         } else if !_text.isEmpty {
-            base = Swift.max(FontEngine.measure(renderedText, font: font).rounded(.up), 5)
+            base = Swift.max(FontEngine.measure(renderedText, font: _font).rounded(.up), 5)
         } else if let p = placeholder, !p.isEmpty {
-            base = FontEngine.ceilToPixel(FontEngine.measure(p, font: font), scale: scale)
+            base = FontEngine.ceilToPixel(FontEngine.measure(p, font: _font), scale: scale)
         } else {
             base = 5
         }
@@ -1053,7 +1066,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         case .roundedRect, .bezel, .line:
             return CGSize(width: base + 28, height: 34)
         case .none:
-            return CGSize(width: base, height: FontEngine.metrics(for: font).lineHeight + 1.5)
+            return CGSize(width: base, height: FontEngine.metrics(for: _font).lineHeight + 1.5)
         }
     }
 
@@ -1110,7 +1123,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                                         width: tr.width, height: lineH)
         if isEditing {
             // Full text width, shifted by the scroll offset; no truncation.
-            let w = Swift.max(FontEngine.measure(renderedText, font: font).rounded(.up) + 2,
+            let w = Swift.max(FontEngine.measure(renderedText, font: _font).rounded(.up) + 2,
                               tr.width)
             textLabel.lineBreakMode = .byClipping
             textLabel.frame = CGRect(x: -textScrollOffset,
@@ -1195,7 +1208,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         let p = touch.location(in: self)
         let tr = textRect(forBounds: bounds)
         let x = p.x - tr.minX + textScrollOffset
-        let scalarOffset = UITextCaretMath.caretIndex(for: x, text: _text, font: font)
+        let scalarOffset = UITextCaretMath.caretIndex(for: x, text: _text, font: _font)
         let offset = utf16Offset(forScalarOffset: scalarOffset)
         storeSelection(NSRange(location: offset, length: 0),
                        notifyDelegate: wasEditing)
@@ -1342,13 +1355,13 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             ? String(repeating: "\u{2022}", count: modelPrefix.count)
             : modelPrefix
         return FontEngine.roundToPixel(
-            FontEngine.measure(displayPrefix, font: font),
+            FontEngine.measure(displayPrefix, font: _font),
             scale: scale)
     }
 
     private final var caretVerticalMetrics: (y: CGFloat, height: CGFloat) {
         let tr = textRect(forBounds: bounds)
-        let fontLineHeight = FontEngine.metrics(for: font).lineHeight
+        let fontLineHeight = FontEngine.metrics(for: _font).lineHeight
         let height = fontLineHeight + 1.5
         let boxTop = tr.minY + (tr.height - (fontLineHeight + 2)) / 2
         return ((boxTop + 0.25).rounded(.down), height)
@@ -1398,7 +1411,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         // Keep the caret visible: adjust the horizontal scroll first.
         let cx = caretTextX
         let visibleW = tr.width - 2   // caret bar width stays inside
-        let textW = FontEngine.measure(renderedText, font: font)
+        let textW = FontEngine.measure(renderedText, font: _font)
         var scroll = textScrollOffset
         let maxScroll = Swift.max(0, textW + 2 - tr.width)
         if cx - scroll > visibleW { scroll = cx - visibleW }
@@ -1408,7 +1421,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             textScrollOffset = scroll
             // Re-place the text label with the new offset.
             let labelY = ((bounds.height - lineHeight) / 2 + 0.5).rounded(.down) - tr.minY
-            let w = Swift.max(FontEngine.measure(renderedText, font: font).rounded(.up) + 2,
+            let w = Swift.max(FontEngine.measure(renderedText, font: _font).rounded(.up) + 2,
                               tr.width)
             textLabel.frame = CGRect(x: -textScrollOffset,
                                      y: labelY, width: w, height: lineHeight)

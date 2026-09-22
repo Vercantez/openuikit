@@ -47,8 +47,9 @@
 // Catalyst keeps 1/8 s. Default-color core over white is (156,156,159)
 // — the same invert as the frozen control_activity measurement.
 
-public enum UIActivityIndicatorViewStyle: Sendable {
-    case medium, large
+public enum UIActivityIndicatorViewStyle: Int, Sendable {
+    // iOS 26.1 raw values (iososswallsprobe lens.activity.style.raws).
+    case medium = 100, large = 101
 }
 
 @preconcurrency @MainActor
@@ -99,10 +100,29 @@ open class UIActivityIndicatorView: UIView {
             : UIColor(white: 128.0 / 255.0, alpha: 1)
     })
 
-    public let style: Style
-    public var color: UIColor = UIActivityIndicatorView.defaultColor {
-        didSet { setNeedsDisplay() }
+    /// Settable, as in UIKit. iOS 26.1 (iososswallsprobe lens.activity.*):
+    /// `.medium` raw 100, `.large` raw 101; changing the style keeps an
+    /// explicitly assigned colour.
+    public var style: Style {
+        didSet {
+            guard style != oldValue else { return }
+            setNeedsLayout()
+            superview?.setNeedsLayout()
+            setNeedsDisplay()
+        }
     }
+
+    /// UIKit declares `color` `null_resettable` (Swift `UIColor!`). MEASURED
+    /// iOS 26.1: the getter of a fresh indicator (either style) reads
+    /// secondaryLabel (light rgba 0.2353, 0.2353, 0.2627, 0.6), and assigning
+    /// nil reads that again. The spokes OpenUIKit paints for the default are
+    /// the pixel-measured `defaultColor` below, unchanged.
+    public var color: UIColor! {
+        get { _customColor ?? .secondaryLabel }
+        set { _customColor = newValue; setNeedsDisplay() }
+    }
+    private var _customColor: UIColor?
+    var _drawColor: UIColor { _customColor ?? UIActivityIndicatorView.defaultColor }
     public var hidesWhenStopped: Bool = true {
         didSet { setNeedsDisplay() }
     }
@@ -172,7 +192,7 @@ open class UIActivityIndicatorView: UIView {
         guard isAnimating || !hidesWhenStopped else { return }
         guard bounds.width > 0, bounds.height > 0 else { return }
         let m = metrics
-        let base = color.resolvedCGColor(with: traitCollection)
+        let base = _drawColor.resolvedCGColor(with: traitCollection)
         guard base.alpha > 0 else { return }
 
         let ox = ((bounds.width - m.size) / 2).rounded(.down)

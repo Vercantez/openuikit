@@ -244,7 +244,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             guard !text.isEmpty else { return nil }
             return NSAttributedString(string: text,
                                       attributes: [.font: effectiveFont,
-                                                   .foregroundColor: textColor])
+                                                   .foregroundColor: effectiveTextColor])
         }
         set {
             let s = newValue?.string ?? ""
@@ -274,16 +274,33 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         guard let a = _attributed, a.length > 0 else { return nil }
         var t = AttributedTextLayout.flatten(_applyingLinkAttributes(a),
                                              defaultFont: effectiveFont,
-                                             defaultColor: textColor)
+                                             defaultColor: effectiveTextColor)
         t.usesFontLineHeight = true
         return t
     }
     public final var font: UIFont? {
         didSet { contentDidChange() }
     }
-    public final var textColor: UIColor = .label {
-        didSet { contentDidChange() }
+    /// UIKit declares `textColor` nullable. MEASURED iPhone 16 / iOS 26.1
+    /// (iososswallsprobe `lens.textView.textColor.*`): a fresh view reads a
+    /// non-nil label colour; after `= nil` the getter reads nil. OpenUIKit
+    /// draws a nil colour as `.label` (the rendered colour of a nil
+    /// `textColor` is not measured).
+    public final var textColor: UIColor? {
+        get { _textColor }
+        set { _textColor = newValue; contentDidChange() }
     }
+    private final var _textColor: UIColor? = .label
+    final var effectiveTextColor: UIColor { _textColor ?? .label }
+
+    /// UIKit's `textAlignment` (iOS 26.1 default `.natural`, raw 4).
+    /// Stored only: plain-text drawing stays leading-aligned; attributed text
+    /// follows its paragraph style.
+    public final var textAlignment: NSTextAlignment = .natural
+
+    /// UITextInputTraits' `isSecureTextEntry` (iOS 26.1 default false).
+    /// Stored only — a text view never masks its text here.
+    public final var isSecureTextEntry: Bool = false
     public final var textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
         didSet { contentDidChange() }
     }
@@ -363,7 +380,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         } else {
             s = NSAttributedString(string: text ?? "",
                                    attributes: [.font: effectiveFont,
-                                                .foregroundColor: textColor])
+                                                .foregroundColor: effectiveTextColor])
         }
         textStorage.setAttributedString(s)
         suppressingStorage = false
@@ -462,7 +479,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         }
         guard !text.isEmpty else { return }
         let font = effectiveFont
-        let color = textColor.resolvedCGColor(with: traitCollection)
+        let color = effectiveTextColor.resolvedCGColor(with: traitCollection)
         guard color.alpha > 0 else { return }
         let dark = traitCollection.userInterfaceStyle == .dark
         let glyphFont = GlyphRasterizer.font(for: font)

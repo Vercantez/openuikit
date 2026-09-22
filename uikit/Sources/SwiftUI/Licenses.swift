@@ -13,6 +13,17 @@ public struct _OpenList<Content: _OpenView>: _OpenView {
         self.content = content()
     }
 
+    /// SwiftUI's single-selection `List(selection:content:)` (ios-oss
+    /// Library PaginatingList.swift:48). The list renders as the plain list;
+    /// OpenUIKit's list rows have no selection state yet, so the binding is
+    /// never written (no row reads as selected) — recorded in
+    /// docs/KNOWN_GAPS.md.
+    public init<SelectionValue: Hashable>(selection: _OpenBinding<SelectionValue?>?,
+                                          @_OpenViewBuilder content: () -> Content) {
+        _ = selection
+        self.content = content()
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(
             .list(

@@ -124,6 +124,168 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" "${APPLE_SWIFT_OVERLAY_FLAGS[@]}" -
 LD=(ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$SYS" -rpath /usr/lib/swift)
 CC=(clang-18 -target "$TARGET" -isysroot "$SYS" -O2)
 
+# ---- parallel independent compiles -----------------------------------------
+# run_jobs <fn> <arg>... runs `fn arg` for every arg, at most BUILD_FULL_JOBS
+# at a time, and fails if ANY invocation failed. Only independent commands
+# (distinct outputs, no reads of each other's outputs) go through here, so the
+# bytes produced cannot depend on scheduling; callers keep their own ordered
+# lists for anything that consumes the outputs (link lines).
+BUILD_FULL_JOBS=${BUILD_FULL_JOBS:-$(nproc 2>/dev/null || echo 4)}
+case "$BUILD_FULL_JOBS" in
+    ''|*[!0-9]*|0) die "BUILD_FULL_JOBS must be a positive integer" ;;
+esac
+run_jobs() {
+    local fn=$1 arg pid rc=0
+    local -a pids=()
+    shift
+    for arg in "$@"; do
+        if [ "${#pids[@]}" -ge "$BUILD_FULL_JOBS" ]; then
+            wait "${pids[0]}" || rc=1
+            pids=("${pids[@]:1}")
+        fi
+        "$fn" "$arg" &
+        pids+=("$!")
+    done
+    for pid in "${pids[@]}"; do
+        wait "$pid" || rc=1
+    done
+    return "$rc"
+}
+
+# ---- optional stage cache (BUILD_FULL_STAGE_CACHE=1; default off) -----------
+# Two stages depend on nothing under uikit/ and dominate the build: the
+# FoundationEssentials closure (collections, os, C shims, FE, compat objects)
+# and FoundationInternationalization (474 ICU TUs + 61 Swift files). With the
+# cache on, each stage's complete output tree is stored as a tar under
+# BUILD_FULL_STAGE_CACHE_DIR, keyed by a SHA-256 over the stage's inputs:
+# every source/script/patch by CONTENT, the pinned upstream trees, the compile
+# sysroot's content, the compiler/linker binaries and version strings, the
+# relevant flags/environment, the absolute paths the stage writes, and (for FI)
+# the upstream stage outputs it links. A hit restores the exact bytes a cold
+# run of the same inputs wrote (cold runs of this script are deterministic);
+# a miss runs the stage normally and then records it. Off by default: the
+# authority routes keep compiling everything.
+BUILD_FULL_STAGE_CACHE=${BUILD_FULL_STAGE_CACHE:-0}
+BUILD_FULL_STAGE_CACHE_DIR=${BUILD_FULL_STAGE_CACHE_DIR:-$OUT.stage-cache}
+case "$BUILD_FULL_STAGE_CACHE" in
+    0|1) ;;
+    *) die "BUILD_FULL_STAGE_CACHE must be 0 or 1" ;;
+esac
+# hash_inputs <path|string>...: one line per regular file (content hash) or
+# symlink (target) under each existing path, or the literal argument.
+hash_inputs() {
+    local arg
+    for arg in "$@"; do
+        if [ -d "$arg" ]; then
+            printf 'D %s\n' "$arg"
+            (
+                cd "$arg"
+                find . \( -type f -o -type l \) -print0 | LC_ALL=C sort -z \
+                    | while IFS= read -r -d '' rel; do
+                        if [ -L "$rel" ]; then
+                            printf 'L %s -> %s\n' "$rel" "$(readlink "$rel")"
+                        else
+                            printf 'F %s %s\n' "$rel" "$(sha256sum < "$rel" | cut -d' ' -f1)"
+                        fi
+                    done
+            )
+        elif [ -f "$arg" ]; then
+            printf 'F %s %s\n' "$arg" "$(sha256sum < "$arg" | cut -d' ' -f1)"
+        else
+            printf 'S %s\n' "$arg"
+        fi
+    done
+}
+toolchain_identity() {
+    local tool
+    swiftc -version 2>&1
+    clang-18 --version 2>&1
+    for tool in swiftc swift-frontend clang-18 clang++-18 ld64.lld-18; do
+        printf '%s ' "$tool"
+        sha256sum < "$(readlink -f "$(command -v "$tool")")"
+    done
+}
+# tree_manifest <root> <rel>...: type, mode, path and content hash (files) or
+# link target (symlinks) of every entry at and under each <root>/<rel>, sorted.
+tree_manifest() {
+    local root=$1
+    shift
+    (
+        cd "$root" || exit 2
+        find "$@" -printf '%y %m %p\n' | LC_ALL=C sort -k3 \
+            | while read -r type mode rel; do
+                case "$type" in
+                    f) printf '%s %s %s %s\n' "$type" "$mode" "$rel" "$(sha256sum < "$rel" | cut -d' ' -f1)" ;;
+                    l) printf '%s %s %s -> %s\n' "$type" "$mode" "$rel" "$(readlink "$rel")" ;;
+                    *) printf '%s %s %s\n' "$type" "$mode" "$rel" ;;
+                esac
+            done
+    )
+}
+# Entries are plain `cp -a` copies of each recorded path, not tarballs: GNU
+# tar's delayed symlink/directory-status extraction relies on stable inode
+# numbers, which Docker Desktop bind mounts do not provide (measured: symlinks
+# came back as empty placeholder files and tar exited 2).
+#
+# stage_cache_restore <stage> <key> <path>...: on a hit, replace <path>... with
+# the recorded tree and return 0; on a miss return 1. The entry is checked
+# against its manifest before anything is touched, and the restored paths are
+# checked against it afterwards. This runs as an `if` condition, where errexit
+# is off, so every step checks its own status.
+stage_cache_restore() {
+    local stage=$1 key=$2 entry p rel
+    local -a rels=()
+    shift 2
+    [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 1
+    entry=$BUILD_FULL_STAGE_CACHE_DIR/$stage/$key
+    [ -d "$entry/payload" ] && [ -f "$entry/manifest" ] && [ -f "$entry/paths" ] || {
+        echo "   stage cache: $stage miss key=${key:0:12}"
+        return 1
+    }
+    mapfile -t rels < "$entry/paths" || return 1
+    if ! tree_manifest "$entry/payload" "${rels[@]}" | cmp -s - "$entry/manifest"; then
+        echo "   stage cache: $stage entry ${key:0:12} does not match its manifest; rebuilding" >&2
+        rm -rf -- "$entry"
+        return 1
+    fi
+    for p in "$@"; do
+        rm -rf -- "$p" || die "stage cache: cannot remove $p"
+    done
+    for rel in "${rels[@]}"; do
+        mkdir -p "/$(dirname "$rel")" && cp -a "$entry/payload/$rel" "/$rel" \
+            || die "stage cache: restoring /$rel failed"
+    done
+    tree_manifest / "${rels[@]}" | cmp -s - "$entry/manifest" \
+        || die "stage cache: restored $stage paths differ from entry ${key:0:12}"
+    echo "   stage cache: $stage restored key=${key:0:12}"
+}
+# stage_cache_store <stage> <key> <path>...: record the existing <path>...
+# (absolute), replacing any older entry for <stage>.
+stage_cache_store() {
+    local stage=$1 key=$2 entry tmp p
+    local -a rels=()
+    shift 2
+    [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 0
+    entry=$BUILD_FULL_STAGE_CACHE_DIR/$stage/$key
+    mkdir -p "$BUILD_FULL_STAGE_CACHE_DIR/$stage"
+    tmp=$(mktemp -d "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp.XXXXXX")
+    for p in "$@"; do
+        case "$p" in /*) ;; *) die "stage cache path must be absolute: $p" ;; esac
+        [ -e "$p" ] || [ -L "$p" ] || die "stage cache: $stage output missing: $p"
+        rels+=("${p#/}")
+        mkdir -p "$tmp/payload$(dirname "$p")"
+        cp -a "$p" "$tmp/payload$p"
+    done
+    printf '%s\n' "${rels[@]}" > "$tmp/paths"
+    tree_manifest "$tmp/payload" "${rels[@]}" > "$tmp/manifest"
+    tree_manifest / "${rels[@]}" | cmp -s - "$tmp/manifest" \
+        || die "stage cache: copy of $stage outputs differs from the originals"
+    find "$BUILD_FULL_STAGE_CACHE_DIR/$stage" -mindepth 1 -maxdepth 1 \
+        ! -name "$(basename "$tmp")" -exec rm -rf -- {} +
+    mv "$tmp" "$entry"
+    echo "   stage cache: $stage stored key=${key:0:12}"
+}
+
 # The DTS route is explicit and fail-closed. Standalone mode builds the
 # canonical target source, external mode consumes an all-or-none attested trio,
 # and disabled mode is reserved for the core package's Foundation-hidden stage,
@@ -677,10 +839,14 @@ QCXX=(-std=gnu++17 -fno-exceptions -fno-rtti -fPIC -Os -g0 -DNDEBUG
       "-D_LIBCPP_VERBOSE_ABORT(...)=__builtin_trap()")
 QOBJS=()
 for f in "$UIKIT"/Sources/CQuartz/*.cpp; do
-    o="$QOBJ/$(basename "$f" .cpp).o"
-    clang-18 -target "$TARGET" -isysroot "$SYS" "${QCXX[@]}" $QINC -c "$f" -o "$o"
-    QOBJS+=("$o")
+    QOBJS+=("$QOBJ/$(basename "$f" .cpp).o")
 done
+# One TU per job; the link below consumes QOBJS in the same glob order.
+compile_quartz_tu() {
+    clang-18 -target "$TARGET" -isysroot "$SYS" "${QCXX[@]}" $QINC -c "$1" \
+        -o "$QOBJ/$(basename "$1" .cpp).o"
+}
+run_jobs compile_quartz_tu "$UIKIT"/Sources/CQuartz/*.cpp
 # -syslibroot the GUEST root: our libSystem.B/libc++.1 are umbrellas that
 # LC_REEXPORT_DYLIB /usr/lib/*.real.dylib, and the linker has to be able to
 # resolve those install names to files.
@@ -745,6 +911,34 @@ CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
 # dependency objects into both executables. There is no swift-system checkout
 # in this graph; the local os-module source is part of the project subject.
 echo "== FoundationEssentials production inputs ($TARGET)"
+# build_fe.sh also derives patched upstream sources here; they are part of the
+# stage's output tree (FoundationEssentials.swiftsourceinfo names them).
+FE_PORT_SOURCES=$W/build/foundationessentials-port-sources
+fe_stage_key=$(
+    {
+        echo 'fe-stage-v1'
+        toolchain_identity
+        printf '%s\n' "$TARGET" "$W" "$OUT" "$SF" "$SC" "$SYS" "${MC-}" \
+            "$(printenv MC || echo unexported)" "${APPLE_SWIFT_OVERLAY_FLAGS[*]}" \
+            "$PINNED_SOURCE_STATE_BEFORE" \
+            "$(git -C "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null || echo no-git)" \
+            "$(git -C "$SC" rev-parse 'HEAD^{tree}' 2>/dev/null || echo no-git)"
+        hash_inputs "${BASH_SOURCE[0]}" "$SYS" \
+            ${APPLE_SWIFT_USER_OVERLAYS:+"$APPLE_SWIFT_USER_OVERLAYS"} \
+            "$W/full/foundation/build_collections.sh" \
+            "$W/full/foundation/build_os_module.sh" \
+            "$W/full/foundation/build_cshims.sh" \
+            "$W/full/foundation/build_fe.sh" \
+            "$PINNED_INPUTS_TOOL" "$W/full/foundation/patches" \
+            "$W/full/foundation/os-module" \
+            "$W/full/foundation/fm_unimplemented.c" \
+            "$W/full/foundation/removefile_compat.c" \
+            "$W/full/foundation/removefile_compat.h" \
+            "$W/full/foundation/removefile_compat_tests.c" \
+            "$W/full/foundation/uuid_compat.c"
+    } | sha256sum | cut -d' ' -f1
+)
+if ! stage_cache_restore fe "$fe_stage_key" "$FE_BUILD" "$FE_PORT_SOURCES"; then
 rm -rf "$FE_BUILD"
 mkdir -p "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
 W="$W" SC="$SC" SYS="$SYS" OUT="$FE_COLLECTIONS" TARGET="$TARGET" \
@@ -770,6 +964,15 @@ clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
     "$W/full/foundation/removefile_compat.c" \
     "$W/full/foundation/removefile_compat_tests.c" \
     -o "$FE_OUT/removefile_compat_tests"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -Wall -Wextra -Werror -I "$W/full/foundation" \
+    -c "$W/full/foundation/removefile_compat.c" \
+    -o "$FE_OUT/removefile_compat.o"
+clang-18 -target "$TARGET" -isysroot "$SYS" -O1 \
+    -c "$W/full/foundation/uuid_compat.c" -o "$FE_OUT/uuid_compat.o"
+stage_cache_store fe "$fe_stage_key" "$FE_BUILD" "$FE_PORT_SOURCES"
+fi
+# The removefile semantic proof runs on every build, cached stage or not.
 "$FE_OUT/removefile_compat_tests" \
     | tee "$FE_OUT/removefile-compat-tests.log"
 grep -Fxq 'OPEN_FOUNDATION_REMOVEFILE_OK recursive=depth-first symlink=no-follow keep-parent=yes callbacks=confirm,error,status cancellation=honored secure=refused' \
@@ -777,12 +980,6 @@ grep -Fxq 'OPEN_FOUNDATION_REMOVEFILE_OK recursive=depth-first symlink=no-follow
         echo 'build_full: removefile semantic proof marker is missing' >&2
         exit 2
     }
-clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
-    -Wall -Wextra -Werror -I "$W/full/foundation" \
-    -c "$W/full/foundation/removefile_compat.c" \
-    -o "$FE_OUT/removefile_compat.o"
-clang-18 -target "$TARGET" -isysroot "$SYS" -O1 \
-    -c "$W/full/foundation/uuid_compat.c" -o "$FE_OUT/uuid_compat.o"
 
 FEMODULES=(
     -I "$FE_OUT" -I "$FE_COLLECTIONS" -I "$FE_OS"
@@ -1195,12 +1392,74 @@ for fi_runtime in libc++.1.dylib libc++.real.dylib libc++abi.dylib \
         "$FINTL_STAGE/guest-root/darwin/usr/lib/$fi_runtime"
 done
 : > "$FINTL_STAGE/guest-root/.manifest"
+# Stage-cache key for FI. Its Swift compile searches APPMODS, which by now
+# also holds modules built from uikit/. The pinned FoundationInternationalization
+# sources import only FoundationEssentials, _FoundationICU, _FoundationCShims,
+# CoreFoundation/Darwin/os and private framework-only modules (none of the
+# uikit-derived ones), so those contribute only their presence; everything
+# else FI can read or link contributes its content. FI's own previous outputs
+# (overwritten below) and UIKit.* (copied in later, history-dependent) are left
+# out so the key does not depend on what an earlier run left behind.
+fi_stage_appmods_inputs() {
+    local name
+    find "$APPMODS" -mindepth 1 -maxdepth 1 -printf '%f\n' | LC_ALL=C sort \
+        | while IFS= read -r name; do
+            case "$name" in
+                FoundationInternationalization.*|libFoundationInternationalization.dylib|lib_FoundationICU.dylib|UIKit.*) ;;
+                OpenUIKit.*|OpenCoreGraphics.*|SwiftUI.*|Symbols.*) printf 'P %s\n' "$name" ;;
+                include)
+                    find "$APPMODS/include" -mindepth 1 -maxdepth 1 -printf '%f\n' | LC_ALL=C sort \
+                        | while IFS= read -r name; do
+                            case "$name" in
+                                CQuartz|CPortableIO|CSTBTrueType) printf 'P include/%s\n' "$name" ;;
+                                *) hash_inputs "$APPMODS/include/$name" ;;
+                            esac
+                        done ;;
+                *) hash_inputs "$APPMODS/$name" ;;
+            esac
+        done
+}
+fi_stage_key=$(
+    {
+        echo 'fi-stage-v1'
+        echo "$fe_stage_key"
+        ldd --version 2>&1 | head -1
+        printf '%s\n' "$SWIFT_FOUNDATION_ICU" "$FINTL_STAGE" "$FINTL_WORK" "$APPMODS" \
+            "$ROOTDIR" "$MINOS" \
+            "$(git -C "$SWIFT_FOUNDATION_ICU" rev-parse 'HEAD^{tree}' 2>/dev/null || echo no-git)" \
+            "$(git -C "$SWIFT_FOUNDATION_ICU" status --porcelain=v1 --untracked-files=all 2>/dev/null || echo no-git)" \
+            "$(git -C "$SF" status --porcelain=v1 --untracked-files=all 2>/dev/null || echo no-git)"
+        for fi_env in LINK_PLATFORM LINK_SDK_VERSION APPLE_SWIFT_USER_OVERLAYS DYLIB_INSTALL_PREFIX; do
+            printf '%s=%s\n' "$fi_env" "$(printenv "$fi_env" || echo unexported)"
+        done
+        hash_inputs "$W/full/foundationinternationalization" \
+            "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" \
+            "$ROOTDIR/darwin/usr/lib/libc++.real.dylib" \
+            "$ROOTDIR/darwin/usr/lib/libc++abi.dylib" \
+            "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
+            "$ROOTDIR/darwin/usr/lib/libSystem.real.dylib" \
+            "$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib" \
+            "$FINTL_STAGE"
+        fi_stage_appmods_inputs
+    } | sha256sum | cut -d' ' -f1
+)
+if stage_cache_restore fi "$fi_stage_key" "$FINTL_STAGE" "$FINTL_WORK" \
+    "$APPMODS"/FoundationInternationalization.* \
+    "$APPMODS/libFoundationInternationalization.dylib" \
+    "$APPMODS/lib_FoundationICU.dylib"; then
+    :
+else
 env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SF" \
     SWIFT_FOUNDATION_ICU="$SWIFT_FOUNDATION_ICU" STAGE="$FINTL_STAGE" \
     WORK="$FINTL_WORK" TARGET="$TARGET" MIN_OS="$MINOS" \
     COLLECTIONS="$FE_COLLECTIONS" OSMOD="$FE_OS" CSHIMS="$FE_CSHIMS" \
     FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
     bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
+stage_cache_store fi "$fi_stage_key" "$FINTL_STAGE" "$FINTL_WORK" \
+    "$APPMODS"/FoundationInternationalization.* \
+    "$APPMODS/libFoundationInternationalization.dylib" \
+    "$APPMODS/lib_FoundationICU.dylib"
+fi
 [ -f "$APPMODS/FoundationInternationalization.swiftmodule" ] \
     || die "FoundationInternationalization.swiftmodule missing after FI build"
 cp "$APPMODS/FoundationInternationalization.swiftmodule" "$APPINC/"
@@ -1555,27 +1814,36 @@ link_app_executable() {
     "${APP_LINK_OBJECTS[@]}" \
     "${COMMON_LINK_OBJECTS[@]}"
 }
-link_app_executable "$OUT/render_full" "$OUT/render_full.o" "$OUT/realappprobe.o"
-# Executable behavioral probes share the identical guest module/link boundary.
-for probe in GuestBoundaryTests LaunchProbe FuziProbe; do
-    compile_app_module "$probe" "$OUT/$probe.o" "$W/full/focus-ios/$probe.swift"
-    link_app_executable "$OUT/$probe" "$OUT/$probe.o"
-done
-
-
-compile_app_module BrowserInkProbe "$OUT/BrowserInkProbe.o" \
-    "$W/full/focus-ios/BrowserInkProbe.swift" \
-    "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift"
-link_app_executable "$OUT/BrowserInkProbe" "$OUT/BrowserInkProbe.o" "$OUT/realappprobe.o"
-
-"${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
-    -L"$ROOTDIR/darwin/usr/lib" \
-    -L/usr/lib/swift -lswiftCore "$SWIFTCOMPAT" \
-    -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
-    "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
-    -o "$OUT/indexpath_identity_probe" \
-    "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
-    "${COMMON_LINK_OBJECTS[@]}"
+# The final executables are independent of each other (each probe emits its
+# own object/module and executable, and nothing here imports another probe),
+# so they build concurrently through run_jobs.
+build_final_executable() {
+    case "$1" in
+        render_full)
+            link_app_executable "$OUT/render_full" "$OUT/render_full.o" "$OUT/realappprobe.o" ;;
+        # Executable behavioral probes share the identical guest module/link boundary.
+        GuestBoundaryTests|LaunchProbe|FuziProbe)
+            compile_app_module "$1" "$OUT/$1.o" "$W/full/focus-ios/$1.swift"
+            link_app_executable "$OUT/$1" "$OUT/$1.o" ;;
+        BrowserInkProbe)
+            compile_app_module BrowserInkProbe "$OUT/BrowserInkProbe.o" \
+                "$W/full/focus-ios/BrowserInkProbe.swift" \
+                "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift"
+            link_app_executable "$OUT/BrowserInkProbe" "$OUT/BrowserInkProbe.o" "$OUT/realappprobe.o" ;;
+        indexpath_identity_probe)
+            "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
+                -L"$ROOTDIR/darwin/usr/lib" \
+                -L/usr/lib/swift -lswiftCore "$SWIFTCOMPAT" \
+                -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
+                "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" \
+                -o "$OUT/indexpath_identity_probe" \
+                "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
+                "${COMMON_LINK_OBJECTS[@]}" ;;
+        *) die "unknown final executable $1" ;;
+    esac
+}
+run_jobs build_final_executable render_full GuestBoundaryTests LaunchProbe \
+    FuziProbe BrowserInkProbe indexpath_identity_probe
 
 # Match SwiftPM's executable bundle metadata and stage Focus startup assets.
 # The guest Bundle reads a filesystem Info.plist rather than __TEXT metadata.

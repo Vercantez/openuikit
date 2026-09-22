@@ -100,6 +100,43 @@ public func UIGraphicsBeginImageContextWithOptions(_ size: CGSize, _ opaque: Boo
                                 scale: resolvedScale)
 }
 
+/// UIKit's `UIGraphicsBeginImageContext(_:)`: a transparent context at scale
+/// 1. iOS 26.1 (iososswallsprobe lens.imageContext.*): a 1×1 request yields a
+/// 1×1 image at scale 1.0 whose untouched pixel is (0,0,0,0).
+public func UIGraphicsBeginImageContext(_ size: CGSize) {
+    UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+}
+
+// MARK: - CGContext fill-colour state on the canvas
+//
+// UIKit hands app code a CGContext; OpenUIKit's is the Canvas. These are the
+// CGContext spellings of the implicit fill colour the context stack already
+// keeps (`UIColor.setFill()` writes the same slot). iOS 26.1: a fresh image
+// context fills with opaque black (lens.imageContext.defaultFillPixel
+// 0,0,0,255); after `setFillColor(red)` the pixel reads red.
+extension Canvas {
+    private var _graphicsState: UIGraphicsState? {
+        UIGraphics.stack.last { $0.canvas === self }
+    }
+
+    /// CGContext's `setFillColor(_:)`. Recorded in this canvas's entry of
+    /// the current-context stack; a canvas that is not on the stack keeps no
+    /// colour state and the call is ignored.
+    public func setFillColor(_ color: CGColor) {
+        _graphicsState?.fillColor = color
+    }
+
+    /// CGContext's `setStrokeColor(_:)` (same storage rule).
+    public func setStrokeColor(_ color: CGColor) {
+        _graphicsState?.strokeColor = color
+    }
+
+    /// CGContext's `fill(_:)` with the current fill colour (black by default).
+    public func fill(_ rect: CGRect) {
+        fill(rect: rect, color: _graphicsState?.fillColor ?? .black)
+    }
+}
+
 /// Snapshot the current legacy image context. Contexts installed with
 /// UIGraphicsPushContext are not image contexts and therefore return nil.
 public func UIGraphicsGetImageFromCurrentImageContext() -> UIImage? {
