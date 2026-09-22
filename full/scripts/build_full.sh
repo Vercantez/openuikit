@@ -501,6 +501,8 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/mathpatch.o" \
         "$W/full/shims/libsystem_math_compat.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
+    # posix_madvise (iOS-triple ICU), docs/agent_reports/ios-target-route.md.
+    "${CC[@]}" -O1 -c -o "$OUT/posixpatch.o" "$W/full/shims/libsystem_posix_compat.c"
     clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/cxxpatch.o" "$W/spike/cxxpatch.cpp"
@@ -510,7 +512,7 @@ done
 
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" \
+        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/posixpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
@@ -523,7 +525,7 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
+        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/posixpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
 
     # The umbrella must DEFINE the symbols that are its whole reason to exist.
@@ -531,7 +533,7 @@ done
     # used to be __NSGetMachExecuteHeader; that moved into machorun's libSystem
     # (darwin/src/objcsupport.c). A definition here would beat libSystem.real,
     # so the umbrella must NOT define it.
-    for sym in _nan _remquo; do
+    for sym in _nan _remquo _posix_madvise; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
             | awk -v s="$sym" '$NF==s{f=1} END{exit !f}' || {
             echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
@@ -634,7 +636,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
-    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\n'
+    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo,_posix_madvise\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\tfull/shims/libsystem_posix_compat.c\n'
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'
