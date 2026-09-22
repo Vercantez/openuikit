@@ -191,4 +191,15 @@ simplenote-objc-core named, still open). SimplenoteFoundation now compiles its i
 
 ## Validation
 
-VALIDATION_PLACEHOLDER
+| check | result |
+|---|---|
+| `CHECK_ONLY=1 ALLOW_PATHS='^full/(iostarget/|scripts/build_full\.sh$|shims/(libsystem_posix_compat|ios_availability)\.c$|xcodeplan/stage_true_ios_full_sdk\.sh$)' uikit/scripts/agent_merge.sh agent/ios-target-route` (after merging main `d48096f4`) | `124/124 scenes pass`, `GUEST_ROUTE_CHECK_OK`, Linux build, **`checks passed (CHECK_ONLY)`**. (A first run with `ALLOW_STALE_GOLDENS="Forms Tabs"` was refused because those sets are now fresh; the run without it passed.) |
+| `scripts/ops/local_guest_verify.sh` (macOS-triple guest, full Mach-O path) | `FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController`, `rendered 15 screens; existing screens byte-identical 14/14 (including Ledger)`, **`REAL-APP SCREEN VERIFIED ON LINUX`** |
+| `full/iostarget/ios_guest.sh` (iOS-triple guest) | `POSIX_MADVISE_MATCHES_DARWIN`, `IOS_TARGET_PROBE_MATCHES_IOS_26_1 lines=14`, `FOCUS_REAL_APPDELEGATE_LAUNCHED`, `byte-identical 14/14`, **`IOS_TARGET_GUEST_VERIFIED target=arm64-apple-ios26.0-simulator`** |
+| `uikit/Tools/iostarget/run_probe.sh` (route b, simulator) | **`IOS_TARGET_PROBE_VERIFIED trace=52 lines identical to iOS 26.1 UIKit`** |
+| ingest tests (`LADDER_CORPUS=…`) | 96 passed |
+| `full/xcodeplan/tests -k "true_ios or build_full"` | 48 passed |
+| `swift test --filter "TableViewBatchUpdatesTests|ObjCSubclassingTests|OpenUIKitObjCBridgeTests"` (after merge) | 19/19 |
+| corpus / pins | no vendored or pin file edited. `machorun/` edits were reverted, because machorun is pinned; the fix moved to the full/ umbrella. For about a minute there were six stray entries in `scratch/ladder-corpus/ios-oss` (see Risks); they were removed |
+| push | `origin/agent/ios-target-route` |
+
