@@ -1,0 +1,382 @@
+{
+ "date": "2026-09-22",
+ "spec": "docs/agent_reports/ios-oss-launch2-chain.json",
+ "committed_state": {
+  "base": "agent/ios-oss-walls b5496afe",
+  "targets": {
+   "Statsig": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "FirebaseCore": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "FirebaseAnalytics": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "FirebaseCrashlytics": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "FirebaseRemoteConfig": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Firebase": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "FacebookCore": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "FacebookLogin": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "StripePayments": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "StripeApplePay": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Stripe": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "StripePaymentSheet": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "BrazeKit": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "BrazeUI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Segment": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "SegmentBrazeUI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "AlamofireImage": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Prelude": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "ReactiveSwift": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "SwiftSoup": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "ApolloAPI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Apollo": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "GraphAPI": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "ReactiveExtensions": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Prelude_UIKit": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Experimentation": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "KDS": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "KsApi": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Kingfisher": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "KingfisherWebP": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "Lottie": {
+    "status": "passed",
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "errors": []
+   },
+   "ServerDrivenUI": {
+    "status": "failed",
+    "own_errors": 12,
+    "dependency_errors": 0,
+    "errors": [
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 41,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 41,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 48,
+      "msg": "cannot convert value of type 'Font' (aka '_OpenFont') to expected argument type 'AttributeScopes.SwiftUIAttributes.FontAttribute.Value' (aka 'Font')"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 50,
+      "msg": "cannot convert value of type 'Font' (aka '_OpenFont') to expected argument type 'AttributeScopes.SwiftUIAttributes.FontAttribute.Value' (aka 'Font')"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 52,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 52,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 54,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 54,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 56,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 56,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 58,
+      "msg": "cannot assign to property: subscript is get-only"
+     },
+     {
+      "file": "ServerDrivenUI/Blocks/TextBlock.swift",
+      "line": 58,
+      "msg": "no 'font' candidates produce the expected contextual result type 'AttributeContainer.Builder<AttributeScopes.SwiftUIAttributes.FontAttribute>'"
+     }
+    ]
+   },
+   "Library": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 12,
+    "errors": []
+   },
+   "Kickstarter_Framework": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 12,
+    "errors": []
+   },
+   "KickstarterApp": {
+    "status": "blocked by dependency",
+    "own_errors": 0,
+    "dependency_errors": 12,
+    "errors": []
+   }
+  }
+ },
+ "experiment_E": {
+  "what": "NOT committed: OpenUIKit without `import AppKit` (IndexPath item/section declared @_disfavoredOverload, UIResponder.awakeFromNib fresh) and SwiftUI TextAttributes without the !canImport(SwiftUICore) guard; the second row adds a generated module-local NSAttributedString alias file to Library. Measures what lies behind the macOS AppKit leak.",
+  "library_without_alias": {
+   "status": "failed",
+   "own_errors": 16,
+   "dependency_errors": 0,
+   "errors": [
+    {
+     "file": "Library/Library/String+SimpleHTML.swift",
+     "line": 8,
+     "msg": "'NSAttributedString' is ambiguous for type lookup in this context"
+    },
+    {
+     "file": "Library/Library/String+Attributed.swift",
+     "line": 4,
+     "msg": "'NSAttributedString' is ambiguous for type lookup in this context"
+    },
+    {
+     "file": "Library/Library/String+Attributed.swift",
+     "line": 4,
+     "msg": "'NSAttributedString' is ambiguous for type lookup in this context"
+    },
+    {
+     "file": "Library/Library/String+Attributed.swift",
+     "line": 4,
+     "msg": "'NSAttributedString' is ambiguous for type lookup in this context"
+    },
+    {
+     "file": "Library/Library/Tracking/KSRAnalytics.swift",
+     "line": 1573,
+     "msg": "cannot find type 'UNAuthorizationStatus' in scope"
+    },
+    {
+     "file": "Library/Library/OnboardingViewModel.swift",
+     "line": 95,
+     "msg": "cannot infer contextual base in reference to member 'onboardingNotificationsDialog'"
+    },
+    {
+     "file": "Library/Library/PaddingLabel.swift",
+     "line": 8,
+     "msg": "method does not override any method from its superclass"
+    },
+    {
+     "file": "Library/Library/PaddingLabel.swift",
+     "line": 9,
+     "msg": "value of type 'UILabel' has no member 'drawText'"
+    },
+    {
+     "file": "Library/Library/PagedContainer/PagedContainerViewController.swift",
+     "line": 56,
+     "msg": "property does not override any property from its superclass"
+    },
+    {
+     "file": "Library/Library/PagedContainer/PagedContainerViewController.swift",
+     "line": 35,
+     "msg": "value of type 'UIView' has no member 'maximumContentSizeCategory'"
+    },
+    {
+     "file": "Library/Library/PagedContainer/PagedContainerViewController.swift",
+     "line": 35,
+     "msg": "cannot infer contextual base in reference to member 'medium'"
+    },
+    {
+     "file": "Library/Library/PagedContainer/PagedTabBar.swift",
+     "line": 83,
+     "msg": "type 'Text' (aka '_OpenText') has no member 'TruncationMode'"
+    },
+    {
+     "file": "Library/Library/PaginatingList.swift",
+     "line": 48,
+     "msg": "generic parameter 'Content' could not be inferred"
+    },
+    {
+     "file": "Library/Library/PaginatingList.swift",
+     "line": 48,
+     "msg": "extra arguments at positions #1, #2 in call"
+    },
+    {
+     "file": "Library/Library/PaginatingList.swift",
+     "line": 48,
+     "msg": "missing argument for parameter 'content' in call"
+    },
+    {
+     "file": "Library/Library/ProjectActivityItemProvider.swift",
+     "line": 13,
+     "msg": "overriding non-open instance method outside of its defining module"
+    }
+   ]
+  },
+  "library_with_alias": {
+   "status": "failed",
+   "own_errors": 1,
+   "dependency_errors": 0,
+   "errors": [
+    {
+     "file": "Library/Library/NumberFormatter.swift",
+     "line": 14,
+     "msg": "method does not override any method from its superclass"
+    }
+   ]
+  }
+ }
+}
