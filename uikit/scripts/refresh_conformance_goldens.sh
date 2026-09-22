@@ -61,18 +61,26 @@ for ax in "${AXES[@]}"; do
   SETS+=("$set")
   d=$WORK/$set
   if [ -z "${REFRESH_WORKDIR:-}" ]; then
-    for attempt in 1 2; do
+    # a loaded simulator drops frames: a short set (flow exit 4) is retried,
+    # never written (REFRESH_ATTEMPTS, default 3)
+    want=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["captures"]))' "Sources/ConformanceApps/$APP/script.json")
+    attempt=1
+    while :; do
       rm -rf "$d"
       echo "==> capture $set (attempt $attempt)"
-      CONFORMANCE_PREBUILT=1 bash scripts/conformance_flow.sh "$d" "$APP" $flag > "$d.log" 2>&1 \
-        || { echo "CONFORMANCE FLOW FAILED: $set (see $d.log)"; exit 9; }
+      rc=0; CONFORMANCE_PREBUILT=1 bash scripts/conformance_flow.sh "$d" "$APP" $flag > "$d.log" 2>&1 || rc=$?
       g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
-      [ "$g" = "$o" ] && [ "$g" -gt 0 ] && break
-      echo "   $set: golden $g frame(s) vs ours $o"
-      [ "$attempt" = 2 ] && { echo "RECAPTURE INCOMPLETE: $set"; exit 9; }
+      [ "$rc" = 0 ] && [ "$g" = "$want" ] && [ "$o" = "$want" ] && break
+      [ "$rc" = 0 ] || [ "$rc" = 4 ] || { echo "CONFORMANCE FLOW FAILED: $set (exit $rc, see $d.log)"; exit 9; }
+      echo "   $set: short capture — golden $g, ours $o of $want frame(s)"
+      [ "$attempt" -ge "${REFRESH_ATTEMPTS:-3}" ] && { echo "RECAPTURE INCOMPLETE: $set after $attempt attempts; nothing written"; exit 9; }
+      attempt=$((attempt + 1))
     done
   fi
   [ -f "$d/summary.json" ] && [ -f "$d/golden/provenance.json" ] || { echo "$d: no summary.json / golden/provenance.json" >&2; exit 2; }
+  want=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["captures"]))' "Sources/ConformanceApps/$APP/script.json")
+  g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
+  [ "$g" = "$want" ] && [ "$o" = "$want" ] || { echo "$d: golden $g, ours $o of $want frame(s); nothing written" >&2; exit 9; }
 done
 
 echo "==> goldens/ios: replace ${SETS[*]} (only those manifest entries)"

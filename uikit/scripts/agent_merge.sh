@@ -32,8 +32,10 @@
 #     on the simulator. GATE_SERIAL=1 restores the one-at-a-time order.
 #   - GATE_WARM=1: persistent build caches (off by default; see the report).
 # Knobs: GATE_GOLDENS=tmp grades against the machine-local /tmp round captures
-# (the old route); ALLOW_STALE_GOLDENS="<set or App> ..." accepts named stale
-# or unpinned golden sets (said in the merge).
+# (the old route); ALLOW_STALE_GOLDENS="<set or App> ..." names golden sets
+# known stale (failing a golden check, or board rows not pinned yet): they are
+# rendered and reported, NOT graded, and listed in the merge message; naming a
+# set that is pinned and fresh is refused.
 set -e
 SELF=$(cd "$(dirname "$0")" && pwd -P)/$(basename "$0")
 cd "$(dirname "$0")/../.."          # monorepo root
@@ -63,7 +65,7 @@ drop_lock() {
   HAVE_LOCK=""
 }
 [[ -n "${CHECK_ONLY:-}" ]] || take_lock
-trap 'drop_lock' EXIT INT TERM HUP
+trap 'drop_lock' EXIT; trap 'exit 130' INT TERM HUP
 ROOT=$(pwd)
 NAME=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
@@ -207,13 +209,16 @@ SIM_LOCK=/tmp/conformance_sim.lock
 HAVE_SIM=""
 killtree() { local c; for c in $(pgrep -P "$1" 2>/dev/null); do killtree "$c"; done; kill "$1" 2>/dev/null || true; }
 cleanup() {
+  local rc=$?; set +e   # never let a cleanup failure replace the verdict (a failing
+                        # git in the old trap turned exit 9 into 128)
   for p in $BG_PIDS; do killtree "$p"; done
   docker rm -f "gate-linux-$$" >/dev/null 2>&1 || true
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; fi
   if [ -n "${SLOT_LOCK:-}" ]; then rm -rf "$SLOT_LOCK"; fi
   git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; drop_lock
+  exit $rc
 }
-trap cleanup EXIT INT TERM HUP
+trap cleanup EXIT; trap 'exit 130' INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 WT_TREE=$(git -C "$WT" write-tree)
 STAMP_OK=1
@@ -343,7 +348,7 @@ if [ "$GOLDENS" = committed ]; then
   fi
 fi
 rm -rf $S/app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp $S/app >/dev/null
-python3 Tools/compare/compare_realapp.py --golden "$REALAPP_GOLDEN" --out $S/app --scale 3 > $S/app-compare.txt 2>&1 || true
+python3 Tools/compare/compare_realapp.py --golden "$REALAPP_GOLDEN" --out $S/app --scale 3 > $S/app-compare.txt 2> $S/app-compare.err || true
 grep pixels $S/app-compare.txt | cut -c1-80
 GATE_S=$S python3 - <<'PY' || exit 6
 import os, re
@@ -407,12 +412,13 @@ def app_fingerprint(app):
         h.update(rel.encode() + b"\0" + sha(rel).encode() + b"\n")
     return h.hexdigest()
 def last_source_change(app):
-    t = subprocess.run(["git", "log", "-1", "--no-merges", "--format=%at", "HEAD", "MERGE_HEAD", "--",
+    revs = ["HEAD"] + (["MERGE_HEAD"] if subprocess.run(["git", "rev-parse", "-q", "--verify", "MERGE_HEAD"], capture_output=True).returncode == 0 else [])
+    t = subprocess.run(["git", "log", "-1", "--no-merges", "--format=%at", *revs, "--",
                         f"Sources/ConformanceApps/{app}"], capture_output=True, text=True).stdout.strip()
     return int(t) if t else 0
 import datetime
 def ts(iso): return datetime.datetime.strptime(iso, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=datetime.timezone.utc).timestamp()
-bad, notes = [], []
+bad, notes, unpinned = [], [], set()
 if mode == "committed" and "golden_realapp_ios" in man:
     info = man["golden_realapp_ios"]; d = "goldens/ios/golden_realapp_ios"
     have = set(n for n in os.listdir(d) if not n.startswith("."))
@@ -466,17 +472,32 @@ for set_, app, skip, *flag in plan:
     if wrong:
         bad.append((set_, app, f"BOARD-GOLDEN MISMATCH: {set_} {sorted(wrong)} were graded on the board against a different golden than the one here", fix))
     if len(pinned) < len(frames):
+        unpinned.add(set_)
         notes.append(f"   {set_}: {len(frames) - len(pinned)} board row(s) not pinned to a golden (no golden_sha): a drop there may be a stale golden, not a regression")
 for n in notes: print(n)
+# ALLOW_STALE_GOLDENS names sets (or Apps) whose goldens are known stale: they
+# are rendered and REPORTED, never graded (no drop allowance can hide a real
+# regression elsewhere). An entry may only name a set that fails a golden check
+# above or whose board rows are not pinned yet, so the stopgap cannot outlive
+# the refresh that fixes it.
+suspect = {b[0] for b in bad} | unpinned
+app_of = {p[0]: p[1] for p in plan}
+allowed = set()
+for tok in sorted(allow):
+    hit = {st for st in suspect if st == tok or app_of.get(st) == tok}
+    if not hit:
+        bad.append((tok, None, f"ALLOW_STALE_GOLDENS names {tok}, which is pinned and fresh (or not a set this gate grades): drop it from ALLOW_STALE_GOLDENS", "remove it from ALLOW_STALE_GOLDENS"))
+    allowed |= hit
 refuse = []
 for set_, app, msg, fix in bad:
-    if set_ in allow or (app and app in allow) or "all" in allow:
-        print(f"   {msg} — ALLOWED (ALLOW_STALE_GOLDENS)")
+    if set_ in allowed:
+        print(f"   {msg} — ALLOWED STALE (ALLOW_STALE_GOLDENS): rendered and reported, not graded")
     else:
         refuse.append(f"{msg}\n      fix: {fix}")
+open(f"{S}/allowed_stale.txt", "w").write("".join(f"{st}\n" for st in sorted(allowed)))
 if refuse:
     print("\n".join(refuse))
-    raise SystemExit(f"CONFORMANCE GOLDENS REFUSED: {len(refuse)} set(s) (ALLOW_STALE_GOLDENS=\"<set or App> ...\" accepts them, named in the merge)")
+    raise SystemExit(f"CONFORMANCE GOLDENS REFUSED: {len(refuse)} problem(s) (ALLOW_STALE_GOLDENS=\"<set or App> ...\" reports named stale sets instead of grading them; said in the merge)")
 PY
 seed() { # <set> <dir>: the goldens a set is graded against
   rm -rf "$2"
@@ -495,6 +516,7 @@ frames_complete() { # <dir> <skip> <flow args...>
   echo "   $d: golden $g frame(s) vs ours $o — recapturing once"
   rm -rf "$d"
   CONFORMANCE_PREBUILT=1 bash scripts/conformance_flow.sh "$d" "$@" > "$d.log" 2>&1 || { echo "CONFORMANCE FLOW FAILED on retry: $d"; return 1; }
+  touch "$d.retried"
   g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
   [ "$g" = "$o" ] || { echo "RECAPTURE INCOMPLETE: $d golden $g frame(s) vs ours $o"; return 1; }
 }
@@ -536,8 +558,12 @@ if [ -s $S/plan.txt ]; then
   # verdicts in the serial gate's order: first failing set decides the message
   while read -r set app skip flag; do
     d=$S/conf-${set#hc-conformance-}
-    [ "$(cat "$d.rc" 2>/dev/null)" = 0 ] || { echo "CONFORMANCE FLOW FAILED: $app${flag:+ $flag} (see $d.log)"; exit 9; }
+    rc=$(cat "$d.rc" 2>/dev/null || echo 1)
+    # rc 4 = a short set (conformance_flow.sh SHORT CAPTURE): the frame-count
+    # check below retries a short recapture once or refuses it by name
+    case $rc in 0|4) ;; *) echo "CONFORMANCE FLOW FAILED: $app${flag:+ $flag} (see $d.log)"; exit 9 ;; esac
     frames_complete "$d" "$([ "$skip" = 1 ] && echo 1)" $app $flag || exit 9
+    if [ "$rc" = 4 ] && ! [ -f "$d.retried" ]; then grep -h 'SHORT CAPTURE' "$d.log" | tail -1; echo "CONFORMANCE FLOW SHORT: $app${flag:+ $flag} (see $d.log)"; exit 9; fi
   done < $S/plan.txt
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; HAVE_SIM=""; fi
 fi
@@ -545,12 +571,18 @@ GATE_S=$S python3 - <<'PY' || exit 9
 import json, os, glob
 board = {r["scene"]: r for r in json.load(open("scoreboard/latest.json"))["rows"] if r["category"] == "conformance"}
 bad = []
-for d in sorted(glob.glob(os.environ['GATE_S'] + "/conf-*")):
+S = os.environ['GATE_S']
+stale = set(open(f"{S}/allowed_stale.txt").read().split()) if os.path.exists(f"{S}/allowed_stale.txt") else set()
+for d in sorted(glob.glob(S + "/conf-*")):
     if not os.path.isdir(d): continue
     s = json.load(open(os.path.join(d, "summary.json")))
+    set_ = "hc-conformance-" + os.path.basename(d)[len("conf-"):]
     for cap in s["captures"]:
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
+        if set_ in stale:
+            print(f"   {name}: {score:.3f} (board {row['score']:.3f}) ALLOWED STALE (not graded: {set_})")
+            continue
         hint = "" if row.get("golden_sha") else " [board row not pinned to a golden: may be a stale golden]"
         if score == 0.0:
             # 0.000 is not a fidelity score: a missing frame or a size mismatch
@@ -597,7 +629,9 @@ git checkout -q main && git fetch -q origin && git merge -q --ff-only origin/mai
   && NOW_TREE=$(git merge-tree --write-tree main "$BR" | head -1) \
   && { [ "$(git rev-parse "$NOW_TREE:uikit")" = "$(git rev-parse "$MERGED_TREE:uikit")" ] \
        || { echo "REFUSED: main's uikit/ moved since the check (origin/main advanced); rerun the gate"; exit 3; }; } \
-  && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" "$BR"
+  && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" \
+       ${ALLOW_STALE_GOLDENS:+-m "Allowed stale goldens, rendered and reported but NOT graded (ALLOW_STALE_GOLDENS): $ALLOW_STALE_GOLDENS"} \
+       ${ALLOW_DROP:+-m "Allowed drops (ALLOW_DROP): $ALLOW_DROP"} "$BR"
 OLD=$(grep -o 'EXPECTED_INREPO_UIKIT_TREE=[0-9a-f]*' scripts/vendor_pins.sh | cut -d= -f2); NEW=$(git rev-parse HEAD:uikit)
 sed -i "s/$OLD/$NEW/" scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 python3 scripts/env/test_contract.py 2>&1 | tail -1

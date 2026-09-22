@@ -1,5 +1,14 @@
 # Known gaps (living document — fixers: read this)
 
+## Pager-ipad t3133: real render change since the 2026-09-06 board (2026-09-22)
+
+`Pager-ipad:t3133` moved 99.961 -> 99.308 against a byte-identical golden
+(refresh_conformance_goldens.sh Pager ipad, agent/gate-speed): OpenUIKit's
+render of that mid-fling frame changed on main after the 2026-09-06 board. Still
+above the 97.5 bar; the board row is regraded and pinned (golden_sha) at
+99.308. Cause not yet bisected. (t500 / t3267 moved because their goldens
+changed: mid-fling frames differ between two simulator captures.)
+
 ## Scroll edge effects: what `UIScrollEdgeEffect` paints and what it only stores (2026-09-10)
 
 MEASURED `Tools/oracle2/scrolledgeeffectprobe` (iPhone 16 / iOS 26.1),

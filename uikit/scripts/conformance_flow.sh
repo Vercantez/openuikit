@@ -24,6 +24,11 @@
 #   scripts/conformance_flow.sh /tmp/conf-landscape NavFlow --landscape
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
 #
+# Exit 4: a short set — a capture in script.json has no golden or no render
+# (SHORT CAPTURE line names them). A short real-iOS capture stops before the
+# OpenUIKit replay (no summary.json); a short render still writes summary.json.
+# Exit 3: the simulator probe failed some other way (see <workdir>/probe.log).
+#
 # --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
 # openhost renders with idiom .pad, that window size, and the measured
 # pad safe area `[32, 0, 25, 0]` (same plumbing as realapp *_ipad).
@@ -104,14 +109,16 @@ if [ -z "${SKIP_CAPTURE:-}" ]; then
   if ! zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" > "$OUT/probe.log" 2>&1; then
     grep -E "SHORT CAPTURE|FAILED|conformance_probe_sim:" "$OUT/probe.log" | tail -5 >&2
     echo "conformance_flow.sh: real iOS capture FAILED for $APPNAME (see $OUT/probe.log)" >&2
+    # exit 4 = short set (callers retry or refuse it by name), 3 = other failure
+    if grep -q "SHORT CAPTURE" "$OUT/probe.log"; then echo "SHORT CAPTURE: $APPNAME (probe)"; exit 4; fi
     exit 3
   fi
   tail -1 "$OUT/probe.log"
   want=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["captures"]))' "$SCRIPT")
   got=$(ls "$OUT"/golden/*.png 2>/dev/null | wc -l | tr -d ' ')
   if [ "$got" != "$want" ]; then
-    echo "SHORT CAPTURE: $APPNAME golden has $got/$want frame(s) in $OUT/golden (see $OUT/probe.log)" >&2
-    exit 3
+    echo "SHORT CAPTURE: $APPNAME golden has $got/$want frame(s) in $OUT/golden (see $OUT/probe.log)"
+    exit 4
   fi
   # What the goldens were captured from (agent_merge.sh refuses a committed
   # set whose app sources changed since; goldens_snapshot.sh carries it).
@@ -248,6 +255,7 @@ def layout_problems(g, o, tol=compare.LAYOUT_TOL):
     return problems
 
 captures = []
+missing = []   # (name, have golden, have ours)
 for t in script["captures"]:
     name = suffix(t)
     d = f"{out}/report/{name}"
@@ -258,6 +266,7 @@ for t in script["captures"]:
     if not (os.path.exists(g) and os.path.exists(o)):
         open(f"{d}/report.txt", "w").write("missing golden or render\n")
         captures.append({"name": name, "score": 0.0, "blob": 0.0, "layout_issues": 1})
+        missing.append((name, os.path.exists(g), os.path.exists(o)))
         continue
     gdump, odump = json.load(open(gl)), json.load(open(ol))
     if scale is None:
@@ -307,5 +316,14 @@ json.dump(summary, open(f"{out}/summary.json", "w"), indent=1)
 scores = [c["score"] for c in captures]
 print(f"\n{app} ({style}/{direction}/{content_size}/{orientation}): {len(captures)} capture(s), worst {min(scores):.3f}, "
       f"mean {sum(scores) / len(scores):.3f}")
+# A short capture (a loaded simulator drops frames: 3-6 of 7-8 goldens, and the
+# flow used to exit 0 scoring the rest 0.0) is a failed run, not a score:
+# exit 4 so callers retry or refuse it. summary.json is still written.
+if missing:
+    n = len(script["captures"])
+    print(f"SHORT CAPTURE: {len(missing)} of {n} capture(s) missing "
+          f"(golden {n - sum(1 for m in missing if not m[1])}/{n}, ours {n - sum(1 for m in missing if not m[2])}/{n}): "
+          + ", ".join(m[0] for m in missing))
+    sys.exit(4)
 PY
 echo "reports: $OUT/report/<t>/{sheet,diff,golden,ours}.png + report.txt; $OUT/summary.json"
