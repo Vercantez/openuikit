@@ -56,7 +56,10 @@ public final class GlyphFont {
         bytes.withUnsafeBufferPointer { data.update(from: $0.baseAddress!, count: bytes.count) }
         let offset = stbtt_GetFontOffsetForIndex(data, 0)
         guard offset >= 0, stbtt_InitFont(&info, data, offset) != 0 else {
-            data.deallocate()
+            // Every stored property is initialised here, so returning nil
+            // still runs `deinit`, which frees `data`. Freeing it here as
+            // well was a double free (found registering a font file that
+            // stb_truetype rejects: SIGABRT in GlyphFont.deinit).
             return nil
         }
         variations = FontVariations(bytes: data, count: count, fontOffset: Int(offset))
@@ -82,6 +85,19 @@ public final class GlyphFont {
         var lsb: Int32 = 0
         stbtt_GetGlyphHMetrics(&info, g, &adv, &lsb)
         return CGFloat(adv) * emScale(forPixels: pointSize)
+    }
+
+    /// Top of a glyph's bounding box in font units (default instance), or nil
+    /// when the font has no such glyph.
+    func glyphTop(of scalar: Unicode.Scalar, coordsKey: Int = 0) -> Double? {
+        let g = glyphIndex(of: scalar)
+        guard g != 0 else { return nil }
+        if coordsKey != 0, let verts = instancedOutline(glyph: g, coordsKey: coordsKey), !verts.isEmpty {
+            return Double(verts.map { Int($0.y) }.max() ?? 0)
+        }
+        var x0: Int32 = 0, y0: Int32 = 0, x1: Int32 = 0, y1: Int32 = 0
+        guard stbtt_GetGlyphBox(&info, g, &x0, &y0, &x1, &y1) != 0 else { return nil }
+        return Double(y1)
     }
 
     /// Register a normalized coordinate set, returning its cache key (0 = default).
@@ -396,6 +412,12 @@ public enum GlyphRasterizer {
 
     /// Best available font file + variation instance for the given UIFont.
     public static func font(for font: UIFont) -> InstancedGlyphFont? {
+        if let face = font._registeredFace {
+            // A registered (CTFontManager) face: its own file, at its named
+            // instance's fvar coordinates.
+            guard let gf = load([face.path]) else { return nil }
+            return InstancedGlyphFont(font: gf, coordsKey: face.coordsKey(in: gf, pointSize: font.pointSize))
+        }
         let overrides = OpenUIKitRuntime.fontPaths
         var paths: [String] = []
         switch font.design {

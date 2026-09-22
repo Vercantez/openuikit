@@ -2837,6 +2837,25 @@ public extension _OpenView {
         )
     }
 
+    /// SwiftUI's `background(_:ignoresSafeAreaEdges:)` (iOS 15): fill the
+    /// view's bounds behind it with a shape style. Disfavoured so a `Color`
+    /// argument keeps resolving to the view overload above; an implicit
+    /// member such as `.background(.white)` (KDS ColorsView.swift:198) can
+    /// only mean this one. The safe-area extension is not modelled: the fill
+    /// covers the view's own bounds.
+    @_disfavoredOverload
+    func background<Style: ShapeStyle>(
+        _ style: Style,
+        ignoresSafeAreaEdges edges: _OpenEdge.Set = .all
+    ) -> some _OpenView {
+        let color = style._openResolvedForegroundColor()
+        let node = _OpenViewNode(.roundedRectangle(cornerRadius: 0, style: .fill(color)))
+        return _OpenModifiedContent(
+            content: self,
+            modification: .background({ node }, alignment: .center)
+        )
+    }
+
     func background<Style: ShapeStyle, S: Shape>(
         _ style: Style,
         in shape: S

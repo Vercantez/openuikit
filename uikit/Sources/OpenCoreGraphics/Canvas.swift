@@ -27,14 +27,41 @@ import Foundation
 
 public struct CGColor: Equatable, Sendable {
     public var red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat
+    /// True for a colour in a gray colour space (two components). The
+    /// renderer only ever reads the RGBA fields; this decides what
+    /// `numberOfComponents` / `components` report. MEASURED iPhone 16 /
+    /// iOS 26.1 (ios-oss-launch2 iososswallsprobe `cgcolor.*`):
+    /// `UIColor(white:alpha:)`, `.white`, `.black`, `.clear`, `.gray`,
+    /// `CGColor(gray:alpha:)` and a handful of semantic colours are gray.
+    public var isGrayModel: Bool = false
     public init(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         self.red = red; self.green = green; self.blue = blue; self.alpha = alpha
+    }
+    /// CoreGraphics' `CGColor(gray:alpha:)`.
+    public init(gray: CGFloat, alpha: CGFloat) {
+        self.red = gray; self.green = gray; self.blue = gray; self.alpha = alpha
+        self.isGrayModel = true
+    }
+    /// Equality compares the colour VALUE only. Apple's CGColor equality
+    /// also compares colour spaces (gray white != RGB white, measured); the
+    /// renderer's colour comparisons predate the model and stay value-based.
+    public static func == (lhs: CGColor, rhs: CGColor) -> Bool {
+        lhs.red == rhs.red && lhs.green == rhs.green && lhs.blue == rhs.blue && lhs.alpha == rhs.alpha
+    }
+    /// 2 for a gray colour (white, alpha), 4 for RGB (r, g, b, a).
+    public var numberOfComponents: Int { isGrayModel ? 2 : 4 }
+    /// The colour's components in its own space (iOS 26.1: white is
+    /// [1, 1], an sRGB red is [1, 0, 0, 1]).
+    public var components: [CGFloat]? {
+        isGrayModel ? [red, alpha] : [red, green, blue, alpha]
     }
     public static let clear = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
     public static let black = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public static let white = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
     public func withAlpha(_ a: CGFloat) -> CGColor {
-        CGColor(red: red, green: green, blue: blue, alpha: alpha * a)
+        var c = CGColor(red: red, green: green, blue: blue, alpha: alpha * a)
+        c.isGrayModel = isGrayModel
+        return c
     }
 }
 
