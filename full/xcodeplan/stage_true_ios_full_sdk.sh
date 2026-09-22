@@ -47,6 +47,10 @@ SDK_MODULES=(
     _Builtin_float
     _Concurrency
     _StringProcessing
+    # SwiftUI re-exports Observation (uikit/Sources/SwiftUI/State.swift);
+    # without it build_full stops at "no such module 'Observation'" for an
+    # iOS TARGET (docs/agent_reports/ios-target-route.md).
+    Observation
 )
 APPLE_USER_MODULES=(
     Darwin
@@ -96,6 +100,7 @@ RUNTIME_TBDS=(
     libswift_Concurrency.tbd
     libswift_RegexParser.tbd
     libswift_StringProcessing.tbd
+    libswiftObservation.tbd
 )
 for tbd_name in "${RUNTIME_TBDS[@]}"; do
     source_file="$IOS_SDK/usr/lib/swift/$tbd_name"
