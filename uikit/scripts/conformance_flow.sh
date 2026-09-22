@@ -98,7 +98,21 @@ if [ -z "${SKIP_CAPTURE:-}" ]; then
   PROBE_ARGS=("$APPNAME" "$OUT/golden")
   if [ "$IPAD" -eq 1 ]; then PROBE_ARGS+=(--ipad); fi
   if [ "$ORIENTATION" = landscape ]; then PROBE_ARGS+=(--landscape); fi
-  zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" | tail -1
+  # The probe's full console goes to probe.log; its exit status is the
+  # run's (a `| tail -1` pipe used to discard it, so a failed or short
+  # capture carried on into compare with frames missing).
+  if ! zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" > "$OUT/probe.log" 2>&1; then
+    grep -E "SHORT CAPTURE|FAILED|conformance_probe_sim:" "$OUT/probe.log" | tail -5 >&2
+    echo "conformance_flow.sh: real iOS capture FAILED for $APPNAME (see $OUT/probe.log)" >&2
+    exit 3
+  fi
+  tail -1 "$OUT/probe.log"
+  want=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["captures"]))' "$SCRIPT")
+  got=$(ls "$OUT"/golden/*.png 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$got" != "$want" ]; then
+    echo "SHORT CAPTURE: $APPNAME golden has $got/$want frame(s) in $OUT/golden (see $OUT/probe.log)" >&2
+    exit 3
+  fi
   # What the goldens were captured from (agent_merge.sh refuses a committed
   # set whose app sources changed since; goldens_snapshot.sh carries it).
   python3 Tools/compare/conformance_provenance.py write "$OUT/golden" "$APPNAME"
