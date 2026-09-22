@@ -26,4 +26,18 @@ void cpio_mutex_destroy(void *mutex);
 void cpio_mutex_lock(void *mutex);
 void cpio_mutex_unlock(void *mutex);
 
+/* NSTextStorage.EditActions for the Apple-toolchain NSTextStorage, which is
+   an Objective-C class (OpenUIKit/NSTextStorage.swift): its edited mask must
+   be an Objective-C type, and Swift cannot declare an Objective-C option set.
+   Same raw values as iOS 26.1's NSTextStorageEditActions. The C name is
+   distinct so it never meets AppKit's NSTextStorageEditActions on the macOS
+   host; Objective-C sources spell the SDK names through UIKitObjCSupport.h.
+   Clang on Apple targets only; unused by the builds that keep the portable NSTextStorage. */
+#if defined(__clang__) && defined(__APPLE__)
+typedef enum __attribute__((flag_enum, enum_extensibility(open))) OUKTextStorageEditActions : unsigned long {
+    OUKTextStorageEditedAttributes __attribute__((swift_name("editedAttributes"))) = (1 << 0),
+    OUKTextStorageEditedCharacters __attribute__((swift_name("editedCharacters"))) = (1 << 1),
+} OUKTextStorageEditActions;
+#endif
+
 #endif

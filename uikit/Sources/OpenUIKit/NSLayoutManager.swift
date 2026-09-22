@@ -116,6 +116,17 @@ open class NSLayoutManager: NSObject {
         actualRange?.pointee = charRange
     }
 
+    /// Called by the text storage after its didProcessEditing callbacks
+    /// (measured order, Tools/oracle2/textstorageprobe). Invalidates the
+    /// layout of the edited range.
+    open func processEditing(for textStorage: NSTextStorage,
+                             edited editMask: NSTextStorage.EditActions,
+                             range newCharRange: NSRange,
+                             changeInLength delta: Int,
+                             invalidatedRange invalidatedCharRange: NSRange) {
+        invalidateLayout(forCharacterRange: invalidatedCharRange, actualCharacterRange: nil)
+    }
+
     open func invalidateDisplay(forCharacterRange charRange: NSRange) {
         valid = false
     }

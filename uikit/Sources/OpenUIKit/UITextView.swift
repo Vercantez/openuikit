@@ -875,8 +875,11 @@ extension UITextView {
     func _applyingLinkAttributes(_ a: NSAttributedString) -> NSAttributedString {
         guard !linkTextAttributes.isEmpty else { return a }
         var hasLink = false
-        a.enumerateAttribute(.link, in: NSRange(location: 0, length: a.length)) { v, _, stop in
-            if v != nil { hasLink = true; stop = true }
+        // No early stop: the stop parameter's type differs between
+        // Foundation's NSAttributedString (Apple toolchain) and the portable
+        // one, and the scan is linear either way.
+        a.enumerateAttribute(.link, in: NSRange(location: 0, length: a.length)) { v, _, _ in
+            if v != nil { hasLink = true }
         }
         guard hasLink else { return a }
         let m = NSMutableAttributedString(attributedString: a)
