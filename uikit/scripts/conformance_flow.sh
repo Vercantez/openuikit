@@ -25,7 +25,9 @@
 #   SKIP_CAPTURE=1 scripts/conformance_flow.sh /tmp/conf NavFlow
 #
 # Exit 4: a short set — a capture in script.json has no golden or no render
-# (SHORT CAPTURE line names them); summary.json is still written.
+# (SHORT CAPTURE line names them). A short real-iOS capture stops before the
+# OpenUIKit replay (no summary.json); a short render still writes summary.json.
+# Exit 3: the simulator probe failed some other way (see <workdir>/probe.log).
 #
 # --ipad captures on a private "iPad (A16)" (820×1180 @2x portrait) and
 # openhost renders with idiom .pad, that window size, and the measured
@@ -101,7 +103,23 @@ if [ -z "${SKIP_CAPTURE:-}" ]; then
   PROBE_ARGS=("$APPNAME" "$OUT/golden")
   if [ "$IPAD" -eq 1 ]; then PROBE_ARGS+=(--ipad); fi
   if [ "$ORIENTATION" = landscape ]; then PROBE_ARGS+=(--landscape); fi
-  zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" | tail -1
+  # The probe's full console goes to probe.log; its exit status is the
+  # run's (a `| tail -1` pipe used to discard it, so a failed or short
+  # capture carried on into compare with frames missing).
+  if ! zsh scripts/conformance_probe_sim.sh "${PROBE_ARGS[@]}" > "$OUT/probe.log" 2>&1; then
+    grep -E "SHORT CAPTURE|FAILED|conformance_probe_sim:" "$OUT/probe.log" | tail -5 >&2
+    echo "conformance_flow.sh: real iOS capture FAILED for $APPNAME (see $OUT/probe.log)" >&2
+    # exit 4 = short set (callers retry or refuse it by name), 3 = other failure
+    if grep -q "SHORT CAPTURE" "$OUT/probe.log"; then echo "SHORT CAPTURE: $APPNAME (probe)"; exit 4; fi
+    exit 3
+  fi
+  tail -1 "$OUT/probe.log"
+  want=$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["captures"]))' "$SCRIPT")
+  got=$(ls "$OUT"/golden/*.png 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$got" != "$want" ]; then
+    echo "SHORT CAPTURE: $APPNAME golden has $got/$want frame(s) in $OUT/golden (see $OUT/probe.log)"
+    exit 4
+  fi
   # What the goldens were captured from (agent_merge.sh refuses a committed
   # set whose app sources changed since; goldens_snapshot.sh carries it).
   python3 Tools/compare/conformance_provenance.py write "$OUT/golden" "$APPNAME"

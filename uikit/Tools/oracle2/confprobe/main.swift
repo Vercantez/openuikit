@@ -447,6 +447,23 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     var motionAxisX = true
     var motionIndex = 0
     var lastCurN = 0
+    /// A keyboard-up capture waiting on the shell watcher's framebuffer
+    /// screenshot (NEED_SHOT / GOT_SHOT). The main thread is NOT blocked:
+    /// the timeline pauses on the display link until GOT_SHOT, then the
+    /// pause is added to `startedAt` so every later scripted action keeps
+    /// its scripted gap to this capture. MEASURED (probe-keyboard-capture,
+    /// iPhone SE 2x / iOS 26.1): the first `simctl io screenshot` of a run
+    /// took 2.6-10+ s; the old blocking wait (10 s cap) stalled the link
+    /// and the next tick fired every overdue action at once (Forms
+    /// type/toggle/slide all at frame 245, or all five at frame 690), each
+    /// overwriting the previous action's armed capture: t2100..t4800 lost.
+    var pendingShot: (pngName: String, rotate: Bool, since: CFTimeInterval,
+                      then: (() -> Void)?)?
+    var pausedForShots: CFTimeInterval = 0
+    /// PNG names actually written, checked against the script at finish:
+    /// a short capture is a failed run (DONE != ok), never a silent one.
+    var writtenPNGs: Set<String> = []
+    var timelineErrors: [String] = []
 
     func application(_ app: UIApplication,
                      didFinishLaunchingWithOptions o: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -624,11 +641,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             startedAt = l.timestamp
             lastActionTimestamp = l.timestamp
         }
+        if pendingShot != nil {
+            pollFramebufferShot(link: l)
+            return
+        }
         // Media frame, not callback count. A 40 ms drawHierarchy stall after
         // t900 used to be counted as one tick while CA advanced two vsyncs;
         // the mid-flight sample then walked 0.12–0.15 s of spring.
         let frame = Int(((l.timestamp - startedAt) * Double(ConformanceClock.hz)).rounded())
         if frame == lastServicedFrame { return }
+        if lastServicedFrame >= 0, frame - lastServicedFrame > 30 {
+            print("confprobe: WARNING clock jumped \(lastServicedFrame) -> \(frame)")
+        }
         lastServicedFrame = frame
         frameIndex = frame
         if l.duration > 0.020 {
@@ -652,6 +676,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                 if let w = window {
                     collectScrollPOffsets(w, into: &scrollRestOffsets)
                 }
+                for dropped in armedAfterAction {
+                    timelineErrors.append("t=\(dropped.t) still armed when \(action) fired at frame \(frame)")
+                }
                 if let list = capturesByActionFrame[entry.frame] {
                     armedAfterAction = list
                     springBegin = nil
@@ -661,6 +688,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                 capture(at: t, frame: frame, link: l, sampleElapsed: nil, springBegin: nil)
             }
             cursor += 1
+            if pendingShot != nil { return }
         }
         // Post-action captures: seek mid-flight to spring begin+N/60;
         // tick-updated scrolls (Pager page-next / fling) invert the cosine
@@ -747,10 +775,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                     let elapsed = Double(next.frames) / Double(ConformanceClock.hz)
                     freezeLayer(w.layer, at: origin + elapsed)
                     CATransaction.flush()
-                    capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
-                            sampleElapsed: elapsed, springBegin: origin)
-                    unfreezeLayer(w.layer)
                     armedAfterAction.removeFirst()
+                    capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
+                            sampleElapsed: elapsed, springBegin: origin,
+                            then: { unfreezeLayer(w.layer) })
+                    if pendingShot != nil { return }
                     continue
                 }
                 if next.seek {
@@ -772,10 +801,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                         } else if curN < next.frames {
                             break
                         }
+                        armedAfterAction.removeFirst()
                         capture(at: next.t, frame: lastActionFrame + next.frames, link: l,
                                 sampleElapsed: Double(next.frames) / Double(ConformanceClock.hz),
                                 springBegin: nil)
-                        armedAfterAction.removeFirst()
+                        if pendingShot != nil { return }
                         continue
                     }
                     let giveUp = lastActionTimestamp
@@ -785,9 +815,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
                 let due = lastActionTimestamp
                     + Double(next.frames) / Double(ConformanceClock.hz)
                 if l.timestamp + 1e-4 < due { break }
+                armedAfterAction.removeFirst()
                 capture(at: next.t, frame: frame, link: l,
                         sampleElapsed: nil, springBegin: nil)
-                armedAfterAction.removeFirst()
+                if pendingShot != nil { return }
             }
         }
         if cursor >= timeline.count, armedAfterAction.isEmpty {
@@ -882,29 +913,75 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 /// UIKeyInput capture therefore takes a `simctl io screenshot` via the
 /// NEED_SHOT / GOT_SHOT handshake in conformance_probe_sim.sh, then the
 /// same sRGB re-encode. Unfocused captures stay drawHierarchy so they do
-/// not move.
-func waitForFramebufferShot(named pngName: String) -> UIImage? {
-    let needPath = docsDir + "/NEED_SHOT"
-    let gotPath = docsDir + "/GOT_SHOT"
-    let shotPath = docsDir + "/" + pngName
-    try? FileManager.default.removeItem(atPath: gotPath)
-    try? pngName.write(toFile: needPath, atomically: true, encoding: .utf8)
-    var img: UIImage?
-    for _ in 0..<200 {
-        if FileManager.default.fileExists(atPath: gotPath) {
-            img = UIImage(contentsOfFile: shotPath)
-            break
+/// not move. The handshake is asynchronous (see `pendingShot`): a slow
+/// screenshot pauses the script; it can no longer collapse it.
+func requestFramebufferShot(named pngName: String, rotate: Bool,
+                            link l: CADisplayLink, then: (() -> Void)?) {
+    try? FileManager.default.removeItem(atPath: docsDir + "/GOT_SHOT")
+    try? pngName.write(toFile: docsDir + "/NEED_SHOT", atomically: true, encoding: .utf8)
+    pendingShot = (pngName, rotate, l.timestamp, then)
+}
+
+func pollFramebufferShot(link l: CADisplayLink) {
+    guard let p = pendingShot else { return }
+    let waited = l.timestamp - p.since
+    if !FileManager.default.fileExists(atPath: docsDir + "/GOT_SHOT") {
+        if waited > 90 {
+            pendingShot = nil
+            fail("framebuffer shot \(p.pngName) timed out after \(Int(waited)) s")
         }
-        Thread.sleep(forTimeInterval: 0.05)
+        return
     }
-    try? FileManager.default.removeItem(atPath: gotPath)
-    try? FileManager.default.removeItem(atPath: needPath)
-    return img
+    pendingShot = nil
+    try? FileManager.default.removeItem(atPath: docsDir + "/GOT_SHOT")
+    try? FileManager.default.removeItem(atPath: docsDir + "/NEED_SHOT")
+    guard let shot = UIImage(contentsOfFile: docsDir + "/" + p.pngName) else {
+        fail("framebuffer shot \(p.pngName) unreadable")
+        return
+    }
+    // NEED_SHOT writes the raw framebuffer. LandscapeLeft is a
+    // portrait-sized PNG until we rotate (rotateScreenshot90CW).
+    var img = shot
+    if p.rotate, let cg = shot.cgImage, cg.width < cg.height {
+        img = rotateScreenshot90CW(shot)
+    }
+    writePNG(img, named: p.pngName)
+    // Resume the script clock where it paused: `frame` continues from the
+    // capture's frame, so the next action is its scripted gap after this
+    // capture. lastActionTimestamp / springBegin stay real media time
+    // (animations keep running in the render server during the pause).
+    pausedForShots += waited
+    startedAt += waited
+    lastServicedFrame = Int(((l.timestamp - startedAt) * Double(ConformanceClock.hz)).rounded())
+    print("confprobe: framebuffer shot \(p.pngName) paused the script \(String(format: "%.2f", waited)) s")
+    p.then?()
+}
+
+func writePNG(_ img: UIImage, named pngName: String) {
+    // Same re-encode SimScene uses (docs/ORACLE_FLOW.md): `.extended`
+    // hands back Display-P3-tagged bitmaps. Feed t200, iPhone SE 2x:
+    // UIColor(0.25, 0.48, 0.85) is sRGB (64, 122, 217) after this
+    // conversion and P3-raw (78, 121, 211) without it — 14 counts, over
+    // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
+    // PNG bytes without the ICC, so the golden has to be untagged sRGB.
+    try! normalizedSRGB(img).pngData()!.write(
+        to: URL(fileURLWithPath: "\(docsDir)/\(pngName)"))
+    writtenPNGs.insert(pngName)
+    print("captured \(pngName)")
+}
+
+func fail(_ why: String) {
+    print("confprobe: FAILED \(why)")
+    try? why.write(toFile: docsDir + "/DONE", atomically: true, encoding: .utf8)
+    link?.invalidate()
+    link = nil
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { exit(4) }
 }
 
 func capture(at t: Double, frame: Int, link: CADisplayLink,
-                 sampleElapsed: Double?, springBegin: CFTimeInterval?) {
-        guard let w = window else { return }
+                 sampleElapsed: Double?, springBegin: CFTimeInterval?,
+                 then: (() -> Void)? = nil) {
+        guard let w = window else { then?(); return }
         // Layout dump FIRST: presentation() is this display-link tick.
         // drawHierarchy can stall ~40 ms and would otherwise sample a later
         // vsync (navprobe: stamp with link.timestamp, not CACurrentMediaTime).
@@ -922,40 +999,6 @@ func capture(at t: Double, frame: Int, link: CADisplayLink,
                                                     contentSize: contentSize,
                                                     orientation: orientation)
         let pngName = "\(appName).\(suffix).png"
-        let img: UIImage
-        if keyboardIsOnScreen(),
-           let shot = waitForFramebufferShot(named: pngName) {
-            // NEED_SHOT writes the raw framebuffer. LandscapeLeft is a
-            // portrait-sized PNG until we rotate (rotateScreenshot90CW).
-            if orientation == "landscape",
-               let cg = shot.cgImage, cg.width < cg.height {
-                img = rotateScreenshot90CW(shot)
-            } else {
-                img = shot
-            }
-        } else {
-            let fmt = UIGraphicsImageRendererFormat()
-            fmt.scale = UIScreen.main.scale
-            // .extended keeps the private glass materials the bar platters and
-            // the sheet are made of; .standard drops them (measured, see
-            // Tools/oracle2/simscene). opaque: the window is fully covered, so
-            // alpha is 255 everywhere and premultiplied == straight — which is
-            // what lets compare.py read these as straight-alpha goldens.
-            fmt.preferredRange = .extended
-            fmt.opaque = true
-            img = UIGraphicsImageRenderer(bounds: w.bounds, format: fmt).image { _ in
-                w.drawHierarchy(in: w.bounds, afterScreenUpdates: false)
-            }
-        }
-        // Same re-encode SimScene uses (docs/ORACLE_FLOW.md): `.extended`
-        // hands back Display-P3-tagged bitmaps. Feed t200, iPhone SE 2x:
-        // UIColor(0.25, 0.48, 0.85) is sRGB (64, 122, 217) after this
-        // conversion and P3-raw (78, 121, 211) without it — 14 counts, over
-        // PIXEL_TOL 6, 99.8 % of each generated card. compare.py / PIL read
-        // PNG bytes without the ICC, so the golden has to be untagged sRGB.
-        try! normalizedSRGB(img).pngData()!.write(
-            to: URL(fileURLWithPath: "\(docsDir)/\(pngName)"))
-
         var clock: [String: Any] = [
             "frame": frame,
             "hz": ConformanceClock.hz,
@@ -967,6 +1010,9 @@ func capture(at t: Double, frame: Int, link: CADisplayLink,
             "sinceActionFrames": Int(((link.timestamp - lastActionTimestamp)
                                       * Double(ConformanceClock.hz)).rounded()),
         ]
+        if pausedForShots > 0 {
+            clock["pausedForShots"] = round3(CGFloat(pausedForShots))
+        }
         if let sampleElapsed {
             clock["sampleElapsed"] = round3(CGFloat(sampleElapsed))
         }
@@ -1003,12 +1049,30 @@ func capture(at t: Double, frame: Int, link: CADisplayLink,
             data = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
         } catch {
             print("confprobe: JSON dump failed at t=\(t): \(error)")
-            try? "json failed: \(error)".write(toFile: docsDir + "/DONE",
-                                               atomically: true, encoding: .utf8)
+            fail("json failed at t=\(t): \(error)")
             return
         }
         try! data.write(to: URL(fileURLWithPath: "\(docsDir)/\(appName).\(suffix).layout.json"))
-        print("captured \(appName).\(suffix).png frame=\(frame) dl=\(String(format: "%.6f", link.timestamp))")
+        print("dumped \(appName).\(suffix) frame=\(frame) dl=\(String(format: "%.6f", link.timestamp))")
+        if keyboardIsOnScreen() {
+            requestFramebufferShot(named: pngName, rotate: orientation == "landscape",
+                                   link: link, then: then)
+            return
+        }
+        let fmt = UIGraphicsImageRendererFormat()
+        fmt.scale = UIScreen.main.scale
+        // .extended keeps the private glass materials the bar platters and
+        // the sheet are made of; .standard drops them (measured, see
+        // Tools/oracle2/simscene). opaque: the window is fully covered, so
+        // alpha is 255 everywhere and premultiplied == straight — which is
+        // what lets compare.py read these as straight-alpha goldens.
+        fmt.preferredRange = .extended
+        fmt.opaque = true
+        let img = UIGraphicsImageRenderer(bounds: w.bounds, format: fmt).image { _ in
+            w.drawHierarchy(in: w.bounds, afterScreenUpdates: false)
+        }
+        writePNG(img, named: pngName)
+        then?()
     }
 
     func finish() {
@@ -1021,14 +1085,31 @@ func capture(at t: Double, frame: Int, link: CADisplayLink,
             }
         }
         let elapsed = startedAt == 0 ? 0 : CACurrentMediaTime() - startedAt
-        print("confprobe: \(String(format: "%.3f", elapsed)) s  frames=\(frameIndex)")
+        print("confprobe: \(String(format: "%.3f", elapsed)) s  frames=\(frameIndex)"
+              + " pausedForShots=\(String(format: "%.2f", pausedForShots)) s")
+        var missing: [String] = []
+        for t in captures {
+            let suffix = ConformanceClock.captureSuffix(for: t, style: style,
+                                                        direction: direction,
+                                                        contentSize: contentSize,
+                                                        orientation: orientation)
+            if !writtenPNGs.contains("\(appName).\(suffix).png") { missing.append(suffix) }
+        }
+        if !missing.isEmpty || !timelineErrors.isEmpty {
+            fail("SHORT CAPTURE \(captures.count - missing.count)/\(captures.count):"
+                 + " missing [\(missing.joined(separator: ","))]"
+                 + (timelineErrors.isEmpty ? "" : "; " + timelineErrors.joined(separator: "; ")))
+            return
+        }
         try? "ok".write(toFile: docsDir + "/DONE", atomically: true, encoding: .utf8)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { exit(0) }
     }
 }
 
 // Watchdog — never wedge the simulator boot pipeline.
-DispatchQueue.main.asyncAfter(deadline: .now() + 120) {
+// 300 s: a keyboard capture may legitimately pause the script while a
+// slow `simctl io screenshot` runs (pollFramebufferShot gives up at 90 s).
+DispatchQueue.main.asyncAfter(deadline: .now() + 300) {
     try? "watchdog timeout".write(toFile: docsDir + "/DONE", atomically: true, encoding: .utf8)
     exit(3)
 }
