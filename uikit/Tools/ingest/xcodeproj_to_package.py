@@ -21,10 +21,16 @@ emitted in Xcode's staged order on route (b): a Swift library target that
 reads the app's ObjC headers through its bridging header, a Clang target that
 depends on it (so SwiftPM has written `<App>-Swift.h` before any .m file
 compiles), and a `<App>Main` executable for main.m. `<UIKit/UIKit.h>` is
-OpenUIKit's compiler-generated header plus OpenUIKitObjCSupport. What that
-does NOT give is Objective-C subclasses of OpenUIKit classes: the generated
-header marks them objc_subclassing_restricted, and lifting the attribute
-crashes on the first Swift vtable read (simplenote-launch3, measured).
+OpenUIKit's compiler-generated header plus OpenUIKitObjCSupport. Objective-C
+subclasses of OpenUIKit classes compile for exactly the vtable-free UIKit
+chain OpenUIKit builds under OPENUIKIT_OBJC_SUBCLASSING (UIResponder, UIView,
+UIControl, UIScrollView, UITableView, UITextView, UITextField,
+UITableViewCell, UIViewController, UINavigationController,
+UITableViewController): every Clang and Swift consumer of the generated header
+gets the SWIFT_CLASS / SWIFT_CLASS_NAMED pair below (simplenote-objc-core).
+Any other OpenUIKit class stays objc_subclassing_restricted, because lifting
+the attribute there crashes on the first Swift vtable read
+(simplenote-launch3, measured).
 Missing Apple frameworks and SPM products are reported, not silently
 dropped.
 
@@ -416,6 +422,18 @@ SWIFT_SIDE_NS_RENAMES = [
 # Where SwiftPM writes OpenUIKit's generated header, relative to the generated
 # package root (MEASURED: swiftc runs with the package root as cwd, so a
 # relative -Xcc -I resolves). Missing directories are ignored by clang.
+# OpenUIKit-Swift.h defines SWIFT_CLASS / SWIFT_CLASS_NAMED with
+# objc_subclassing_restricted unless the includer predefines them. The chain
+# classes OpenUIKit compiles vtable-free carry an explicit `@objc(UIKitName)`
+# and therefore SWIFT_CLASS_NAMED; predefining that one WITHOUT the attribute
+# (and SWIFT_CLASS exactly as the header would) makes precisely those
+# subclassable. Command-line macros reach the Clang module build, so the
+# Swift target (-Xcc) and every Clang target carry the same pair; the pair
+# is copied from OpenUIKit's own Package.swift (openUIKitObjCSubclassingDefines).
+OBJC_SUBCLASSING_DEFINES = [
+    "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) __attribute__((objc_subclassing_restricted)) SWIFT_CLASS_EXTRA",
+    "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+]
 GENERATED_HEADER_DIRS = [
     f".build/{triple}/{cfg}/OpenUIKit.build/include"
     for cfg in ("debug", "release")
@@ -1792,6 +1810,8 @@ def emit_package_swift(
         xcc += ["-Xcc", f"-ISources/{clang_name}/include"]
         for name in SWIFT_SIDE_NS_RENAMES:
             xcc += ["-Xcc", f"-D{name}=OUK_{name}"]
+        for define in OBJC_SUBCLASSING_DEFINES:
+            xcc += ["-Xcc", define]
         bridging = manifest.get("bridging_header")
         if bridging:
             swift_flags.append(f'"-import-objc-header", "Sources/{clang_name}/include/{bridging}"')
@@ -1832,6 +1852,9 @@ def emit_package_swift(
         # UIKitObjCSupport.h carries an AppKit-colliding C struct for the
         # Objective-C side only (see the header).
         search_paths.append('                .define("OPENUIKIT_OBJC_SIDE", to: "1")')
+        search_paths.append(
+            '                .unsafeFlags([' + ", ".join(_swift_string(d) for d in OBJC_SUBCLASSING_DEFINES) + '])'
+        )
         objc_product_lines = ",\n".join(objc_products)
         search_lines = ",\n".join(search_paths)
         clang_target = f'''        .target(
