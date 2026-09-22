@@ -733,6 +733,9 @@ let testTargets: [Target] = [
             ], .when(platforms: [.linux])),
         ]
     ),
+    // NWPathMonitor contract measured on Network.framework
+    // (Tools/oracle2/nwpathprobe/transcript-macos.txt).
+    .testTarget(name: "NetworkTests", dependencies: ["Network"]),
     .testTarget(
         name: "OSTests",
         dependencies: ["os"],
