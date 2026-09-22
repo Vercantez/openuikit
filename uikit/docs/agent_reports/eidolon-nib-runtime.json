@@ -1,0 +1,81 @@
+{
+  "date": "2026-09-22",
+  "branch": "worktree-agent-a0549899b7f421981",
+  "base_commit": "9cd38125",
+  "app_commit": "44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+  "scope": "Storyboard/NIB runtime (compiled .storyboardc/.nib), measured against iOS 26.1; re-measure of Eidolon's remaining walls",
+  "native_oracle": {
+    "xcode": "Xcode 26.1 (17B55); ibtool 26.1 (bundle-version 24412)",
+    "sdk": "iPhoneSimulator26.1",
+    "triple": "arm64-apple-ios26.0-simulator",
+    "device": {"name": "OpenUIKit-NibRuntime-nibrt-a054", "type": "iPhone 16", "runtime": "iOS 26.1 (23B86)"},
+    "command": "SIM_DEVICE_SUFFIX=-nibrt-a054 scripts/nib_runtime_probe_sim.sh <out>",
+    "probe_sources": [
+      "Tools/oracle2/nibruntimeprobe/main.swift",
+      "Tools/oracle2/nibruntimeprobe/OUKTry.m",
+      "Tests/NibRuntimeTests/NibRuntimeScenario.swift",
+      "Tests/NibRuntimeTests/EidolonNibScenario.swift"
+    ],
+    "compiled_inputs": [
+      "fixtures/nibruntime/NibRuntimeProbe.storyboardc (ibtool --compile of Tools/oracle2/nibruntimeprobe/NibRuntimeProbe.storyboard; two compiles byte-identical)",
+      "fixtures/nibruntime/ProbeXibView.nib (ibtool --compile of Tools/oracle2/nibruntimeprobe/ProbeXibView.xib)",
+      "fixtures/realapp/eidolon/nibs (29 view archives: 10 Auction, 18 Fulfillment, KeypadView.nib)"
+    ],
+    "transcripts_sha256": {
+      "fixtures/nibruntime/oracle/nibruntime.json": "0724120013ced98817664ab88c2b0c776d8891e007e120c4353e20ea575aedb4",
+      "fixtures/nibruntime/oracle/nibruntime2.json": "86d083c67a69b7d7f37f1abbe81fcdcdae332f0cdfc705b1987b93b9383cf033",
+      "fixtures/nibruntime/oracle/eidolonnibs.json": "bbfdec775d4de29daad5531c817bd0e6780cd629a11b6395b5db6062dd59bc57"
+    },
+    "measured_while_building": [
+      "sendActions(for:) delivers nothing without UIApplicationMain (UIControl routes through UIApplication)",
+      "a plain NSObject in a view's gestureRecognizers collection raises inside -[UIView setGestureRecognizers:]",
+      "KeypadView.xib without app classes raises NSUnknownKeyException: [<UIView> setValue:forUndefinedKey:]: key keys",
+      "missing custom fonts fall back to Helvetica at the archived size (ios.fontName)",
+      "an animated push onto a navigation controller that is not in a window never sends didMove(toParent:) within 1 s of run loop"
+    ]
+  },
+  "comparison": {
+    "nibruntime.json": {"events": 56, "values": 345, "differences": 0},
+    "nibruntime2.json": {"events": 19, "values": 295, "differences": 11, "known": "table self-sizing of an ambiguous prototype cell (iOS 51 pt vs port 52 pt) and 1/3 pt label text width"},
+    "eidolonnibs.json": {"archives": 29, "compared": 28, "ios_exceptions": 1, "values": 5032, "differences": 6, "known": "two labels in AGaramondPro-Regular 38 pt (unbundled private face): iOS Helvetica fallback vs port system face"},
+    "known_divergences_file": "fixtures/nibruntime/known_divergences.json"
+  },
+  "validation": {
+    "darwin_tests": "swift test --filter 'NibRuntimeTests|UINibTests': 18 tests, 0 failures",
+    "guest_route_check": "GUEST_ROUTE_CHECK_OK openuikit=161",
+    "linux_swift_6_2_noble": "openrender rc=0, ConformanceApps rc=0, OpenUIKitTests rc=0, NibRuntimeTests rc=0",
+    "macho_guest_nib_probe": "NIB_GUEST_RUNTIME_OK class=GuestNibController label=Guest badgeInitFrame=(10,20,30,40) taps=1 prepared=[\"Embed\"] child=UIViewController subviews=4",
+    "macho_guest_nib_probe_command": "bash uikit/scripts/nib_guest_probe.sh (NIB_GUEST_BUILD_FULL=/Users/miguelsalinas/openuikit/full/scripts/build_full.sh for the main checkout's uncommitted undefined-symbol limit 19)",
+    "local_guest_verify": [
+      "FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController",
+      "rendered 15 screens; existing screens byte-identical 14/14 (including Ledger)",
+      "REAL-APP SCREEN VERIFIED ON LINUX"
+    ]
+  },
+  "eidolon": {
+    "storyboard_initial": {
+      "result": "UIViewController (UIKit's fallback class: the Kiosk classes do not compile yet)",
+      "children": ["UINavigationController", "UIViewController"],
+      "subviews": 6,
+      "unhandled_distinct": 19,
+      "unhandled_classes": ["_TtC5Kiosk24ListingsCountdownManager", "_TtC5Kiosk17AppViewController", "_TtC5Kiosk12ActionButton", "_TtC5Kiosk22ListingsViewController", "_TtC5Kiosk7Spinner", "_TtC5Kiosk21OfflineViewController"],
+      "previous": "instantiateInitialViewController() returned nil (eidolon-launch-oracle.md)"
+    },
+    "absent_import_census": {
+      "app_files": 109,
+      "files_importing_absent_module": 24,
+      "by_module": {"Artsy_UILabels": 9, "Artsy_UIButtons": 7, "ORStackView": 6, "Artsy_UIFonts": 4, "SDWebImage": 2, "FLKAutoLayout": 2, "ARTiledImageView": 2, "SVProgressHUD": 1, "XNGMarkdownParser": 1, "CardFlight": 1, "ARCollectionViewMasonryLayout": 1, "DZNWebViewController": 1, "UIImageViewAligned": 1, "ECPhoneNumberFormatter": 1},
+      "first_screen_files": {"App/AppDelegate.swift": ["SDWebImage"], "Auction Listings/ListingsViewController.swift": ["ARCollectionViewMasonryLayout"], "App/AppViewController.swift": []}
+    },
+    "objc_pod_probe": {
+      "source": "scratch/ladder-deps/SVProgressHUD at ece669b5010693024572bcf7bfd5ebede904859f (HEAD, not the locked 2.2.3)",
+      "headers": "<UIKit/UIKit.h> = OpenUIKit-Swift.h (SwiftPM generated) + UIKitObjCSupport.h",
+      "command": "xcrun clang -fsyntax-only -ferror-limit=0 -fobjc-arc -fmodules -I <shim> -I .build/arm64-apple-macosx/debug/OpenUIKit.build/include -I Sources/OpenUIKitObjCSupport/include SVProgressHUD.m",
+      "errors": 397,
+      "first_wall": "SVProgressHUD.h:65:12: error: cannot subclass a class that was declared with the 'objc_subclassing_restricted' attribute",
+      "top_missing": {"property 'text' not found on object of type 'UILabel *'": 15, "property 'alpha' not found on object of type 'UIView *'": 12, "receiver 'UIColor' for class message is a forward declaration": 13}
+    },
+    "rxcocoa_uses": {".rx.text": 38, ".rx.action": 26, ".rx.observe": 16, ".rx.event": 7, ".rx.isEnabled": 4, ".rx.textInput": 3, ".rx.tap": 3, ".rx.attributedText": 3, ".rx.title": 1, ".rx.controlEvent": 1},
+    "first_screen": "not reached; score N/A"
+  }
+}
