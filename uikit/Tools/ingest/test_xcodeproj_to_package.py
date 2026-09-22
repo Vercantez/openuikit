@@ -182,6 +182,19 @@ class MiniAppFixtureTests(unittest.TestCase):
         )
         self.assertNotIn('.product(name: "SimplenoteSearch"', text)
 
+    def test_mobilecoreservices_import_links_the_port_on_every_platform(self) -> None:
+        # Simplenote 9b1bb17 CSSearchable+Helpers.swift imports it; macOS has
+        # no SDK module of that name (simplenote-objc-core).
+        row = ingest.classify_module("MobileCoreServices")
+        self.assertEqual(row["port"], "MobileCoreServices")
+        self.assertNotIn("port_platforms", row)
+        self.manifest["imports"].append(row)
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "pkg"
+            ingest.emit_tree(self.graph, self.manifest, out, UIKIT)
+            text = (out / "Package.swift").read_text()
+        self.assertIn('.product(name: "MobileCoreServices", package: "OpenUIKit")', text)
+
     def test_emit_package_layout(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "pkg"

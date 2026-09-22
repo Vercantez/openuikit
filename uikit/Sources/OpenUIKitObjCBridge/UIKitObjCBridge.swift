@@ -64,10 +64,10 @@ private func gestureStateRaw(_ state: UIGestureRecognizer.State) -> Int {
     @unknown default: return 0
     }
 }
-private func edgeInsets(_ insets: OpenUIKit.UIEdgeInsets) -> OpenUIKitObjCSupport.UIEdgeInsets {
-    OpenUIKitObjCSupport.UIEdgeInsets(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
+private func edgeInsets(_ insets: OpenUIKit.UIEdgeInsets) -> OpenUIKitObjCSupport.UIEdgeInsetsObjC {
+    OpenUIKitObjCSupport.UIEdgeInsetsObjC(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
 }
-private func edgeInsets(_ insets: OpenUIKitObjCSupport.UIEdgeInsets) -> OpenUIKit.UIEdgeInsets {
+private func edgeInsets(_ insets: OpenUIKitObjCSupport.UIEdgeInsetsObjC) -> OpenUIKit.UIEdgeInsets {
     OpenUIKit.UIEdgeInsets(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
 }
 
@@ -108,7 +108,7 @@ extension UIView {
     @objc(layoutIfNeeded) public func __objc_layoutIfNeeded() { layoutIfNeeded() }
     @objc(setNeedsDisplay) public func __objc_setNeedsDisplay() { setNeedsDisplay() }
     @objc(sizeToFit) public func __objc_sizeToFit() { sizeToFit() }
-    @objc(safeAreaInsets) public var __objc_safeAreaInsets: OpenUIKitObjCSupport.UIEdgeInsets { edgeInsets(safeAreaInsets) }
+    @objc(safeAreaInsets) public var __objc_safeAreaInsets: OpenUIKitObjCSupport.UIEdgeInsetsObjC { edgeInsets(safeAreaInsets) }
     @objc(addGestureRecognizer:) public func __objc_addGestureRecognizer(_ recognizer: UIGestureRecognizer) { addGestureRecognizer(recognizer) }
     @objc(removeGestureRecognizer:) public func __objc_removeGestureRecognizer(_ recognizer: UIGestureRecognizer) { removeGestureRecognizer(recognizer) }
     @objc(convertRect:toView:) public func __objc_convert(_ rect: CGRect, to view: UIView?) -> CGRect { convert(rect, to: view) }
@@ -132,7 +132,7 @@ extension UIControl {
 extension UIScrollView {
     @objc(contentOffset) public var __objc_contentOffset: CGPoint { get { contentOffset } set { contentOffset = newValue } }
     @objc(contentSize) public var __objc_contentSize: CGSize { get { contentSize } set { contentSize = newValue } }
-    @objc(contentInset) public var __objc_contentInset: OpenUIKitObjCSupport.UIEdgeInsets {
+    @objc(contentInset) public var __objc_contentInset: OpenUIKitObjCSupport.UIEdgeInsetsObjC {
         get { edgeInsets(contentInset) } set { contentInset = edgeInsets(newValue) }
     }
     @objc(isScrollEnabled) public var __objc_scrollEnabled: Bool { get { isScrollEnabled } set { isScrollEnabled = newValue } }

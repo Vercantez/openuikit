@@ -8,6 +8,7 @@ import ObjectiveC
 import XCTest
 @testable import OpenUIKit
 @testable import OpenUIKitObjCBridge
+import OpenUIKitObjCSupport
 
 final class ObjCBridgeTests: XCTestCase {
     @MainActor
@@ -83,6 +84,25 @@ final class ObjCBridgeTests: XCTestCase {
         nav.perform(NSSelectorFromString("pushViewController:animated:"), with: next, with: false)
         XCTAssertTrue(nav.topViewController === next)
         XCTAssertEqual((nav.perform(NSSelectorFromString("viewControllers"))?.takeUnretainedValue() as? [UIViewController])?.count, 2)
+    }
+
+    /// simplenote-objc-core: the support header's C structs and protocols
+    /// reach an app's Swift half through its bridging header, next to
+    /// OpenUIKit's own Swift types of the same UIKit names. Distinct Swift
+    /// names keep both usable (Simplenote's Swift half reported 13
+    /// `ambiguous use of 'init(top:left:bottom:right:)'` and 8+8
+    /// `'UITableViewDelegate'/'UITableViewDataSource' is ambiguous` without
+    /// them), and NSDirectionalEdgeInsets now exists on the Swift side at all
+    /// (SPTextField.h:13 stopped Simplenote's bridging-header precompile).
+    func testSupportDeclarationsHaveDistinctSwiftNames() {
+        let directional = NSDirectionalEdgeInsetsObjC(top: 1, leading: 2, bottom: 3, trailing: 4)
+        XCTAssertEqual(directional.leading, 2)
+        XCTAssertEqual(MemoryLayout<NSDirectionalEdgeInsetsObjC>.size, 4 * MemoryLayout<CGFloat>.size)
+        let c = UIEdgeInsetsObjC(top: 1, left: 2, bottom: 3, right: 4)
+        let swift = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)   // OpenUIKit's, unambiguous
+        XCTAssertEqual(c.left, swift.left)
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDelegateObjC.self), "UITableViewDelegate")
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDataSourceObjC.self), "UITableViewDataSource")
     }
 
     @MainActor

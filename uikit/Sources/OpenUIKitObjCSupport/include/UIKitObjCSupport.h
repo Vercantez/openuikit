@@ -52,22 +52,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Geometry (UIGeometry.h)
 
-typedef struct UIEdgeInsets { CGFloat top, left, bottom, right; } UIEdgeInsets;
+/* NS_SWIFT_NAME: the app's Swift half sees this header through its bridging
+ * header next to OpenUIKit's own Swift `UIEdgeInsets`; without a distinct
+ * Swift name every `UIEdgeInsets(top:left:bottom:right:)` there is ambiguous
+ * (MEASURED simplenote-objc-core: 13 `ambiguous use of
+ * 'init(top:left:bottom:right:)'`, 5 `'UIEdgeInsets' is ambiguous`). The C
+ * name and layout are UIKit's. */
+typedef struct NS_SWIFT_NAME(UIEdgeInsetsObjC) UIEdgeInsets { CGFloat top, left, bottom, right; } UIEdgeInsets;
 static inline UIEdgeInsets UIEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right) {
     UIEdgeInsets i = {top, left, bottom, right}; return i;
 }
-/* AppKit declares NSDirectionalEdgeInsets(Make/Zero) too. Any Swift module
- * that imports this one has AppKit loaded (OpenUIKit imports it on macOS) and
- * reports `different definitions in different modules` (MEASURED
- * OpenUIKitObjCBridgeTests, with and without a -D rename: the rename hits
- * AppKit's inline function too). An Objective-C translation unit does not
- * load AppKit, so only the ObjC side (OPENUIKIT_OBJC_SIDE=1, emitted by the
- * ingest tool) gets this copy: AppKit's four CGFloats. A Swift-side parse of
- * an app header that uses the type reports it unknown (Simplenote
- * SPTextField.h:13, one property on a class Objective-C cannot subclass
- * anyway). */
+/* NSDirectionalEdgeInsets: UIKit's four CGFloats. simplenote-launch3 kept
+ * this ObjC-side only (OPENUIKIT_OBJC_SIDE) after measuring `different
+ * definitions in different modules` against AppKit's copy; that left the
+ * Swift half's bridging-header precompile failing on SPTextField.h:13
+ * (`unknown type name`). Re-measured in simplenote-objc-core: the STRUCT is
+ * safe on both sides (the same four CGFloats as AppKit's; a distinct Swift
+ * name keeps it apart from OpenUIKit's Swift struct) and Simplenote's
+ * bridging-header PCH compiles. What collides with AppKit is the inline
+ * `NSDirectionalEdgeInsetsMake` (`different definitions ... first difference
+ * is function body`, MEASURED OpenUIKitObjCBridgeTests with this module
+ * imported), so the function and the constant stay ObjC-side. */
+typedef struct NS_SWIFT_NAME(NSDirectionalEdgeInsetsObjC) NSDirectionalEdgeInsets { CGFloat top, leading, bottom, trailing; } NSDirectionalEdgeInsets;
 #if OPENUIKIT_OBJC_SIDE
-typedef struct NSDirectionalEdgeInsets { CGFloat top, leading, bottom, trailing; } NSDirectionalEdgeInsets;
 static inline NSDirectionalEdgeInsets NSDirectionalEdgeInsetsMake(CGFloat top, CGFloat leading, CGFloat bottom, CGFloat trailing) {
     NSDirectionalEdgeInsets i = {top, leading, bottom, trailing}; return i;
 }
@@ -251,7 +258,7 @@ extern NSString * const UIKeyInputDownArrow;
 
 #pragma mark - Protocols
 
-@protocol UIApplicationDelegate <NSObject>
+NS_SWIFT_NAME(UIApplicationDelegateObjC) @protocol UIApplicationDelegate <NSObject>
 @optional
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
@@ -266,11 +273,11 @@ extern NSString * const UIKeyInputDownArrow;
 - (BOOL)application:(UIApplication *)application shouldRestoreSecureApplicationState:(NSCoder *)coder;
 @end
 
-@protocol UIUserActivityRestoring <NSObject>
+NS_SWIFT_NAME(UIUserActivityRestoringObjC) @protocol UIUserActivityRestoring <NSObject>
 - (void)restoreUserActivityState:(NSUserActivity *)userActivity;
 @end
 
-@protocol UIScrollViewDelegate <NSObject>
+NS_SWIFT_NAME(UIScrollViewDelegateObjC) @protocol UIScrollViewDelegate <NSObject>
 @optional
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
@@ -278,7 +285,7 @@ extern NSString * const UIKeyInputDownArrow;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 @end
 
-@protocol UITableViewDataSource <NSObject>
+NS_SWIFT_NAME(UITableViewDataSourceObjC) @protocol UITableViewDataSource <NSObject>
 @required
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -291,7 +298,7 @@ extern NSString * const UIKeyInputDownArrow;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(NSInteger)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
-@protocol UITableViewDelegate <NSObject, UIScrollViewDelegate>
+NS_SWIFT_NAME(UITableViewDelegateObjC) @protocol UITableViewDelegate <NSObject, UIScrollViewDelegate>
 @optional
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
@@ -299,7 +306,7 @@ extern NSString * const UIKeyInputDownArrow;
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
-@protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
+NS_SWIFT_NAME(UITextViewDelegateObjC) @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
 @optional
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
 - (void)textViewDidBeginEditing:(UITextView *)textView;
@@ -309,7 +316,7 @@ extern NSString * const UIKeyInputDownArrow;
 - (void)textViewDidChangeSelection:(UITextView *)textView;
 @end
 
-@protocol UITextFieldDelegate <NSObject>
+NS_SWIFT_NAME(UITextFieldDelegateObjC) @protocol UITextFieldDelegate <NSObject>
 @optional
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
@@ -317,23 +324,23 @@ extern NSString * const UIKeyInputDownArrow;
 - (void)textFieldDidBeginEditing:(UITextField *)textField;
 @end
 
-@protocol UIGestureRecognizerDelegate <NSObject>
+NS_SWIFT_NAME(UIGestureRecognizerDelegateObjC) @protocol UIGestureRecognizerDelegate <NSObject>
 @optional
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
 @end
 
-@protocol UIViewControllerTransitionCoordinatorContext <NSObject>
+NS_SWIFT_NAME(UIViewControllerTransitionCoordinatorContextObjC) @protocol UIViewControllerTransitionCoordinatorContext <NSObject>
 - (BOOL)isAnimated;
 - (NSTimeInterval)transitionDuration;
 - (nullable UIViewController *)viewControllerForKey:(UITransitionContextViewControllerKey)key;
 - (nullable UIView *)viewForKey:(UITransitionContextViewKey)key;
 @end
-@protocol UIViewControllerTransitionCoordinator <UIViewControllerTransitionCoordinatorContext>
+NS_SWIFT_NAME(UIViewControllerTransitionCoordinatorObjC) @protocol UIViewControllerTransitionCoordinator <UIViewControllerTransitionCoordinatorContext>
 - (BOOL)animateAlongsideTransition:(void (^ _Nullable)(id<UIViewControllerTransitionCoordinatorContext> context))animation
                         completion:(void (^ _Nullable)(id<UIViewControllerTransitionCoordinatorContext> context))completion;
 @end
-@protocol UIViewControllerContextTransitioning <NSObject>
+NS_SWIFT_NAME(UIViewControllerContextTransitioningObjC) @protocol UIViewControllerContextTransitioning <NSObject>
 - (nullable UIView *)containerView;
 - (BOOL)isAnimated;
 - (BOOL)isInteractive;
@@ -345,14 +352,14 @@ extern NSString * const UIKeyInputDownArrow;
 - (nullable UIViewController *)viewControllerForKey:(UITransitionContextViewControllerKey)key;
 - (nullable UIView *)viewForKey:(UITransitionContextViewKey)key;
 @end
-@protocol UIViewControllerAnimatedTransitioning <NSObject>
+NS_SWIFT_NAME(UIViewControllerAnimatedTransitioningObjC) @protocol UIViewControllerAnimatedTransitioning <NSObject>
 - (NSTimeInterval)transitionDuration:(nullable id<UIViewControllerContextTransitioning>)transitionContext;
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
 @end
-@protocol UIViewControllerInteractiveTransitioning <NSObject>
+NS_SWIFT_NAME(UIViewControllerInteractiveTransitioningObjC) @protocol UIViewControllerInteractiveTransitioning <NSObject>
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
 @end
-@protocol UINavigationControllerDelegate <NSObject>
+NS_SWIFT_NAME(UINavigationControllerDelegateObjC) @protocol UINavigationControllerDelegate <NSObject>
 @optional
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
@@ -363,12 +370,12 @@ extern NSString * const UIKeyInputDownArrow;
                                                 fromViewController:(UIViewController *)fromVC
                                                   toViewController:(UIViewController *)toVC;
 @end
-@protocol UIPickerViewDataSource <NSObject>
+NS_SWIFT_NAME(UIPickerViewDataSourceObjC) @protocol UIPickerViewDataSource <NSObject>
 @required
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
 @end
-@protocol UIPickerViewDelegate <NSObject>
+NS_SWIFT_NAME(UIPickerViewDelegateObjC) @protocol UIPickerViewDelegate <NSObject>
 @optional
 - (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component;
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;

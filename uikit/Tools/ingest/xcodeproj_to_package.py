@@ -375,7 +375,14 @@ PORTED_PRODUCTS = {
     "Network": "Network",
     "SafariServices": "SafariServices",
     "StoreKit": "StoreKit",
+    # uikit/Sources/MobileCoreServices (UTType); macOS has no SDK module of
+    # that name ("no such module 'MobileCoreServices'", MEASURED
+    # simplenote-objc-core on Simplenote 9b1bb17 CSSearchable+Helpers.swift),
+    # so the product is linked on every platform when the app imports it.
+    "MobileCoreServices": "MobileCoreServices",
 }
+# Ported products emitted only when the app demands them, on every platform.
+DEMANDED_ALL_PLATFORM_PRODUCTS = {"MobileCoreServices"}
 
 # Simplenote 9b1bb17: these five source dependencies build on Darwin route
 # (b). CoreData/AppKit and @objc still prevent claiming a Linux/guest port.
@@ -1761,6 +1768,8 @@ def emit_package_swift(
     # (eidolon-launch and simplenote-launch3 both measured that SwiftPM
     # resolves a product name before evaluating its platform condition).
     demanded = {r["name"] for r in manifest["spm"] + manifest["imports"]}
+    for name in sorted(DEMANDED_ALL_PLATFORM_PRODUCTS & demanded):
+        products.append(f'                .product(name: "{name}", package: "OpenUIKit")')
     for name in sorted(DARWIN_SOURCE_PRODUCTS & demanded):
         products.append(
             f'                .product(name: "{name}", package: "OpenUIKit", '
