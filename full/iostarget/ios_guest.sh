@@ -120,8 +120,19 @@ cat "$LGI/probe.txt"
 diff <(tail -n +2 "$TREE/full/iostarget/oracle-ios26.1.txt") <(tail -n +2 "$LGI/probe.txt") \
     || die 'probe transcript differs from the iOS 26.1 simulator'
 echo "IOS_TARGET_PROBE_MATCHES_IOS_26_1 lines=$(wc -l < "$LGI/probe.txt")"
+# Same working directory and environment as uikit/scripts/linux_guest_realapp_verify.sh.
+cd "$TREE/uikit"
+export OPENUIKIT_FORCE_IOS=1 OPENUIKIT_REALAPP_SCALE=2 OPENUIKIT_BACKEND=quartz
 "$ROOTDIR/machorun" "$OUT/GuestBoundaryTests" > "$LGI/boundary.log" 2>&1 || true
 grep -F 'FOCUS_GUEST_BOUNDARY_OK' "$LGI/boundary.log" || die 'GuestBoundaryTests failed on the iOS triple'
 "$ROOTDIR/machorun" "$OUT/LaunchProbe" > "$LGI/launch.log" 2>&1 || true
 grep -F 'FOCUS_REAL_APPDELEGATE_LAUNCHED' "$LGI/launch.log" || die 'LaunchProbe failed on the iOS triple'
+# The whole real-app verifier, unchanged, on the iOS-triple build: the 14
+# pinned screens must stay byte-identical.
+unset LD_PRELOAD LD_LIBRARY_PATH MACHORUN_ROOT OPENUIKIT_FORCE_IOS OPENUIKIT_REALAPP_SCALE OPENUIKIT_BACKEND
+cd "$TREE"
+OPENUIKIT_REALAPP_GUEST_SUPPORT=$TREE OPENUIKIT_REALAPP_GUEST_BUILD=$OUT OPENUIKIT_REALAPP_GUEST_ROOT=$ROOTDIR \
+    bash uikit/scripts/linux_guest_realapp_verify.sh "$LGI/verify" > "$LGI/verify.log" 2>&1 \
+    || { tail -30 "$LGI/verify.log" >&2; die 'real-app verify failed on the iOS triple'; }
+grep -E 'byte-identical|REAL-APP SCREEN VERIFIED ON LINUX' "$LGI/verify.log"
 echo "IOS_TARGET_GUEST_VERIFIED target=$TARGET"
