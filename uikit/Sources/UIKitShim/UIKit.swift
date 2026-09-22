@@ -169,6 +169,12 @@ extension AttributeScopes.UIKitAttributes {
     }
 }
 
+// Only where OpenUIKit's NSAttributedString.Key is its own portable type.
+// With Foundation and the Objective-C runtime it IS Foundation's key, and
+// Foundation already declares this exact initializer (it resolves keys
+// through the loaded attribute scopes, as on iOS); a second one made every
+// `AttributeContainer([...])` ambiguous.
+#if !(canImport(ObjectiveC) && canImport(Foundation))
 @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
 extension AttributeContainer {
     /// Converts OpenUIKit's Objective-C-shaped text dictionary into typed
@@ -242,6 +248,7 @@ extension AttributeContainer {
         }
     }
 }
+#endif
 #endif
 
 // Preview is app-side machinery: the DeveloperToolsSupport module is built

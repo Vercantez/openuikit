@@ -162,6 +162,23 @@ replace with same attrs no-op range {0,0} ""
   after mask=none range={NSNotFound, 0} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
 addAttribute zero-length {1,0}
   after mask=none range={NSNotFound, 0} delta=0 runs="new++!" {0, 3}[OUKKey=n] {3, 3}[]
+### edit masks (base NSTextStorage)
+insert mid-run: mask=chars range={4, 1} delta=1
+insert at run start: mask=chars range={2, 1} delta=1
+insert at run end: mask=chars range={4, 1} delta=1
+insert at 0: mask=chars range={0, 1} delta=1
+insert at end: mask=chars range={8, 1} delta=1
+delete inside run: mask=chars range={5, 0} delta=-1
+delete whole first run: mask=chars range={0, 0} delta=-2
+delete whole middle run: mask=chars range={2, 0} delta=-2
+delete whole last run: mask=chars range={4, 0} delta=-4
+delete across runs: mask=chars range={1, 0} delta=-2
+replace inside run: mask=chars range={5, 2} delta=1
+replace whole middle run: mask=chars range={2, 2} delta=0
+delete all: mask=chars range={0, 0} delta=-8
+two edits, 1: mask=chars range={6, 1} delta=1
+two edits, 2: mask=attr|chars range={0, 5} delta=-1
+single-run delete prefix: mask=attr|chars range={0, 0} delta=-2
 ### Objective-C subclass
 subclass superclass: NSTextStorage
 subclass length initially: 0
@@ -393,6 +410,13 @@ subclass edit with fixAttributes logging:
   invalidateAttributesInRange:{0, 5}
   fixAttributesInRange:{0, 5}
 subclass after edits: {0, 1}=Helvetica 17 {1, 2}=AppleColorEmoji 17 {3, 1}=PingFangSC-Regular 17 {4, 1}=Helvetica 17
+### edit masks with and without a covering font
+font=0 fresh delete prefix: mask=3
+font=0 insert then delete prefix: mask=3
+font=0 insert: did-notification mask=2
+font=1 fresh delete prefix: mask=3
+font=1 insert then delete prefix: mask=3
+font=1 insert: did-notification mask=2
 ### layout manager ordering
 after addLayoutManager: layoutManagers=1 lm.textStorage==ts 1
 replace {0,0} "Hello"

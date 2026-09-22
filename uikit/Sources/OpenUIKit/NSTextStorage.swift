@@ -98,39 +98,75 @@ open class NSTextStorage: NSMutableAttributedString {
 
     // MARK: Initializers
     //
-    // None are declared: the class inherits Foundation's designated set
-    // (init(), init(string:), init(string:attributes:),
-    // init(attributedString:), init?(coder:) and, on the macOS host,
-    // AppKit's required NSPasteboardReading initializer, whose parameter
-    // type would otherwise pull AppKit into OpenUIKit-Swift.h). Foundation's
-    // inherited initializers fill a subclass through the primitives below,
-    // so a fresh storage has run one edit and reads editedRange
-    // {NSNotFound, length}, as iOS 26.1's does.
+    // NSMutableAttributedString is an abstract class cluster: its initializers
+    // other than init() are unimplemented on a subclass
+    // ("-[OUKTextStorage initWithString:]: unrecognized selector", measured),
+    // so each one builds the backing store itself. A fresh storage reads
+    // editedRange {NSNotFound, length} (iOS 26.1: initWithString:attributes:).
+
+    public override init() {
+        super.init()
+    }
+
+    public override convenience init(string str: String) {
+        self.init(string: str, attributes: nil)
+    }
+
+    public override init(string str: String,
+                         attributes attrs: [NSAttributedString.Key: Any]? = nil) {
+        super.init()
+        _store.replaceCharacters(in: NSRange(location: 0, length: 0),
+                                 with: Foundation.NSAttributedString(string: str, attributes: attrs))
+        _editedRange = NSRange(location: NSNotFound, length: _store.length)
+    }
+
+    public override init(attributedString attrStr: NSAttributedString) {
+        super.init()
+        _store.setAttributedString(attrStr)
+        _editedRange = NSRange(location: NSNotFound, length: _store.length)
+    }
+
+    public required init?(coder: NSCoder) {
+        // No archiver for this type: an archived NSTextStorage decodes as an
+        // empty one (NSSecureCoding is not claimed).
+        super.init()
+    }
 
 #if canImport(AppKit)
-    public override init() { super.init() }
-    public override init(string str: String) { super.init(string: str) }
-    public override init(string str: String, attributes attrs: [NSAttributedString.Key: Any]? = nil) { super.init(string: str, attributes: attrs) }
-    public override init(attributedString attrStr: NSAttributedString) { super.init(attributedString: attrStr) }
-    public required init?(coder: NSCoder) { super.init(coder: coder) }
+    // The macOS host only: AppKit declares these on NSAttributedString (the
+    // pasteboard one `required`, through NSPasteboardReading). They are
+    // @nonobjc so OpenUIKit-Swift.h, which must not import AppKit (its UIKit
+    // interfaces collide with AppKit's), does not print them. They are the
+    // class's only Swift vtable slots; OpenUIKit never calls them
+    // (AttributedStringUnifyTests allows exactly these four).
     @nonobjc public required init?(pasteboardPropertyList propertyList: Any,
                                    ofType type: NSPasteboard.PasteboardType) {
-        super.init(pasteboardPropertyList: propertyList, ofType: type)
+        guard let s = Foundation.NSAttributedString(pasteboardPropertyList: propertyList, ofType: type)
+        else { return nil }
+        super.init()
+        _store.setAttributedString(s)
     }
     @nonobjc public override init?(html data: Data,
                                    options: [NSAttributedString.DocumentReadingOptionKey: Any] = [:],
                                    documentAttributes dict: AutoreleasingUnsafeMutablePointer<NSDictionary?>?) {
-        super.init(html: data, options: options, documentAttributes: dict)
+        guard let s = Foundation.NSAttributedString(html: data, options: options, documentAttributes: dict)
+        else { return nil }
+        super.init()
+        _store.setAttributedString(s)
     }
     @nonobjc public override init(url: URL,
                                   options: [NSAttributedString.DocumentReadingOptionKey: Any] = [:],
                                   documentAttributes dict: AutoreleasingUnsafeMutablePointer<NSDictionary?>?) throws {
-        try super.init(url: url, options: options, documentAttributes: dict)
+        let s = try Foundation.NSAttributedString(url: url, options: options, documentAttributes: dict)
+        super.init()
+        _store.setAttributedString(s)
     }
     @nonobjc public override init(data: Data,
                                   options: [NSAttributedString.DocumentReadingOptionKey: Any] = [:],
                                   documentAttributes dict: AutoreleasingUnsafeMutablePointer<NSDictionary?>?) throws {
-        try super.init(data: data, options: options, documentAttributes: dict)
+        let s = try Foundation.NSAttributedString(data: data, options: options, documentAttributes: dict)
+        super.init()
+        _store.setAttributedString(s)
     }
 #endif
 

@@ -10,6 +10,7 @@
 #if OUK_OPENUIKIT
 @import CoreGraphics;
 #import "OpenUIKit-Swift.h"
+#import "UIKitObjCSupport.h"
 #else
 #import <UIKit/UIKit.h>
 #endif
@@ -405,6 +406,46 @@ NSArray<NSString *> *OUKRunTextStorageScenarios(void) {
 
     L(@"## base NSTextStorage");
     DriveStorage([[NSTextStorage alloc] init], [OUKTSDelegate new], YES);
+
+    L(@"## edit masks (base NSTextStorage)");
+    {
+        NSArray *cases = @[
+            @[@"insert mid-run", @4, @0, @"x"],
+            @[@"insert at run start", @2, @0, @"x"],
+            @[@"insert at run end", @4, @0, @"x"],
+            @[@"insert at 0", @0, @0, @"x"],
+            @[@"insert at end", @8, @0, @"x"],
+            @[@"delete inside run", @5, @1, @""],
+            @[@"delete whole first run", @0, @2, @""],
+            @[@"delete whole middle run", @2, @2, @""],
+            @[@"delete whole last run", @4, @4, @""],
+            @[@"delete across runs", @1, @2, @""],
+            @[@"replace inside run", @5, @1, @"yz"],
+            @[@"replace whole middle run", @2, @2, @"yz"],
+            @[@"delete all", @0, @8, @""],
+        ];
+        for (NSArray *c in cases) {
+            NSTextStorage *t = [[NSTextStorage alloc] initWithString:@"aabbcccc"];
+            [t addAttribute:@"OUKKey" value:@1 range:NSMakeRange(2, 2)];
+            [t beginEditing];
+            [t replaceCharactersInRange:NSMakeRange([c[1] unsignedIntegerValue], [c[2] unsignedIntegerValue]) withString:c[3]];
+            L(@"%@: mask=%@ range=%@ delta=%ld", c[0], M(t.editedMask), R(t.editedRange), (long)t.changeInLength);
+            [t endEditing];
+        }
+        NSTextStorage *t = [[NSTextStorage alloc] initWithString:@"aabbcccc"];
+        [t addAttribute:@"OUKKey" value:@1 range:NSMakeRange(2, 2)];
+        [t beginEditing];
+        [t replaceCharactersInRange:NSMakeRange(6, 0) withString:@"x"];
+        L(@"two edits, 1: mask=%@ range=%@ delta=%ld", M(t.editedMask), R(t.editedRange), (long)t.changeInLength);
+        [t deleteCharactersInRange:NSMakeRange(0, 2)];
+        L(@"two edits, 2: mask=%@ range=%@ delta=%ld", M(t.editedMask), R(t.editedRange), (long)t.changeInLength);
+        [t endEditing];
+        NSTextStorage *t2 = [[NSTextStorage alloc] initWithString:@"aabbcccc"];
+        [t2 beginEditing];
+        [t2 deleteCharactersInRange:NSMakeRange(0, 2)];
+        L(@"single-run delete prefix: mask=%@ range=%@ delta=%ld", M(t2.editedMask), R(t2.editedRange), (long)t2.changeInLength);
+        [t2 endEditing];
+    }
 
     L(@"## Objective-C subclass");
     OUKObjCTextStorage *sub = [[OUKObjCTextStorage alloc] init];

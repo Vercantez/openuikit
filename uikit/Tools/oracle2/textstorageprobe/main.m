@@ -98,6 +98,34 @@ static NSArray<NSString *> *OracleOnly(void) {
     [fs setAttributes:fa range:NSMakeRange(0, fs.length)];
     [gOracle addObject:[NSString stringWithFormat:@"subclass after edits: %@", FontRuns(fs)]];
 
+    // Is the `attr` bit some edits gain inside begin/endEditing font fixing?
+    // Same edits as the shared "edit masks" section, with and without a font
+    // that covers every character.
+    [gOracle addObject:@"## edit masks with and without a covering font"];
+    for (NSNumber *withFont in @[@NO, @YES]) {
+        NSDictionary *attrs = withFont.boolValue ? fa : @{};
+        NSTextStorage *t2 = [[NSTextStorage alloc] initWithString:@"aabbcccc" attributes:attrs];
+        [t2 beginEditing];
+        [t2 deleteCharactersInRange:NSMakeRange(0, 2)];
+        [gOracle addObject:[NSString stringWithFormat:@"font=%@ fresh delete prefix: mask=%lu", withFont, (unsigned long)t2.editedMask]];
+        [t2 endEditing];
+        NSTextStorage *t = [[NSTextStorage alloc] initWithString:@"aabbcccc" attributes:attrs];
+        [t addAttribute:@"OUKKey" value:@1 range:NSMakeRange(2, 2)];
+        [t beginEditing];
+        [t replaceCharactersInRange:NSMakeRange(6, 0) withString:@"x"];
+        [t deleteCharactersInRange:NSMakeRange(0, 2)];
+        [gOracle addObject:[NSString stringWithFormat:@"font=%@ insert then delete prefix: mask=%lu", withFont, (unsigned long)t.editedMask]];
+        [t endEditing];
+        NSTextStorage *t3 = [[NSTextStorage alloc] initWithString:@"Hello world" attributes:attrs];
+        NSMutableArray *masks = [NSMutableArray array];
+        id obs = [NSNotificationCenter.defaultCenter addObserverForName:NSTextStorageDidProcessEditingNotification object:t3 queue:nil usingBlock:^(NSNotification *n) {
+            [masks addObject:@(((NSTextStorage *)n.object).editedMask)];
+        }];
+        [t3 replaceCharactersInRange:NSMakeRange(0, 0) withString:@"A"];
+        [NSNotificationCenter.defaultCenter removeObserver:obs];
+        [gOracle addObject:[NSString stringWithFormat:@"font=%@ insert: did-notification mask=%@", withFont, masks.firstObject]];
+    }
+
     // Layout manager ordering.
     [gOracle addObject:@"## layout manager ordering"];
     NSTextStorage *lts = [NSTextStorage new];
