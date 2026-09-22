@@ -45,7 +45,8 @@ from pathlib import Path
 ROOT_MODULES = ("UIKit", "SwiftUI", "AppKit")
 TRIPLE_VARIANT = "arm64-apple-ios-simulator"
 DEFAULT_TRIPLE = "arm64-apple-ios26.1-simulator"
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2
+FRAMEWORK_DIRS = ("System/Library/Frameworks", "System/Library/SubFrameworks")
 
 _HEADER_IMPORT = re.compile(r"^\s*#\s*(?:import|include)\s*<([A-Za-z_][A-Za-z0-9_]*)/", re.M)
 _AT_IMPORT = re.compile(r"^\s*@import\s+([A-Za-z_][A-Za-z0-9_]*)", re.M)
@@ -105,14 +106,14 @@ def framework_imports(framework: Path) -> set[str]:
 def scan_sdk(sdk: Path) -> dict[str, dict]:
     """module name -> {"kind", "path" (SDK-relative), "deps"}."""
     graph: dict[str, dict] = {}
-    fw_root = sdk / "System/Library/Frameworks"
-    for fw in sorted(fw_root.glob("*.framework")):
-        name = fw.name[: -len(".framework")]
-        graph[name] = {
-            "kind": "framework",
-            "path": str(fw.relative_to(sdk)),
-            "deps": sorted(framework_imports(fw) - {name}),
-        }
+    for rel in FRAMEWORK_DIRS:
+        for fw in sorted((sdk / rel).glob("*.framework")):
+            name = fw.name[: -len(".framework")]
+            graph[name] = {
+                "kind": "framework",
+                "path": str(fw.relative_to(sdk)),
+                "deps": sorted(framework_imports(fw) - {name}),
+            }
     swift_root = sdk / "usr/lib/swift"
     for m in sorted(swift_root.glob("*.swiftmodule")):
         name = m.name[: -len(".swiftmodule")]
@@ -151,6 +152,38 @@ def removal_closure(graph: dict[str, dict], roots=ROOT_MODULES) -> dict[str, str
     return removed
 
 
+def cross_import_bystanders(framework: Path) -> dict[str, list[Path]]:
+    """bystander module -> its .swiftoverlay files, for one framework.
+
+    Swift loads `<Framework>.swiftcrossimport/<Bystander>.swiftoverlay`'s
+    overlay module whenever both are imported. OpenUIKit's module is named
+    UIKit, so a kept Apple framework's UIKit/SwiftUI overlay would be loaded
+    against the port (MEASURED: "no such module '_AppIntents_UIKit'" once the
+    overlay itself was removed).
+    """
+    found: dict[str, list[Path]] = {}
+    modules = framework / "Modules"
+    if modules.is_dir():
+        for cross in modules.glob("*.swiftcrossimport"):
+            for overlay in cross.rglob("*.swiftoverlay"):
+                found.setdefault(overlay.stem, []).append(overlay)
+    return found
+
+
+def _copy_pruned(src: Path, dst: Path, drop: set[Path]) -> None:
+    """Mirror src at dst with symlinks, materialising only the directories on
+    the way to a dropped file."""
+    dst.mkdir(parents=True, exist_ok=True)
+    for entry in sorted(os.listdir(src)):
+        s = src / entry
+        if s in drop:
+            continue
+        if s.is_dir() and not s.is_symlink() and any(d.is_relative_to(s) for d in drop):
+            _copy_pruned(s, dst / entry, drop)
+        else:
+            _link(s, dst / entry)
+
+
 def _link(src: Path, dst: Path) -> None:
     dst.parent.mkdir(parents=True, exist_ok=True)
     os.symlink(src, dst)
@@ -180,21 +213,42 @@ def curate(sdk: Path, out: Path, roots=ROOT_MODULES) -> dict:
     removed = removal_closure(graph, roots)
     fw_skip = {f"{n}.framework" for n in removed}
     swift_skip = {f"{n}.swiftmodule" for n in removed}
+    pruned: dict[str, list[str]] = {}
+    prune_files: dict[str, set[Path]] = {}
+    for n, e in graph.items():
+        if e["kind"] != "framework" or n in removed:
+            continue
+        real = (sdk / e["path"]).resolve()
+        hits = {b: f for b, f in cross_import_bystanders(real).items() if b in removed}
+        if hits:
+            pruned[n] = sorted(hits)
+            prune_files[f"{n}.framework"] = {x for fs in hits.values() for x in fs}
     identity = sdk_identity(sdk)
     root = out / name
     manifest_path = out / "ios-target-sdk.json"
     if manifest_path.is_file() and root.is_dir():
         old = json.loads(manifest_path.read_text())
         if old.get("identity") == identity and old.get("removed") == removed \
+                and old.get("pruned_cross_imports") == pruned \
                 and old.get("format") == FORMAT_VERSION:
             return old
     if root.exists():
         _rmtree_links(root)
-    frameworks = lambda s, d: _farm(s, d, fw_skip, {})
+    def frameworks(s: Path, d: Path) -> None:
+        d.mkdir(parents=True, exist_ok=True)
+        for entry in sorted(os.listdir(s)):
+            if entry in fw_skip:
+                continue
+            if entry in prune_files:
+                real = (s / entry).resolve()
+                _copy_pruned(real, d / entry, prune_files[entry])
+            else:
+                _link(s / entry, d / entry)
     swift = lambda s, d: _farm(s, d, swift_skip, {})
     _farm(sdk, root, set(), {
         "System": lambda s, d: _farm(s, d, set(), {
-            "Library": lambda s2, d2: _farm(s2, d2, set(), {"Frameworks": frameworks}),
+            "Library": lambda s2, d2: _farm(s2, d2, set(), {"Frameworks": frameworks,
+                                                            "SubFrameworks": frameworks}),
         }),
         "usr": lambda s, d: _farm(s, d, set(), {
             "lib": lambda s2, d2: _farm(s2, d2, set(), {"swift": swift}),
@@ -208,6 +262,7 @@ def curate(sdk: Path, out: Path, roots=ROOT_MODULES) -> dict:
         "triple": DEFAULT_TRIPLE,
         "roots": list(roots),
         "removed": removed,
+        "pruned_cross_imports": pruned,
         "kept_frameworks": sorted(n for n, e in graph.items()
                                   if e["kind"] == "framework" and n not in removed),
     }

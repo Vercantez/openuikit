@@ -103,6 +103,34 @@ class CuratedSDKUnitTests(unittest.TestCase):
             after = sorted(str(p.relative_to(sdk)) for p in sdk.rglob("*"))
         self.assertEqual(before, after)
 
+    def test_cross_import_overlays_on_removed_bystanders_are_pruned(self) -> None:
+        # MEASURED: Apple's Intents (kept) + OpenUIKit's module named UIKit
+        # made Swift load AppIntents' cross-import overlay `_AppIntents_UIKit`
+        # (removed: it imports UIKit): "no such module '_AppIntents_UIKit'".
+        with tempfile.TemporaryDirectory() as tmp:
+            sdk = _fake_sdk(Path(tmp))
+            _framework(sdk, "AppIntents", "#import <Foundation/Foundation.h>\n", "import Foundation\n")
+            cross = sdk / "System/Library/Frameworks/AppIntents.framework/Modules/AppIntents.swiftcrossimport"
+            cross.mkdir(parents=True)
+            (cross / "UIKit.swiftoverlay").write_text("version: 1\nmodules:\n  - name: _AppIntents_UIKit\n")
+            (cross / "Foundation.swiftoverlay").write_text("version: 1\nmodules:\n  - name: _AppIntents_Foundation\n")
+            _framework(sdk, "_AppIntents_UIKit", "", "import AppIntents\nimport UIKit\n")
+            sub = sdk / "System/Library/SubFrameworks/UIUtilities.framework/Headers"
+            sub.mkdir(parents=True)
+            (sub / "UIUtilities.h").write_text("#import <UIKit/UIKit.h>\n")
+            manifest = sdkmod.curate(sdk, Path(tmp) / "out")
+            root = Path(manifest["curated_sdk"])
+            fw = root / "System/Library/Frameworks/AppIntents.framework"
+            self.assertFalse(fw.is_symlink())
+            kept = root / "System/Library/Frameworks/AppIntents.framework/Modules/AppIntents.swiftcrossimport"
+            self.assertEqual(sorted(p.name for p in kept.iterdir()), ["Foundation.swiftoverlay"])
+            self.assertTrue((fw / "Headers").is_symlink())
+            self.assertIn("UIUtilities", manifest["removed"])
+            self.assertFalse((root / "System/Library/SubFrameworks/UIUtilities.framework").exists())
+            self.assertEqual(manifest["pruned_cross_imports"], {"AppIntents": ["UIKit"]})
+            self.assertTrue((sdk / "System/Library/Frameworks/AppIntents.framework/Modules/"
+                             "AppIntents.swiftcrossimport/UIKit.swiftoverlay").is_file())
+
     def test_swift_import_forms(self) -> None:
         text = "@_exported import UIKit\nimport struct SwiftUI.Color\n@preconcurrency import AVKit\n  // import Nope\n"
         self.assertEqual(sdkmod.swift_imports(text), {"UIKit", "SwiftUI", "AVKit"})
