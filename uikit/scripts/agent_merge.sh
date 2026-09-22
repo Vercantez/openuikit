@@ -32,8 +32,10 @@
 #     on the simulator. GATE_SERIAL=1 restores the one-at-a-time order.
 #   - GATE_WARM=1: persistent build caches (off by default; see the report).
 # Knobs: GATE_GOLDENS=tmp grades against the machine-local /tmp round captures
-# (the old route); ALLOW_STALE_GOLDENS="<set or App> ..." accepts named stale
-# or unpinned golden sets (said in the merge).
+# (the old route); ALLOW_STALE_GOLDENS="<set or App> ..." names golden sets
+# known stale (failing a golden check, or board rows not pinned yet): they are
+# rendered and reported, NOT graded, and listed in the merge message; naming a
+# set that is pinned and fresh is refused.
 set -e
 SELF=$(cd "$(dirname "$0")" && pwd -P)/$(basename "$0")
 cd "$(dirname "$0")/../.."          # monorepo root
@@ -410,12 +412,13 @@ def app_fingerprint(app):
         h.update(rel.encode() + b"\0" + sha(rel).encode() + b"\n")
     return h.hexdigest()
 def last_source_change(app):
-    t = subprocess.run(["git", "log", "-1", "--no-merges", "--format=%at", "HEAD", "MERGE_HEAD", "--",
+    revs = ["HEAD"] + (["MERGE_HEAD"] if subprocess.run(["git", "rev-parse", "-q", "--verify", "MERGE_HEAD"], capture_output=True).returncode == 0 else [])
+    t = subprocess.run(["git", "log", "-1", "--no-merges", "--format=%at", *revs, "--",
                         f"Sources/ConformanceApps/{app}"], capture_output=True, text=True).stdout.strip()
     return int(t) if t else 0
 import datetime
 def ts(iso): return datetime.datetime.strptime(iso, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=datetime.timezone.utc).timestamp()
-bad, notes = [], []
+bad, notes, unpinned = [], [], set()
 if mode == "committed" and "golden_realapp_ios" in man:
     info = man["golden_realapp_ios"]; d = "goldens/ios/golden_realapp_ios"
     have = set(n for n in os.listdir(d) if not n.startswith("."))
@@ -469,17 +472,32 @@ for set_, app, skip, *flag in plan:
     if wrong:
         bad.append((set_, app, f"BOARD-GOLDEN MISMATCH: {set_} {sorted(wrong)} were graded on the board against a different golden than the one here", fix))
     if len(pinned) < len(frames):
+        unpinned.add(set_)
         notes.append(f"   {set_}: {len(frames) - len(pinned)} board row(s) not pinned to a golden (no golden_sha): a drop there may be a stale golden, not a regression")
 for n in notes: print(n)
+# ALLOW_STALE_GOLDENS names sets (or Apps) whose goldens are known stale: they
+# are rendered and REPORTED, never graded (no drop allowance can hide a real
+# regression elsewhere). An entry may only name a set that fails a golden check
+# above or whose board rows are not pinned yet, so the stopgap cannot outlive
+# the refresh that fixes it.
+suspect = {b[0] for b in bad} | unpinned
+app_of = {p[0]: p[1] for p in plan}
+allowed = set()
+for tok in sorted(allow):
+    hit = {st for st in suspect if st == tok or app_of.get(st) == tok}
+    if not hit:
+        bad.append((tok, None, f"ALLOW_STALE_GOLDENS names {tok}, which is pinned and fresh (or not a set this gate grades): drop it from ALLOW_STALE_GOLDENS", "remove it from ALLOW_STALE_GOLDENS"))
+    allowed |= hit
 refuse = []
 for set_, app, msg, fix in bad:
-    if set_ in allow or (app and app in allow) or "all" in allow:
-        print(f"   {msg} — ALLOWED (ALLOW_STALE_GOLDENS)")
+    if set_ in allowed:
+        print(f"   {msg} — ALLOWED STALE (ALLOW_STALE_GOLDENS): rendered and reported, not graded")
     else:
         refuse.append(f"{msg}\n      fix: {fix}")
+open(f"{S}/allowed_stale.txt", "w").write("".join(f"{st}\n" for st in sorted(allowed)))
 if refuse:
     print("\n".join(refuse))
-    raise SystemExit(f"CONFORMANCE GOLDENS REFUSED: {len(refuse)} set(s) (ALLOW_STALE_GOLDENS=\"<set or App> ...\" accepts them, named in the merge)")
+    raise SystemExit(f"CONFORMANCE GOLDENS REFUSED: {len(refuse)} problem(s) (ALLOW_STALE_GOLDENS=\"<set or App> ...\" reports named stale sets instead of grading them; said in the merge)")
 PY
 seed() { # <set> <dir>: the goldens a set is graded against
   rm -rf "$2"
@@ -553,12 +571,18 @@ GATE_S=$S python3 - <<'PY' || exit 9
 import json, os, glob
 board = {r["scene"]: r for r in json.load(open("scoreboard/latest.json"))["rows"] if r["category"] == "conformance"}
 bad = []
-for d in sorted(glob.glob(os.environ['GATE_S'] + "/conf-*")):
+S = os.environ['GATE_S']
+stale = set(open(f"{S}/allowed_stale.txt").read().split()) if os.path.exists(f"{S}/allowed_stale.txt") else set()
+for d in sorted(glob.glob(S + "/conf-*")):
     if not os.path.isdir(d): continue
     s = json.load(open(os.path.join(d, "summary.json")))
+    set_ = "hc-conformance-" + os.path.basename(d)[len("conf-"):]
     for cap in s["captures"]:
         name = f"{s['app']}:{cap['name']}"; score = float(cap["score"]); row = board.get(name)
         if row is None: continue
+        if set_ in stale:
+            print(f"   {name}: {score:.3f} (board {row['score']:.3f}) ALLOWED STALE (not graded: {set_})")
+            continue
         hint = "" if row.get("golden_sha") else " [board row not pinned to a golden: may be a stale golden]"
         if score == 0.0:
             # 0.000 is not a fidelity score: a missing frame or a size mismatch
@@ -605,7 +629,9 @@ git checkout -q main && git fetch -q origin && git merge -q --ff-only origin/mai
   && NOW_TREE=$(git merge-tree --write-tree main "$BR" | head -1) \
   && { [ "$(git rev-parse "$NOW_TREE:uikit")" = "$(git rev-parse "$MERGED_TREE:uikit")" ] \
        || { echo "REFUSED: main's uikit/ moved since the check (origin/main advanced); rerun the gate"; exit 3; }; } \
-  && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" "$BR"
+  && git merge --no-ff -q -m "Merge $BR (agent fan-out; checked by scripts/agent_merge.sh)" \
+       ${ALLOW_STALE_GOLDENS:+-m "Allowed stale goldens, rendered and reported but NOT graded (ALLOW_STALE_GOLDENS): $ALLOW_STALE_GOLDENS"} \
+       ${ALLOW_DROP:+-m "Allowed drops (ALLOW_DROP): $ALLOW_DROP"} "$BR"
 OLD=$(grep -o 'EXPECTED_INREPO_UIKIT_TREE=[0-9a-f]*' scripts/vendor_pins.sh | cut -d= -f2); NEW=$(git rev-parse HEAD:uikit)
 sed -i "s/$OLD/$NEW/" scripts/vendor_pins.sh env/contract.json scripts/env/test_contract.py
 python3 scripts/env/test_contract.py 2>&1 | tail -1
