@@ -289,7 +289,7 @@
    "swift_half_unique_errors": 422,
    "swift_half_files_with_errors": 73,
    "nsattributedstring_ambiguous": 0,
-   "note": "simplenote-objc-core measured 488 unique errors in 85 files behind the PCH with an uncommitted fake NSTextStorage, 22 of them NSAttributedString ambiguity; the remaining groups are the macOS triple (@IBAction arity, AppKit class-name collisions incl. NSTextStorageDelegate) and API gaps."
+   "note": "simplenote-objc-core measured 488 unique errors in 85 files behind the PCH with an uncommitted fake NSTextStorage, 22 of them NSAttributedString ambiguity; the remaining groups are the macOS triple (@IBAction arity, AppKit class-name collisions) and API gaps; an NSTextStorageDelegate collision this branch introduced was removed (OUKTextStorageDelegate on the host)."
   }
  }
 }
