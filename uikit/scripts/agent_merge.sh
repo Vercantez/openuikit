@@ -63,7 +63,7 @@ drop_lock() {
   HAVE_LOCK=""
 }
 [[ -n "${CHECK_ONLY:-}" ]] || take_lock
-trap 'drop_lock' EXIT INT TERM HUP
+trap 'drop_lock' EXIT; trap 'exit 130' INT TERM HUP
 ROOT=$(pwd)
 NAME=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
@@ -207,13 +207,16 @@ SIM_LOCK=/tmp/conformance_sim.lock
 HAVE_SIM=""
 killtree() { local c; for c in $(pgrep -P "$1" 2>/dev/null); do killtree "$c"; done; kill "$1" 2>/dev/null || true; }
 cleanup() {
+  local rc=$?; set +e   # never let a cleanup failure replace the verdict (a failing
+                        # git in the old trap turned exit 9 into 128)
   for p in $BG_PIDS; do killtree "$p"; done
   docker rm -f "gate-linux-$$" >/dev/null 2>&1 || true
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; fi
   if [ -n "${SLOT_LOCK:-}" ]; then rm -rf "$SLOT_LOCK"; fi
   git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; drop_lock
+  exit $rc
 }
-trap cleanup EXIT INT TERM HUP
+trap cleanup EXIT; trap 'exit 130' INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 WT_TREE=$(git -C "$WT" write-tree)
 STAMP_OK=1
@@ -343,7 +346,7 @@ if [ "$GOLDENS" = committed ]; then
   fi
 fi
 rm -rf $S/app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp $S/app >/dev/null
-python3 Tools/compare/compare_realapp.py --golden "$REALAPP_GOLDEN" --out $S/app --scale 3 > $S/app-compare.txt 2>&1 || true
+python3 Tools/compare/compare_realapp.py --golden "$REALAPP_GOLDEN" --out $S/app --scale 3 > $S/app-compare.txt 2> $S/app-compare.err || true
 grep pixels $S/app-compare.txt | cut -c1-80
 GATE_S=$S python3 - <<'PY' || exit 6
 import os, re
