@@ -232,9 +232,9 @@ typedef OUKTextStorageEditActions NSTextStorageEditActions NS_SWIFT_NAME(NSTextS
  * UIKit's `NSTextStorage` except on the macOS host, where AppKit's class of
  * that name is loaded in the same process; there it is `OUKTextStorage` and
  * this alias gives Objective-C source the UIKit spelling
- * (`@interface SPInteractiveTextStorage : NSTextStorage`). Hidden from Swift,
- * which names the class NSTextStorage already. */
-#if TARGET_OS_OSX && !defined(__swift__)
+ * (`@interface SPInteractiveTextStorage : NSTextStorage`). Swift imports it as
+ * a typealias to the same class. */
+#if TARGET_OS_OSX
 @class OUKTextStorage;
 @compatibility_alias NSTextStorage OUKTextStorage;
 #endif
