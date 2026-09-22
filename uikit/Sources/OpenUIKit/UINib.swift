@@ -53,15 +53,34 @@
 // bounds (0, 0, 267, 64) and centre (181.5, 32), i.e. frame (48, 0, 267, 64),
 // which is the `<rect>` in the xib.
 //
-// WHAT THIS DOES NOT DO is run `initWithCoder:`. Real UIKit decodes each
-// archived object through `NSCoding`; OpenUIKit has no archiver, so the
-// decoder below constructs the object through a name -> factory registry
-// (`UINibClassRegistry`, the nib-side twin of the `SelectorDispatching`
-// registry in UISelector.swift) and then applies the archived keys with a
-// switch. Two consequences, both in docs/KNOWN_GAPS.md: a custom
-// `init?(coder:)` in app code is not called, and an archived key this file
-// does not know is skipped — `UINib.unhandledKeys` records every one, so the
-// gap is countable rather than silent.
+// HOW OBJECTS ARE BUILT. Real UIKit decodes each archived object through
+// `NSCoding`: `[[cls alloc] initWithCoder:nibDecoder]`. OpenUIKit does the
+// same for every class it can find at run time (UINibCoder.swift): an app's
+// custom view or controller is looked up by its archived name
+// (`objc_lookUpClass` on an Objective-C runtime, `_typeByName` elsewhere) and
+// built with its own `required init?(coder:)`, handed a `UINibCoder`
+// positioned on its archived keys. The framework's `UIView.init?(coder:)` and
+// `UIViewController.init?(coder:)` then decode the archived state, so the
+// app's initializer body after `super.init(coder:)` sees it, exactly as on
+// iOS (MEASURED, Tools/oracle2/nibruntimeprobe: a custom view's frame and
+// background are already decoded when its `init(coder:)` returns).
+//
+// UIKit's own classes the archive names directly (`UILabel`, `UIView`, …)
+// are built through a name -> factory registry (`UINibClassRegistry`) and the
+// archived keys applied with a switch — the path the Pocket Casts fixture
+// screens have been measured on since this file was written. An app can still
+// register a factory for a custom class (the realapp harness does, for nibs
+// compiled against a module it renames); a registration wins over run-time
+// lookup. An archived key this file does not know is skipped —
+// `UINib.unhandledKeys` records every one, so the gap is countable rather than
+// silent.
+
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
+#if canImport(Foundation)
+import struct Foundation.Data
+#endif
 
 // MARK: - The archive
 
@@ -290,6 +309,95 @@ public enum UINibClassRegistry {
         return builtIn[name]
     }
 
+    /// True when an app registered a factory for `archivedName` (as opposed
+    /// to a built-in UIKit class): an explicit registration beats run-time
+    /// class lookup.
+    static func isRegistered(_ archivedName: String) -> Bool {
+        registered[demangleSwiftClassName(archivedName) ?? archivedName] != nil
+    }
+
+    /// Module renames for run-time lookup: `["Kiosk": "Eidolon"]` makes an
+    /// archive compiled for the app's own module (`_TtC5Kiosk…`) resolve
+    /// against the same source compiled under a different module name. Real
+    /// UIKit has no such table because Xcode compiles the storyboard with the
+    /// module the classes live in; a port that renames the module needs it.
+    public static var moduleAliases: [String: String] = [:]
+
+    /// `_TtC5Kiosk17AppViewController` -> ("Kiosk", ["AppViewController"]),
+    /// following nested-class context letters (`C` class, `O` enum, `V`
+    /// struct) the way Swift's legacy ObjC-name mangling writes them.
+    static func legacyMangledComponents(_ mangled: String) -> (kinds: [Character], names: [String])? {
+        guard mangled.hasPrefix("_Tt") else { return nil }
+        let chars = Array(mangled.dropFirst(3))
+        var kinds: [Character] = []
+        var index = 0
+        while index < chars.count, "COV".contains(chars[index]) {
+            kinds.append(chars[index])
+            index += 1
+        }
+        guard !kinds.isEmpty else { return nil }
+        var names: [String] = []
+        while index < chars.count {
+            var digits = ""
+            while index < chars.count, chars[index].isNumber {
+                digits.append(chars[index])
+                index += 1
+            }
+            guard let length = Int(digits), length > 0, index + length <= chars.count else { return nil }
+            names.append(String(chars[index..<(index + length)]))
+            index += length
+        }
+        // One module name plus one name per context letter.
+        guard names.count == kinds.count + 1 else { return nil }
+        return (kinds, names)
+    }
+
+    /// The archived name with its module replaced per `moduleAliases`, in
+    /// legacy mangling (for `objc_lookUpClass`) — nil when nothing changes.
+    static func aliasedLegacyName(_ archivedName: String) -> String? {
+        guard let (kinds, names) = legacyMangledComponents(archivedName),
+              let alias = moduleAliases[names[0]] else { return nil }
+        var out = "_Tt" + String(kinds)
+        for name in [alias] + names.dropFirst() { out += "\(name.utf8.count)\(name)" }
+        return out
+    }
+
+    /// Swift's current mangling of the same nominal type, which the runtime's
+    /// `_typeByName` accepts: `_TtC5Kiosk17AppViewController` ->
+    /// `5Kiosk17AppViewControllerC`; a nested `_TtCO4main5Outer5Inner` ->
+    /// `4main5OuterO5InnerC`. (MEASURED with swiftc 6.2.1: `_typeByName`
+    /// returns nil for the legacy spelling and the type for this one.)
+    static func currentMangledName(_ legacy: String) -> String? {
+        guard let (kinds, names) = legacyMangledComponents(legacy) else { return nil }
+        var out = "\(names[0].utf8.count)\(names[0])"
+        // Legacy writes the context letters outermost-last; the current
+        // mangling appends each context's letter after its name, innermost
+        // last.
+        for (offset, name) in names.dropFirst().enumerated() {
+            out += "\(name.utf8.count)\(name)"
+            out.append(kinds[kinds.count - 1 - offset])
+        }
+        return out
+    }
+
+    /// The class an archive names, found at run time the way UIKit's
+    /// `NSClassFromString` finds it. Only for names the registry does not
+    /// answer (UIKit's own classes stay on the registry path).
+    static func runtimeClass(_ archivedName: String) -> AnyClass? {
+        var candidates = [archivedName]
+        if let aliased = aliasedLegacyName(archivedName) { candidates.append(aliased) }
+        for name in candidates {
+#if canImport(ObjectiveC)
+            if let found = name.withCString({ objc_lookUpClass($0) }) { return found }
+#endif
+            if let current = currentMangledName(name),
+               let type = _typeByName(current) as? AnyClass {
+                return type
+            }
+        }
+        return nil
+    }
+
     /// `_TtC8podcasts14ThemeableLabel` -> `ThemeableLabel`.
     ///
     /// Swift's legacy class mangling, which is still what Interface Builder
@@ -337,7 +445,9 @@ public enum UINibClassRegistry {
         "UITableViewCell": { UITableViewCell() },
         "UITableViewCellContentView": { UITableViewCellContentView() },
         "UICollectionViewCell": { UICollectionViewCell() },
-        "UIViewController": { UIViewController() },
+        // iOS 7-10 top/bottom layout guides, archived as hidden views in
+        // storyboards saved before safe areas (all of Eidolon's scenes).
+        "_UILayoutGuide": { _UILayoutGuide() },
     ]
 }
 
@@ -367,8 +477,11 @@ open class UINib {
     public struct OptionsKey: Hashable, Sendable {
         public let rawValue: String
         public init(rawValue: String) { self.rawValue = rawValue }
-        /// UIKit's `UINib.OptionsKey.externalObjects`. Accepted and ignored:
-        /// no fixture nib uses external-object placeholders.
+        /// UIKit's `UINib.OptionsKey.externalObjects`: a `[String: Any]`
+        /// mapping each `UIProxyObject` identifier the archive names to the
+        /// object that stands in for it. A storyboard hands its scene nibs
+        /// `UIStoryboardPlaceholder` this way, and a storyboard controller
+        /// hands its view nib the `UpstreamPlaceholder-N` table it archived.
         public static let externalObjects = OptionsKey(rawValue: "UINibExternalObjects")
     }
 
@@ -386,15 +499,14 @@ open class UINib {
     /// Retained for the diagnostic when a nib is missing.
     public let nibName: String
 
-    /// UIKit's `init(nibName:bundle:)`. The bundle argument is retained for
-    /// source compatibility; the file is found on
-    /// `OpenUIKitRuntime.nibSearchPaths`, the same contract
-    /// `OpenUIKitRuntime.imageSearchPaths` gives `UIImage(named:)` — the
-    /// library hardcodes no host paths.
+    /// UIKit's `init(nibName:bundle:)`. The file is found on
+    /// `OpenUIKitRuntime.nibSearchPaths` first — the same contract
+    /// `OpenUIKitRuntime.imageSearchPaths` gives `UIImage(named:)`, so the
+    /// library hardcodes no host paths — and then in the bundle's resource
+    /// directory (the main bundle for nil), which is where Xcode puts it.
     public init(nibName name: String, bundle: Bundle?) {
-        _ = bundle
         nibName = name
-        archive = UINib.loadArchive(named: name)
+        archive = UINib.loadArchive(named: name, bundle: bundle)
     }
 
     /// UIKit's `UINib.nib(withNibName:bundle:)`.
@@ -410,10 +522,30 @@ open class UINib {
         archive = NibArchive.parse(bytes)
     }
 
-    static func loadArchive(named name: String) -> NibArchive? {
+    /// A nib read from an exact file path (a storyboard's scene archives).
+    init(path: String) {
+        nibName = path
+        archive = ResourceIO.readFile(path).flatMap(NibArchive.parse)
+    }
+
+#if canImport(Foundation)
+    /// UIKit's `init(data:bundle:)`.
+    public convenience init(data: Data, bundle: Bundle?) {
+        _ = bundle
+        self.init(nibBytes: [UInt8](data), name: "<data>")
+    }
+#endif
+
+    static func loadArchive(named name: String, bundle: Bundle? = nil) -> NibArchive? {
         let bare = name.hasSuffix(".nib") ? String(name.dropLast(4)) : name
-        for directory in OpenUIKitRuntime.nibSearchPaths {
-            for candidate in ["\(directory)/\(bare).nib", "\(directory)/\(bare)"] {
+        var directories = OpenUIKitRuntime.nibSearchPaths
+        if let resources = _resourceDirectory(of: bundle) { directories.append(resources) }
+        for directory in directories {
+            // Xcode writes a nib either as a flat NIBArchive file or, for a
+            // nib with device-specific variants, as a `.nib` directory whose
+            // `runtime.nib` is the archive.
+            for candidate in ["\(directory)/\(bare).nib", "\(directory)/\(bare)",
+                              "\(directory)/\(bare).nib/runtime.nib"] {
                 if let bytes = ResourceIO.readFile(candidate),
                    let parsed = NibArchive.parse(bytes) {
                     return parsed
@@ -427,17 +559,22 @@ open class UINib {
     public var isLoaded: Bool { archive != nil }
 
     /// UIKit's `instantiate(withOwner:options:)`: the archive's top-level
-    /// objects, with `owner` standing in for the File's Owner placeholder and
-    /// every outlet connected.
+    /// objects, with `owner` standing in for the File's Owner placeholder,
+    /// `options[.externalObjects]` for the other placeholders, and every
+    /// connection made.
     open func instantiate(withOwner owner: Any?,
                           options: [UINib.OptionsKey: Any]?) -> [Any] {
-        _ = options
         guard let archive else {
             fatalError("UINib: no archive for '\(nibName)'; point "
                        + "OpenUIKitRuntime.nibSearchPaths at the directory holding "
                        + "\(nibName).nib")
         }
-        return NibDecoder(archive: archive, owner: owner as AnyObject?).instantiate()
+        var externals: [String: AnyObject] = [:]
+        if let table = options?[.externalObjects] as? [String: Any] {
+            for (key, value) in table { externals[key] = value as AnyObject }
+        }
+        return NibDecoder(archive: archive, owner: owner as AnyObject?,
+                          externalObjects: externals).instantiate()
     }
 
     /// Default-argument form, as UIKit declares it.
@@ -446,10 +583,25 @@ open class UINib {
     }
 }
 
+/// A bundle's resource directory as a path, without Foundation's `Bundle`
+/// API surface differences between the package build and the guest shim.
+@MainActor
+func _resourceDirectory(of bundle: Bundle?) -> String? {
+#if canImport(Foundation)
+    return (bundle ?? Bundle.main).resourcePath
+#elseif canImport(FoundationEssentials)
+    return (bundle ?? Bundle.main).resourcePath
+#else
+    _ = bundle
+    return nil
+#endif
+}
+
 public extension OpenUIKitRuntime {
-    /// Directories searched for `<name>.nib` by `UINib(nibName:bundle:)`, in
-    /// order. EMPTY by default, exactly like `imageSearchPaths`: an app or
-    /// host points this at its compiled nibs.
+    /// Directories searched for `<name>.nib` by `UINib(nibName:bundle:)`, and
+    /// for `<name>.storyboardc` by `UIStoryboard(name:bundle:)`, in order,
+    /// before the bundle's own resources. EMPTY by default, exactly like
+    /// `imageSearchPaths`: an app or host points this at its compiled nibs.
     static var nibSearchPaths: [String] {
         get { _openUIKitNibSearchPaths }
         set { _openUIKitNibSearchPaths = newValue }
@@ -465,23 +617,35 @@ nonisolated(unsafe) var _openUIKitNibSearchPaths: [String] = []
 /// Turns one parsed archive into live objects. One instance per
 /// `instantiate(withOwner:options:)` call, so a nib registered with a table
 /// hands out a fresh hierarchy per dequeue, as UIKit's does.
+///
+/// ORDER, MEASURED on iOS 26.1 (Tools/oracle2/nibruntimeprobe,
+/// fixtures/nibruntime/oracle): every object is decoded first — top-level
+/// objects in archive order, each one's `init(coder:)` decoding what it
+/// references — then the archive's key-value pairs (user-defined runtime
+/// attributes) are set, then the connections are made in archive order, and
+/// finally `awakeFromNib` goes to every object in `UINibObjectsKey` order.
 @MainActor
 final class NibDecoder {
-    private let archive: NibArchive
-    private let owner: AnyObject?
+    let archive: NibArchive
+    let owner: AnyObject?
+    let externalObjects: [String: AnyObject]
     /// Memoized per index: an archived object is referenced by its parent, by
     /// the top-level list and by every constraint that names it.
-    private var built: [Int: AnyObject] = [:]
-    private var building: Set<Int> = []
-    /// Every view/controller the archive produced, for the awakeFromNib pass.
-    private var awakened: [AnyObject] = []
+    var built: [Int: AnyObject] = [:]
+    var building: Set<Int> = []
+    /// Every object the archive produced, in construction order — the
+    /// awakeFromNib order when an archive has no `UINibObjectsKey`.
+    var awakened: [AnyObject] = []
     /// Constraints wait for the whole hierarchy: activating one needs the
     /// common ancestor of its two items to exist.
-    private var deferredConstraints: [NSLayoutConstraint] = []
+    var deferredConstraints: [NSLayoutConstraint] = []
+    /// Constraints whose constant is IB's symbolic standard spacing.
+    var symbolicSpacings: [(NSLayoutConstraint, AnyObject, AnyObject?)] = []
 
-    init(archive: NibArchive, owner: AnyObject?) {
+    init(archive: NibArchive, owner: AnyObject?, externalObjects: [String: AnyObject] = [:]) {
         self.archive = archive
         self.owner = owner
+        self.externalObjects = externalObjects
     }
 
     func instantiate() -> [Any] {
@@ -492,30 +656,71 @@ final class NibDecoder {
         var topLevel: [Any] = []
         if case .reference(let index)? = root.first("UINibTopLevelObjectsKey") {
             for element in arrayElements(at: index) {
-                // The two placeholders (File's Owner, First Responder) are
-                // proxies; UIKit does not return them.
-                if element is NibProxyPlaceholder { continue }
+                // Placeholders (File's Owner, First Responder, external
+                // objects) are proxies; UIKit does not return them.
+                if isPlaceholder(element) { continue }
                 topLevel.append(element)
+            }
+        }
+        var objectOrder: [AnyObject]? = nil
+        if case .reference(let index)? = root.first("UINibObjectsKey") {
+            objectOrder = arrayElements(at: index)
+        }
+
+        if case .reference(let index)? = root.first("UINibKeyValuePairsKey") {
+            for pair in arrayElements(at: index) {
+                (pair as? NibKeyValuePair)?.apply()
             }
         }
 
         if case .reference(let index)? = root.first("UINibConnectionsKey") {
             for connection in arrayElements(at: index) {
-                (connection as? NibConnection)?.connect()
+                (connection as? NibConnecting)?.connect()
             }
         }
 
+        resolveSymbolicSpacings()
         NSLayoutConstraint.activate(deferredConstraints)
         deferredConstraints = []
 
-        for object in awakened { (object as? UIResponder)?.awakeFromNib() }
+        var seen = Set<ObjectIdentifier>()
+        for object in objectOrder ?? awakened {
+            guard !isPlaceholder(object), seen.insert(ObjectIdentifier(object)).inserted else { continue }
+            NibDecoder.sendAwakeFromNib(object)
+        }
         return topLevel
+    }
+
+    func isPlaceholder(_ object: AnyObject) -> Bool {
+        if object is NibProxyPlaceholder { return true }
+        if let owner, object === owner { return true }
+        for value in externalObjects.values where value === object { return true }
+        return false
+    }
+
+    /// `awakeFromNib` is declared on NSObject on Apple platforms (AppKit's /
+    /// UIKit's NSNibAwaking category) and on UIResponder in OpenUIKit
+    /// everywhere; a custom archived NSObject gets it too (MEASURED:
+    /// `Helper.awakeFromNib` fires for an IB "Object").
+    static func sendAwakeFromNib(_ object: AnyObject) {
+        if let responder = object as? UIResponder {
+            responder.awakeFromNib()
+            return
+        }
+#if canImport(AppKit)
+        (object as? NSObject)?.awakeFromNib()
+#elseif canImport(ObjectiveC)
+        let selector = sel_registerName("awakeFromNib")
+        if let nsobject = object as? NSObject, nsobject.responds(to: selector) {
+            _ = nsobject.perform(selector)
+        }
+#endif
     }
 
     // MARK: Object graph
 
-    /// Elements of an archived NSArray/NSMutableArray, in order.
-    private func arrayElements(at index: Int) -> [AnyObject] {
+    /// Elements of an archived NSArray/NSMutableArray/NSSet, in order.
+    func arrayElements(at index: Int) -> [AnyObject] {
         guard index >= 0, index < archive.objects.count else { return [] }
         var out: [AnyObject] = []
         for pair in archive.objects[index].values where pair.key == "UINibEncoderEmptyKey" {
@@ -526,7 +731,21 @@ final class NibDecoder {
         return out
     }
 
-    private func build(_ index: Int) -> AnyObject? {
+    /// An archived NSDictionary: `UINibEncoderEmptyKey` entries alternate
+    /// key, value (MEASURED on UIExternalObjectsTableForViewLoading and
+    /// UIButtonStatefulContent).
+    func dictionaryPairs(at index: Int) -> [(key: AnyObject, value: AnyObject)] {
+        let flat = arrayElements(at: index)
+        var out: [(key: AnyObject, value: AnyObject)] = []
+        var i = 0
+        while i + 1 < flat.count {
+            out.append((flat[i], flat[i + 1]))
+            i += 2
+        }
+        return out
+    }
+
+    func build(_ index: Int) -> AnyObject? {
         if let existing = built[index] { return existing }
         guard index >= 0, index < archive.objects.count else { return nil }
         // A cycle (a constraint naming the view that owns it) resolves through
@@ -539,22 +758,60 @@ final class NibDecoder {
         return made
     }
 
-    private func make(_ object: NibArchive.Object, index: Int) -> AnyObject? {
+    /// Register an object under construction (from inside its
+    /// `init(coder:)`) so references back to it resolve.
+    func register(_ object: AnyObject, at index: Int) {
+        if built[index] == nil {
+            built[index] = object
+            awakened.append(object)
+        }
+    }
+
+    func make(_ object: NibArchive.Object, index: Int) -> AnyObject? {
         switch object.className {
-        case "NSString":
+        case "NSString", "NSMutableString":
             if case .bytes(let raw)? = object.first("NS.bytes") {
                 return NibString(value: NibArchive.utf8String(raw))
             }
             return NibString(value: "")
 
-        case "NSArray", "NSMutableArray", "NSSet", "NSMutableSet":
+        case "NSArray", "NSMutableArray", "NSSet", "NSMutableSet", "NSOrderedSet",
+             "NSMutableOrderedSet":
             // Materialized on demand by `arrayElements`; the box exists so a
             // reference to the array resolves to something.
             return NibArrayBox(index: index)
 
+        case "NSDictionary", "NSMutableDictionary":
+            return NibDictionaryBox(index: index)
+
+        case "NSNumber":
+            for pair in object.values {
+                switch pair.value {
+                case .integer(let i): return NibNumberBox(value: Double(i), isInteger: true)
+                case .number(let d): return NibNumberBox(value: d, isInteger: false)
+                case .boolean(let b): return NibNumberBox(value: b ? 1 : 0, isInteger: true)
+                default: continue
+                }
+            }
+            return NibNumberBox(value: 0, isInteger: true)
+
+        case "NSValue":
+            return makeValue(object)
+
+        case "NSAttributedString", "NSMutableAttributedString":
+            // The characters only: attribute runs are not decoded yet.
+            if object.first("NSAttributes") != nil {
+                UINib.noteUnhandled("NSAttributedString.NSAttributes")
+            }
+            return NibString(value: string(object.first("NSString")) ?? "")
+
         case "UIProxyObject":
             let identifier = string(object.first("UIProxiedObjectIdentifier")) ?? ""
             if identifier == "IBFilesOwner", let owner { return owner }
+            if let external = externalObjects[identifier] { return external }
+            if identifier != "IBFirstResponder" && identifier != "IBFilesOwner" {
+                UINib.noteUnhandled("external-object:\(identifier)")
+            }
             return NibProxyPlaceholder(identifier: identifier)
 
         case "UIClassSwapper":
@@ -563,7 +820,16 @@ final class NibDecoder {
         case "UIRuntimeOutletConnection":
             return makeOutletConnection(object)
 
-        case "NSLayoutConstraint":
+        case "UIRuntimeOutletCollectionConnection":
+            return makeOutletCollectionConnection(object)
+
+        case "UIRuntimeEventConnection":
+            return makeEventConnection(object)
+
+        case "UINibKeyValuePair":
+            return makeKeyValuePair(object)
+
+        case "NSLayoutConstraint", "_UILayoutSupportConstraint", "NSContentSizeLayoutConstraint":
             return makeConstraint(object)
 
         case "UIColor":
@@ -578,70 +844,180 @@ final class NibDecoder {
             UINib.noteUnhandled("missing-image:\(name)")
             return nil
 
+        case "UIButtonContent":
+            return makeButtonContent(object)
+
+        case "UISegment":
+            return NibSegmentBox(title: string(object.first("UISegmentInfo")))
+
+        case "UINavigationItem":
+            return makeNavigationItem(object, index: index)
+
+        case "UIBarButtonItem":
+            return makeBarButtonItem(object, index: index)
+
+        case "UITapGestureRecognizer", "UILongPressGestureRecognizer", "UIPanGestureRecognizer",
+             "UISwipeGestureRecognizer", "UIPinchGestureRecognizer",
+             "UIRotationGestureRecognizer", "UIScreenEdgePanGestureRecognizer":
+            return makeGestureRecognizer(object, index: index)
+
+        case "UIStoryboardShowSegueTemplate", "UIStoryboardPushSegueTemplate",
+             "UIStoryboardModalSegueTemplate", "UIStoryboardPresentationSegueTemplate",
+             "UIStoryboardEmbedSegueTemplate", "UIStoryboardSegueTemplate",
+             "UIStoryboardPopoverPresentationSegueTemplate",
+             "UIStoryboardUnwindSegueTemplate":
+            return makeSegueTemplate(object)
+
         case "_UITableViewCellSeparatorView":
             // The port's cell owns its own separator view and the table sets
             // the inset per style (UITableViewCell.swift); an archived one
             // would be a second, unmanaged separator. Dropped on purpose.
             return NibProxyPlaceholder(identifier: object.className)
 
-        case "NSObject":
+        case "NSObject", "UILayoutGuide", "UITapRecognizer", "UIFontDescriptor",
+             "NSMutableParagraphStyle", "NSParagraphStyle", "UIRuntimeAccessibilityConfiguration":
+            // Archive bookkeeping or values read through their owner's keys
+            // (a tap recognizer's `_imp`, a font's descriptor, the safe-area
+            // guide's own record); never handed to app code on their own.
             return NibProxyPlaceholder(identifier: object.className)
 
+        case "UICustomObject":
+            // An IB "Object" with no custom class: a plain NSObject.
+            let plain = NSObject()
+            register(plain, at: index)
+            return plain
+
         default:
-            guard let made = UINibClassRegistry.make(object.className) else {
-                UINib.noteUnhandled("class:\(object.className)")
-                return nil
-            }
+            return makeClass(named: object.className, object: object, index: index)
+        }
+    }
+
+    /// Build an instance of the archived class `name`: a registered factory
+    /// or a built-in UIKit class through the registry; otherwise the class
+    /// found at run time through its own `init(coder:)`.
+    func makeClass(named name: String, object: NibArchive.Object, index: Int) -> AnyObject? {
+        if let controller = NibDecoder.builtInControllers[name] {
+            return makeWithCoder(controller, index: index)
+        }
+        if UINibClassRegistry.canMake(name) {
+            guard let made = makeRegistered(name, object: object) else { return nil }
             built[index] = made
+            awakened.append(made)
             apply(object, to: made)
             return made
         }
+        if let cls = UINibClassRegistry.runtimeClass(name) {
+            return makeRuntime(cls, name: name, index: index)
+        }
+        UINib.noteUnhandled("class:\(name)")
+        return nil
+    }
+
+    /// A registry construction. A `UIButton` is built with its archived type
+    /// (UIKit decodes `UIButtonType` inside `initWithCoder:`; the registry
+    /// path constructs first, so the type has to be chosen here).
+    func makeRegistered(_ name: String, object: NibArchive.Object) -> AnyObject? {
+        // UIKit raw values: custom = 0, system = 1.
+        if name == "UIButton", int(object.first("UIButtonType")) == 1 {
+            return UIButton(type: .system)
+        }
+        return UINibClassRegistry.make(name)
+    }
+
+    /// UIKit's own controller classes, always built through
+    /// `init(coder:)` so the archived controller state (nib name, navigation
+    /// item, segue templates, children) is decoded the same way for a plain
+    /// storyboard controller as for an app subclass.
+    static let builtInControllers: [String: UIViewController.Type] = [
+        "UIViewController": UIViewController.self,
+        "UINavigationController": UINavigationController.self,
+        "UITableViewController": UITableViewController.self,
+        "UICollectionViewController": UICollectionViewController.self,
+        "UITabBarController": UITabBarController.self,
+        "UIPageViewController": UIPageViewController.self,
+        "UISplitViewController": UISplitViewController.self,
+    ]
+
+    /// A run-time class: a view or controller through `init(coder:)`, any
+    /// other NSObject through `init()` (MEASURED: an IB custom "Object" gets
+    /// `init()`, never `init(coder:)` — `Helper.init()` in the oracle log).
+    func makeRuntime(_ cls: AnyClass, name: String, index: Int) -> AnyObject? {
+        if let viewType = cls as? UIView.Type {
+            return makeWithCoder(viewType, index: index)
+        }
+        if let controllerType = cls as? UIViewController.Type {
+            return makeWithCoder(controllerType, index: index)
+        }
+        if let objectType = cls as? NSObject.Type {
+            let made = objectType.init()
+            register(made, at: index)
+            return made
+        }
+        UINib.noteUnhandled("uninstantiable-class:\(name)")
+        return nil
+    }
+
+    func makeWithCoder(_ type: UIView.Type, index: Int) -> AnyObject? {
+        let coder = UINibCoder(decoder: self, index: index)
+        guard let made = type.init(coder: coder) else { return nil }
+        // A `required convenience init(coder:)` that delegates to a
+        // programmatic initializer never reaches UIView.init(coder:), so
+        // nothing archived was applied — and UIKit applies nothing either.
+        register(made, at: index)
+        return made
+    }
+
+    func makeWithCoder(_ type: UIViewController.Type, index: Int) -> AnyObject? {
+        let coder = UINibCoder(decoder: self, index: index)
+        guard let made = type.init(coder: coder) else { return nil }
+        register(made, at: index)
+        return made
     }
 
     /// `UIClassSwapper` is how Interface Builder archives "this is really a
     /// `ThemeableLabel`, decode it as a `UILabel`": the archived keys are the
     /// original class's, the instance is the custom class's. Falls back to
-    /// `UIOriginalClassName` when the custom class is not registered, which is
-    /// what real UIKit does when `NSClassFromString` returns nil.
-    private func makeSwapped(_ object: NibArchive.Object, index: Int) -> AnyObject? {
+    /// `UIOriginalClassName` when the custom class cannot be found, which is
+    /// what real UIKit does when `NSClassFromString` returns nil (it logs
+    /// "Unknown class … in Interface Builder file").
+    func makeSwapped(_ object: NibArchive.Object, index: Int) -> AnyObject? {
         let custom = string(object.first("UIClassName"))
         let original = string(object.first("UIOriginalClassName"))
-        var made: AnyObject? = nil
-        if let custom, UINibClassRegistry.canMake(custom) {
-            made = UINibClassRegistry.make(custom)
-        } else {
-            if let custom { UINib.noteUnhandled("unregistered-class:\(custom)") }
-            if let original { made = UINibClassRegistry.make(original) }
+        if let custom, custom != original {
+            if UINibClassRegistry.isRegistered(custom) {
+                return makeClass(named: custom, object: object, index: index)
+            }
+            if UINibClassRegistry.constructor(for: custom) == nil,
+               NibDecoder.builtInControllers[custom] == nil,
+               let cls = UINibClassRegistry.runtimeClass(custom) {
+                return makeRuntime(cls, name: custom, index: index)
+            }
+            if UINibClassRegistry.canMake(custom) || NibDecoder.builtInControllers[custom] != nil {
+                return makeClass(named: custom, object: object, index: index)
+            }
+            UINib.noteUnhandled("unregistered-class:\(custom)")
         }
-        guard let made else {
-            UINib.noteUnhandled("class:\(custom ?? original ?? "?")")
+        guard let original else {
+            UINib.noteUnhandled("class:\(custom ?? "?")")
             return nil
         }
-        built[index] = made
-        apply(object, to: made)
-        return made
-    }
-
-    private func makeOutletConnection(_ object: NibArchive.Object) -> AnyObject? {
-        func reference(_ key: String) -> AnyObject? {
-            guard case .reference(let i)? = object.first(key) else { return nil }
-            return build(i)
+        if original == "UICustomObject" {
+            let plain = NSObject()
+            register(plain, at: index)
+            return plain
         }
-        guard let name = string(object.first("UILabel")),
-              let source = reference("UISource") else { return nil }
-        return NibConnection(name: name, source: source,
-                             destination: reference("UIDestination"))
+        return makeClass(named: original, object: object, index: index)
     }
 
     // MARK: Values
 
-    private func string(_ value: NibArchive.Value?) -> String? {
+    func string(_ value: NibArchive.Value?) -> String? {
         guard case .reference(let i)? = value,
               let box = build(i) as? NibString else { return nil }
         return box.value
     }
 
-    private func cgFloat(_ value: NibArchive.Value?) -> CGFloat? {
+    func cgFloat(_ value: NibArchive.Value?) -> CGFloat? {
         switch value {
         case .number(let d): return CGFloat(d)
         case .integer(let i): return CGFloat(i)
@@ -649,7 +1025,7 @@ final class NibDecoder {
         }
     }
 
-    private func int(_ value: NibArchive.Value?) -> Int? {
+    func int(_ value: NibArchive.Value?) -> Int? {
         switch value {
         case .integer(let i): return i
         case .number(let d): return Int(d)
@@ -658,7 +1034,7 @@ final class NibDecoder {
         }
     }
 
-    private func bool(_ value: NibArchive.Value?) -> Bool? {
+    func bool(_ value: NibArchive.Value?) -> Bool? {
         switch value {
         case .boolean(let b): return b
         case .integer(let i): return i != 0
@@ -666,10 +1042,15 @@ final class NibDecoder {
         }
     }
 
+    func object(_ value: NibArchive.Value?) -> AnyObject? {
+        guard case .reference(let i)? = value else { return nil }
+        return build(i)
+    }
+
     /// An archived CGRect/CGPoint: a one-byte component-encoding tag then
     /// that many components. Tag 7 (f64) is what ibtool writes; tag 6 (f32)
     /// is accepted for completeness.
-    private func numbers(_ value: NibArchive.Value?, count: Int) -> [CGFloat]? {
+    func numbers(_ value: NibArchive.Value?, count: Int) -> [CGFloat]? {
         guard case .bytes(let raw)? = value, raw.count >= 1 else { return nil }
         let width = raw[0] == 7 ? 8 : (raw[0] == 6 ? 4 : 0)
         guard width > 0, raw.count >= 1 + width * count else { return nil }
@@ -686,26 +1067,45 @@ final class NibDecoder {
         return out
     }
 
-    /// `"{750, 251}"` — the horizontal/vertical pair Interface Builder writes
-    /// for hugging and compression-resistance priorities.
-    private func priorityPair(_ value: NibArchive.Value?) -> (CGFloat, CGFloat)? {
-        guard let text = string(value) else { return nil }
+    /// Every number in a string, in order: `"{750, 251}"`,
+    /// `"{{16, 290}, {51, 31}}"`.
+    static func numbersIn(_ text: String) -> [CGFloat] {
         var digits = ""
         var found: [CGFloat] = []
         for character in text {
-            if character.isNumber || character == "." {
+            if character.isNumber || character == "." || (character == "-" && digits.isEmpty) {
                 digits.append(character)
             } else if !digits.isEmpty {
-                found.append(CGFloat(Double(digits) ?? 0))
+                if let d = Double(digits) { found.append(CGFloat(d)) }
                 digits = ""
             }
         }
-        if !digits.isEmpty { found.append(CGFloat(Double(digits) ?? 0)) }
+        if !digits.isEmpty, let d = Double(digits) { found.append(CGFloat(d)) }
+        return found
+    }
+
+    /// `"{750, 251}"` — the horizontal/vertical pair Interface Builder writes
+    /// for hugging and compression-resistance priorities.
+    func priorityPair(_ value: NibArchive.Value?) -> (CGFloat, CGFloat)? {
+        guard let text = string(value) else { return nil }
+        let found = NibDecoder.numbersIn(text)
         guard found.count >= 2 else { return nil }
         return (found[0], found[1])
     }
 
-    private func makeColor(_ object: NibArchive.Object) -> AnyObject? {
+    /// `NSValue` as ibtool archives a rect (`NS.special` 3,
+    /// `NS.rectval = "{{x, y}, {w, h}}"`) or point (1) / size (2).
+    func makeValue(_ object: NibArchive.Object) -> AnyObject? {
+        for key in ["NS.rectval", "NS.pointval", "NS.sizeval"] {
+            if let text = string(object.first(key)) {
+                return NibValueBox(key: key, numbers: NibDecoder.numbersIn(text))
+            }
+        }
+        UINib.noteUnhandled("NSValue")
+        return nil
+    }
+
+    func makeColor(_ object: NibArchive.Object) -> AnyObject? {
         // A system colour is archived by name AND by the components it
         // resolved to in Interface Builder's light appearance. Prefer the
         // NAME: OpenUIKit's palette is measured per appearance
@@ -739,7 +1139,7 @@ final class NibDecoder {
     /// `UICTFontTextStyleCallout` -> `UIFont.TextStyle.callout`. UIKit's own
     /// raw values; `largeTitle` really is `Title0` and `subheadline` really is
     /// `Subhead`.
-    private static let archivedTextStyles: [String: UIFont.TextStyle] = [
+    static let archivedTextStyles: [String: UIFont.TextStyle] = [
         "UICTFontTextStyleTitle0": .largeTitle,
         "UICTFontTextStyleTitle1": .title1,
         "UICTFontTextStyleTitle2": .title2,
@@ -753,7 +1153,7 @@ final class NibDecoder {
         "UICTFontTextStyleCaption2": .caption2,
     ]
 
-    private func makeFont(_ object: NibArchive.Object) -> AnyObject? {
+    func makeFont(_ object: NibArchive.Object) -> AnyObject? {
         let size = cgFloat(object.first("NSSize"))
             ?? cgFloat(object.first("UIFontPointSize")) ?? 17
         // An IB text style means "the preferred font for this style", which is
@@ -799,7 +1199,7 @@ final class NibDecoder {
         return NibFontBox(font: UIFont.systemFont(ofSize: size))
     }
 
-    private func makeConstraint(_ object: NibArchive.Object) -> AnyObject? {
+    func makeConstraint(_ object: NibArchive.Object) -> AnyObject? {
         func item(_ key: String) -> AnyObject? {
             guard case .reference(let i)? = object.first(key) else { return nil }
             return build(i)
@@ -833,16 +1233,21 @@ final class NibDecoder {
         let constant = isV2
             ? cgFloat(object.first("NSConstantV2")) ?? 0
             : cgFloat(object.first("NSConstant")) ?? 0
-        guard let first = item("NSFirstItem") else {
+        guard let first = item("NSFirstItem"), !(first is NibProxyPlaceholder) else {
             UINib.noteUnhandled("NSLayoutConstraint:NSFirstItem")
             return nil
+        }
+        var second = item("NSSecondItem")
+        if second is NibProxyPlaceholder {
+            UINib.noteUnhandled("NSLayoutConstraint:NSSecondItem")
+            second = nil
         }
         let constraint = NSLayoutConstraint(
             item: first,
             attribute: attribute("NSFirstAttributeV2", "NSFirstAttribute"),
             relatedBy: NSLayoutConstraint.Relation(
                 rawValue: int(object.first("NSRelation")) ?? 0) ?? .equal,
-            toItem: item("NSSecondItem"),
+            toItem: second,
             attribute: attribute("NSSecondAttributeV2", "NSSecondAttribute"),
             multiplier: cgFloat(object.first("NSMultiplier")) ?? 1,
             constant: constant)
@@ -852,285 +1257,81 @@ final class NibDecoder {
         if let identifier = string(object.first("NSLayoutIdentifier")) {
             constraint.identifier = identifier
         }
+        if let symbol = string(object.first("NSSymbolicConstant")) {
+            if symbol == "NSSpace" {
+                symbolicSpacings.append((constraint, first, second))
+            } else {
+                UINib.noteUnhandled("NSSymbolicConstant:\(symbol)")
+            }
+        }
         return constraint
     }
 
-    // MARK: Applying archived keys
-
-    private func apply(_ object: NibArchive.Object, to target: AnyObject) {
-        if let view = target as? UIView {
-            applyView(object, to: view)
-            awakened.append(view)
-        } else if let controller = target as? UIViewController {
-            awakened.append(controller)
+    /// Interface Builder's "Standard" spacing (`NSSymbolicConstant =
+    /// NSSpace`, no numeric constant archived), resolved once the hierarchy
+    /// exists. MEASURED on iOS 26.1 with Eidolon's archives
+    /// (fixtures/nibruntime/oracle/eidolonnibs.json): a button's top to its
+    /// superview's top resolves to 20 (Sb3-CP-VQj, Jj5-n3-bv0: y = 20), a
+    /// button's leading to its sibling text view's trailing to 8
+    /// (yff-WV-ozf: x = 781 = 773 + 8).
+    func resolveSymbolicSpacings() {
+        for (constraint, first, second) in symbolicSpacings {
+            let a = first as? UIView, b = second as? UIView
+            let toSuperview = (a != nil && a?.superview === b) || (b != nil && b?.superview === a)
+            constraint.constant = toSuperview ? 20 : 8
         }
+        symbolicSpacings = []
     }
 
-    /// UIKit's `UIViewContentMode` raw values (UIView.h), which the port's
-    /// `UIViewContentMode` spells as cases without raw values.
-    private static let archivedContentModes: [UIViewContentMode] = [
-        .scaleToFill, .scaleAspectFit, .scaleAspectFill, .redraw, .center,
-        .top, .bottom, .left, .right, .topLeft, .topRight, .bottomLeft,
-        .bottomRight,
-    ]
-    /// `NSTextAlignment` raw values on iOS (left = 0, centre = 1, right = 2,
-    /// justified = 3, natural = 4).
-    private static let archivedAlignments: [NSTextAlignment] = [
-        .left, .center, .right, .justified, .natural,
-    ]
-    /// `NSLineBreakMode` raw values.
-    private static let archivedLineBreaks: [NSLineBreakMode] = [
-        .byWordWrapping, .byCharWrapping, .byClipping,
-        .byTruncatingHead, .byTruncatingTail, .byTruncatingMiddle,
-    ]
+    // MARK: Connections and key-value pairs
 
-    private func applyView(_ object: NibArchive.Object, to view: UIView) {
-        // Bounds + centre, UIKit's archived spelling of `frame`. Applied
-        // FIRST so a subview's autoresizing starts from the right size.
-        if let bounds = numbers(object.first("UIBounds"), count: 4) {
-            if let center = numbers(object.first("UICenter"), count: 2) {
-                view.frame = CGRect(x: center[0] - bounds[2] / 2,
-                                    y: center[1] - bounds[3] / 2,
-                                    width: bounds[2], height: bounds[3])
-            } else {
-                view.frame = CGRect(x: 0, y: 0, width: bounds[2], height: bounds[3])
-            }
-        }
-
-        // A UITableViewCell's `contentView` is `let` in the port (and is the
-        // view its layoutSubviews positions), so the archived content view is
-        // BOUND to the live one before anything else can construct a second
-        // one: every constraint that names the archived index then resolves to
-        // the view that is really in the hierarchy. UIKit reaches the same
-        // shape through `-setContentView:` while decoding.
-        var boundContentView = false
-        if let cell = view as? UITableViewCell,
-           case .reference(let contentIndex)? = object.first("UIContentView"),
-           contentIndex >= 0, contentIndex < archive.objects.count {
-            built[contentIndex] = cell.contentView
-            applyView(archive.objects[contentIndex], to: cell.contentView)
-            awakened.append(cell.contentView)
-            // The nib's cell has no textLabel/imageView (`UITextLabel` and
-            // `UIImageView` decode as nil); the port creates them eagerly in
-            // `init(style:)`, so take them out of the hierarchy or they show
-            // up as two extra views in every layout dump.
-            cell.textLabel?.removeFromSuperview()
-            cell.imageView?.removeFromSuperview()
-            boundContentView = true
-        }
-
-        for pair in object.values {
-            switch pair.key {
-            case "UIBounds", "UICenter",
-                 // Class-swap bookkeeping, read by `makeSwapped`.
-                 "UIClassName", "UIOriginalClassName",
-                 // Archived state the port models elsewhere, or that has no
-                 // effect on a rendered frame. Listed so the silence is a
-                 // decision rather than an omission.
-                 "UIDeepDrawRect", "UIViewSemanticContentAttribute",
-                 "UIViewLargeContentStoredProperties", "UISystemBackgroundView",
-                 "UIContentConfigurationView", "UITextLabel", "UIDetailTextLabel",
-                 "UIImageView", "UIPrefetchingEnabled", "UIFillerRowHeight",
-                 "UIInsetsContentViewsToSafeArea",
-                 "UIScrollViewIndicatorInsetAdjustmentBehavior",
-                 "UIScrollViewContentInsetAdjustmentBehavior",
-                 "UIShadowOffset", "UIHighlightedColor", "UIBaselineAdjustment",
-                 "UIAutoresizeSubviews", "UISelectionStyle", "UIIndentationWidth",
-                 "UIDisableUpdateTextColorOnTraitCollectionChange",
-                 "UIStyle", "UISeparatorStyleIOS5AndLater", "UIBouncesZoom",
-                 "UIMultipleTouchEnabled", "UIClearsContextBeforeDrawing",
-                 "UISectionHeaderTopPadding",
-                 "UIAdjustsFontSizeToFit", "UIEnabled":
-                continue
-
-            case "UIAutoresizingMask":
-                if let raw = int(pair.value) {
-                    view.autoresizingMask = UIView.AutoresizingMask(rawValue: UInt(raw))
-                }
-            case "UIClipsToBounds":
-                if let flag = bool(pair.value) { view.clipsToBounds = flag }
-            case "UIOpaque":
-                if let flag = bool(pair.value) { view.isOpaque = flag }
-            case "UIHidden":
-                if let flag = bool(pair.value) { view.isHidden = flag }
-            case "UIAlpha":
-                if let alpha = cgFloat(pair.value) { view.alpha = alpha }
-            case "UITag":
-                if let tag = int(pair.value) { view.tag = tag }
-            case "UIUserInteractionDisabled":
-                if let flag = bool(pair.value) { view.isUserInteractionEnabled = !flag }
-            case "UIBackgroundColor":
-                if case .reference(let i) = pair.value {
-                    view.backgroundColor = build(i) as? UIColor
-                }
-            case "UIViewDoesNotTranslateAutoresizingMaskIntoConstraints":
-                if let flag = bool(pair.value) {
-                    view.translatesAutoresizingMaskIntoConstraints = !flag
-                }
-            case "UIViewContentHuggingPriority":
-                if let (h, v) = priorityPair(pair.value) {
-                    view.setContentHuggingPriority(UILayoutPriority(Float(h)), for: .horizontal)
-                    view.setContentHuggingPriority(UILayoutPriority(Float(v)), for: .vertical)
-                }
-            case "UIViewContentCompressionResistancePriority":
-                if let (h, v) = priorityPair(pair.value) {
-                    view.setContentCompressionResistancePriority(
-                        UILayoutPriority(Float(h)), for: .horizontal)
-                    view.setContentCompressionResistancePriority(
-                        UILayoutPriority(Float(v)), for: .vertical)
-                }
-            case "UIViewAutolayoutConstraints":
-                if case .reference(let i) = pair.value {
-                    for element in arrayElements(at: i) {
-                        if let constraint = element as? NSLayoutConstraint {
-                            deferredConstraints.append(constraint)
-                        }
-                    }
-                }
-            case "UISubviews":
-                guard !boundContentView, case .reference(let i) = pair.value else { continue }
-                for element in arrayElements(at: i) {
-                    if let sub = element as? UIView { view.addSubview(sub) }
-                }
-            case "UIContentView":
-                continue
-            case "UIContentMode":
-                if let raw = int(pair.value),
-                   raw >= 0, raw < NibDecoder.archivedContentModes.count {
-                    view.contentMode = NibDecoder.archivedContentModes[raw]
-                }
-            default:
-                applySpecific(pair, to: view)
-            }
-        }
+    func makeOutletConnection(_ object: NibArchive.Object) -> AnyObject? {
+        guard let name = string(object.first("UILabel")),
+              let source = self.object(object.first("UISource")) else { return nil }
+        return NibConnection(name: name, source: source,
+                             destination: self.object(object.first("UIDestination")))
     }
 
-    /// Per-class archived keys.
-    private func applySpecific(_ pair: (key: String, value: NibArchive.Value),
-                               to view: UIView) {
-        if let label = view as? UILabel {
-            switch pair.key {
-            case "UIText":
-                if let text = string(pair.value) { label.text = text }
-                return
-            case "UIFont":
-                if case .reference(let i) = pair.value,
-                   let box = build(i) as? NibFontBox { label.font = box.font }
-                return
-            case "UITextColor":
-                if case .reference(let i) = pair.value,
-                   let color = build(i) as? UIColor { label.textColor = color }
-                return
-            case "UINumberOfLines":
-                if let n = int(pair.value) { label.numberOfLines = n }
-                return
-            case "UITextAlignment":
-                if let raw = int(pair.value),
-                   raw >= 0, raw < NibDecoder.archivedAlignments.count {
-                    label.textAlignment = NibDecoder.archivedAlignments[raw]
-                }
-                return
-            case "UILineBreakMode":
-                if let raw = int(pair.value),
-                   raw >= 0, raw < NibDecoder.archivedLineBreaks.count {
-                    label.lineBreakMode = NibDecoder.archivedLineBreaks[raw]
-                }
-                return
-            case "UIAdjustsFontForContentSizeCategory":
-                if let flag = bool(pair.value) {
-                    label.adjustsFontForContentSizeCategory = flag
-                }
-                return
-            default: break
-            }
+    func makeOutletCollectionConnection(_ object: NibArchive.Object) -> AnyObject? {
+        guard let name = string(object.first("UILabel")),
+              let source = self.object(object.first("UISource")),
+              case .reference(let list)? = object.first("UIDestination") else { return nil }
+        return NibCollectionConnection(
+            name: name, source: source,
+            destinations: arrayElements(at: list).filter { !($0 is NibProxyPlaceholder) },
+            appends: bool(object.first("addsContentToExistingCollection")) ?? false)
+    }
+
+    func makeEventConnection(_ object: NibArchive.Object) -> AnyObject? {
+        guard let name = string(object.first("UILabel")),
+              let source = self.object(object.first("UISource")) else { return nil }
+        let destination = self.object(object.first("UIDestination"))
+        return NibEventConnection(
+            selectorName: name, source: source,
+            // The First Responder placeholder means "nil target": the
+            // responder chain answers at send time.
+            destination: destination is NibProxyPlaceholder ? nil : destination,
+            eventMask: UInt(truncatingIfNeeded: int(object.first("UIEventMask")) ?? 0))
+    }
+
+    func makeKeyValuePair(_ object: NibArchive.Object) -> AnyObject? {
+        guard let target = self.object(object.first("UIObject")),
+              let keyPath = string(object.first("UIKeyPath")) else { return nil }
+        return NibKeyValuePair(target: target, keyPath: keyPath,
+                               value: self.object(object.first("UIValue")))
+    }
+
+    func makeButtonContent(_ object: NibArchive.Object) -> AnyObject? {
+        let content = NibButtonContentBox()
+        content.title = string(object.first("UITitle"))
+        content.titleColor = self.object(object.first("UITitleColor")) as? UIColor
+        content.shadowColor = self.object(object.first("UIShadowColor")) as? UIColor
+        content.image = self.object(object.first("UIImage")) as? UIImage
+        content.backgroundImage = self.object(object.first("UIBackgroundImage")) as? UIImage
+        if object.first("UIAttributedTitle") != nil {
+            content.title = content.title ?? string(object.first("UIAttributedTitle"))
         }
-        if let imageView = view as? UIImageView {
-            if pair.key == "UIImage" {
-                if case .reference(let i) = pair.value {
-                    imageView.image = build(i) as? UIImage
-                }
-                return
-            }
-        }
-        if let table = view as? UITableView {
-            switch pair.key {
-            case "UITableViewStyle":
-                // UIKit's UITableViewStyle: plain = 0, grouped = 1,
-                // insetGrouped = 2.
-                if let raw = int(pair.value) {
-                    let styles: [UITableView.Style] = [.plain, .grouped, .insetGrouped]
-                    if raw >= 0, raw < styles.count { table._setArchivedStyle(styles[raw]) }
-                }
-                return
-            case "UIRowHeight":
-                if let h = cgFloat(pair.value) { table.rowHeight = h }
-                return
-            case "UIEstimatedRowHeight":
-                if let h = cgFloat(pair.value) { table.estimatedRowHeight = h }
-                return
-            case "UIEstimatedSectionHeaderHeight":
-                if let h = cgFloat(pair.value) { table.estimatedSectionHeaderHeight = h }
-                return
-            case "UIEstimatedSectionFooterHeight":
-                if let h = cgFloat(pair.value) { table.estimatedSectionFooterHeight = h }
-                return
-            case "UISectionHeaderHeight":
-                if let h = cgFloat(pair.value) { table.sectionHeaderHeight = h }
-                return
-            case "UISectionFooterHeight":
-                if let h = cgFloat(pair.value) { table.sectionFooterHeight = h }
-                return
-            case "UISeparatorColor":
-                if case .reference(let i) = pair.value {
-                    table.separatorColor = (build(i) as? UIColor)
-                }
-                return
-            case "UISeparatorInsetReference":
-                // Present whenever IB has an opinion, and an opinion is
-                // exactly what makes the inset explicit. The three fixture
-                // nibs all archive a zero inset (no `UISeparatorInset` key),
-                // so a non-zero one stays unhandled rather than guessed —
-                // there is nothing to measure its encoding against.
-                if let raw = int(pair.value),
-                   let reference = UITableView.SeparatorInsetReference(rawValue: raw) {
-                    table.separatorInsetReference = reference
-                    table.separatorInset = .zero
-                }
-                return
-            case "UISeparatorStyle":
-                // UIKit: none = 0, singleLine = 1 (the etched styles are
-                // deprecated aliases of singleLine).
-                if let raw = int(pair.value) {
-                    table.separatorStyle = raw == 0 ? .none : .singleLine
-                }
-                return
-            default: break
-            }
-        }
-        if let scroll = view as? UIScrollView {
-            switch pair.key {
-            case "UIAlwaysBounceVertical":
-                if let flag = bool(pair.value) { scroll.alwaysBounceVertical = flag }
-                return
-            case "UIAlwaysBounceHorizontal":
-                if let flag = bool(pair.value) { scroll.alwaysBounceHorizontal = flag }
-                return
-            case "UIShowsHorizontalScrollIndicator":
-                if let flag = bool(pair.value) { scroll.showsHorizontalScrollIndicator = flag }
-                return
-            case "UIShowsVerticalScrollIndicator":
-                if let flag = bool(pair.value) { scroll.showsVerticalScrollIndicator = flag }
-                return
-            case "UIDelaysContentTouches", "UICanCancelContentTouches":
-                return
-            default: break
-            }
-        }
-        if let control = view as? UISwitch, pair.key == "UISwitchOn" {
-            if let flag = bool(pair.value) { control.isOn = flag }
-            return
-        }
-        UINib.noteUnhandled("\(type(of: view)).\(pair.key)")
+        return content
     }
 }
 
@@ -1141,6 +1342,26 @@ final class NibDecoder {
 final class NibString {
     let value: String
     init(value: String) { self.value = value }
+}
+
+/// An archived NSNumber.
+final class NibNumberBox {
+    let value: Double
+    let isInteger: Bool
+    init(value: Double, isInteger: Bool) {
+        self.value = value
+        self.isInteger = isInteger
+    }
+}
+
+/// An archived NSValue (rect / point / size components).
+final class NibValueBox {
+    let key: String
+    let numbers: [CGFloat]
+    init(key: String, numbers: [CGFloat]) {
+        self.key = key
+        self.numbers = numbers
+    }
 }
 
 /// An archived UIFont. `UIFont` is a value type in the portable core (UIKit's
@@ -1157,49 +1378,31 @@ final class NibArrayBox {
     init(index: Int) { self.index = index }
 }
 
+/// A reference to an archived dictionary (`NibDecoder.dictionaryPairs`).
+final class NibDictionaryBox {
+    let index: Int
+    init(index: Int) { self.index = index }
+}
+
+/// One `UIButtonContent`: a button's per-state title / colours / images.
+final class NibButtonContentBox {
+    var title: String?
+    var titleColor: UIColor?
+    var shadowColor: UIColor?
+    var image: UIImage?
+    var backgroundImage: UIImage?
+}
+
+/// One archived `UISegment` (a segmented control's segment record).
+final class NibSegmentBox {
+    let title: String?
+    init(title: String?) { self.title = title }
+}
+
 /// A placeholder for an archived object OpenUIKit deliberately does not build
 /// (the First Responder proxy, the cell's own separator view, a missing
-/// File's Owner). Never returned to the caller.
+/// File's Owner, archive bookkeeping). Never returned to the caller.
 final class NibProxyPlaceholder {
     let identifier: String
     init(identifier: String) { self.identifier = identifier }
-}
-
-/// One archived `UIRuntimeOutletConnection`.
-@MainActor
-final class NibConnection {
-    let name: String
-    let source: AnyObject
-    let destination: AnyObject?
-
-    init(name: String, source: AnyObject, destination: AnyObject?) {
-        self.name = name
-        self.source = source
-        self.destination = destination
-    }
-
-    func connect() {
-        let target = destination is NibProxyPlaceholder ? nil : destination
-        // Framework-owned outlet names first: UIKit fills these through KVC
-        // on its own classes, where no app-owned table exists to publish them.
-        if let controller = source as? UIViewController, name == "view" {
-            controller.view = target as? UIView
-            return
-        }
-        if let table = source as? UITableView, name == "dataSource" {
-            table.dataSource = target as? UITableViewDataSource
-            return
-        }
-        // A table's `delegate` IS the inherited scroll-view delegate, as in
-        // UIKit (UITableViewDelegate refines UIScrollViewDelegate).
-        if let scroll = source as? UIScrollView, name == "delegate" {
-            scroll.delegate = target as? UIScrollViewDelegate
-            return
-        }
-        if let receiver = source as? UINibOutletConnecting,
-           receiver.setNibOutlet(target, forName: name) {
-            return
-        }
-        UINib.noteUnhandled("outlet:\(type(of: source)).\(name)")
-    }
 }

@@ -207,6 +207,9 @@ open class UINavigationController: UIViewController {
         interactivePopGestureRecognizer
     }
 
+    /// Controllers pushed before the view loaded, owed `didMove(toParent:)`.
+    var _pushesAwaitingDidMove: [UIViewController] = []
+
     public init(rootViewController: UIViewController) {
         super.init()
         addChild(rootViewController)
@@ -275,6 +278,9 @@ open class UINavigationController: UIViewController {
             top.endAppearanceTransition()
             updateBarState()
         }
+        let awaiting = _pushesAwaitingDidMove
+        _pushesAwaitingDidMove = []
+        for vc in awaiting where vc.parent === self { vc.didMove(toParent: self) }
     }
 
     func installTopView(_ vc: UIViewController) {
@@ -760,7 +766,12 @@ open class UINavigationController: UIViewController {
         _ = navigationBar.delegate?.navigationBar(navigationBar, shouldPush: vc.navigationItem)
 
         guard isViewLoaded else {
-            vc.didMove(toParent: self) // view installed by loadView later
+            // MEASURED (Tools/oracle2/nibruntimeprobe, iOS 26.1): a push onto
+            // a navigation controller whose view is not loaded updates
+            // `viewControllers` and sends `willMove(toParent:)`, but no
+            // `didMove(toParent:)` — not within a second of run loop either.
+            // It is sent when the view is installed (loadView below).
+            _pushesAwaitingDidMove.append(vc)
             return
         }
         view.layoutIfNeeded()
@@ -1260,3 +1271,14 @@ extension UINavigationController: UIScrollViewDelegate {
 }
 
 func clamp01(_ v: CGFloat) -> CGFloat { Swift.min(Swift.max(v, 0), 1) }
+
+extension UINavigationController {
+    /// The stack a storyboard archived (`UIViewControllers`), installed the
+    /// way UIKit's `initWithCoder:` does it: no containment callbacks
+    /// (MEASURED, UIViewController._adoptArchivedChild) and no transition —
+    /// the view is not loaded yet.
+    func _setArchivedViewControllers(_ controllers: [UIViewController]) {
+        for controller in controllers { _adoptArchivedChild(controller) }
+        viewControllers = controllers
+    }
+}

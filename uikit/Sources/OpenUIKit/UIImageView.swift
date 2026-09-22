@@ -95,6 +95,7 @@ open class UIImageView: UIView {
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         isUserInteractionEnabled = false
+        UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
     open override var intrinsicContentSize: CGSize {

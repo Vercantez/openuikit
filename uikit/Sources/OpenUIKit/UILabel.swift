@@ -20,8 +20,11 @@ import Foundation
 #endif
 
 
-public enum NSTextAlignment: Sendable {
-    case left, center, right, justified, natural
+/// UIKit's raw values on iOS (NSText.h; MEASURED in
+/// fixtures/nibruntime/oracle/nibruntime.json: a centred label reads 1, a
+/// left-aligned one 0). Nib archives store them (`UITextAlignment`).
+public enum NSTextAlignment: Int, Sendable {
+    case left = 0, center = 1, right = 2, justified = 3, natural = 4
 }
 
 public enum NSLineBreakMode: Sendable {
@@ -141,6 +144,7 @@ open class UILabel: UIView {
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         configureDefaults()
+        UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
     private func configureDefaults() {
