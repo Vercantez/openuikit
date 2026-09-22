@@ -1,0 +1,11 @@
+{
+  "_comment": "Paths at which the port's transcript is KNOWN to differ from the iOS 26.1 oracle, with the measured reason. NibRuntimeTests fails if any other path differs, and also if a listed path stops differing (so the list can only shrink when the gap is closed).",
+  "eidolonnibs.json": {
+    "Auction/ADb-HQ-Xrv-view-FO4-2G-EgI.nib.root.subviews[1].frame[1]": "Label 'Card Tester' names the private Artsy face AGaramondPro-Regular 38 pt, which is not bundled (the OSS fonts pod). iOS 26.1 falls back to Helvetica 38 (oracle ios.fontName) and sizes the label 196 x 44; the port has no Helvetica face (FontEngine is fed explicit font paths) and falls back to the system face, 185.667 x 45.667. The label's y follows from its height through a centre constraint.",
+    "Auction/ADb-HQ-Xrv-view-FO4-2G-EgI.nib.root.subviews[1].frame[2]": "Same label: intrinsic width in Helvetica vs the port's system-face fallback.",
+    "Auction/ADb-HQ-Xrv-view-FO4-2G-EgI.nib.root.subviews[1].frame[3]": "Same label: intrinsic height in Helvetica vs the port's system-face fallback.",
+    "Auction/yff-WV-ozf-view-F6N-AU-wHA.nib.root.subviews[2].frame[1]": "Label 'Admin logs' names AGaramondPro-Regular 38 pt (not bundled); iOS 26.1 falls back to Helvetica 38 and sizes it 188 x 44; the port's system-face fallback gives 181.667 x 45.667, and the centred y follows the height.",
+    "Auction/yff-WV-ozf-view-F6N-AU-wHA.nib.root.subviews[2].frame[2]": "Same label: intrinsic width in Helvetica vs the port's system-face fallback.",
+    "Auction/yff-WV-ozf-view-F6N-AU-wHA.nib.root.subviews[2].frame[3]": "Same label: intrinsic height in Helvetica vs the port's system-face fallback."
+  }
+}

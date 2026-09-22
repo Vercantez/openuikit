@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nav-00-001">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="scn-00-001">
+            <objects>
+                <navigationController storyboardIdentifier="Nav" id="nav-00-001" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nvb-00-001">
+                        <rect key="frame" x="0.0" y="59" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="roo-00-001" kind="relationship" relationship="rootViewController" id="rel-00-001"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="frs-00-001" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-800" y="0.0"/>
+        </scene>
+        <!--Root-->
+        <scene sceneID="scn-00-002">
+            <objects>
+                <viewController storyboardIdentifier="Root" title="Root Title" id="roo-00-001" customClass="ProbeRootViewController" customModule="NibRuntimeTests" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rtv-00-001">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello Storyboard" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-00-001">
+                                <rect key="frame" x="16" y="120" width="361" height="24"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.40000000000000002" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-00-001">
+                                <rect key="frame" x="16" y="160" width="100" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Tap"/>
+                                <connections>
+                                    <action selector="buttonTapped:" destination="roo-00-001" eventType="touchUpInside" id="act-00-001"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btn-00-002">
+                                <rect key="frame" x="140" y="160" width="100" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Next"/>
+                                <connections>
+                                    <segue destination="det-00-001" kind="show" identifier="ShowNext" id="seg-00-001"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bdg-00-001" customClass="ProbeBadgeView" customModule="NibRuntimeTests">
+                                <rect key="frame" x="260" y="160" width="60" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.90000000000000002" green="0.10000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadiusValue">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="tap-00-001" appends="YES" id="ogr-00-001"/>
+                                </connections>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" fixedFrame="YES" text="One" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-00-002">
+                                <rect key="frame" x="16" y="220" width="120" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" tag="12" contentMode="left" fixedFrame="YES" text="Two" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-00-003">
+                                <rect key="frame" x="16" y="250" width="120" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="swi-00-001">
+                                <rect key="frame" x="16" y="290" width="51" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </switch>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.25" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="sld-00-001">
+                                <rect key="frame" x="90" y="290" width="200" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </slider>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="sgc-00-001">
+                                <rect key="frame" x="16" y="340" width="150" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="A"/>
+                                    <segment title="B"/>
+                                </segments>
+                            </segmentedControl>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="txt-00-001">
+                                <rect key="frame" x="190" y="340" width="187" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cnt-00-001">
+                                <rect key="frame" x="16" y="400" width="361" height="200"/>
+                                <connections>
+                                    <segue destination="chd-00-001" kind="embed" identifier="EmbedChild" id="seg-00-002"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="saf-00-001"/>
+                        <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="lbl-00-001" firstAttribute="leading" secondItem="rtv-00-001" secondAttribute="leading" constant="16" id="c01-00-001"/>
+                            <constraint firstAttribute="trailing" secondItem="lbl-00-001" secondAttribute="trailing" constant="16" id="c01-00-002"/>
+                            <constraint firstItem="lbl-00-001" firstAttribute="top" secondItem="rtv-00-001" secondAttribute="top" constant="120" id="c01-00-003"/>
+                            <constraint firstItem="cnt-00-001" firstAttribute="leading" secondItem="rtv-00-001" secondAttribute="leading" constant="16" id="c01-00-004"/>
+                            <constraint firstAttribute="trailing" secondItem="cnt-00-001" secondAttribute="trailing" constant="16" id="c01-00-005"/>
+                            <constraint firstItem="cnt-00-001" firstAttribute="top" secondItem="rtv-00-001" secondAttribute="top" constant="400" id="c01-00-006"/>
+                            <constraint firstItem="cnt-00-001" firstAttribute="height" constant="200" id="c01-00-007"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Root Item" id="nvi-00-001"/>
+                    <connections>
+                        <outlet property="actionButton" destination="btn-00-001" id="out-00-001"/>
+                        <outlet property="badgeView" destination="bdg-00-001" id="out-00-002"/>
+                        <outlet property="helper" destination="hlp-00-001" id="out-00-003"/>
+                        <outlet property="titleLabel" destination="lbl-00-001" id="out-00-004"/>
+                        <outlet property="nextButton" destination="btn-00-002" id="out-00-005"/>
+                        <outlet property="toggle" destination="swi-00-001" id="out-00-006"/>
+                        <outlet property="slider" destination="sld-00-001" id="out-00-007"/>
+                        <outlet property="segments" destination="sgc-00-001" id="out-00-008"/>
+                        <outlet property="nameField" destination="txt-00-001" id="out-00-009"/>
+                        <outletCollection property="labels" destination="lbl-00-002" collectionClass="NSMutableArray" id="ocl-00-001"/>
+                        <outletCollection property="labels" destination="lbl-00-003" collectionClass="NSMutableArray" id="ocl-00-002"/>
+                        <segue destination="det-00-001" kind="show" identifier="ShowDetailManually" id="seg-00-003"/>
+                        <segue destination="det-00-001" kind="presentation" identifier="PresentModal" modalPresentationStyle="fullScreen" id="seg-00-004"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="frs-00-002" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="hlp-00-001" customClass="ProbeHelperObject" customModule="NibRuntimeTests">
+                    <connections>
+                        <outlet property="label" destination="lbl-00-001" id="out-00-010"/>
+                    </connections>
+                </customObject>
+                <tapGestureRecognizer id="tap-00-001">
+                    <connections>
+                        <action selector="badgeTapped:" destination="roo-00-001" id="act-00-002"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="0.0" y="0.0"/>
+        </scene>
+        <!--Child-->
+        <scene sceneID="scn-00-003">
+            <objects>
+                <viewController storyboardIdentifier="Child" id="chd-00-001" customClass="ProbeChildViewController" customModule="NibRuntimeTests" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="chv-00-001">
+                        <rect key="frame" x="0.0" y="0.0" width="361" height="200"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Child" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-00-010">
+                                <rect key="frame" x="8" y="8" width="100" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="saf-00-003"/>
+                        <color key="backgroundColor" red="0.10000000000000001" green="0.69999999999999996" blue="0.29999999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <connections>
+                        <outlet property="childLabel" destination="lbl-00-010" id="out-00-011"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="frs-00-003" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="0.0" y="900"/>
+        </scene>
+        <!--Detail-->
+        <scene sceneID="scn-00-004">
+            <objects>
+                <viewController storyboardIdentifier="Detail" id="det-00-001" customClass="ProbeDetailViewController" customModule="NibRuntimeTests" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dtv-00-001">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbl-00-020">
+                                <rect key="frame" x="20" y="200" width="200" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="saf-00-004"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <connections>
+                        <outlet property="detailLabel" destination="lbl-00-020" id="out-00-012"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="frs-00-004" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="500" y="0.0"/>
+        </scene>
+    </scenes>
+</document>
