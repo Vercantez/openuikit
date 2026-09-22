@@ -30,6 +30,16 @@ are linked by default (a symlink under Sources/<name>) so the package builds
 against the frozen corpus without a copy; --copy materialises the files and
 writes PROVENANCE.json with SHA-256 per file, the way Eidolon's ingest did.
 
+A target may carry `"generated": [{"file": "Secrets.swift", "root": "corpus",
+"path": "Configs/Secrets.swift.example", "replace": [["a", "b"]]}]` for a file
+the upstream build GENERATES into the module (ios-oss's Makefile `secrets`
+target copies the public Secrets example into KsApi). Such a target is
+materialised as a real directory of per-entry symlinks plus the generated
+file, so the upstream tree is still not written; every generated file is
+listed in GENERATED.json with its source, substitutions and SHA-256. A
+substitution that does not match, or a generated name that already exists
+upstream, is a spec error.
+
 Exit 0 on success, 1 on a spec/path error.
 """
 from __future__ import annotations
@@ -106,6 +116,7 @@ def main() -> int:
     targets = list(spec.get("shims", [])) + list(spec["targets"])
     names = set()
     provenance = {}
+    generated: dict[str, list] = {}
     for t in targets:
         if t["name"] in names:
             print(f"duplicate target {t['name']}", file=sys.stderr)
@@ -131,8 +142,31 @@ def main() -> int:
                     p = os.path.join(dp, fn)
                     files[os.path.relpath(p, dst)] = sha256(p)
             provenance[t["name"]] = {"source": src, "files": files}
+        elif t.get("generated"):
+            os.makedirs(dst)
+            for entry in sorted(os.listdir(src)):
+                os.symlink(os.path.join(src, entry), os.path.join(dst, entry))
         else:
             os.symlink(src, dst)
+        for g in t.get("generated", []):
+            gsrc = os.path.join(roots[g.get("root", "corpus")], g["path"])
+            if not os.path.isfile(gsrc):
+                print(f"{t['name']}: no such generator source {gsrc}", file=sys.stderr)
+                return 1
+            gdst = os.path.join(dst, g["file"])
+            if os.path.lexists(gdst):
+                print(f"{t['name']}: generated file {g['file']} already exists upstream", file=sys.stderr)
+                return 1
+            text = open(gsrc).read()
+            for old, new in g.get("replace", []):
+                if old not in text:
+                    print(f"{t['name']}: substitution {old!r} not found in {gsrc}", file=sys.stderr)
+                    return 1
+                text = text.replace(old, new)
+            with open(gdst, "w") as f:
+                f.write(text)
+            generated.setdefault(t["name"], []).append(
+                {"file": g["file"], "source": gsrc, "replace": g.get("replace", []), "sha256": sha256(gdst)})
         for d in t.get("deps", []):
             if d not in names:
                 print(f"{t['name']}: dependency {d} is not declared before it", file=sys.stderr)
@@ -151,7 +185,7 @@ import PackageDescription
 let package = Package(
     name: {json.dumps(spec['name'])},
     defaultLocalization: {json.dumps(spec.get('default_localization', 'en'))},
-    platforms: [.macOS(.v13)],
+    platforms: [.macOS({json.dumps(spec.get("macos_deployment", "13.0"))})],
     products: [
 {products}
     ],
@@ -165,6 +199,9 @@ let package = Package(
 """
     with open(os.path.join(out, "Package.swift"), "w") as f:
         f.write(manifest)
+    if generated:
+        with open(os.path.join(out, "GENERATED.json"), "w") as f:
+            json.dump(generated, f, indent=1, sort_keys=True)
     if args.copy:
         with open(os.path.join(out, "PROVENANCE.json"), "w") as f:
             json.dump(provenance, f, indent=1, sort_keys=True)

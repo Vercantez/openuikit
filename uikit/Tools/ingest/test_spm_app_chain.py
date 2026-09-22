@@ -48,6 +48,7 @@ class SpmAppChainTests(unittest.TestCase):
         manifest = open(os.path.join(out, "Package.swift")).read()
         self.assertIn('swift-tools-version:6.0', manifest)
         self.assertIn('defaultLocalization: "en"', manifest)
+        self.assertIn('platforms: [.macOS("13.0")]', manifest)
         self.assertIn('.package(name: "OpenUIKit", path: "%s")' % json.dumps(self.openuikit)[1:-1], manifest)
         self.assertIn('dependencies: ["Dep", "Svc", .product(name: "UIKit", package: "OpenUIKit")]', manifest)
         self.assertIn('exclude: ["Info.plist"]', manifest)
@@ -86,6 +87,48 @@ class SpmAppChainTests(unittest.TestCase):
         p, _ = self.run_tool()
         self.assertEqual(p.returncode, 1)
         self.assertIn("no such directory", p.stderr)
+
+    def _with_generated(self, gen):
+        os.makedirs(os.path.join(self.corpus, "Configs"), exist_ok=True)
+        open(os.path.join(self.corpus, "Configs/Secrets.swift.example"), "w").write(
+            "public enum Secrets { public static let isOSS = false }\n")
+        spec = json.load(open(self.spec))
+        spec["targets"][1]["generated"] = [gen]
+        json.dump(spec, open(self.spec, "w"))
+
+    def test_generated_file_overlays_without_writing_upstream(self):
+        self._with_generated({"file": "Secrets.swift", "root": "corpus", "path": "Configs/Secrets.swift.example",
+                              "replace": [["isOSS = false", "isOSS = true"]]})
+        p, out = self.run_tool()
+        self.assertEqual(p.returncode, 0, p.stderr)
+        app = os.path.join(out, "Sources", "App")
+        self.assertFalse(os.path.islink(app))
+        self.assertTrue(os.path.islink(os.path.join(app, "A.swift")))
+        self.assertIn("isOSS = true", open(os.path.join(app, "Secrets.swift")).read())
+        gen = json.load(open(os.path.join(out, "GENERATED.json")))
+        self.assertEqual(gen["App"][0]["file"], "Secrets.swift")
+        self.assertEqual(len(gen["App"][0]["sha256"]), 64)
+        # the frozen tree gained nothing
+        self.assertEqual(sorted(os.listdir(os.path.join(self.corpus, "App/Sources/App"))), ["A.swift", "Info.plist"])
+        # regenerating over an existing output is idempotent
+        p, _ = self.run_tool()
+        self.assertEqual(p.returncode, 0, p.stderr)
+
+    def test_macos_deployment_follows_spec(self):
+        # ios-oss deploys iOS 18; the Apple-toolchain chain maps it to macOS 15.
+        spec = json.load(open(self.spec))
+        spec["macos_deployment"] = "15.0"
+        json.dump(spec, open(self.spec, "w"))
+        p, out = self.run_tool()
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertIn('platforms: [.macOS("15.0")]', open(os.path.join(out, "Package.swift")).read())
+
+    def test_generated_substitution_must_match(self):
+        self._with_generated({"file": "Secrets.swift", "root": "corpus", "path": "Configs/Secrets.swift.example",
+                              "replace": [["isOSS = maybe", "isOSS = true"]]})
+        p, _ = self.run_tool()
+        self.assertEqual(p.returncode, 1)
+        self.assertIn("substitution", p.stderr)
 
 
 if __name__ == "__main__":
