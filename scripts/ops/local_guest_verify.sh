@@ -4,8 +4,15 @@
 # git worktree of it) and runs uikit/scripts/linux_guest_realapp_verify.sh.
 #
 #   bash scripts/ops/local_guest_verify.sh [TREE]        # default: this checkout
-#   LOCAL_GUEST_FORCE=1 ...                              # rebuild everything
+#   LOCAL_GUEST_FORCE=1 ...                              # rebuild everything, cold
+#                                                        # (stage cache bypassed)
 #   LOCAL_GUEST_SKIP_VERIFY=1 ...                        # build only
+#   LOCAL_GUEST_CACHE=0 ...                              # no build_full stage cache
+#       (default 1: BUILD_FULL_STAGE_CACHE=1 under build/local-guest/stage-cache,
+#       so a uikit/ edit does not recompile FoundationEssentials or
+#       FoundationInternationalization; hits are byte-identical to cold builds)
+#   LOCAL_GUEST_JOBS=N ...                               # parallel compile jobs
+#       inside build_full (default: all container CPUs)
 #   LOCAL_GUEST_BUILD_FULL=/path/build_full.sh ...       # diagnostic: run another
 #       copy of build_full (it must sit beside a guest_arch.inc); the guest
 #       subject is still hashed from the tree's own full/scripts/build_full.sh
@@ -39,6 +46,15 @@ IMAGE=${LOCAL_GUEST_IMAGE:-openuikit-guest-env:arm64}
 log() { printf '[local-guest] %s\n' "$*" >&2; }
 die() { printf '[local-guest] FAIL: %s\n' "$*" >&2; exit 2; }
 now() { date +%s; }
+# Prefix each line with the epoch time it was read (bash 5 EPOCHREALTIME, no fork).
+stamp_lines() { local l; while IFS= read -r l || [ -n "$l" ]; do printf '%s %s\n' "$EPOCHREALTIME" "$l"; done; }
+# Seconds between consecutive "== stage" headings of a stamped build_full log.
+stage_times() {
+    awk '{ t = $1; sub(/^[^ ]+ /, "") }
+        NR == 1 { t0 = t; prev = t; name = "(preflight)" }
+        /^== / { printf "%7.1f  %s\n", t - prev, name; prev = t; name = substr($0, 1, 100) }
+        END { if (NR) { printf "%7.1f  %s\n", t - prev, name; printf "%7.1f  total\n", t - t0 } }'
+}
 
 # ---------------------------------------------------------------- host side --
 if [ "${1:-}" != --inside ]; then
@@ -82,6 +98,8 @@ if [ "${1:-}" != --inside ]; then
         -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0='*' \
         -e LOCAL_GUEST_FORCE="${LOCAL_GUEST_FORCE:-0}" \
         -e LOCAL_GUEST_SKIP_VERIFY="${LOCAL_GUEST_SKIP_VERIFY:-0}" \
+        -e LOCAL_GUEST_CACHE="${LOCAL_GUEST_CACHE:-1}" \
+        -e LOCAL_GUEST_JOBS="${LOCAL_GUEST_JOBS:-}" \
         -e LOCAL_GUEST_BUILD_FULL="${LOCAL_GUEST_BUILD_FULL:-}" \
         -e TREE="$TREE" -e MAIN="$MAIN" -e SCRATCH="$SCRATCH" \
         "$IMAGE" bash "$HERE/$(basename "${BASH_SOURCE[0]}")" --inside
@@ -203,6 +221,16 @@ export SF=$SCRATCH/swift-foundation SC=$SCRATCH/swift-collections
 export SWIFT_FOUNDATION_ICU=$SCRATCH/swift-foundation-icu
 export OPENCOMBINE_ROOT=$SCRATCH/opencombine-core-durable-20260828-r2
 export BASE_RUNTIME_SOURCE=$BASE FE_RUNTIME_SOURCE=$SCRATCH/mrroot_fe
+# Speed only: neither setting changes a single output byte (see build_full's
+# run_jobs and stage-cache notes). The cache key never covers LOCAL_GUEST_*.
+export BUILD_FULL_JOBS=${LOCAL_GUEST_JOBS:-$(nproc)}
+export FOUNDATION_ICU_JOBS=$BUILD_FULL_JOBS
+export BUILD_FULL_STAGE_CACHE_DIR=$LG/stage-cache
+if [ "$LOCAL_GUEST_CACHE" = 1 ] && [ "$LOCAL_GUEST_FORCE" != 1 ]; then
+    export BUILD_FULL_STAGE_CACHE=1
+else
+    export BUILD_FULL_STAGE_CACHE=0
+fi
 BUILD_FULL=${LOCAL_GUEST_BUILD_FULL:-$TREE/full/scripts/build_full.sh}
 [ "$BUILD_FULL" = "$TREE/full/scripts/build_full.sh" ] || log "build_full: DIAGNOSTIC override $BUILD_FULL"
 full_key=$( {
@@ -214,10 +242,13 @@ if key_ok "$OUT/.local-guest.key" "$full_key" && [ -f "$OUT/render_full" ] \
     && [ -f "$OUT/focus-guest-executable.sha256" ]; then
     log "build_full: reused key=${full_key:0:12}"
 else
-    log "build_full: building (log $LG/build_full.log)"
+    log "build_full: building jobs=$BUILD_FULL_JOBS stage-cache=$BUILD_FULL_STAGE_CACHE (log $LG/build_full.log, stage times $LG/build_full.stages)"
     rm -f "$OUT/.local-guest.key"
-    bash "$BUILD_FULL" > "$LG/build_full.log" 2>&1 \
+    # Every log line carries its wall-clock time so build_full.stages can say
+    # where the time went; pipefail keeps build_full's own exit status.
+    bash "$BUILD_FULL" 2>&1 | stamp_lines > "$LG/build_full.log" \
         || { tail -60 "$LG/build_full.log" >&2; die "build_full failed (log $LG/build_full.log)"; }
+    stage_times < "$LG/build_full.log" > "$LG/build_full.stages"
     echo "$full_key" > "$OUT/.local-guest.key"
 fi
 log "build_full: $(( $(now) - t ))s"
