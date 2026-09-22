@@ -148,7 +148,7 @@ a Swift-only member. `ObjCSubclassingTests` enforces this list exactly.
 | real-app 3x | 99.137 / 98.535 / 98.548 / 99.74 / 98.72 / 98.334 / 97.549 / 99.65 / 98.823 / 98.558 / 99.86 / 99.734 / 98.235 / 99.61 (all at or above the gate floors) |
 | Linux `swift:6.2-noble` | `openrender` (release), `ConformanceApps`, `OpenUIKitTests` build |
 | ingest tests | 48/48 with the corpus (2 new) |
-| guest route / machorun | see "Guest verification" |
+| guest route / machorun | `REAL-APP SCREEN VERIFIED ON LINUX`, 14/14 byte-identical, Focus AppDelegate launched (below) |
 
 ## Simplenote, re-ingested
 
@@ -229,7 +229,16 @@ here.
 
 ## Guest verification
 
-GUEST_RESULT_PLACEHOLDER
+`LOCAL_GUEST_BUILD_FULL=…/full/scripts/build_full.sh bash scripts/ops/local_guest_verify.sh <this worktree>`
+(machorun + objc4 on arm64 Linux, full `build_full.sh`), same as the main-HEAD
+baseline:
+
+```
+FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController
+rendered 15 screens; existing screens byte-identical 14/14 (including Ledger)
+REAL-APP SCREEN VERIFIED ON LINUX
+[local-guest] verify: 77s rc=0; total 283s
+```
 
 What the guest run does **not** exercise: the guest build (`build_full.sh`)
 compiles OpenUIKit without `OPENUIKIT_OBJC_SUBCLASSING`, which is
