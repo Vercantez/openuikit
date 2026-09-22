@@ -209,9 +209,10 @@ SIM_LOCK=/tmp/conformance_sim.lock
 HAVE_SIM=""
 killtree() { local c; for c in $(pgrep -P "$1" 2>/dev/null); do killtree "$c"; done; kill "$1" 2>/dev/null || true; }
 cleanup() {
-  local rc=$?; set +e   # never let a cleanup failure replace the verdict (a failing
+  local rc=$?; set +e; cd "$ROOT"   # never let a cleanup failure replace the verdict (a failing
                         # git in the old trap turned exit 9 into 128)
   for p in $BG_PIDS; do killtree "$p"; done
+  pkill -TERM -f "$S/" 2>/dev/null   # docker clients mounting this root (their containers stop with them)
   docker rm -f "gate-linux-$$" >/dev/null 2>&1 || true
   for b in "$S"/bin/openhost-gate-*; do [ -e "$b" ] || [ -L "$b" ] || continue; defaults delete "$(basename "$b")" >/dev/null 2>&1; done
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; fi
