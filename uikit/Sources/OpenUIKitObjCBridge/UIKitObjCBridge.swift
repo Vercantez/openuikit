@@ -277,13 +277,20 @@ extension UITableViewCell {
 }
 
 /// UIKit's `NSIndexPath (UITableView)` category: `row` and `section` are
-/// index positions 1 and 0 (UITableView.h).
+/// index positions 1 and 0 (UITableView.h). On macOS AppKit's
+/// `NSIndexPath (NSCollectionViewAdditions)` already implements `section`
+/// (and `item`, `+indexPathForItem:inSection:`); a twin would replace it
+/// (MEASURED ObjCSurfaceTests.testNoTwinShadowsANativeSelector), so those
+/// three are declared in UIKitObjCSupport.h and implemented here only where
+/// AppKit is absent.
 extension NSIndexPath {
     @objc(row) public var __objc_row: Int { index(atPosition: 1) }
-    @objc(section) public var __objc_section: Int { index(atPosition: 0) }
     @objc(indexPathForRow:inSection:) public class func __objc_indexPath(forRow row: Int, inSection section: Int) -> NSIndexPath {
         NSIndexPath(indexes: [section, row], length: 2)
     }
+#if !canImport(AppKit)
+    @objc(section) public var __objc_section: Int { index(atPosition: 0) }
+#endif
 }
 
 // MARK: - UISwitch / UIActivityIndicatorView / UIImageView / UIImage
@@ -653,6 +660,88 @@ extension UIColor {
     @objc(colorWithHue:saturation:brightness:alpha:)
     public class func __objc_color(hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) -> UIColor {
         UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
+    }
+}
+// MARK: - Alerts, bar button items, collection index paths (Simplenote / eidolon census)
+
+extension UIAlertAction {
+    /// UIAlertActionStyle raw values equal OpenUIKit's (alertprobe); an
+    /// undefined one fails closed to `.default`.
+    @objc(actionWithTitle:style:handler:)
+    public class func __objc_action(title: String?, style: Int, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+        UIAlertAction(title: title, style: Style(rawValue: style) ?? .default, handler: handler)
+    }
+    @objc(title) public var __objc_title: String? { title }
+    @objc(style) public var __objc_style: Int { style.rawValue }
+    @objc(isEnabled) public var __objc_isEnabled: Bool { isEnabled }
+    @objc(setEnabled:) public func __objc_setEnabled(_ enabled: Bool) { isEnabled = enabled }
+}
+
+extension UIAlertController {
+    /// UIAlertControllerStyle: ActionSheet 0, Alert 1 (UIAlertController.h).
+    @objc(alertControllerWithTitle:message:preferredStyle:)
+    public class func __objc_alertController(title: String?, message: String?, preferredStyle: Int) -> UIAlertController {
+        UIAlertController(title: title, message: message, preferredStyle: preferredStyle == 1 ? .alert : .actionSheet)
+    }
+    @objc(addAction:) public func __objc_addAction(_ action: UIAlertAction) { addAction(action) }
+    @objc(actions) public var __objc_actions: [UIAlertAction] { actions }
+    @objc(message) public var __objc_message: String? { get { message } set { message = newValue } }
+}
+
+/// UIBarButtonSystemItem's SDK values: OpenUIKit's case order up to
+/// UIBarButtonSystemItemRedo (22); PageCurl (23) has no OpenUIKit item;
+/// Close is 24 (UIBarButtonItem.h).
+private func barSystemItem(_ raw: Int) -> UIBarButtonItem.SystemItem? {
+    if raw == 24 { return .close }
+    guard raw >= 0, raw <= 22 else { return nil }
+    return UIBarButtonItem.SystemItem.allCases[raw]
+}
+
+extension UIBarButtonItem {
+    /// UIBarButtonItemStyle: Plain 0, Done/Prominent 2 map to OpenUIKit's
+    /// styles; the deprecated Bordered (1) and undefined values fail closed
+    /// to `.plain`.
+    @objc(initWithTitle:style:target:action:)
+    public convenience init(__objcTitle title: String?, style: Int, target: AnyObject?, action: Selector?) {
+        self.init(title: title, style: Style(rawValue: style) ?? .plain, target: target, action: action)
+    }
+    @objc(initWithImage:style:target:action:)
+    public convenience init(__objcImage image: UIImage?, style: Int, target: AnyObject?, action: Selector?) {
+        self.init(image: image, style: Style(rawValue: style) ?? .plain, target: target, action: action)
+    }
+    /// PageCurl has no OpenUIKit item: it fails closed to an untitled
+    /// plain item with the same target and action.
+    @objc(initWithBarButtonSystemItem:target:action:)
+    public convenience init(__objcSystemItem systemItem: Int, target: AnyObject?, action: Selector?) {
+        if let item = barSystemItem(systemItem) {
+            self.init(barButtonSystemItem: item, target: target, action: action)
+        } else {
+            self.init(title: nil, style: .plain, target: target, action: action)
+        }
+    }
+}
+
+/// UIKit's `NSIndexPath (UICollectionViewAdditions)`: `item` is index
+/// position 1, as `row` is (UICollectionView.h). AppKit implements the same
+/// category on macOS (see `row` above).
+#if !canImport(AppKit)
+extension NSIndexPath {
+    @objc(item) public var __objc_item: Int { index(atPosition: 1) }
+    @objc(indexPathForItem:inSection:) public class func __objc_indexPath(forItem item: Int, inSection section: Int) -> NSIndexPath {
+        NSIndexPath(indexes: [section, item], length: 2)
+    }
+}
+#endif
+
+extension UIView {
+    @objc(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)
+    public class func __objc_animate(withDuration duration: TimeInterval, delay: TimeInterval,
+                                     usingSpringWithDamping dampingRatio: CGFloat,
+                                     initialSpringVelocity velocity: CGFloat, options: UInt,
+                                     animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+        animate(withDuration: duration, delay: delay, usingSpringWithDamping: dampingRatio,
+                initialSpringVelocity: velocity, options: AnimationOptions(rawValue: options),
+                animations: animations, completion: completion)
     }
 }
 #endif

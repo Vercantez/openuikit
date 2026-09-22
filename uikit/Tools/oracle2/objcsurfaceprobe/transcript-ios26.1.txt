@@ -2,6 +2,7 @@
 ## superclasses
 UIFont:NSObject
 CALayer:NSObject
+UIAlertAction:NSObject
 ## font
 systemFontOfSize:17 pointSize=17 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
 boldSystemFontOfSize:17 pointSize=17 fontName=.SFUI-Semibold familyName=.AppleSystemUIFont kind=YES

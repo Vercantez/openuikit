@@ -49,7 +49,7 @@ s = s.replace(anchor, anchor + '''
 # DIAGNOSTIC (uikit/scripts/objc_surface_guest_probe.sh): Objective-C surface.
 OSP="$OUT/objcsurface"
 OSP_SRC="$UIKIT/Tools/oracle2/objcsurfaceprobe"
-OSP_FLAGS=(-fobjc-arc -DOUK_OPENUIKIT=1 -DOUK_NO_FOUNDATION=1 -I "$OSP" -I "$OSP_SRC/scenario/include"
+OSP_FLAGS=(-fobjc-arc -DOUK_OPENUIKIT=1 -DOUK_NO_FOUNDATION=1 -I "$OSP" -I "$OSP_SRC/scenario/include" -I "$OSP_SRC/guestinc"
   "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) __attribute__((objc_subclassing_restricted)) SWIFT_CLASS_EXTRA"
   "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA")
 echo "== objc surface probe: header $(grep -c '^@interface' "$OSP/OpenUIKit-Swift.h") interfaces"

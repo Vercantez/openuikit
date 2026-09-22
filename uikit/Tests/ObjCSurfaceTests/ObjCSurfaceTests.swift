@@ -185,7 +185,9 @@ final class ObjCSurfaceTests: XCTestCase {
         let classes: [AnyClass] = [UIFont.self, CALayer.self, UIColor.self, UIView.self, UIControl.self,
                                    UIButton.self, UILabel.self, UIImage.self, UIScreen.self,
                                    UIVisualEffectView.self, UIBlurEffect.self, NSLayoutConstraint.self,
-                                   UIApplication.self, UITextField.self, UITextView.self]
+                                   UIApplication.self, UITextField.self, UITextView.self,
+                                   UIAlertAction.self, UIAlertController.self, UIBarButtonItem.self,
+                                   NSIndexPath.self]
         for cls in classes {
             for target in [cls, object_getClass(cls)!] {
                 var count: UInt32 = 0

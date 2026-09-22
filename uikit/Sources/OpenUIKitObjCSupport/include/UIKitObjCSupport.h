@@ -40,6 +40,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class UIWindow;
 @class UIView, UIViewController, UINavigationController, UITableView, UITableViewCell,
        UIScrollView, UITextView, UITextField, UIGestureRecognizer, UIPickerView,
        UIApplication, UIApplicationShortcutItem, UITraitCollection;
@@ -278,18 +279,36 @@ static const UILayoutPriority UILayoutPriorityFittingSizeLevel = 50;
 #if !__swift__
 typedef NS_ENUM(NSInteger, NSLayoutRelation) {
     NSLayoutRelationLessThanOrEqual = -1, NSLayoutRelationEqual = 0, NSLayoutRelationGreaterThanOrEqual = 1,
-} NS_SWIFT_NAME(NSLayoutRelationObjC);
+};
+/* The SDK itself declares the margin members only `#if TARGET_OS_IPHONE`
+ * (NSLayoutConstraint.h:65). Off iOS the enum keeps exactly AppKit's members,
+ * so an Objective-C file that sees AppKit's copy too merges the two instead
+ * of failing (MEASURED Simplenote census: "'NSLayoutAttribute' has different
+ * definitions in different modules … enum with 22 elements"), and the
+ * margins are constant expressions with their iOS values. */
 typedef NS_ENUM(NSInteger, NSLayoutAttribute) {
     NSLayoutAttributeLeft = 1, NSLayoutAttributeRight, NSLayoutAttributeTop, NSLayoutAttributeBottom,
     NSLayoutAttributeLeading, NSLayoutAttributeTrailing, NSLayoutAttributeWidth, NSLayoutAttributeHeight,
     NSLayoutAttributeCenterX, NSLayoutAttributeCenterY, NSLayoutAttributeLastBaseline,
     NSLayoutAttributeBaseline = NSLayoutAttributeLastBaseline,
     NSLayoutAttributeFirstBaseline,
+#if TARGET_OS_IPHONE
     NSLayoutAttributeLeftMargin, NSLayoutAttributeRightMargin, NSLayoutAttributeTopMargin,
     NSLayoutAttributeBottomMargin, NSLayoutAttributeLeadingMargin, NSLayoutAttributeTrailingMargin,
     NSLayoutAttributeCenterXWithinMargins, NSLayoutAttributeCenterYWithinMargins,
-    NSLayoutAttributeNotAnAttribute = 0,
-} NS_SWIFT_NAME(NSLayoutAttributeObjC);
+#endif
+    NSLayoutAttributeNotAnAttribute = 0
+};
+#if !TARGET_OS_IPHONE
+#define NSLayoutAttributeLeftMargin ((NSLayoutAttribute)13)
+#define NSLayoutAttributeRightMargin ((NSLayoutAttribute)14)
+#define NSLayoutAttributeTopMargin ((NSLayoutAttribute)15)
+#define NSLayoutAttributeBottomMargin ((NSLayoutAttribute)16)
+#define NSLayoutAttributeLeadingMargin ((NSLayoutAttribute)17)
+#define NSLayoutAttributeTrailingMargin ((NSLayoutAttribute)18)
+#define NSLayoutAttributeCenterXWithinMargins ((NSLayoutAttribute)19)
+#define NSLayoutAttributeCenterYWithinMargins ((NSLayoutAttribute)20)
+#endif
 #endif
 
 #pragma mark - Images and views (UIImage.h, UIView.h, UIBlurEffect.h, UIApplication.h)
@@ -373,9 +392,25 @@ extern NSNotificationName const UIContentSizeCategoryDidChangeNotification;
 extern NSNotificationName const UIKeyboardWillShowNotification;
 extern NSNotificationName const UIKeyboardWillChangeFrameNotification;
 extern NSNotificationName const UITextViewTextDidEndEditingNotification;
+extern NSString * const UICollectionElementKindSectionHeader;
+extern NSString * const UICollectionElementKindSectionFooter;
 extern NSString * const UIKeyboardFrameEndUserInfoKey;
 extern NSString * const UIKeyInputUpArrow;
 extern NSString * const UIKeyInputDownArrow;
+
+#pragma mark - NSIndexPath (UITableView / UICollectionViewAdditions)
+
+/* Declarations only: OpenUIKitObjCBridge implements them, except that on
+ * macOS AppKit's NSIndexPath (NSCollectionViewAdditions) already provides
+ * `section`, `item` and `+indexPathForItem:inSection:` (identical meaning:
+ * index positions 0 and 1). */
+#if !__swift__
+@interface NSIndexPath (OpenUIKitCollectionAdditions)
++ (instancetype)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
+@property (nonatomic, readonly) NSInteger item;
+@property (nonatomic, readonly) NSInteger section;
+@end
+#endif
 
 #pragma mark - Protocols
 
@@ -392,6 +427,7 @@ NS_SWIFT_NAME(UIApplicationDelegateObjC) @protocol UIApplicationDelegate <NSObje
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler;
 - (BOOL)application:(UIApplication *)application shouldSaveSecureApplicationState:(NSCoder *)coder;
 - (BOOL)application:(UIApplication *)application shouldRestoreSecureApplicationState:(NSCoder *)coder;
+@property (nullable, nonatomic, strong) UIWindow *window;
 @end
 
 NS_SWIFT_NAME(UIUserActivityRestoringObjC) @protocol UIUserActivityRestoring <NSObject>

@@ -91,7 +91,11 @@ static const char *P(CGPoint p) {
 
 void OUKSurfaceSuperclassFacts(OUKSurfaceSink sink, void *context) {
     gSink = sink; gContext = context;
+#ifndef OUK_NO_FOUNDATION
+    Class classes[] = { [UIFont class], [CALayer class], [UIAlertAction class] };
+#else
     Class classes[] = { [UIFont class], [CALayer class] };
+#endif
     for (unsigned i = 0; i < sizeof classes / sizeof classes[0]; i++) {
         emit("%s:%s", class_getName(classes[i]), class_getName(class_getSuperclass(classes[i])));
     }
