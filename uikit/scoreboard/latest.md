@@ -2,7 +2,7 @@
 
 iOS scene suite: **112/113** · Catalyst gate: **124/124**
 
-conformance captured: Feed @ 2026-09-06T20:36, Feed-ipad @ 2026-09-06T20:37, Feed.ax1 @ 2026-09-06T20:38, Feed.dark @ 2026-09-06T20:37, Feed.landscape @ 2026-09-06T20:39, Feed.rtl @ 2026-09-06T20:38, Feed.xxxl @ 2026-09-06T20:38, Forms @ 2026-09-06T20:39, Forms-ipad @ 2026-09-06T20:40, Forms.ax1 @ 2026-09-06T20:41, Forms.dark @ 2026-09-06T20:40, Forms.landscape @ 2026-09-06T20:42, Forms.rtl @ 2026-09-06T20:41, Forms.xxxl @ 2026-09-06T20:41, Ledger @ 2026-09-06T20:42, Ledger-ipad @ 2026-09-06T20:43, Ledger.ax1 @ 2026-09-06T20:44, Ledger.dark @ 2026-09-06T20:43, Ledger.landscape @ 2026-09-06T20:45, Ledger.rtl @ 2026-09-06T20:44, Ledger.xxxl @ 2026-09-06T20:45, Materials @ 2026-09-06T20:45, Materials-ipad @ 2026-09-06T20:46, Materials.ax1 @ 2026-09-06T20:47, Materials.dark @ 2026-09-06T20:46, Materials.landscape @ 2026-09-06T20:48, Materials.rtl @ 2026-09-06T20:47, Materials.xxxl @ 2026-09-06T20:48, Modal @ 2026-09-06T20:49, Modal-ipad @ 2026-09-06T20:49, Modal.ax1 @ 2026-09-06T20:51, Modal.dark @ 2026-09-06T20:50, Modal.landscape @ 2026-09-06T20:52, Modal.rtl @ 2026-09-06T20:50, Modal.xxxl @ 2026-09-06T20:51, NavFlow @ 2026-09-06T20:52, NavFlow-ipad @ 2026-09-06T20:53, NavFlow.ax1 @ 2026-09-06T20:54, NavFlow.dark @ 2026-09-06T20:53, NavFlow.landscape @ 2026-09-06T20:55, NavFlow.rtl @ 2026-09-06T20:53, NavFlow.xxxl @ 2026-09-06T20:54, Notes @ 2026-09-06T20:55, Notes-ipad @ 2026-09-06T20:56, Notes.ax1 @ 2026-09-06T20:58, Notes.dark @ 2026-09-06T20:56, Notes.landscape @ 2026-09-06T20:59, Notes.rtl @ 2026-09-06T20:57, Notes.xxxl @ 2026-09-06T20:58, Pager @ 2026-09-06T20:59, Pager-ipad @ 2026-09-22T15:48, Pager.ax1 @ 2026-09-06T21:01, Pager.dark @ 2026-09-06T21:00, Pager.landscape @ 2026-09-06T21:02, Pager.rtl @ 2026-09-06T21:00, Pager.xxxl @ 2026-09-06T21:01, Present @ 2026-09-06T21:02, Present-ipad @ 2026-09-06T21:02, Present.ax1 @ 2026-09-06T21:03, Present.dark @ 2026-09-06T21:03, Present.landscape @ 2026-09-06T21:04, Present.rtl @ 2026-09-06T21:03, Present.xxxl @ 2026-09-06T21:04, TableEditor @ 2026-09-06T21:04, TableEditor-ipad @ 2026-09-06T21:05, TableEditor.ax1 @ 2026-09-06T21:06, TableEditor.dark @ 2026-09-06T21:05, TableEditor.landscape @ 2026-09-06T21:07, TableEditor.rtl @ 2026-09-06T21:06, TableEditor.xxxl @ 2026-09-06T21:07, Tabs @ 2026-09-06T21:07, Tabs-ipad @ 2026-09-06T21:08, Tabs.ax1 @ 2026-09-06T21:09, Tabs.dark @ 2026-09-06T21:08, Tabs.landscape @ 2026-09-06T21:10, Tabs.rtl @ 2026-09-06T21:09, Tabs.xxxl @ 2026-09-06T21:10, TextKit @ 2026-09-06T21:10, TextKit-ipad @ 2026-09-06T21:11, TextKit.ax1 @ 2026-09-06T21:12, TextKit.dark @ 2026-09-06T21:11, TextKit.landscape @ 2026-09-06T21:12, TextKit.rtl @ 2026-09-06T21:11, TextKit.xxxl @ 2026-09-06T21:12
+conformance captured: Feed @ 2026-09-06T20:36, Feed-ipad @ 2026-09-06T20:37, Feed.ax1 @ 2026-09-06T20:38, Feed.dark @ 2026-09-06T20:37, Feed.landscape @ 2026-09-06T20:39, Feed.rtl @ 2026-09-06T20:38, Feed.xxxl @ 2026-09-06T20:38, Forms @ 2026-09-06T20:39, Forms-ipad @ 2026-09-22T16:24, Forms.ax1 @ 2026-09-22T16:26, Forms.dark @ 2026-09-22T16:25, Forms.landscape @ 2026-09-06T20:42, Forms.rtl @ 2026-09-22T16:25, Forms.xxxl @ 2026-09-06T20:41, Ledger @ 2026-09-06T20:42, Ledger-ipad @ 2026-09-06T20:43, Ledger.ax1 @ 2026-09-06T20:44, Ledger.dark @ 2026-09-06T20:43, Ledger.landscape @ 2026-09-06T20:45, Ledger.rtl @ 2026-09-06T20:44, Ledger.xxxl @ 2026-09-06T20:45, Materials @ 2026-09-06T20:45, Materials-ipad @ 2026-09-06T20:46, Materials.ax1 @ 2026-09-06T20:47, Materials.dark @ 2026-09-06T20:46, Materials.landscape @ 2026-09-06T20:48, Materials.rtl @ 2026-09-06T20:47, Materials.xxxl @ 2026-09-06T20:48, Modal @ 2026-09-06T20:49, Modal-ipad @ 2026-09-06T20:49, Modal.ax1 @ 2026-09-06T20:51, Modal.dark @ 2026-09-06T20:50, Modal.landscape @ 2026-09-06T20:52, Modal.rtl @ 2026-09-06T20:50, Modal.xxxl @ 2026-09-06T20:51, NavFlow @ 2026-09-06T20:52, NavFlow-ipad @ 2026-09-06T20:53, NavFlow.ax1 @ 2026-09-06T20:54, NavFlow.dark @ 2026-09-06T20:53, NavFlow.landscape @ 2026-09-06T20:55, NavFlow.rtl @ 2026-09-06T20:53, NavFlow.xxxl @ 2026-09-06T20:54, Notes @ 2026-09-06T20:55, Notes-ipad @ 2026-09-06T20:56, Notes.ax1 @ 2026-09-06T20:58, Notes.dark @ 2026-09-06T20:56, Notes.landscape @ 2026-09-06T20:59, Notes.rtl @ 2026-09-06T20:57, Notes.xxxl @ 2026-09-06T20:58, Pager @ 2026-09-06T20:59, Pager-ipad @ 2026-09-22T15:48, Pager.ax1 @ 2026-09-06T21:01, Pager.dark @ 2026-09-06T21:00, Pager.landscape @ 2026-09-06T21:02, Pager.rtl @ 2026-09-06T21:00, Pager.xxxl @ 2026-09-06T21:01, Present @ 2026-09-06T21:02, Present-ipad @ 2026-09-06T21:02, Present.ax1 @ 2026-09-06T21:03, Present.dark @ 2026-09-06T21:03, Present.landscape @ 2026-09-06T21:04, Present.rtl @ 2026-09-06T21:03, Present.xxxl @ 2026-09-06T21:04, TableEditor @ 2026-09-06T21:04, TableEditor-ipad @ 2026-09-06T21:05, TableEditor.ax1 @ 2026-09-06T21:06, TableEditor.dark @ 2026-09-06T21:05, TableEditor.landscape @ 2026-09-06T21:07, TableEditor.rtl @ 2026-09-06T21:06, TableEditor.xxxl @ 2026-09-06T21:07, Tabs @ 2026-09-06T21:07, Tabs-ipad @ 2026-09-22T16:27, Tabs.ax1 @ 2026-09-06T21:09, Tabs.dark @ 2026-09-22T16:27, Tabs.landscape @ 2026-09-06T21:10, Tabs.rtl @ 2026-09-06T21:09, Tabs.xxxl @ 2026-09-06T21:10, TextKit @ 2026-09-06T21:10, TextKit-ipad @ 2026-09-06T21:11, TextKit.ax1 @ 2026-09-06T21:12, TextKit.dark @ 2026-09-06T21:11, TextKit.landscape @ 2026-09-06T21:12, TextKit.rtl @ 2026-09-06T21:11, TextKit.xxxl @ 2026-09-06T21:12
 
 | scene | category | score | bar | blob pt² | layout | status |
 |---|---|---|---|---|---|---|
@@ -99,14 +99,14 @@ conformance captured: Feed @ 2026-09-06T20:36, Feed-ipad @ 2026-09-06T20:37, Fee
 | Ledger:t2100.xxxl | conformance | 92.14 | 97.5 | 7.8 | 4 | fail |
 | Ledger:t6000.xxxl | conformance | 92.29 | 97.5 | 7.2 | 3 | fail |
 | Ledger:t2100 | conformance | 92.36 | 97.5 | 3.8 | 2 | fail |
-| Tabs:t4000.dark | conformance | 92.36 | 97.5 | 213.2 | 10 | fail |
 | Ledger:t7000.rtl | conformance | 92.37 | 97.5 | 3.8 | 1 | fail |
+| Tabs:t4000.dark | conformance | 92.37 | 97.5 | 213.2 | 10 | fail |
 | Ledger:t6000.dark | conformance | 92.39 | 97.5 | 1.2 | 1 | fail |
 | Ledger:t5000.rtl | conformance | 92.39 | 97.5 | 3.8 | 1 | fail |
 | Tabs:t5000.dark | conformance | 92.45 | 97.5 | 213.2 | 14 | fail |
+| Tabs:t2000.dark | conformance | 92.47 | 97.5 | 9.8 | 7 | fail |
 | Tabs:t4000.ax1 | conformance | 92.82 | 97.5 | 282.0 | 11 | fail |
 | Ledger:t6000 | conformance | 92.94 | 97.5 | 3.8 | 1 | fail |
-| Tabs:t2000.dark | conformance | 93.19 | 97.5 | 8.0 | 7 | fail |
 | Ledger:t200.ax1 | conformance | 93.24 | 97.5 | 7.8 | 1 | fail |
 | Forms:t3000.landscape | conformance | 93.26 | 97.5 | 98.8 | 2 | fail |
 | Tabs:t5000.xxxl | conformance | 93.33 | 97.5 | 139.8 | 14 | fail |
@@ -136,7 +136,7 @@ conformance captured: Feed @ 2026-09-06T20:36, Feed-ipad @ 2026-09-06T20:37, Fee
 | Notes:t2100.landscape | conformance | 95.14 | 97.5 | 98.8 | 11 | fail |
 | Forms:t4800.dark | conformance | 95.31 | 97.5 | 213.2 | 6 | fail |
 | Forms:t3900.dark | conformance | 95.32 | 97.5 | 213.2 | 6 | fail |
-| Forms:t3000.dark | conformance | 95.35 | 97.5 | 213.2 | 6 | fail |
+| Forms:t3000.dark | conformance | 95.34 | 97.5 | 213.2 | 6 | fail |
 | Forms:t2100.dark | conformance | 95.36 | 97.5 | 213.2 | 6 | fail |
 | Notes:t2100 | conformance | 95.36 | 97.5 | 137.0 | 7 | fail |
 | Notes:t2100.ax1 | conformance | 95.37 | 97.5 | 137.0 | 7 | fail |
@@ -154,28 +154,28 @@ conformance captured: Feed @ 2026-09-06T20:36, Feed-ipad @ 2026-09-06T20:37, Fee
 | Forms:t2100.rtl | conformance | 95.94 | 97.5 | 557.5 | 6 | fail |
 | Tabs:t7000.ax1 | conformance | 95.97 | 97.5 | 160.0 | 5 | fail |
 | Forms:t1200.rtl | conformance | 96.08 | 97.5 | 557.5 | 5 | fail |
-| Tabs-ipad:t4000 | conformance | 96.10 | 97.5 | 380.5 | 7 | fail |
 | Notes-ipad:t10000 | conformance | 96.10 | 97.5 | 119.2 | 15 | fail |
 | Ledger:t3000.xxxl | conformance | 96.11 | 97.5 | 53.8 | 3 | fail |
 | Tabs:t7000.xxxl | conformance | 96.17 | 97.5 | 73.2 | 5 | fail |
 | Notes:t5000.ax1 | conformance | 96.19 | 97.5 | 282.2 | 6 | fail |
-| Forms-ipad:t1200 | conformance | 96.19 | 97.5 | 378.8 | 24 | fail |
 | Modal:t5200.ax1 | conformance | 96.24 | 97.5 | 6.5 | 0 | fail |
-| Tabs-ipad:t5000 | conformance | 96.25 | 97.5 | 449.2 | 9 | fail |
-| Forms-ipad:t3900 | conformance | 96.29 | 97.5 | 378.8 | 23 | fail |
-| Forms-ipad:t4800 | conformance | 96.30 | 97.5 | 378.8 | 23 | fail |
-| Forms-ipad:t3000 | conformance | 96.30 | 97.5 | 378.8 | 23 | fail |
-| Forms-ipad:t2100 | conformance | 96.30 | 97.5 | 378.8 | 23 | fail |
+| Tabs-ipad:t4000 | conformance | 96.26 | 97.5 | 269.5 | 7 | fail |
 | Ledger:t3000.dark | conformance | 96.30 | 97.5 | 14.8 | 1 | fail |
 | Ledger:t3000 | conformance | 96.33 | 97.5 | 26.8 | 1 | fail |
+| Forms-ipad:t1200 | conformance | 96.34 | 97.5 | 269.5 | 24 | fail |
 | Forms:t3900.ax1 | conformance | 96.40 | 97.5 | 137.0 | 6 | fail |
 | TableEditor:t6800.rtl | conformance | 96.40 | 97.5 | 98.0 | 13 | fail |
 | Forms:t4800.ax1 | conformance | 96.41 | 97.5 | 137.0 | 6 | fail |
+| Tabs-ipad:t5000 | conformance | 96.41 | 97.5 | 449.2 | 9 | fail |
+| Forms:t3000.ax1 | conformance | 96.41 | 97.5 | 137.0 | 6 | fail |
 | Tabs:t200.xxxl | conformance | 96.42 | 97.5 | 73.0 | 5 | fail |
-| Forms:t3000.ax1 | conformance | 96.43 | 97.5 | 137.0 | 6 | fail |
 | TableEditor:t2350.ax1 | conformance | 96.43 | 97.5 | 34.2 | 1 | fail |
+| Forms-ipad:t3900 | conformance | 96.44 | 97.5 | 208.5 | 23 | fail |
+| Forms-ipad:t3000 | conformance | 96.45 | 97.5 | 208.5 | 23 | fail |
 | Forms:t2100.ax1 | conformance | 96.45 | 97.5 | 137.0 | 6 | fail |
-| Forms:t1200.ax1 | conformance | 96.49 | 97.5 | 137.0 | 5 | fail |
+| Forms-ipad:t2100 | conformance | 96.45 | 97.5 | 208.5 | 23 | fail |
+| Forms-ipad:t4800 | conformance | 96.45 | 97.5 | 208.5 | 23 | fail |
+| Forms:t1200.ax1 | conformance | 96.47 | 97.5 | 137.0 | 5 | fail |
 | NavFlow:t4800.ax1 | conformance | 96.52 | 97.5 | 24.8 | 1 | fail |
 | Tabs:t200.ax1 | conformance | 96.54 | 97.5 | 113.0 | 5 | fail |
 | TableEditor:t5800.rtl | conformance | 96.55 | 97.5 | 98.0 | 13 | fail |
