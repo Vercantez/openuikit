@@ -16,19 +16,35 @@
 # env/contract.json, scripts/env/test_contract.py), test_contract,
 # test_vendor_tree (chained on the attestation line), push.
 set -e
+SELF=$(cd "$(dirname "$0")" && pwd -P)/$(basename "$0")
 cd "$(dirname "$0")/../.."          # monorepo root
+GATE_T0=$(date +%s)
+stage() { echo "==> $* [+$(( $(date +%s) - GATE_T0 ))s]"; }
 # One merge at a time: several waiters once launched merges into main together.
-MERGE_LOCK=/tmp/agent_merge.lock
-until mkdir "$MERGE_LOCK" 2>/dev/null; do
-  # A lock whose recorded owner is dead is stale (2026-09-17: two merges slept
-  # 38 min and 3 h on locks left by finished operator chains); reclaim it.
-  lock_pid=$(cat "$MERGE_LOCK/pid" 2>/dev/null)
-  if [ -n "$lock_pid" ] && ! kill -0 "$lock_pid" 2>/dev/null; then rm -rf "$MERGE_LOCK"; continue; fi
-  sleep 30
-done
-echo $$ > "$MERGE_LOCK/pid"
-echo $$ > "$MERGE_LOCK/pid"   # the holder; a monitor removes the lock only when this pid is dead
-trap 'rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
+# Only a REAL merge takes the lock (for its whole run, so what it checked is
+# what it merges); CHECK_ONLY runs never touch main and run concurrently, each
+# in its own scratch root. A lock whose recorded owner is dead is stale
+# (2026-09-17: two merges slept 38 min and 3 h on locks left by finished
+# operator chains); reclaim it.
+MERGE_LOCK=${GATE_LOCK:-/tmp/agent_merge.lock}
+HAVE_LOCK=""
+take_lock() {
+  [ -n "$HAVE_LOCK" ] && return 0
+  until mkdir "$MERGE_LOCK" 2>/dev/null; do
+    lock_pid=$(cat "$MERGE_LOCK/pid" 2>/dev/null)
+    if [ -n "$lock_pid" ] && ! kill -0 "$lock_pid" 2>/dev/null; then rm -rf "$MERGE_LOCK"; continue; fi
+    sleep 30
+  done
+  echo $$ > "$MERGE_LOCK/pid"   # the holder; a monitor removes the lock only when this pid is dead
+  HAVE_LOCK=1
+}
+drop_lock() {
+  [ -n "$HAVE_LOCK" ] || return 0
+  [ "$(cat "$MERGE_LOCK/pid" 2>/dev/null)" = "$$" ] && rm -rf "$MERGE_LOCK"
+  HAVE_LOCK=""
+}
+[[ -n "${CHECK_ONLY:-}" ]] || take_lock
+trap 'drop_lock' EXIT INT TERM HUP
 ROOT=$(pwd)
 NAME=${1:?usage: agent_merge.sh <branch>}
 git fetch -q origin 2>/dev/null || true
@@ -42,9 +58,9 @@ for cand in "agent/$NAME" "$NAME" "origin/agent/$NAME" "origin/$NAME"; do
 done
 [[ -n "$BR" ]] || { echo "no such branch: $NAME" >&2; exit 2; }
 ADDS=$(git rev-list --count main.."$BR")
-echo "==> $BR: $(git log --oneline -1 "$BR") — $ADDS commit(s) over main"
+stage "$BR: $(git log --oneline -1 "$BR") — $ADDS commit(s) over main"
 [ "$ADDS" -gt 0 ] || { echo "REFUSED: $BR adds no commits over main (stale base branch?)"; exit 3; }
-echo "==> files changed vs main:"
+stage "files changed vs main:"
 git diff --stat main..."$BR" | tail -15
 # ALLOW_PATHS='^full/foundation/|^full/scripts/build_full\.sh$' widens the scope for
 # a named task (the guest Foundation, the guest builder); pin files stay refused.
@@ -86,21 +102,42 @@ if git diff main..."$BR" -- 'uikit/Sources/OpenUIKit/*.swift' 'uikit/Sources/CQu
   echo "REFUSED: the branch adds an unguarded 'import Foundation' to a library source (guest library route has no Foundation module) — guard it with #if canImport(Foundation) like its siblings"; exit 3
 fi
 
+# Every run gets its own scratch root: its worktree ($S/wt) and every output
+# (gate/, app/, conf-*/, *.log), so concurrent CHECK_ONLY runs cannot collide.
+# GATE_SCRATCH=<dir> picks it (created if missing; should be empty).
 # Stale temp worktrees from runs that died (disk full, killed) are 1.1 GB
-# each; 25 of them once filled the disk. Reap any not attached to a live run.
-for stale in /tmp/agent_merge.*/; do
+# each; 25 of them once filled the disk. Reap the worktree of any scratch root
+# whose recorded owner is dead, and whole roots older than GATE_KEEP_H (24) h.
+for stale in /tmp/agent_gate.*/; do
   [ -d "$stale" ] || continue
-  # the glob also matches the lock directory: the reaper deleted every run's own
-  # lock a second after it was taken, so the lock never held (measured: a merge
-  # running with /tmp/agent_merge.lock absent).
-  [ "${stale%/}" = "$MERGE_LOCK" ] && continue
-  pgrep -f "agent_merge.*$stale" >/dev/null 2>&1 && continue
-  git worktree remove --force "$stale" 2>/dev/null || rm -rf "$stale"
+  owner=$(cat "$stale/pid" 2>/dev/null || true)
+  [ -n "$owner" ] && kill -0 "$owner" 2>/dev/null && continue
+  if [ -d "$stale/wt" ]; then git worktree remove --force "$stale/wt" 2>/dev/null || rm -rf "$stale/wt"; fi
+  [ -n "$(find "$stale" -maxdepth 0 -mmin +$(( ${GATE_KEEP_H:-24} * 60 )) 2>/dev/null)" ] && rm -rf "$stale"
 done
+# Legacy roots (/tmp/agent_merge.XXXX, one per pre-scratch run, which always
+# held the lock for its whole run): only reaped when no live run holds the lock.
+lock_pid=$(cat "$MERGE_LOCK/pid" 2>/dev/null || true)
+if [ -n "$HAVE_LOCK" ] || [ -z "$lock_pid" ] || ! kill -0 "$lock_pid" 2>/dev/null; then
+  for stale in /tmp/agent_merge.*/; do
+    [ -d "$stale" ] || continue
+    # the glob also matches the lock directory: the reaper deleted every run's own
+    # lock a second after it was taken, so the lock never held (measured: a merge
+    # running with /tmp/agent_merge.lock absent).
+    [ "${stale%/}" = "$MERGE_LOCK" ] && continue
+    [ "${stale%/}" = /tmp/agent_merge.lock ] && continue
+    pgrep -f "agent_merge.*$stale" >/dev/null 2>&1 && continue
+    git worktree remove --force "$stale" 2>/dev/null || rm -rf "$stale"
+  done
+fi
 git worktree prune
-WT=$(mktemp -d /tmp/agent_merge.XXXX)
+if [ -n "${GATE_SCRATCH:-}" ]; then S=$GATE_SCRATCH; mkdir -p "$S"; else S=$(mktemp -d /tmp/agent_gate.XXXXXX); fi
+S=$(cd "$S" && pwd -P)
+echo $$ > "$S/pid"
+WT=$S/wt
+stage "scratch root $S (worktree, outputs, logs)"
 git worktree add -q --detach "$WT" main
-trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
+trap 'git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; drop_lock' EXIT INT TERM HUP
 git -C "$WT" merge -q --no-ff --no-commit "$BR" || { echo "MERGE CONFLICT with main"; exit 4; }
 cd "$WT/uikit"
 # When /tmp has no simulator goldens (Linux merge box, or a wiped Mac),
@@ -109,31 +146,31 @@ cd "$WT/uikit"
 if [[ -d goldens/ios && -f goldens/ios/manifest.json ]]; then
   zsh scripts/goldens_restore.sh
 fi
-echo "==> macOS build + Catalyst gate"
+stage "macOS build + Catalyst gate"
 swift build -c release --product openrender 2>&1 | grep -E 'error|Build of' | tail -3
-rm -rf /tmp/agent_merge_gate; ./.build/release/openrender render /tmp/agent_merge_gate fixtures/scenes/*.json >/dev/null
-python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -E '^FAIL|scenes pass' | tail -5
-python3 Tools/compare/compare.py --out /tmp/agent_merge_gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5; }
-echo "==> guest library route (Foundation hidden)"
+rm -rf $S/gate; ./.build/release/openrender render $S/gate fixtures/scenes/*.json >/dev/null
+python3 Tools/compare/compare.py --out $S/gate 2>&1 | grep -E '^FAIL|scenes pass' | tail -5
+python3 Tools/compare/compare.py --out $S/gate 2>&1 | grep -q '^FAIL' && { echo "GATE RED"; exit 5; }
+stage "guest library route (Foundation hidden)"
 # The Docker/corelibs Linux build cannot see this: OpenUIKit is compiled
 # against a Darwin sysroot with no Foundation.swiftmodule (rung b/c, build_full.sh).
 # x86 cycle c4dce839 went red on unguarded NSNumber/URL/Data after the ladder
 # merges. Refuse that class at merge time (Mac, under 10 minutes).
-bash scripts/guest_route_check.sh
-echo "==> test bundle builds (a keep-both on a test file once merged an unbalanced class)"
-swift build --build-tests > /tmp/agent_merge_tests.log 2>&1 || { grep -E 'error:' /tmp/agent_merge_tests.log | head -5; echo "TEST BUNDLE RED"; exit 5; }
-echo "==> real-app screens"
-rm -rf /tmp/agent_merge_app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp /tmp/agent_merge_app >/dev/null
-python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out /tmp/agent_merge_app --scale 3 2>&1 | grep pixels | cut -c1-80
-python3 - <<'PY' || exit 6
-import re, subprocess
-out = subprocess.run(['python3', 'Tools/compare/compare_realapp.py', '--golden', '/tmp/golden_realapp_ios', '--out', '/tmp/agent_merge_app', '--scale', '3'], capture_output=True, text=True).stdout
+GUEST_ROUTE_OUT=$S/guest-route bash scripts/guest_route_check.sh
+stage "test bundle builds (a keep-both on a test file once merged an unbalanced class)"
+swift build --build-tests > $S/tests.log 2>&1 || { grep -E 'error:' $S/tests.log | head -5; echo "TEST BUNDLE RED"; exit 5; }
+stage "real-app screens"
+rm -rf $S/app; OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_FORCE_IOS=1 ./.build/release/openrender realapp $S/app >/dev/null
+python3 Tools/compare/compare_realapp.py --golden /tmp/golden_realapp_ios --out $S/app --scale 3 2>&1 | grep pixels | cut -c1-80
+GATE_S=$S python3 - <<'PY' || exit 6
+import os, re, subprocess
+out = subprocess.run(['python3', 'Tools/compare/compare_realapp.py', '--golden', '/tmp/golden_realapp_ios', '--out', os.environ['GATE_S'] + '/app', '--scale', '3'], capture_output=True, text=True).stdout
 floors = {'realapp_history_light': 99.0, 'realapp_settings_light': 98.4, 'realapp_settings_dark': 98.4, 'realapp_storage_light': 99.0, 'realapp_settings_light_xs': 98.4, 'realapp_settings_light_xxxl': 98.0, 'realapp_settings_light_ax1': 97.0, 'realapp_settings_light_ipad': 99.4, 'realapp_history_light_ipad': 99.6, 'realapp_storage_light_ipad': 99.5, 'realapp_focus_settings_light': 80.2, 'realapp_hackers_feed_light': 84.4}
 for name, floor in floors.items():
     m = re.search(name + r".*?'score': np\.float64\(([\d.]+)\)", out)
     if not m or float(m.group(1)) < floor: raise SystemExit(f'REAL APP DROPPED: {name} {m.group(1) if m else "?"} < {floor}')
 PY
-echo "==> conformance apps (SKIP_CAPTURE re-render against the last round's goldens)"
+stage "conformance apps (SKIP_CAPTURE re-render against the last round's goldens)"
 # Wave 12 merged a page-transition regression (Pager t600 98.9 -> 95.9) that
 # the gate and the real-app floors cannot see. Every app the last round
 # captured (/tmp/hc-conformance-<App>) is re-rendered from the merged tree
@@ -143,7 +180,7 @@ for app_dir in Sources/ConformanceApps/*/; do
   [ -d "$app_dir" ] || continue
   app=$(basename "$app_dir")
   [ -d /tmp/hc-conformance-$app/golden ] || { echo "   $app: no round capture, skipped"; continue; }
-  rm -rf /tmp/agent_merge_conf-$app; cp -r /tmp/hc-conformance-$app /tmp/agent_merge_conf-$app
+  rm -rf $S/conf-$app; cp -r /tmp/hc-conformance-$app $S/conf-$app
   # A branch that changes the PROBE (how a frame is named, what is dumped)
   # invalidates the round's goldens for that app: RECAPTURE_APPS="Pager Tabs"
 # A recapture that comes back short (the iPad probe missed Tabs t6000 once:
@@ -165,97 +202,97 @@ frames_complete() { # <dir> <skip> <flow args...>
   skip=1
   for r in ${RECAPTURE_APPS:-}; do
     if [ "$r" = "$app" ]; then
-      skip=""; rm -rf /tmp/agent_merge_conf-$app/golden
+      skip=""; rm -rf $S/conf-$app/golden
       echo "   $app: recapturing goldens with the merged probe"
     fi
   done
-  SKIP_CAPTURE=$skip bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app $app > /tmp/agent_merge_conf-$app.log 2>&1 \
-    || { echo "CONFORMANCE FLOW FAILED: $app (see /tmp/agent_merge_conf-$app.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app "$skip" $app || exit 9
+  SKIP_CAPTURE=$skip bash scripts/conformance_flow.sh $S/conf-$app $app > $S/conf-$app.log 2>&1 \
+    || { echo "CONFORMANCE FLOW FAILED: $app (see $S/conf-$app.log)"; exit 9; }
+  frames_complete $S/conf-$app "$skip" $app || exit 9
   if [ -d /tmp/hc-conformance-$app-ipad/golden ]; then
-    rm -rf /tmp/agent_merge_conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad /tmp/agent_merge_conf-$app-ipad
+    rm -rf $S/conf-$app-ipad; cp -r /tmp/hc-conformance-$app-ipad $S/conf-$app-ipad
     skip_ipad=1
     for r in ${RECAPTURE_APPS:-}; do
       if [ "$r" = "$app" ] || [ "$r" = "$app-ipad" ]; then
-        skip_ipad=""; rm -rf /tmp/agent_merge_conf-$app-ipad/golden
+        skip_ipad=""; rm -rf $S/conf-$app-ipad/golden
         echo "   $app-ipad: recapturing goldens with the merged probe"
       fi
     done
-    SKIP_CAPTURE=$skip_ipad bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ipad $app --ipad > /tmp/agent_merge_conf-$app-ipad.log 2>&1 \
-      || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see /tmp/agent_merge_conf-$app-ipad.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-ipad "$skip_ipad" $app --ipad || exit 9
+    SKIP_CAPTURE=$skip_ipad bash scripts/conformance_flow.sh $S/conf-$app-ipad $app --ipad > $S/conf-$app-ipad.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --ipad (see $S/conf-$app-ipad.log)"; exit 9; }
+  frames_complete $S/conf-$app-ipad "$skip_ipad" $app --ipad || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-dark/golden ]; then
-    rm -rf /tmp/agent_merge_conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark /tmp/agent_merge_conf-$app-dark
+    rm -rf $S/conf-$app-dark; cp -r /tmp/hc-conformance-$app-dark $S/conf-$app-dark
     skipd=1
     for r in ${RECAPTURE_APPS:-}; do
       if [ "$r" = "$app" ]; then
-        skipd=""; rm -rf /tmp/agent_merge_conf-$app-dark/golden
+        skipd=""; rm -rf $S/conf-$app-dark/golden
         echo "   $app-dark: recapturing goldens with the merged probe"
       fi
     done
-    SKIP_CAPTURE=$skipd bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-dark $app --dark > /tmp/agent_merge_conf-$app-dark.log 2>&1 \
-      || { echo "CONFORMANCE FLOW FAILED: $app --dark (see /tmp/agent_merge_conf-$app-dark.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-dark "$skipd" $app --dark || exit 9
+    SKIP_CAPTURE=$skipd bash scripts/conformance_flow.sh $S/conf-$app-dark $app --dark > $S/conf-$app-dark.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --dark (see $S/conf-$app-dark.log)"; exit 9; }
+  frames_complete $S/conf-$app-dark "$skipd" $app --dark || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-rtl/golden ]; then
-    rm -rf /tmp/agent_merge_conf-$app-rtl; cp -r /tmp/hc-conformance-$app-rtl /tmp/agent_merge_conf-$app-rtl
+    rm -rf $S/conf-$app-rtl; cp -r /tmp/hc-conformance-$app-rtl $S/conf-$app-rtl
     skipr=1
     for r in ${RECAPTURE_APPS:-}; do
       if [ "$r" = "$app" ]; then
-        skipr=""; rm -rf /tmp/agent_merge_conf-$app-rtl/golden
+        skipr=""; rm -rf $S/conf-$app-rtl/golden
         echo "   $app-rtl: recapturing goldens with the merged probe"
       fi
     done
-    SKIP_CAPTURE=$skipr bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-rtl $app --rtl > /tmp/agent_merge_conf-$app-rtl.log 2>&1 \
-      || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see /tmp/agent_merge_conf-$app-rtl.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-rtl "$skipr" $app --rtl || exit 9
+    SKIP_CAPTURE=$skipr bash scripts/conformance_flow.sh $S/conf-$app-rtl $app --rtl > $S/conf-$app-rtl.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --rtl (see $S/conf-$app-rtl.log)"; exit 9; }
+  frames_complete $S/conf-$app-rtl "$skipr" $app --rtl || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-ax1/golden ]; then
-    rm -rf /tmp/agent_merge_conf-$app-ax1; cp -r /tmp/hc-conformance-$app-ax1 /tmp/agent_merge_conf-$app-ax1
+    rm -rf $S/conf-$app-ax1; cp -r /tmp/hc-conformance-$app-ax1 $S/conf-$app-ax1
     skipax=1
     for r in ${RECAPTURE_APPS:-}; do
       if [ "$r" = "$app" ] || [ "$r" = "$app-ax1" ]; then
-        skipax=""; rm -rf /tmp/agent_merge_conf-$app-ax1/golden
+        skipax=""; rm -rf $S/conf-$app-ax1/golden
         echo "   $app-ax1: recapturing goldens with the merged probe"
       fi
     done
-    SKIP_CAPTURE=$skipax bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-ax1 $app --ax1 > /tmp/agent_merge_conf-$app-ax1.log 2>&1 \
-      || { echo "CONFORMANCE FLOW FAILED: $app --ax1 (see /tmp/agent_merge_conf-$app-ax1.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-ax1 "$skipax" $app --ax1 || exit 9
+    SKIP_CAPTURE=$skipax bash scripts/conformance_flow.sh $S/conf-$app-ax1 $app --ax1 > $S/conf-$app-ax1.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --ax1 (see $S/conf-$app-ax1.log)"; exit 9; }
+  frames_complete $S/conf-$app-ax1 "$skipax" $app --ax1 || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-xxxl/golden ]; then
-    rm -rf /tmp/agent_merge_conf-$app-xxxl; cp -r /tmp/hc-conformance-$app-xxxl /tmp/agent_merge_conf-$app-xxxl
+    rm -rf $S/conf-$app-xxxl; cp -r /tmp/hc-conformance-$app-xxxl $S/conf-$app-xxxl
     skipxx=1
     for r in ${RECAPTURE_APPS:-}; do
       if [ "$r" = "$app" ] || [ "$r" = "$app-xxxl" ]; then
-        skipxx=""; rm -rf /tmp/agent_merge_conf-$app-xxxl/golden
+        skipxx=""; rm -rf $S/conf-$app-xxxl/golden
         echo "   $app-xxxl: recapturing goldens with the merged probe"
       fi
     done
-    SKIP_CAPTURE=$skipxx bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-xxxl $app --xxxl > /tmp/agent_merge_conf-$app-xxxl.log 2>&1 \
-      || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see /tmp/agent_merge_conf-$app-xxxl.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-xxxl "$skipxx" $app --xxxl || exit 9
+    SKIP_CAPTURE=$skipxx bash scripts/conformance_flow.sh $S/conf-$app-xxxl $app --xxxl > $S/conf-$app-xxxl.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --xxxl (see $S/conf-$app-xxxl.log)"; exit 9; }
+  frames_complete $S/conf-$app-xxxl "$skipxx" $app --xxxl || exit 9
   fi
   if [ -d /tmp/hc-conformance-$app-landscape/golden ]; then
-    rm -rf /tmp/agent_merge_conf-$app-landscape; cp -r /tmp/hc-conformance-$app-landscape /tmp/agent_merge_conf-$app-landscape
+    rm -rf $S/conf-$app-landscape; cp -r /tmp/hc-conformance-$app-landscape $S/conf-$app-landscape
     skipl=1
     for r in ${RECAPTURE_APPS:-}; do
       if [ "$r" = "$app" ]; then
-        skipl=""; rm -rf /tmp/agent_merge_conf-$app-landscape/golden
+        skipl=""; rm -rf $S/conf-$app-landscape/golden
         echo "   $app-landscape: recapturing goldens with the merged probe"
       fi
     done
-    SKIP_CAPTURE=$skipl bash scripts/conformance_flow.sh /tmp/agent_merge_conf-$app-landscape $app --landscape > /tmp/agent_merge_conf-$app-landscape.log 2>&1 \
-      || { echo "CONFORMANCE FLOW FAILED: $app --landscape (see /tmp/agent_merge_conf-$app-landscape.log)"; exit 9; }
-  frames_complete /tmp/agent_merge_conf-$app-landscape "$skipl" $app --landscape || exit 9
+    SKIP_CAPTURE=$skipl bash scripts/conformance_flow.sh $S/conf-$app-landscape $app --landscape > $S/conf-$app-landscape.log 2>&1 \
+      || { echo "CONFORMANCE FLOW FAILED: $app --landscape (see $S/conf-$app-landscape.log)"; exit 9; }
+  frames_complete $S/conf-$app-landscape "$skipl" $app --landscape || exit 9
   fi
 done
-python3 - <<'PY' || exit 9
+GATE_S=$S python3 - <<'PY' || exit 9
 import json, os, glob
 board = {r["scene"]: r for r in json.load(open("scoreboard/latest.json"))["rows"] if r["category"] == "conformance"}
 bad = []
-for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
+for d in sorted(glob.glob(os.environ['GATE_S'] + "/conf-*")):
     if not os.path.isdir(d): continue
     s = json.load(open(os.path.join(d, "summary.json")))
     for cap in s["captures"]:
@@ -281,7 +318,7 @@ for d in sorted(glob.glob("/tmp/agent_merge_conf-*")):
         print(f"   {name}: {score:.3f} (board {row['score']:.3f})")
 if bad: raise SystemExit("CONFORMANCE DROPPED: " + "; ".join(bad))
 PY
-echo "==> Linux build"
+stage "Linux build"
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender 2>&1 | grep -E "error|Build of" | tail -3' | tail -3
 # openrender AND the ConformanceApps target (openhost needs SDL2, absent in the
 # plain image): the Ledger app's DateComponentsFormatter (unavailable in corelibs)
@@ -293,9 +330,9 @@ docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1 && swift build -c release --target ConformanceApps >/dev/null 2>&1 && swift build --target OpenUIKitTests 2>&1 | grep -E "error:" | head -5; test ${PIPESTATUS[0]} -eq 0' || { echo "LINUX BUILD RED"; exit 7; }
 cd "$WT" && git merge --abort 2>/dev/null || true
 cd "$ROOT"
-[[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0; }
+[[ -n "${CHECK_ONLY:-}" ]] && { stage "checks passed (CHECK_ONLY)"; exit 0; }
 
-echo "==> merging into main"
+stage "merging into main"
 # SDK-depth framework merges (scratchpad fw_merge.sh) land on main concurrently
 # under their own lock and never touch uikit/; sync main first so the push is a
 # fast-forward, and if main still moved before the push, merge it once more.
