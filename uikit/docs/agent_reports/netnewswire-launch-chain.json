@@ -1,0 +1,577 @@
+{
+ "name": "NetNewsWireChain",
+ "app": "Ranchero-Software/NetNewsWire (target NetNewsWire-iOS)",
+ "corpus_revision": "3b378e72f877f86258b2d04e1601719f9d0036a7",
+ "note": "Targets point at unchanged upstream sources. corpus root = ladder-corpus (so paths start NetNewsWire/); checkouts = the SwiftPM checkouts Xcode resolved from the app's own Package.resolved (Tidemark 2a5cd8a, Zip 059e734); generated = SecretKey.swift produced by the app's own buildscripts/updateSecrets.sh with no secret in the environment (every key the empty string, as the upstream build without secrets). App target = NetNewsWire-iOS sources from full/ladder/target-scope-netnewswire-ios-2026-09-10.json (iOS/ + Shared/ minus membership exceptions). Packages keep their whole Sources/ dir: what SwiftPM compiles for the host platform is the measurement. Upcoming features and the Debug defines are the project's own (xcconfig/NetNewsWire_project*.xcconfig, Package.swift).",
+ "platforms": [
+  ".macOS(.v15)",
+  ".iOS(\"26.0\")"
+ ],
+ "shims": [],
+ "targets": [
+  {
+   "name": "Tidemark",
+   "root": "checkouts",
+   "path": "Tidemark/Sources/Tidemark",
+   "deps": [],
+   "openuikit": []
+  },
+  {
+   "name": "Minizip",
+   "root": "checkouts",
+   "path": "Zip/Zip/minizip",
+   "deps": [],
+   "openuikit": [],
+   "exclude": [
+    "module"
+   ]
+  },
+  {
+   "name": "Zip",
+   "root": "checkouts",
+   "path": "Zip/Zip",
+   "deps": [
+    "Minizip"
+   ],
+   "openuikit": [],
+   "exclude": [
+    "minizip",
+    "zlib",
+    "Info.plist",
+    "Info-tvOS.plist",
+    "Zip.h"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "RSCoreObjC",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSCore/Sources/RSCoreObjC",
+   "deps": [],
+   "openuikit": [],
+   "swift_settings": [],
+   "c_settings": [
+    ".headerSearchPath(\"include\")"
+   ]
+  },
+  {
+   "name": "RSCore",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSCore/Sources/RSCore",
+   "deps": [
+    "RSCoreObjC"
+   ],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI",
+    "SafariServices",
+    "WebKit",
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "RSDatabaseObjC",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSDatabase/Sources/RSDatabaseObjC",
+   "deps": [],
+   "openuikit": [],
+   "swift_settings": []
+  },
+  {
+   "name": "RSDatabase",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSDatabase/Sources/RSDatabase",
+   "deps": [
+    "RSDatabaseObjC"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "RSParser",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSParser/Sources/RSParser",
+   "deps": [
+    "Tidemark",
+    "RSCore"
+   ],
+   "openuikit": [],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ],
+   "swift_language_mode": "6"
+  },
+  {
+   "name": "RSWeb",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSWeb/Sources/RSWeb",
+   "deps": [
+    "RSParser",
+    "RSCore"
+   ],
+   "openuikit": [
+    "os",
+    "Network"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "RSTree",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/RSTree/Sources/RSTree",
+   "deps": [],
+   "openuikit": [],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "ActivityLog",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/ActivityLog/Sources/ActivityLog",
+   "deps": [],
+   "openuikit": [],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ],
+   "resources": [
+    "Resources"
+   ]
+  },
+  {
+   "name": "Articles",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/Articles/Sources/Articles",
+   "deps": [
+    "RSCore"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "ArticlesDatabase",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/ArticlesDatabase/Sources/ArticlesDatabase",
+   "deps": [
+    "Articles",
+    "RSCore",
+    "RSDatabase",
+    "RSDatabaseObjC",
+    "RSParser"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "ErrorLog",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/ErrorLog/Sources/ErrorLog",
+   "deps": [
+    "RSCore",
+    "RSDatabase",
+    "RSDatabaseObjC"
+   ],
+   "openuikit": [],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "Secrets",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/Secrets/Sources/Secrets",
+   "deps": [
+    "ErrorLog",
+    "RSCore"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ],
+   "exclude": [
+    "SecretKey.swift.gyb"
+   ],
+   "overlay": {
+    "SecretKey.swift": {
+     "root": "generated",
+     "path": "Secrets/SecretKey.swift"
+    }
+   }
+  },
+  {
+   "name": "SyncDatabase",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/SyncDatabase/Sources/SyncDatabase",
+   "deps": [
+    "Articles",
+    "RSCore",
+    "RSDatabase",
+    "RSDatabaseObjC"
+   ],
+   "openuikit": [],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "CloudKitSync",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/CloudKitSync/Sources/CloudKitSync",
+   "deps": [
+    "RSCore"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "FeedFinder",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/FeedFinder/Sources/FeedFinder",
+   "deps": [
+    "RSWeb",
+    "RSParser",
+    "RSCore",
+    "ActivityLog"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "NewsBlur",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/NewsBlur/Sources/NewsBlur",
+   "deps": [
+    "Secrets",
+    "RSWeb",
+    "RSParser",
+    "RSCore"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "HTMLMetadata",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/HTMLMetadata/Sources/HTMLMetadata",
+   "deps": [
+    "RSCore",
+    "RSDatabase",
+    "RSDatabaseObjC",
+    "RSParser",
+    "RSWeb",
+    "ActivityLog"
+   ],
+   "openuikit": [
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "Account",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/Account/Sources/Account",
+   "deps": [
+    "RSCore",
+    "RSDatabase",
+    "RSDatabaseObjC",
+    "RSParser",
+    "RSWeb",
+    "ActivityLog",
+    "Articles",
+    "ArticlesDatabase",
+    "CloudKitSync",
+    "ErrorLog",
+    "FeedFinder",
+    "Secrets",
+    "SyncDatabase",
+    "NewsBlur"
+   ],
+   "openuikit": [
+    "UIKit",
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "Images",
+   "root": "corpus",
+   "path": "NetNewsWire/Modules/Images/Sources/Images",
+   "deps": [
+    "RSCore",
+    "RSDatabase",
+    "RSDatabaseObjC",
+    "RSWeb",
+    "Account",
+    "Articles",
+    "HTMLMetadata",
+    "ActivityLog"
+   ],
+   "openuikit": [
+    "UIKit",
+    "os"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")"
+   ]
+  },
+  {
+   "name": "NetNewsWireObjC",
+   "root": "corpus",
+   "deps": [],
+   "openuikit": [
+    "SafariServices"
+   ],
+   "files": [
+    "NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.m"
+   ],
+   "overlay": {
+    "include/SFSafariViewController+Extras.h": {
+     "root": "corpus",
+     "path": "NetNewsWire/iOS/UIKit Extensions/SFSafariViewController+Extras.h"
+    }
+   },
+   "c_settings": [
+    ".headerSearchPath(\"include\")"
+   ]
+  },
+  {
+   "name": "NetNewsWire",
+   "root": "corpus",
+   "deps": [
+    "RSCore",
+    "RSWeb",
+    "RSTree",
+    "RSParser",
+    "RSDatabase",
+    "Account",
+    "Articles",
+    "ArticlesDatabase",
+    "ActivityLog",
+    "ErrorLog",
+    "Secrets",
+    "Images",
+    "HTMLMetadata",
+    "Zip"
+   ],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI",
+    "SafariServices",
+    "WebKit",
+    "MessageUI",
+    "os",
+    "Intents"
+   ],
+   "files": [
+    "NetNewsWire/Shared/AccountStats/AccountStatsViewModel.swift",
+    "NetNewsWire/Shared/AccountType+Helpers.swift",
+    "NetNewsWire/Shared/Activity/ActivityManager.swift",
+    "NetNewsWire/Shared/Activity/ActivityType.swift",
+    "NetNewsWire/Shared/ActivityLog/ActivityLogViewModel.swift",
+    "NetNewsWire/Shared/AppDelegate+Shared.swift",
+    "NetNewsWire/Shared/AppNotifications.swift",
+    "NetNewsWire/Shared/Article Extractor/ArticleExtractor.swift",
+    "NetNewsWire/Shared/Article Extractor/ExtractedArticle.swift",
+    "NetNewsWire/Shared/Article Rendering/ArticleRenderer.swift",
+    "NetNewsWire/Shared/Article Rendering/ArticleRenderingSpecialCases.swift",
+    "NetNewsWire/Shared/Article Rendering/ArticleTextSize.swift",
+    "NetNewsWire/Shared/Article Rendering/WebViewConfiguration.swift",
+    "NetNewsWire/Shared/ArticleSpecifier.swift",
+    "NetNewsWire/Shared/ArticleStyles/ArticleTheme+Notifications.swift",
+    "NetNewsWire/Shared/ArticleStyles/ArticleTheme.swift",
+    "NetNewsWire/Shared/ArticleStyles/ArticleThemeDownloader.swift",
+    "NetNewsWire/Shared/ArticleStyles/ArticleThemePlist.swift",
+    "NetNewsWire/Shared/ArticleStyles/ArticleThemesManager.swift",
+    "NetNewsWire/Shared/Assets.swift",
+    "NetNewsWire/Shared/Commands/DeleteCommand.swift",
+    "NetNewsWire/Shared/Commands/MarkStatusCommand.swift",
+    "NetNewsWire/Shared/CurrentActivity/CurrentActivityViewModel.swift",
+    "NetNewsWire/Shared/Dinosaurs/DinosaursViewModel.swift",
+    "NetNewsWire/Shared/Exporters/OPMLExporter.swift",
+    "NetNewsWire/Shared/Extensions/AddFeedDefaultContainer.swift",
+    "NetNewsWire/Shared/Extensions/ArticleStringFormatter.swift",
+    "NetNewsWire/Shared/Extensions/ArticleUtilities.swift",
+    "NetNewsWire/Shared/Extensions/CacheCleaner.swift",
+    "NetNewsWire/Shared/Extensions/IconImageView.swift",
+    "NetNewsWire/Shared/Extensions/NSAttributedString+Extensions.swift",
+    "NetNewsWire/Shared/Extensions/Node+Extensions.swift",
+    "NetNewsWire/Shared/Extensions/RSImage+Extensions.swift",
+    "NetNewsWire/Shared/Extensions/SmallIconProvider.swift",
+    "NetNewsWire/Shared/HelpURL.swift",
+    "NetNewsWire/Shared/IconImageCache.swift",
+    "NetNewsWire/Shared/Importers/DefaultFeedsImporter.swift",
+    "NetNewsWire/Shared/Settings/AddCloudKitAccount.swift",
+    "NetNewsWire/Shared/ShareExtension/ExtensionContainers.swift",
+    "NetNewsWire/Shared/ShareExtension/ExtensionContainersFile.swift",
+    "NetNewsWire/Shared/ShareExtension/ExtensionFeedAddRequest.swift",
+    "NetNewsWire/Shared/ShareExtension/ExtensionFeedAddRequestFile.swift",
+    "NetNewsWire/Shared/SmartFeeds/PseudoFeed.swift",
+    "NetNewsWire/Shared/SmartFeeds/SearchFeedDelegate.swift",
+    "NetNewsWire/Shared/SmartFeeds/SearchTimelineFeedDelegate.swift",
+    "NetNewsWire/Shared/SmartFeeds/SmartFeed.swift",
+    "NetNewsWire/Shared/SmartFeeds/SmartFeedDelegate.swift",
+    "NetNewsWire/Shared/SmartFeeds/SmartFeedsController.swift",
+    "NetNewsWire/Shared/SmartFeeds/StarredFeedDelegate.swift",
+    "NetNewsWire/Shared/SmartFeeds/TodayFeedDelegate.swift",
+    "NetNewsWire/Shared/SmartFeeds/UnreadFeed.swift",
+    "NetNewsWire/Shared/Timeline/ArticleArray.swift",
+    "NetNewsWire/Shared/Timeline/ArticleSorter.swift",
+    "NetNewsWire/Shared/Timeline/FetchRequestOperation.swift",
+    "NetNewsWire/Shared/Timeline/FetchRequestQueue.swift",
+    "NetNewsWire/Shared/Timer/ArticleStatusSyncTimer.swift",
+    "NetNewsWire/Shared/Timer/RefreshInterval.swift",
+    "NetNewsWire/Shared/Tree/FolderTreeControllerDelegate.swift",
+    "NetNewsWire/Shared/Tree/SidebarTreeControllerDelegate.swift",
+    "NetNewsWire/Shared/UserInfoKey.swift",
+    "NetNewsWire/Shared/UserNotifications/UserNotificationManager.swift",
+    "NetNewsWire/Shared/Widget/WidgetData.swift",
+    "NetNewsWire/Shared/Widget/WidgetDataDecoder.swift",
+    "NetNewsWire/Shared/Widget/WidgetDataEncoder.swift",
+    "NetNewsWire/Shared/Widget/WidgetDeepLinks.swift",
+    "NetNewsWire/iOS/Account/AccountNotificationInspectorView.swift",
+    "NetNewsWire/iOS/Account/CloudKitAccountViewController.swift",
+    "NetNewsWire/iOS/Account/FeedbinAccountViewController.swift",
+    "NetNewsWire/iOS/Account/LocalAccountViewController.swift",
+    "NetNewsWire/iOS/Account/NewsBlurAccountViewController.swift",
+    "NetNewsWire/iOS/Account/ReaderAPIAccountViewController.swift",
+    "NetNewsWire/iOS/AccountStats/AccountStatsView.swift",
+    "NetNewsWire/iOS/Add/AddComboTableViewCell.swift",
+    "NetNewsWire/iOS/Add/AddFeedFolderViewController.swift",
+    "NetNewsWire/iOS/Add/AddFeedSelectFolderTableViewCell.swift",
+    "NetNewsWire/iOS/Add/AddFeedViewController.swift",
+    "NetNewsWire/iOS/Add/AddFolderViewController.swift",
+    "NetNewsWire/iOS/Add/SelectComboTableViewCell.swift",
+    "NetNewsWire/iOS/AppDefaults.swift",
+    "NetNewsWire/iOS/AppDelegate.swift",
+    "NetNewsWire/iOS/AppIntents/AddFeedAppIntent.swift",
+    "NetNewsWire/iOS/AppIntents/NetNewsWireAppShortcuts.swift",
+    "NetNewsWire/iOS/Article/ArticleExtractorButton.swift",
+    "NetNewsWire/iOS/Article/ArticleIconSchemeHandler.swift",
+    "NetNewsWire/iOS/Article/ArticleSearchBar.swift",
+    "NetNewsWire/iOS/Article/ArticleViewController.swift",
+    "NetNewsWire/iOS/Article/ContextMenuPreviewViewController.swift",
+    "NetNewsWire/iOS/Article/FindInArticleActivity.swift",
+    "NetNewsWire/iOS/Article/ImageScrollView.swift",
+    "NetNewsWire/iOS/Article/ImageTransition.swift",
+    "NetNewsWire/iOS/Article/ImageViewController.swift",
+    "NetNewsWire/iOS/Article/OpenInSafariActivity.swift",
+    "NetNewsWire/iOS/Article/PreloadedWebView.swift",
+    "NetNewsWire/iOS/Article/WebViewController.swift",
+    "NetNewsWire/iOS/Article/WebViewFullscreenKeeper.swift",
+    "NetNewsWire/iOS/Article/WebViewProvider.swift",
+    "NetNewsWire/iOS/Article/WrapperScriptMessageHandler.swift",
+    "NetNewsWire/iOS/ArticleActivityItemSource.swift",
+    "NetNewsWire/iOS/CurrentActivity/CurrentActivityView.swift",
+    "NetNewsWire/iOS/ErrorHandler.swift",
+    "NetNewsWire/iOS/HidingReadArticlesState.swift",
+    "NetNewsWire/iOS/IconView.swift",
+    "NetNewsWire/iOS/Inspector/AccountInspectorViewController.swift",
+    "NetNewsWire/iOS/Inspector/FeedInspectorViewController.swift",
+    "NetNewsWire/iOS/Inspector/InspectorIconHeaderView.swift",
+    "NetNewsWire/iOS/KeyboardManager.swift",
+    "NetNewsWire/iOS/MainFeed/Collection View Cells/MainFeedCollectionHeaderReusableView.swift",
+    "NetNewsWire/iOS/MainFeed/Collection View Cells/MainFeedCollectionViewCell.swift",
+    "NetNewsWire/iOS/MainFeed/Collection View Cells/MainFeedCollectionViewFolderCell.swift",
+    "NetNewsWire/iOS/MainFeed/Collection View Cells/MainFeedRowIdentifier.swift",
+    "NetNewsWire/iOS/MainFeed/MainFeedCollectionViewController+Drag.swift",
+    "NetNewsWire/iOS/MainFeed/MainFeedCollectionViewController+Drop.swift",
+    "NetNewsWire/iOS/MainFeed/MainFeedCollectionViewController.swift",
+    "NetNewsWire/iOS/MainFeed/RefreshProgressView.swift",
+    "NetNewsWire/iOS/MainTimeline/Cell/MainTimelineCell.swift",
+    "NetNewsWire/iOS/MainTimeline/Cell/MainTimelineCellData.swift",
+    "NetNewsWire/iOS/MainTimeline/Cell/MainTimelineCellLayout.swift",
+    "NetNewsWire/iOS/MainTimeline/Cell/MultilineUILabelSizer.swift",
+    "NetNewsWire/iOS/MainTimeline/Cell/SingleLineUILabelSizer.swift",
+    "NetNewsWire/iOS/MainTimeline/Cell/StringSize+Extensions.swift",
+    "NetNewsWire/iOS/MainTimeline/MainTimelineDataSource.swift",
+    "NetNewsWire/iOS/MainTimeline/MainTimelineModernViewController.swift",
+    "NetNewsWire/iOS/MainTimeline/MarkAsReadAlertController.swift",
+    "NetNewsWire/iOS/RootSplitViewController.swift",
+    "NetNewsWire/iOS/SceneCoordinator.swift",
+    "NetNewsWire/iOS/SceneDelegate.swift",
+    "NetNewsWire/iOS/Settings/AboutContributor.swift",
+    "NetNewsWire/iOS/Settings/AboutCreditView.swift",
+    "NetNewsWire/iOS/Settings/AboutView.swift",
+    "NetNewsWire/iOS/Settings/ActivityLogView.swift",
+    "NetNewsWire/iOS/Settings/AddAccountViewController.swift",
+    "NetNewsWire/iOS/Settings/ArticleThemeImporter.swift",
+    "NetNewsWire/iOS/Settings/ArticleThemesTableViewController.swift",
+    "NetNewsWire/iOS/Settings/CloudKitStatsView.swift",
+    "NetNewsWire/iOS/Settings/ColorPaletteTableViewController.swift",
+    "NetNewsWire/iOS/Settings/DinosaurRowView.swift",
+    "NetNewsWire/iOS/Settings/DinosaursView.swift",
+    "NetNewsWire/iOS/Settings/ErrorLogView.swift",
+    "NetNewsWire/iOS/Settings/SettingsComboTableViewCell.swift",
+    "NetNewsWire/iOS/Settings/SettingsViewController.swift",
+    "NetNewsWire/iOS/Settings/TickMarkSlider.swift",
+    "NetNewsWire/iOS/Settings/TimelineCustomizerCell.swift",
+    "NetNewsWire/iOS/Settings/TimelineCustomizerCollectionViewController.swift",
+    "NetNewsWire/iOS/Settings/TimelineHeaderView.swift",
+    "NetNewsWire/iOS/TitleActivityItemSource.swift",
+    "NetNewsWire/iOS/UIKit Extensions/UIActivityViewController+Extras.swift",
+    "NetNewsWire/iOS/UIKit Extensions/UIViewController+Extras.swift",
+    "NetNewsWire/iOS/UIKit Extensions/VibrantButton.swift",
+    "NetNewsWire/iOS/UIKit Extensions/VibrantLabel.swift",
+    "NetNewsWire/iOS/UIKit Extensions/VibrantTableViewCell.swift"
+   ],
+   "swift_settings": [
+    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
+    ".enableUpcomingFeature(\"InferIsolatedConformances\")",
+    ".define(\"DEBUG\")",
+    ".define(\"SKIP_APP_GROUP_ACCESS\")"
+   ]
+  }
+ ]
+}

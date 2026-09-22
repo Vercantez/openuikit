@@ -2,6 +2,59 @@ import Dispatch
 import XCTest
 import os
 
+final class OSSignposterTests: XCTestCase {
+    // MEASURED Tools/oracle2/signposterprobe/transcript-macos.txt.
+    func testNetNewsWireArticlesTableShapeAndMeasuredValues() {
+        // ArticlesTable.swift:28 / 767 / 771 / 777.
+        let s = OSSignposter(subsystem: "com.example.probe", category: .pointsOfInterest)
+        XCTAssertTrue(s.isEnabled)
+        XCTAssertTrue(OSSignposter(subsystem: "com.example.probe", category: "x").isEnabled)
+        XCTAssertTrue(OSSignposter().isEnabled)
+        XCTAssertFalse(OSSignposter(logHandle: .disabled).isEnabled)
+        let a = s.makeSignpostID()
+        let b = s.makeSignpostID()
+        XCTAssertNotEqual(a, b)
+        for id in [a, b] {
+            XCTAssertNotEqual(id, .invalid)
+            XCTAssertNotEqual(id, .null)
+            XCTAssertNotEqual(id, .exclusive)
+        }
+        let state = s.beginInterval("Fetch articles")
+        s.endInterval("Fetch articles", state, "\(3) articles")
+        s.endInterval("Fetch articles", s.beginInterval("Fetch articles"), "no result set")
+        s.emitEvent("event")
+        XCTAssertEqual(s.withIntervalSignpost("around") { 42 }, 42)
+    }
+
+    func testSignpostIDSentinelsMatchApple() {
+        XCTAssertEqual(OSSignpostID.exclusive.rawValue, 0xEEEEB0B5B2B2EEEE)
+        XCTAssertEqual(OSSignpostID.invalid.rawValue, UInt64.max)
+        XCTAssertEqual(OSSignpostID.null.rawValue, 0)
+    }
+}
+
+final class OSLogFormattingTests: XCTestCase {
+    func testFloatIntegerFormattingAndAlignmentInterpolationsCompile() {
+        // NetNewsWire RSDatabase FMDatabase+Extras.swift:43:
+        //   "\(duration, format: .fixed(precision: 4), privacy: .public)"
+        // Declarations follow iPhoneSimulator26.1.sdk os.swiftinterface
+        // (OSLogFloatFormatting / OSLogIntegerFormatting / OSLogStringAlignment).
+        // The port's Logger discards messages, so the values are never read.
+        let logger = Logger(subsystem: "com.example", category: "fmt")
+        let duration = 0.25
+        let count = 7
+        let ratio: Float = 1.5
+        logger.debug("VACUUM took \(duration, format: .fixed(precision: 4), privacy: .public) seconds")
+        logger.info("\(duration, format: .exponential) \(duration, format: .hybrid(precision: 3)) \(ratio, format: .fixed)")
+        logger.info("\(duration, format: .fixed, align: .right(columns: 8))")
+        logger.info("\(count, format: .hex(includePrefix: true), privacy: .public) \(count, format: .decimal(minDigits: 3))")
+        logger.info("\(UInt8(3), format: .octal) \(Int64(9), format: .decimal, align: .left(columns: 4))")
+        // the existing privacy-only shape still resolves (no ambiguity)
+        logger.info("\(count, privacy: .public) \(duration)")
+        XCTAssertEqual(logger.category, "fmt")
+    }
+}
+
 final class OSAllocatedUnfairLockTests: XCTestCase {
     func testWithLockSerializesConcurrentIncrements() {
         // NetNewsWire Cache.swift:24 / Hackers DependencyContainer.swift:85
