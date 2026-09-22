@@ -87,17 +87,22 @@ open class UISegmentedControl: UIControl {
     /// here (that is what the oracle dumps for every probe).
     public var apportionsSegmentWidthsByContent: Bool = false
 
+    /// MEASURED (Tools/oracle2/nibruntimeprobe `defaults`, iOS 26.1): a
+    /// segmented control clips to its bounds, programmatic or archived.
     public init(items: [String]) {
         super.init(frame: .zero)
+        clipsToBounds = true
         for t in items { insertSegment(withTitle: t, at: titles.count, animated: false) }
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        clipsToBounds = true
     }
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+        clipsToBounds = true
     }
 
     public var numberOfSegments: Int { titles.count }

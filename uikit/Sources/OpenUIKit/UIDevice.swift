@@ -1,3 +1,9 @@
+#if canImport(Foundation)
+import struct Foundation.UUID
+#elseif canImport(FoundationEssentials)
+import struct FoundationEssentials.UUID
+#endif
+
 // UIDevice — the device an app believes it is running on. Owner: lifecycle
 // module (M12, docs/APP_COMPAT.md "App lifecycle / environment").
 //
@@ -62,6 +68,16 @@ public final class UIDevice {
     public var model: String = "iPhone"
     public var localizedModel: String = "iPhone"
     public var userInterfaceIdiom: UIUserInterfaceIdiom = .phone
+
+#if canImport(Foundation) || canImport(FoundationEssentials)
+    /// UIKit's `identifierForVendor`. The iOS 26.1 simulator reports a UUID
+    /// (iososswallsprobe `misc.identifierForVendor.isNil` false). OpenUIKit
+    /// has no vendor identity to report and answers nil, the value UIKit
+    /// documents for a device whose identity is not yet available — it does
+    /// not mint an identifier. (KsApi's `Service` coalesces nil with a fresh
+    /// `UUID()`.)
+    public var identifierForVendor: UUID? { nil }
+#endif
 
     /// OpenUIKit renders one fixed, upright surface: there is no rotation
     /// pipeline, so the orientation never changes and no notification for it

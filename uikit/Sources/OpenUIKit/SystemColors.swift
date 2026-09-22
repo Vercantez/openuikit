@@ -65,7 +65,14 @@ public enum SystemColors {
         case .dark: styleTable = t.dark
         case .light, .unspecified: styleTable = t.light
         }
-        return styleTable[name] ?? missing
+        guard var c = styleTable[name] else { return missing }
+        // MEASURED iPhone 16 / iOS 26.1 (iososswallsprobe `cgcolor.*`): these
+        // semantic colours resolve to gray-model CGColors in that style.
+        let gray: Set<String> = traits.userInterfaceStyle == .dark
+            ? ["label", "systemBackground", "systemGroupedBackground", "lightText", "darkText"]
+            : ["label", "systemBackground", "tertiarySystemBackground", "lightText", "darkText"]
+        if gray.contains(name) { c.isGrayModel = true }
+        return c
     }
 
     /// Whether the measured palette carries `name`. `UINib` asks before

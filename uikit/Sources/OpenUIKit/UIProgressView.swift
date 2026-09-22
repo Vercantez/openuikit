@@ -70,6 +70,21 @@ open class UIProgressView: UIView {
     public var progressTintColor: UIColor?
     public var trackTintColor: UIColor?
 
+    /// UIKit's `UIProgressView.Style` (iOS 26.1 raws: default 0, bar 1).
+    public enum Style: Int, Sendable {
+        case `default` = 0
+        case bar = 1
+    }
+    /// iOS 26.1 (iososswallsprobe lens.progress.*): `.default` on a fresh
+    /// view; `init(progressViewStyle:)` and the setter both store it.
+    /// Stored only — both styles draw the default track.
+    open var progressViewStyle: Style = .default
+
+    public convenience init(progressViewStyle style: Style) {
+        self.init(frame: .zero)
+        progressViewStyle = style
+    }
+
     public override init(frame: CGRect) {
         var normalizedFrame = frame
         normalizedFrame.size.height = UIProgressView.barHeight

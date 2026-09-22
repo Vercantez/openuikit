@@ -2837,6 +2837,25 @@ public extension _OpenView {
         )
     }
 
+    /// SwiftUI's `background(_:ignoresSafeAreaEdges:)` (iOS 15): fill the
+    /// view's bounds behind it with a shape style. Disfavoured so a `Color`
+    /// argument keeps resolving to the view overload above; an implicit
+    /// member such as `.background(.white)` (KDS ColorsView.swift:198) can
+    /// only mean this one. The safe-area extension is not modelled: the fill
+    /// covers the view's own bounds.
+    @_disfavoredOverload
+    func background<Style: ShapeStyle>(
+        _ style: Style,
+        ignoresSafeAreaEdges edges: _OpenEdge.Set = .all
+    ) -> some _OpenView {
+        let color = style._openResolvedForegroundColor()
+        let node = _OpenViewNode(.roundedRectangle(cornerRadius: 0, style: .fill(color)))
+        return _OpenModifiedContent(
+            content: self,
+            modification: .background({ node }, alignment: .center)
+        )
+    }
+
     func background<Style: ShapeStyle, S: Shape>(
         _ style: Style,
         in shape: S
@@ -3165,6 +3184,27 @@ public extension _OpenView {
 
     func accessibilityAddTraits(_ traits: AccessibilityTraits) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .accessibilityTraits(traits))
+    }
+
+    /// SwiftUI's `accessibilityHeading(_:)` (ServerDrivenUI TextBlock.swift:98).
+    /// The heading level has no UIKit trait to land on (UIKit has only
+    /// `.header`, which the app adds itself) and its effect on the hosted
+    /// accessibility tree could not be measured (swiftuia11yprobe: no tree
+    /// without an assistive technology), so the level is not recorded: the
+    /// view is returned unchanged.
+    func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> Self {
+        _ = level
+        return self
+    }
+
+    /// SwiftUI's `backgroundStyle(_:)` (ServerDrivenUI RichTextView.swift:18).
+    /// It sets the environment's background style, which only views filled
+    /// with `.background` read; the modifier itself draws nothing. OpenUIKit
+    /// has no background-style environment value, so the view is returned
+    /// unchanged — equal pixels for any view that does not read it.
+    func backgroundStyle<S: ShapeStyle>(_ style: S) -> Self {
+        _ = style
+        return self
     }
 
     func accessibilityAction(

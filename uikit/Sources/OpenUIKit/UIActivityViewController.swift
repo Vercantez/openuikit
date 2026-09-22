@@ -133,13 +133,15 @@ open class UIActivityItemProvider: _UIActivityProviderBase, UIActivityItemSource
         return placeholderItem as? String ?? ""
     }
 
-    public func activityViewControllerPlaceholderItem(
+    // `open`: app providers override both (ios-oss
+    // ProjectActivityItemProvider.swift:13), as UIKit's ObjC methods allow.
+    open func activityViewControllerPlaceholderItem(
         _ activityViewController: UIActivityViewController
     ) -> Any {
         placeholderItem as Any
     }
 
-    public func activityViewController(
+    open func activityViewController(
         _ activityViewController: UIActivityViewController,
         itemForActivityType activityType: UIActivity.ActivityType?
     ) -> Any? {
