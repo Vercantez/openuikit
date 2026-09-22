@@ -143,8 +143,21 @@ N/A. Nothing rendered on OpenUIKit. `UIApplicationMain` was not reached, and the
 | new or changed tests | OSTests 13/13, NetworkTests 3/3, IndexPathsForRowsTests 2/2, ObjCSubclassingTests 7/7, ingest discover OK |
 | corpus | untouched: builds on a scratch copy, chain via symlinks, no `Package.resolved` or pin written |
 | simulator | `OpenUIKit-Launch-netnewswire-launch` erased and shut down |
-| `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/netnewswire-launch` | see the Gates section |
-| `scripts/ops/local_guest_verify.sh` | see the Gates section |
+| `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/netnewswire-launch` (head 3af18982) | the stages below |
+| `scripts/ops/local_guest_verify.sh <worktree>` | `FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController`; rendered 15 screens, existing screens byte-identical **14/14** (including Ledger); **`REAL-APP SCREEN VERIFIED ON LINUX`**, exit 0 |
+
+### Gates
+
+`CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/netnewswire-launch`, stage by stage:
+
+| stage | printed |
+|---|---|
+| macOS release `openrender` | complete, 294.06 s |
+| Catalyst gate | **124/124 scenes pass** |
+| real-app floors | history_light 99.137, settings_light 98.535, settings_dark 98.548, storage_light 99.74, settings_light_xs 98.72, settings_light_xxxl 98.334, settings_light_ax1 97.549, settings_light_ipad 99.65, focus_settings_light 98.823, focus_home_light 98.558, history_light_ipad 99.86, storage_light_ipad 99.734, hackers_feed_light 98.235, ledger_light 99.61. These are the same values ios-oss-launch recorded. |
+| guest library route (Foundation hidden) | `GUEST_ROUTE_COMPILE_OK openuikit=162 opencoregraphics=12`, `GUEST_ROUTE_CHECK_OK elapsed=179s` |
+| conformance apps | **stopped at `CONFORMANCE DROPPED`**, and only on Forms (19 rows), Forms-ipad (5), Tabs (4), Tabs-ipad (2) and Pager-ipad (3). The coordinator identified this as known main-level gate issue #2: shared `/tmp/hc-conformance-*` round captures were overwritten with the stale Sep 4–5 golden snapshot at 14:02. It is being fixed on main. The branch changes none of those apps' code paths. |
+| Linux `swift:6.2-noble` build | not reached, because the script stops at the line above |
 
 ## Reproduce
 
