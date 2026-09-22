@@ -1,0 +1,53 @@
+# objcsubclassprobe — iOS 26.1
+## superclasses
+UIResponder:NSObject
+UIView:UIResponder
+UITouch:NSObject
+UIEvent:NSObject
+UIPress:NSObject
+UIPressesEvent:UIEvent
+UIColor:NSObject
+UITraitCollection:NSObject
+## trace
+-- 1 designated initializer
+OUKObjCView -initWithFrame: {{1, 2}, {30, 40}} (enter)
+OUKObjCView -initWithFrame: bounds={{0, 0}, {30, 40}} (exit)
+a frame={{1, 2}, {30, 40}} bounds={{0, 0}, {30, 40}} class=OUKObjCView super=UIView
+-- 2 -init reaches the subclass's -initWithFrame:
+OUKObjCView -initWithFrame: {{0, 0}, {0, 0}} (enter)
+OUKObjCView -initWithFrame: bounds={{0, 0}, {0, 0}} (exit)
+b frame={{0, 0}, {0, 0}}
+-- 3 hierarchy callbacks
+OUKObjCView -willMoveToSuperview: UIView
+OUKObjCView -didMoveToSuperview superview=UIView
+a.superview=UIView host.subviews=1
+-- 4 layout
+OUKObjCView -layoutSubviews (enter) bounds={{0, 0}, {30, 40}}
+OUKObjCView -layoutSubviews (exit) count=1
+after first layoutIfNeeded count=1
+after second layoutIfNeeded count=1
+OUKObjCView -layoutSubviews (enter) bounds={{0, 0}, {30, 40}}
+OUKObjCView -layoutSubviews (exit) count=2
+after setNeedsLayout+layoutIfNeeded count=2
+OUKObjCView -layoutSubviews (enter) bounds={{0, 0}, {50, 60}}
+OUKObjCView -layoutSubviews (exit) count=3
+after bounds change count=3
+-- 5 sizeToFit uses the override
+OUKObjCView -sizeThatFits: {50, 60}
+a frame after sizeToFit={{-9, -8}, {77, 33}}
+-- 6 Objective-C subclass of the Objective-C subclass
+OUKObjCLeafView -initWithFrame: {{0, 0}, {5, 5}} (enter)
+OUKObjCLeafView -initWithFrame: bounds={{0, 0}, {5, 5}} (exit)
+OUKObjCLeafView -layoutSubviews (enter)
+OUKObjCLeafView -layoutSubviews (enter) bounds={{0, 0}, {5, 5}}
+OUKObjCLeafView -layoutSubviews (exit) count=1
+OUKObjCLeafView -layoutSubviews (exit)
+leaf count=1
+-- 7 removal
+OUKObjCView -willMoveToSuperview: nil
+OUKObjCView -didMoveToSuperview superview=nil
+a.superview=nil
+-- 8 runtime shape
+isKindOfClass UIView=1 UIResponder=1
+respondsToSelector layoutSubviews=1 drawRect:=1 initWithFrame:=1
+UIView class name=UIView UIResponder class name=UIResponder

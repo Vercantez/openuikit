@@ -42,6 +42,12 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -161,10 +167,22 @@ extension UIColor {
 
 // MARK: - UITableView
 
+// Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
+// Objective-C app classes may subclass it (vtable-free, see
+// ObjCSubclassing.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITableView)
+#endif
 @preconcurrency @MainActor
 open class UITableView: UIScrollView {
-    public enum Style: Sendable {
-        case plain, grouped, insetGrouped
+    /// Raw values: iOS 26.1 SDK `UITableViewStyle` (UITableView.h). `@objc`
+    /// because `init(frame:style:)` is an Objective-C designated
+    /// initializer under OPENUIKIT_OBJC_SUBCLASSING.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UITableViewStyle)
+#endif
+    public enum Style: Int, Sendable {
+        case plain = 0, grouped = 1, insetGrouped = 2
     }
 
     /// Sentinel for "let the table compute it" (UIKit's is -1 too).
@@ -200,7 +218,7 @@ open class UITableView: UIScrollView {
     /// and a hosted table both resolve. Used to tell a large-title
     /// overlay (NavFlow t200, SA.top 116, header 38) from an inactive
     /// search slot (Notes t6000, SA.top 124, header 55.5).
-    var _hostingViewController: UIViewController? {
+    final var _hostingViewController: UIViewController? {
         var r: UIResponder? = self
         while let cur = r {
             if let vc = cur as? UIViewController { return vc }
@@ -209,7 +227,7 @@ open class UITableView: UIScrollView {
         return nil
     }
 
-    var _hostingNavigationBar: UINavigationBar? {
+    final var _hostingNavigationBar: UINavigationBar? {
         _hostingViewController?.navigationController?.navigationBar
     }
     /// iOS cut AND pad idiom. Guard for iPad (A16) chrome
@@ -341,12 +359,12 @@ open class UITableView: UIScrollView {
     /// `table_plain` / `iOSPadCellMargin`). First ink 1 pt into the label.
     static let iOSPadInsetGroupedInnerInset: CGFloat = 20
     /// This table's margin (window width; its own width without a window).
-    var iOSMargin: CGFloat { UITableView.iOSSystemMargin(width: window?.bounds.width ?? bounds.width) }
+    final var iOSMargin: CGFloat { UITableView.iOSSystemMargin(width: window?.bounds.width ?? bounds.width) }
     /// Plain cells' text inset (Catalyst 16; iOS: the system margin) and
     /// plain header label x (Catalyst 8; iOS: the system margin).
-    var plainTextInset: CGFloat { UITableView.isIOSChrome ? iOSMargin : UITableViewCell.labelX }
-    var plainHeaderTextX: CGFloat { UITableView.isIOSChrome ? iOSMargin : UITableView.plainHeaderLabelX }
-    var plainSeparatorInsets: (left: CGFloat, right: CGFloat) {
+    final var plainTextInset: CGFloat { UITableView.isIOSChrome ? iOSMargin : UITableViewCell.labelX }
+    final var plainHeaderTextX: CGFloat { UITableView.isIOSChrome ? iOSMargin : UITableView.plainHeaderLabelX }
+    final var plainSeparatorInsets: (left: CGFloat, right: CGFloat) {
         UITableView.isIOSChrome ? (iOSMargin, iOSMargin)
             : (UITableView.separatorLeftInset, UITableView.plainSeparatorRightInset)
     }
@@ -371,7 +389,7 @@ open class UITableView: UIScrollView {
     /// tableview_grouped cards at x = 16, header text at 32). Modelled on
     /// the host window's width (the table's own when it has no window):
     /// 20 from 390 pt, 16 below. Assigning the property pins a value.
-    public var insetGroupedSideInset: CGFloat {
+    public final var insetGroupedSideInset: CGFloat {
         get {
             if let pinned = _insetGroupedSideInsetOverride { return pinned }
             return UITableView.isIOSChrome ? iOSMargin : 8
@@ -382,7 +400,7 @@ open class UITableView: UIScrollView {
             if newValue != old { setNeedsMetrics() }
         }
     }
-    var _insetGroupedSideInsetOverride: CGFloat?
+    final var _insetGroupedSideInsetOverride: CGFloat?
 
     open override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -393,7 +411,7 @@ open class UITableView: UIScrollView {
     /// Catalyst keep 16 (`UITableViewCell.labelX`). Pad inset-grouped is 20.
     /// Compact-height phone inset-grouped is the window's `iOSMargin` (20
     /// on the 667-wide SE).
-    var groupedTextInset: CGFloat {
+    final var groupedTextInset: CGFloat {
         if style == .insetGrouped, UITableView.isPadChrome {
             return UITableView.iOSPadInsetGroupedInnerInset
         }
@@ -407,7 +425,7 @@ open class UITableView: UIScrollView {
         }
         return UITableViewCell.labelX
     }
-    var groupedHeaderLabelX: CGFloat {
+    final var groupedHeaderLabelX: CGFloat {
         // MEASURED Forms t200, iPhone SE 2x, iOS 26.1: a `.grouped` table
         // (no card — cells are full-bleed 375) puts the section header
         // label at x = 16, the window's system margin. `insetGroupedSideInset
@@ -439,75 +457,75 @@ open class UITableView: UIScrollView {
     /// `UINibClassRegistry`'s zero-argument factory and then told its archived
     /// style (`UITableViewStyle` in the archive), which is the one path that
     /// needs to write it — see `_setArchivedStyle`.
-    public private(set) var style: Style
-    public weak var dataSource: UITableViewDataSource? {
+    public private(set) final var style: Style
+    public weak final var dataSource: UITableViewDataSource? {
         didSet { if dataSource !== oldValue { reloadData() } }
     }
     /// Drag source. Installing a delegate also installs the 0.325 s lift
     /// long-press (MEASURED GestureProbe, iPhone SE 2x / iOS 26.1).
-    public weak var dragDelegate: UITableViewDragDelegate? {
+    public weak final var dragDelegate: UITableViewDragDelegate? {
         didSet { _installDragLift() }
     }
-    public weak var dropDelegate: UITableViewDropDelegate?
+    public weak final var dropDelegate: UITableViewDropDelegate?
     /// As of iOS 15 this defaults to true on iPhone (UITableView.h).
-    public var dragInteractionEnabled = true
-    public internal(set) var hasActiveDrag = false
-    public internal(set) var hasActiveDrop = false
-    var _activeDrag = false {
+    public final var dragInteractionEnabled = true
+    public internal(set) final var hasActiveDrag = false
+    public internal(set) final var hasActiveDrop = false
+    final var _activeDrag = false {
         didSet { hasActiveDrag = _activeDrag }
     }
-    var _activeDrop = false {
+    final var _activeDrop = false {
         didSet { hasActiveDrop = _activeDrop }
     }
-    var _dragLift: UILongPressGestureRecognizer?
+    final var _dragLift: UILongPressGestureRecognizer?
     // NOTE: like UIKit, the table's delegate is the inherited scroll-view
     // `delegate`; assign a UITableViewDelegate to it (the protocol refines
     // UIScrollViewDelegate) — the table discovers the table conformance
     // dynamically.
-    var tableDelegate: UITableViewDelegate? { delegate as? UITableViewDelegate }
+    final var tableDelegate: UITableViewDelegate? { delegate as? UITableViewDelegate }
 
     /// Row height used when the delegate does not provide one.
     /// automaticDimension resolves to the measured default (51.5).
-    public var rowHeight: CGFloat = UITableView.automaticDimension {
+    public final var rowHeight: CGFloat = UITableView.automaticDimension {
         didSet { if rowHeight != oldValue { setNeedsMetrics() } }
     }
     /// Plain style: padding above each section header (measured 22).
-    public var sectionHeaderTopPadding: CGFloat = 22 {
+    public final var sectionHeaderTopPadding: CGFloat = 22 {
         didSet { if sectionHeaderTopPadding != oldValue { setNeedsMetrics() } }
     }
     public enum SeparatorStyle: Sendable { case none, singleLine }
-    public var separatorStyle: SeparatorStyle = .singleLine {
+    public final var separatorStyle: SeparatorStyle = .singleLine {
         didSet { if separatorStyle != oldValue { retile() } }
     }
     /// Colour of the hairline under each row. `nil` restores the system
     /// `.separator`, which is what the cell paints itself with when the table
     /// has no opinion (UITableViewCell.setUp).
-    public var separatorColor: UIColor? = .separator {
+    public final var separatorColor: UIColor? = .separator {
         didSet { applySeparatorColor() }
     }
-    public var allowsSelection = true
-    public var allowsMultipleSelection = false
-    public var allowsSelectionDuringEditing = false
-    public var allowsMultipleSelectionDuringEditing = false
-    public var cellLayoutMarginsFollowReadableWidth = true
+    public final var allowsSelection = true
+    public final var allowsMultipleSelection = false
+    public final var allowsSelectionDuringEditing = false
+    public final var allowsMultipleSelectionDuringEditing = false
+    public final var cellLayoutMarginsFollowReadableWidth = true
 
     /// Estimates affect UIKit's pre-layout bookkeeping, not final geometry.
     /// OpenUIKit already computes exact visible metrics eagerly, but retains
     /// these values because applications commonly configure them.
-    public var estimatedRowHeight: CGFloat = UITableView.automaticDimension
-    public var estimatedSectionHeaderHeight: CGFloat = UITableView.automaticDimension
-    public var estimatedSectionFooterHeight: CGFloat = UITableView.automaticDimension
+    public final var estimatedRowHeight: CGFloat = UITableView.automaticDimension
+    public final var estimatedSectionHeaderHeight: CGFloat = UITableView.automaticDimension
+    public final var estimatedSectionFooterHeight: CGFloat = UITableView.automaticDimension
     /// Height for a section header the delegate supplies no height for.
     /// `automaticDimension` means "size the header view by its own
     /// constraints", which every pocket-casts settings screen relies on.
-    public var sectionHeaderHeight: CGFloat = UITableView.automaticDimension {
+    public final var sectionHeaderHeight: CGFloat = UITableView.automaticDimension {
         didSet { if sectionHeaderHeight != oldValue { setNeedsMetrics() } }
     }
-    public var sectionFooterHeight: CGFloat = UITableView.automaticDimension {
+    public final var sectionFooterHeight: CGFloat = UITableView.automaticDimension {
         didSet { if sectionFooterHeight != oldValue { setNeedsMetrics() } }
     }
 
-    public var backgroundView: UIView? {
+    public final var backgroundView: UIView? {
         didSet {
             guard backgroundView !== oldValue else { return }
             oldValue?.removeFromSuperview()
@@ -519,7 +537,7 @@ open class UITableView: UIScrollView {
         }
     }
 
-    public var tableHeaderView: UIView? {
+    public final var tableHeaderView: UIView? {
         didSet {
             guard tableHeaderView !== oldValue else { return }
             oldValue?.removeFromSuperview()
@@ -528,7 +546,7 @@ open class UITableView: UIScrollView {
         }
     }
 
-    public var tableFooterView: UIView? {
+    public final var tableFooterView: UIView? {
         didSet {
             guard tableFooterView !== oldValue else { return }
             oldValue?.removeFromSuperview()
@@ -537,11 +555,11 @@ open class UITableView: UIScrollView {
         }
     }
 
-    public private(set) var isEditing = false
+    public private(set) final var isEditing = false
 
-    public private(set) var indexPathForSelectedRow: IndexPath?
-    private var additionalSelectedRows: Set<IndexPath> = []
-    public var indexPathsForSelectedRows: [IndexPath]? {
+    public private(set) final var indexPathForSelectedRow: IndexPath?
+    private final var additionalSelectedRows: Set<IndexPath> = []
+    public final var indexPathsForSelectedRows: [IndexPath]? {
         var paths = additionalSelectedRows
         if let indexPathForSelectedRow { paths.insert(indexPathForSelectedRow) }
         return paths.isEmpty ? nil : paths.sorted()
@@ -549,7 +567,10 @@ open class UITableView: UIScrollView {
 
     // MARK: Init
 
-    public init(frame: CGRect, style: Style) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic init(frame: CGRect, style: Style) {
         self.style = style
         super.init(frame: frame)
         configureStyle(style)
@@ -563,7 +584,10 @@ open class UITableView: UIScrollView {
         self.init(frame: .zero, style: .plain)
     }
 
-    public required init?(coder: NSCoder) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public required dynamic init?(coder: NSCoder) {
         style = .plain
         super.init(coder: coder)
         configureStyle(.plain)
@@ -573,14 +597,14 @@ open class UITableView: UIScrollView {
     /// style inside `initWithCoder:`, before any of the table's own state
     /// exists; the portable loader constructs first and configures after, so
     /// this re-runs the style's own setup.
-    func _setArchivedStyle(_ style: Style) {
+    final func _setArchivedStyle(_ style: Style) {
         guard style != self.style else { return }
         self.style = style
         configureStyle(style)
         setNeedsMetrics()
     }
 
-    private func configureStyle(_ style: Style) {
+    private final func configureStyle(_ style: Style) {
         switch style {
         case .plain:
             backgroundColor = .systemBackground
@@ -620,25 +644,25 @@ open class UITableView: UIScrollView {
         func rowY(_ i: Int) -> CGFloat { i == 0 ? rowsStart : rowEnds[i - 1] }
     }
 
-    var metrics: [SectionMetrics] = []
-    private var metricsDirty = true
-    private var metricsWidth: CGFloat = -1
+    final var metrics: [SectionMetrics] = []
+    private final var metricsDirty = true
+    private final var metricsWidth: CGFloat = -1
 
-    func setNeedsMetrics() {
+    final func setNeedsMetrics() {
         valueCellPaddingCache.removeAll()
         metricsDirty = true
         setNeedsLayout()
     }
 
     /// Scratch label for footer text measurement.
-    private let footerSizer: UILabel = {
+    private final let footerSizer: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 13)
         l.numberOfLines = 0
         return l
     }()
 
-    private func resolveRowHeight(_ path: IndexPath) -> CGFloat {
+    private final func resolveRowHeight(_ path: IndexPath) -> CGFloat {
         if let d = tableDelegate {
             let h = d.tableView(self, heightForRowAt: path)
             if h >= 0 { return h }
@@ -681,7 +705,7 @@ open class UITableView: UIScrollView {
     /// come out 65 pt from their xib's own label constraints; the port had
     /// them at `defaultRowHeight` (53), which put every view below them 24 pt
     /// too high.
-    private func refineSelfSizedRows() -> Bool {
+    private final func refineSelfSizedRows() -> Bool {
         guard rowHeight < 0 else { return false }
         var changed = false
         for (path, cell) in visibleCellsByPath.views {
@@ -723,10 +747,10 @@ open class UITableView: UIScrollView {
     /// Heights `refineSelfSizedRows` has measured, by path. Survives a metrics
     /// rebuild — that is the whole point, the rebuild is what consumes them —
     /// and is dropped when the data source is reloaded.
-    var selfSizedRowHeights: [IndexPath: CGFloat] = [:]
+    final var selfSizedRowHeights: [IndexPath: CGFloat] = [:]
     /// Refinement passes spent on the current `retile`, so a cell whose
     /// measured height never settles cannot spin.
-    private var selfSizingPass = 0
+    private final var selfSizingPass = 0
 
     /// The delegate's own header view for `s`, created once and cached.
     ///
@@ -736,7 +760,7 @@ open class UITableView: UIScrollView {
     /// `SettingsTableHeader(frame:title:)`), so it has to be the same object
     /// both passes see. Returns nil when the delegate supplies no view, which
     /// leaves the title-driven chrome path untouched.
-    private func delegateHeaderView(for s: Int) -> UIView? {
+    private final func delegateHeaderView(for s: Int) -> UIView? {
         if let cached = headerViews[s] { return cached }
         guard let view = tableDelegate?.tableView(self, viewForHeaderInSection: s)
         else { return nil }
@@ -745,7 +769,7 @@ open class UITableView: UIScrollView {
         return view
     }
 
-    private func delegateFooterView(for s: Int) -> UIView? {
+    private final func delegateFooterView(for s: Int) -> UIView? {
         if let cached = footerViews[s] { return cached }
         guard let view = tableDelegate?.tableView(self, viewForFooterInSection: s)
         else { return nil }
@@ -757,7 +781,7 @@ open class UITableView: UIScrollView {
     /// Height a view asks for at the table's width, or nil when its subtree
     /// installs no constraints and it therefore has no opinion. Used for a
     /// self-sizing row and for a delegate-supplied section header/footer.
-    private func constraintFittingHeight(of view: UIView) -> CGFloat? {
+    private final func constraintFittingHeight(of view: UIView) -> CGFloat? {
         var width = bounds.width > 0 ? bounds.width : metricsWidth
         guard width > 0 else { return nil }
         if UITableView.isIOSChrome, style == .insetGrouped {
@@ -780,7 +804,7 @@ open class UITableView: UIScrollView {
         return fitted.height
     }
 
-    private func rebuildMetrics() {
+    private final func rebuildMetrics() {
         metrics.removeAll()
         metricsDirty = false
         metricsWidth = bounds.width
@@ -956,12 +980,12 @@ open class UITableView: UIScrollView {
 
     // MARK: Public geometry / lookup API
 
-    public var numberOfSections: Int {
+    public final var numberOfSections: Int {
         metricsIfNeeded()
         return metrics.count
     }
 
-    public func numberOfRows(inSection section: Int) -> Int {
+    public final func numberOfRows(inSection section: Int) -> Int {
         metricsIfNeeded()
         guard section >= 0, section < metrics.count else { return 0 }
         return metrics[section].rowEnds.count
@@ -969,8 +993,8 @@ open class UITableView: UIScrollView {
 
     /// iOS 26's extra 2 pt for an accessory-less value1/value2 cell (needs
     /// the cell, so the data source is asked; nil when it cannot be built).
-    private var valueCellPaddingCache: [IndexPath: CGFloat] = [:]
-    func valueCellPadding(_ path: IndexPath) -> CGFloat {
+    private final var valueCellPaddingCache: [IndexPath: CGFloat] = [:]
+    final func valueCellPadding(_ path: IndexPath) -> CGFloat {
         guard UITableView.valueCellPadding > 0, style != .plain else { return 0 }
         // Only a pinned row height (delegate / `rowHeight`) carries the
         // content-configuration 2 pt: the fixture scenes pin 53 and their
@@ -994,7 +1018,7 @@ open class UITableView: UIScrollView {
         return pad
     }
 
-    public func rectForRow(at indexPath: IndexPath) -> CGRect {
+    public final func rectForRow(at indexPath: IndexPath) -> CGRect {
         metricsIfNeeded()
         guard indexPath.section >= 0, indexPath.section < metrics.count else { return .zero }
         let m = metrics[indexPath.section]
@@ -1005,7 +1029,7 @@ open class UITableView: UIScrollView {
                       height: m.rowEnds[indexPath.row] - y)
     }
 
-    public func indexPathForRow(at point: CGPoint) -> IndexPath? {
+    public final func indexPathForRow(at point: CGPoint) -> IndexPath? {
         metricsIfNeeded()
         for (s, m) in metrics.enumerated() {
             guard point.y >= m.rowsStart, point.y < m.rowsEnd else { continue }
@@ -1016,41 +1040,41 @@ open class UITableView: UIScrollView {
         return nil
     }
 
-    public func cellForRow(at indexPath: IndexPath) -> UITableViewCell? {
+    public final func cellForRow(at indexPath: IndexPath) -> UITableViewCell? {
         visibleCellsByPath[indexPath]
     }
 
-    public func indexPath(for cell: UITableViewCell) -> IndexPath? {
+    public final func indexPath(for cell: UITableViewCell) -> IndexPath? {
         visibleCellsByPath.first { $1 === cell }?.key
     }
 
     /// Editing style the data source reports for this bound cell.
-    func _editingStyle(for cell: UITableViewCell) -> UITableViewCell.EditingStyle {
+    final func _editingStyle(for cell: UITableViewCell) -> UITableViewCell.EditingStyle {
         guard let path = indexPath(for: cell), let ds = dataSource else { return .delete }
         if !ds.tableView(self, canEditRowAt: path) { return .none }
         return ds.tableView(self, editingStyleForRowAt: path)
     }
 
-    func _canMove(_ cell: UITableViewCell) -> Bool {
+    final func _canMove(_ cell: UITableViewCell) -> Bool {
         guard let path = indexPath(for: cell), let ds = dataSource else { return false }
         return ds.tableView(self, canMoveRowAt: path)
     }
 
-    public var visibleCells: [UITableViewCell] {
+    public final var visibleCells: [UITableViewCell] {
         visibleCellsByPath.views.sorted { $0.key < $1.key }.map(\.value)
     }
 
-    public var indexPathsForVisibleRows: [IndexPath]? {
+    public final var indexPathsForVisibleRows: [IndexPath]? {
         visibleCellsByPath.isEmpty ? nil : visibleCellsByPath.keys.sorted()
     }
 
-    private func metricsIfNeeded() {
+    private final func metricsIfNeeded() {
         if metricsDirty || metricsWidth != bounds.width { rebuildMetrics() }
     }
 
     // MARK: Reload
 
-    public func reloadData() {
+    public final func reloadData() {
         discardVisibleData(clearSelection: true)
         setNeedsMetrics()
         if updateNesting > 0 {
@@ -1062,7 +1086,7 @@ open class UITableView: UIScrollView {
         }
     }
 
-    private func discardVisibleData(clearSelection: Bool) {
+    private final func discardVisibleData(clearSelection: Bool) {
         // Measured row heights are keyed by path and the paths are about to
         // mean something else.
         selfSizedRowHeights.removeAll()
@@ -1086,7 +1110,7 @@ open class UITableView: UIScrollView {
         }
     }
 
-    private func dropRowAnimationOrphans() {
+    private final func dropRowAnimationOrphans() {
         for cell in rowAnimationOrphans {
             cell.removeFromSuperview()
             cell.alpha = 1
@@ -1102,7 +1126,7 @@ open class UITableView: UIScrollView {
         case fade, right, left, top, bottom, none, middle, automatic
     }
 
-    public func setEditing(_ editing: Bool, animated: Bool) {
+    public final func setEditing(_ editing: Bool, animated: Bool) {
         guard isEditing != editing else { return }
         isEditing = editing
         for cell in visibleCells { cell.setEditing(editing, animated: animated) }
@@ -1118,19 +1142,19 @@ open class UITableView: UIScrollView {
         }
     }
 
-    private var updateNesting = 0
-    private var structuralUpdatePending = false
-    private var pendingRowMoves: [(source: IndexPath, destination: IndexPath)] = []
-    private var pendingStructuralUpdateIncludesNonMove = false
-    private var pendingInsertedRows: [(IndexPath, RowAnimation)] = []
-    private var pendingDeletedRows: [(IndexPath, RowAnimation)] = []
+    private final var updateNesting = 0
+    private final var structuralUpdatePending = false
+    private final var pendingRowMoves: [(source: IndexPath, destination: IndexPath)] = []
+    private final var pendingStructuralUpdateIncludesNonMove = false
+    private final var pendingInsertedRows: [(IndexPath, RowAnimation)] = []
+    private final var pendingDeletedRows: [(IndexPath, RowAnimation)] = []
     /// Departing cells still fading after a measured delete. Dropped on
     /// the next structural commit so a second update cannot leave a ghost.
-    private var rowAnimationOrphans: [UITableViewCell] = []
+    private final var rowAnimationOrphans: [UITableViewCell] = []
 
-    public func beginUpdates() { updateNesting += 1 }
+    public final func beginUpdates() { updateNesting += 1 }
 
-    public func endUpdates() {
+    public final func endUpdates() {
         guard updateNesting > 0 else { return }
         updateNesting -= 1
         if updateNesting == 0, structuralUpdatePending {
@@ -1138,13 +1162,13 @@ open class UITableView: UIScrollView {
         }
     }
 
-    private func noteStructuralUpdate() {
+    private final func noteStructuralUpdate() {
         structuralUpdatePending = true
         pendingStructuralUpdateIncludesNonMove = true
         if updateNesting == 0 { commitPendingStructuralUpdate() }
     }
 
-    private func commitPendingStructuralUpdate() {
+    private final func commitPendingStructuralUpdate() {
         if !pendingStructuralUpdateIncludesNonMove, pendingRowMoves.count == 1,
            let move = pendingRowMoves.first {
             structuralUpdatePending = false
@@ -1155,7 +1179,7 @@ open class UITableView: UIScrollView {
         applyStructuralUpdate()
     }
 
-    private func applyStructuralUpdate() {
+    private final func applyStructuralUpdate() {
         structuralUpdatePending = false
         pendingRowMoves.removeAll()
         pendingStructuralUpdateIncludesNonMove = false
@@ -1174,12 +1198,12 @@ open class UITableView: UIScrollView {
         retile()
     }
 
-    public func insertRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+    public final func insertRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
         pendingInsertedRows.append(contentsOf: indexPaths.map { ($0, animation) })
         noteStructuralUpdate()
     }
 
-    public func deleteRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+    public final func deleteRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
         if let selected = indexPathForSelectedRow, indexPaths.contains(selected) {
             indexPathForSelectedRow = nil
         }
@@ -1190,7 +1214,7 @@ open class UITableView: UIScrollView {
     /// Whether this update is the measured iOS 26.1 row spring (TableEditor
     /// t1350 / t2350). Other styles stay a snap — they were not on the
     /// display-tick recording.
-    private func iOSRowAnimationIsMeasured(_ animation: RowAnimation) -> Bool {
+    private final func iOSRowAnimationIsMeasured(_ animation: RowAnimation) -> Bool {
         animation == .fade || animation == .automatic
     }
 
@@ -1198,7 +1222,7 @@ open class UITableView: UIScrollView {
     /// false when the update is out of the measured set so the caller can
     /// snap. Driven by `UIView.animate` so openhost's `animationTime`
     /// clock (ConformanceMode, 60 Hz) samples it.
-    private func applyAnimatedRowUpdateIfMeasured(
+    private final func applyAnimatedRowUpdateIfMeasured(
         inserts: [(IndexPath, RowAnimation)],
         deletes: [(IndexPath, RowAnimation)]
     ) -> Bool {
@@ -1348,7 +1372,7 @@ open class UITableView: UIScrollView {
     /// into a dest that straddles the visible bottom springs its presentation
     /// height from `iOSClippedRowSpringHeight` (52) to destHeight, keeping
     /// the top at the old slot. Other neighbours keep the full old frame.
-    private func clippedRowSpringFromFrame(dest: CGRect, old: CGRect) -> CGRect {
+    private final func clippedRowSpringFromFrame(dest: CGRect, old: CGRect) -> CGRect {
         let visBottom = bounds.maxY
         guard dest.minY < visBottom, dest.maxY > visBottom, old.minY >= visBottom
         else { return old }
@@ -1362,8 +1386,11 @@ open class UITableView: UIScrollView {
     /// when this method is called. The affected index paths therefore form a
     /// deterministic permutation: the moved cell and every shifted neighbour
     /// keep their identity, and selection follows the same permutation.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(moveRowAtIndexPath:toIndexPath:)
+#endif
     @available(iOS 5.0, *)
-    open func moveRow(at indexPath: IndexPath, to newIndexPath: IndexPath) {
+    open dynamic func moveRow(at indexPath: IndexPath, to newIndexPath: IndexPath) {
         if updateNesting > 0 {
             structuralUpdatePending = true
             pendingRowMoves.append((indexPath, newIndexPath))
@@ -1372,15 +1399,15 @@ open class UITableView: UIScrollView {
         applyRowMove(from: indexPath, to: newIndexPath)
     }
 
-    public func reloadRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
+    public final func reloadRows(at indexPaths: [IndexPath], with animation: RowAnimation) {
         noteStructuralUpdate()
     }
 
-    public func insertSections(_ sections: IndexSet, with animation: RowAnimation) {
+    public final func insertSections(_ sections: IndexSet, with animation: RowAnimation) {
         noteStructuralUpdate()
     }
 
-    public func deleteSections(_ sections: IndexSet, with animation: RowAnimation) {
+    public final func deleteSections(_ sections: IndexSet, with animation: RowAnimation) {
         if let selected = indexPathForSelectedRow,
            sections.contains(selected.section) {
             indexPathForSelectedRow = nil
@@ -1388,14 +1415,14 @@ open class UITableView: UIScrollView {
         noteStructuralUpdate()
     }
 
-    public func reloadSections(_ sections: IndexSet, with animation: RowAnimation) {
+    public final func reloadSections(_ sections: IndexSet, with animation: RowAnimation) {
         noteStructuralUpdate()
     }
 
     /// Map a slot in the pre-move table to its slot in the post-move table.
     /// This is a bijection for a valid single move, both within and between
     /// sections.
-    private func remappedIndexPath(_ path: IndexPath, movingFrom source: IndexPath,
+    private final func remappedIndexPath(_ path: IndexPath, movingFrom source: IndexPath,
                                    to destination: IndexPath) -> IndexPath {
         if path == source { return destination }
 
@@ -1424,7 +1451,7 @@ open class UITableView: UIScrollView {
     /// Apply one already-committed data-source move. Only cells which remain
     /// visible are retained; cells leaving the viewport return to the reuse
     /// pool and newly visible slots are filled by the ordinary tiler.
-    private func applyRowMove(from source: IndexPath, to destination: IndexPath) {
+    private final func applyRowMove(from source: IndexPath, to destination: IndexPath) {
         guard source.section >= 0, source.row >= 0,
               destination.section >= 0, destination.row >= 0 else {
             applyStructuralUpdate()
@@ -1525,7 +1552,7 @@ open class UITableView: UIScrollView {
     /// supplies a stable identity per index path.
     ///
     /// `completion` runs on the host clock (`UIView.animate` semantics).
-    public func performUpdates(withDuration duration: Double,
+    public final func performUpdates(withDuration duration: Double,
                                delay: Double = 0,
                                options: UIView.AnimationOptions = .curveEaseInOut,
                                identity: (IndexPath) -> AnyHashable,
@@ -1670,18 +1697,27 @@ open class UITableView: UIScrollView {
     // the same component UICollectionView drives for its cells and
     // supplementary views.
 
-    private let cellRegistry = ReuseRegistry<UITableViewCell>()
-    private let headerFooterRegistry = ReuseRegistry<UITableViewHeaderFooterView>()
+    private final let cellRegistry = ReuseRegistry<UITableViewCell>()
+    private final let headerFooterRegistry = ReuseRegistry<UITableViewHeaderFooterView>()
 
     /// Recycled cells kept per identifier (shared cap — see UIReuse.swift).
     static var poolCapacityPerIdentifier: Int { reusePoolCapacityPerIdentifier }
 
-    public func register(_ cellClass: UITableViewCell.Type,
+    public final func register(_ cellClass: UITableViewCell.Type,
                          forCellReuseIdentifier identifier: String) {
         cellRegistry.register(identifier: identifier) { id in
+            // `cellClass as AnyObject` is the class object even for an
+            // Objective-C subclass (whose Swift metatype is a wrapper the
+            // allocator cannot take; see `_objcMessageable`).
+#if OPENUIKIT_OBJC_SUBCLASSING
+            let constructor = unsafeBitCast(
+                cellClass as AnyObject,
+                to: _UITableViewCellDynamicConstructor.Type.self)
+#else
             let constructor = unsafeBitCast(
                 cellClass,
                 to: _UITableViewCellDynamicConstructor.Type.self)
+#endif
             return constructor.init(style: .default, reuseIdentifier: id)
         }
     }
@@ -1691,7 +1727,7 @@ open class UITableView: UIScrollView {
     /// dequeue instantiates the archive afresh, as UIKit's does, and the
     /// identifier is stamped onto the cell the nib produced (a nib cell has
     /// no `init(style:reuseIdentifier:)` to carry it).
-    public func register(_ nib: UINib, forCellReuseIdentifier identifier: String) {
+    public final func register(_ nib: UINib, forCellReuseIdentifier identifier: String) {
         cellRegistry.register(identifier: identifier) { id in
             let objects = nib.instantiate(withOwner: nil, options: nil)
             guard let cell = objects.compactMap({ $0 as? UITableViewCell }).first else {
@@ -1703,11 +1739,11 @@ open class UITableView: UIScrollView {
         }
     }
 
-    public func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
+    public final func dequeueReusableCell(withIdentifier identifier: String) -> UITableViewCell? {
         cellRegistry.dequeue(identifier)
     }
 
-    public func dequeueReusableCell(withIdentifier identifier: String,
+    public final func dequeueReusableCell(withIdentifier identifier: String,
                                     for indexPath: IndexPath) -> UITableViewCell {
         guard let cell = dequeueReusableCell(withIdentifier: identifier) else {
             fatalError("dequeueReusableCell(withIdentifier:for:) requires a registered class for '\(identifier)'")
@@ -1715,7 +1751,7 @@ open class UITableView: UIScrollView {
         return cell
     }
 
-    public func register(_ viewClass: UITableViewHeaderFooterView.Type,
+    public final func register(_ viewClass: UITableViewHeaderFooterView.Type,
                          forHeaderFooterViewReuseIdentifier identifier: String) {
         headerFooterRegistry.register(identifier: identifier) { id in
             let constructor = unsafeBitCast(
@@ -1725,18 +1761,18 @@ open class UITableView: UIScrollView {
         }
     }
 
-    public func dequeueReusableHeaderFooterView(
+    public final func dequeueReusableHeaderFooterView(
         withIdentifier identifier: String
     ) -> UITableViewHeaderFooterView? {
         headerFooterRegistry.dequeue(identifier)
     }
 
-    private func recycle(_ cell: UITableViewCell) {
+    private final func recycle(_ cell: UITableViewCell) {
         cell.tableView = nil
         cellRegistry.recycle(cell)
     }
 
-    private func recycleHeaderFooter(_ view: UIView) {
+    private final func recycleHeaderFooter(_ view: UIView) {
         guard let reusable = view as? UITableViewHeaderFooterView else { return }
         headerFooterRegistry.recycle(reusable)
     }
@@ -1744,10 +1780,10 @@ open class UITableView: UIScrollView {
     // MARK: Tiling
 
     // Slot -> live view bookkeeping (shared component, UIReuse.swift).
-    var visibleCellsByPath = VisibleViewMap<IndexPath, UITableViewCell>()
-    var headerViews = VisibleViewMap<Int, UIView>()
-    var footerViews = VisibleViewMap<Int, UIView>()
-    var cardViews = VisibleViewMap<Int, UITableViewCardView>()
+    final var visibleCellsByPath = VisibleViewMap<IndexPath, UITableViewCell>()
+    final var headerViews = VisibleViewMap<Int, UIView>()
+    final var footerViews = VisibleViewMap<Int, UIView>()
+    final var cardViews = VisibleViewMap<Int, UITableViewCardView>()
 
     open override var bounds: CGRect {
         didSet {
@@ -1775,11 +1811,11 @@ open class UITableView: UIScrollView {
 
     /// Re-entrancy guard: tiling adds subviews (→ setNeedsLayout) and can
     /// clamp offsets; never recurse.
-    private var inTile = false
+    private final var inTile = false
 
     /// Rows and sections that intersect the visible rect at the current
     /// offset, in ascending order. Assumes metrics are up to date.
-    func neededViews() -> (cells: [IndexPath], sections: [Int]) {
+    final func neededViews() -> (cells: [IndexPath], sections: [Int]) {
         let visTop = contentOffset.y
         let visBottom = visTop + bounds.height
 
@@ -1811,7 +1847,7 @@ open class UITableView: UIScrollView {
         return (neededCells, neededSections)
     }
 
-    func retile() {
+    final func retile() {
         // The data source may already expose post-update rows while the live
         // cells still use pre-update keys. Wait for the outer structural
         // commit; ordinary open batches with no queued structural work still
@@ -2019,19 +2055,19 @@ open class UITableView: UIScrollView {
     /// Table-wide separator inset. Untouched, the style's measured default
     /// applies; assigning any value (including `.zero`) makes it explicit,
     /// the same contract ``UITableViewCell/separatorInset`` has.
-    public var separatorInset: UIEdgeInsets = .zero {
+    public final var separatorInset: UIEdgeInsets = .zero {
         didSet {
             _hasExplicitSeparatorInset = true
             setNeedsLayout()
         }
     }
-    var _hasExplicitSeparatorInset = false
-    public var separatorInsetReference: SeparatorInsetReference = .fromCellEdges {
+    final var _hasExplicitSeparatorInset = false
+    public final var separatorInsetReference: SeparatorInsetReference = .fromCellEdges {
         didSet { setNeedsLayout() }
     }
 
     /// Horizontal separator insets for `cell` (style-dependent, measured).
-    func separatorDrawInsets(for cell: UITableViewCell) -> (left: CGFloat, right: CGFloat) {
+    final func separatorDrawInsets(for cell: UITableViewCell) -> (left: CGFloat, right: CGFloat) {
         var defaults: (left: CGFloat, right: CGFloat)
         switch style {
         case .plain:
@@ -2113,7 +2149,7 @@ open class UITableView: UIScrollView {
     }
 
     /// Whether `path`'s cell draws the line above the row.
-    func showsTopSeparator(_ path: IndexPath) -> Bool {
+    final func showsTopSeparator(_ path: IndexPath) -> Bool {
         if path.row != 0 { return false }
         if style == .grouped { return true }
         if UITableView.isIOSChrome, style == .plain,
@@ -2126,7 +2162,7 @@ open class UITableView: UIScrollView {
     /// Apply the measured separator visibility rules across visible cells:
     /// no separator on an inset-grouped section's last row, none on a
     /// selected/highlighted row, none on the row directly above one.
-    func updateSeparators() {
+    final func updateSeparators() {
         for (path, cell) in visibleCellsByPath.views {
             var hidden = separatorStyle == .none
             // The card style closes its own bottom edge, so its last row
@@ -2162,7 +2198,7 @@ open class UITableView: UIScrollView {
         applySeparatorColor()
     }
 
-    private func applySeparatorColor() {
+    private final func applySeparatorColor() {
         let color = separatorColor ?? .separator
         for (_, cell) in visibleCellsByPath.views {
             cell.separatorView.backgroundColor = color
@@ -2175,7 +2211,7 @@ open class UITableView: UIScrollView {
     public enum ScrollPosition: Sendable { case none, top, middle, bottom }
 
     /// Programmatic selection (UIKit semantics: no delegate callbacks).
-    public func selectRow(at indexPath: IndexPath?, animated: Bool,
+    public final func selectRow(at indexPath: IndexPath?, animated: Bool,
                           scrollPosition: ScrollPosition = .none) {
         let permitsMultiple = isEditing
             ? allowsMultipleSelectionDuringEditing
@@ -2220,7 +2256,7 @@ open class UITableView: UIScrollView {
         updateSeparators()
     }
 
-    public func deselectRow(at indexPath: IndexPath, animated: Bool) {
+    public final func deselectRow(at indexPath: IndexPath, animated: Bool) {
         if indexPathForSelectedRow == indexPath {
             indexPathForSelectedRow = additionalSelectedRows.sorted().first
             if let promoted = indexPathForSelectedRow {
@@ -2233,7 +2269,7 @@ open class UITableView: UIScrollView {
         updateSeparators()
     }
 
-    public func scrollToRow(at indexPath: IndexPath, at position: ScrollPosition,
+    public final func scrollToRow(at indexPath: IndexPath, at position: ScrollPosition,
                             animated: Bool) {
         let rect = rectForRow(at: indexPath)
         guard rect.height > 0 else { return }
@@ -2262,7 +2298,7 @@ open class UITableView: UIScrollView {
     /// A bound cell finished a tap: select it and notify the delegate
     /// (highlight → selected is seamless; UIKit fires didSelect after the
     /// selection state is set).
-    func cellHighlightDidChange(_ cell: UITableViewCell, highlighted: Bool) {
+    final func cellHighlightDidChange(_ cell: UITableViewCell, highlighted: Bool) {
         guard let path = indexPath(for: cell) else { return }
         if highlighted {
             tableDelegate?.tableView(self, didHighlightRowAt: path)
@@ -2271,7 +2307,7 @@ open class UITableView: UIScrollView {
         }
     }
 
-    func commitRowTap(on cell: UITableViewCell) {
+    final func commitRowTap(on cell: UITableViewCell) {
         guard allowsSelection, let path = indexPath(for: cell) else { return }
         if isEditing && !allowsSelectionDuringEditing && !allowsMultipleSelectionDuringEditing {
             return
