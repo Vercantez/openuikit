@@ -10,6 +10,8 @@ stops at the first target that fails unless --continue is given; a failing
 target's dependents are reported as "not reached", never as passing.
 
     python3 Tools/ingest/chain_census.py SPEC --package DIR --out census.json [--continue] [--timeout SEC]
+        [--ios-target]   # build for arm64-apple-ios26.1-simulator against the
+                         # curated SDK (Tools/ingest/ios_target_sdk.py)
 """
 from __future__ import annotations
 
@@ -47,9 +49,13 @@ def member_of(msg: str) -> str | None:
     return None
 
 
-def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
+def build_command(name: str, jobs: int, build_args: list[str]) -> list[str]:
+    return ["swift", "build", "--target", name, "-j", str(jobs)] + list(build_args)
+
+
+def run_target(pkg: str, name: str, timeout: int, jobs: int, build_args: list[str] = ()) -> dict:
     own_dir = os.path.realpath(os.path.join(pkg, "Sources", name))
-    cmd = ["swift", "build", "--target", name, "-j", str(jobs)]
+    cmd = build_command(name, jobs, list(build_args))
     t0 = time.time()
     try:
         p = subprocess.run(cmd, cwd=pkg, capture_output=True, text=True, timeout=timeout)
@@ -106,7 +112,16 @@ def main() -> int:
     ap.add_argument("--continue", dest="cont", action="store_true")
     ap.add_argument("--timeout", type=int, default=540)
     ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--ios-target", action="store_true",
+                    help="build for the iOS simulator triple against the curated SDK")
+    ap.add_argument("--ios-sdk-cache", help="where the curated SDK lives (default <package>/.build/ios-target-sdk)")
     args = ap.parse_args()
+    build_args: list[str] = []
+    if args.ios_target:
+        import ios_target_sdk
+        from pathlib import Path
+        cache = Path(args.ios_sdk_cache or os.path.join(args.package, ".build", "ios-target-sdk"))
+        build_args = ios_target_sdk.swift_build_flags(ios_target_sdk.curate(ios_target_sdk.default_sdk(), cache))
     spec = json.load(open(args.spec))
     order = [t["name"] for t in spec.get("shims", [])] + [t["name"] for t in spec["targets"]]
     if args.only:
@@ -125,7 +140,7 @@ def main() -> int:
         if stopped and not args.cont:
             results.append({"target": name, "status": "not reached", "blocked_by": stopped})
             continue
-        r = run_target(args.package, name, args.timeout, args.jobs)
+        r = run_target(args.package, name, args.timeout, args.jobs, build_args)
         print(f"{name}: {r['status']} exit={r['exit']} errors={r['unique_errors']} (own {r['own_errors']}, deps {r['dependency_errors']}) files={r['files_with_errors']} {r['seconds']}s", flush=True)
         for msg, n in r["errors_by_message"][:5]:
             print(f"   {n:4d}  {msg}")

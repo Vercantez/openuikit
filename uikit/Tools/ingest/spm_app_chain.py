@@ -151,7 +151,7 @@ import PackageDescription
 let package = Package(
     name: {json.dumps(spec['name'])},
     defaultLocalization: {json.dumps(spec.get('default_localization', 'en'))},
-    platforms: [.macOS(.v13)],
+    platforms: [.macOS(.v13), .iOS("26.0")],
     products: [
 {products}
     ],

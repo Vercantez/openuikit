@@ -177,7 +177,7 @@ class MiniAppFixtureTests(unittest.TestCase):
             ingest.emit_tree(self.graph, self.manifest, out, UIKIT)
             text = (out / "Package.swift").read_text()
         self.assertIn(
-            '.product(name: "Gridicons", package: "OpenUIKit", condition: .when(platforms: [.macOS]))',
+            '.product(name: "Gridicons", package: "OpenUIKit", condition: .when(platforms: [.macOS, .iOS]))',
             text,
         )
         self.assertNotIn('.product(name: "SimplenoteSearch"', text)
@@ -645,8 +645,8 @@ class SimplenoteTests(unittest.TestCase):
             self.assertFalse((out / "Sources/SimplenoteObjC/include/Simplenote-Swift.h").exists())
             objc_block = package[package.index('name: "SimplenoteObjC"'):package.index(".executableTarget(")]
             self.assertIn('"Simplenote",', objc_block)
-            self.assertIn('.product(name: "Simperium", package: "OpenUIKit", condition: .when(platforms: [.macOS]))', objc_block)
-            self.assertIn('.product(name: "AutomatticTracksModelObjC", package: "OpenUIKit", condition: .when(platforms: [.macOS]))', objc_block)
+            self.assertIn('.product(name: "Simperium", package: "OpenUIKit", condition: .when(platforms: [.macOS, .iOS]))', objc_block)
+            self.assertIn('.product(name: "AutomatticTracksModelObjC", package: "OpenUIKit", condition: .when(platforms: [.macOS, .iOS]))', objc_block)
             self.assertIn(
                 '"-import-objc-header", "Sources/SimplenoteObjC/include/Simplenote/Simplenote-Bridging-Header.h"',
                 package,
