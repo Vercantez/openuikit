@@ -41,3 +41,7 @@ Tools/oracle2/SymbolInkProbe.app/
 Tools/oracle2/TextProbe.app/
 Tools/oracle2/NavProbe.app/
 Tools/oracle2/ConfProbe.app/
+# SwiftPM writes it on every build; a committed one is refused by agent_merge.sh
+/Package.resolved
+# agent_merge.sh test-bundle scratch path
+.build-tests/

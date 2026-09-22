@@ -3136,6 +3136,18 @@
    "status": "pass"
   },
   {
+   "scene": "Pager-ipad:t500",
+   "category": "conformance",
+   "score": 98.164,
+   "blob": 16510.0,
+   "layout_issues": 2,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "7eb8b82668026e03ee9e960ca131945fbd012b9a8910b5eb81bd16410e166c6b",
+   "status": "pass"
+  },
+  {
    "scene": "NavFlow:t3000.landscape",
    "category": "conformance",
    "score": 98.193,
@@ -3247,9 +3259,10 @@
    "score": 98.335,
    "blob": 14859.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T21:00",
+   "captured": "2026-09-22T15:48",
    "verdict": "PASS",
    "threshold": 97.5,
+   "golden_sha": "7c83f63f4358b82cec7c4a400d2aaec445d751ecba54f3e1c08ac8b88bb9aa55",
    "status": "pass"
   },
   {
@@ -3258,9 +3271,10 @@
    "score": 98.342,
    "blob": 14859.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T21:00",
+   "captured": "2026-09-22T15:48",
    "verdict": "PASS",
    "threshold": 97.5,
+   "golden_sha": "929a6f02dca2493d0021b586f1524f93dc7461c1b9fd168c1705fdb3c59163b9",
    "status": "pass"
   },
   {
@@ -4486,6 +4500,18 @@
    "status": "pass"
   },
   {
+   "scene": "Pager-ipad:t3267",
+   "category": "conformance",
+   "score": 99.123,
+   "blob": 68.0,
+   "layout_issues": 4,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "1f69efc2b19faa18e9441268a2c08d57c2f3b86dfb5ad2488ff7099561d9d887",
+   "status": "pass"
+  },
+  {
    "scene": "Feed:t2800.xxxl",
    "category": "conformance",
    "score": 99.127,
@@ -4938,6 +4964,18 @@
    "captured": "2026-09-06T20:53",
    "verdict": "PASS",
    "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3133",
+   "category": "conformance",
+   "score": 99.308,
+   "blob": 58.5,
+   "layout_issues": 4,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "03c112bdb072035e5708a6487328d5535f14908b5129328824fd366d8fc2b288",
    "status": "pass"
   },
   {
@@ -8172,17 +8210,6 @@
    "status": "pass"
   },
   {
-   "scene": "Pager-ipad:t4650",
-   "category": "conformance",
-   "score": 99.957,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "constraints_chain",
    "category": "geometry",
    "score": 99.961,
@@ -8203,25 +8230,15 @@
    "status": "pass"
   },
   {
-   "scene": "Pager-ipad:t3133",
-   "category": "conformance",
-   "score": 99.961,
-   "blob": 0.0,
-   "layout_issues": 4,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "Pager-ipad:t1800",
    "category": "conformance",
    "score": 99.963,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T21:00",
+   "captured": "2026-09-22T15:48",
    "verdict": "PASS",
    "threshold": 97.5,
+   "golden_sha": "3292bd515895b3c2c6916026887431bfd606ccc76a7c8c0227218cb75328e93d",
    "status": "pass"
   },
   {
@@ -8250,9 +8267,10 @@
    "score": 99.968,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
+   "captured": "2026-09-22T15:48",
    "verdict": "PASS",
    "threshold": 97.5,
+   "golden_sha": "2bcc84049135c98f9f82deea210086d8e0a6d2e8d03392c0663f89564a40ac7a",
    "status": "pass"
   },
   {
@@ -8261,9 +8279,10 @@
    "score": 99.968,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
+   "captured": "2026-09-22T15:48",
    "verdict": "PASS",
    "threshold": 97.5,
+   "golden_sha": "2bcc84049135c98f9f82deea210086d8e0a6d2e8d03392c0663f89564a40ac7a",
    "status": "pass"
   },
   {
@@ -8272,20 +8291,10 @@
    "score": 99.968,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
+   "captured": "2026-09-22T15:48",
    "verdict": "PASS",
    "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t500",
-   "category": "conformance",
-   "score": 99.974,
-   "blob": 0.0,
-   "layout_issues": 2,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
+   "golden_sha": "2bcc84049135c98f9f82deea210086d8e0a6d2e8d03392c0663f89564a40ac7a",
    "status": "pass"
   },
   {
@@ -8299,94 +8308,6 @@
    "status": "pass"
   },
   {
-   "scene": "Pager-ipad:t200",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t400",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t2000",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t2500",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t3000",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t3267",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 4,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t3500",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t4000",
-   "category": "conformance",
-   "score": 99.979,
-   "blob": 0.0,
-   "layout_issues": 0,
-   "captured": "2026-09-06T21:00",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "TextKit-ipad:t1200",
    "category": "conformance",
    "score": 99.979,
@@ -8395,6 +8316,102 @@
    "captured": "2026-09-06T21:11",
    "verdict": "PASS",
    "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t200",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "1c462390c56f5d82b8119a78d7159c84b0b78363277fdac9e61dab1743f9e3b1",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t400",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "1c462390c56f5d82b8119a78d7159c84b0b78363277fdac9e61dab1743f9e3b1",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t2000",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "1c462390c56f5d82b8119a78d7159c84b0b78363277fdac9e61dab1743f9e3b1",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t2500",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "1c462390c56f5d82b8119a78d7159c84b0b78363277fdac9e61dab1743f9e3b1",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3000",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "1c462390c56f5d82b8119a78d7159c84b0b78363277fdac9e61dab1743f9e3b1",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3500",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "7b04e91edb92a61754190a853c2eade2426f170b56ab5a6f0acf7a4d1918a405",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t4000",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "7b04e91edb92a61754190a853c2eade2426f170b56ab5a6f0acf7a4d1918a405",
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t4650",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 0,
+   "captured": "2026-09-22T15:48",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "golden_sha": "d5af819172fb3f8224aed392f8b875768c0b4e65dd9e56f75e32d14e718e432c",
    "status": "pass"
   },
   {
