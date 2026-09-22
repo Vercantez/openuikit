@@ -1554,6 +1554,13 @@ COMMON_LINK_OBJECTS=(
     "${FE_OBJECTS[@]}"
     "${PREVIEW_LINK_OBJECTS[@]}"
 )
+# `#available(iOS x, *)` answers for iOS 26.1 in iOS-triple executables
+# (full/shims/ios_availability.c); the macOS-triple guest keeps
+# libswiftcompat's always-yes.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    "${CC[@]}" -O1 -c -o "$OUT/iosavailability.o" "$W/full/shims/ios_availability.c"
+    COMMON_LINK_OBJECTS+=("$OUT/iosavailability.o")
+fi
 # Combine/OpenCombine/Dispatch are dylibs (widget/onboarding measured path).
 # Their .o files are inside those dylibs — do not object-link them as well.
 # render_full links the Foundation-visible UIKit object; the IndexPath probe
