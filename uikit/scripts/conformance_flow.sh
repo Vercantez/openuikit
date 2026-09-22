@@ -145,7 +145,13 @@ rm -rf "$OUT/ours"; mkdir -p "$OUT/ours"
 HOST_ARGS=(--app "$APPNAME" --script "$SCRIPT" --record "$OUT/ours")
 if [ "$IPAD" -eq 1 ]; then HOST_ARGS+=(--ipad); fi
 if [ "$ORIENTATION" = landscape ]; then HOST_ARGS+=(--landscape); fi
-./.build/release/openhost "${HOST_ARGS[@]}" \
+# CONFORMANCE_HOST_BIN: a symlink to openhost under another NAME. openhost
+# links Foundation, so an app's UserDefaults.standard is the CFPreferences
+# domain named after the process: two replays running at once shared one
+# domain, and NavFlow's switch (reset at launch, set at t3.3) leaked from one
+# replay into the other (measured: 10 of 24 concurrent NavFlow --dark replays
+# drew the switch on at t3000). agent_merge.sh gives every replay its own name.
+"${CONFORMANCE_HOST_BIN:-./.build/release/openhost}" "${HOST_ARGS[@]}" \
   | tail -1
 
 echo "==> compare"

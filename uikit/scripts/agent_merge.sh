@@ -213,6 +213,7 @@ cleanup() {
                         # git in the old trap turned exit 9 into 128)
   for p in $BG_PIDS; do killtree "$p"; done
   docker rm -f "gate-linux-$$" >/dev/null 2>&1 || true
+  for b in "$S"/bin/openhost-gate-*; do [ -e "$b" ] || [ -L "$b" ] || continue; defaults delete "$(basename "$b")" >/dev/null 2>&1; done
   if [ -n "$HAVE_SIM" ]; then rm -rf "$SIM_LOCK"; fi
   if [ -n "${SLOT_LOCK:-}" ]; then rm -rf "$SLOT_LOCK"; fi
   git -C "$WT" merge --abort 2>/dev/null; git worktree remove --force "$WT" 2>/dev/null; git worktree prune; drop_lock
@@ -515,18 +516,28 @@ frames_complete() { # <dir> <skip> <flow args...>
   if [ "$skip" = 1 ]; then echo "RENDER INCOMPLETE: $d golden $g frame(s) vs ours $o"; return 1; fi
   echo "   $d: golden $g frame(s) vs ours $o — recapturing once"
   rm -rf "$d"
-  CONFORMANCE_PREBUILT=1 bash scripts/conformance_flow.sh "$d" "$@" > "$d.log" 2>&1 || { echo "CONFORMANCE FLOW FAILED on retry: $d"; return 1; }
+  CONFORMANCE_PREBUILT=1 CONFORMANCE_HOST_BIN=$(host_bin retry) bash scripts/conformance_flow.sh "$d" "$@" > "$d.log" 2>&1 || { echo "CONFORMANCE FLOW FAILED on retry: $d"; return 1; }
   touch "$d.retried"
   g=$(ls "$d"/golden/*.png 2>/dev/null | wc -l | tr -d ' '); o=$(ls "$d"/ours/*.png 2>/dev/null | wc -l | tr -d ' ')
   [ "$g" = "$o" ] || { echo "RECAPTURE INCOMPLETE: $d golden $g frame(s) vs ours $o"; return 1; }
 }
-run_set() { # <set> <app> <skip> [flag]: one conformance_flow run, rc to $S/conf-<...>.rc
-  local set=$1 app=$2 skip=$3 flag=${4:-}
+# Every replay runs openhost under its own name (a symlink), so its
+# UserDefaults domain is its own: concurrent replays (this run's, or another
+# agent's) sharing the "openhost" domain leaked NavFlow's switch state across
+# processes. The domains are deleted at exit.
+mkdir -p $S/bin
+host_bin() { # <index>: the per-replay openhost name
+  local b=$S/bin/openhost-gate-$$-$1
+  ln -sf "$WT/uikit/.build/release/openhost" "$b"; echo "$b"
+}
+run_set() { # <set> <app> <skip> <index> [flag]: one conformance_flow run, rc to $S/conf-<...>.rc
+  local set=$1 app=$2 skip=$3 idx=$4 flag=${5:-}
   local d=$S/conf-${set#hc-conformance-}
   [ "$skip" = 1 ] || echo "   ${set#hc-conformance-}: recapturing goldens with the merged probe"
   seed "$set" "$d"
   [ "$skip" = 1 ] || rm -rf "$d/golden"
-  ( set +e; SKIP_CAPTURE=$([ "$skip" = 1 ] && echo 1) CONFORMANCE_PREBUILT=1 bash scripts/conformance_flow.sh "$d" "$app" $flag > "$d.log" 2>&1; echo $? > "$d.rc.tmp"; mv "$d.rc.tmp" "$d.rc" )
+  ( set +e; SKIP_CAPTURE=$([ "$skip" = 1 ] && echo 1) CONFORMANCE_PREBUILT=1 CONFORMANCE_HOST_BIN=$(host_bin "$idx") \
+      bash scripts/conformance_flow.sh "$d" "$app" $flag > "$d.log" 2>&1; echo $? > "$d.rc.tmp"; mv "$d.rc.tmp" "$d.rc" )
 }
 if [ -s $S/plan.txt ]; then
   if [ -n "${GATE_SERIAL:-}" ]; then swift build -c release --product openhost $SCRATCH_ARGS > $S/openhost.log 2>&1 && echo 0 > $S/openhost.rc || echo 1 > $S/openhost.rc; fi
@@ -534,10 +545,11 @@ if [ -s $S/plan.txt ]; then
   # Replays (SKIP_CAPTURE) touch no simulator and write only their own dirs:
   # GATE_JOBS (4) at a time. Recaptures go one at a time on the simulator.
   JOBS=${GATE_JOBS:-4}; [ -n "${GATE_SERIAL:-}" ] && JOBS=1
-  ( running=0
+  ( running=0; idx=0
     while read -r set app skip flag; do
+      idx=$((idx + 1))
       [ "$skip" = 1 ] || continue
-      run_set "$set" "$app" 1 $flag &
+      run_set "$set" "$app" 1 "$idx" $flag &
       running=$((running + 1))
       if [ "$running" -ge "$JOBS" ]; then wait -n; running=$((running - 1)); fi
     done < $S/plan.txt
@@ -550,8 +562,10 @@ if [ -s $S/plan.txt ]; then
       sleep 30
     done
     echo $$ > "$SIM_LOCK/pid"; HAVE_SIM=1
+    idx=0
     while read -r set app skip flag; do
-      [ "$skip" = 0 ] && run_set "$set" "$app" 0 $flag
+      idx=$((idx + 1))
+      if [ "$skip" = 0 ]; then run_set "$set" "$app" 0 "$idx" $flag; fi
     done < $S/plan.txt
   fi
   wait $POOL || true
