@@ -2849,3 +2849,37 @@ alive (`UIPresentation`'s containers, `UIViewController._view`).
 
 Not fixed in the facade branch on purpose: it is a view-module semantics change
 with a measurable cost, and the bridge works without it.
+
+## ios-oss launch pass 2 (2026-09-22): stored-only members and registered fonts
+
+Measured on iOS 26.1 (Tools/oracle2/iososswallsprobe; report
+docs/agent_reports/ios-oss-launch2-walls.md). These round-trip their measured
+values but change no pixel:
+
+- `UIButton.adjustsImageWhenHighlighted` / `adjustsImageWhenDisabled` (no image dimming).
+- `UITextView.textAlignment` (plain text stays leading-aligned) and
+  `isSecureTextEntry`; `UITextField.textAlignment`.
+- `UIStackView.isBaselineRelativeArrangement`, `UITabBar.barTintColor`,
+  `UIProgressView.progressViewStyle` (`.bar` draws the default track).
+- `UIFontDescriptor` feature settings (`kNumberSpacingType` /
+  `kMonospacedNumbersSelector` etc.): stored, not applied — iOS widens the
+  digit "1" in 17 pt system from 7.454 to 10.276 pt; OpenUIKit keeps
+  proportional digits.
+- A nil-target `addTarget` registration is kept and reported by `allTargets`
+  (as NSNull) but `sendActions` does not walk the responder chain for it.
+- `UIControl` state while disabled: iOS keeps `.disabled` (2) after
+  `isHighlighted = true` on a disabled button; OpenUIKit reports 3.
+
+Registered fonts (`CTFontManagerRegisterFontsForURL` + `UIFont(name:size:)`):
+names, family, vertical metrics and x-height match the oracle for the app's
+Inter variable fonts. Glyphs draw from the file at the named instance with
+opsz = point size. NOT matched: advances come from the default instance (no
+HVAR) and GPOS pair kerning is not applied — iOS measures "Next" in
+Inter-Regular 16 pt at 35.025 pt and in Inter-Regular_SemiBold at 36.05 pt.
+`UIFont(name:)` answers only for registered fonts; installed system families
+("Helvetica", "Courier") resolve on iOS and are nil here.
+
+`CGColor` equality is value-based across colour models; iOS compares spaces
+(gray white != RGB white).
+
+`UIDevice.identifierForVendor` is nil (the simulator reports a UUID).
