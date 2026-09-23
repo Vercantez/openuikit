@@ -33,6 +33,9 @@
 
 import CPortableIO
 
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
 #if canImport(Foundation)
 import Foundation
 #endif
@@ -172,7 +175,9 @@ private final class UIPasteboardRegistry: @unchecked Sendable {
 }
 
 /// A process-local implementation of UIKit's pasteboard item model.
-open class UIPasteboard: @unchecked Sendable {
+/// An NSObject (Objective-C callers: DZNWebViewController's
+/// `[[UIPasteboard generalPasteboard] setURL:]`, OpenUIKitObjCBridge).
+open class UIPasteboard: NSObject, @unchecked Sendable {
     public struct Name: Hashable, RawRepresentable, Sendable,
                         ExpressibleByStringLiteral, CustomStringConvertible {
         public let rawValue: String
@@ -218,6 +223,7 @@ open class UIPasteboard: @unchecked Sendable {
     private init(name: Name, storage: UIPasteboardStorage) {
         self.name = name
         self.storage = storage
+        super.init()
         UIPasteboardRegistry.shared.remember(self)
     }
 

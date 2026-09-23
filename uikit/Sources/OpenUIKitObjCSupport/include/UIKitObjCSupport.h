@@ -153,10 +153,15 @@ typedef NS_OPTIONS(NSUInteger, UIControlEvents) {
     UIControlEventAllTouchEvents = 0x00000FFF, UIControlEventAllEditingEvents = 0x000F0000,
     UIControlEventAllEvents = 0xFFFFFFFF,
 } NS_SWIFT_NAME(UIControlEventsObjC);
-typedef NS_OPTIONS(NSUInteger, UIControlState) {
-    UIControlStateNormal = 0, UIControlStateHighlighted = 1 << 0, UIControlStateDisabled = 1 << 1,
-    UIControlStateSelected = 1 << 2, UIControlStateFocused = 1 << 3,
-} NS_SWIFT_NAME(UIControlStateObjC);
+/* UIControlState is OpenUIKit's own UIControl.State (cportableio.h). */
+typedef OUKControlState UIControlState;
+#define UIControlStateNormal OUKControlStateNormal
+#define UIControlStateHighlighted OUKControlStateHighlighted
+#define UIControlStateDisabled OUKControlStateDisabled
+#define UIControlStateSelected OUKControlStateSelected
+#define UIControlStateFocused OUKControlStateFocused
+#define UIControlStateApplication OUKControlStateApplication
+#define UIControlStateReserved OUKControlStateReserved
 typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
     UIGestureRecognizerStatePossible, UIGestureRecognizerStateBegan, UIGestureRecognizerStateChanged,
     UIGestureRecognizerStateEnded, UIGestureRecognizerStateCancelled, UIGestureRecognizerStateFailed,
@@ -199,6 +204,9 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 } NS_SWIFT_NAME(UIButtonTypeObjC);
 typedef NS_ENUM(NSInteger, UIActivityIndicatorViewStyle) {
     UIActivityIndicatorViewStyleMedium = 100, UIActivityIndicatorViewStyleLarge = 101,
+    /* Deprecated in iOS 13, still in the 26.1 SDK (SDWebImage uses Gray). */
+    UIActivityIndicatorViewStyleWhiteLarge = 0, UIActivityIndicatorViewStyleWhite = 1,
+    UIActivityIndicatorViewStyleGray = 2,
 } NS_SWIFT_NAME(UIActivityIndicatorViewStyleObjC);
 /* UIUserInterfaceLayoutDirection: exported by OpenUIKit-Swift.h (an @objc
  * Int enum, raw values 0/1 as in UIApplication.h). */
@@ -227,6 +235,22 @@ typedef NS_ENUM(NSInteger, UIReturnKeyType) {
 typedef NS_ENUM(NSInteger, UITextFieldViewMode) {
     UITextFieldViewModeNever, UITextFieldViewModeWhileEditing, UITextFieldViewModeUnlessEditing, UITextFieldViewModeAlways,
 } NS_SWIFT_NAME(UITextFieldViewModeObjC);
+/* NSParagraphStyle.h / NSAttributedString.h (UIKit, iOS 26.1 SDK values).
+ * Objective-C side only on the macOS host, like NSLayoutRelation below: the
+ * Swift importer there also sees AppKit's copies (MEASURED building
+ * OpenUIKitObjCBridge: "'NSLineBreakMode' has different definitions in
+ * different modules; definition in module 'AppKit.NSParagraphStyle'"). */
+#if TARGET_OS_IPHONE || !__swift__
+typedef NS_ENUM(NSInteger, NSLineBreakMode) {
+    NSLineBreakByWordWrapping = 0, NSLineBreakByCharWrapping, NSLineBreakByClipping,
+    NSLineBreakByTruncatingHead, NSLineBreakByTruncatingTail, NSLineBreakByTruncatingMiddle,
+} NS_SWIFT_NAME(NSLineBreakModeObjC);
+/* NSAttributedString.h (UIKit), iOS 26.1 SDK values. */
+typedef NS_OPTIONS(NSInteger, NSUnderlineStyle) {
+    NSUnderlineStyleNone = 0x00, NSUnderlineStyleSingle = 0x01, NSUnderlineStyleThick = 0x02,
+    NSUnderlineStyleDouble = 0x09,
+} NS_SWIFT_NAME(NSUnderlineStyleObjC);
+#endif
 typedef NS_ENUM(NSInteger, NSTextAlignment) {
     NSTextAlignmentLeft = 0, NSTextAlignmentCenter = 1, NSTextAlignmentRight = 2,
     NSTextAlignmentJustified = 3, NSTextAlignmentNatural = 4,
@@ -295,10 +319,14 @@ static const UILayoutPriority UILayoutPrioritySceneSizeStayPut = 500;
 static const UILayoutPriority UILayoutPriorityDragThatCannotResizeScene = 490;
 static const UILayoutPriority UILayoutPriorityDefaultLow = 250;
 static const UILayoutPriority UILayoutPriorityFittingSizeLevel = 50;
-#if !__swift__
+/* On the iOS triple there is no AppKit copy, and Swift must see these too:
+ * it imports pod headers that declare them in method signatures
+ * (FLKAutoLayout's UIView+FLKAutoLayoutPredicate.h; MEASURED building
+ * Eidolon's Kiosk: "unknown type name 'NSLayoutRelation'"). */
+#if TARGET_OS_IPHONE || !__swift__
 typedef NS_ENUM(NSInteger, NSLayoutRelation) {
     NSLayoutRelationLessThanOrEqual = -1, NSLayoutRelationEqual = 0, NSLayoutRelationGreaterThanOrEqual = 1,
-};
+} NS_SWIFT_NAME(NSLayoutRelationObjC);
 /* The SDK itself declares the margin members only `#if TARGET_OS_IPHONE`
  * (NSLayoutConstraint.h:65). Off iOS the enum keeps exactly AppKit's members,
  * so an Objective-C file that sees AppKit's copy too merges the two instead
@@ -317,7 +345,7 @@ typedef NS_ENUM(NSInteger, NSLayoutAttribute) {
     NSLayoutAttributeCenterXWithinMargins, NSLayoutAttributeCenterYWithinMargins,
 #endif
     NSLayoutAttributeNotAnAttribute = 0
-};
+} NS_SWIFT_NAME(NSLayoutAttributeObjC);
 #if !TARGET_OS_IPHONE
 #define NSLayoutAttributeLeftMargin ((NSLayoutAttribute)13)
 #define NSLayoutAttributeRightMargin ((NSLayoutAttribute)14)
@@ -408,6 +436,10 @@ extern NSAttributedStringKey const NSForegroundColorAttributeName;
 extern NSAttributedStringKey const NSParagraphStyleAttributeName;
 extern NSAttributedStringKey const NSLinkAttributeName;
 extern NSAttributedStringKey const NSAttachmentAttributeName;
+extern NSAttributedStringKey const NSUnderlineStyleAttributeName;
+extern NSAttributedStringKey const NSStrikethroughStyleAttributeName;
+/* UIView.h: `UIKIT_EXTERN const CGFloat UIViewNoIntrinsicMetric`. */
+extern const CGFloat UIViewNoIntrinsicMetric;
 extern NSNotificationName const UIApplicationDidEnterBackgroundNotification;
 extern NSNotificationName const UIApplicationDidBecomeActiveNotification;
 extern NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification;
@@ -546,6 +578,94 @@ NS_SWIFT_NAME(UIPickerViewDelegateObjC) @protocol UIPickerViewDelegate <NSObject
 @optional
 - (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component;
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
+@end
+
+/* NSLayoutConstraint.h: the visual format options and
+ * NSDictionaryOfVariableBindings (ORStackView). Objective-C side only on the
+ * macOS host, where AppKit declares both. */
+#if TARGET_OS_IPHONE || !__swift__
+typedef NS_OPTIONS(NSUInteger, NSLayoutFormatOptions) {
+    NSLayoutFormatAlignAllLeft = (1 << 1), NSLayoutFormatAlignAllRight = (1 << 2),
+    NSLayoutFormatAlignAllTop = (1 << 3), NSLayoutFormatAlignAllBottom = (1 << 4),
+    NSLayoutFormatAlignAllLeading = (1 << 5), NSLayoutFormatAlignAllTrailing = (1 << 6),
+    NSLayoutFormatAlignAllCenterX = (1 << 9), NSLayoutFormatAlignAllCenterY = (1 << 10),
+    NSLayoutFormatAlignAllLastBaseline = (1 << 11), NSLayoutFormatAlignAllFirstBaseline = (1 << 12),
+    NSLayoutFormatAlignAllBaseline = NSLayoutFormatAlignAllLastBaseline,
+    NSLayoutFormatAlignmentMask = 0xFFFF,
+    NSLayoutFormatDirectionLeadingToTrailing = 0 << 16, NSLayoutFormatDirectionLeftToRight = 1 << 16,
+    NSLayoutFormatDirectionRightToLeft = 2 << 16, NSLayoutFormatDirectionMask = 0x3 << 16,
+    NSLayoutFormatSpacingEdgeToEdge = 0 << 19, NSLayoutFormatSpacingBaselineToBaseline = 1 << 19,
+    NSLayoutFormatSpacingMask = 0x1 << 19,
+} NS_SWIFT_NAME(NSLayoutFormatOptionsObjC);
+#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
+extern NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSeparatedKeysString, _Nullable id firstValue, ...);
+#endif
+
+/* UIActivity.h / UIWindow.h (iOS 26.1 SDK values). */
+typedef NS_ENUM(NSInteger, UIActivityCategory) {
+    UIActivityCategoryAction, UIActivityCategoryShare,
+} NS_SWIFT_NAME(UIActivityCategoryObjC);
+typedef CGFloat UIWindowLevel NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UIWindowLevelObjC);
+extern const UIWindowLevel UIWindowLevelNormal;
+extern const UIWindowLevel UIWindowLevelAlert;
+extern const UIWindowLevel UIWindowLevelStatusBar;
+
+/* UIWebView.h (iOS 26.1 SDK): the navigation types and the delegate
+ * protocol NJKWebViewProgress and DZNWebViewController implement. */
+@class UIWebView;
+typedef NS_ENUM(NSInteger, UIWebViewNavigationType) {
+    UIWebViewNavigationTypeLinkClicked, UIWebViewNavigationTypeFormSubmitted,
+    UIWebViewNavigationTypeBackForward, UIWebViewNavigationTypeReload,
+    UIWebViewNavigationTypeFormResubmitted, UIWebViewNavigationTypeOther,
+} NS_SWIFT_NAME(UIWebViewNavigationTypeObjC);
+NS_SWIFT_NAME(UIWebViewDelegateObjC) @protocol UIWebViewDelegate <NSObject>
+@optional
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
+@end
+
+/* UILayoutSupport (UIViewController.h), which ORStackView's header names for
+ * a view controller's top/bottom layout guide. Declaration only: no OpenUIKit
+ * object conforms yet. */
+NS_SWIFT_NAME(UILayoutSupportObjC) @protocol UILayoutSupport <NSObject>
+@property (nonatomic, readonly) CGFloat length;
+@end
+
+#pragma mark - Collection views (eidolon-flowlayout)
+
+/* UICollectionViewLayout.h / UICollectionViewFlowLayout.h /
+ * UICollectionView.h of the iPhoneSimulator26.1 SDK: the enums and the three
+ * protocols Eidolon's ARCollectionViewMasonryLayout 2.0.0 and its app code
+ * use. OpenUIKitObjCBridge wraps an object conforming to them for OpenUIKit's
+ * Swift UICollectionView (UICollectionViewObjCBridge.swift); its `delegate` /
+ * `dataSource` getters hand the original object back. */
+@class UICollectionView, UICollectionViewLayout, UICollectionViewCell, UICollectionReusableView;
+
+typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
+    UICollectionViewScrollDirectionVertical,
+    UICollectionViewScrollDirectionHorizontal
+} NS_SWIFT_NAME(UICollectionViewScrollDirectionObjC);
+
+typedef NS_ENUM(NSUInteger, UICollectionElementCategory) {
+    UICollectionElementCategoryCell,
+    UICollectionElementCategorySupplementaryView,
+    UICollectionElementCategoryDecorationView,
+} NS_SWIFT_NAME(UICollectionElementCategoryObjC);
+
+/* UICollectionViewDataSource / UICollectionViewDelegate are OpenUIKit's own
+ * @objc protocols (OpenUIKit-Swift.h; objc-protocols.md). The flow-layout
+ * delegate is not (its methods return UIEdgeInsets, OpenUIKit's Swift
+ * struct), so it is declared here for Objective-C. */
+NS_SWIFT_NAME(UICollectionViewDelegateFlowLayoutObjC) @protocol UICollectionViewDelegateFlowLayout <NSObject> /* SDK: <UICollectionViewDelegate>, which this header cannot see (it is OpenUIKit-Swift.h's) */
+@optional
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 @end
 
 NS_ASSUME_NONNULL_END

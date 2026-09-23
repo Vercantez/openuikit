@@ -868,9 +868,12 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         XCTAssertEqual(editor.backgroundColor, .clear)
         XCTAssertTrue(editor.becomeFirstResponder())
 
-        editor.insertText("!")
+        // Typing goes through the keyboard path: UITextView's own
+        // `insertText` does not ask `shouldChangeTextIn` (MEASURED
+        // Tools/oracle2/textviewinputprobe), the keyboard does.
+        window.sendText("!")
         XCTAssertEqual(value, "Draft!")
-        editor.insertText("\n")
+        window.sendKey(.return)
         XCTAssertEqual(value, "Draft!", "a configured submit consumes the newline")
         XCTAssertEqual(submitCount, 1)
     }

@@ -143,9 +143,15 @@ final class ContentOffsetInvalidationOrderTests: XCTestCase {
          Event(name: "invalidateLayout(with:)", bounds: seen)]
     }
 
+    /// The element query's rect is the visible bounds widened to the
+    /// bounds-size grid: offset-order-ios-26.1-iphone16.json records
+    /// [0, 0, 200, 600] at y 40 and [0, 300, 200, 300] at y 300 (every
+    /// base/flow entry point; flowlayoutprobe agrees).
     private func layoutPass(at new: CGRect, dequeuing items: [Int]) -> [Event] {
-        [Event(name: "prepare", bounds: new),
-         Event(name: "layoutAttributesForElements", bounds: new, argument: new)]
+        let query = new.minY == 300 ? CGRect(x: 0, y: 300, width: 200, height: 300)
+                                    : CGRect(x: 0, y: 0, width: 200, height: 600)
+        return [Event(name: "prepare", bounds: new),
+                Event(name: "layoutAttributesForElements", bounds: new, argument: query)]
             + items.map { Event(name: "cellForItem \($0)", bounds: new) }
     }
 

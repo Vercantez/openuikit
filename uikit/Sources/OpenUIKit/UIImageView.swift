@@ -70,9 +70,23 @@ enum _UIBitmapAllocation {
     }
 }
 
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
+// UIKit's runtime name: Objective-C classes may subclass it (vtable-free,
+// ObjCSubclassing.swift; eidolon-first-screen.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIImageView)
+#endif
 @preconcurrency @MainActor
 open class UIImageView: UIView {
-    open var image: UIImage? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(image)
+#endif
+    open dynamic var image: UIImage? {
         didSet {
             guard image !== oldValue else { return }
             setNeedsDisplay()
@@ -80,16 +94,98 @@ open class UIImageView: UIView {
         }
     }
 
-    public init(image: UIImage?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(initWithImage:)
+#endif
+    public dynamic init(image: UIImage?) {
         super.init(frame: CGRect(origin: .zero, size: image?.size ?? .zero))
-        self.image = image
+        // Through the (dynamic) setter, not the init's direct store: UIKit's
+        // -initWithImage: sends -setImage:, nil included, so a subclass
+        // override runs (MEASURED objcsubclassprobe section 9).
+        _setImageThroughAccessor(image)
         // UIKit: image views do not receive touches by default.
+        isUserInteractionEnabled = false
+    }
+
+    /// `-initWithImage:highlightedImage:` (designated in the SDK). MEASURED
+    /// iOS 26.1 (podsurfaceprobe "## imageview"): frame from `image`, both
+    /// images stored, not highlighted.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(initWithImage:highlightedImage:)
+#endif
+    public dynamic init(image: UIImage?, highlightedImage: UIImage?) {
+        super.init(frame: CGRect(origin: .zero, size: image?.size ?? .zero))
+        _setImageThroughAccessor(image)
+        self.highlightedImage = highlightedImage
         isUserInteractionEnabled = false
     }
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
+    }
+
+    // MARK: Highlight and frame animation (state; MEASURED iOS 26.1,
+    // Tools/oracle2/podsurfaceprobe "## imageview")
+    //
+    // `image` keeps returning the plain image while highlighted. Drawing the
+    // highlighted image and cycling `animationImages` are not rendered yet.
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(highlightedImage)
+#endif
+    open dynamic var highlightedImage: UIImage?
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(highlighted)
+    open dynamic var isHighlighted: Bool {
+        @objc(isHighlighted) get { _isHighlighted }
+        set { _isHighlighted = newValue }
+    }
+#else
+    open dynamic var isHighlighted: Bool {
+        get { _isHighlighted }
+        set { _isHighlighted = newValue }
+    }
+#endif
+    final var _isHighlighted = false
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(animationImages)
+#endif
+    open dynamic var animationImages: [UIImage]?
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(animationDuration)
+#endif
+    open dynamic var animationDuration: TimeInterval = 0
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(animationRepeatCount)
+#endif
+    open dynamic var animationRepeatCount: Int = 0
+
+    /// iOS: starting with no `animationImages` leaves `isAnimating` NO.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(startAnimating)
+#endif
+    open dynamic func startAnimating() {
+        _isAnimating = !(animationImages?.isEmpty ?? true)
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(stopAnimating)
+#endif
+    open dynamic func stopAnimating() { _isAnimating = false }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(isAnimating)
+#endif
+    open dynamic var isAnimating: Bool { _isAnimating }
+    final var _isAnimating = false
+
+    final func _setImageThroughAccessor(_ image: UIImage?) {
+        self.image = image
     }
 
     public required init?(coder: NSCoder) {

@@ -1155,6 +1155,13 @@ final class NibDecoder {
         return nil
     }
 
+    /// The fixed-value class colours of UIColor.h (iPhoneSimulator26.1 SDK).
+    static let fixedColorNames: Set<String> = [
+        "blackColor", "darkGrayColor", "lightGrayColor", "whiteColor", "grayColor",
+        "redColor", "greenColor", "blueColor", "cyanColor", "yellowColor",
+        "magentaColor", "orangeColor", "purpleColor", "brownColor", "clearColor",
+    ]
+
     func makeColor(_ object: NibArchive.Object) -> AnyObject? {
         // A system colour is archived by name AND by the components it
         // resolved to in Interface Builder's light appearance. Prefer the
@@ -1169,7 +1176,12 @@ final class NibDecoder {
             if SystemColors.isKnown(stripped) {
                 return UIColor(semantic: stripped)
             }
-            UINib.noteUnhandled("UISystemColorName:\(name)")
+            // UIColor.h's fixed class colours (blackColor ... clearColor)
+            // have one value in every appearance, so the archived components
+            // below ARE the colour; only an unknown semantic name is a gap.
+            if !Self.fixedColorNames.contains(name) {
+                UINib.noteUnhandled("UISystemColorName:\(name)")
+            }
         }
         let alpha = cgFloat(object.first("UIAlpha-Double"))
             ?? cgFloat(object.first("UIAlpha")) ?? 1

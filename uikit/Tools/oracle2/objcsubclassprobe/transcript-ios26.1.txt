@@ -51,3 +51,14 @@ a.superview=nil
 isKindOfClass UIView=1 UIResponder=1
 respondsToSelector layoutSubviews=1 drawRect:=1 initWithFrame:=1
 UIView class name=UIView UIResponder class name=UIResponder
+-- 9 UILabel / UIButton / UIImageView subclasses
+OUKObjCLabel -initWithFrame: text=nil lines=1
+OUKObjCLabel -setText: lot 12
+label text=LOT 12 lines=0 super=UILabel
+OUKObjCButton -initWithFrame: title=Bid
+button title=Bid titleRectCalled=1 super=UIButton
+OUKObjCImageView -setImage: nil
+OUKObjCImageView -initWithImage: image=nil
+OUKObjCImageView -setImage: nil
+imageView image=nil frame={{0, 0}, {0, 0}} super=UIImageView
+UILabel class name=UILabel UIButton class name=UIButton UIImageView class name=UIImageView

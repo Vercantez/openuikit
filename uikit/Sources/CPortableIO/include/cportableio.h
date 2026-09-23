@@ -38,6 +38,23 @@ typedef enum __attribute__((flag_enum, enum_extensibility(open))) OUKTextStorage
     OUKTextStorageEditedAttributes __attribute__((swift_name("editedAttributes"))) = (1 << 0),
     OUKTextStorageEditedCharacters __attribute__((swift_name("editedCharacters"))) = (1 << 1),
 } OUKTextStorageEditActions;
+
+/* UIControlState (UIControl.h, iOS 26.1 SDK values and Swift names:
+   UIKit.apinotes gives UIControlStateNormal the Swift name `normal`). On
+   Apple toolchains OpenUIKit's `UIControl.State` IS this C option set, and
+   UIKitObjCSupport.h spells it `UIControlState`, so an Objective-C pod's
+   `-setBorderColor:forState:animated:` (Artsy-UIButtons) takes the very type
+   Swift code passes (MEASURED building Eidolon's Kiosk: "'normal' is
+   unavailable" / no conversion between the two option sets). */
+typedef enum __attribute__((flag_enum, enum_extensibility(open))) OUKControlState : unsigned long {
+    OUKControlStateNormal __attribute__((swift_name("normal"))) = 0,
+    OUKControlStateHighlighted __attribute__((swift_name("highlighted"))) = (1 << 0),
+    OUKControlStateDisabled __attribute__((swift_name("disabled"))) = (1 << 1),
+    OUKControlStateSelected __attribute__((swift_name("selected"))) = (1 << 2),
+    OUKControlStateFocused __attribute__((swift_name("focused"))) = (1 << 3),
+    OUKControlStateApplication __attribute__((swift_name("application"))) = 0x00FF0000,
+    OUKControlStateReserved __attribute__((swift_name("reserved"))) = 0xFF000000,
+} OUKControlState;
 #endif
 
 #endif

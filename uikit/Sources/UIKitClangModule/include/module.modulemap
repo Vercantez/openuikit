@@ -27,6 +27,11 @@ module UIKit {
     header "UIKit/UIFont.h"
     export *
   }
+  // Moya 11.0.0 Image.swift:2 `import UIKit.UIImage` (its iOS branch).
+  module UIImage {
+    header "UIKit/UIImage.h"
+    export *
+  }
   module UIContextMenuConfiguration {
     header "UIKit/UIContextMenuConfiguration.h"
     export *

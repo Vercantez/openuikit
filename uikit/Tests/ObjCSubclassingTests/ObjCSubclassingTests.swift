@@ -158,6 +158,17 @@ final class ObjCSubclassingTests: XCTestCase {
                 "popoverPresentation", // popoverPresentationController (mangled with a substitution)
                 "transitionCoordinator",
             ],
+            // UIEdgeInsets and UIControl.State are Swift types here, so these
+            // stay Swift-overridable (UIKitSubclassSurfaceTests) with a slot
+            // each accessor; OpenUIKit itself reads their storage.
+            "UIButton": [
+                "contentEdgeInsets", "titleEdgeInsets", "imageEdgeInsets",
+                "setAttributedTitle", "C15attributedTitle3for", "currentAttributedTitle",
+            ],
+        ]
+        // Allowlisted settable properties carry getter, setter and modify.
+        let slotsPerMember: [String: Int] = [
+            "contentEdgeInsets": 3, "titleEdgeInsets": 3, "imageEdgeInsets": 3,
         ]
         let chain: [(String, AnyClass)] = [
             ("UIResponder", UIResponder.self),
@@ -171,6 +182,17 @@ final class ObjCSubclassingTests: XCTestCase {
             ("UIViewController", UIViewController.self),
             ("UINavigationController", UINavigationController.self),
             ("UITableViewController", UITableViewController.self),
+            // Eidolon's pods subclass these from Objective-C (ARLabel,
+            // ARButton, ARCircularActionButton, UIImageViewAligned;
+            // eidolon-first-screen.md).
+            ("UILabel", UILabel.self),
+            ("UIButton", UIButton.self),
+            ("UIImageView", UIImageView.self),
+            // ARCollectionViewMasonryLayout : UICollectionViewFlowLayout
+            // (eidolon-flowlayout; FlowLayoutObjCTests).
+            ("UICollectionViewLayout", UICollectionViewLayout.self),
+            ("UICollectionViewFlowLayout", UICollectionViewFlowLayout.self),
+            ("UICollectionViewLayoutAttributes", UICollectionViewLayoutAttributes.self),
         ]
         for (name, cls) in chain {
             let entries = introducedVTableEntries(cls)
@@ -179,7 +201,7 @@ final class ObjCSubclassingTests: XCTestCase {
             }
             XCTAssertEqual(unexpected, [], "\(name) introduces Swift vtable slots")
             for member in allowed[name] ?? [] {
-                XCTAssertEqual(entries.filter { $0.contains(member) }.count, 1,
+                XCTAssertEqual(entries.filter { $0.contains(member) }.count, slotsPerMember[member] ?? 1,
                                "\(name).\(member): exactly one slot (a getter-only property or a method)")
             }
         }
@@ -195,6 +217,10 @@ final class ObjCSubclassingTests: XCTestCase {
             ("UITableViewCell", UITableViewCell.self), ("UIViewController", UIViewController.self),
             ("UINavigationController", UINavigationController.self),
             ("UITableViewController", UITableViewController.self),
+            ("UICollectionViewLayout", UICollectionViewLayout.self),
+            ("UICollectionViewFlowLayout", UICollectionViewFlowLayout.self),
+            ("UICollectionViewLayoutAttributes", UICollectionViewLayoutAttributes.self),
+            ("UICollectionViewLayoutInvalidationContext", UICollectionViewLayoutInvalidationContext.self),
         ]
         for (name, cls) in chain {
             XCTAssertEqual(NSStringFromClass(cls), name)

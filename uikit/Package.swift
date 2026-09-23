@@ -715,6 +715,14 @@ let testTargets: [Target] = [
         path: "Tests/NibRuntimeTests",
         swiftSettings: [.unsafeFlags(["-swift-version", "5"])]
     ),
+    // Compiled in Swift 4 mode, like Eidolon: the Swift 4 UIKit spellings
+    // (Sources/OpenUIKit/Swift4Names.swift) must resolve.
+    .testTarget(
+        name: "Swift4NamesTests",
+        dependencies: ["OpenUIKit"],
+        path: "Tests/Swift4NamesTests",
+        swiftSettings: [.unsafeFlags(["-swift-version", "4"])]
+    ),
     .testTarget(
         name: "OpenUIKitCTests",
         dependencies: openUIKitCTestDeps,
@@ -1027,8 +1035,15 @@ let simplenoteTargets: [Target] = [
     .target(name: "OpenUIKitObjCSubclassFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
             path: "Tools/oracle2/objcsubclassprobe/scenario", publicHeadersPath: "include",
             cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    // Objective-C UICollectionViewFlowLayout subclasses shaped like Eidolon's
+    // ARCollectionViewMasonryLayout (eidolon-flowlayout). The scenario is the
+    // SAME .m the iOS 26.1 oracle runs (Tools/oracle2/flowlayoutprobe/run.sh).
+    .target(name: "OpenUIKitFlowLayoutFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
+            path: "Tools/oracle2/flowlayoutprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
     .testTarget(name: "ObjCSubclassingTests",
-                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitFlowLayoutFixtures",
+                               "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSubclassingTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     // The Objective-C surface of UIFont / CALayer / CGColorRef
@@ -1046,6 +1061,15 @@ let simplenoteTargets: [Target] = [
                 "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
                 "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
             ])]),
+    // Eidolon's CocoaPods' UIKit selectors (eidolon-first-screen): the SAME
+    // .m Tools/oracle2/podsurfaceprobe/run.sh runs on the iOS 26.1 simulator.
+    .target(name: "OpenUIKitPodSurfaceFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/podsurfaceprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "PodSurfaceTests",
+                dependencies: ["OpenUIKitPodSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/PodSurfaceTests"),
     .testTarget(name: "ObjCSurfaceTests",
                 dependencies: ["OpenUIKitObjCSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSurfaceTests",
@@ -1140,9 +1164,13 @@ let eidolonDependencyTargets: [Target] = [
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "RxCocoaRuntime", path: "Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime",
             publicHeadersPath: "include", cSettings: [.unsafeFlags(["-fobjc-arc"])]),
-    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit"],
+    // The upstream iOS/ sources are `#if os(iOS)`: on the iOS triple (route
+    // b) they compile against OpenUIKit's `UIKit` and are the branch Eidolon
+    // uses (UIButton.rx.tap); on macOS they compile out.
+    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit",
+                                            .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/RxSwift/RxCocoa",
-            exclude: ["Runtime", "iOS", "RxCocoa.h"],
+            exclude: ["Runtime", "RxCocoa.h"],
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Result", path: "Sources/EidolonDependencies/Result/Result",
             exclude: ["Result.h"], swiftSettings: eidolonDependencySwiftSettings),
@@ -1152,7 +1180,9 @@ let eidolonDependencyTargets: [Target] = [
             exclude: ["SwiftyJSON.h"], swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Reachability", path: "Sources/EidolonDependencies/Reachability/Reachability",
             swiftSettings: eidolonDependencySwiftSettings),
-    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift"],
+    // Moya's iOS branch imports UIKit.UIImage (route b, iOS triple).
+    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift",
+                                         .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/Moya/Sources",
             swiftSettings: eidolonDependencySwiftSettings + [.define("COCOAPODS")]),
     .target(name: "Action", dependencies: ["RxSwift", "RxCocoa"],
