@@ -158,7 +158,7 @@ public typealias IndexSet = Foundation.IndexSet
 
 /// Foundation's `NSRange`: `location`/`length` in UTF-16 code units, with
 /// `upperBound`, `lowerBound` and `contains(_:)` already on it.
-public typealias NSRange = Foundation.NSRange
+@_exported import typealias Foundation.NSRange
 public typealias NSRangePointer = Foundation.NSRangePointer
 
 /// Foundation's `TimeInterval` (`Double`, seconds). OpenUIKit's clock is the

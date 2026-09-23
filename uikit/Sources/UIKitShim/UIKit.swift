@@ -52,6 +52,16 @@
 @_exported import UserNotifications
 #endif
 
+// Apple's UIKit headers import CoreText (NSAdaptiveImageGlyph.h, NSText.h)
+// and export it: a file importing only UIKit names CTFont and the SFNT
+// layout constants (typecheck against iPhoneSimulator26.1; NetNewsWire
+// NSAttributedString+Extensions.swift:358 `kVerticalPositionType`;
+// Tools/iostarget/probe `coreTextVisibleThroughUIKit`). On the macOS host
+// AppKit already exports it.
+#if os(iOS) && canImport(CoreText)
+@_exported import CoreText
+#endif
+
 // UIKit owns the typed AttributedString keys for font and text decoration.
 // Foundation deliberately cannot define these keys because their values are
 // UIKit types.  Keep this overlay in the literal `UIKit` module so unchanged
@@ -350,8 +360,10 @@ public typealias UICollectionViewDiffableDataSource<SectionIdentifierType, ItemI
 // TextKit-1 types live in OpenUIKit and shadow Foundation's names. UIKit
 // applications resolve the portable ones through this module, matching
 // `import UIKit` on iOS (where Foundation's types are the only ones).
+#if !(canImport(ObjectiveC) && canImport(Foundation))
 public typealias NSAttributedString = OpenUIKit.NSAttributedString
 public typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
+#endif
 public typealias NSTextAttachment = OpenUIKit.NSTextAttachment
 public typealias NSTextStorage = OpenUIKit.NSTextStorage
 public typealias NSTextContainer = OpenUIKit.NSTextContainer

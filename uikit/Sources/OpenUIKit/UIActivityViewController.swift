@@ -30,9 +30,12 @@ import class Foundation.Operation
 /// override `activityTitle` / `perform()`.
 @preconcurrency @MainActor
 open class UIActivity {
-    public struct ActivityType: Hashable, Sendable, ExpressibleByStringLiteral {
+    public struct ActivityType: Hashable, Sendable, RawRepresentable, ExpressibleByStringLiteral {
         public let rawValue: String
         public init(_ rawValue: String) { self.rawValue = rawValue }
+        /// UIKit's `UIActivity.ActivityType(rawValue:)` (typecheck against
+        /// iPhoneSimulator26.1; NetNewsWire FindInArticleActivity.swift:17).
+        public init(rawValue: String) { self.rawValue = rawValue }
         public init(stringLiteral value: String) { self.rawValue = value }
         /// A few of UIKit's system types, so `excludedActivityTypes` lists
         /// compile. Nothing here ever performs one.

@@ -617,7 +617,7 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         let label = try XCTUnwrap(
             descendant(host, identifier: "SwiftUI.Text") as? UILabel
         )
-        XCTAssertEqual(label.textColor, .red)
+        XCTAssertEqual(label.textColor, .systemRed)
     }
 
     func testDecorativeBitmapImageAppliesCGImageOrientationAndScale() throws {
@@ -678,10 +678,10 @@ final class SwiftUIDesignSystemTests: XCTestCase {
             descendant(host, identifier: "SwiftUI.ProgressView") as? UIActivityIndicatorView
         )
         XCTAssertTrue(progress.isAnimating)
-        XCTAssertEqual(progress.color, .red)
+        XCTAssertEqual(progress.color, .systemRed)
         let capsule = try XCTUnwrap(descendant(host, identifier: "SwiftUI.Capsule.fill"))
         XCTAssertEqual(capsule.layer.cornerRadius, 12, accuracy: 0.001)
-        XCTAssertEqual(capsule.backgroundColor, .blue)
+        XCTAssertEqual(capsule.backgroundColor, .systemBlue)
 
         let button = try XCTUnwrap(
             descendant(host, identifier: "SwiftUI.Button") as? UIControl
@@ -1039,7 +1039,7 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         let rowBackground = try XCTUnwrap(
             descendant(list, identifier: "SwiftUI.ListRowBackground")
         )
-        XCTAssertNotNil(descendants(rowBackground).first { $0.backgroundColor == .red })
+        XCTAssertNotNil(descendants(rowBackground).first { $0.backgroundColor == .systemRed })
 
         let circle = try XCTUnwrap(
             descendants(host).first {

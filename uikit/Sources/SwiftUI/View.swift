@@ -351,6 +351,7 @@ enum _OpenViewModification {
     case clipped
     case hidden
     case navigationTitle(String)
+    case navigationSubtitle(String)
     case navigationBarHidden(Bool)
     case navigationBackButtonHidden(Bool)
     case navigationTitleDisplayMode(NavigationBarTitleDisplayMode)
@@ -382,6 +383,7 @@ enum _OpenViewModification {
     case linearProgressStyle
     case compositingGroup
     case menuPickerStyle
+    case segmentedPickerStyle
     case symbolRenderingMode(SymbolRenderingMode?)
     case accessibilityIdentifier(String)
     case alert(_OpenAlertConfiguration)
@@ -468,6 +470,7 @@ fileprivate enum _OpenViewModifier {
     case clipped
     case hidden
     case navigationTitle(String)
+    case navigationSubtitle(String)
     case navigationBarHidden(Bool)
     case navigationBackButtonHidden(Bool)
     case navigationTitleDisplayMode(NavigationBarTitleDisplayMode)
@@ -499,6 +502,7 @@ fileprivate enum _OpenViewModifier {
     case linearProgressStyle
     case compositingGroup
     case menuPickerStyle
+    case segmentedPickerStyle
     case symbolRenderingMode(SymbolRenderingMode?)
     case accessibilityIdentifier(String)
     case alert(
@@ -629,6 +633,7 @@ fileprivate enum _OpenViewModifier {
         case .clipped: return .clipped
         case .hidden: return .hidden
         case .navigationTitle(let title): return .navigationTitle(title)
+        case .navigationSubtitle(let subtitle): return .navigationSubtitle(subtitle)
         case .navigationBarHidden(let hidden): return .navigationBarHidden(hidden)
         case .navigationBackButtonHidden(let hidden):
             return .navigationBackButtonHidden(hidden)
@@ -666,6 +671,7 @@ fileprivate enum _OpenViewModifier {
         case .linearProgressStyle: return .linearProgressStyle
         case .compositingGroup: return .compositingGroup
         case .menuPickerStyle: return .menuPickerStyle
+        case .segmentedPickerStyle: return .segmentedPickerStyle
         case .symbolRenderingMode(let mode): return .symbolRenderingMode(mode)
         case .accessibilityIdentifier(let identifier):
             return .accessibilityIdentifier(identifier)
@@ -3146,6 +3152,57 @@ public extension _OpenView {
         navigationTitle(title.content)
     }
 
+    func navigationTitle(_ title: Text) -> some _OpenView {
+        navigationTitle(title.content)
+    }
+
+    func navigationSubtitle(_ subtitle: String) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .navigationSubtitle(subtitle))
+    }
+
+    func navigationSubtitle(_ subtitle: Text) -> some _OpenView {
+        navigationSubtitle(subtitle.content)
+    }
+
+    /// MEASURED iPhone 16 / iOS 26.1 (nnwswiftuiprobe): the scene margin
+    /// is 16 pt a side (393-pt window -> 361-pt content at x = 16).
+    func scenePadding(_ edges: Edge.Set = .all) -> some _OpenView {
+        padding(edges, 16)
+    }
+
+    /// Text selection is recorded but OpenUIKit has no selection UI
+    /// (KNOWN_GAPS).
+    func textSelection<S: _OpenTextSelectability>(_ selectability: S) -> some _OpenView {
+        _ = selectability
+        return self
+    }
+
+    /// Pointer tooltip text. iPhone has no pointer tooltip; not surfaced
+    /// (KNOWN_GAPS).
+    func help(_ text: String) -> some _OpenView {
+        _ = text
+        return self
+    }
+
+    func help(_ text: Text) -> some _OpenView {
+        help(text.content)
+    }
+
+    /// Moves the view's text baseline. OpenUIKit does not model baseline
+    /// guides, so this has no layout effect yet (KNOWN_GAPS).
+    func baselineOffset(_ baselineOffset: CGFloat) -> some _OpenView {
+        _ = baselineOffset
+        return self
+    }
+
+    /// Fixed-width font design for the subtree's text (the same monospaced
+    /// system face `monospacedDigit()` selects in the portable renderer).
+    func monospaced(_ isActive: Bool = true) -> some _OpenView {
+        isActive
+            ? AnyView(_OpenModifiedContent(content: self, modification: .monospacedDigits))
+            : AnyView(self)
+    }
+
     func disabled(_ disabled: Bool) -> some _OpenView {
         _OpenDisabledContent(content: self, disabled: disabled)
     }
@@ -3347,6 +3404,14 @@ public extension _OpenView {
         return _OpenModifiedContent(content: self, modification: .menuPickerStyle)
     }
 
+    /// MEASURED iPhone 16 / iOS 26.1 (nnwswiftuiprobe): a segmented Picker is
+    /// a UISegmentedControl spanning the proposed width, 31 pt tall, one
+    /// segment per option in order, the selection's segment selected.
+    func pickerStyle(_ style: SegmentedPickerStyle) -> some _OpenView {
+        _ = style
+        return _OpenModifiedContent(content: self, modification: .segmentedPickerStyle)
+    }
+
     func menuIndicator(_ visibility: Visibility) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .menuIndicator(visibility))
     }
@@ -3442,6 +3507,22 @@ public extension _OpenView {
         @_OpenViewBuilder content: @escaping @MainActor () -> SheetContent
     ) -> some _OpenView {
         sheet(isPresented: isPresented, onDismiss: nil, content: content)
+    }
+
+    /// `sheet(item:)`: presented while `item` is non-nil, built from the
+    /// item's value at presentation; dismissal sets `item` back to nil.
+    func sheet<Item: Identifiable, SheetContent: _OpenView>(
+        item: Binding<Item?>,
+        onDismiss: (@MainActor () -> Void)? = nil,
+        @_OpenViewBuilder content: @escaping @MainActor (Item) -> SheetContent
+    ) -> some _OpenView {
+        let isPresented = Binding<Bool>(
+            get: { item.wrappedValue != nil },
+            set: { if !$0 { item.wrappedValue = nil } }
+        )
+        return sheet(isPresented: isPresented, onDismiss: onDismiss) {
+            item.wrappedValue.map { AnyView(content($0)) } ?? AnyView(EmptyView())
+        }
     }
 
     /// The dismissal callback is delivered after the concrete UIKit
@@ -3673,6 +3754,22 @@ public extension _OpenView {
             content: self,
             modification: .onChange {
                 _OpenGraphContext.trackChange(value, action: action)
+            }
+        )
+    }
+
+    /// iOS 17 `onChange(of:initial:_:)` with a zero-argument action. The
+    /// `initial: true` first-appearance call is not delivered (KNOWN_GAPS).
+    func onChange<Value: Equatable>(
+        of value: Value,
+        initial: Bool = false,
+        _ action: @escaping @MainActor () -> Void
+    ) -> _OpenEffectContent {
+        _ = initial
+        return _OpenEffectContent(
+            content: self,
+            modification: .onChange {
+                _OpenGraphContext.trackChange(value) { _, _ in action() }
             }
         )
     }
@@ -4017,6 +4114,9 @@ private func _flattenGroup(_ node: _OpenViewNode) -> [_OpenViewNode] {
 @MainActor
 struct _OpenNavigationConfiguration {
     var title: String?
+    /// iOS 26 `navigationSubtitle`. MEASURED (nnwswiftuiprobe): lands on
+    /// the hosting controller's navigationItem.subtitle.
+    var subtitle: String?
     var barHidden = false
     var backButtonHidden = false
     var titleDisplayMode: NavigationBarTitleDisplayMode = .automatic
@@ -4038,6 +4138,8 @@ func _openExtractNavigationConfiguration(
         switch modification {
         case .navigationTitle(let title):
             configuration.title = title
+        case .navigationSubtitle(let subtitle):
+            configuration.subtitle = subtitle
         case .navigationBarHidden(let hidden):
             configuration.barHidden = hidden
         case .navigationBackButtonHidden(let hidden):
