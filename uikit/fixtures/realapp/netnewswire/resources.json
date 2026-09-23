@@ -1,0 +1,204 @@
+{
+ "verbatim": [
+  {
+   "bundle": "About.rtf",
+   "corpus": "iOS/Resources/About.rtf",
+   "sha256": "a68faa6508ac933f3757a108d17a3d4b322eb56a8d977f7b21e95282fc2a28eb"
+  },
+  {
+   "bundle": "Appanoose.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Appanoose.nnwtheme/Info.plist",
+   "sha256": "bab57ade35e5e5f1ff76bdbb47112f37d768777b6ab3bcc74f65cb21efd5fe88"
+  },
+  {
+   "bundle": "Appanoose.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Appanoose.nnwtheme/stylesheet.css",
+   "sha256": "ad02d4e959563bbc3dfeaa78324ca0ff13bc34dce0c5503888e4b584fe1b6d46"
+  },
+  {
+   "bundle": "Appanoose.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Appanoose.nnwtheme/template.html",
+   "sha256": "24a3458a9cf541724570aa5de7476dc522cf290b5683147eaf17fb214d373184"
+  },
+  {
+   "bundle": "Biblioteca.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Biblioteca.nnwtheme/Info.plist",
+   "sha256": "faddad23d55a3986fc8b3b0ad20a5460a11ef32218fbdad4e7133d30e8265e8c"
+  },
+  {
+   "bundle": "Biblioteca.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Biblioteca.nnwtheme/stylesheet.css",
+   "sha256": "3f4e6c3b93df077d890f0c6f6255d52a094efeecffd4dd0dc994d6706a480599"
+  },
+  {
+   "bundle": "Biblioteca.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Biblioteca.nnwtheme/template.html",
+   "sha256": "31824e68ac8b9adfec712fe7f9953ad12892347ebf33099f4cff733cdb424fa4"
+  },
+  {
+   "bundle": "ContentRules.json",
+   "corpus": "Shared/Resources/ContentRules.json",
+   "sha256": "e63f44e739c940b81cfa002aaa5ee416945d20f7d189ff1a0bc44b4da1a8d162"
+  },
+  {
+   "bundle": "Credits.rtf",
+   "corpus": "iOS/Resources/Credits.rtf",
+   "sha256": "4a0f8b01b97032ed90d6aafae56ff99ed44928652652e0ea0007106e9323a6e0"
+  },
+  {
+   "bundle": "Dedication.rtf",
+   "corpus": "iOS/Resources/Dedication.rtf",
+   "sha256": "8c58129fed8010d3574f0afa9888e5c6d78838b2b5bdfceba59531cd74f7fc00"
+  },
+  {
+   "bundle": "DefaultFeeds.opml",
+   "corpus": "Shared/Importers/DefaultFeeds.opml",
+   "sha256": "b536bdbccb97a7fb0c1202c25e3aab2383644d08b5da8c83d6b6dca7fe941d93"
+  },
+  {
+   "bundle": "Hyperlegible.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Hyperlegible.nnwtheme/Info.plist",
+   "sha256": "490df0d6bbef3239831fad330d86f64dd83e5ab48d48a0018c7818d95aa6f170"
+  },
+  {
+   "bundle": "Hyperlegible.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Hyperlegible.nnwtheme/stylesheet.css",
+   "sha256": "442165467688bef2a61a97362a16bcdc4235115e794747c734d3e62205fb49a9"
+  },
+  {
+   "bundle": "Hyperlegible.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Hyperlegible.nnwtheme/template.html",
+   "sha256": "abdeaf98f2494787bf3a3a395015262f3a36eb840c25bc29267d7c43805d0b2e"
+  },
+  {
+   "bundle": "NewsFax.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/NewsFax.nnwtheme/Info.plist",
+   "sha256": "28a85955db58f5587ad08508c884c8984b4b6acd69803d3bc7bc34f1c83a2465"
+  },
+  {
+   "bundle": "NewsFax.nnwtheme/License.md",
+   "corpus": "Resources/Themes/NewsFax.nnwtheme/License.md",
+   "sha256": "0da6b583ee7abd878f9db2bcb38d53078f4993f5ef8a0cf3fe36f22994bf656f"
+  },
+  {
+   "bundle": "NewsFax.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/NewsFax.nnwtheme/stylesheet.css",
+   "sha256": "247741e4430d4e04bb82526551c046b00f55865dd323eb5bcaf6c329de9b7591"
+  },
+  {
+   "bundle": "NewsFax.nnwtheme/template.html",
+   "corpus": "Resources/Themes/NewsFax.nnwtheme/template.html",
+   "sha256": "71b0a9129c0f87efc0243ed9e6fe508f9910d23236e5cf7d36652d3478065054"
+  },
+  {
+   "bundle": "PrivacyInfo.xcprivacy",
+   "corpus": "iOS/Resources/PrivacyInfo.xcprivacy",
+   "sha256": "671b7ea7606f4204275ae85e1304b062d7d176499aac6d557396f25c87c11988"
+  },
+  {
+   "bundle": "Promenade.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Promenade.nnwtheme/Info.plist",
+   "sha256": "0b260f9202c80accc9ea1f276a366ab8a512b866e20eb02fd0c261037dfa7062"
+  },
+  {
+   "bundle": "Promenade.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Promenade.nnwtheme/stylesheet.css",
+   "sha256": "35eb8b7c3df090ce1636828fa8faeaeaf9b3961156e7d0c3188aa07d82af02f4"
+  },
+  {
+   "bundle": "Promenade.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Promenade.nnwtheme/template.html",
+   "sha256": "c2d0e8e5d9fb9add7915e15e46da7b05bdd18dc2a7c30b7632d220052fe76f49"
+  },
+  {
+   "bundle": "Sepia.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Sepia.nnwtheme/Info.plist",
+   "sha256": "46b2929424e2fabf12b97ae821c27568ec35265efb7bc45976340c77dad726c9"
+  },
+  {
+   "bundle": "Sepia.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Sepia.nnwtheme/stylesheet.css",
+   "sha256": "0e633de0cf82b95f078a3aba1c73f3a116a5e8d6233e26ef2d2db179e2f077bc"
+  },
+  {
+   "bundle": "Sepia.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Sepia.nnwtheme/template.html",
+   "sha256": "39fd7ef19d6008f9c265adadf493b74d77566ba1b062b17740a2d74d67ce1440"
+  },
+  {
+   "bundle": "Thanks.rtf",
+   "corpus": "iOS/Resources/Thanks.rtf",
+   "sha256": "9b14d65e6ce5ab27ca5048fa4256646b46e27ff1efd1e8aa3ee7fdffa47102f0"
+  },
+  {
+   "bundle": "Tiqoe Dark.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Tiqoe Dark.nnwtheme/Info.plist",
+   "sha256": "31b375cfe7971737b684205354d20c2e624db6773413e6876e1281f4b8cd0563"
+  },
+  {
+   "bundle": "Tiqoe Dark.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Tiqoe Dark.nnwtheme/stylesheet.css",
+   "sha256": "f84d7c6375dd57f3146a17af643a5d4c052752da449acd9b1e34ee0e185aa130"
+  },
+  {
+   "bundle": "Tiqoe Dark.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Tiqoe Dark.nnwtheme/template.html",
+   "sha256": "b830088573e1853432e9571c524a0252cfa278a2128746735216539654b2e8df"
+  },
+  {
+   "bundle": "Verdana Revival.nnwtheme/Info.plist",
+   "corpus": "Resources/Themes/Verdana Revival.nnwtheme/Info.plist",
+   "sha256": "6338a3dc2864acf7693ef24741e6505621656c4d3b30bd5120540bfb1915ad36"
+  },
+  {
+   "bundle": "Verdana Revival.nnwtheme/stylesheet.css",
+   "corpus": "Resources/Themes/Verdana Revival.nnwtheme/stylesheet.css",
+   "sha256": "200e0fcba7a73f3f5f52ff2d81d30f1eecc9c5225895969e706789e3a0b62881"
+  },
+  {
+   "bundle": "Verdana Revival.nnwtheme/template.html",
+   "corpus": "Resources/Themes/Verdana Revival.nnwtheme/template.html",
+   "sha256": "fe896ea2315cf1eaf36c569abefa82103fa71ee7df2324c43e4994dae16cb8b2"
+  },
+  {
+   "bundle": "blank.html",
+   "corpus": "iOS/Resources/blank.html",
+   "sha256": "cb8bdb66d3e5fb7c8163950ac62970ea00459d18019109328e3d27b5115d0b0b"
+  },
+  {
+   "bundle": "core.css",
+   "corpus": "Shared/Article Rendering/core.css",
+   "sha256": "5cd07a57d6511d9e043aaaf4dc6cd544da18b9733725375928edb9b11ae96e6b"
+  },
+  {
+   "bundle": "main.js",
+   "corpus": "Shared/Article Rendering/main.js",
+   "sha256": "80f1c47cf608a37b2a9c8a01577330e0363ba8036c9eb4f18015a55bcb76bc04"
+  },
+  {
+   "bundle": "main_ios.js",
+   "corpus": "iOS/Resources/main_ios.js",
+   "sha256": "e764183ea8e9ce75df13d268834741b176afdb440eb492efeaba8ccabd7dfb8b"
+  },
+  {
+   "bundle": "newsfoot.js",
+   "corpus": "Shared/Article Rendering/newsfoot.js",
+   "sha256": "6a921854ef81214eebb983314023a20417e76c64eb78e2c4742815744476ae4f"
+  },
+  {
+   "bundle": "page.html",
+   "corpus": "iOS/Resources/page.html",
+   "sha256": "c5470f24972ac03d0c9256a6c7dcca4344094e3b7bc2b4a5164321634a966279"
+  },
+  {
+   "bundle": "stylesheet.css",
+   "corpus": "Shared/Article Rendering/stylesheet.css",
+   "sha256": "b42f52e1fb5638f17d1ec3a1d8042c6647c6245cbea56cc6d671da077a7ad86c"
+  },
+  {
+   "bundle": "template.html",
+   "corpus": "Shared/Article Rendering/template.html",
+   "sha256": "15c2cb36907e2a2b7a6aaf45c32a210649a5a19ff283b9a0aba0c55c8f321440"
+  }
+ ]
+}
