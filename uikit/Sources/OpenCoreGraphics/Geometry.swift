@@ -53,6 +53,11 @@ public struct CGVector: Equatable, Sendable {
     public init(dx: CGFloat, dy: CGFloat) { self.dx = dx; self.dy = dy }
     public static let zero = CGVector(dx: 0, dy: 0)
 }
+extension CGVector {
+    // The CoreGraphics overlay's integer / Double conveniences (see below).
+    @_transparent public init(dx: Int, dy: Int) { self.init(dx: CGFloat(dx), dy: CGFloat(dy)) }
+    @_transparent public init(dx: Double, dy: Double) { self.init(dx: CGFloat(dx), dy: CGFloat(dy)) }
+}
 #endif
 
 #else
@@ -97,7 +102,7 @@ public struct CGRect: Equatable, Hashable, Sendable {
     public init() { self.init(origin: .zero, size: .zero) }
 
     public static let zero = CGRect()
-    public static let null = CGRect(x: .infinity, y: .infinity, width: 0, height: 0)
+    public static let null = CGRect(x: CGFloat.infinity, y: CGFloat.infinity, width: 0, height: 0)
 
     public var isNull: Bool { origin.x == .infinity || origin.y == .infinity }
     public var isEmpty: Bool { isNull || size.width == 0 || size.height == 0 }
@@ -159,6 +164,34 @@ public struct CGRect: Equatable, Hashable, Sendable {
         let x0 = s.minX.rounded(.down), y0 = s.minY.rounded(.down)
         let x1 = s.maxX.rounded(.up), y1 = s.maxY.rounded(.up)
         return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
+    }
+}
+
+// The CoreGraphics overlay's Int / Double conveniences, same labels and
+// bodies as the iOS 26.1 SDK's CoreGraphics.swiftinterface (`@_transparent
+// public init(width: Swift.Double, height: Swift.Double)` and friends). Apple
+// toolchains and Linux corelibs-Foundation already have them on their CG
+// types; the portable structs above (the Foundation-hidden guest) did not, so
+// NetNewsWire's `CGSize(width: width, height: height)` with Double operands
+// (RSParser HTMLMetadata.swift:212) failed to type-check on the guest.
+extension CGPoint {
+    @_transparent public init(x: Int, y: Int) { self.init(x: CGFloat(x), y: CGFloat(y)) }
+    @_transparent public init(x: Double, y: Double) { self.init(x: CGFloat(x), y: CGFloat(y)) }
+}
+extension CGSize {
+    @_transparent public init(width: Int, height: Int) { self.init(width: CGFloat(width), height: CGFloat(height)) }
+    @_transparent public init(width: Double, height: Double) { self.init(width: CGFloat(width), height: CGFloat(height)) }
+}
+extension CGVector {
+    @_transparent public init(dx: Int, dy: Int) { self.init(dx: CGFloat(dx), dy: CGFloat(dy)) }
+    @_transparent public init(dx: Double, dy: Double) { self.init(dx: CGFloat(dx), dy: CGFloat(dy)) }
+}
+extension CGRect {
+    @_transparent public init(x: Double, y: Double, width: Double, height: Double) {
+        self.init(origin: CGPoint(x: x, y: y), size: CGSize(width: width, height: height))
+    }
+    @_transparent public init(x: Int, y: Int, width: Int, height: Int) {
+        self.init(origin: CGPoint(x: x, y: y), size: CGSize(width: width, height: height))
     }
 }
 

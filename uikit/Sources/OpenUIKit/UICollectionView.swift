@@ -534,6 +534,8 @@ open class UICollectionView: UIScrollView {
     // MARK: Visible views
 
     var visibleViews = VisibleViewMap<ElementKey, UICollectionReusableView>()
+    /// Separators the list layout draws for plain cells (`_layoutPlainListSeparators`).
+    var _plainListSeparators: [_UICollectionViewListSeparatorView] = []
 
     public var visibleCells: [UICollectionViewCell] {
         visibleViews.views
@@ -989,6 +991,7 @@ open class UICollectionView: UIScrollView {
             if let v = visibleViews[a.elementKey] { bringSubviewToFront(v) }
         }
         if let bg = backgroundView { sendSubviewToBack(bg) }
+        _layoutPlainListSeparators(attributes)
         _frontScrollEdgePockets()
         if let bar = verticalIndicator { bringSubviewToFront(bar) }
         if let bar = horizontalIndicator { bringSubviewToFront(bar) }

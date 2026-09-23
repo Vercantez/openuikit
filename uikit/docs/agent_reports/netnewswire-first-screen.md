@@ -38,7 +38,9 @@ not linking: the chain spec has no executable app target yet.
 | 06fbd351 | golden recaptured as the key window's own drawing |
 | 1659707e | storyboard cell content views, self-sizing plain list rows, NSLocalizableString titles, the phone trait environment |
 | 86648a22 | supplementary list headers self-size and sit where UIKit puts them (listheaderprobe); Interface Builder SF Symbols (`UISystemSymbolResourceName`); inset-grouped plain cells round their section corners on the cell (`cornerConfiguration`, measured with and without a cell backgroundColor) |
-| (next) | the storyboard's toolbar items; title + image bar items draw only the image, at body/medium/large; toolbar image runs share one platter (toolbaritemsprobe); the automatic bottom edge material under a toolbar (toolbaredgeprobe); no vertical safe area for content inside a scroll view (listheaderprobe ROWS=10) |
+| 1c9161bc, 5c09571b | the storyboard's toolbar items; title + image bar items draw only the image, at body/medium/large; toolbar image runs share one platter (toolbaritemsprobe); the automatic bottom edge material under a toolbar (toolbaredgeprobe); no vertical safe area for content inside a scroll view (listheaderprobe ROWS=10) |
+| 3da1b2b5 | CoreGraphics' Int / Double geometry initializers on the guest's portable types (cggeometryprobe + CGGeometryGuestProbe); the nnwguest frontier tool |
+| (next) | separators between plain cells of an insetGrouped list, with and without an itemSeparatorHandler (listseparatorprobe) |
 
 Every fix is measured on the iOS 26.1 simulator (oracles under
 Tools/oracle2: nnwmiscprobe, nnwswiftuiprobe, springsettleprobe, scenelaunch,
@@ -64,16 +66,18 @@ A no-network capture needs admin rights, so the masked comparison was chosen.
 | 1659707e | 84.9 | 83.6 |
 | list headers + nib symbols + section corners | 92.266 | 90.668 |
 | toolbar: storyboard items, iOS 26 symbol items, automatic bottom material; no vertical safe area inside scroll views | 98.394 | 96.803 |
+| plain-cell list separators (listseparatorprobe) | 99.288 | 97.667 |
 
-The masked score is past the 97.5 bar. The list layout and the toolbar
-frames match the golden. What remains: plain-cell separators (the 1 pt lines
-between rows, the largest remaining share), the Current Activity button's
-colour (the port captures it while a refresh is still running, so it is
-accent-tinted), and small glass and glyph differences.
+The masked score is past the 97.5 bar; the unmasked score is past it too.
+The list layout, separators and toolbar frames match the golden. What
+remains: the Current Activity button's colour (the port captures it while a
+refresh is still running, so it is accent-tinted), favicon edges, and small
+glass and glyph differences.
 
 ## Not reached
 
-- **Guest wiring under machorun.** Waits on guest-objc-foundation (ObjC
-  Foundation, sqlite, SafariServices, zlib) and guest-swift-modules (Foundation
-  facade gaps, Bundle.module, guest CG/Security/CloudKit module names).
-- **Separators** between plain list rows are still open.
+- **Guest launch.** uikit/Tools/nnwguest measures the guest build frontier
+  on the iOS triple. 15 of 24 targets build. The rest wait on
+  guest-objc-foundation (zlib, the SafariServices Clang module, NSException)
+  and guest-swift-modules (Foundation facade members, os signposts, CryptoKit,
+  CoreServices, CloudKit).
