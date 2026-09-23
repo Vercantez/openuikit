@@ -1,0 +1,26 @@
+guestmodulesprobe v1
+cg.rect 2.0 3.0 16.0 14.0
+cg.transform 7.0 10.0
+cg.context.collection 0
+cg.union 0.0 -5.0 15.0 15.0
+security.add -34018
+security.copy -34018 result=nil
+security.update -34018
+security.delete -34018
+security.message 0 No error.
+security.message -34018 A required entitlement isn't present.
+security.message -25300 The specified item could not be found in the keychain.
+security.message -25299 The specified item already exists in the keychain.
+security.message -25291 No keychain is available. You may need to restart your computer.
+security.message -25293 The user name or passphrase you entered is not correct.
+security.message -50 One or more parameters passed to a function were not valid.
+security.message -36 I/O error.
+security.message -4 Function or operation not implemented.
+security.message -108 Failed to allocate memory.
+security.message -128 User canceled the operation.
+security.message -25308 User interaction is not allowed.
+security.message -26275 Unable to decode the provided data.
+security.message -67853 The encoding was not valid.
+security.message 12345 OSStatus 12345
+security.random 0 nonzero=true
+guestmodulesprobe done

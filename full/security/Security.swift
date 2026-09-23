@@ -275,11 +275,27 @@ private func _securityAuthFailed(_ item: [String: Any]) -> Bool {
     return false
 }
 
+/// The Linux-hosted Mach-O guest (compiled with -D OPENUIKIT_GUEST by
+/// full/scripts/build_full.sh) has no keychain service. It answers every
+/// keychain item call the way an iOS 26.1 process without keychain
+/// entitlements is answered: errSecMissingEntitlement (-34018) and no result
+/// (MEASURED, uikit/Tools/oracle2/guestservicesprobe security.* rows). The
+/// file-backed store below is the host lane's and is never reached there.
+@inline(__always)
+private func _securityGuestKeychainStatus() -> OSStatus? {
+#if OPENUIKIT_GUEST
+    return errSecMissingEntitlement
+#else
+    return nil
+#endif
+}
+
 @discardableResult
 public func SecItemAdd(
     _ attributes: CFDictionary,
     _ result: UnsafeMutablePointer<CFTypeRef?>?
 ) -> OSStatus {
+    if let status = _securityGuestKeychainStatus() { result?.pointee = nil; return status }
     var candidate = _securityDictionary(attributes)
     guard let itemClass = candidate[kSecClass as String] as? String else {
         return errSecParam
@@ -330,6 +346,7 @@ public func SecItemUpdate(
     _ query: CFDictionary,
     _ attributesToUpdate: CFDictionary
 ) -> OSStatus {
+    if let status = _securityGuestKeychainStatus() { return status }
     let query = _securityDictionary(query)
     let updates = _securityDictionary(attributesToUpdate)
     let store = _PortableKeychain.shared
@@ -352,6 +369,7 @@ public func SecItemUpdate(
 
 @discardableResult
 public func SecItemDelete(_ query: CFDictionary) -> OSStatus {
+    if let status = _securityGuestKeychainStatus() { return status }
     let query = _securityDictionary(query)
     let store = _PortableKeychain.shared
     store.lock.lock()
@@ -424,6 +442,7 @@ public func SecItemCopyMatching(
     _ query: CFDictionary,
     _ result: UnsafeMutablePointer<CFTypeRef?>?
 ) -> OSStatus {
+    if let status = _securityGuestKeychainStatus() { result?.pointee = nil; return status }
     let query = _securityDictionary(query)
     let store = _PortableKeychain.shared
     store.lock.lock()
@@ -472,17 +491,25 @@ public func SecCopyErrorMessageString(
     _ reserved: UnsafeMutableRawPointer?
 ) -> CFString? {
     _ = reserved
+    // MEASURED iOS 26.1 simulator, SecCopyErrorMessageString(status, nil)
+    // (uikit/Tools/oracle2/guestservicesprobe, security.message rows).
     let message: String
     switch status {
     case errSecSuccess: message = "No error."
-    case errSecNotAvailable: message = "Security service is unavailable."
-    case errSecAuthFailed: message = "Authorization failed."
-    case errSecDuplicateItem: message = "The item already exists."
-    case errSecItemNotFound: message = "The item cannot be found."
-    case errSecInvalidEncoding: message = "The item has invalid encoding."
-    case errSecParam: message = "One or more parameters are invalid."
-    case errSecIO: message = "An input/output error occurred."
-    default: message = "Security error \(status)."
+    case errSecMissingEntitlement: message = "A required entitlement isn't present."
+    case errSecNotAvailable: message = "No keychain is available. You may need to restart your computer."
+    case errSecAuthFailed: message = "The user name or passphrase you entered is not correct."
+    case errSecDuplicateItem: message = "The specified item already exists in the keychain."
+    case errSecItemNotFound: message = "The specified item could not be found in the keychain."
+    case errSecInvalidEncoding: message = "The encoding was not valid."
+    case errSecParam: message = "One or more parameters passed to a function were not valid."
+    case errSecIO: message = "I/O error."
+    case errSecUnimplemented: message = "Function or operation not implemented."
+    case errSecAllocate: message = "Failed to allocate memory."
+    case errSecUserCanceled: message = "User canceled the operation."
+    case errSecInteractionNotAllowed: message = "User interaction is not allowed."
+    case errSecDecode: message = "Unable to decode the provided data."
+    default: message = "OSStatus \(status)"
     }
     return message as CFString
 }

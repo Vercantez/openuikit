@@ -1939,6 +1939,37 @@ APPMODS_CINC+=("${FOCUS_XML_FLAGS[@]}"
     -Xcc -fmodule-map-file="$UIKIT/Sources/os/include/module.modulemap"
     -Xcc -I"$UIKIT/Sources/os/include")
 
+# ---- guest Apple-name Swift modules (guest-swift-modules) -----------------
+# Apps import these frameworks by Apple's names (NetNewsWire RSCore/RSParser
+# `import CoreGraphics`, Secrets `import Security`; census in
+# uikit/docs/agent_reports/guest-swift-modules.md). Each is the framework
+# fan-out's own source list, compiled with compile_app_module (so with
+# -D OPENUIKIT_GUEST) into APPINC. Placed after the Focus graph: nothing
+# compiled before it can see these names, and no Focus/RealAppProbe source has
+# a canImport() guard on them (grep, 2026-09-23), so render_full is unchanged.
+#   CoreGraphics  re-exports OpenCoreGraphics; CGContext is OpenUIKit's own
+#                 (re-exported, not re-declared: cg-unify phase 4).
+#   Security      the keychain answers errSecMissingEntitlement (-34018), as
+#                 iOS 26.1 answers a process without keychain entitlements;
+#                 SecRandomCopyBytes, SecKey, SecCertificate, SecTrust are the
+#                 fan-out's real implementations.
+# Probe: uikit/Tools/guestprobes/GuestModulesProbe.probe.sh.
+build_guest_apple_name_modules() {
+    local spec dir name relative sources
+    for spec in coregraphics:CoreGraphics security:Security; do
+        dir=${spec%%:*}; name=${spec#*:}
+        sources=()
+        while IFS= read -r relative; do
+            [ -n "$relative" ] || continue
+            sources+=("$W/$relative")
+        done < "$W/full/$dir/${dir}_guest_sources.txt"
+        [ "${#sources[@]}" -gt 0 ] || die "empty guest source list for $name"
+        compile_app_module "$name" "$OUT/guest-apple-$dir.o" "${sources[@]}"
+    done
+}
+echo "== guest Apple-name Swift modules (CoreGraphics, Security)"
+build_guest_apple_name_modules
+
 echo "== RealAppProbe (top-level + Vendored + Vendored/* + Focus/ + Hackers/)"
 # Measured glob that SwiftPM already compiles. The previous guest path
 # only globbed RealAppProbe/*.swift + Vendored/*.swift, so canImport(Onboarding)

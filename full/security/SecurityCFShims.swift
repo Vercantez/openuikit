@@ -5,21 +5,30 @@ import Foundation
 // CoreFoundation, not a second Foundation. The later EC2 integration build
 // uses real CF types from the platform sysroot.
 
+#if OPENUIKIT_GUEST
+// The Linux-hosted Mach-O guest's Foundation re-exports its CoreFoundation
+// module (full/foundation/CoreFoundationCompatibility.swift), which already
+// names these with Apple's shapes (CFTypeRef is AnyObject, as in the iOS SDK:
+// `var result: AnyObject?; SecItemCopyMatching(query, &result)`). Declaring
+// them again here would make every file importing Security and Foundation
+// ambiguous.
+#else
 public typealias CFString = String
 public typealias CFDictionary = [String: Any]
 public typealias CFTypeRef = Any
-public typealias CFData = Data
-public typealias CFArray = [Any]
-public typealias CFDate = Date
 public typealias CFURL = URL
-public typealias CFError = NSError
-public typealias CFTypeID = UInt
-public typealias CFIndex = Int
-public typealias CFOptionFlags = UInt
 public typealias CFAbsoluteTime = Double
 
 /// Only the default allocator is representable on the isolated host.
 public enum CFAllocator: Sendable {}
+#endif
+public typealias CFData = Data
+public typealias CFArray = [Any]
+public typealias CFDate = Date
+public typealias CFError = NSError
+public typealias CFTypeID = UInt
+public typealias CFIndex = Int
+public typealias CFOptionFlags = UInt
 
 /// DarwinBoolean stand-in for imported C APIs. Not a public Darwin substitute
 /// for use outside Security; it exists so `SecTrustGetNetworkFetchAllowed`
