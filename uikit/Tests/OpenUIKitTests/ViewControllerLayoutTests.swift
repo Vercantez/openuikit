@@ -54,7 +54,7 @@ private final class LayoutProbeController: UIViewController {
         callbackLog = log
         rootProbe = LayoutProbeView("root", log: log)
         childProbe = LayoutProbeView("child", log: log)
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     override func loadView() {
@@ -89,7 +89,7 @@ private final class ContentProbeController: UIViewController {
     init(_ name: String, log: CallbackLog) {
         self.name = name
         callbackLog = log
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     override var preferredContentSize: CGSize {
@@ -190,7 +190,7 @@ private final class CoordinatorVendingController: UIViewController {
 
     init(coordinator: UIViewControllerTransitionCoordinator) {
         self.coordinator = coordinator
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     override var transitionCoordinator: UIViewControllerTransitionCoordinator? {

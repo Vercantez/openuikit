@@ -263,7 +263,7 @@ open class SFSafariViewController: UIViewController {
 #endif
         initialURL = url
         self.configuration = configuration.copy()
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         // MEASURED PresentProbe safari, iPhone SE 2x + iPhone 16 3x / iOS 26.1:
         // modalPresentationStyle rawValue 0 = .fullScreen. View fills the
         // window (SE [0,0,375,667]; iPhone 16 [0,0,393,852]).

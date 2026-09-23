@@ -38,6 +38,8 @@ target whose `@main` type is its entry point: the app's product, linked), and
 `linker_flags` become `linkerSettings: [.unsafeFlags([...])]` (e.g.
 `-sectcreate __TEXT __info_plist <Info.plist>`, which Xcode does for a bare
 executable's embedded Info.plist).
+`public_headers_path` is a Clang target's publicHeadersPath (a module map
+there names the module, e.g. a pod whose module is not its target name).
 `c_settings` are raw SwiftPM cSettings; spec-level `platforms` replaces the
 default [.macOS(.v13)]. Targets
 are linked by default (a symlink under Sources/<name>) so the package builds
@@ -191,6 +193,8 @@ def render_target(t: dict, shims: set[str], clang: bool = False) -> str:
     if t.get("resources"):
         res = ", ".join(f".process({json.dumps(r)})" for r in t["resources"])
         lines.append(f"            resources: [{res}],")
+    if t.get("public_headers_path"):
+        lines.append(f"            publicHeadersPath: {json.dumps(t['public_headers_path'])},")
     settings = list(t.get("swift_settings", []))
     if t.get("swift_language_mode"):
         settings.append(f".swiftLanguageMode(.v{t['swift_language_mode']})")

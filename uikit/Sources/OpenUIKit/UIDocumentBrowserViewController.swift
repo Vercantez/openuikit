@@ -105,7 +105,7 @@ open class UIDocumentBrowserViewController: UIViewController {
         let types = contentTypes ?? []
         self.contentTypesForRecentDocuments = types
         self.allowedContentTypes = types.map(\.identifier)
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
     }
 

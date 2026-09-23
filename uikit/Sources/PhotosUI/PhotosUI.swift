@@ -173,7 +173,7 @@ public final class PHPickerViewController: UIViewController {
 
     public init(configuration: PHPickerConfiguration) {
         self.configuration = configuration
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 

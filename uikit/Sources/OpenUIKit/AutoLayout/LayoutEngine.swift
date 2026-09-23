@@ -575,6 +575,10 @@ enum LayoutEngine {
         // Wrapping labels: second pass (see the intrinsic note above).
         for vv in intrinsicViews {
             guard let l = vv.view as? UILabel, l.numberOfLines != 1 else { continue }
+            // An explicit preferredMaxLayoutWidth already sized the intrinsic
+            // (UILabel.intrinsicContentSize); UIKit's second pass only
+            // supplies the width when the app did not.
+            if l.preferredMaxLayoutWidth > 0 { continue }
             for c in intrinsicConstraints[ObjectIdentifier(l)] ?? [] { try? solver.removeConstraint(c) }
             // Fitting solves always re-measure at the solved width. Ordinary
             // solves keep the one-line intrinsic on Catalyst and for

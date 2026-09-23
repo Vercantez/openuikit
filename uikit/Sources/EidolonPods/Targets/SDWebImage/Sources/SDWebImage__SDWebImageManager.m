@@ -1,0 +1,1 @@
+../../../Pods/SDWebImage/SDWebImage/SDWebImageManager.m

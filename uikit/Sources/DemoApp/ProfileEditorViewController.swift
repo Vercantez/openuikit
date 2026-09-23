@@ -45,7 +45,7 @@ public final class ProfileEditorViewController: UIViewController {
     public init(name: String, email: String) {
         initialName = name
         initialEmail = email
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
     public required init?(coder: NSCoder) { fatalError() }
 

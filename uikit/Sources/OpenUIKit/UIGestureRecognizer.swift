@@ -134,6 +134,14 @@ public extension UIGestureRecognizerDelegate {
 }
 #endif
 
+// UIKit's runtime name, and vtable-free under OPENUIKIT_OBJC_SUBCLASSING:
+// Objective-C subclasses it (DZNWebViewController's
+// DZNLongPressGestureRecognizer : UILongPressGestureRecognizer;
+// ObjCSubclassing.swift, eidolon-kiosk.md). Overridable members are
+// `@objc dynamic`, everything else is final.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIGestureRecognizer)
+#endif
 @preconcurrency @MainActor
 open class UIGestureRecognizer: NSObject {
     public enum State: Sendable {
@@ -145,15 +153,15 @@ open class UIGestureRecognizer: NSObject {
     /// Current state. Subclasses drive transitions by assigning (like
     /// UIGestureRecognizerSubclass); assigning fires the attached actions
     /// for .began/.changed/.ended/.cancelled.
-    public var state: State {
+    public final var state: State {
         get { _state }
         set { transition(to: newValue) }
     }
-    var _state: State = .possible
+    final var _state: State = .possible
 
-    public internal(set) weak var view: UIView?
+    public final internal(set) weak var view: UIView?
     /// Disabling mid-gesture cancels it (UIKit).
-    public var isEnabled: Bool = true {
+    public final var isEnabled: Bool = true {
         didSet {
             if !isEnabled, _state == .began || _state == .changed {
                 transition(to: .cancelled)
@@ -162,20 +170,20 @@ open class UIGestureRecognizer: NSObject {
     }
     /// Standard UIKit behavior: when this recognizer recognizes, the
     /// touches it tracks are cancelled in their hit-test view.
-    public var cancelsTouchesInView = true
+    public final var cancelsTouchesInView = true
     /// UIKit delivery-policy flags. The event dispatcher already delays
     /// scroll-view content through `delaysContentTouches`; standalone
     /// recognizers retain these policies for hosts which queue touch delivery.
-    public var delaysTouchesBegan = false
-    public var delaysTouchesEnded = true
-    public var name: String?
+    public final var delaysTouchesBegan = false
+    public final var delaysTouchesEnded = true
+    public final var name: String?
     /// M13: the app's veto on recognition / simultaneity / touch delivery.
-    public weak var delegate: UIGestureRecognizerDelegate?
+    public final weak var delegate: UIGestureRecognizerDelegate?
 
     /// Touches this recognizer is observing (insertion order).
-    var trackedTouches: [UITouch] = []
+    final var trackedTouches: [UITouch] = []
     /// Set on recognition; consumed by UIWindow.processRecognitions.
-    var pendingCancelTouches = false
+    final var pendingCancelTouches = false
 
     struct Action {
         let token: Int
@@ -184,15 +192,17 @@ open class UIGestureRecognizer: NSObject {
         weak var target: AnyObject?
         let selector: Selector?
     }
-    private var actions: [Action] = []
-    private var nextToken = 0
+    private final var actions: [Action] = []
+    private final var nextToken = 0
 
-    public init(handler: ActionHandler? = nil) {
-        super.init()
+    /// A closure registration (OpenUIKit's form, below the UIKit one).
+    public convenience init(handler: ActionHandler? = nil) {
+        self.init(target: nil, action: nil)
         if let handler { addTarget(handler) }
     }
 
-    /// UIKit's `init(target:action:)`.
+    /// UIKit's `init(target:action:)`, the designated initializer (an
+    /// Objective-C subclass is created through `-initWithTarget:action:`).
     ///
     ///     view.addGestureRecognizer(
     ///         UITapGestureRecognizer(target: self,
@@ -200,15 +210,18 @@ open class UIGestureRecognizer: NSObject {
     /// `Any?`/`Selector?`, as UIKit spells it — a caller that forwards an
     /// optional target and selector straight through (pocket-casts'
     /// SettingsTableHeader does) needs exactly this signature.
-    public convenience init(target: Any?, action: Selector?) {
-        self.init(handler: nil)
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(initWithTarget:action:)
+#endif
+    public dynamic init(target: Any?, action: Selector?) {
+        super.init()
         if let action { addTarget(target, action: action) }
     }
 
     // MARK: Targets
 
     @discardableResult
-    public func addTarget(_ handler: @escaping ActionHandler) -> Int {
+    public final func addTarget(_ handler: @escaping ActionHandler) -> Int {
         nextToken += 1
         actions.append(Action(token: nextToken, handler: handler,
                               target: nil, selector: nil))
@@ -216,7 +229,7 @@ open class UIGestureRecognizer: NSObject {
     }
 
     /// Remove a closure registration by the token `addTarget(_:)` returned.
-    public func removeTarget(_ token: Int) {
+    public final func removeTarget(_ token: Int) {
         actions.removeAll { $0.token == token }
     }
 
@@ -224,7 +237,7 @@ open class UIGestureRecognizer: NSObject {
     /// methods dispatch through NSObject metadata where available;
     /// ``SelectorDispatching`` is the native-ELF/fallback route. Supported
     /// framework-owned actions such as `UIView.endEditing(_:)` are built in.
-    public func addTarget(_ target: Any?, action: Selector) {
+    public final func addTarget(_ target: Any?, action: Selector) {
         nextToken += 1
         actions.append(Action(token: nextToken, handler: nil,
                               target: target.flatMap { $0 as? AnyObject },
@@ -232,7 +245,7 @@ open class UIGestureRecognizer: NSObject {
     }
 
     /// UIKit's `removeTarget(_:action:)`. `nil` matches any target / action.
-    public func removeTarget(_ target: Any?, action: Selector?) {
+    public final func removeTarget(_ target: Any?, action: Selector?) {
         // See UIControl.removeTarget: `as?` would bridge a nil `Any?` to
         // NSNull and match nothing.
         let target = target.flatMap { $0 as? AnyObject }
@@ -246,7 +259,7 @@ open class UIGestureRecognizer: NSObject {
 
     // MARK: State machine
 
-    func transition(to newState: State) {
+    final func transition(to newState: State) {
         let old = _state
         // Recognition happens on .began (continuous) or on .ended straight
         // out of .possible (discrete). That is the ONE instant UIKit asks
@@ -284,7 +297,7 @@ open class UIGestureRecognizer: NSObject {
     }
 
     /// Called by the window when every tracked touch has ended/cancelled.
-    func _sequenceEnded() {
+    final func _sequenceEnded() {
         reset()
     }
 
@@ -293,7 +306,7 @@ open class UIGestureRecognizer: NSObject {
     /// Every other recognizer observing any touch this one tracks. The
     /// window stamps that list onto the touch at hit-test time
     /// (UIWindow.sendTouch), so no back-pointer to the window is needed.
-    var _peers: [UIGestureRecognizer] {
+    final var _peers: [UIGestureRecognizer] {
         var out: [UIGestureRecognizer] = []
         for t in trackedTouches {
             for r in t.gestureRecognizers ?? []
@@ -305,7 +318,7 @@ open class UIGestureRecognizer: NSObject {
     }
 
     /// UIKit asks BOTH delegates; either saying yes allows both to run.
-    func _mayRecognizeSimultaneously(with other: UIGestureRecognizer) -> Bool {
+    final func _mayRecognizeSimultaneously(with other: UIGestureRecognizer) -> Bool {
         if let d = delegate, d._simultaneous(self, other) {
             return true
         }
@@ -317,7 +330,7 @@ open class UIGestureRecognizer: NSObject {
 
     /// A peer that ALREADY recognized blocks this one unless simultaneous
     /// recognition is allowed.
-    func _blockedByRecognizedPeer() -> Bool {
+    final func _blockedByRecognizedPeer() -> Bool {
         for p in _peers {
             switch p._state {
             case .began, .changed, .ended:
@@ -331,7 +344,7 @@ open class UIGestureRecognizer: NSObject {
 
     /// Having recognized, fail the still-possible peers that are not allowed
     /// to run alongside.
-    func _failConflictingPeers() {
+    final func _failConflictingPeers() {
         for p in _peers where p._state == .possible {
             if !_mayRecognizeSimultaneously(with: p) { p._state = .failed }
         }
@@ -339,7 +352,10 @@ open class UIGestureRecognizer: NSObject {
 
     /// Return to .possible and clear per-gesture state. Subclasses override
     /// (and call super) to clear their own accumulators.
-    open func reset() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(reset)
+#endif
+    open dynamic func reset() {
         _state = .possible
         pendingCancelTouches = false
         trackedTouches.removeAll()
@@ -349,7 +365,10 @@ open class UIGestureRecognizer: NSObject {
 
     /// Centroid of the tracked touches, in `view`'s coordinates (nil =
     /// window coordinates), like UIKit.
-    open func location(in view: UIView?) -> CGPoint {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(locationInView:)
+#endif
+    open dynamic func location(in view: UIView?) -> CGPoint {
         let live = trackedTouches.filter { $0.phase != .cancelled }
         guard !live.isEmpty else { return .zero }
         var x: CGFloat = 0, y: CGFloat = 0
@@ -362,32 +381,57 @@ open class UIGestureRecognizer: NSObject {
         return CGPoint(x: x / n, y: y / n)
     }
 
-    public var numberOfTouches: Int { trackedTouches.count }
+    public final var numberOfTouches: Int { trackedTouches.count }
 
     // MARK: Touch observation (window-called wrappers)
 
-    func _touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+    final func _touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         for t in touches.sorted(by: { $0.touchID < $1.touchID })
         where !trackedTouches.contains(where: { $0 === t }) {
             trackedTouches.append(t)
         }
         touchesBegan(touches, with: event)
     }
-    func _touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+    final func _touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         touchesMoved(touches, with: event)
     }
-    func _touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+    final func _touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         touchesEnded(touches, with: event)
     }
-    func _touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+    final func _touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
         touchesCancelled(touches, with: event)
     }
 
+    /// UIGestureRecognizerSubclass's prevention hooks (UIKit default: YES).
+    /// Declared so a subclass (DZNLongPressGestureRecognizer) can override
+    /// them; OpenUIKit's exclusion rule (above) does not consult them yet
+    /// (docs/KNOWN_GAPS.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(canPreventGestureRecognizer:)
+#endif
+    open dynamic func canPrevent(_ preventedGestureRecognizer: UIGestureRecognizer) -> Bool { true }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(canBePreventedByGestureRecognizer:)
+#endif
+    open dynamic func canBePrevented(by preventingGestureRecognizer: UIGestureRecognizer) -> Bool { true }
+
     /// Subclass observation points (UIGestureRecognizerSubclass).
-    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {}
-    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {}
-    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {}
-    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesBegan:withEvent:)
+#endif
+    open dynamic func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesMoved:withEvent:)
+#endif
+    open dynamic func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesEnded:withEvent:)
+#endif
+    open dynamic func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(touchesCancelled:withEvent:)
+#endif
+    open dynamic func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
         if _state == .began || _state == .changed {
             transition(to: .cancelled)
         } else if _state == .possible {
@@ -397,9 +441,12 @@ open class UIGestureRecognizer: NSObject {
 
     /// Time-only advance (no touch change): UIWindow.tick / stationary
     /// phases call this so time-based recognizers (long press) can fire.
-    open func timeAdvanced(to timestamp: TimeInterval, with event: UIEvent) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(_ouk_timeAdvancedTo:withEvent:)
+#endif
+    open dynamic func timeAdvanced(to timestamp: TimeInterval, with event: UIEvent) {}
 
-    func _twoTouchSpan() -> (distance: CGFloat, angle: CGFloat)? {
+    final func _twoTouchSpan() -> (distance: CGFloat, angle: CGFloat)? {
         let live = trackedTouches.filter { $0.phase != .cancelled }
         guard live.count >= 2 else { return nil }
         let a = live[0].location(in: nil)
@@ -410,7 +457,7 @@ open class UIGestureRecognizer: NSObject {
         return (distance, _atan2(dy, dx))
     }
 
-    func _liveTouchCount() -> Int {
+    final func _liveTouchCount() -> Int {
         trackedTouches.filter { $0.phase != .ended && $0.phase != .cancelled }.count
     }
 }
@@ -577,15 +624,24 @@ open class UIPanGestureRecognizer: UIGestureRecognizer {
 // MARK: - Long press
 
 @preconcurrency @MainActor
-public final class UILongPressGestureRecognizer: UIGestureRecognizer {
-    public var minimumPressDuration: TimeInterval = 0.5
+/// Subclassable from Objective-C (DZNLongPressGestureRecognizer), so open,
+/// with UIKit's runtime name and vtable-free under
+/// OPENUIKIT_OBJC_SUBCLASSING (see UIGestureRecognizer). MEASURED
+/// kioskrowsprobe `## longpress` (iOS 26.1): an Objective-C subclass reads
+/// allowableMovement 10 and minimumPressDuration 0.5, both settable, and its
+/// own override of `-canBePreventedByGestureRecognizer:` answers.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UILongPressGestureRecognizer)
+#endif
+open class UILongPressGestureRecognizer: UIGestureRecognizer {
+    public final var minimumPressDuration: TimeInterval = 0.5
     /// UIKit default: 10 pt of movement allowed before recognition.
-    public var allowableMovement: CGFloat = 10
-    public var numberOfTapsRequired: Int = 0
-    public var numberOfTouchesRequired: Int = 1
+    public final var allowableMovement: CGFloat = 10
+    public final var numberOfTapsRequired: Int = 0
+    public final var numberOfTouchesRequired: Int = 1
 
-    var initialLocation: CGPoint = .zero
-    var pressStart: TimeInterval = 0
+    final var initialLocation: CGPoint = .zero
+    final var pressStart: TimeInterval = 0
 
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         guard _state == .possible else { return }
@@ -633,7 +689,7 @@ public final class UILongPressGestureRecognizer: UIGestureRecognizer {
 
     /// Recognize once the press has been held long enough (before any
     /// movement/lift disqualified it).
-    func maybeFire(at timestamp: TimeInterval) {
+    final func maybeFire(at timestamp: TimeInterval) {
         guard _state == .possible,
               trackedTouches.count == numberOfTouchesRequired,
               timestamp - pressStart >= minimumPressDuration else { return }

@@ -127,7 +127,7 @@ private final class TraceVC: UIViewController {
     init(name: String, trace: Trace) {
         self.name = name
         self.trace = trace
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         title = name
     }
     override func viewWillAppear(_ animated: Bool) { trace.add("\(name).willAppear") }

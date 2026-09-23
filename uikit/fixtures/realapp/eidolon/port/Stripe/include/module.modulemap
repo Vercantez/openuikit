@@ -1,0 +1,4 @@
+module Stripe {
+    umbrella header "Stripe/Stripe.h"
+    export *
+}

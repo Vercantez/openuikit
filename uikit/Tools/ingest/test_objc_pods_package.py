@@ -64,11 +64,50 @@ class ObjCPodsPackageTests(unittest.TestCase):
             self.assertEqual(manifest['Artsy-UIColors']['extras'], ['LICENSE'])
             package = open(os.path.join(out, 'Package.swift')).read()
             self.assertIn('podFlags(arc: false, headers: [', package)          # requires_arc = false
-            self.assertIn('dependencies: openUIKit + ["Artsy_UIColors"]', package)
+            self.assertIn('dependencies: openUIKit + ["PodsUIKitUmbrella", "Artsy_UIColors"]', package)
+            # <UIKit/UIKit.h> is published to the pods' consumers too
+            umbrella_link = os.path.join(out, 'Targets', 'PodsUIKitUmbrella', 'include', 'UIKit', 'UIKit.h')
+            self.assertTrue(os.path.islink(umbrella_link))
+            self.assertEqual(os.path.realpath(umbrella_link), os.path.realpath(os.path.join(out, 'Support', 'UIKit', 'UIKit.h')))
+            self.assertIn('name: "PodsUIKitUmbrella"', package)
             self.assertIn('"Artsy_UIColors/include/Artsy_UIColors"', package)  # dependency's quote path
             self.assertIn('.linkedFramework("ImageIO")', package)
             self.assertNotIn('.linkedFramework("UIKit")', package)
             self.assertIn('path: "../uikit"', package)
+            # CocoaPods' prefix header: UIKit for Objective-C units only (a pod's .c
+            # file compiles as C: XNGMarkdownParser's fmemopen.c)
+            self.assertIn('"-include", root + "/Support/Pod-prefix.pch"', package)
+            self.assertTrue(open(os.path.join(out, 'Support', 'Pod-prefix.pch')).read()
+                            .startswith('#ifdef __OBJC__\n#import <UIKit/UIKit.h>\n#else'))
+
+    def test_resources_and_readme_licence(self):
+        with tempfile.TemporaryDirectory() as d:
+            pods = os.path.join(d, 'pods')
+            touch(pods, 'Fonts/Pod/Classes/F.h')
+            touch(pods, 'Fonts/Pod/Classes/F.m')
+            touch(pods, 'Fonts/Pod/Assets/A.ttf', 'font')
+            touch(pods, 'Fonts/README.md', 'Code is MIT, fonts OFL')
+            touch(pods, 'HUD/HUD/H.m')
+            touch(pods, 'HUD/HUD/HUD.bundle/x@2x.png')
+            touch(pods, 'HUD/LICENSE.txt')
+            fixture = {'podspecs': {
+                'Fonts': {'name': 'Fonts', 'module': 'Fonts', 'source_files': ['Pod/Classes'],
+                          'resources': ['Pod/Assets/*'], 'dependencies': []},
+                'HUD': {'name': 'HUD', 'module': 'HUD', 'source_files': ['HUD/*.m'],
+                        'resources': ['HUD/HUD.bundle'], 'dependencies': []}}}
+            spec = os.path.join(d, 'spec.json')
+            json.dump(fixture, open(spec, 'w'))
+            out = os.path.join(d, 'out')
+            manifest = g.generate(pods, spec, out, '../uikit', vendor=True)
+            # a file lands at the bundle root; a directory resource is kept whole
+            self.assertEqual(manifest['Fonts']['resources'],
+                             [{'path': 'Pod/Assets/A.ttf', 'bundle_path': 'A.ttf'}])
+            self.assertEqual(manifest['HUD']['resources'],
+                             [{'path': 'HUD/HUD.bundle/x@2x.png', 'bundle_path': 'HUD.bundle/x@2x.png'}])
+            self.assertEqual(open(os.path.join(out, 'Pods', 'Fonts', 'Pod/Assets/A.ttf')).read(), 'font')
+            # no licence file: the README that states the terms is carried
+            self.assertEqual(manifest['Fonts']['extras'], ['README.md'])
+            self.assertEqual(manifest['HUD']['extras'], ['LICENSE.txt'])
 
 
 if __name__ == '__main__':

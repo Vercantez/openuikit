@@ -508,7 +508,12 @@ open class UIAlertController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
-    public convenience init(title: String?, message: String?, preferredStyle: Style) {
+    /// `required`: UIKit's initializer is an imported Objective-C one, which
+    /// Swift lets a class method call through its metatype — Eidolon's
+    /// `extension UIAlertController { class func …() { self.init(title:
+    /// message: preferredStyle:) } }` (BidderDetailsRetrieval.swift:60).
+    /// A Swift class member is callable that way only when it is required.
+    public required convenience init(title: String?, message: String?, preferredStyle: Style) {
         self.init()
         self.title = title
         self.message = message

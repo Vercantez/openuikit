@@ -39,11 +39,8 @@ final class NibOutletRecorder: UIGestureRecognizer {
     var outlets: [String] = []
     init(identifier: String) {
         self.identifier = identifier
-#if canImport(OpenUIKit)
-        super.init(handler: nil)
-#else
+        // UIKit's designated initializer, OpenUIKit's too (eidolon-kiosk).
         super.init(target: nil, action: nil)
-#endif
     }
     override func setValue(_ value: Any?, forUndefinedKey key: String) {
         outlets.append(NibOutletRecorder.describe(identifier, key, value))

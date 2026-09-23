@@ -595,6 +595,124 @@ NS_SWIFT_NAME(UICollectionViewDelegateFlowLayoutObjC) @protocol UICollectionView
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 @end
 
+#pragma mark - Eidolon Kiosk rows (eidolon-kiosk)
+
+/* The declarations DZNWebViewController, SDWebImage, SVProgressHUD and
+ * Artsy+UIFonts use that OpenUIKit-Swift.h cannot carry. Values: the
+ * iPhoneSimulator26.1 SDK headers, and the strings as the iOS 26.1 simulator
+ * prints them (Tools/oracle2/kioskrowsprobe/transcript-ios26.1.txt). */
+
+/* UIApplication.h / UIOrientation.h. */
+typedef NS_ENUM(NSInteger, UIInterfaceOrientation) {
+    UIInterfaceOrientationUnknown = 0, UIInterfaceOrientationPortrait = 1,
+    UIInterfaceOrientationPortraitUpsideDown = 2, UIInterfaceOrientationLandscapeLeft = 4,
+    UIInterfaceOrientationLandscapeRight = 3,
+} NS_SWIFT_NAME(UIInterfaceOrientationObjC);
+typedef NS_OPTIONS(NSUInteger, UIInterfaceOrientationMask) {
+    UIInterfaceOrientationMaskPortrait = (1 << UIInterfaceOrientationPortrait),
+    UIInterfaceOrientationMaskLandscapeLeft = (1 << UIInterfaceOrientationLandscapeLeft),
+    UIInterfaceOrientationMaskLandscapeRight = (1 << UIInterfaceOrientationLandscapeRight),
+    UIInterfaceOrientationMaskPortraitUpsideDown = (1 << UIInterfaceOrientationPortraitUpsideDown),
+    UIInterfaceOrientationMaskLandscape = (UIInterfaceOrientationMaskLandscapeLeft | UIInterfaceOrientationMaskLandscapeRight),
+    UIInterfaceOrientationMaskAll = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
+                                     UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskPortraitUpsideDown),
+    UIInterfaceOrientationMaskAllButUpsideDown = (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscapeLeft |
+                                                  UIInterfaceOrientationMaskLandscapeRight),
+} NS_SWIFT_NAME(UIInterfaceOrientationMaskObjC);
+#if !__swift__
+static inline BOOL UIInterfaceOrientationIsPortrait(UIInterfaceOrientation orientation) {
+    return orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown;
+}
+static inline BOOL UIInterfaceOrientationIsLandscape(UIInterfaceOrientation orientation) {
+    return orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight;
+}
+#endif
+typedef NSUInteger UIBackgroundTaskIdentifier NS_SWIFT_NAME(UIBackgroundTaskIdentifierObjC);
+extern const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
+extern NSNotificationName const UIApplicationWillTerminateNotification;
+
+/* UIMotionEffect.h. */
+typedef NS_ENUM(NSInteger, UIInterpolatingMotionEffectType) {
+    UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis,
+    UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis,
+} NS_SWIFT_NAME(UIInterpolatingMotionEffectTypeObjC);
+
+/* UIActivity.h. The string values are the iOS 26.1 simulator's (note
+ * PostToTencentWeibo = "…activity.TencentWeibo"). */
+typedef NSString * UIActivityType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UIActivityTypeObjC);
+extern UIActivityType const UIActivityTypePostToFacebook;
+extern UIActivityType const UIActivityTypePostToTwitter;
+extern UIActivityType const UIActivityTypePostToWeibo;
+extern UIActivityType const UIActivityTypeMessage;
+extern UIActivityType const UIActivityTypeMail;
+extern UIActivityType const UIActivityTypePrint;
+extern UIActivityType const UIActivityTypeCopyToPasteboard;
+extern UIActivityType const UIActivityTypeAssignToContact;
+extern UIActivityType const UIActivityTypeSaveToCameraRoll;
+extern UIActivityType const UIActivityTypeAddToReadingList;
+extern UIActivityType const UIActivityTypePostToFlickr;
+extern UIActivityType const UIActivityTypePostToTencentWeibo;
+extern UIActivityType const UIActivityTypeAirDrop;
+typedef void (^UIActivityViewControllerCompletionHandler)(UIActivityType _Nullable activityType, BOOL completed);
+
+/* UIFontDescriptor.h: the same strings as OpenUIKit's
+ * UIFontDescriptor.AttributeName / FeatureKey raw values. */
+typedef NSString * UIFontDescriptorAttributeName NS_TYPED_ENUM NS_SWIFT_NAME(UIFontDescriptorAttributeNameObjC);
+extern UIFontDescriptorAttributeName const UIFontDescriptorFamilyAttribute;
+extern UIFontDescriptorAttributeName const UIFontDescriptorNameAttribute;
+extern UIFontDescriptorAttributeName const UIFontDescriptorSizeAttribute;
+extern UIFontDescriptorAttributeName const UIFontDescriptorFeatureSettingsAttribute;
+typedef NSString * UIFontDescriptorFeatureKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UIFontDescriptorFeatureKeyObjC);
+extern UIFontDescriptorFeatureKey const UIFontFeatureTypeIdentifierKey;
+extern UIFontDescriptorFeatureKey const UIFontFeatureSelectorIdentifierKey;
+
+/* Round 2 (kioskrowsprobe `## hud`, iOS 26.1 values). */
+typedef NS_ENUM(NSInteger, UIBaselineAdjustment) {
+    UIBaselineAdjustmentAlignBaselines = 0, UIBaselineAdjustmentAlignCenters, UIBaselineAdjustmentNone,
+} NS_SWIFT_NAME(UIBaselineAdjustmentObjC);
+typedef NS_ENUM(NSInteger, UINotificationFeedbackType) {
+    UINotificationFeedbackTypeSuccess, UINotificationFeedbackTypeWarning, UINotificationFeedbackTypeError,
+} NS_SWIFT_NAME(UINotificationFeedbackTypeObjC);
+/* NSStringDrawing.h: Objective-C side only on the macOS host, where AppKit
+ * declares it (NSLayoutFormatOptions' rule above). */
+#if TARGET_OS_IPHONE || !__swift__
+typedef NS_OPTIONS(NSInteger, NSStringDrawingOptions) {
+    NSStringDrawingUsesLineFragmentOrigin = 1 << 0, NSStringDrawingUsesFontLeading = 1 << 1,
+    NSStringDrawingUsesDeviceMetrics = 1 << 3, NSStringDrawingTruncatesLastVisibleLine = 1 << 5,
+} NS_SWIFT_NAME(NSStringDrawingOptionsObjC);
+#endif
+/* UIAccessibilityConstants.h: `typedef uint32_t UIAccessibilityNotifications`
+ * (ScreenChanged 1000, Announcement 1008). UIAccessibilityPostNotification is
+ * declared by OpenUIKitObjCBridge-Swift.h, which implements it. */
+typedef uint32_t UIAccessibilityNotifications NS_SWIFT_NAME(UIAccessibilityNotificationsObjC);
+extern UIAccessibilityNotifications UIAccessibilityScreenChangedNotification;
+extern UIAccessibilityNotifications UIAccessibilityAnnouncementNotification;
+extern NSNotificationName const UIApplicationDidChangeStatusBarOrientationNotification;
+extern NSNotificationName const UIKeyboardWillHideNotification;
+extern NSNotificationName const UIKeyboardDidHideNotification;
+extern NSNotificationName const UIKeyboardDidShowNotification;
+extern NSString * const UIKeyboardFrameBeginUserInfoKey;
+extern NSString * const UIKeyboardAnimationDurationUserInfoKey;
+
+/* NSObject (UINibLoadingAdditions / UINibDesignable). On the iOS triple
+ * and the guest OpenUIKit declares both on NSObject (NSObjectNibAwaking.swift,
+ * OpenUIKit-Swift.h); on the macOS host AppKit implements them and this is
+ * the declaration an Objective-C translation unit that does not import AppKit
+ * needs. */
+#if !TARGET_OS_IPHONE && !__swift__
+@interface NSObject (OpenUIKitNibAwaking)
+- (void)awakeFromNib;
+- (void)prepareForInterfaceBuilder;
+@end
+#endif
+
+/* UIGraphics.h / UIImage.h C functions (UIGraphicsBeginImageContext…,
+ * UIRectFill, UIImagePNGRepresentation, UIImageJPEGRepresentation): declared
+ * by OpenUIKitObjCBridge-Swift.h, which implements them (@_cdecl,
+ * EidolonKioskObjCBridge.swift) and which the route-(b) umbrella imports for
+ * Objective-C only; OpenUIKit's Swift functions of the same names serve the
+ * app's Swift half. */
+
 NS_ASSUME_NONNULL_END
 
 #endif /* OPENUIKIT_OBJC_SUPPORT_H */

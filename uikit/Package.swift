@@ -968,7 +968,7 @@ let simplenoteTargets: [Target] = []
 let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
-    "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge",
+    "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge", "OpenUIKitObjCClasses",
 ].map { .library(name: $0, targets: [$0]) } + [
     // The Clang module `SafariServices` for Objective-C targets
     // (Sources/SafariServicesObjC/include/module.modulemap). OpenUIKit is in
@@ -1027,6 +1027,11 @@ let simplenoteTargets: [Target] = [
     // from the Simplenote per-TU selector census (simplenote-launch3).
     .target(name: "OpenUIKitObjCBridge", dependencies: ["OpenUIKit", "OpenUIKitObjCSupport"],
             path: "Sources/OpenUIKitObjCBridge", swiftSettings: simplenoteSettings),
+    // UIKit classes whose Objective-C API Swift cannot implement (UIAlertView's
+    // variadic initializer), in Objective-C over OpenUIKit (eidolon-kiosk).
+    .target(name: "OpenUIKitObjCClasses", dependencies: ["OpenUIKit", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge"],
+            path: "Sources/OpenUIKitObjCClasses", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags, .unsafeFlags(["-fobjc-arc"])]),
     .testTarget(name: "OpenUIKitObjCBridgeTests", dependencies: ["OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/OpenUIKitObjCBridgeTests", swiftSettings: simplenoteSettings),
     // Objective-C subclasses of OpenUIKit classes (simplenote-objc-core).
@@ -1070,6 +1075,18 @@ let simplenoteTargets: [Target] = [
     .testTarget(name: "PodSurfaceTests",
                 dependencies: ["OpenUIKitPodSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/PodSurfaceTests"),
+    // The rows Eidolon's Kiosk target and its remaining pods need
+    // (eidolon-kiosk): the SAME .m Tools/oracle2/kioskrowsprobe/run.sh runs
+    // inside a UIApplicationMain app on the iOS 26.1 simulator.
+    .target(name: "OpenUIKitKioskRowsFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport", "OpenUIKitObjCClasses"],
+            path: "Tools/oracle2/kioskrowsprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags],
+            linkerSettings: [.linkedFramework("CoreText")]),
+    .testTarget(name: "KioskRowsTests",
+                dependencies: ["OpenUIKitKioskRowsFixtures", "OpenUIKitObjCBridge", "OpenUIKit", "UIKit"],
+                path: "Tests/KioskRowsTests",
+                swiftSettings: [.unsafeFlags(["-swift-version", "4"])]),
     .testTarget(name: "ObjCSurfaceTests",
                 dependencies: ["OpenUIKitObjCSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSurfaceTests",

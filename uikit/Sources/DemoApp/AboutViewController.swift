@@ -11,7 +11,7 @@ public final class AboutViewController: UIViewController, BottomInsetAdjustable 
 
     public var extraBottomInset: CGFloat = 0
 
-    public init() { super.init() }
+    public init() { super.init(nibName: nil, bundle: nil) }
     public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {

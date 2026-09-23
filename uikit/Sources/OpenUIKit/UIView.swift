@@ -738,6 +738,9 @@ open class UIView: UIResponder, CALayerDelegate {
     private static var _appearanceProxy: UIView?
     private static var _constructingAppearanceProxy = false
 
+    /// UIView.motionEffects storage (UIMotionEffect.swift).
+    final var _motionEffects: [UIMotionEffect] = []
+
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc
 #endif

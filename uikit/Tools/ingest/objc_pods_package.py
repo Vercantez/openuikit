@@ -11,7 +11,9 @@ source_files / exclude_files / requires_arc / dependencies / module, as
 
 The package mirrors what `pod install` + `use_frameworks!` gives an app:
 
-  Pods/<pod>/...            the files the spec selects (plus license and spec),
+  Pods/<pod>/...            the files the spec selects (plus license and spec,
+                            and the spec's `resources`, listed per pod in
+                            pods-manifest.json for the app bundle),
                             byte-identical; copied with --vendor, else symlinks
                             to PODS_DIR
   Targets/<Module>/         one Clang target per pod:
@@ -21,9 +23,9 @@ The package mirrors what `pod install` + `use_frameworks!` gives an app:
                             header_names (CocoaPods' Headers/Public/<pod>, the
                             framework's <Module/Header.h>)
     include/module.modulemap
-  Support/UIKit/UIKit.h     route (b)'s UIKit umbrella; every translation unit
-                            gets `-include UIKit/UIKit.h`, which is what the
-                            generated Pod-prefix.pch does
+  Support/UIKit/UIKit.h     route (b)'s UIKit umbrella
+  Support/Pod-prefix.pch    CocoaPods' prefix header, `-include`d by every
+                            translation unit: UIKit/UIKit.h under __OBJC__
 
 Compiler flags follow the pod target's xcconfig: -fobjc-arc unless the spec
 says requires_arc = false, the pod's own header directory and every
@@ -60,9 +62,32 @@ UMBRELLA = """/* Route-(b) UIKit umbrella for CocoaPods Objective-C sources
 #import "UIKitObjCSupport.h"
 #if !__swift__
 #import "OpenUIKitObjCBridge-Swift.h"
+/* UIKit classes implemented in Objective-C over OpenUIKit (UIAlertView). */
+#if __has_include("OpenUIKitObjCClasses.h")
+#import "OpenUIKitObjCClasses.h"
+#endif
 #endif
 #endif
 """
+
+# CocoaPods' generated Target Support Files/<pod>-prefix.pch: UIKit for
+# Objective-C translation units only (a pod's .c file compiles as C, e.g.
+# XNGMarkdownParser's fmemopen.c).
+PREFIX = """#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
+#endif
+"""
+
+# The Clang target that publishes <UIKit/UIKit.h> to the pods' consumers.
+SUPPORT_TARGET = 'PodsUIKitUmbrella'
 
 SUBCLASSING_DEFINES = [
     '-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) '
@@ -102,6 +127,26 @@ def pod_files(root, spec):
     return sorted(f for f in files - excluded if f.endswith(SOURCE_EXT + HEADER_EXT))
 
 
+def pod_resources(root, spec):
+    """The spec's `resources`, as {"path": pod-relative file, "bundle_path":
+    where CocoaPods puts it}: each matched item lands at the root of the app
+    bundle (or of the pod framework with use_frameworks!), a directory whole
+    (SVProgressHUD.bundle/...). Sorted by path."""
+    found = {}
+    for pattern in spec.get('resources', []):
+        for p in expand_braces(pattern):
+            for item in glob.glob(os.path.join(root, p), recursive=True):
+                base = os.path.dirname(item)
+                if os.path.isdir(item):
+                    for dp, _, fn in os.walk(item):
+                        for x in fn:
+                            f = os.path.join(dp, x)
+                            found[os.path.relpath(f, root)] = os.path.relpath(f, base)
+                else:
+                    found[os.path.relpath(item, root)] = os.path.basename(item)
+    return [{'path': k, 'bundle_path': v} for k, v in sorted(found.items())]
+
+
 def relink(target, link):
     os.makedirs(os.path.dirname(link), exist_ok=True)
     if os.path.lexists(link):
@@ -124,6 +169,22 @@ def generate(pods_dir, spec_path, out, uikit, vendor):
             shutil.rmtree(os.path.join(out, sub), ignore_errors=True)
     os.makedirs(os.path.join(out, 'Support', 'UIKit'), exist_ok=True)
     open(os.path.join(out, 'Support', 'UIKit', 'UIKit.h'), 'w').write(UMBRELLA)
+    open(os.path.join(out, 'Support', 'Pod-prefix.pch'), 'w').write(PREFIX)
+    # <UIKit/UIKit.h> for every CONSUMER of a pod's module, not only for the
+    # pods' own translation units: each pod's umbrella header starts with
+    # `#import <UIKit/UIKit.h>` (as CocoaPods writes it), and an app target
+    # or a Swift module importing the pod builds that module with its own
+    # header search paths (MEASURED: "'UIKit/UIKit.h' file not found" building
+    # ARTiledImageView from a Swift target). This target publishes the route
+    # (b) umbrella at include/UIKit/UIKit.h; its module map declares an empty
+    # module, so nothing is imported by naming it.
+    sup = os.path.join(out, 'Targets', SUPPORT_TARGET)
+    os.makedirs(os.path.join(sup, 'include', 'UIKit'), exist_ok=True)
+    os.makedirs(os.path.join(sup, 'Sources'), exist_ok=True)
+    relink(os.path.join(out, 'Support', 'UIKit', 'UIKit.h'), os.path.join(sup, 'include', 'UIKit', 'UIKit.h'))
+    open(os.path.join(sup, 'include', 'module.modulemap'), 'w').write(f'module {SUPPORT_TARGET} {{\n}}\n')
+    open(os.path.join(sup, 'Sources', 'anchor.c'), 'w').write(
+        '// SwiftPM builds a C target from at least one source file.\nint eidolon_pods_support_anchor;\n')
     targets = []
     manifest = {}
     for pod in sorted(specs):
@@ -132,8 +193,12 @@ def generate(pods_dir, spec_path, out, uikit, vendor):
         src_root = os.path.join(pods_dir, pod)
         files = pod_files(src_root, spec)
         extras = sorted(f for f in os.listdir(src_root) if LICENSE_RE.match(f) or f.endswith('.podspec'))
+        if not any(LICENSE_RE.match(f) for f in extras):
+            # No licence file (Artsy+UIFonts 3.1.3): its README states the terms.
+            extras += sorted(f for f in os.listdir(src_root) if f.lower() == 'readme.md')
+        resources = pod_resources(src_root, spec)
         pod_root = os.path.join(out, 'Pods', pod)
-        for rel in files + extras:
+        for rel in files + extras + [r['path'] for r in resources]:
             dst = os.path.join(pod_root, rel)
             os.makedirs(os.path.dirname(dst), exist_ok=True)
             if vendor:
@@ -152,6 +217,7 @@ def generate(pods_dir, spec_path, out, uikit, vendor):
         # CocoaPods' framework umbrella (Target Support Files/<pod>-umbrella.h):
         # UIKit first, then every public header; the module map names it.
         headers = sorted({os.path.basename(r) for r in files if r.endswith(HEADER_EXT)})
+        os.makedirs(os.path.join(tdir, 'include'), exist_ok=True)
         open(os.path.join(tdir, 'include', f'{module}-umbrella.h'), 'w').write(
             '#ifdef __OBJC__\n#import <UIKit/UIKit.h>\n#endif\n\n'
             + ''.join(f'#import "{module}/{h}"\n' for h in headers))
@@ -160,7 +226,7 @@ def generate(pods_dir, spec_path, out, uikit, vendor):
         deps = [specs[by_name[d]]['module'] for d in spec['dependencies'] if d in by_name]
         missing = [d for d in spec['dependencies'] if d not in by_name]
         manifest[pod] = {'module': module, 'files': files, 'extras': extras, 'dependencies': deps,
-                         'missing_dependencies': missing}
+                         'missing_dependencies': missing, 'resources': resources}
         targets.append((module, spec, deps))
 
     def dep_headers(module, seen=None):
@@ -185,10 +251,11 @@ def generate(pods_dir, spec_path, out, uikit, vendor):
              '    .product(name: "OpenUIKit", package: "OpenUIKit"),',
              '    .product(name: "OpenUIKitObjCSupport", package: "OpenUIKit"),',
              '    .product(name: "OpenUIKitObjCBridge", package: "OpenUIKit"),',
+             '    .product(name: "OpenUIKitObjCClasses", package: "OpenUIKit"),',
              ']',
              'func podFlags(arc: Bool, headers: [String]) -> [CSetting] {',
              '    [.unsafeFlags([arc ? "-fobjc-arc" : "-fno-objc-arc",',
-             '                   "-include", "UIKit/UIKit.h", "-I", root + "/Support",',
+             '                   "-include", root + "/Support/Pod-prefix.pch", "-I", root + "/Support",',
              ] + [f'                   {json.dumps(d)},' for d in SUBCLASSING_DEFINES] + [
              '                  ] + headers.flatMap { ["-I", root + "/Targets/" + $0] })]',
              '}',
@@ -204,12 +271,17 @@ def generate(pods_dir, spec_path, out, uikit, vendor):
               f'        .package(name: "OpenUIKit", path: {json.dumps(uikit)}),',
               '    ],',
               '    targets: [']
+    lines += ['        .target(',
+              f'            name: "{SUPPORT_TARGET}",',
+              f'            path: "Targets/{SUPPORT_TARGET}",',
+              '            publicHeadersPath: "include"',
+              '        ),']
     for module, spec, deps in targets:
         header_dirs = [f'{module}/include/{module}'] + [f'{d}/include/{d}' for d in sorted(dep_headers(module))]
         frameworks = [f for f in spec.get('frameworks', []) if f not in ('UIKit', 'Foundation')]
         lines.append('        .target(')
         lines.append(f'            name: "{module}",')
-        lines.append('            dependencies: openUIKit' + (' + [' + ', '.join(json.dumps(d) for d in deps) + ']' if deps else '') + ',')
+        lines.append('            dependencies: openUIKit + [' + ', '.join(json.dumps(d) for d in [SUPPORT_TARGET] + deps) + '],')
         lines.append(f'            path: "Targets/{module}",')
         lines.append('            publicHeadersPath: "include",')
         lines.append(f'            cSettings: podFlags(arc: {"true" if spec.get("requires_arc", True) else "false"}, headers: [')

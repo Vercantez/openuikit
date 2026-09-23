@@ -45,7 +45,7 @@ open class UICollectionViewController: UIViewController,
     // vc.init: false isViewLoaded; clear/install true, transitions false.
     public init(collectionViewLayout layout: UICollectionViewLayout) {
         initialLayout = layout
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     /// coder.empty: a keyed archive with no entries yields a non-nil,
@@ -58,7 +58,7 @@ open class UICollectionViewController: UIViewController,
     public required init?(coder: NSCoder) {
         _ = coder
         initialLayout = nil
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     open var clearsSelectionOnViewWillAppear = true

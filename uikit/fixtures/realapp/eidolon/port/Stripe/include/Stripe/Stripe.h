@@ -1,0 +1,1 @@
+../../../../golden/recipe/StripeShim/Stripe/Stripe.h

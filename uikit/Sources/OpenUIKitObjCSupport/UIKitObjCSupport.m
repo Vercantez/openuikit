@@ -88,3 +88,37 @@ NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSep
 const UIWindowLevel UIWindowLevelNormal = 0;
 const UIWindowLevel UIWindowLevelStatusBar = 1000;
 const UIWindowLevel UIWindowLevelAlert = 2000;
+
+/* Eidolon Kiosk rows, MEASURED iOS 26.1 (Tools/oracle2/kioskrowsprobe
+ * transcript-ios26.1.txt `## application`, `## activity`, `## font`). */
+const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = 0;
+NSNotificationName const UIApplicationWillTerminateNotification = @"UIApplicationWillTerminateNotification";
+UIActivityType const UIActivityTypePostToFacebook = @"com.apple.UIKit.activity.PostToFacebook";
+UIActivityType const UIActivityTypePostToTwitter = @"com.apple.UIKit.activity.PostToTwitter";
+UIActivityType const UIActivityTypePostToWeibo = @"com.apple.UIKit.activity.PostToWeibo";
+UIActivityType const UIActivityTypeMessage = @"com.apple.UIKit.activity.Message";
+UIActivityType const UIActivityTypeMail = @"com.apple.UIKit.activity.Mail";
+UIActivityType const UIActivityTypePrint = @"com.apple.UIKit.activity.Print";
+UIActivityType const UIActivityTypeCopyToPasteboard = @"com.apple.UIKit.activity.CopyToPasteboard";
+UIActivityType const UIActivityTypeAssignToContact = @"com.apple.UIKit.activity.AssignToContact";
+UIActivityType const UIActivityTypeSaveToCameraRoll = @"com.apple.UIKit.activity.SaveToCameraRoll";
+UIActivityType const UIActivityTypeAddToReadingList = @"com.apple.UIKit.activity.AddToReadingList";
+UIActivityType const UIActivityTypePostToFlickr = @"com.apple.UIKit.activity.PostToFlickr";
+UIActivityType const UIActivityTypePostToTencentWeibo = @"com.apple.UIKit.activity.TencentWeibo";
+UIActivityType const UIActivityTypeAirDrop = @"com.apple.UIKit.activity.AirDrop";
+UIFontDescriptorAttributeName const UIFontDescriptorFamilyAttribute = @"NSFontFamilyAttribute";
+UIFontDescriptorAttributeName const UIFontDescriptorNameAttribute = @"NSFontNameAttribute";
+UIFontDescriptorAttributeName const UIFontDescriptorSizeAttribute = @"NSFontSizeAttribute";
+UIFontDescriptorAttributeName const UIFontDescriptorFeatureSettingsAttribute = @"NSCTFontFeatureSettingsAttribute";
+UIFontDescriptorFeatureKey const UIFontFeatureTypeIdentifierKey = @"CTFeatureTypeIdentifier";
+UIFontDescriptorFeatureKey const UIFontFeatureSelectorIdentifierKey = @"CTFeatureSelectorIdentifier";
+
+/* Round 2, MEASURED kioskrowsprobe `## hud` (iOS 26.1). */
+UIAccessibilityNotifications UIAccessibilityScreenChangedNotification = 1000;
+UIAccessibilityNotifications UIAccessibilityAnnouncementNotification = 1008;
+NSNotificationName const UIApplicationDidChangeStatusBarOrientationNotification = @"UIApplicationDidChangeStatusBarOrientationNotification";
+NSNotificationName const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
+NSNotificationName const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
+NSNotificationName const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
+NSString * const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
+NSString * const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";

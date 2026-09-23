@@ -2947,3 +2947,22 @@ and run, but some are only partly implemented:
 - On the iOS triple, `AttributedString(NSAttributedString)` is Foundation's
   initializer. The resulting runs carry only attributes whose scopes
   Foundation knows, so OpenUIKit's font and colour keys are dropped.
+- Eidolon Kiosk rows (docs/agent_reports/eidolon-kiosk.md), stored but not
+  applied: `UIViewController.automaticallyAdjustsScrollViewInsets`,
+  `NSParagraphStyle.tabStops` (text layout does not expand tabs),
+  `UILabel.baselineAdjustment`, the title label's text shadow a
+  `UIButton.setTitleShadowColor(_:for:)` sets (not drawn), and
+  `UIGestureRecognizer.canPrevent(_:)` / `canBePrevented(by:)` (the
+  exclusion rule does not consult them). `UIMotionEffect`s are listed on a
+  view and never applied (a simulator applies none either).
+- `super.init()` in a UIViewController subclass's designated initializer:
+  UIViewController's `init()` is a convenience initializer, as in UIKit, so
+  this is "must call a designated initializer" within OpenUIKit, but across
+  a module boundary swiftc accepted it (SafariServices) and the call trapped
+  at run time with "Use of unimplemented initializer 'init(nibName:bundle:)'".
+  Write `super.init(nibName: nil, bundle: nil)` (UIKit rejects `super.init()`).
+- An Objective-C class whose superclass is an OpenUIKit (Swift) class does
+  not inherit the superclass's initializers in Swift (ClangImporter imports
+  inherited initializers only from a Clang superclass): from Swift,
+  `ARTiledImageScrollView(frame:)` does not exist. Eidolon's chain carries
+  an interop initializer (fixtures/realapp/eidolon/port/KioskInterop).

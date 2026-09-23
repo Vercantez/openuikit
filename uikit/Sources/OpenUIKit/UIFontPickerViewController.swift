@@ -55,7 +55,7 @@ open class UIFontPickerViewController: UIViewController {
 
     public init(configuration: Configuration) {
         self.configuration = configuration.copy() as! Configuration
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 

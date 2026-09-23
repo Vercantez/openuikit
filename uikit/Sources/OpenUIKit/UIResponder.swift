@@ -147,7 +147,8 @@ open class UIResponder: NSObject {
     // not from Foundation: the Linux-hosted arm64-apple-macos GUEST route
     // can import ObjectiveC but has no AppKit, and there `override` does not
     // compile (x86 authority, fc0b97d8). Key on AppKit, not ObjectiveC.
-#if canImport(AppKit)
+#if canImport(AppKit) || _runtime(_ObjC)
+    // Without AppKit, NSObjectNibAwaking.swift declares it on NSObject.
     open override func awakeFromNib() {}
 #else
 #if OPENUIKIT_OBJC_SUBCLASSING

@@ -300,9 +300,38 @@ open class UILabel: UIView {
         // Explicit CGFloat: CGSize has Int/Double/CGFloat initialisers, so an
         // implicit-member `.greatestFiniteMagnitude` is ambiguous now that
         // CGFloat is a distinct type from Double (M15).
-        sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude,
-                            height: CGFloat.greatestFiniteMagnitude))
+        // A multi-line label with a preferredMaxLayoutWidth wraps at it.
+        // MEASURED kioskrowsprobe `## label` (iOS 26.1): 17 pt text that is
+        // one line unbounded measures width <= 120 and six lines at 120.
+        let width = numberOfLines != 1 && preferredMaxLayoutWidth > 0
+            ? preferredMaxLayoutWidth : CGFloat.greatestFiniteMagnitude
+        return sizeThatFits(CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
     }
+
+    /// UIKit's `preferredMaxLayoutWidth`: the width a multi-line label wraps
+    /// at when it reports its intrinsic size (Kiosk's help and artwork
+    /// detail screens set it). MEASURED kioskrowsprobe: 0 by default, reads
+    /// back what was set.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(preferredMaxLayoutWidth)
+#endif
+    open dynamic var preferredMaxLayoutWidth: CGFloat = 0 {
+        didSet { if preferredMaxLayoutWidth != oldValue { setNeedsLayout() } }
+    }
+
+    /// The text shadow (`UILabel.shadowColor` / `shadowOffset` in UIKit,
+    /// which OpenUIKit's UIView already spells for the LAYER shadow). A
+    /// UIButton's title shadow colour lands here (titleShadowColor(for:)).
+    /// Stored, not drawn: Kiosk sets it to clear (Button.swift:9-11).
+    public final var _textShadowColor: UIColor?
+    public final var _textShadowOffset: CGSize = .zero
+
+    /// UIKit's `baselineAdjustment` (SVProgressHUD sets .alignCenters).
+    /// MEASURED kioskrowsprobe `## hud` (iOS 26.1): .alignBaselines by
+    /// default, reads back what was set. Stored: it only matters when
+    /// adjustsFontSizeToFitWidth shrinks the text, and OpenUIKit's shrink
+    /// keeps the baseline (docs/KNOWN_GAPS.md).
+    public final var baselineAdjustment: UIBaselineAdjustment = .alignBaselines
 
     // MARK: - Attributed measurement (M12)
 

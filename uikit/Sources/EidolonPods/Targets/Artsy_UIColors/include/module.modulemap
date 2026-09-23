@@ -1,0 +1,5 @@
+module Artsy_UIColors {
+    umbrella header "Artsy_UIColors-umbrella.h"
+    export *
+    module * { export * }
+}

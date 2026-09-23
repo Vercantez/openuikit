@@ -2,8 +2,14 @@
 import CPortableIO
 
 public enum ResourceIO {
+    /// In-memory "files" readFile answers before the file system, keyed by a
+    /// path-like name that names no real file (a font CoreText registered
+    /// from bytes, CoreTextFontAdoption.swift).
+    nonisolated(unsafe) static var memoryFiles: [String: [UInt8]] = [:]
+
     /// Read an entire file; nil if unreadable.
     public static func readFile(_ path: String) -> [UInt8]? {
+        if let bytes = memoryFiles[path] { return bytes }
         var size: Int = 0
         guard let buf = cpio_read_file(path, &size) else { return nil }
         defer { cpio_free(buf) }

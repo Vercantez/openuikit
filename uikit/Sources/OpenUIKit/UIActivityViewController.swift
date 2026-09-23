@@ -240,7 +240,7 @@ open class UIActivityViewController: UIViewController,
     public init(activityItems: [Any], applicationActivities: [UIActivity]?) {
         self.activityItems = activityItems
         self.applicationActivities = applicationActivities
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 

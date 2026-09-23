@@ -98,7 +98,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     @objc
 #endif
     public init() {
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     /// MEASURED `tab.coder`: non-nil, unloaded, `viewControllers` nil.

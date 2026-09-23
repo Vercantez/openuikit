@@ -184,7 +184,7 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
     public init(searchResultsController: UIViewController?) {
         self.searchResultsController = searchResultsController
         self.searchBar = UISearchBar()
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         searchBar.delegate = self
         searchBar._owningSearchController = self
     }

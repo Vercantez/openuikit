@@ -38,7 +38,7 @@ public final class TasksStatsViewController: UIViewController {
 
     public init(tasks: [TaskItem]) {
         self.tasks = tasks
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         title = "Statistics"
     }
     public required init?(coder: NSCoder) { fatalError() }

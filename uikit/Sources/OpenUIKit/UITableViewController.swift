@@ -46,7 +46,7 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
 #endif
     public dynamic init(style: UITableView.Style = .plain) {
         self.style = style
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     /// MEASURED `table.coder` (viewcontrollercoderprobe): an empty archive

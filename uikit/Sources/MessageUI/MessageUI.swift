@@ -203,7 +203,7 @@ open class MFMessageComposeViewController: UIViewController {
     open class func canSendText() -> Bool { false }
 
     public init() {
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     /// Required by the base coder initializer; unmeasured, mirrors `init()`.

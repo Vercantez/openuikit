@@ -113,7 +113,7 @@ public final class TasksDetailViewController: UIViewController,
 
     public init(task: TaskItem) {
         self.task = task
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         title = "Task"
     }
     public required init?(coder: NSCoder) { fatalError() }

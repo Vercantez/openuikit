@@ -247,12 +247,28 @@ public enum OpenUIKitFontRegistry {
     }
 
     static func face(named name: String) -> RegisteredFontFace? {
+        if let f = registeredFace(named: name) { return f }
+        // A font the app registered with Apple's CoreText directly (an
+        // Objective-C pod: Artsy+UIFonts' CTFontManagerRegisterGraphicsFont)
+        // is adopted on first use (CoreTextFontAdoption.swift).
+        guard _adoptCoreTextFace(named: name) else { return nil }
+        return registeredFace(named: name)
+    }
+
+    static func registeredFace(named name: String) -> RegisteredFontFace? {
         if let f = faces[name] { return f }
         // A family name resolves to its upright default instance (measured:
         // "Inter" → "Inter-Regular").
         let candidates = faces.values.filter { $0.familyName == name && $0.isDefaultInstance }
         return candidates.first { !$0.postScriptName.localizedLowercaseContainsItalic }
             ?? candidates.sorted { $0.postScriptName < $1.postScriptName }.first
+    }
+
+    /// Register a font file held in memory under `key` (a name that is not
+    /// a real path). Same result codes as `register(path:)`.
+    public static func register(bytes: [UInt8], key: String) -> Result<[String], RegistrationError> {
+        ResourceIO.memoryFiles[key] = bytes
+        return register(path: key)
     }
 
     /// Test hook: forget every registration.

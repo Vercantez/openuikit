@@ -1,0 +1,441 @@
+{
+ "_comment": "Objective-C CocoaPods of artsy/eidolon 44486ed Podfile.lock, vendored byte-identical by Tools/ingest/objc_pods_package.py --vendor from the GitHub archive of each resolved commit (https://codeload.github.com/<repo>/tar.gz/<commit>; archive_sha256 below). Only the files the locked podspec selects (source_files minus exclude_files, resources) plus the licence and podspec are kept. spec_checksum is the Podfile.lock SPEC CHECKSUMS value, verified against the spec file (fixtures/realapp/eidolon/objc_pods.json).",
+ "pods": {
+  "ARCollectionViewMasonryLayout": {
+   "podspec_name": "ARCollectionViewMasonryLayout",
+   "module": "ARCollectionViewMasonryLayout",
+   "version": "2.0.0",
+   "source": "https://github.com/AshFurrow/ARCollectionViewMasonryLayout.git",
+   "commit": "6f6908268011b9a6fd623f5dfb538bcb58f115b5",
+   "archive_sha256": "1a7642239e6aa9b00e3a87a036cf49849689dc15ff2a7c7b101431ca931ad32c",
+   "spec_checksum": "164b82010cf8ec99bc7a38cffe59a179d7e5a116",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "ARCollectionViewMasonryLayout.h": "63a18bf58a4f070ee54646dfc05f6bed15348241c1e428480dce11d1c47b1f54",
+    "ARCollectionViewMasonryLayout.m": "d8d15d8c3742aefda1abceba2effb745c85decc3c65ccee8b9c917cc8f561650",
+    "ARCollectionViewMasonryLayout.podspec": "b3f56d58c8f05c0c8dc62429bd437c3a0102636e8da7c130238fac1f63926f31",
+    "LICENSE": "dd0a8f2ac47a7bdf64f033e867ad6f5839a512e99336879023a2eac5e9ee9795"
+   }
+  },
+  "ARTiledImageView": {
+   "podspec_name": "ARTiledImageView",
+   "module": "ARTiledImageView",
+   "version": "1.1.1",
+   "source": "https://github.com/dblock/ARTiledImageView.git",
+   "commit": "466c0f25168dc99729af935fead0ac46953ad73b",
+   "archive_sha256": "22dce09d04565b347f0709bf3f25fe1ad2150de1c9a42e24c3a952fb41400b2a",
+   "spec_checksum": "8c6fd11d9e8459a853d94394adea3a5e8c9329ba",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "ARTiledImageView.podspec": "26c990e534dbfddafe184ff7dc6ca65aae8539fc73ca2a5c5cae7708db2168b4",
+    "Classes/ARLocalTiledImageDataSource.h": "58b53c53b263cfb963e4a18c8c9370a868facd080c6fcdbca295a727cd84197b",
+    "Classes/ARLocalTiledImageDataSource.m": "6a2d37b3ca3506e6757aa2c13c5b8a7c72decdbafe6a6eb3c6eff4f7f4ae8545",
+    "Classes/ARTile.h": "becd4bd74845478a2bfcbe7fab0de3cc0b898fce2d2ff8f325f7391901a35c0b",
+    "Classes/ARTile.m": "9a204c4cdbfe66eb9b6f7b107e7df8313990e6453a94bfd0775131e4ba01ff46",
+    "Classes/ARTiledImageScrollView.h": "b36369ff691eca0a561d8e02dce6cd43a766d973c8a2fd1148bb54d3d149856a",
+    "Classes/ARTiledImageScrollView.m": "7de373fd9fa73d48ca9bb53ecf25fa7de4837b38c691fa834cbb25788bf49885",
+    "Classes/ARTiledImageView.h": "1699f0c4bb97c062c8747be34f30d11945ff1981bb3682d0c84170e795ddffc3",
+    "Classes/ARTiledImageView.m": "9325865ef7e6e109bf84940da43c31465778280bb3c1033f1ccd76a53fc00757",
+    "Classes/ARTiledImageViewDataSource.h": "14dc35577b081040cc7348f15f18dacf8447dc6a66cb540d2dcc2cfe9819c9f8",
+    "Classes/ARWebTiledImageDataSource.h": "26df5e4719d6ce04d9eb4d6e8f6f7f99647edb319e7d2114d90d186c548d0e76",
+    "Classes/ARWebTiledImageDataSource.m": "1f6a5aa1614f535498d3a69db364a2fa4e841538eb1ec642a013d8d06890cd0e",
+    "LICENSE": "933c1a56f1287019f0c1920154742dbf22bd36cd39482bd261f240071a3412cd"
+   }
+  },
+  "Artsy-OSSUIFonts": {
+   "podspec_name": "Artsy+UIFonts",
+   "module": "Artsy_UIFonts",
+   "version": "3.1.3",
+   "source": "https://github.com/artsy/Artsy-OSSUIFonts.git",
+   "commit": "cc476e600439fd2450eef65524682408cfb98126",
+   "archive_sha256": "bb2d22365c3496b5d612bebcb371220e5520e97f2251d82d3074a146ae0da865",
+   "spec_checksum": "d38c82636e000b1dee31b7bec0268e1841dac17f",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "README.md"
+   ],
+   "files": {
+    "Artsy+UIFonts.podspec": "40017001ffa9e2ddb324c16e431f68faa8a57b57d4f8262d71f6b0d2ccb0dcde",
+    "Pod/Assets/EBGaramond08-Italic.ttf": "dc4a49253eff6b655a3ba06abc6d2c004aba8891f9680f6986008fbf46ff8eb0",
+    "Pod/Assets/EBGaramond08-Regular.ttf": "3c2cd552af5764bbcf49126d07dd4f56d172db9e8befe73da54b879b5477efd4",
+    "Pod/Assets/EBGaramond12-Italic.ttf": "d81f7610703944f5e496e166d593eb7981603268f17bd294b59207d4dc27ee47",
+    "Pod/Assets/EBGaramond12-Regular.ttf": "f89a1c02ab16062751c6ff1498139e74604e02b1b54c5b35b1dadd530ef35f2d",
+    "Pod/Assets/texgyreadventor-bold.ttf": "111c130f7bb563f50b2e0b005a6681e6a65b1aeb76139264c6acff3190ab4f40",
+    "Pod/Assets/texgyreadventor-regular.ttf": "9f86d273731612ce87d609d4738d09bb969932446f789a40522e05f3d1c7586f",
+    "Pod/Classes/UIFont+ArtsyFonts.h": "a2a029abb7b3f38bcd9a25cc9073a7f5c02daf9942020b28ea2fb0d11bccf372",
+    "Pod/Classes/UIFont+ArtsyFonts.m": "8f5cb36211f07184ea9943c9a0ff66729f5d7f2d1a2375b1f1bd4ef80b35c78d",
+    "README.md": "000e6419016fb5192b48a35270f930063f7453905eddd8f7cbde6ff0731f7221"
+   }
+  },
+  "Artsy-UIButtons": {
+   "podspec_name": "Artsy-UIButtons",
+   "module": "Artsy_UIButtons",
+   "version": "2.1.0",
+   "source": "https://github.com/artsy/Artsy-UIButtons.git",
+   "commit": "c12745a7d1578df6a58781fabe5acc7c4ac5b0b4",
+   "archive_sha256": "acfb631e46042f461b7b26c415f163b79ea7abdc0893d8837a888ec93b737b90",
+   "spec_checksum": "cdcc3ccf4d0d31ee80f45c1d11ffd2d772695b74",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "Artsy-UIButtons.podspec": "4e5e00553ffd920774d3f3da6895a51ff2d376a69a4bb99eba358922d1341f45",
+    "LICENSE": "36daab3fc06e93e6bec8b5378a232aae5a627f93190ed029dbc0b9002ee0c206",
+    "Pod/Classes/ARButtonSubclasses.h": "df14ccb7d0297f4b5c32bbb42211cbe62852fddb991db12975e4d54b46ae4070",
+    "Pod/Classes/ARButtonSubclasses.m": "9ef7095e7b30b5b3ccc7ca2969d82b59ad053abb904a676103bd220b15d39799"
+   }
+  },
+  "Artsy-UIColors": {
+   "podspec_name": "Artsy+UIColors",
+   "module": "Artsy_UIColors",
+   "version": "3.1.0",
+   "source": "https://github.com/artsy/Artsy-UIColors.git",
+   "commit": "a80556b7d5fc9a30f962fcba747888d46657ff20",
+   "archive_sha256": "0c696d98161c16391887a0a8f8ee78b15b0658a365849e9eccad5228949ac8d5",
+   "spec_checksum": "31c03c4146f5e6618a9b950f37dfe02dd9ac09a6",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "Artsy+UIColors.podspec": "3605bc41bcfe833c93db61f9847aa2200d64f1cd39baa93d49683c4186a1744f",
+    "Classes/UIColor+ArtsyColors.h": "0ff0d3d4b6446b031a0006da1b4ccb85b4c32909cf68c39ffacbd86d3ca7826a",
+    "Classes/UIColor+ArtsyColors.m": "a68df3c5eab9913f9157bfe91634f9af308fe2cc94aa97adfa606b4bbee4437f",
+    "Classes/UIColor+DebugColours.h": "6faa02d9603e8b6b01b7e02c8ad409be6b370541a6a3c6f5c786f9de5834077a",
+    "Classes/UIColor+DebugColours.m": "902cbe3eb6466958e32308da715922b8993d0a97f79c37a4321ea30e950bb531",
+    "LICENSE": "e74d5228081bca007cb9831bbaa2bc79ec54593958865f3c981169e7db538e98"
+   }
+  },
+  "Artsy-UILabels": {
+   "podspec_name": "Artsy+UILabels",
+   "module": "Artsy_UILabels",
+   "version": "2.2.0",
+   "source": "https://github.com/artsy/Artsy-UILabels.git",
+   "commit": "d3363043cfa2025c6ec92a1b878ef27488fbf13e",
+   "archive_sha256": "ffa42c344731ae034c4c4e7c722ac9ad9c2fe9942012cd61d0b883749cc5f41d",
+   "spec_checksum": "7cb6e290a4f70dddba037b7dbeb21e90b49d7275",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "Artsy+UILabels.podspec": "c04c8cac734f36f10d9da9c111e5cc08671bf75b09eaf33229b3ac8bd564e644",
+    "LICENSE": "e74d5228081bca007cb9831bbaa2bc79ec54593958865f3c981169e7db538e98",
+    "Pod/Assets/Chevron_Black.png": "8c18f6903742d885bae081c45fd18c58bc7bf358441096947db5080cfa52529f",
+    "Pod/Assets/Chevron_Black@2x.png": "e136835d68300ea5edd2a5dee83891826e67f743fa84f4bb2180de3d8d3befac",
+    "Pod/Classes/Artsy+UILabels.h": "47c876e9f2a8597b9e4887307f5075ec319b0c91a0a443fb72224a46d9a5cf06",
+    "Pod/Classes/Artsy+UILabels.m": "5061e1c590cbc1ed0d6e917b8187b479e4c0fdc5324ee1b3f73713e01ed7bf01",
+    "Pod/Classes/NSNumberFormatter+ARCurrency.h": "49a2f9e660a7d8410a8096d8a161684277febfc3f28d63022325aeaea84677d9",
+    "Pod/Classes/NSNumberFormatter+ARCurrency.m": "da7bf447ec16a712226ad03113dfa563c8b766cd30d54fd76fc4e072be9ca561",
+    "Pod/Classes/UIView+ARDrawing.h": "f76bf69adfd36b4d92f07edc2db5834d31111c149fce33eca1e07c310e06afa1",
+    "Pod/Classes/UIView+ARDrawing.m": "99c4eb9a0dac23cc28bffdde66851d6eb59f49a7d3432cd1d855867c706c3b0e"
+   }
+  },
+  "DZNWebViewController": {
+   "podspec_name": "DZNWebViewController",
+   "module": "DZNWebViewController",
+   "version": "checkout",
+   "source": "https://github.com/orta/DZNWebViewController.git",
+   "commit": "9121386901af95072fb19eaa3df7060ca46fc337",
+   "archive_sha256": "17fc164c23b78658b7994b0e174c6dc5e40a82b725f4ac63627aff85a9358504",
+   "spec_checksum": "54e8ee1c5bcc43e341ad77737631098d0d76db69",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "DZNWebViewController.podspec": "5e2e1be468a959a5e0f55f4d4f86a5d6dd7e6d0a2570586d0460b42c4c1110c0",
+    "LICENSE": "2f52b0adc55901a29c52176f110d5d3d7f529a9750b746b6066792fe1887aef1",
+    "Source/Classes/DZNPolyActivity.h": "840b31aea3f9ad5b3d6a202d666714aa53e3f28d833b7c76eb1e414ae1607d84",
+    "Source/Classes/DZNPolyActivity.m": "e093f131a472ecb64b38ad154de8a41a39d90bd07e313113a43a4f3f760a31e3",
+    "Source/Classes/DZNWebViewController.h": "66153677f3acda8a2c8072cadc7415ccdad534c4902f3bab1842f8f17fb13a26",
+    "Source/Classes/DZNWebViewController.m": "07bfa6a25319dde089996f06ac92e17bf2007b68e52f354521ac68367ba66383",
+    "Source/Resources/Chrome7.png": "419b44b61bc3fd6875e4109a1073e87d55f71e73402a7ee382ef157380203b43",
+    "Source/Resources/Chrome7@2x.png": "706e7476f77fd7874c482232a097edc9e7b851161ca07ffdd8e299dbb6d5912f",
+    "Source/Resources/Chrome7@2x~ipad.png": "98bf018aab8c513f2649e4b3d26a779d91c2959d035883f36f3277809408ef75",
+    "Source/Resources/Chrome7~ipad.png": "718cf3739eb7c73534b049310b93a7115dd7e88e089f6b39c1811f7023bff04f",
+    "Source/Resources/Dolphin7.png": "2debf555ba7a3747ce7e6d6030463abe1125237748ab2cb70411150354680e5a",
+    "Source/Resources/Dolphin7@2x.png": "5dbec31a79b44208307d873926a78f54d69fcfdedf74e11b86bd64b02b3d39fb",
+    "Source/Resources/Dolphin7@2x~ipad.png": "5792693114b422aba3174baf941608c091cd5d2de64816ab92c524593b5ba951",
+    "Source/Resources/Dolphin7~ipad.png": "5ac224bc3643c251bd6eff6aba56ba61893f75314d27e5822e52769ac2a78f2d",
+    "Source/Resources/Link7.png": "efe6d0d436fd05d95fcad4cb65ececc75651611a3cb4b3cf7aae683a92cdfb51",
+    "Source/Resources/Link7@2x.png": "dacc7665dc1de911f7fc047d1386218933852ee598c07930380cf642d84f7b44",
+    "Source/Resources/Link7@2x~ipad.png": "26418474293d556d59d3d0724ce5ddc3ccf4220f7e54e1256e7640b917fbc98b",
+    "Source/Resources/Link7~ipad.png": "0bf104cdfa2d63fe89032390bbccd92b9255aae262bde0004cb4a8dae04b1bc0",
+    "Source/Resources/Opera7.png": "bbc3740fa21b5c6f18b5fae60ffa23d54ff1a340ec469d77c57c42d9bbd25965",
+    "Source/Resources/Opera7@2x.png": "df71ac7386f21f655a47a449961d61da3f3ffd5d6cb1b7226259315a8f074a6f",
+    "Source/Resources/Opera7@2x~ipad.png": "6467ca0239923ab1abfbc4081eeba0c0881bafeff488112edcccc2ffc4276d0e",
+    "Source/Resources/Opera7~ipad.png": "d6c48716ab90f238478dc1712d12526febfa5a738b0073b30657de7a4141bb60",
+    "Source/Resources/Safari7.png": "3e2d34bf6612cf397d0f20d37b870acb32c9746584ad1e8259cf9a42a48f1751",
+    "Source/Resources/Safari7@2x.png": "58e0c955e48419bc076756980aefa2631cacb64c57e777d18ec97cb38566f0af",
+    "Source/Resources/Safari7@2x~ipad.png": "dc393b81bd7f6fd5d842cbeba2d7f366fc060af46c619f09fb6dedd4bc39917e",
+    "Source/Resources/Safari7~ipad.png": "0a0ea6f1664677f5e44ea26987d4d81e72f253f9a709c468172929dc503b16e0",
+    "Source/Resources/toolbar_backward.png": "23bc2be04776708e713f881ce599e1ab2ad0520f64bf15ed7f2819db767f6dc1",
+    "Source/Resources/toolbar_backward@2x.png": "6db18ee0b6e3a714a43ecd6da2fd93e3fb457a460b672dc344e00454d9bd4077",
+    "Source/Resources/toolbar_forward.png": "abb1c7cdd517a7dec68fb30be2d53b5576134fc89295362bade8ff553313a25b",
+    "Source/Resources/toolbar_forward@2x.png": "946a272c3e89ff38371640eb24e2b5c0bd62b1cd673d2a2b9e2ed8c43f84f800",
+    "Source/Scripts/inpector-script.js": "62115dfabfcbf53fcfa6b80ea9928ebc8a5ff6fa1e6427598a73565378cd07f6"
+   }
+  },
+  "ECPhoneNumberFormatter": {
+   "podspec_name": "ECPhoneNumberFormatter",
+   "module": "ECPhoneNumberFormatter",
+   "version": "0.1.1",
+   "source": "https://github.com/enriquez/ECPhoneNumberFormatter.git",
+   "commit": "c70d50d8ba6dfd1299120a209cc105b6847d90b4",
+   "archive_sha256": "f9cde032e2b14dcb978a6b34a1adaeea543d7b668dcff82b00d9aa2cda660db7",
+   "spec_checksum": "061041e7715f8d3f2e8e2a069ddf28c52f7bd314",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "ECPhoneNumberFormatter.podspec": "e85fbe7e0002097684077befab30f2f18dcf5d0e49f3b1d972fec314b7aac101",
+    "ECPhoneNumberFormatter/ECPhoneNumberFormatter.h": "5806c1e067ed957cc9ae8420ff06bb2b0629f2ead2ab9d35e454c181b186ab9a",
+    "ECPhoneNumberFormatter/ECPhoneNumberFormatter.m": "912d246b0fb6e6c66a8a5e0c2b0f12d93a1721ef93c052de51512d75538d08b8",
+    "LICENSE": "fcf4d5f5e2f7bb42d787f00403214191ea52ded8788809cdefbbfe6dcd9b4cbe"
+   }
+  },
+  "FLKAutoLayout": {
+   "podspec_name": "FLKAutoLayout",
+   "module": "FLKAutoLayout",
+   "version": "0.1.1",
+   "source": "https://github.com/floriankugler/FLKAutoLayout.git",
+   "commit": "bc5b351bfe0f6cf9062b6e685ec665b35a60bb24",
+   "archive_sha256": "3b009b075a2b421ff4f0ccc673a4fcd9271b99eac2f684818507a0e0f75e120d",
+   "spec_checksum": "95b12c5cd9652100235140b68652f063f7437851",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "FLKAutoLayout.podspec": "40f5c5044609b37f5b25ea9bdb2969d29df946c5fd5104427daf58bebdb35823",
+    "FLKAutoLayout/FLKAutoLayoutPredicateList.h": "537dc3ff7647583e6f9cac9d6795b8a02bdad0077b310db1873538659529d710",
+    "FLKAutoLayout/FLKAutoLayoutPredicateList.m": "2312deeed214f4449682610b73f06bb737ec46f3b59ac22fc091ad249ad9af7e",
+    "FLKAutoLayout/UIView+FLKAutoLayout.h": "0570ab86b4aa18a44cfc1a4456d3d51d802fa9e1f8c435d40365ee26e70f5fdc",
+    "FLKAutoLayout/UIView+FLKAutoLayout.m": "f14344d3d487e04823fe4104be7d9b18a8331a82ab6a6ca744be33db45701daa",
+    "FLKAutoLayout/UIView+FLKAutoLayoutPredicate.h": "b63f405b91e20ce2463b040b6713d4452972867794dacbc59789e00c1ab97c4b",
+    "FLKAutoLayout/UIView+FLKAutoLayoutPredicate.m": "f50bbd6adf838869beb350a8af3e4e0c3ae2922c927b2145a8064af082fcf63a",
+    "LICENSE": "378bd658828eae4696ff95b935ec57be72787bc247ab788a3ae15ede8aa6fca6"
+   }
+  },
+  "ISO8601DateFormatter": {
+   "podspec_name": "ISO8601DateFormatter",
+   "module": "ISO8601DateFormatter",
+   "version": "0.8",
+   "source": "https://github.com/boredzo/iso-8601-date-formatter.git",
+   "commit": "c361d097e19ca1cafd8eb21427467004f511c381",
+   "archive_sha256": "900475d9aa595dcb8acf9a8614c0483aaf62337001c31eb8c593d97915eb4589",
+   "spec_checksum": "4551b6ce4f83185425f583b0b3feb3c7b59b942c",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE.txt"
+   ],
+   "files": {
+    "ISO8601DateFormatter.h": "141d66da16fb601ca44ccd70d210865e95921788ded754f27d9dbd89eee52631",
+    "ISO8601DateFormatter.m": "f0b021a1d2caec68d8f50dec1fa32fdea64740f992385f3f89563a01e48177c4",
+    "LICENSE.txt": "116e9d91e4523f8963ba6881655aeaceab1f5ac1286d2fa9f3bc98e00fc9b4c5"
+   }
+  },
+  "NJKWebViewProgress": {
+   "podspec_name": "NJKWebViewProgress",
+   "module": "NJKWebViewProgress",
+   "version": "0.2.3 (tag v0.2.3; DZNWebViewController dependency)",
+   "source": "https://github.com/ninjinkun/NJKWebViewProgress.git",
+   "commit": "90b694a8e6b8aa1c93f3c3a18e4a45e2039f2c56",
+   "archive_sha256": "cb2f6d4f96c44479b86a85d9974ee657fd64c46376ee4bd2c6a62fdf82417ed0",
+   "spec_checksum": "f481fd424cb5ecc27eacae11b5397db92fba9a4d",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "LICENSE": "2ba30e728529218f9139269ea456f5162e90a6fe0394579611e635a0a7e624ca",
+    "NJKWebViewProgress.podspec": "e4fbad0389548ad2dec91435891dc7c54e062c94bbaf62efc1e23ad21d65fc2d",
+    "NJKWebViewProgress/NJKWebViewProgress.h": "bfa364a316d96aa34bef9e7a41ab38f0688301f0bd175c4f1ea160dbf071f76b",
+    "NJKWebViewProgress/NJKWebViewProgress.m": "9bea28d9c11498d4cae4fb87be53b9518766731343b42489bc2c7b8634d5ab2c",
+    "NJKWebViewProgress/NJKWebViewProgressView.h": "16d44058718a6c808d14f77f0288aaf9872939f9aa7a5e81eb8f5d21027a6c14",
+    "NJKWebViewProgress/NJKWebViewProgressView.m": "e6dfe58792f171c9b8f0914c6e5b44c30fdafa644a57f7e5f6ffb88a00ccef96"
+   }
+  },
+  "ORStackView": {
+   "podspec_name": "ORStackView",
+   "module": "ORStackView",
+   "version": "2.0.0",
+   "source": "https://github.com/orta/ORStackView.git",
+   "commit": "3add7869c2c541846ce8a97a88136699f13f0da9",
+   "archive_sha256": "06c8b5f6ede9ff832ecb6449f2eedba2c8f525953b42de2f8f9595398f59ca48",
+   "spec_checksum": "5df6b1b990b0648d8ef6f69f89361ea8648e8f64",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "Classes/ios/ORSplitStackView.h": "02c9b39eed91cef47d05394f69768b9167b9ebb3da152a3c181ec7c5ec103124",
+    "Classes/ios/ORSplitStackView.m": "54bb98d6ff9da592960af1f2d0e0c7364c10d9e6fb759b12a98b83f21f2d36a7",
+    "Classes/ios/ORStackScrollView.h": "b76e29acb260bf497d55daf64ea69d35713342805c96cc7b79aeaba9cb703c93",
+    "Classes/ios/ORStackScrollView.m": "27b2c94bbf882f6be11a0bc69b227d262392054790445c066cee40a5b4bf48d7",
+    "Classes/ios/ORStackView.h": "83ef71044d6c37cfa140724c3e603813156773fbe89019d272be1ac646aa173f",
+    "Classes/ios/ORStackView.m": "cecfd6d622a130ab675870aacd53daa22215f0dff503ec698e2c8876be55570a",
+    "Classes/ios/ORTagBasedAutoStackView.h": "66618e55b23a071364bba5f4fea0968b117e68ae92304edbbb4bd38d7b90e8d8",
+    "Classes/ios/ORTagBasedAutoStackView.m": "8d4240306653d8acec148a17fcda277f109722c92e6ee3d31c583f7e5751098f",
+    "Classes/ios/private/ORStackView+Private.h": "706f22396fd95ac4855a4e915020e147d3c35970b80297acd4dbbe8e396b6b67",
+    "Classes/ios/private/ORStackView+Private.m": "9db2cdd5952473ac301c8f7ab83266ac847d645840ddd1456bfd8b35934038d0",
+    "LICENSE": "927558dec6184d3df33f10e5ff8c2764a6d8c36bf69f90b2cab5ca5786196b06",
+    "ORStackView.podspec": "aa7d8127f0df7afcf934e7dc11e56d1f1f05524859f29856a8f4c402231bd6b7"
+   }
+  },
+  "SDWebImage": {
+   "podspec_name": "SDWebImage",
+   "module": "SDWebImage",
+   "version": "3.8.2",
+   "source": "https://github.com/SDWebImage/SDWebImage.git",
+   "commit": "42a5e6f6ec513e57987ea9544ac8a969cf586c3c",
+   "archive_sha256": "152b98e292d079b80c42d089f68d4024123c91a4f74708ca9903e3c22d141f92",
+   "spec_checksum": "098e97e6176540799c27e804c96653ee0833d13c",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "LICENSE": "1bc439bd0e2144c0c445581de31e975c739bbbc3c1ec687c2b6bdb4aa310bab2",
+    "SDWebImage.podspec": "79c44a89656dfc8a05c07e7c673ab0f9f0d1e21d278cce67e6565725300a1b77",
+    "SDWebImage/NSData+ImageContentType.h": "6699dfec581e67c0229db44eb59dbb9327adf0fc35f31744418f7b4b5d384560",
+    "SDWebImage/NSData+ImageContentType.m": "31d4ea82308db5a88e6f9faa9d7386c6fdb10b803ace462cf34df4749a6d867b",
+    "SDWebImage/SDImageCache.h": "804d516b5cc26ab7b5aa4aed30ede481fa7d5dcb18bb5fcc6eee5272f6f9df0f",
+    "SDWebImage/SDImageCache.m": "b31f5b39ddc44e80a25a84fcedf3bbbe3ec24a5584e4d8dd12636d2cb59d558f",
+    "SDWebImage/SDWebImageCompat.h": "323959132672bc97064a20c6389a49a8042d64ddaeb47c14e8d7d3022704168e",
+    "SDWebImage/SDWebImageCompat.m": "c8c85c0040ba03146778128026f180642c2a558d31126040160f3567e55e95c7",
+    "SDWebImage/SDWebImageDecoder.h": "25c346ad7d1d9bb751d53d37324c9ebbe089d806d6c5c848a60b5b2c1b5aed1a",
+    "SDWebImage/SDWebImageDecoder.m": "66a0c87e7d56b2d56ae1780972698aa66e877141166d105c7b0edcd4f3bdc5c8",
+    "SDWebImage/SDWebImageDownloader.h": "4b9dbb74f1e881ba16fc9b22977877a17fae4e112524edc7a5ce481c5d6fc37e",
+    "SDWebImage/SDWebImageDownloader.m": "e265cfce204f5fa6aea57863330d2ba2efab6c5e66b32f82fc2e56e9c6f3b175",
+    "SDWebImage/SDWebImageDownloaderOperation.h": "9e0b7be19486a036348c08211a2e013be652c4ccf909274352420d134e4a6908",
+    "SDWebImage/SDWebImageDownloaderOperation.m": "4cc376f5d4107dc82f47750593ae599f29e2559e694aa803c3f6f319416088c2",
+    "SDWebImage/SDWebImageManager.h": "e80dcf0b84390c736808ca63e67240b17ebc158177990e895d976e0b8797634c",
+    "SDWebImage/SDWebImageManager.m": "12523805077b72f8e335437b9a329e40005675bf9830ebee1768a8ffd9e9a039",
+    "SDWebImage/SDWebImageOperation.h": "c374c8767ef44c1543166894ddc4a74c6bdf0861864887d2a3fe1ceb330e301d",
+    "SDWebImage/SDWebImagePrefetcher.h": "648e597cbfa025a8e07b84ad7789d382f249f5151e6fb5a8f0c833643d3d8d6f",
+    "SDWebImage/SDWebImagePrefetcher.m": "9e046ebb5a8dcdea337b4f6b894458682137e3e97e2e8bf2b1c933d97ce0f9cb",
+    "SDWebImage/UIButton+WebCache.h": "0afb2a167dcdf74b52c25209e3f88fbae1c0bc5de3164ed67f910fd69a4afa23",
+    "SDWebImage/UIButton+WebCache.m": "3d9378a86e43aa28158d3a9c97f0b8d39e481cc3ab21c5c87c74264401cd2e94",
+    "SDWebImage/UIImage+GIF.h": "da8200231e9cd2ed54d3838a325eec0544090558e305f99be8adfcf5464427a9",
+    "SDWebImage/UIImage+GIF.m": "1ca2e14d29cfd43aebd72fa1c085181532657714e4c8dfb41b4fc0d0fa9010d3",
+    "SDWebImage/UIImage+MultiFormat.h": "b0ccf2203aadfc6fdc147fdf490e39dc3585099fc7bb8c88ec77b46adeb87061",
+    "SDWebImage/UIImage+MultiFormat.m": "45e10d0e0c2e0ac5c4f2cc36128beb87da6590d820ac5b7d011e66e00e0ce022",
+    "SDWebImage/UIImageView+HighlightedWebCache.h": "3dd4b1bbe2f87e6f907e3c0786e0e943265a846835ba9fb3df6a8bab3f31ff38",
+    "SDWebImage/UIImageView+HighlightedWebCache.m": "b360b4017775b16178752576c922bcca9cabc2add51dac35e7b7631dceefdd14",
+    "SDWebImage/UIImageView+WebCache.h": "e9eef2c249ab28758f24d73f82d146ba920946d09dd8cb99064f6e9d4b334791",
+    "SDWebImage/UIImageView+WebCache.m": "b5cd56ccd995f0a756edfccf6aec9a70a3afd599fb9dbfb4df4718d91b7bfd18",
+    "SDWebImage/UIView+WebCacheOperation.h": "7e340ec7a2094262d89b598914f25278ad958fbcda63bddb18e287e1468eb9d0",
+    "SDWebImage/UIView+WebCacheOperation.m": "e2a9898b1718100b15ca0a9cf8245cc2aa68cf9e60b4d8b38864c7ceddc09ab6"
+   }
+  },
+  "SVProgressHUD": {
+   "podspec_name": "SVProgressHUD",
+   "module": "SVProgressHUD",
+   "version": "2.2.3",
+   "source": "https://github.com/SVProgressHUD/SVProgressHUD.git",
+   "commit": "fa00b0d1af8475eb63101002a261224b61e2d353",
+   "archive_sha256": "117d9fee237e4a2356bef85b17e9a928f626a4e8a46f5c4582e636fd8a07eb9f",
+   "spec_checksum": "a5eaeff664a82dda89809c409ace40183ce91523",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE.txt"
+   ],
+   "files": {
+    "LICENSE.txt": "53ebc103c9d6d40b258ccda3bc4d22a3009e76e2189827f05213c2b3021c913f",
+    "SVProgressHUD.podspec": "38ca175e09597462628b3c2c54793663b1f44ae9c69b774ee13ef2bffb91ec8c",
+    "SVProgressHUD/SVIndefiniteAnimatedView.h": "8162e5a0b9458f52d10cd537313c035755bc4f14d6437fe8e411e0248f02ed9f",
+    "SVProgressHUD/SVIndefiniteAnimatedView.m": "b44fd2fc377ee9f1519f04636e1cde8d76f263cbdd4f09d1759b348b44c6d838",
+    "SVProgressHUD/SVProgressAnimatedView.h": "329bdb526719c5c2fe1df3d3a1becc3a792f62be9ebf65fc562e525baf831a1d",
+    "SVProgressHUD/SVProgressAnimatedView.m": "556aa02fd7fe99374e5b61647782963fbcf764a694486c62cb88d01c78049d61",
+    "SVProgressHUD/SVProgressHUD.bundle/angle-mask.png": "0c3c368e75e9d568e87d3f88903eaacb7f9d2c8cc313dbebc4d48fa1e40ee23a",
+    "SVProgressHUD/SVProgressHUD.bundle/angle-mask@2x.png": "e900095e8614eef4294ddcd471bd87aca8528fa80272b65bf6beb3d09e722bec",
+    "SVProgressHUD/SVProgressHUD.bundle/angle-mask@3x.png": "8b0c005fc1de794ef4bd0b9d6f52facfcd156e7b95789fb39fde232cca2f98ab",
+    "SVProgressHUD/SVProgressHUD.bundle/error.png": "50393f5fecb237e5129c35bd245a7b3fd3b98ab08b6647b26d50750440d5ba70",
+    "SVProgressHUD/SVProgressHUD.bundle/error@2x.png": "5dcf5f833877836157f23f5d62abb1fe09beef7203ba5ed56f429a300419a3e1",
+    "SVProgressHUD/SVProgressHUD.bundle/error@3x.png": "3fac0ad68c4e2fabf20fba3dabdfa13fd8dcb59693ca5b99826d73a4a830d1d3",
+    "SVProgressHUD/SVProgressHUD.bundle/info.png": "19eca9c60cab51d290f0dcaa73dc34abd5cb09db516e4e1c262f441394175ecf",
+    "SVProgressHUD/SVProgressHUD.bundle/info@2x.png": "28bb2b419ae3530aec52d652ba5d5b25b347f0e4dbe7e62b8da556fab6e5eb84",
+    "SVProgressHUD/SVProgressHUD.bundle/info@3x.png": "79eaf9d5ef41dee56b3e69e529f622aa893b2cb951e9c9d4b7c2419a8da81b76",
+    "SVProgressHUD/SVProgressHUD.bundle/success.png": "667783b67a2d8a26b5e276f246496b0958069a794f723a52c148f21d27cf7977",
+    "SVProgressHUD/SVProgressHUD.bundle/success@2x.png": "85ba4e881b6b616a8f64962710121ffdd6569feeab1701d13e9d16cd4f60035f",
+    "SVProgressHUD/SVProgressHUD.bundle/success@3x.png": "10c89ce4f670e5a6fbb015232f9b7560cac7e569d100909b81e30b14981943f4",
+    "SVProgressHUD/SVProgressHUD.h": "a890c8f92ad7a79ea605d08ababe2d8addd3a3230d445103dfb9fc43a03b2364",
+    "SVProgressHUD/SVProgressHUD.m": "e3b050ea64ecf466639f5114bbbc298d2c39cafecccdbf0a811bbed126d7c5f6",
+    "SVProgressHUD/SVRadialGradientLayer.h": "7ccd3d1d541e1dfbdadb8ea491f68981f785d41652dbd684a6280818bbe4d947",
+    "SVProgressHUD/SVRadialGradientLayer.m": "1116f297d9fd831dd297563fe36654b21989a4c59b043c3070363090732b0c3e"
+   }
+  },
+  "UIImageViewAligned": {
+   "podspec_name": "UIImageViewAligned",
+   "module": "UIImageViewAligned",
+   "version": "checkout",
+   "source": "https://github.com/ashfurrow/UIImageViewAligned.git",
+   "commit": "6f8cb5669b219ef08c90c2e2e5a082cadfe7565b",
+   "archive_sha256": "a62564d6c0355c845750ee079b2b60e5e8ed2b650f1d2e76fc0b7dba07c5c0e3",
+   "spec_checksum": "5726c9651898342c19588a02e2115cace59342ee",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "LICENSE": "fc125d0083ffaaf804dd8df330b33c0ecfd05d8c4f607a2e4d9ea96f494fb58d",
+    "UIImageViewAligned.podspec": "d57268ccb525e70a91c5e335c5a23f69790d58b13de6280947fe400b7ae8c690",
+    "UIImageViewAligned/UIImageViewAligned.h": "a61db475a9ef545d3eca5367040da9ad04395954557ec57d80c72689533d40e4",
+    "UIImageViewAligned/UIImageViewAligned.m": "a98b232ac9c913aa9c22f91a80ee700a91988710a5e03ae949e117392f31ea07"
+   }
+  },
+  "UIView-BooleanAnimations": {
+   "podspec_name": "UIView+BooleanAnimations",
+   "module": "UIView_BooleanAnimations",
+   "version": "1.0.2",
+   "source": "https://github.com/ashfurrow/UIView-BooleanAnimations.git",
+   "commit": "e80e7bb6c57565ac41da8fbfb1b45c46fa1fda22",
+   "archive_sha256": "ab3fb418f6851393640804e1becc3b4eb79c096d5df0a5f794aae4b335f932a7",
+   "spec_checksum": "a760be9a066036e55f298b7b7350a6cb14cfcd97",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "LICENSE": "74a8b941d0e8db8290e0e8528f43ff065c885bf5c8053a83b31ffcac906bdb6a",
+    "UIView+BooleanAnimations.h": "e162a1822589b9594370dca4441677e57c8214b4e51e67f0b5fc9ce5f96ce21f",
+    "UIView+BooleanAnimations.m": "cb11a109ee3f9d30567c164096fb446067ba3bdddfaec18fe94cb11b2a45d139",
+    "UIView+BooleanAnimations.podspec": "43c90c2797989ca3d2b1a0a7395e49e78e7877ae1ea7ef1a4f86627687a56818"
+   }
+  },
+  "XNGMarkdownParser": {
+   "podspec_name": "XNGMarkdownParser",
+   "module": "XNGMarkdownParser",
+   "version": "0.3.2",
+   "source": "https://github.com/xing/XNGMarkdownParser.git",
+   "commit": "147e22b5be0c879c909c6f2e870464ed4ea8ee38",
+   "archive_sha256": "4e74b89d3bcb6311d86b8fa06433689ac27120e2928d52e0e6528bdf11722123",
+   "spec_checksum": "aed98c14f0c0eb20064184ddf9bac26c482722b2",
+   "spec_checksum_verified": true,
+   "licence_files": [
+    "LICENSE"
+   ],
+   "files": {
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "XNGMarkdownParser.podspec": "d6ae9e69e06bd4c2a694027c62a8bb658cfe12248a0d6fc4136d58b4233bfee3",
+    "src/XNGMarkdownParser.h": "661bfb2fb351ff080ffff127ef76faa399cb83cf828e50c5316ba0ab631f8dfe",
+    "src/XNGMarkdownParser.m": "292966fcd6de72429310c845debaec2f1c39d25c7f01ca3500c8d02870fe958e",
+    "src/XNGMarkdownTokenizer.m": "ae75da6c3a837dfb75fdef9f12979c63eb1d73334b31eddb45fe109304370fdd",
+    "src/XNGMarkdownTokens.h": "2920b1bf951af067c63d0b06d1d4e9700730c4f72167c972b0ae5aec591ad4cf",
+    "src/XNGMarkdownTokens.m": "883d7a2dd3e83b62c99a3afbf7f21f796b30b66cea8232a801c0a94d6be5ca4f",
+    "src/fmemopen.c": "06c22d30d2a19fe36a151c15c2a9f6e5837d5422ed625f8a033892f9da5f1670",
+    "src/fmemopen.h": "c10949e53d98a59eb50c1a43ef4cf8d4d612df4ec025b7dcd0379ffb181d4e94"
+   }
+  }
+ }
+}

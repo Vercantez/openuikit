@@ -117,7 +117,7 @@ public final class SelectorDemoViewController: UIViewController, SelectorDispatc
     let panel = UIView()
     let panelLabel = UILabel()
 
-    public init() { super.init() }
+    public init() { super.init(nibName: nil, bundle: nil) }
     public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {

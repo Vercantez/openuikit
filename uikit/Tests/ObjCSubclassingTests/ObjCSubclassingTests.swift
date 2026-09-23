@@ -193,6 +193,10 @@ final class ObjCSubclassingTests: XCTestCase {
             ("UICollectionViewLayout", UICollectionViewLayout.self),
             ("UICollectionViewFlowLayout", UICollectionViewFlowLayout.self),
             ("UICollectionViewLayoutAttributes", UICollectionViewLayoutAttributes.self),
+            // DZNWebViewController's DZNLongPressGestureRecognizer
+            // (eidolon-kiosk; KioskRowsTests `## longpress`).
+            ("UIGestureRecognizer", UIGestureRecognizer.self),
+            ("UILongPressGestureRecognizer", UILongPressGestureRecognizer.self),
         ]
         for (name, cls) in chain {
             let entries = introducedVTableEntries(cls)
@@ -221,6 +225,8 @@ final class ObjCSubclassingTests: XCTestCase {
             ("UICollectionViewFlowLayout", UICollectionViewFlowLayout.self),
             ("UICollectionViewLayoutAttributes", UICollectionViewLayoutAttributes.self),
             ("UICollectionViewLayoutInvalidationContext", UICollectionViewLayoutInvalidationContext.self),
+            ("UIGestureRecognizer", UIGestureRecognizer.self),
+            ("UILongPressGestureRecognizer", UILongPressGestureRecognizer.self),
         ]
         for (name, cls) in chain {
             XCTAssertEqual(NSStringFromClass(cls), name)

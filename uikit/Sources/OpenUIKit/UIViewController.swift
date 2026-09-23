@@ -145,6 +145,23 @@ open class UIViewController: UIResponder, UIContentContainer {
         super.init()
     }
 
+    /// NSObject's `-init`, which UIKit's UIViewController answers with
+    /// `initWithNibName:nil bundle:nil`. MEASURED kioskrowsprobe
+    /// `## viewcontroller` (iOS 26.1): `[[UIViewController alloc] init]` is
+    /// unloaded with a nil nibName, and a subclass's `initWithNibName:bundle:`
+    /// override runs with nil / nil (DZNWebViewController's `[self init]`).
+    /// A convenience initializer, as UIKit's is in Swift (typechecked against
+    /// the iOS 26.1 SDK: `super.init()` in a subclass's designated
+    /// initializer is "must call a designated initializer", while a
+    /// subclass's own `convenience init()` needs no `override`). Without it
+    /// the generated header marked `-init` unavailable to Objective-C.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic override convenience init() {
+        self.init(nibName: nil, bundle: nil)
+    }
+
     /// UIKit's required keyed-archive initializer, the base every
     /// storyboard/nib-backed subclass's `required init?(coder:)` chains to.
     /// MEASURED (Tools/oracle2/viewcontrollercoderprobe, iPhone 16 / iOS
@@ -313,6 +330,35 @@ open class UIViewController: UIResponder, UIContentContainer {
     @objc
 #endif
     open dynamic func viewDidLoad() {}
+
+    /// UIKit sends this when the application receives a memory warning;
+    /// since iOS 6 the default keeps the view (MEASURED kioskrowsprobe
+    /// `## viewcontroller`: loaded before and after). OpenUIKit posts no
+    /// memory warnings; the method exists so subclasses (Swift or
+    /// Objective-C, e.g. DZNWebViewController) can override and call super.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func didReceiveMemoryWarning() {}
+
+    /// iOS 26.1 still answers `viewDidUnload` (deprecated since iOS 6, never
+    /// sent; MEASURED kioskrowsprobe: `respondsToSelector:` YES).
+    /// DZNWebViewController overrides it and calls super.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    @available(iOS, deprecated: 6.0)
+    open dynamic func viewDidUnload() {}
+
+    /// Deprecated since iOS 11 in favour of UIScrollView's
+    /// contentInsetAdjustmentBehavior. MEASURED kioskrowsprobe: YES by
+    /// default, reads back what was set. Stored; OpenUIKit's inset
+    /// adjustment does not consult it (docs/KNOWN_GAPS.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    @available(iOS, deprecated: 11.0, message: "Use UIScrollView's contentInsetAdjustmentBehavior instead")
+    public dynamic var automaticallyAdjustsScrollViewInsets: Bool = true
 
     // MARK: Safe area (app-compat cluster — AutoLayout/UILayoutGuide.swift)
 

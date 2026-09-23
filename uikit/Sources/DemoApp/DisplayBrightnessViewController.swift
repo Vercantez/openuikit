@@ -130,7 +130,7 @@ public final class DisplayBrightnessViewController: UIViewController {
     let slider = BrightnessSlider(value: 0.72)
     let footer = makeFootnote("Brightness: 72%")
 
-    public init() { super.init() }
+    public init() { super.init(nibName: nil, bundle: nil) }
     public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {

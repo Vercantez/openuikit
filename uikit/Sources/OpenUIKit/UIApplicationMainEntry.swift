@@ -49,6 +49,7 @@ import struct Foundation.Data
 import struct Foundation.URL
 #if canImport(ObjectiveC)
 import func Foundation.NSClassFromString
+import class Foundation.NSString
 #endif
 #endif
 #if canImport(Foundation) && canImport(Dispatch)
@@ -220,6 +221,29 @@ extension UIApplicationDelegate {
         UIApplication._runMain(delegateType: Self.self)
     }
 }
+
+#if canImport(Foundation) && canImport(ObjectiveC) && canImport(Dispatch)
+/// UIKit's C `UIApplicationMain(argc, argv, principalClassName,
+/// delegateClassName)` (declared in Sources/UIKitClangModule, which Swift's
+/// `@UIApplicationMain` binds to). The delegate class is found by name
+/// (NSStringFromClass of the attributed class, the Swift runtime name), then
+/// the launch is `@main`'s: `UIApplication._runMain`. Never returns.
+/// OpenUIKit has one application class, so a principal class name other
+/// than nil / "UIApplication" is not honoured (it is ignored).
+@_cdecl("UIApplicationMain")
+public nonisolated func _openUIKitUIApplicationMain(_ argc: Int32,
+                                                    _ argv: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>,
+                                                    _ principalClassName: NSString?,
+                                                    _ delegateClassName: NSString?) -> Int32 {
+    MainActor.assumeIsolated {
+        guard let name = delegateClassName as String?,
+              let cls = NSClassFromString(name) as? UIApplicationDelegate.Type else {
+            fatalError("UIApplicationMain: no UIApplicationDelegate class named \(String(describing: delegateClassName))")
+        }
+        UIApplication._runMain(delegateType: cls)
+    }
+}
+#endif
 
 extension UIApplication {
     /// Headless launch for `@main` apps. The screen comes from the host

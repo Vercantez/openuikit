@@ -1,0 +1,5 @@
+module Artsy_UILabels {
+    umbrella header "Artsy_UILabels-umbrella.h"
+    export *
+    module * { export * }
+}

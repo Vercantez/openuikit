@@ -63,10 +63,10 @@ open class UIColorPickerViewController: UIViewController {
 
     /// Not `override`: UIViewController's designated init is the defaulted
     /// nib initializer (MEASURED AutocompleteSettingViewController.swift:19
-    /// cannot mark `convenience init()` as override). `super.init()` still
+    /// cannot mark `convenience init()` as override). `super.init(nibName: nil, bundle: nil)` still
     /// binds to nibName:nil / bundle:nil.
     public init() {
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 

@@ -82,7 +82,18 @@ extension CanvasLineJoin {
     }
 }
 
-public class UIBezierPath {
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
+/// An NSObject class, as in UIKit (UIBezierPath.h: `@interface UIBezierPath
+/// : NSObject <NSCopying, NSSecureCoding>`), so Objective-C has the class:
+/// SVProgressHUD 2.2.3 draws its rings with `+bezierPathWithArcCenter:…` and
+/// hands `.CGPath` to a CAShapeLayer (docs/agent_reports/eidolon-kiosk.md;
+/// MEASURED kioskrowsprobe `## bezier`).
+public class UIBezierPath: NSObject, @unchecked Sendable {
     /// The renderer's path. UIKit's `cgPath` is CoreGraphics' own `CGPath`
     /// where CoreGraphics exists (cg-unify) and this `Path` elsewhere.
     public var _path: Path
@@ -120,22 +131,24 @@ public class UIBezierPath {
     /// quarter-circle corners and ellipses.
     static let kappa: CGFloat = 0.5522847498307936
 
-    public init() { _path = Path() }
-    public init(_path: Path) { self._path = _path }
+    public override init() { _path = Path(); super.init() }
+    public init(_path: Path) { self._path = _path; super.init() }
 
-    public init(rect: CGRect) { _path = .rect(rect) }
+    public init(rect: CGRect) { _path = .rect(rect); super.init() }
 
     /// Ellipse inscribed in `rect`, built like CGPathAddEllipseInRect:
     /// four kappa cubics starting at the right-middle point, clockwise in
     /// UIKit's top-left geometry.
     public init(ovalIn rect: CGRect) {
         _path = UIBezierPath.oval(in: rect)
+        super.init()
     }
 
     /// Rounded rect with a uniform radius (identical to the layer corner
     /// construction — radius clamps to half the smaller side, like CGPath).
     public init(roundedRect rect: CGRect, cornerRadius: CGFloat) {
         _path = .roundedRect(rect, cornerRadius: cornerRadius)
+        super.init()
     }
 
     /// Rounded rect with only `corners` rounded. UIKit takes a CGSize of
@@ -145,6 +158,7 @@ public class UIBezierPath {
     public init(roundedRect rect: CGRect, byRoundingCorners corners: UIRectCorner,
                 cornerRadii: CGSize) {
         _path = UIBezierPath.roundedRect(rect, corners: corners, radii: cornerRadii)
+        super.init()
     }
 
     // MARK: Construction
@@ -241,7 +255,8 @@ public class UIBezierPath {
         return p
     }
 
-    public func copy() -> UIBezierPath {
+    /// NSCopying, as UIKit spells it (`path.copy() as! UIBezierPath`).
+    public override func copy() -> Any {
         let p = UIBezierPath(_path: _path)
         p.copyAttributes(from: self)
         return p

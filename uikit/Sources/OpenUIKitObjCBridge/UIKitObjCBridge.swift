@@ -325,17 +325,20 @@ extension UIImage {
 
 // MARK: - Gesture recognizers
 
+// `-initWithTarget:action:`, `-locationInView:` and the touch hooks are
+// UIGestureRecognizer's own `@objc` members now (vtable-free for
+// Objective-C subclasses; eidolon-kiosk).
 extension UIGestureRecognizer {
-    @objc(initWithTarget:action:) public convenience init(__objcTarget target: Any?, action: Selector?) {
-        self.init(target: target, action: action)
-    }
     @objc(state) public var __objc_state: Int { gestureStateRaw(state) }
     @objc(view) public var __objc_view: UIView? { view }
-    @objc(isEnabled) public var __objc_enabled: Bool { get { isEnabled } set { isEnabled = newValue } }
+    /// UIGestureRecognizer.h: `@property(nonatomic, getter=isEnabled) BOOL enabled`.
+    @objc(enabled) public var __objc_enabled: Bool {
+        @objc(isEnabled) get { isEnabled }
+        @objc(setEnabled:) set { isEnabled = newValue }
+    }
     @objc(cancelsTouchesInView) public var __objc_cancelsTouchesInView: Bool {
         get { cancelsTouchesInView } set { cancelsTouchesInView = newValue }
     }
-    @objc(locationInView:) public func __objc_location(in view: UIView?) -> CGPoint { location(in: view) }
     @objc(addTarget:action:) public func __objc_addTarget(_ target: Any?, action: Selector) { addTarget(target, action: action) }
 }
 

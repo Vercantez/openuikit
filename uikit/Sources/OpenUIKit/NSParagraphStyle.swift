@@ -61,6 +61,15 @@ open class NSParagraphStyle: NSObject, @unchecked Sendable {
     public internal(set) var tailIndent: CGFloat = 0
     public internal(set) var lineBreakMode: NSLineBreakMode = .byWordWrapping
     public internal(set) var hyphenationFactor: Float = 0
+    /// The tab stops. MEASURED kioskrowsprobe `## paragraph` (iOS 26.1): a
+    /// new style has 12 left-aligned stops every 28 pt (28 … 336); an
+    /// assigned array reads back and survives `copy`. Stored: OpenUIKit's
+    /// text layout does not expand tabs (docs/KNOWN_GAPS.md).
+    public internal(set) var tabStops: [NSTextTab] = NSParagraphStyle._defaultTabStops()
+
+    static func _defaultTabStops() -> [NSTextTab] {
+        (1...12).map { NSTextTab(textAlignment: .left, location: CGFloat($0) * 28, options: [:]) }
+    }
 
     public override init() {}
 
@@ -111,6 +120,7 @@ open class NSParagraphStyle: NSObject, @unchecked Sendable {
         tailIndent = obj.tailIndent
         lineBreakMode = obj.lineBreakMode
         hyphenationFactor = obj.hyphenationFactor
+        tabStops = obj.tabStops
     }
 
     /// True when nothing in this style changes layout (the fast path).
@@ -208,8 +218,55 @@ open class NSMutableParagraphStyle: NSParagraphStyle, @unchecked Sendable {
     open override var hyphenationFactor: Float {
         get { super.hyphenationFactor } set { super.hyphenationFactor = newValue }
     }
+    open override var tabStops: [NSTextTab] {
+        get { super.tabStops } set { super.tabStops = newValue }
+    }
 
     open func setParagraphStyle(_ obj: NSParagraphStyle) {
         _copyParagraphAttributes(from: obj)
     }
+}
+
+/// NSTextTab (NSParagraphStyle.h): XNGMarkdownParser 0.3.2 sets one tab stop
+/// per list paragraph. MEASURED kioskrowsprobe `## paragraph` (iOS 26.1):
+/// `initWithTextAlignment:NSTextAlignmentLeft location:24 options:@{}`
+/// reads back location 24, alignment 0 (left), no options.
+open class NSTextTab: NSObject, @unchecked Sendable {
+    public struct OptionKey: Hashable, RawRepresentable, Sendable {
+        public let rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let columnTerminators = OptionKey(rawValue: "NSTabColumnTerminatorsAttributeName")
+    }
+
+    public let alignment: NSTextAlignment
+    public let location: CGFloat
+    public let options: [OptionKey: Any]
+
+    public init(textAlignment alignment: NSTextAlignment, location loc: CGFloat, options: [OptionKey: Any] = [:]) {
+        self.alignment = alignment
+        self.location = loc
+        self.options = options
+        super.init()
+    }
+
+#if _runtime(_ObjC) && canImport(Foundation)
+    // The Objective-C surface lives here, not in OpenUIKitObjCBridge: a
+    // bridge category on NSTextTab does not compile on the macOS host,
+    // where CoreText forward-declares `@class NSTextTab` (MEASURED:
+    // "cannot define category for undefined class 'NSTextTab'").
+    @objc(initWithTextAlignment:location:options:)
+    public convenience init(__objcTextAlignment alignment: Int, location: _OUKObjCFloat, options: [String: Any]) {
+        var converted: [OptionKey: Any] = [:]
+        for (key, value) in options { converted[OptionKey(rawValue: key)] = value }
+        self.init(textAlignment: NSTextAlignment(rawValue: alignment) ?? .natural, location: CGFloat(location),
+                  options: converted)
+    }
+    @objc(location) public var __objc_location: _OUKObjCFloat { _OUKObjCFloat(location) }
+    @objc(alignment) public var __objc_alignment: Int { alignment.rawValue }
+    @objc(options) public var __objc_options: [String: Any] {
+        var out: [String: Any] = [:]
+        for (key, value) in options { out[key.rawValue] = value }
+        return out
+    }
+#endif
 }

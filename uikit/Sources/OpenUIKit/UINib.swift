@@ -599,10 +599,21 @@ extension Bundle {
     /// `UINib(nibName:bundle:).instantiate(withOwner:options:)` (MEASURED
     /// identical top-level objects and owner outlets in the nibruntime2
     /// oracle), from this bundle.
-    @MainActor
-    public func loadNibNamed(_ name: String, owner: Any?,
-                             options: [UINib.OptionsKey: Any]? = nil) -> [Any]? {
-        UINib(nibName: name, bundle: self).instantiate(withOwner: owner, options: options)
+    ///
+    /// Not main-actor isolated, as in UIKit (UINibLoading.h's NSBundle
+    /// category carries no actor): Eidolon's KeypadContainerView calls it
+    /// from `awakeFromNib`, which overrides NSObject's nonisolated
+    /// declaration (NSObjectNibAwaking.swift). Nibs load on the main thread;
+    /// the work runs on the main actor.
+    nonisolated public func loadNibNamed(_ name: String, owner: Any?,
+                                         options: [UINib.OptionsKey: Any]? = nil) -> [Any]? {
+        nonisolated(unsafe) let owner = owner
+        nonisolated(unsafe) let options = options
+        nonisolated(unsafe) var result: [Any]?
+        MainActor.assumeIsolated {
+            result = UINib(nibName: name, bundle: self).instantiate(withOwner: owner, options: options)
+        }
+        return result
     }
 }
 

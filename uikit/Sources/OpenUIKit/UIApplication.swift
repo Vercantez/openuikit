@@ -563,6 +563,13 @@ open class UIApplication: UIResponder {
         set {}
     }
 
+    /// Whether the system idle timer is disabled (Eidolon's kiosk sets it
+    /// at launch, AppDelegate.swift:23). MEASURED kioskrowsprobe
+    /// (`## application`, iPad Pro 11-inch M4 / iOS 26.1): NO by default,
+    /// reads back what was set. OpenUIKit has no idle timer to suspend; the
+    /// value is stored.
+    public final var isIdleTimerDisabled: Bool = false
+
     private var _shortcutItems: [UIApplicationShortcutItem] = []
     public var shortcutItems: [UIApplicationShortcutItem]? {
         get { _shortcutItems }

@@ -300,7 +300,7 @@ public final class BackdropViewController: UIViewController {
 
     init(theme: Theme.ThemeType) {
         self.theme = theme
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     public required init?(coder: NSCoder) { fatalError() }

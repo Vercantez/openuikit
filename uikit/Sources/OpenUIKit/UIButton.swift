@@ -125,6 +125,7 @@ open class UIButton: UIControl {
     private final var titles: [UInt: String] = [:]
     private final var attributedTitles: [UInt: NSAttributedString] = [:]
     private final var titleColors: [UInt: UIColor] = [:]
+    private final var titleShadowColors: [UInt: UIColor] = [:]
     private final var images: [UInt: UIImage] = [:]
     private final var backgroundImages: [UInt: UIImage] = [:]
     /// Created on the first background image, never before, so an image-less
@@ -569,6 +570,24 @@ open class UIButton: UIControl {
         titleColors[state.rawValue] ?? titleColors[State.normal.rawValue]
     }
 
+    /// UIKit's per-state title shadow colour (Kiosk's Button clears it for
+    /// normal / highlighted / disabled, Button.swift:9-11). MEASURED
+    /// kioskrowsprobe `## button` (iOS 26.1): nil by default; lookup is the
+    /// exact state, then `.normal` (highlighted and selected read the normal
+    /// colour, disabled its own); the title label's shadow colour follows the
+    /// current state (the normal colour while enabled, the disabled colour
+    /// once disabled) with a zero shadow offset.
+    public final func setTitleShadowColor(_ color: UIColor?, for state: State) {
+        titleShadowColors[state.rawValue] = color
+        updateTitleView()
+    }
+
+    public final func titleShadowColor(for state: State) -> UIColor? {
+        titleShadowColors[state.rawValue] ?? titleShadowColors[State.normal.rawValue]
+    }
+
+    public final var currentTitleShadowColor: UIColor? { titleShadowColor(for: state) }
+
     public final var currentTitleColor: UIColor {
         if let configuration {
             return resolvedConfigurationTitleColor(configuration)
@@ -949,6 +968,7 @@ open class UIButton: UIControl {
 
     private final func updateTitleView() {
         _titleLabel.textColor = currentTitleColor
+        _titleLabel._textShadowColor = currentTitleShadowColor
         if let configuration {
             _titleLabel.font = resolvedConfigurationTitleFont(configuration)
             if let attributed = configurationAttributedText(

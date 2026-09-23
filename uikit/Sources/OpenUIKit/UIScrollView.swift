@@ -517,16 +517,25 @@ open class UIScrollView: UIView {
     public dynamic var bouncesZoom = true
 
     /// Zooms so `rect` (content coordinates) fits the bounds: the scale is
-    /// UIKit's fit ratio, clamped to the zoom range. Scrolling the rect
-    /// into view after the scale change is OPEN (not measured).
+    /// UIKit's fit ratio, clamped to the zoom range, then the rect is centred
+    /// in the bounds (clamped to the scrollable range). MEASURED
+    /// kioskrowsprobe `## scroll2` (iOS 26.1): a 100 × 100 scroll view over a
+    /// 400 × 400 zooming view, zoom range 1…4, `zoomToRect:{100,100,50,50}
+    /// animated:NO` → zoomScale 2, contentOffset 200,200.
 #if canImport(Foundation)
 #if OPENUIKIT_OBJC_SUBCLASSING
-    @objc
+    @objc(zoomToRect:animated:)
 #endif
     public dynamic func zoom(to rect: CGRect, animated: Bool) {
         guard rect.width > 0, rect.height > 0 else { return }
         let scale = min(bounds.width / rect.width, bounds.height / rect.height)
         setZoomScale(scale, animated: animated)
+        let s = zoomScale
+        let maxX = Swift.max(0, contentSize.width - bounds.width)
+        let maxY = Swift.max(0, contentSize.height - bounds.height)
+        let x = Swift.min(maxX, Swift.max(0, rect.midX * s - bounds.width / 2))
+        let y = Swift.min(maxY, Swift.max(0, rect.midY * s - bounds.height / 2))
+        setContentOffset(CGPoint(x: x, y: y), animated: animated)
     }
 #endif
 

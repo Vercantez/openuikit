@@ -22,7 +22,7 @@ private final class PageChild: UIViewController {
     init(_ name: String, log: PageLog) {
         self.name = name
         self.log = log
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     override func loadView() {

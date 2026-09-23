@@ -1,0 +1,5 @@
+module Artsy_UIFonts {
+    umbrella header "Artsy_UIFonts-umbrella.h"
+    export *
+    module * { export * }
+}

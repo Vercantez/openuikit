@@ -483,7 +483,7 @@ private final class _SwiftUIPresentationContainerController: UIViewController,
         contentController = UIHostingController(
             rootView: configuration.makeDestination(dismiss)
         )
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = configuration.kind == .sheet
             ? .pageSheet : .fullScreen
     }
@@ -816,7 +816,7 @@ private final class _SwiftUINavigationNodeController: UIViewController {
     init(node: _OpenViewNode, configuration: _OpenNavigationConfiguration) {
         self.node = node
         self.configuration = configuration
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         applyNavigationMetadata()
     }
 
@@ -1360,7 +1360,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
 
     public init(rootView: Content) {
         self.rootView = rootView
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         graph.invalidate = { [weak self] animation in
             guard let self,
                   self.viewIfLoaded is _SwiftUIHostingView else { return }

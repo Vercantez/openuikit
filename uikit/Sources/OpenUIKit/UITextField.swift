@@ -444,6 +444,11 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         didSet { setNeedsLayout() }
     }
 
+    /// UIKit's `clearsOnBeginEditing` (Kiosk's TextField sets it,
+    /// TextField.swift:104). MEASURED kioskrowsprobe: false by default; see
+    /// becomeFirstResponder for the effect.
+    public final var clearsOnBeginEditing: Bool = false
+
     public final var clearButtonMode: ViewMode = .never {
         didSet {
             if clearButtonMode != .never { ensureClearButton() }
@@ -1223,6 +1228,10 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         guard super.becomeFirstResponder() else { return false }
         if !isEditing {
             isEditing = true
+            // MEASURED kioskrowsprobe `## textfield` (iOS 26.1): with
+            // clearsOnBeginEditing a field holding "abc" reads "" once it
+            // becomes first responder; without it the text is kept.
+            if clearsOnBeginEditing, !(text ?? "").isEmpty { text = "" }
             storeSelection(NSRange(location: documentUTF16Length, length: 0),
                            notifyDelegate: false)
             UITextInputState.focus(self, at: OpenUIKitRuntime.animationTime)

@@ -71,6 +71,9 @@
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
 #endif
+#if canImport(Dispatch)
+import class Dispatch.DispatchQueue
+#endif
 
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
@@ -1238,6 +1241,29 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
     }
 
     final var _caretHeight: CGFloat { (lineHeight + 2).rounded(.down) }
+
+    /// UIKit's `scrollRangeToVisible(_:)` (Kiosk's AdminLogViewController
+    /// scrolls its log to the end). MEASURED kioskrowsprobe `## textview`
+    /// (iOS 26.1, a 200 x 100 view holding 40 lines): the offset is still 0
+    /// when the call returns and the view has scrolled by the next
+    /// main-queue turn. OpenUIKit scrolls the range's end caret rect into
+    /// view on that turn.
+    public final func scrollRangeToVisible(_ range: NSRange) {
+#if canImport(Dispatch)
+        DispatchQueue.main.async { [weak self] in
+            MainActor.assumeIsolated { self?._scrollRangeToVisibleNow(range) }
+        }
+#else
+        _scrollRangeToVisibleNow(range)
+#endif
+    }
+
+    final func _scrollRangeToVisibleNow(_ range: NSRange) {
+        layoutIfNeeded()
+        let end = Swift.min(Swift.max(0, range.location + range.length), (text ?? "").utf16.count)
+        let (line, x) = _lineAndX(forUTF16: end)
+        scrollRectToVisible(CGRect(x: x, y: _caretY(line: line), width: 1, height: _caretHeight), animated: false)
+    }
 
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc(caretRectForPosition:)

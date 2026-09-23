@@ -275,7 +275,7 @@ open class UIPageViewController: UIViewController {
         }
         _isDoubleSided = _spineLocation == .mid
         interPageSpacing = max(0, Self.floatingOption(options?[.interPageSpacing]) ?? 0)
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     /// MEASURED `page.coder` (viewcontrollercoderprobe, iPhone 16 / iOS

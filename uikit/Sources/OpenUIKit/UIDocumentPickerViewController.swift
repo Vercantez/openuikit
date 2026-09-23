@@ -83,7 +83,7 @@ open class UIDocumentPickerViewController: UIViewController {
         self.asCopy = asCopy
         self.exportedURLs = []
         self.documentPickerMode = asCopy ? .import : .open
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 
@@ -96,7 +96,7 @@ open class UIDocumentPickerViewController: UIViewController {
         self.asCopy = asCopy
         self.exportedURLs = urls
         self.documentPickerMode = asCopy ? .exportToService : .moveToService
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 
@@ -119,7 +119,7 @@ open class UIDocumentPickerViewController: UIViewController {
         self.asCopy = mode == .import
         self.exportedURLs = []
         self.documentPickerMode = mode
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 
@@ -128,7 +128,7 @@ open class UIDocumentPickerViewController: UIViewController {
         self.asCopy = mode == .exportToService
         self.exportedURLs = [url]
         self.documentPickerMode = mode
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 
@@ -137,7 +137,7 @@ open class UIDocumentPickerViewController: UIViewController {
         self.asCopy = mode == .exportToService
         self.exportedURLs = urls
         self.documentPickerMode = mode
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .pageSheet
     }
 

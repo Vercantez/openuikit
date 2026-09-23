@@ -1,0 +1,142 @@
+# kioskrowsprobe — iOS 26.1
+## viewcontroller
+init -> nibName=nil isViewLoaded=NO
+subclass init -> initWithNibName:nil bundle:nil
+automaticallyAdjustsScrollViewInsets default=YES
+set NO -> NO
+navigationItem identical=YES title=nil
+setToolbarItems:animated: -> count=1 identical=YES
+responds didReceiveMemoryWarning=YES viewDidUnload=YES
+didReceiveMemoryWarning -> isViewLoaded=YES
+## navigation
+toolbarHidden default=YES toolbar isUIToolbar=YES
+setToolbarHidden:NO -> NO toolbar.hidden=NO
+setToolbarHidden:YES animated:NO -> YES
+interactivePopGestureRecognizer isGestureRecognizer=YES enabled=YES
+## barbutton
+enabled default=YES width=0
+set enabled NO width 12 -> enabled=NO width=12
+initWithCustomView: identical=YES enabled=YES title=nil
+## navbar
+titleTextAttributes default=nil
+set -> count=1 color identical=YES
+## activity
+CopyToPasteboard=com.apple.UIKit.activity.CopyToPasteboard
+SaveToCameraRoll=com.apple.UIKit.activity.SaveToCameraRoll
+PostToFlickr=com.apple.UIKit.activity.PostToFlickr
+Print=com.apple.UIKit.activity.Print
+AssignToContact=com.apple.UIKit.activity.AssignToContact
+Mail=com.apple.UIKit.activity.Mail
+Message=com.apple.UIKit.activity.Message
+PostToFacebook=com.apple.UIKit.activity.PostToFacebook
+PostToTwitter=com.apple.UIKit.activity.PostToTwitter
+PostToWeibo=com.apple.UIKit.activity.PostToWeibo
+PostToTencentWeibo=com.apple.UIKit.activity.TencentWeibo
+AirDrop=com.apple.UIKit.activity.AirDrop
+AddToReadingList=com.apple.UIKit.activity.AddToReadingList
+excludedActivityTypes default=nil
+set -> count=2 first=com.apple.UIKit.activity.Mail
+completionHandler default=nil
+completionHandler set -> block withItemsHandler=nil
+## application
+idleTimerDisabled default=NO
+set YES -> YES
+networkActivityIndicatorVisible default=NO
+set YES -> NO
+UIApplicationWillTerminateNotification=UIApplicationWillTerminateNotification
+UIBackgroundTaskInvalid=0
+beginBackgroundTask valid=YES
+UIInterfaceOrientationMaskAll=30 Portrait=1 LandscapeLeft=4 LandscapeRight=3 IsPortrait(Up)=YES
+## value
+valueWithCGPoint -> 1.5,-2 objCType={CGPoint=dd}
+valueWithCGRect -> 1,2,3,4
+## image
+UIGraphicsBeginImageContextWithOptions(3x2, NO, 2) -> size=3x2 scale=2 cg=6x4
+after End current=NULL
+UIImagePNGRepresentation -> data signature=89504e47
+decoded -> size=6x4 scale=1
+UIImageJPEGRepresentation -> data soi=ffd8
+drawInRect:blendMode:Normal alpha:0.5 over white -> rgba=255,127,127,255
+## font
+font file bytes=1027784
+CGFont postScriptName=AGaramondPro-Regular
+before register fontWithName=nil
+CTFontManagerRegisterGraphicsFont=YES error=0
+again=NO error=305
+fontWithName:AGaramondPro-Regular size:20 -> fontName=AGaramondPro-Regular familyName=Adobe Garamond Pro pointSize=20
+metrics ascender=14.1992 descender=-5.8008 lineHeight=20.0000 capHeight=14.1992 leading=0.0000
+by family name -> fontName=AGaramondPro-Regular
+UIFontFeatureTypeIdentifierKey=CTFeatureTypeIdentifier UIFontFeatureSelectorIdentifierKey=CTFeatureSelectorIdentifier
+UIFontDescriptorFeatureSettingsAttribute=NSCTFontFeatureSettingsAttribute NameAttribute=NSFontNameAttribute SizeAttribute=NSFontSizeAttribute
+descriptor postscriptName=AGaramondPro-Regular pointSize=15
+fontWithDescriptor:size:15 -> fontName=AGaramondPro-Regular pointSize=15
+fontWithDescriptor:size:0 -> pointSize=15
+## bezier
+arc bounding box=6.000,6.000,36.000,36.000 empty=NO
+CAShapeLayer isCALayer=YES path=set lineCap=round
+bezierPathWithRect -> 1,2,3,4
+## paragraph
+default tabStops count=12 first=28 last=336
+NSTextTab location=24 alignment=0 options=0
+set -> count=1 location=24
+copy tabStops count=1
+## label
+preferredMaxLayoutWidth default=0
+preferredMaxLayoutWidth=120 -> width<=120=YES lines=6 (unbounded lines=1)
+read back=120
+## button
+titleShadowColor normal default=nil
+normal identical=YES highlighted->normal=YES disabled identical=YES selected->normal=YES
+currentTitleShadowColor identical=YES
+titleLabel.shadowColor -> 1,1,1,1 offset=0,0
+disabled -> titleLabel.shadowColor 0,0,0,0
+## textfield
+clearsOnBeginEditing default=NO
+set YES, becomeFirstResponder=YES -> text=''
+NO, becomeFirstResponder -> text='def'
+## textview
+before offset.y=0 inset.top=0
+scrollRangeToVisible(end), same turn -> scrolled=NO
+next turn -> scrolled=YES
+## nib
+NSObject responds awakeFromNib=YES prepareForInterfaceBuilder=YES
+subclass awakeFromNib -> awakened=1
+## longpress
+subclass class=OUKLongPress allowableMovement=10 minimumPressDuration=0.5
+set -> allowableMovement=20 minimumPressDuration=0.25
+canBePreventedByGestureRecognizer override -> NO
+## motion
+keyPath=center.x type=0 min=-10 max=10 TiltAlongVerticalAxis=1
+addMotionEffect -> count=1
+removeMotionEffect -> count=0
+## alertview
+title=Error message=Failed numberOfButtons=3 cancelButtonIndex=0 firstOtherButtonIndex=1 visible=NO
+buttonTitleAtIndex 0=OK 1=Retry 2=More
+no buttons -> numberOfButtons=0 cancelButtonIndex=-1 firstOtherButtonIndex=-1
+## scroll2
+insertSubview:belowSubview: -> b before a=YES
+panGestureRecognizer isPan=YES view is scroll=YES
+zoomToRect:{100,100,50,50} animated:NO -> zoomScale=2 offset=200,200
+contentScaleFactor default==screen scale=NO
+set 1 -> 1
+setNeedsDisplayInRect: returned
+## bars
+UIToolbar barTintColor default=nil translucent=YES
+set -> barTintColor identical=YES translucent=NO
+UINavigationItem titleView=nil rightBarButtonItem=nil
+set -> titleView identical=YES rightBarButtonItem identical=YES rightBarButtonItems=1
+## hud
+UILabel baselineAdjustment default=0 AlignBaselines=0 AlignCenters=1 None=2
+set AlignCenters -> 1
+UIWindow screen is mainScreen=YES
+UINotificationFeedbackType Success=0 Warning=1 Error=2; prepare/notificationOccurred: returned
+accessibilityIdentifier=nil isAccessibilityElement=NO
+set -> accessibilityIdentifier=SVProgressHUD isAccessibilityElement=YES
+NSStringDrawing UsesLineFragmentOrigin=1 UsesFontLeading=2 TruncatesLastVisibleLine=32
+boundingRectWithSize "Loading" 16pt -> origin=0,0 height=19.094 fits=YES
+UIApplicationDidChangeStatusBarOrientationNotification=UIApplicationDidChangeStatusBarOrientationNotification
+UIKeyboardWillHideNotification=UIKeyboardWillHideNotification UIKeyboardDidHideNotification=UIKeyboardDidHideNotification UIKeyboardDidShowNotification=UIKeyboardDidShowNotification
+UIKeyboardFrameBeginUserInfoKey=UIKeyboardFrameBeginUserInfoKey UIKeyboardAnimationDurationUserInfoKey=UIKeyboardAnimationDurationUserInfoKey
+statusBarOrientation landscape==wide screen=YES statusBarFrame width==screen width=YES
+UIEvent allTouches=YES UITouch locationInView:=YES
+UIAccessibilityScreenChangedNotification=1000 UIAccessibilityAnnouncementNotification=1008; post returned

@@ -307,7 +307,7 @@ open class UINavigationController: UIViewController {
     @objc
 #endif
     public dynamic init(rootViewController: UIViewController) {
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         addChild(rootViewController)
         _viewControllerStack = [rootViewController]
         rootViewController.didMove(toParent: self)
@@ -317,7 +317,7 @@ open class UINavigationController: UIViewController {
     @objc
 #endif
     public dynamic init() {
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     /// MEASURED `navigation.coder`: non-nil, unloaded, no view controllers.

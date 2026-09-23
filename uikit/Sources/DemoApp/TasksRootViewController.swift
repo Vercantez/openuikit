@@ -62,7 +62,7 @@ public final class TasksRootViewController: UIViewController,
     /// showcase app's floating tab bar). Set before the view loads.
     public var extraBottomInset: CGFloat = 0
 
-    public init() { super.init() }
+    public init() { super.init(nibName: nil, bundle: nil) }
     public required init?(coder: NSCoder) { fatalError() }
 
     // MARK: Load

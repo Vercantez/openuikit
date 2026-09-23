@@ -1,0 +1,505 @@
+{
+ "ARCollectionViewMasonryLayout": {
+  "dependencies": [],
+  "extras": [
+   "ARCollectionViewMasonryLayout.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "ARCollectionViewMasonryLayout.h",
+   "ARCollectionViewMasonryLayout.m"
+  ],
+  "missing_dependencies": [],
+  "module": "ARCollectionViewMasonryLayout",
+  "resources": []
+ },
+ "ARTiledImageView": {
+  "dependencies": [
+   "SDWebImage"
+  ],
+  "extras": [
+   "ARTiledImageView.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "Classes/ARLocalTiledImageDataSource.h",
+   "Classes/ARLocalTiledImageDataSource.m",
+   "Classes/ARTile.h",
+   "Classes/ARTile.m",
+   "Classes/ARTiledImageScrollView.h",
+   "Classes/ARTiledImageScrollView.m",
+   "Classes/ARTiledImageView.h",
+   "Classes/ARTiledImageView.m",
+   "Classes/ARTiledImageViewDataSource.h",
+   "Classes/ARWebTiledImageDataSource.h",
+   "Classes/ARWebTiledImageDataSource.m"
+  ],
+  "missing_dependencies": [],
+  "module": "ARTiledImageView",
+  "resources": []
+ },
+ "Artsy-OSSUIFonts": {
+  "dependencies": [],
+  "extras": [
+   "Artsy+UIFonts.podspec",
+   "README.md"
+  ],
+  "files": [
+   "Pod/Classes/UIFont+ArtsyFonts.h",
+   "Pod/Classes/UIFont+ArtsyFonts.m"
+  ],
+  "missing_dependencies": [],
+  "module": "Artsy_UIFonts",
+  "resources": [
+   {
+    "bundle_path": "EBGaramond08-Italic.ttf",
+    "path": "Pod/Assets/EBGaramond08-Italic.ttf"
+   },
+   {
+    "bundle_path": "EBGaramond08-Regular.ttf",
+    "path": "Pod/Assets/EBGaramond08-Regular.ttf"
+   },
+   {
+    "bundle_path": "EBGaramond12-Italic.ttf",
+    "path": "Pod/Assets/EBGaramond12-Italic.ttf"
+   },
+   {
+    "bundle_path": "EBGaramond12-Regular.ttf",
+    "path": "Pod/Assets/EBGaramond12-Regular.ttf"
+   },
+   {
+    "bundle_path": "texgyreadventor-bold.ttf",
+    "path": "Pod/Assets/texgyreadventor-bold.ttf"
+   },
+   {
+    "bundle_path": "texgyreadventor-regular.ttf",
+    "path": "Pod/Assets/texgyreadventor-regular.ttf"
+   }
+  ]
+ },
+ "Artsy-UIButtons": {
+  "dependencies": [
+   "Artsy_UIColors",
+   "Artsy_UIFonts",
+   "UIView_BooleanAnimations"
+  ],
+  "extras": [
+   "Artsy-UIButtons.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "Pod/Classes/ARButtonSubclasses.h",
+   "Pod/Classes/ARButtonSubclasses.m"
+  ],
+  "missing_dependencies": [],
+  "module": "Artsy_UIButtons",
+  "resources": []
+ },
+ "Artsy-UIColors": {
+  "dependencies": [],
+  "extras": [
+   "Artsy+UIColors.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "Classes/UIColor+ArtsyColors.h",
+   "Classes/UIColor+ArtsyColors.m",
+   "Classes/UIColor+DebugColours.h",
+   "Classes/UIColor+DebugColours.m"
+  ],
+  "missing_dependencies": [],
+  "module": "Artsy_UIColors",
+  "resources": []
+ },
+ "Artsy-UILabels": {
+  "dependencies": [
+   "Artsy_UIColors",
+   "Artsy_UIFonts"
+  ],
+  "extras": [
+   "Artsy+UILabels.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "Pod/Classes/Artsy+UILabels.h",
+   "Pod/Classes/Artsy+UILabels.m",
+   "Pod/Classes/NSNumberFormatter+ARCurrency.h",
+   "Pod/Classes/NSNumberFormatter+ARCurrency.m",
+   "Pod/Classes/UIView+ARDrawing.h",
+   "Pod/Classes/UIView+ARDrawing.m"
+  ],
+  "missing_dependencies": [],
+  "module": "Artsy_UILabels",
+  "resources": [
+   {
+    "bundle_path": "Chevron_Black.png",
+    "path": "Pod/Assets/Chevron_Black.png"
+   },
+   {
+    "bundle_path": "Chevron_Black@2x.png",
+    "path": "Pod/Assets/Chevron_Black@2x.png"
+   }
+  ]
+ },
+ "DZNWebViewController": {
+  "dependencies": [
+   "NJKWebViewProgress"
+  ],
+  "extras": [
+   "DZNWebViewController.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "Source/Classes/DZNPolyActivity.h",
+   "Source/Classes/DZNPolyActivity.m",
+   "Source/Classes/DZNWebViewController.h",
+   "Source/Classes/DZNWebViewController.m"
+  ],
+  "missing_dependencies": [],
+  "module": "DZNWebViewController",
+  "resources": [
+   {
+    "bundle_path": "Chrome7.png",
+    "path": "Source/Resources/Chrome7.png"
+   },
+   {
+    "bundle_path": "Chrome7@2x.png",
+    "path": "Source/Resources/Chrome7@2x.png"
+   },
+   {
+    "bundle_path": "Chrome7@2x~ipad.png",
+    "path": "Source/Resources/Chrome7@2x~ipad.png"
+   },
+   {
+    "bundle_path": "Chrome7~ipad.png",
+    "path": "Source/Resources/Chrome7~ipad.png"
+   },
+   {
+    "bundle_path": "Dolphin7.png",
+    "path": "Source/Resources/Dolphin7.png"
+   },
+   {
+    "bundle_path": "Dolphin7@2x.png",
+    "path": "Source/Resources/Dolphin7@2x.png"
+   },
+   {
+    "bundle_path": "Dolphin7@2x~ipad.png",
+    "path": "Source/Resources/Dolphin7@2x~ipad.png"
+   },
+   {
+    "bundle_path": "Dolphin7~ipad.png",
+    "path": "Source/Resources/Dolphin7~ipad.png"
+   },
+   {
+    "bundle_path": "Link7.png",
+    "path": "Source/Resources/Link7.png"
+   },
+   {
+    "bundle_path": "Link7@2x.png",
+    "path": "Source/Resources/Link7@2x.png"
+   },
+   {
+    "bundle_path": "Link7@2x~ipad.png",
+    "path": "Source/Resources/Link7@2x~ipad.png"
+   },
+   {
+    "bundle_path": "Link7~ipad.png",
+    "path": "Source/Resources/Link7~ipad.png"
+   },
+   {
+    "bundle_path": "Opera7.png",
+    "path": "Source/Resources/Opera7.png"
+   },
+   {
+    "bundle_path": "Opera7@2x.png",
+    "path": "Source/Resources/Opera7@2x.png"
+   },
+   {
+    "bundle_path": "Opera7@2x~ipad.png",
+    "path": "Source/Resources/Opera7@2x~ipad.png"
+   },
+   {
+    "bundle_path": "Opera7~ipad.png",
+    "path": "Source/Resources/Opera7~ipad.png"
+   },
+   {
+    "bundle_path": "Safari7.png",
+    "path": "Source/Resources/Safari7.png"
+   },
+   {
+    "bundle_path": "Safari7@2x.png",
+    "path": "Source/Resources/Safari7@2x.png"
+   },
+   {
+    "bundle_path": "Safari7@2x~ipad.png",
+    "path": "Source/Resources/Safari7@2x~ipad.png"
+   },
+   {
+    "bundle_path": "Safari7~ipad.png",
+    "path": "Source/Resources/Safari7~ipad.png"
+   },
+   {
+    "bundle_path": "toolbar_backward.png",
+    "path": "Source/Resources/toolbar_backward.png"
+   },
+   {
+    "bundle_path": "toolbar_backward@2x.png",
+    "path": "Source/Resources/toolbar_backward@2x.png"
+   },
+   {
+    "bundle_path": "toolbar_forward.png",
+    "path": "Source/Resources/toolbar_forward.png"
+   },
+   {
+    "bundle_path": "toolbar_forward@2x.png",
+    "path": "Source/Resources/toolbar_forward@2x.png"
+   },
+   {
+    "bundle_path": "inpector-script.js",
+    "path": "Source/Scripts/inpector-script.js"
+   }
+  ]
+ },
+ "ECPhoneNumberFormatter": {
+  "dependencies": [],
+  "extras": [
+   "ECPhoneNumberFormatter.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "ECPhoneNumberFormatter/ECPhoneNumberFormatter.h",
+   "ECPhoneNumberFormatter/ECPhoneNumberFormatter.m"
+  ],
+  "missing_dependencies": [],
+  "module": "ECPhoneNumberFormatter",
+  "resources": []
+ },
+ "FLKAutoLayout": {
+  "dependencies": [],
+  "extras": [
+   "FLKAutoLayout.podspec",
+   "LICENSE"
+  ],
+  "files": [
+   "FLKAutoLayout/FLKAutoLayoutPredicateList.h",
+   "FLKAutoLayout/FLKAutoLayoutPredicateList.m",
+   "FLKAutoLayout/UIView+FLKAutoLayout.h",
+   "FLKAutoLayout/UIView+FLKAutoLayout.m",
+   "FLKAutoLayout/UIView+FLKAutoLayoutPredicate.h",
+   "FLKAutoLayout/UIView+FLKAutoLayoutPredicate.m"
+  ],
+  "missing_dependencies": [],
+  "module": "FLKAutoLayout",
+  "resources": []
+ },
+ "ISO8601DateFormatter": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE.txt"
+  ],
+  "files": [
+   "ISO8601DateFormatter.h",
+   "ISO8601DateFormatter.m"
+  ],
+  "missing_dependencies": [],
+  "module": "ISO8601DateFormatter",
+  "resources": []
+ },
+ "NJKWebViewProgress": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE",
+   "NJKWebViewProgress.podspec"
+  ],
+  "files": [
+   "NJKWebViewProgress/NJKWebViewProgress.h",
+   "NJKWebViewProgress/NJKWebViewProgress.m",
+   "NJKWebViewProgress/NJKWebViewProgressView.h",
+   "NJKWebViewProgress/NJKWebViewProgressView.m"
+  ],
+  "missing_dependencies": [],
+  "module": "NJKWebViewProgress",
+  "resources": []
+ },
+ "ORStackView": {
+  "dependencies": [
+   "FLKAutoLayout"
+  ],
+  "extras": [
+   "LICENSE",
+   "ORStackView.podspec"
+  ],
+  "files": [
+   "Classes/ios/ORSplitStackView.h",
+   "Classes/ios/ORSplitStackView.m",
+   "Classes/ios/ORStackScrollView.h",
+   "Classes/ios/ORStackScrollView.m",
+   "Classes/ios/ORStackView.h",
+   "Classes/ios/ORStackView.m",
+   "Classes/ios/ORTagBasedAutoStackView.h",
+   "Classes/ios/ORTagBasedAutoStackView.m",
+   "Classes/ios/private/ORStackView+Private.h",
+   "Classes/ios/private/ORStackView+Private.m"
+  ],
+  "missing_dependencies": [],
+  "module": "ORStackView",
+  "resources": []
+ },
+ "SDWebImage": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE",
+   "SDWebImage.podspec"
+  ],
+  "files": [
+   "SDWebImage/NSData+ImageContentType.h",
+   "SDWebImage/NSData+ImageContentType.m",
+   "SDWebImage/SDImageCache.h",
+   "SDWebImage/SDImageCache.m",
+   "SDWebImage/SDWebImageCompat.h",
+   "SDWebImage/SDWebImageCompat.m",
+   "SDWebImage/SDWebImageDecoder.h",
+   "SDWebImage/SDWebImageDecoder.m",
+   "SDWebImage/SDWebImageDownloader.h",
+   "SDWebImage/SDWebImageDownloader.m",
+   "SDWebImage/SDWebImageDownloaderOperation.h",
+   "SDWebImage/SDWebImageDownloaderOperation.m",
+   "SDWebImage/SDWebImageManager.h",
+   "SDWebImage/SDWebImageManager.m",
+   "SDWebImage/SDWebImageOperation.h",
+   "SDWebImage/SDWebImagePrefetcher.h",
+   "SDWebImage/SDWebImagePrefetcher.m",
+   "SDWebImage/UIButton+WebCache.h",
+   "SDWebImage/UIButton+WebCache.m",
+   "SDWebImage/UIImage+GIF.h",
+   "SDWebImage/UIImage+GIF.m",
+   "SDWebImage/UIImage+MultiFormat.h",
+   "SDWebImage/UIImage+MultiFormat.m",
+   "SDWebImage/UIImageView+HighlightedWebCache.h",
+   "SDWebImage/UIImageView+HighlightedWebCache.m",
+   "SDWebImage/UIImageView+WebCache.h",
+   "SDWebImage/UIImageView+WebCache.m",
+   "SDWebImage/UIView+WebCacheOperation.h",
+   "SDWebImage/UIView+WebCacheOperation.m"
+  ],
+  "missing_dependencies": [],
+  "module": "SDWebImage",
+  "resources": []
+ },
+ "SVProgressHUD": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE.txt",
+   "SVProgressHUD.podspec"
+  ],
+  "files": [
+   "SVProgressHUD/SVIndefiniteAnimatedView.h",
+   "SVProgressHUD/SVIndefiniteAnimatedView.m",
+   "SVProgressHUD/SVProgressAnimatedView.h",
+   "SVProgressHUD/SVProgressAnimatedView.m",
+   "SVProgressHUD/SVProgressHUD.h",
+   "SVProgressHUD/SVProgressHUD.m",
+   "SVProgressHUD/SVRadialGradientLayer.h",
+   "SVProgressHUD/SVRadialGradientLayer.m"
+  ],
+  "missing_dependencies": [],
+  "module": "SVProgressHUD",
+  "resources": [
+   {
+    "bundle_path": "SVProgressHUD.bundle/angle-mask.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/angle-mask.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/angle-mask@2x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/angle-mask@2x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/angle-mask@3x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/angle-mask@3x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/error.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/error.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/error@2x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/error@2x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/error@3x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/error@3x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/info.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/info.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/info@2x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/info@2x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/info@3x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/info@3x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/success.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/success.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/success@2x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/success@2x.png"
+   },
+   {
+    "bundle_path": "SVProgressHUD.bundle/success@3x.png",
+    "path": "SVProgressHUD/SVProgressHUD.bundle/success@3x.png"
+   }
+  ]
+ },
+ "UIImageViewAligned": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE",
+   "UIImageViewAligned.podspec"
+  ],
+  "files": [
+   "UIImageViewAligned/UIImageViewAligned.h",
+   "UIImageViewAligned/UIImageViewAligned.m"
+  ],
+  "missing_dependencies": [],
+  "module": "UIImageViewAligned",
+  "resources": []
+ },
+ "UIView-BooleanAnimations": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE",
+   "UIView+BooleanAnimations.podspec"
+  ],
+  "files": [
+   "UIView+BooleanAnimations.h",
+   "UIView+BooleanAnimations.m"
+  ],
+  "missing_dependencies": [],
+  "module": "UIView_BooleanAnimations",
+  "resources": []
+ },
+ "XNGMarkdownParser": {
+  "dependencies": [],
+  "extras": [
+   "LICENSE",
+   "XNGMarkdownParser.podspec"
+  ],
+  "files": [
+   "src/XNGMarkdownParser.h",
+   "src/XNGMarkdownParser.m",
+   "src/XNGMarkdownTokenizer.m",
+   "src/XNGMarkdownTokens.h",
+   "src/XNGMarkdownTokens.m",
+   "src/fmemopen.c",
+   "src/fmemopen.h"
+  ],
+  "missing_dependencies": [],
+  "module": "XNGMarkdownParser",
+  "resources": []
+ }
+}

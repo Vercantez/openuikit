@@ -103,6 +103,26 @@ class SpmAppChainTests(unittest.TestCase):
         self.assertIn('.executable(name: "App", targets: ["App"])', manifest)
         self.assertIn('.library(name: "Dep", targets: ["Dep"])', manifest)
 
+    def test_public_headers_path(self):
+        # Eidolon's generated Keys pod: a Clang target whose module map sits
+        # next to its header, so its public headers path is "." (module Keys).
+        spec = json.load(open(self.spec))
+        spec["targets"][0]["public_headers_path"] = "."
+        json.dump(spec, open(self.spec, "w"))
+        p, out = self.run_tool()
+        self.assertEqual(p.returncode, 0, p.stderr)
+        manifest = open(os.path.join(out, "Package.swift")).read()
+        targets = manifest[manifest.index("targets: [\n"):]
+        dep = targets[targets.index('name: "Dep"'):targets.index('name: "App"')]
+        self.assertIn('publicHeadersPath: "."', dep)
+        # SwiftPM's argument order: exclude/resources precede publicHeadersPath
+        spec["targets"][0]["exclude"] = ["x"]
+        json.dump(spec, open(self.spec, "w"))
+        p, out = self.run_tool()
+        manifest = open(os.path.join(out, "Package.swift")).read()
+        self.assertLess(manifest.index('exclude: ["x"]'), manifest.index("publicHeadersPath"))
+        self.assertNotIn("publicHeadersPath", targets[targets.index('name: "App"'):])
+
     def test_copy_writes_provenance_hashes(self):
         p, out = self.run_tool("--copy")
         self.assertEqual(p.returncode, 0, p.stderr)

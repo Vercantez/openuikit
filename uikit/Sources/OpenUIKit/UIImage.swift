@@ -861,12 +861,19 @@ extension UIImage {
     /// translucent source pixels. Unsupported blend modes currently use the
     /// same source-over path; see `CGBlendMode`'s declaration.
     public func draw(at point: CGPoint, blendMode: CGBlendMode, alpha: CGFloat) {
-        UIGraphics.draw { _draw(at: point, blendMode: blendMode, alpha: alpha, in: $0) }
+        draw(in: CGRect(origin: point, size: size), blendMode: blendMode, alpha: alpha)
     }
 
-    private func _draw(at point: CGPoint, blendMode: CGBlendMode, alpha: CGFloat,
+    /// Scaled into `rect` with a blend mode and global alpha (ARTiledImageView
+    /// draws its tiles this way). MEASURED kioskrowsprobe `## image` (iOS
+    /// 26.1): a red image drawn with Normal at alpha 0.5 over opaque white
+    /// reads 255,127,127,255.
+    public func draw(in rect: CGRect, blendMode: CGBlendMode, alpha: CGFloat) {
+        UIGraphics.draw { _draw(in: rect, blendMode: blendMode, alpha: alpha, in: $0) }
+    }
+
+    private func _draw(in rect: CGRect, blendMode: CGBlendMode, alpha: CGFloat,
                        in canvas: Canvas) {
-        let rect = CGRect(origin: point, size: size)
         let opacity = Swift.min(Swift.max(alpha, 0), 1)
         guard opacity > 0 else { return }
 

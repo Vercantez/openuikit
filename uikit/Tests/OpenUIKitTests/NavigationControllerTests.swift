@@ -28,7 +28,7 @@ private class LifecycleVC: UIViewController {
     init(name: String, log: Log) {
         self.name = name
         self.log = log
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         title = name
     }
     override func viewDidLoad() { log.add("\(name).didLoad") }

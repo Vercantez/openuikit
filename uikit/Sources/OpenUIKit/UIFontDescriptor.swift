@@ -2,7 +2,7 @@
 //
 // Real UIFontDescriptor is an attribute bag that can name any installed
 // family. OpenUIKit's font model is (pointSize, weight, design) — the system
-// face only (docs/KNOWN_GAPS.md) — so the descriptor is a value type over
+// face only (docs/KNOWN_GAPS.md) — so the descriptor is an immutable object over
 // exactly that, wide enough for the idiom apps actually write:
 //
 //     let d = label.font.fontDescriptor.withSymbolicTraits([.traitBold])!
@@ -32,11 +32,45 @@ import Foundation
 #endif
 
 
-public struct UIFontDescriptor: Equatable {
-    public static func == (lhs: UIFontDescriptor, rhs: UIFontDescriptor) -> Bool {
-        lhs.pointSize == rhs.pointSize && lhs.weight == rhs.weight && lhs.design == rhs.design
-            && lhs.customFontName == rhs.customFontName
-            && lhs.featureSettings.map { [$0.type, $0.selector] } == rhs.featureSettings.map { [$0.type, $0.selector] }
+/// An immutable NSObject class, as in UIKit (UIFontDescriptor.h:
+/// `@interface UIFontDescriptor : NSObject <NSCopying, NSSecureCoding>`).
+/// It was a Swift struct, which left Objective-C with no UIFontDescriptor
+/// class: Artsy+UIFonts' `+smallCapsSerifFontWithSize:` builds one with
+/// `-initWithFontAttributes:` and hands it to `+[UIFont
+/// fontWithDescriptor:size:]` (docs/agent_reports/eidolon-kiosk.md). Every
+/// edit (`withSize`, `addingAttributes`, …) returns a new descriptor, as the
+/// struct's copies did; `isEqual:` / `hash` compare the same fields the
+/// struct's `==` did. Runtime name: the mangled Swift one (UIFont's rule,
+/// UIFont.swift).
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
+public final class UIFontDescriptor: NSObject, @unchecked Sendable {
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let rhs = object as? UIFontDescriptor else { return false }
+        return pointSize == rhs.pointSize && weight == rhs.weight && design == rhs.design
+            && customFontName == rhs.customFontName
+            && featureSettings.map { [$0.type, $0.selector] } == rhs.featureSettings.map { [$0.type, $0.selector] }
+    }
+
+    public override var hash: Int {
+        var h = Hasher()
+        h.combine(Double(pointSize))
+        h.combine(weight)
+        h.combine(customFontName)
+        return h.finalize()
+    }
+
+    /// A copy to edit before returning it (the descriptor is immutable to
+    /// clients).
+    func _copy() -> UIFontDescriptor {
+        let d = UIFontDescriptor(pointSize: pointSize, weight: weight, design: design)
+        d.customFontName = customFontName
+        d.featureSettings = featureSettings
+        return d
     }
 
     public struct SymbolicTraits: OptionSet, Sendable {
@@ -98,7 +132,7 @@ public struct UIFontDescriptor: Equatable {
         public static let slant = TraitKey("NSCTFontSlantTrait")
     }
 
-    public var pointSize: CGFloat
+    public internal(set) var pointSize: CGFloat
     /// PostScript name of a registered face (CTFontManager.swift), kept
     /// through descriptor edits so a custom font stays custom.
     var customFontName: String?
@@ -109,15 +143,16 @@ public struct UIFontDescriptor: Equatable {
     public internal(set) var featureSettings: [(type: Int, selector: Int)] = []
     /// The weight this descriptor resolves to (OpenUIKit extension: real
     /// UIKit hides it inside the traits dictionary).
-    public var weight: UIFont.Weight
+    public internal(set) var weight: UIFont.Weight
     /// The design this descriptor resolves to (OpenUIKit extension).
-    public var design: UIFont.Design
+    public internal(set) var design: UIFont.Design
 
     public init(pointSize: CGFloat = 17, weight: UIFont.Weight = .regular,
                 design: UIFont.Design = .default) {
         self.pointSize = pointSize
         self.weight = weight
         self.design = design
+        super.init()
     }
 
     /// Traits implied by the weight/design pair.
@@ -136,7 +171,7 @@ public struct UIFontDescriptor: Equatable {
     /// system face always can, so this never fails — it stays Optional so
     /// call sites that write `?` / `!` compile unchanged.
     public func withSymbolicTraits(_ traits: SymbolicTraits) -> UIFontDescriptor? {
-        var d = self
+        let d = _copy()
         // Bold: promote, never demote a heavier weight. iOS 26.1
         // (iososswallsprobe `fontdesc.withBold`): the 17 pt regular system
         // font with `.traitBold` is `.SFUI-Semibold`, not Bold. Lighter
@@ -163,13 +198,13 @@ public struct UIFontDescriptor: Equatable {
     }
 
     public func withSize(_ newPointSize: CGFloat) -> UIFontDescriptor {
-        var d = self
+        let d = _copy()
         d.pointSize = newPointSize
         return d
     }
 
     public func withWeight(_ newWeight: UIFont.Weight) -> UIFontDescriptor {
-        var d = self
+        let d = _copy()
         d.weight = newWeight
         return d
     }
@@ -178,7 +213,7 @@ public struct UIFontDescriptor: Equatable {
     /// `.serif` are not portable — they return nil rather than silently
     /// giving back the default face.
     public func withDesign(_ design: SystemDesign) -> UIFontDescriptor? {
-        var d = self
+        let d = _copy()
         switch design {
         case .monospaced: d.design = .monospaced
         case .default: d.design = .default
@@ -210,7 +245,7 @@ extension UIFontDescriptor {
     /// the 17 pt system descriptor gives `.SFUI-Bold` / `.SFUI-Semibold`
     /// 17, equal to `systemFont(ofSize: 17, weight:)`.
     public func addingAttributes(_ attributes: [AttributeName: Any]) -> UIFontDescriptor {
-        var d = self
+        let d = _copy()
         if let traits = attributes[.traits] as? [TraitKey: Any], let w = traits[.weight] {
             if let weight = w as? UIFont.Weight {
                 d.weight = weight
@@ -257,7 +292,7 @@ extension UIFont.Weight {
 
 extension UIFont {
     public var fontDescriptor: UIFontDescriptor {
-        var d = UIFontDescriptor(pointSize: pointSize, weight: weight, design: design)
+        let d = UIFontDescriptor(pointSize: pointSize, weight: weight, design: design)
         d.customFontName = customFontName
         return d
     }
@@ -268,5 +303,35 @@ extension UIFont {
                   weight: descriptor.weight,
                   design: descriptor.design,
                   customFontName: descriptor.customFontName)
+    }
+}
+
+extension UIFontDescriptor {
+    /// UIKit's `init(fontAttributes:)`. Understood: `.name` (a registered
+    /// face — CTFontManager.swift, including fonts registered through
+    /// CoreText — or a system `.SFUI-*` name), `.family`, `.size`, `.traits`
+    /// and `.featureSettings` (stored, see `featureSettings`). MEASURED
+    /// kioskrowsprobe `## font` (iOS 26.1): Artsy+UIFonts' small-caps
+    /// descriptor {featureSettings: [{38, 1}], name: "AGaramondPro-Regular",
+    /// size: 15} reads back postscriptName "AGaramondPro-Regular", pointSize
+    /// 15, and `UIFont(descriptor:size: 15)` is that face at 15 pt.
+    public convenience init(fontAttributes attributes: [AttributeName: Any] = [:]) {
+        let raw = attributes[.size]
+        let size = (raw as? CGFloat) ?? (raw as? Double).map { CGFloat($0) } ?? (raw as? Int).map { CGFloat($0) } ?? 0
+        self.init(pointSize: size)
+        let name = (attributes[.name] as? String) ?? (attributes[.family] as? String)
+        if let name, let face = OpenUIKitFontRegistry.face(named: name) {
+            customFontName = face.postScriptName
+        }
+        let edited = addingAttributes(attributes.filter { $0.key != .size })
+        weight = edited.weight
+        featureSettings = edited.featureSettings
+    }
+
+    /// UIKit's `postscriptName`: the registered face's name, else the
+    /// system face's (`UIFont.fontName`'s rule).
+    public var postscriptName: String {
+        if let customFontName { return customFontName }
+        return UIFont(descriptor: self, size: pointSize > 0 ? pointSize : 12).fontName
     }
 }

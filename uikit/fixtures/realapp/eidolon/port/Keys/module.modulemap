@@ -1,0 +1,4 @@
+module Keys {
+    header "EidolonKeys.h"
+    export *
+}
