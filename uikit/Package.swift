@@ -294,6 +294,7 @@ let frameworkProducts: [Product] = [
     .library(name: "FocusAppServices", targets: ["FocusAppServices"]),
     .library(name: "LocalAuthentication", targets: ["LocalAuthentication"]),
     .library(name: "AuthenticationServices", targets: ["AuthenticationServices"]),
+    .library(name: "WidgetKit", targets: ["WidgetKit"]),
     .library(name: "PassKit", targets: ["PassKit"]),
     .library(name: "Network", targets: ["Network"]),
     .library(name: "MobileCoreServices", targets: ["MobileCoreServices"]),
@@ -563,6 +564,9 @@ let frameworkTargets: [Target] = [
     // Fail-closed ASWebAuthenticationSession (NetNewsWire's OAuth sign-in);
     // the curated iOS SDK drops Apple's (it imports UIKit). MEASURED
     // Tools/oracle2/webauthsessionprobe.
+    // WidgetCenter for an app with no widget extension (NetNewsWire);
+    // MEASURED Tools/oracle2/widgetcenterprobe.
+    .target(name: "WidgetKit", path: "Sources/WidgetKit"),
     .target(
         name: "AuthenticationServices",
         dependencies: ["OpenUIKit", "UIKit"],
@@ -751,6 +755,7 @@ let testTargets: [Target] = [
     // (Tools/oracle2/nwpathprobe/transcript-macos.txt).
     .testTarget(name: "NetworkTests", dependencies: ["Network"]),
     .testTarget(name: "AuthenticationServicesTests", dependencies: ["AuthenticationServices"]),
+    .testTarget(name: "WidgetKitTests", dependencies: ["WidgetKit"]),
     // Swift 6 language mode: Sendable conformances the SDK declares
     // (NS_SWIFT_SENDABLE) are compile errors here, not warnings.
     .testTarget(

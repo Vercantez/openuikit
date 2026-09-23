@@ -413,7 +413,8 @@
     "WebKit",
     "MessageUI",
     "os",
-    "Intents"
+    "Intents",
+    "WidgetKit"
    ],
    "files": [
     "NetNewsWire/Shared/AccountStats/AccountStatsViewModel.swift",

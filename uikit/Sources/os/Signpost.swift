@@ -77,6 +77,13 @@ extension OSLog {
 
 public typealias SignpostMetadata = OSLogMessage
 
+// On Darwin the port's `os` module loads next to Apple's libswiftos, whose
+// OSSignpostIntervalState has the same mangled name (_TtC2os23…); a second
+// class under that runtime name makes objc warn "implemented in both … may
+// cause spurious casting failures". Give ours a distinct runtime name.
+#if canImport(ObjectiveC)
+@_objcRuntimeName(_TtC2os32OpenUIKitOSSignpostIntervalState)
+#endif
 public final class OSSignpostIntervalState: @unchecked Sendable {
     public let signpostID: OSSignpostID
     init(id: OSSignpostID) { self.signpostID = id }
