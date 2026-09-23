@@ -41,7 +41,7 @@ static const char *E(UIEdgeInsets i) {
 
 static const char *const kSections[] = {
     "view", "constraint", "label", "paragraph", "attributes", "button", "activity", "image", "imageview",
-    "appdelegate", NULL,
+    "appdelegate", "vfl", NULL,
 };
 
 // FLKAutoLayout (translatesAutoresizingMaskIntoConstraints), Artsy+UILabels
@@ -219,6 +219,71 @@ static void appDelegateSection(void) {
     emit("delegate=%s", delegate ? "object" : "nil");
 }
 
+static const char *AttrName(NSLayoutAttribute a) {
+    switch (a) {
+    case NSLayoutAttributeLeft: return "left"; case NSLayoutAttributeRight: return "right";
+    case NSLayoutAttributeTop: return "top"; case NSLayoutAttributeBottom: return "bottom";
+    case NSLayoutAttributeLeading: return "leading"; case NSLayoutAttributeTrailing: return "trailing";
+    case NSLayoutAttributeWidth: return "width"; case NSLayoutAttributeHeight: return "height";
+    case NSLayoutAttributeCenterX: return "centerX"; case NSLayoutAttributeCenterY: return "centerY";
+    case NSLayoutAttributeLastBaseline: return "lastBaseline"; case NSLayoutAttributeFirstBaseline: return "firstBaseline";
+    case NSLayoutAttributeNotAnAttribute: return "none";
+    default: return "other";
+    }
+}
+
+// ORStackView: +constraintsWithVisualFormat:options:metrics:views: with
+// NSDictionaryOfVariableBindings. Each constraint as items/attributes/
+// relation/multiplier/constant/priority, in the order UIKit returns them.
+static void vflSection(void) {
+    UIView *container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 300)];
+    UIView *view = [UIView new], *other = [UIView new], *third = [UIView new];
+    [container addSubview:view];
+    [container addSubview:other];
+    [container addSubview:third];
+    NSDictionary *views = NSDictionaryOfVariableBindings(view, other, third);
+    emit("bindings keys=%s", [[[views allKeys] sortedArrayUsingSelector:@selector(compare:)]
+                                 componentsJoinedByString:@","].UTF8String);
+    NSDictionary *names = @{ [NSValue valueWithNonretainedObject:view]: @"view",
+                             [NSValue valueWithNonretainedObject:other]: @"other",
+                             [NSValue valueWithNonretainedObject:third]: @"third",
+                             [NSValue valueWithNonretainedObject:container]: @"super",
+                             [NSValue valueWithNonretainedObject:container.layoutMarginsGuide]: @"superMargins" };
+    NSArray<NSString *> *formats = @[
+        @"V:[other]-0-[view]", @"V:[other]-20-[view]", @"H:|-[view]-|", @"H:|[view]|",
+        @"H:|-8-[view(>=50)]-(<=12)-[other(==view)]", @"V:[view(44@750)]", @"H:[view]-[other]-[third]",
+        @"H:|-(pad)-[view(w)]", @"V:|-(>=10,<=30)-[view]", @"[view]-(==5@250)-[other]",
+        @"H:|-[view]", @"V:|-[view]-|", @"H:[view]-(>=0)-|", @"H:|-0-[view]-0-|", @"[view(>=other)]",
+        @"V:[view]-8-|", @"H:[view(==other@500)]", @"H:|[view][other]|", @"V:[view]-(-4)-[other]",
+    ];
+    for (NSString *format in formats) {
+        NSArray<NSLayoutConstraint *> *cs = nil;
+        @try {
+            cs = [NSLayoutConstraint constraintsWithVisualFormat:format options:0
+                                                         metrics:@{@"pad": @7, @"w": @33} views:views];
+        } @catch (NSException *e) {
+            emit("%s -> exception %s", format.UTF8String, e.name.UTF8String);
+            continue;
+        }
+        emit("%s -> %lu", format.UTF8String, (unsigned long)cs.count);
+        for (NSLayoutConstraint *c in cs) {
+            NSString *first = names[[NSValue valueWithNonretainedObject:c.firstItem]] ?: @"?";
+            NSString *second = c.secondItem ? (names[[NSValue valueWithNonretainedObject:c.secondItem]] ?: @"?") : @"nil";
+            emit("  %s.%s %s %s.%s x%g %+g @%g", first.UTF8String, AttrName(c.firstAttribute),
+                 c.relation == NSLayoutRelationEqual ? "==" : c.relation == NSLayoutRelationLessThanOrEqual ? "<=" : ">=",
+                 second.UTF8String, AttrName(c.secondAttribute), c.multiplier, c.constant, c.priority);
+        }
+    }
+    NSArray *leading = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[view]-[other]"
+        options:NSLayoutFormatDirectionLeadingToTrailing metrics:nil views:views];
+    emit("DirectionLeadingToTrailing option=%lu -> %lu", (unsigned long)NSLayoutFormatDirectionLeadingToTrailing,
+         (unsigned long)leading.count);
+    @try {
+        [NSLayoutConstraint constraintsWithVisualFormat:@"H:[missing]" options:0 metrics:nil views:views];
+        emit("unknown view -> no exception");
+    } @catch (NSException *e) { emit("unknown view -> exception %s", e.name.UTF8String); }
+}
+
 const char *OUKPodSurfaceSection(int index) {
     return index >= 0 && index < (int)(sizeof kSections / sizeof kSections[0]) ? kSections[index] : NULL;
 }
@@ -236,4 +301,5 @@ void OUKPodSurfaceRun(const char *name, OUKPodSurfaceSink sink, void *context) {
     else if (!strcmp(name, "image")) imageSection();
     else if (!strcmp(name, "imageview")) imageViewSection();
     else if (!strcmp(name, "appdelegate")) appDelegateSection();
+    else if (!strcmp(name, "vfl")) vflSection();
 }

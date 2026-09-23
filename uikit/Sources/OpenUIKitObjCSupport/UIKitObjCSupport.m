@@ -61,3 +61,24 @@ NSString * const UICollectionElementKindSectionFooter = @"UICollectionElementKin
 NSString * const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
 NSString * const UIKeyInputUpArrow = @"UIKeyInputUpArrow";
 NSString * const UIKeyInputDownArrow = @"UIKeyInputDownArrow";
+
+/* NSDictionaryOfVariableBindings(view, other) -> @{@"view": view, @"other": other}
+ * (MEASURED iOS 26.1, podsurfaceprobe "## vfl": the keys are the argument
+ * spellings, whitespace dropped). */
+#if TARGET_OS_IPHONE || !__swift__
+NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSeparatedKeysString, id firstValue, ...) {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    NSArray<NSString *> *keys = [commaSeparatedKeysString componentsSeparatedByString:@","];
+    va_list args;
+    va_start(args, firstValue);
+    id value = firstValue;
+    for (NSString *raw in keys) {
+        if (!value) break;
+        NSString *key = [raw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        result[key] = value;
+        value = va_arg(args, id);
+    }
+    va_end(args);
+    return [result copy];
+}
+#endif

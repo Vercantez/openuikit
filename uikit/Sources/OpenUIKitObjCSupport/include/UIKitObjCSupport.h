@@ -582,6 +582,27 @@ NS_SWIFT_NAME(UIPickerViewDelegateObjC) @protocol UIPickerViewDelegate <NSObject
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 @end
 
+/* NSLayoutConstraint.h: the visual format options and
+ * NSDictionaryOfVariableBindings (ORStackView). Objective-C side only on the
+ * macOS host, where AppKit declares both. */
+#if TARGET_OS_IPHONE || !__swift__
+typedef NS_OPTIONS(NSUInteger, NSLayoutFormatOptions) {
+    NSLayoutFormatAlignAllLeft = (1 << 1), NSLayoutFormatAlignAllRight = (1 << 2),
+    NSLayoutFormatAlignAllTop = (1 << 3), NSLayoutFormatAlignAllBottom = (1 << 4),
+    NSLayoutFormatAlignAllLeading = (1 << 5), NSLayoutFormatAlignAllTrailing = (1 << 6),
+    NSLayoutFormatAlignAllCenterX = (1 << 9), NSLayoutFormatAlignAllCenterY = (1 << 10),
+    NSLayoutFormatAlignAllLastBaseline = (1 << 11), NSLayoutFormatAlignAllFirstBaseline = (1 << 12),
+    NSLayoutFormatAlignAllBaseline = NSLayoutFormatAlignAllLastBaseline,
+    NSLayoutFormatAlignmentMask = 0xFFFF,
+    NSLayoutFormatDirectionLeadingToTrailing = 0 << 16, NSLayoutFormatDirectionLeftToRight = 1 << 16,
+    NSLayoutFormatDirectionRightToLeft = 2 << 16, NSLayoutFormatDirectionMask = 0x3 << 16,
+    NSLayoutFormatSpacingEdgeToEdge = 0 << 19, NSLayoutFormatSpacingBaselineToBaseline = 1 << 19,
+    NSLayoutFormatSpacingMask = 0x1 << 19,
+} NS_SWIFT_NAME(NSLayoutFormatOptionsObjC);
+#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
+extern NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSeparatedKeysString, _Nullable id firstValue, ...);
+#endif
+
 /* UILayoutSupport (UIViewController.h), which ORStackView's header names for
  * a view controller's top/bottom layout guide. Declaration only: no OpenUIKit
  * object conforms yet. */

@@ -877,4 +877,40 @@ extension UIApplication {
     }
 }
 
+
+extension NSLayoutConstraint {
+    /// ORStackView: `+constraintsWithVisualFormat:options:metrics:views:`.
+    @objc(constraintsWithVisualFormat:options:metrics:views:)
+    public class func __objc_constraints(withVisualFormat format: String, options: UInt,
+                                          metrics: [String: Any]?, views: [String: Any]) -> [NSLayoutConstraint] {
+        constraints(withVisualFormat: format, options: FormatOptions(rawValue: options), metrics: metrics, views: views)
+    }
+}
+
+extension UIView {
+    @objc(addConstraints:) public func __objc_addConstraints(_ constraints: [NSLayoutConstraint]) {
+        addConstraints(constraints)
+    }
+    @objc(removeConstraint:) public func __objc_removeConstraint(_ constraint: NSLayoutConstraint?) {
+        if let constraint { removeConstraint(constraint) }
+    }
+    @objc(removeConstraints:) public func __objc_removeConstraints(_ constraints: [NSLayoutConstraint]) {
+        removeConstraints(constraints)
+    }
+}
+
+
+extension NSLayoutConstraint {
+    @objc(firstItem) public var __objc_firstItem: AnyObject? { firstItem }
+    @objc(secondItem) public var __objc_secondItem: AnyObject? { secondItem }
+    @objc(firstAttribute) public var __objc_firstAttribute: Int { firstAttribute.rawValue }
+    @objc(secondAttribute) public var __objc_secondAttribute: Int { secondAttribute.rawValue }
+    @objc(relation) public var __objc_relation: Int { relation.rawValue }
+    @objc(multiplier) public var __objc_multiplier: CGFloat { multiplier }
+}
+
+extension UIView {
+    @objc(layoutMarginsGuide) public var __objc_layoutMarginsGuide: UILayoutGuide { layoutMarginsGuide }
+}
+
 #endif

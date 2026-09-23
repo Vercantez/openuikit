@@ -57,3 +57,57 @@ initWithImage:highlightedImage: image-is-a=YES highlighted-is-b=YES highlighted=
 animated image -> isAnimating=NO animationImages=nil image.images.count=2
 ## appdelegate
 delegate=nil
+## vfl
+bindings keys=other,third,view
+V:[other]-0-[view] -> 1
+  view.top == other.bottom x1 +0 @1000
+V:[other]-20-[view] -> 1
+  view.top == other.bottom x1 +20 @1000
+H:|-[view]-| -> 2
+  view.leading == superMargins.leading x1 +0 @1000
+  superMargins.trailing == view.trailing x1 +0 @1000
+H:|[view]| -> 2
+  view.leading == super.leading x1 +0 @1000
+  super.trailing == view.trailing x1 +0 @1000
+H:|-8-[view(>=50)]-(<=12)-[other(==view)] -> 4
+  view.leading == super.leading x1 +8 @1000
+  view.width >= nil.none x1 +50 @1000
+  other.leading <= view.trailing x1 +12 @1000
+  other.width == view.width x1 +0 @1000
+V:[view(44@750)] -> 1
+  view.height == nil.none x1 +44 @750
+H:[view]-[other]-[third] -> 2
+  other.leading == view.trailing x1 +8 @1000
+  third.leading == other.trailing x1 +8 @1000
+H:|-(pad)-[view(w)] -> 2
+  view.leading == super.leading x1 +7 @1000
+  view.width == nil.none x1 +33 @1000
+V:|-(>=10,<=30)-[view] -> 2
+  view.top >= super.top x1 +10 @1000
+  view.top <= super.top x1 +30 @1000
+[view]-(==5@250)-[other] -> 1
+  other.leading == view.trailing x1 +5 @250
+H:|-[view] -> 1
+  view.leading == superMargins.leading x1 +0 @1000
+V:|-[view]-| -> 2
+  view.top == superMargins.top x1 +0 @1000
+  superMargins.bottom == view.bottom x1 +0 @1000
+H:[view]-(>=0)-| -> 1
+  super.trailing >= view.trailing x1 +0 @1000
+H:|-0-[view]-0-| -> 2
+  view.leading == super.leading x1 +0 @1000
+  super.trailing == view.trailing x1 +0 @1000
+[view(>=other)] -> 1
+  view.width >= other.width x1 +0 @1000
+V:[view]-8-| -> 1
+  super.bottom == view.bottom x1 +8 @1000
+H:[view(==other@500)] -> 1
+  view.width == other.width x1 +0 @500
+H:|[view][other]| -> 3
+  view.leading == super.leading x1 +0 @1000
+  other.leading == view.trailing x1 +0 @1000
+  super.trailing == other.trailing x1 +0 @1000
+V:[view]-(-4)-[other] -> 1
+  other.top == view.bottom x1 -4 @1000
+DirectionLeadingToTrailing option=0 -> 1
+unknown view -> exception NSInvalidArgumentException
