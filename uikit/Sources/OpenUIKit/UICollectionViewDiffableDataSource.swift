@@ -5,6 +5,8 @@
 // the live cell when the identifier is unchanged.
 
 #if canImport(Foundation)
+import struct Foundation.IndexPath
+#endif
 // NSObject-derived, as in UIKit (the SDK declares it `: NSObject`), so it can
 // cross the `@objc` delegate / data-source protocols on the Apple toolchain
 // (objc-protocols.md). Same provider choice as UIColor.swift.
@@ -12,8 +14,6 @@
 import class Foundation.NSObject
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
-#endif
-import struct Foundation.IndexPath
 #endif
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
