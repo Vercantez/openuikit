@@ -89,6 +89,20 @@ class SpmAppChainTests(unittest.TestCase):
         self.assertIn('.product(name: "SafariServices", package: "OpenUIKit")', swift)
         self.assertNotIn("SafariServicesObjC", swift)
 
+    def test_executable_kind_and_linker_flags(self):
+        spec = json.load(open(self.spec))
+        spec["targets"][1]["kind"] = "executable"
+        spec["targets"][1]["linker_flags"] = ["-Xlinker", "-sectcreate", "-Xlinker", "__TEXT"]
+        json.dump(spec, open(self.spec, "w"))
+        p, out = self.run_tool()
+        self.assertEqual(p.returncode, 0, p.stderr)
+        manifest = open(os.path.join(out, "Package.swift")).read()
+        self.assertIn('.executableTarget(\n            name: "App"', manifest)
+        self.assertIn('linkerSettings: [.unsafeFlags(["-Xlinker", "-sectcreate", "-Xlinker", "__TEXT"])]', manifest)
+        self.assertIn('.target(\n            name: "Dep"', manifest)
+        self.assertIn('.executable(name: "App", targets: ["App"])', manifest)
+        self.assertIn('.library(name: "Dep", targets: ["Dep"])', manifest)
+
     def test_copy_writes_provenance_hashes(self):
         p, out = self.run_tool("--copy")
         self.assertEqual(p.returncode, 0, p.stderr)

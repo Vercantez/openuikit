@@ -390,6 +390,7 @@
   {
    "name": "NetNewsWire",
    "root": "corpus",
+   "kind": "executable",
    "deps": [
     "RSCore",
     "RSWeb",

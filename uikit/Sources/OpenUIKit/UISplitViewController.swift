@@ -66,9 +66,33 @@ open class UISplitViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     /// MEASURED `split.coder`: style unspecified (0), no view controllers.
+    /// From a storyboard the archived `UISplitViewControllerStyle` is the
+    /// style (MEASURED Tools/oracle2/nnwgolden/SplitFacts.m on NetNewsWire's
+    /// Main.storyboard, iPhone 16 / iOS 26.1: archived 2 -> style 2, and the
+    /// three archived children become primary / supplementary / secondary).
     public required init?(coder: NSCoder) {
-        style = .unspecified
+        style = UINibCoder.archivedInteger(coder, "UISplitViewControllerStyle")
+            .flatMap(Style.init(rawValue:)) ?? .unspecified
         super.init(coder: coder)
+    }
+
+    /// The storyboard's archived configuration (UIStoryboard.swift). The
+    /// display mode is applied before the split behavior because assigning a
+    /// display mode also writes the behavior (MEASURED mode sweep above).
+    func _applyArchivedConfiguration(children: [UIViewController],
+                                     displayMode: Int?, splitBehavior: Int?,
+                                     backgroundStyle: Int?, primaryEdge: Int?) {
+        if let raw = primaryEdge, let edge = PrimaryEdge(rawValue: raw) { self.primaryEdge = edge }
+        if let raw = backgroundStyle, let bg = BackgroundStyle(rawValue: raw) { primaryBackgroundStyle = bg }
+        if let raw = displayMode, let mode = DisplayMode(rawValue: raw) { preferredDisplayMode = mode }
+        if let raw = splitBehavior, let behavior = SplitBehavior(rawValue: raw) { preferredSplitBehavior = behavior }
+        let columns: [Column]
+        switch style {
+        case .tripleColumn: columns = [.primary, .supplementary, .secondary]
+        case .doubleColumn: columns = [.primary, .secondary]
+        case .unspecified: viewControllers = children; return
+        }
+        for (column, child) in zip(columns, children) { setViewController(child, for: column) }
     }
 
     // MEASURED all three defaults rows: unloaded, not collapsed, secondaryOnly;

@@ -74,6 +74,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) { launchLog("applicationDidBecomeActive (app delegate)") }
 }
 
+/// An app delegate without configurationForConnecting (NetNewsWire's shape).
+final class PlainAppDelegate: UIResponder, UIApplicationDelegate {}
+
 @MainActor
 final class SceneLaunchTests: XCTestCase {
     static let fixtures = URL(fileURLWithPath: #filePath)
@@ -134,5 +137,51 @@ final class SceneLaunchTests: XCTestCase {
         if launchEvents != expected {
             for (i, e) in launchEvents.enumerated() { print("PORT[\(i)] \(e)") }
         }
+    }
+
+    func testDelegateWithoutConfigurationForConnectingUsesTheManifestEntry() {
+        launchEvents = []
+        let savedPaths = OpenUIKitRuntime.nibSearchPaths
+        let savedAliases = UINibClassRegistry.moduleAliases
+        OpenUIKitRuntime.nibSearchPaths = [Self.fixtures]
+        UINibClassRegistry.moduleAliases["LaunchProbe"] = "SceneLaunchTests"
+        defer {
+            OpenUIKitRuntime.nibSearchPaths = savedPaths
+            UINibClassRegistry.moduleAliases = savedAliases
+        }
+        let entry = _UISceneManifestEntry(name: "Default Configuration",
+                                          delegateClassName: "SceneLaunchTests.SceneDelegate",
+                                          storyboardName: "Main", sceneClassName: nil)
+        let app = UIApplication._mainLaunch(delegateType: PlainAppDelegate.self)
+        let scene = app._hostConnectSceneFromManifest(entry)
+        XCTAssertNotNil(scene)
+        XCTAssertTrue(scene?.delegate is SceneDelegate)
+        XCTAssertEqual(scene?.session.configuration.name, "Default Configuration")
+        let window = (scene?.delegate as? SceneDelegate)?.window
+        XCTAssertTrue(window?.rootViewController is RootViewController)
+        XCTAssertTrue(window?.isKeyWindow ?? false)
+        window?.isHidden = true
+        if let scene { app._disconnect(scene: scene) }
+    }
+
+    /// Xcode writes a Base-internationalized storyboard into Base.lproj/
+    /// (NetNewsWire.app/Base.lproj/Main.storyboardc); UIKit finds it through
+    /// the bundle's localization lookup.
+    func testStoryboardInBaseLprojIsFoundThroughTheBundle() throws {
+        let fm = FileManager.default
+        let root = fm.temporaryDirectory.appendingPathComponent("lproj-\(UUID().uuidString).bundle")
+        let base = root.appendingPathComponent("Base.lproj")
+        try fm.createDirectory(at: base, withIntermediateDirectories: true)
+        try fm.copyItem(atPath: Self.fixtures + "/Main.storyboardc",
+                        toPath: base.appendingPathComponent("Main.storyboardc").path)
+        defer { try? fm.removeItem(at: root) }
+        let bundle = try XCTUnwrap(Bundle(path: root.path))
+        let savedPaths = OpenUIKitRuntime.nibSearchPaths
+        OpenUIKitRuntime.nibSearchPaths = []
+        defer { OpenUIKitRuntime.nibSearchPaths = savedPaths }
+        let found = UIStoryboard.locate("Main", bundle: bundle)
+        XCTAssertEqual(found.0.map { URL(fileURLWithPath: $0).resolvingSymlinksInPath().path },
+                       base.appendingPathComponent("Main.storyboardc").resolvingSymlinksInPath().path)
+        XCTAssertNotNil(found.1, "entry point read from the storyboard's Info.plist")
     }
 }

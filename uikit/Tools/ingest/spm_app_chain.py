@@ -33,6 +33,11 @@ Sources/<name>/ as per-file symlinks -- an Xcode app target spanning several
 folders minus membership exceptions). `overlay` adds files into the target
 ({"Name.swift": {"root": ..., "path": ...}}), which turns the target into a
 real directory of per-entry symlinks so the upstream tree is never written.
+`"kind": "executable"` renders the target as an `.executableTarget` (an app
+target whose `@main` type is its entry point: the app's product, linked), and
+`linker_flags` become `linkerSettings: [.unsafeFlags([...])]` (e.g.
+`-sectcreate __TEXT __info_plist <Info.plist>`, which Xcode does for a bare
+executable's embedded Info.plist).
 `c_settings` are raw SwiftPM cSettings; spec-level `platforms` replaces the
 default [.macOS(.v13)]. Targets
 are linked by default (a symlink under Sources/<name>) so the package builds
@@ -172,8 +177,11 @@ def render_target(t: dict, shims: set[str], clang: bool = False) -> str:
             if flags not in c_settings:
                 c_settings.append(flags)
         deps.append(f'.product(name: {json.dumps(p)}, package: "OpenUIKit"{condition})')
+    kind = t.get("kind", "library")
+    if kind not in ("library", "executable"):
+        raise SystemExit(f"{t['name']}: kind must be library or executable")
     lines = [
-        "        .target(",
+        "        .executableTarget(" if kind == "executable" else "        .target(",
         f"            name: {json.dumps(t['name'])},",
         f"            dependencies: [{', '.join(deps)}],",
         f"            path: {json.dumps('Sources/' + t['name'])},",
@@ -194,6 +202,8 @@ def render_target(t: dict, shims: set[str], clang: bool = False) -> str:
         lines.append(f"            swiftSettings: [{', '.join(settings)}],")
     if c_settings:
         lines.append(f"            cSettings: [{', '.join(c_settings)}],")
+    if t.get("linker_flags"):
+        lines.append(f"            linkerSettings: [.unsafeFlags([{swift_string_list(t['linker_flags'])}])],")
     lines[-1] = lines[-1].rstrip(",")
     lines.append("        ),")
     return "\n".join(lines)
@@ -322,8 +332,11 @@ def main() -> int:
                 return 1
 
     shim_names = {s["name"] for s in spec.get("shims", [])}
-    products = ",\n".join(f'        .library(name: {json.dumps(t["name"])}, targets: [{json.dumps(t["name"])}])'
-                          for t in targets)
+    products = ",\n".join(
+        (f'        .executable(name: {json.dumps(t["name"])}, targets: [{json.dumps(t["name"])}])'
+         if t.get("kind") == "executable" else
+         f'        .library(name: {json.dumps(t["name"])}, targets: [{json.dumps(t["name"])}])')
+        for t in targets)
     openuikit_path = roots["openuikit"]
     if spec.get("openuikit_manifest_filter"):
         filtered = os.path.join(out, "OpenUIKitFiltered")

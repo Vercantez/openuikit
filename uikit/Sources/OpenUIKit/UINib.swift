@@ -550,7 +550,7 @@ open class UINib {
     static func loadArchive(named name: String, bundle: Bundle? = nil) -> NibArchive? {
         let bare = name.hasSuffix(".nib") ? String(name.dropLast(4)) : name
         var directories = OpenUIKitRuntime.nibSearchPaths
-        if let resources = _resourceDirectory(of: bundle) { directories.append(resources) }
+        directories += _resourceDirectories(of: bundle, name: bare, type: "nib")
         for directory in directories {
             // Xcode writes a nib either as a flat NIBArchive file or, for a
             // nib with device-specific variants, as a `.nib` directory whose
@@ -609,6 +609,25 @@ extension Bundle {
 /// A bundle's resource directory as a path, without Foundation's `Bundle`
 /// API surface differences between the package build and the guest shim.
 @MainActor
+/// The directories to search for a compiled resource, bundle side: where
+/// Foundation's own lookup finds `<name>.<type>` (it knows the localization
+/// folders -- Xcode writes a Base-internationalized storyboard or nib into
+/// `Base.lproj/`, e.g. NetNewsWire's `Base.lproj/Main.storyboardc`), then the
+/// bundle's resource root.
+func _resourceDirectories(of bundle: Bundle?, name: String, type: String) -> [String] {
+    var directories: [String] = []
+#if canImport(Foundation)
+    if let path = (bundle ?? Bundle.main).path(forResource: name, ofType: type),
+       let slash = path.lastIndex(of: "/") {
+        directories.append(String(path[..<slash]))
+    }
+#endif
+    if let resources = _resourceDirectory(of: bundle), !directories.contains(resources) {
+        directories.append(resources)
+    }
+    return directories
+}
+
 func _resourceDirectory(of bundle: Bundle?) -> String? {
 #if canImport(Foundation)
     return (bundle ?? Bundle.main).resourcePath
