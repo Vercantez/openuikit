@@ -26,13 +26,13 @@ extension Canvas {
     /// (`darkCalibration`: glyph calibrated against a black background),
     /// matching how real UIKit label layers store glyph ink.
     public func drawMask(_ mask: [UInt8], width: Int, height: Int,
-                         atPixelX x: Int, pixelY y: Int, color: CGColor,
+                         atPixelX x: Int, pixelY y: Int, color: CanvasColor,
                          blendGamma gamma: CGFloat, darkCalibration: Bool = false) {
         _drawMaskGamma(mask, width, height, x, y, color, gamma, darkCalibration)
     }
 
     func _drawMaskGamma(_ mask: [UInt8], _ w: Int, _ h: Int, _ ox: Int, _ oy: Int,
-                        _ color: CGColor, _ gamma: CGFloat, _ darkCal: Bool) {
+                        _ color: CanvasColor, _ gamma: CGFloat, _ darkCal: Bool) {
         guard color.alpha > 0, w > 0, h > 0 else { return }
         let lut = _GammaLUT.shared(gamma: gamma)
         let bw = bitmap.width

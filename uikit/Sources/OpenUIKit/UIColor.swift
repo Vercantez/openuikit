@@ -255,18 +255,23 @@ public final class UITraitOverrides {
 public class UIColor: NSObject, @unchecked Sendable {
     /// Static color, or a named semantic color resolved via traits.
     enum Storage {
-        case fixed(CGColor)
+        case fixed(CanvasColor)
         case semantic(name: String)
-        case dynamic((UITraitCollection) -> CGColor)
+        case dynamic((UITraitCollection) -> CanvasColor)
     }
     let storage: Storage
+    /// The CoreGraphics colour a `UIColor(cgColor:)` was made from. iOS 26.1
+    /// keeps it: `cgColor` returns a colour in the same space (GenericGray,
+    /// SRGB, …), and such a colour is not `==` to the same components in
+    /// UIKit's own extended spaces (cgunifyprobe `## color`).
+    private(set) var _sourceCGColor: CGColor?
 
     public init(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
-        storage = .fixed(CGColor(red: red, green: green, blue: blue, alpha: alpha))
+        storage = .fixed(CanvasColor(red: red, green: green, blue: blue, alpha: alpha))
         super.init()
     }
     public init(white: CGFloat, alpha: CGFloat) {
-        storage = .fixed(CGColor(gray: white, alpha: alpha))
+        storage = .fixed(CanvasColor(gray: white, alpha: alpha))
         super.init()
     }
     init(_ storage: Storage) { self.storage = storage; super.init() }
@@ -277,7 +282,7 @@ public class UIColor: NSObject, @unchecked Sendable {
     }
 
     /// Decomposes the color resolved in the current trait environment into
-    /// extended sRGB components. OpenUIKit's CGColor representation is
+    /// extended sRGB components. OpenUIKit's CanvasColor representation is
     /// normalized RGBA, so every supported color space is representable.
     @discardableResult
     public func getRed(
@@ -405,7 +410,7 @@ public class UIColor: NSObject, @unchecked Sendable {
             if indexed.hasAppearanceVariants {
                 self.init(.dynamic { traits in
                     indexed.resolvedColor(for: traits)
-                        ?? CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+                        ?? CanvasColor(red: 0, green: 0, blue: 0, alpha: 0)
                 })
             } else {
                 self.init(red: initial.red, green: initial.green,
@@ -436,7 +441,7 @@ public class UIColor: NSObject, @unchecked Sendable {
     }
 
     /// Resolve to concrete sRGB components for the given traits.
-    public func resolvedCGColor(with traits: UITraitCollection) -> CGColor {
+    public func resolvedCGColor(with traits: UITraitCollection) -> CanvasColor {
         switch storage {
         case .fixed(let c): return c
         case .semantic(let name): return SystemColors.resolve(name, traits: traits)
@@ -447,7 +452,27 @@ public class UIColor: NSObject, @unchecked Sendable {
         let c = resolvedCGColor(with: traits)
         return UIColor(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha)
     }
-    public var cgColor: CGColor { resolvedCGColor(with: .current) }
+    /// UIKit's `cgColor`: CoreGraphics' own `CGColor` where CoreGraphics
+    /// exists (cg-unify), the renderer's value colour elsewhere. Gray-model
+    /// colours are 2-component extended gray, the rest 4-component extended
+    /// sRGB (iOS 26.1); a `UIColor(cgColor:)` returns its source colour.
+    public var cgColor: CGColor { _cgColorObject(with: .current) }
+
+    /// `cgColor` resolved for `traits`.
+    func _cgColorObject(with traits: UITraitCollection) -> CGColor {
+        _sourceCGColor ?? resolvedCGColor(with: traits).cgColor
+    }
+
+    /// The renderer's value colour in the current trait environment (what
+    /// `cgColor` was before cg-unify; internal drawing reads this).
+    var _canvasColor: CanvasColor { resolvedCGColor(with: .current) }
+
+    /// UIKit's `init(cgColor:)`. The colour keeps its model (gray stays
+    /// gray); a colour in another space is converted to sRGB.
+    public convenience init(cgColor: CGColor) {
+        self.init(.fixed(CanvasColor(cgColor)))
+        _sourceCGColor = cgColor
+    }
 
     public func withAlphaComponent(_ alpha: CGFloat) -> UIColor {
         switch storage {
@@ -466,6 +491,10 @@ public class UIColor: NSObject, @unchecked Sendable {
 
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? UIColor else { return false }
+        if other === self { return true }
+        if _sourceCGColor != nil || other._sourceCGColor != nil {
+            return _cgColorObject(with: .current) == other._cgColorObject(with: .current)
+        }
         return resolvedCGColor(with: .current) == other.resolvedCGColor(with: .current)
     }
 
@@ -480,7 +509,7 @@ public class UIColor: NSObject, @unchecked Sendable {
     }
 
     // Fixed palette colors (values match UIKit's fixed colors).
-    // iOS 26.1: these three are gray-model colours (two CGColor components).
+    // iOS 26.1: these three are gray-model colours (two CanvasColor components).
     public static let clear = UIColor(white: 0, alpha: 0)
     public static let black = UIColor(white: 0, alpha: 1)
     public static let white = UIColor(white: 1, alpha: 1)
@@ -548,13 +577,13 @@ private struct _NamedColorAsset {
         case unsupported
     }
 
-    let base: CGColor
-    let light: CGColor?
-    let dark: CGColor?
+    let base: CanvasColor
+    let light: CanvasColor?
+    let dark: CanvasColor?
 
     var hasAppearanceVariants: Bool { light != nil || dark != nil }
 
-    func resolvedColor(for traits: UITraitCollection) -> CGColor {
+    func resolvedColor(for traits: UITraitCollection) -> CanvasColor {
         switch traits.userInterfaceStyle {
         case .dark:
             return dark ?? base
@@ -593,9 +622,9 @@ private struct _NamedColorAsset {
             return nil
         }
 
-        var base: CGColor?
-        var light: CGColor?
-        var dark: CGColor?
+        var base: CanvasColor?
+        var light: CanvasColor?
+        var dark: CanvasColor?
         for entry in entries {
             guard entry["idiom"]?.stringValue == "universal",
                   entry["display-gamut"] == nil else { continue }
@@ -632,7 +661,7 @@ private struct _NamedColorAsset {
         }
     }
 
-    private static func parseColor(_ value: JSONValue?) -> CGColor? {
+    private static func parseColor(_ value: JSONValue?) -> CanvasColor? {
         guard let value,
               value["color-space"]?.stringValue == "srgb",
               let components = value["components"],
@@ -648,7 +677,7 @@ private struct _NamedColorAsset {
         } else {
             alpha = 1
         }
-        return CGColor(red: clamp(red), green: clamp(green),
+        return CanvasColor(red: clamp(red), green: clamp(green),
                        blue: clamp(blue), alpha: clamp(alpha))
     }
 

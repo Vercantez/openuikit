@@ -96,7 +96,7 @@ public struct CanvasBackdropFilterMask: Equatable, Sendable {
 public struct CanvasBackdropFilterConfiguration: Equatable, Sendable {
     public var blurRadius: CGFloat
     public var saturation: CGFloat
-    public var tintColor: CGColor?
+    public var tintColor: CanvasColor?
     public var intensity: CGFloat
     public var blurMask: CanvasBackdropFilterMask?
     public var normalizesMaskEdges: Bool
@@ -111,7 +111,7 @@ public struct CanvasBackdropFilterConfiguration: Equatable, Sendable {
 
     public init(blurRadius: CGFloat = 0,
                 saturation: CGFloat = 1,
-                tintColor: CGColor? = nil,
+                tintColor: CanvasColor? = nil,
                 intensity: CGFloat = 1,
                 blurMask: CanvasBackdropFilterMask? = nil,
                 normalizesMaskEdges: Bool = true,
@@ -264,8 +264,8 @@ extension Canvas {
         return Swift.min(upper, Swift.max(lower, value))
     }
 
-    private static func _normalizedBackdropColor(_ color: CGColor) -> CGColor {
-        CGColor(red: _finiteClamped(color.red, lower: 0, upper: 1, fallback: 0),
+    private static func _normalizedBackdropColor(_ color: CanvasColor) -> CanvasColor {
+        CanvasColor(red: _finiteClamped(color.red, lower: 0, upper: 1, fallback: 0),
                 green: _finiteClamped(color.green, lower: 0, upper: 1, fallback: 0),
                 blue: _finiteClamped(color.blue, lower: 0, upper: 1, fallback: 0),
                 alpha: _finiteClamped(color.alpha, lower: 0, upper: 1, fallback: 0))
@@ -1386,7 +1386,7 @@ struct _CanvasBackdropFilter {
     /// nil selects the byte-identical historical uniform kernel.
     let blurMask: [UInt8]?
     let saturation: Double
-    let tint: CGColor?
+    let tint: CanvasColor?
     let intensity: Double
     let clampsSaturation: Bool
 }

@@ -1016,17 +1016,17 @@ final class NamedAssetLoadingTests: XCTestCase {
             XCTAssertEqual(dark?.green ?? -1, 0.3, accuracy: 0.000001)
 
             let extended = UIColor(named: "Extended", in: bundle,
-                                   compatibleWith: lightTraits)?.cgColor
+                                   compatibleWith: lightTraits)?.cgColor.canvasColor
             XCTAssertEqual(extended?.red ?? -1, 1.2, accuracy: 0.000001)
             XCTAssertEqual(extended?.green ?? 1, -0.1, accuracy: 0.000001)
             let gray = UIColor(named: "Gray", in: bundle,
-                               compatibleWith: lightTraits)?.cgColor
+                               compatibleWith: lightTraits)?.cgColor.canvasColor
             XCTAssertEqual(gray?.red ?? -1, 0.9, accuracy: 0.000001)
             XCTAssertEqual(gray?.green ?? -1, 0.9, accuracy: 0.000001)
             XCTAssertEqual(gray?.blue ?? -1, 0.9, accuracy: 0.000001)
             XCTAssertEqual(gray?.alpha ?? -1, 0.4, accuracy: 0.000001)
             let platform = UIColor(named: "Platform", in: bundle,
-                                   compatibleWith: lightTraits)?.cgColor
+                                   compatibleWith: lightTraits)?.cgColor.canvasColor
             XCTAssertEqual(platform?.green ?? -1, 1, accuracy: 0.000001)
             XCTAssertNil(UIColor(named: "MacOnly", in: bundle,
                                  compatibleWith: lightTraits))

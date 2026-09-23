@@ -535,7 +535,7 @@ public func openuikit_gc_fill_rect(_ x: Double, _ y: Double, _ w: Double, _ h: D
     oukMain {
         guard let c = UIGraphicsGetCurrentContext() else { return }
         c.fill(rect: CGRect(x: x, y: y, width: w, height: h),
-               color: CGColor(red: r, green: g, blue: b, alpha: a))
+               color: CanvasColor(red: r, green: g, blue: b, alpha: a))
     }
 }
 
@@ -546,7 +546,7 @@ public func openuikit_gc_fill_rounded_rect(_ x: Double, _ y: Double, _ w: Double
     oukMain {
         guard let c = UIGraphicsGetCurrentContext() else { return }
         c.fill(.roundedRect(CGRect(x: x, y: y, width: w, height: h), cornerRadius: radius),
-               color: CGColor(red: r, green: g, blue: b, alpha: a))
+               color: CanvasColor(red: r, green: g, blue: b, alpha: a))
     }
 }
 
@@ -557,7 +557,7 @@ public func openuikit_gc_stroke_rect(_ x: Double, _ y: Double, _ w: Double, _ h:
     oukMain {
         guard let c = UIGraphicsGetCurrentContext() else { return }
         c.stroke(.rect(CGRect(x: x, y: y, width: w, height: h)),
-                 color: CGColor(red: r, green: g, blue: b, alpha: a), lineWidth: lineWidth)
+                 color: CanvasColor(red: r, green: g, blue: b, alpha: a), lineWidth: lineWidth)
     }
 }
 

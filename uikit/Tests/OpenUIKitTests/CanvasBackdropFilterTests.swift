@@ -251,7 +251,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.clip(to: CGRect(x: 1, y: 0, width: 2, height: 2))
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: 0, y: 0, width: 4, height: 2))
             canvas.restore()
 
@@ -291,7 +291,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
 
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: rect)
 
             for index in zeroIndices {
@@ -362,7 +362,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
                 canvas.applyBackdropFilter(
                     CanvasBackdropFilterConfiguration(
                         blurRadius: 0.8, saturation: 0.65,
-                        tintColor: CGColor(red: 0.9, green: 0.15,
+                        tintColor: CanvasColor(red: 0.9, green: 0.15,
                                            blue: 0.35, alpha: 0.4),
                         intensity: 0.73),
                     in: fixture.4)
@@ -550,7 +550,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
                 Canvas(bitmap: bitmap, scale: 1).applyBackdropFilter(
                     CanvasBackdropFilterConfiguration(
                         blurRadius: 2,
-                        tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                        tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                     in: rect)
                 XCTAssertEqual(bitmap.pixels, before, "\(backend), \(rect)")
             }
@@ -561,7 +561,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
                 canvas.concatenate(transform)
                 canvas.applyBackdropFilter(
                     CanvasBackdropFilterConfiguration(
-                        tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                        tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                     in: CGRect(x: 0, y: 0, width: 4, height: 3))
                 XCTAssertEqual(bitmap.pixels, before, "\(backend), \(transform)")
             }
@@ -574,7 +574,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             let giantRectBitmap = patternedBitmap(width: 5, height: 4)
             Canvas(bitmap: giantRectBitmap, scale: 1).applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: -huge / 2, y: -huge / 2,
                            width: huge, height: huge))
             assertSolid(giantRectBitmap, Pixel(255, 0, 0, 255), "\(backend), huge rect")
@@ -588,7 +588,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
                 a: huge, b: 0, c: 0, d: huge, tx: 0, ty: 0))
             overflowCanvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: -2, y: -2, width: 4, height: 4))
             assertSolid(overflowProductBitmap, Pixel(255, 0, 0, 255),
                         "\(backend), overflowed affine products")
@@ -597,7 +597,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             let before = offscreenBitmap.pixels
             Canvas(bitmap: offscreenBitmap, scale: 1).applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: huge / 2, y: huge / 2,
                            width: huge / 4, height: huge / 4))
             XCTAssertEqual(offscreenBitmap.pixels, before,
@@ -816,7 +816,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             }
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: rect)
             return bitmap.pixels
         }
@@ -850,7 +850,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.concatenate(transform)
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: rect)
             return bitmap.pixels
         }
@@ -941,7 +941,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
                     let canvas = Canvas(bitmap: bitmap, scale: 1)
                     canvas.clip(to: triangle)
                     canvas.applyBackdropFilter(
-                        CanvasBackdropFilterConfiguration(tintColor: CGColor(
+                        CanvasBackdropFilterConfiguration(tintColor: CanvasColor(
                             red: 1, green: 0, blue: 0, alpha: 1)),
                         in: CGRect(x: 0, y: 0, width: 4, height: 4))
                     XCTAssertEqual(pixels(bitmap), expected, "\(backend), \(points)")
@@ -977,7 +977,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.clip(to: triangle)
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: 0, y: 0, width: 4, height: 4))
             return bitmap.pixels
         }
@@ -1026,7 +1026,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.clip(to: path(points))
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: 0, y: 0, width: 4, height: 4))
             return bitmap.pixels
         }
@@ -1116,7 +1116,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
                     blurRadius: 1.25, saturation: 1.8,
-                    tintColor: CGColor(red: 0.9, green: 0.95, blue: 1, alpha: 0.22),
+                    tintColor: CanvasColor(red: 0.9, green: 0.95, blue: 1, alpha: 0.22),
                     intensity: 0.73),
                 in: CGRect(x: 0.5, y: 0.5, width: 8, height: 4))
             canvas.restore()
@@ -1134,9 +1134,9 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.fill(rect: CGRect(x: 0, y: 0, width: 5, height: 1), color: .white)
             canvas.beginTransparencyLayer(alpha: 0.5)
             canvas.fill(rect: CGRect(x: 0, y: 0, width: 2, height: 1),
-                        color: CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+                        color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
             canvas.fill(rect: CGRect(x: 2, y: 0, width: 3, height: 1),
-                        color: CGColor(red: 0, green: 0, blue: 1, alpha: 1))
+                        color: CanvasColor(red: 0, green: 0, blue: 1, alpha: 1))
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(blurRadius: 1),
                 in: CGRect(x: 0, y: 0, width: 5, height: 1))
@@ -1161,12 +1161,12 @@ final class CanvasBackdropFilterTests: XCTestCase {
             let canvas = Canvas(bitmap: bitmap, scale: 1)
             canvas.fill(
                 rect: CGRect(x: 0, y: 0, width: 1, height: 1),
-                color: CGColor(red: 200 / 255, green: 113 / 255,
+                color: CanvasColor(red: 200 / 255, green: 113 / 255,
                                blue: 76 / 255, alpha: 1))
             canvas.beginTransparencyLayer(alpha: 157 / 255)
             canvas.fill(
                 rect: CGRect(x: 0, y: 0, width: 1, height: 1),
-                color: CGColor(red: 48 / 255, green: 112 / 255,
+                color: CanvasColor(red: 48 / 255, green: 112 / 255,
                                blue: 42 / 255, alpha: 1))
             canvas.endTransparencyLayer()
             if saturation != 1 {
@@ -1213,7 +1213,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             Canvas(bitmap: bitmap, scale: 1).applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
                     blurRadius: 1,
-                    tintColor: CGColor(red: 0.1, green: 0.4, blue: 0.9, alpha: 0.35)),
+                    tintColor: CanvasColor(red: 0.1, green: 0.4, blue: 0.9, alpha: 0.35)),
                 in: CGRect(x: 1, y: 0, width: 4, height: 1))
             XCTAssertEqual(pixels(bitmap), expected, "\(backend)")
         }
@@ -1224,23 +1224,23 @@ final class CanvasBackdropFilterTests: XCTestCase {
             let bitmap = Bitmap(width: 4, height: 2)
             let canvas = Canvas(bitmap: bitmap, scale: 1)
             canvas.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 2),
-                        color: CGColor(red: 0.12, green: 0.18, blue: 0.25, alpha: 1))
+                        color: CanvasColor(red: 0.12, green: 0.18, blue: 0.25, alpha: 1))
             canvas.beginTransparencyLayer(alpha: 0.75)
             canvas.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 2),
-                        color: CGColor(red: 0.1, green: 0.75, blue: 0.2, alpha: 1))
+                        color: CanvasColor(red: 0.1, green: 0.75, blue: 0.2, alpha: 1))
             canvas.beginMaskedTransparencyLayer(
                 alpha: 0.6,
                 mask: .rect(CGRect(x: 0.5, y: 0.25, width: 3, height: 1.5)))
             canvas.fill(rect: CGRect(x: 0, y: 0, width: 2, height: 2),
-                        color: CGColor(red: 0.9, green: 0.1, blue: 0.05, alpha: 0.8))
+                        color: CanvasColor(red: 0.9, green: 0.1, blue: 0.05, alpha: 0.8))
             canvas.fill(rect: CGRect(x: 2, y: 0, width: 2, height: 2),
-                        color: CGColor(red: 0.05, green: 0.2, blue: 0.95, alpha: 1))
+                        color: CanvasColor(red: 0.05, green: 0.2, blue: 0.95, alpha: 1))
             canvas.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 1),
-                        color: CGColor(red: 1, green: 1, blue: 1, alpha: 0.25))
+                        color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 0.25))
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
                     blurRadius: 1,
-                    tintColor: CGColor(red: 1, green: 0.8, blue: 0.2, alpha: 0.2)),
+                    tintColor: CanvasColor(red: 1, green: 0.8, blue: 0.2, alpha: 0.2)),
                 in: CGRect(x: 0, y: 0, width: 4, height: 2))
             canvas.endTransparencyLayer()
             canvas.endTransparencyLayer()
@@ -1286,7 +1286,7 @@ final class CanvasBackdropFilterTests: XCTestCase {
             canvas.clip(to: CGRect(x: -1.6, y: -1.1, width: 3.2, height: 2.2))
             canvas.applyBackdropFilter(
                 CanvasBackdropFilterConfiguration(
-                    tintColor: CGColor(red: 1, green: 0, blue: 0, alpha: 1)),
+                    tintColor: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)),
                 in: CGRect(x: -2, y: -2, width: 4, height: 4))
             XCTAssertEqual(pixels(bitmap), expected, "\(backend)")
         }

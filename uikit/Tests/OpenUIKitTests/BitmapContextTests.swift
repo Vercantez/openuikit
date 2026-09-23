@@ -1,9 +1,12 @@
 import XCTest
 import OpenCoreGraphics
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 
 final class BitmapContextTests: XCTestCase {
     func testOwnedDeviceRGBContextMakesIndependentImageSnapshot() throws {
-        let space = OpenCoreGraphics.CGColorSpaceCreateDeviceRGB()
+        let space = CGColorSpaceCreateDeviceRGB()
         let context = try XCTUnwrap(OpenCoreGraphics.Canvas(
             data: nil,
             width: 2,
@@ -16,7 +19,7 @@ final class BitmapContextTests: XCTestCase {
 
         context.fill(
             rect: CGRect(x: 0, y: 0, width: 1, height: 1),
-            color: CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+            color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1)
         )
         let image = try XCTUnwrap(context.makeImage())
         XCTAssertEqual(image.width, 2)
@@ -39,14 +42,14 @@ final class BitmapContextTests: XCTestCase {
                 height: 1,
                 bitsPerComponent: 8,
                 bytesPerRow: 8,
-                space: OpenCoreGraphics.CGColorSpaceCreateDeviceRGB(),
+                space: CGColorSpaceCreateDeviceRGB(),
                 bitmapInfo: OpenCoreGraphics.CGImageAlphaInfo.premultipliedLast.rawValue
             ))
             XCTAssertEqual(Array(bytes.prefix(4)), [1, 2, 3, 4])
             for index in 0..<4 { bytes[index] = 0 }
             context.fill(
                 rect: CGRect(x: 0, y: 0, width: 1, height: 1),
-                color: CGColor(red: 0, green: 1, blue: 0, alpha: 0.5)
+                color: CanvasColor(red: 0, green: 1, blue: 0, alpha: 0.5)
             )
             return try XCTUnwrap(context.makeImage())
         }
@@ -58,7 +61,7 @@ final class BitmapContextTests: XCTestCase {
     }
 
     func testUnsupportedBitmapContractsFailClosed() {
-        let space = OpenCoreGraphics.CGColorSpaceCreateDeviceRGB()
+        let space = CGColorSpaceCreateDeviceRGB()
         XCTAssertNil(OpenCoreGraphics.Canvas(
             data: nil, width: 1, height: 1, bitsPerComponent: 16,
             bytesPerRow: 4, space: space,

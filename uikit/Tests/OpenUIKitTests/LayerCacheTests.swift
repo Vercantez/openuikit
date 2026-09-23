@@ -139,7 +139,7 @@ final class LayerCacheTests: XCTestCase {
         override func drawContent(in canvas: Canvas, bounds: OpenUIKit.CGRect) {
             canvas.fill(rect: CGRect(x: 0, y: 0, width: bounds.width * level,
                                      height: bounds.height),
-                        color: CGColor(red: 0.1, green: 0.4, blue: 0.9, alpha: 1))
+                        color: CanvasColor(red: 0.1, green: 0.4, blue: 0.9, alpha: 1))
         }
     }
 

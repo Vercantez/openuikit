@@ -1592,18 +1592,8 @@ private final class _SwiftUITrimmedCircleStrokeView: UIView {
         guard circumference.isFinite, circumference > 0 else { return }
         let pathLength = (end - start) * circumference
         let color = strokeColor.resolve().resolvedCGColor(with: traitCollection)
-        let cap: CanvasLineCap
-        switch strokeStyle.lineCap {
-        case .butt: cap = .butt
-        case .round: cap = .round
-        case .square: cap = .square
-        }
-        let join: CanvasLineJoin
-        switch strokeStyle.lineJoin {
-        case .miter: join = .miter
-        case .round: join = .round
-        case .bevel: join = .bevel
-        }
+        let cap = CanvasLineCap(strokeStyle.lineCap)
+        let join = CanvasLineJoin(strokeStyle.lineJoin)
 
         func drawArc(from lower: CGFloat, to upper: CGFloat) {
             guard upper > lower else { return }

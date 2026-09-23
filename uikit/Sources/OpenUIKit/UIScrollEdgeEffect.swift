@@ -173,7 +173,7 @@ final class _UIScrollEdgeEffectView: UIView {
 extension UIScrollEdgeEffect {
     /// MEASURED light only (white 230 over both red and black). Dark is
     /// unmeasured: the plate follows the system background there.
-    static func hardPlateColor(for traits: UITraitCollection) -> CGColor {
+    static func hardPlateColor(for traits: UITraitCollection) -> CanvasColor {
         UIColor.systemBackground.resolvedCGColor(with: traits).withAlpha(hardPlateAlpha)
     }
 }

@@ -53,9 +53,9 @@ final class BackendParityTests: XCTestCase {
     func testAsymmetricFillParity() {
         let d = maxDelta(width: 100, height: 80) { c in
             c.fill(rect: CGRect(x: 2, y: 3, width: 20, height: 8),
-                   color: CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+                   color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
             c.fill(.roundedRect(CGRect(x: 10, y: 22, width: 30, height: 12), cornerRadius: 5),
-                   color: CGColor(red: 0, green: 0.5, blue: 1, alpha: 0.6))
+                   color: CanvasColor(red: 0, green: 0.5, blue: 1, alpha: 0.6))
         }
         XCTAssertLessThanOrEqual(d, 3, "asymmetric fills differ between backends")
     }
@@ -63,12 +63,12 @@ final class BackendParityTests: XCTestCase {
     func testHardEdgedRotatedFillParity() {
         let d = maxDelta(width: 64, height: 64) { c in
             c.fill(rect: CGRect(x: 0, y: 0, width: 32, height: 32),
-                   color: CGColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1))
+                   color: CanvasColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1))
             c.save()
             c.translate(x: 16, y: 16)
             c.concatenate(CGAffineTransform(rotationAngle: 0.5))
             c.fill(.rect(CGRect(x: -8, y: -5, width: 16, height: 10)),
-                   color: CGColor(red: 0.2, green: 0.3, blue: 0.8, alpha: 1),
+                   color: CanvasColor(red: 0.2, green: 0.3, blue: 0.8, alpha: 1),
                    hardEdges: true)
             c.restore()
         }
@@ -81,13 +81,13 @@ final class BackendParityTests: XCTestCase {
     func testTransparencyLayerGroupAlphaParity() {
         let d = maxDelta(width: 40, height: 40) { c in
             c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20),
-                   color: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+                   color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 1))
             c.beginTransparencyLayer(alpha: 0.5)
             // Overlapping fills must composite first, THEN fade as a unit.
             c.fill(rect: CGRect(x: 2, y: 2, width: 10, height: 10),
-                   color: CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+                   color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
             c.fill(rect: CGRect(x: 6, y: 6, width: 10, height: 10),
-                   color: CGColor(red: 0, green: 0, blue: 1, alpha: 1))
+                   color: CanvasColor(red: 0, green: 0, blue: 1, alpha: 1))
             c.endTransparencyLayer()
         }
         XCTAssertLessThanOrEqual(d, 3, "group alpha semantics differ")
@@ -99,13 +99,13 @@ final class BackendParityTests: XCTestCase {
         for y in 0..<10 { for x in 0..<12 { mask[y * 12 + x] = UInt8((x * 21 + y * 9) % 256) } }
         let d = maxDelta(width: 30, height: 30, scale: 1) { c in
             c.fill(rect: CGRect(x: 0, y: 0, width: 30, height: 30),
-                   color: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+                   color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 1))
             c.save()
             c.clip(to: CGRect(x: 4, y: 4, width: 18, height: 14), cornerRadius: 4)
             c.fill(rect: CGRect(x: 0, y: 0, width: 30, height: 30),
-                   color: CGColor(red: 0.3, green: 0.6, blue: 0.9, alpha: 1))
+                   color: CanvasColor(red: 0.3, green: 0.6, blue: 0.9, alpha: 1))
             c.drawMask(mask, width: 12, height: 10, atPixelX: 6, pixelY: 6,
-                       color: CGColor(red: 0, green: 0, blue: 0, alpha: 1))
+                       color: CanvasColor(red: 0, green: 0, blue: 0, alpha: 1))
             c.restore()
         }
         XCTAssertLessThanOrEqual(d, 3, "clip+mask differs")
@@ -154,11 +154,11 @@ final class BackendParityTests: XCTestCase {
         let bmp = Bitmap(width: 10, height: 10)
         let c = Canvas(bitmap: bmp, scale: 1)
         c.fill(rect: CGRect(x: 0, y: 0, width: 10, height: 5),
-               color: CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+               color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
         XCTAssertEqual(bmp.pixels[(2 * 10 + 2) * 4], 255)
         XCTAssertEqual(bmp.pixels[(2 * 10 + 2) * 4 + 3], 255)
         c.fill(rect: CGRect(x: 0, y: 5, width: 10, height: 5),
-               color: CGColor(red: 0, green: 1, blue: 0, alpha: 1))
+               color: CanvasColor(red: 0, green: 1, blue: 0, alpha: 1))
         XCTAssertEqual(bmp.pixels[(7 * 10 + 2) * 4 + 1], 255)
     }
 
@@ -169,7 +169,7 @@ final class BackendParityTests: XCTestCase {
             var p = Path()
             p.move(to: CGPoint(x: 4, y: 10))
             p.addLine(to: CGPoint(x: 36, y: 10))
-            c.stroke(p, color: CGColor(red: 0, green: 0, blue: 0, alpha: 1), lineWidth: 4)
+            c.stroke(p, color: CanvasColor(red: 0, green: 0, blue: 0, alpha: 1), lineWidth: 4)
         }
         XCTAssertLessThanOrEqual(d, 3, "straight-line stroke differs")
     }

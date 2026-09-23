@@ -457,7 +457,7 @@ final class SwiftUISettingsTests: XCTestCase {
         XCTAssertEqual(shadow.layer.shadowOffset, CGSize(width: 2, height: 3))
         XCTAssertEqual(shadow.layer.shadowOpacity, 0.5, accuracy: 0.001)
         XCTAssertEqual(
-            try XCTUnwrap(shadow.layer.shadowColor).blue,
+            try XCTUnwrap(shadow.layer.shadowColor).canvasColor.blue,
             1,
             accuracy: 0.001
         )

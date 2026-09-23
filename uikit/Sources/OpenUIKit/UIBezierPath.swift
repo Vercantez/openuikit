@@ -28,6 +28,8 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+import enum CoreGraphics.CGLineCap
+import enum CoreGraphics.CGLineJoin
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -46,10 +48,41 @@ public struct UIRectCorner: OptionSet, Sendable {
     public static let allCorners: UIRectCorner = [.topLeft, .topRight, .bottomLeft, .bottomRight]
 }
 
+#if canImport(CoreGraphics)
+// cg-unify: CoreGraphics' own enums where CoreGraphics exists, as UIKit's
+// `UIBezierPath.lineCapStyle` / `lineJoinStyle` declare them.
+public typealias CGLineCap = CoreGraphics.CGLineCap
+public typealias CGLineJoin = CoreGraphics.CGLineJoin
+#else
 /// CG line cap styles (`CGLineCap`).
 public enum CGLineCap: Sendable { case butt, round, square }
 /// CG line join styles (`CGLineJoin`).
 public enum CGLineJoin: Sendable { case miter, round, bevel }
+#endif
+
+extension CanvasLineCap {
+    /// The renderer's cap for a CoreGraphics cap. CoreGraphics' enum is
+    /// open (a C enum), so an unknown value draws as the default, butt.
+    public init(_ cap: CGLineCap) {
+        switch cap {
+        case .round: self = .round
+        case .square: self = .square
+        default: self = .butt
+        }
+    }
+}
+
+extension CanvasLineJoin {
+    /// The renderer's join for a CoreGraphics join (unknown values: miter,
+    /// the default).
+    public init(_ join: CGLineJoin) {
+        switch join {
+        case .round: self = .round
+        case .bevel: self = .bevel
+        default: self = .miter
+        }
+    }
+}
 
 public class UIBezierPath {
     /// The underlying OpenCoreGraphics path (UIKit's `cgPath`).
@@ -341,20 +374,8 @@ public class UIBezierPath {
         UIGraphicsGetCurrentContext()?.clip(to: cgPath)
     }
 
-    var canvasCap: CanvasLineCap {
-        switch lineCapStyle {
-        case .butt: return .butt
-        case .round: return .round
-        case .square: return .square
-        }
-    }
-    var canvasJoin: CanvasLineJoin {
-        switch lineJoinStyle {
-        case .miter: return .miter
-        case .round: return .round
-        case .bevel: return .bevel
-        }
-    }
+    var canvasCap: CanvasLineCap { CanvasLineCap(lineCapStyle) }
+    var canvasJoin: CanvasLineJoin { CanvasLineJoin(lineJoinStyle) }
 
     // MARK: Shape builders
 

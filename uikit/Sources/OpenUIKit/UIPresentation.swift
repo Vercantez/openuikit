@@ -889,7 +889,7 @@ final class _UIPageSheetView: UIView {
         }
         let path = _UIPageSheetView.sheetPath(
             in: bounds, topRadius: top, bottomRadius: bottom)
-        let color = paintedFillColor.resolvedColor(with: traitCollection).cgColor
+        let color = paintedFillColor.resolvedColor(with: traitCollection)._canvasColor
         canvas.fill(path, color: color)
     }
 

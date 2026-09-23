@@ -886,11 +886,11 @@ final class _UIKeyboardKey: UIView {
         return p
     }
 
-    func fillShift(_ canvas: Canvas, bounds: CGRect, color: CGColor) {
+    func fillShift(_ canvas: Canvas, bounds: CGRect, color: CanvasColor) {
         canvas.fill(shiftPath(bounds: bounds), color: color)
     }
 
-    func strokeShift(_ canvas: Canvas, bounds: CGRect, color: CGColor,
+    func strokeShift(_ canvas: Canvas, bounds: CGRect, color: CanvasColor,
                       lineWidth: CGFloat) {
         canvas.stroke(shiftPath(bounds: bounds), color: color, lineWidth: lineWidth)
     }

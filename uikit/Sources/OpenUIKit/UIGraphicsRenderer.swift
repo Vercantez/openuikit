@@ -23,8 +23,8 @@ final class UIGraphicsState {
     let canvas: Canvas
     /// Non-nil only for a legacy UIGraphicsBeginImageContext... entry.
     let imageScale: CGFloat?
-    var fillColor: CGColor = .black
-    var strokeColor: CGColor = .black
+    var fillColor: CanvasColor = .black
+    var strokeColor: CanvasColor = .black
     init(canvas: Canvas, imageScale: CGFloat? = nil) {
         self.canvas = canvas
         self.imageScale = imageScale
@@ -59,8 +59,8 @@ public func UIGraphicsPopContext() { UIGraphics.popContext() }
 
 /// Current implicit fill / stroke colors (set by `UIColor.setFill()` /
 /// `setStroke()`; black by default, like CG).
-public func UIGraphicsCurrentFillColor() -> CGColor { UIGraphics.top?.fillColor ?? .black }
-public func UIGraphicsCurrentStrokeColor() -> CGColor { UIGraphics.top?.strokeColor ?? .black }
+public func UIGraphicsCurrentFillColor() -> CanvasColor { UIGraphics.top?.fillColor ?? .black }
+public func UIGraphicsCurrentStrokeColor() -> CanvasColor { UIGraphics.top?.strokeColor ?? .black }
 
 extension UIColor {
     /// Set this color as the current context's fill color.
@@ -123,12 +123,12 @@ extension Canvas {
     /// the current-context stack; a canvas that is not on the stack keeps no
     /// colour state and the call is ignored.
     public func setFillColor(_ color: CGColor) {
-        _graphicsState?.fillColor = color
+        _graphicsState?.fillColor = CanvasColor(color)
     }
 
     /// CGContext's `setStrokeColor(_:)` (same storage rule).
     public func setStrokeColor(_ color: CGColor) {
-        _graphicsState?.strokeColor = color
+        _graphicsState?.strokeColor = CanvasColor(color)
     }
 
     /// CGContext's `fill(_:)` with the current fill colour (black by default).
