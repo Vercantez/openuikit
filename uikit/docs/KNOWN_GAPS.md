@@ -2892,3 +2892,21 @@ Inter-Regular 16 pt at 35.025 pt and in Inter-Regular_SemiBold at 36.05 pt.
 (gray white != RGB white).
 
 `UIDevice.identifierForVendor` is nil (the simulator reports a UUID).
+
+NetNewsWire batch D (Tools/oracle2/nnwmiscprobe, springsettleprobe):
+- `UISlider.trackConfiguration` snaps values to the nearest tick. Tick marks,
+  titles and images are not drawn, and `enabledRange` / `neutralValue` are
+  stored but have no effect. Tie-breaking between two equidistant ticks was
+  not measured.
+- `UIView.animate(springDuration:bounce:...)` settling time matches
+  QuartzCore for bounce >= 0. For overdamped springs (bounce < 0) QuartzCore
+  reports a longer settling time (p 0.5, b -0.3 -> 1.1 s); OpenUIKit uses the
+  critical-damping rule (0.8 s). Settling ignores initial velocity.
+- The `UIScene` notification names exist, but OpenUIKit does not post them
+  on scene transitions yet.
+- `registerForTraitChanges(_:target:action:)` holds the target weakly
+  (retention not measured). On platforms without ObjC, the selector goes
+  through `SelectorDispatching` with the environment as sender, and
+  `previous` is not delivered.
+- `UIContentSizeCategory` raw values are OpenUIKit spellings ("large"). iOS
+  uses "UICTContentSizeCategoryL".

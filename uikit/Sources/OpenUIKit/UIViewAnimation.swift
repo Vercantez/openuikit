@@ -43,6 +43,15 @@
 // calls LayerBridge's CQuartz-backed evaluator so recording and rendering use
 // one curve/spring implementation.
 
+// M15 (see UISlider.swift): the `bounce: CGFloat = 0.0` default argument of
+// `animate(springDuration:...)` needs CGFloat's defining module imported
+// here. Scoped, so no CoreGraphics type collides with OpenCoreGraphics'.
+#if canImport(CoreGraphics)
+import struct CoreFoundation.CGFloat
+#elseif canImport(Foundation)
+import Foundation
+#endif
+
 // MARK: - Recorded animation
 
 /// One recorded property animation (the unit UIView.animate produces per
@@ -70,6 +79,10 @@ struct UIViewAnimation {
         case curve(c1x: CGFloat, c1y: CGFloat, c2x: CGFloat, c2y: CGFloat)
         /// UIView spring (damping ratio + normalized initial velocity).
         case spring(dampingRatio: CGFloat, initialVelocity: CGFloat)
+        /// Explicit CASpringAnimation coefficients (mass 1), as built by
+        /// `animate(springDuration:bounce:...)` from
+        /// `CASpringAnimation(perceptualDuration:bounce:)`.
+        case springCoefficients(stiffness: Double, damping: Double, initialVelocity: CGFloat)
         /// Cosine ease-in-out `(1 − cos(πt))/2`. MEASURED pager-clock
         /// probe, iPhone SE 2x / iOS 26.1: `_UIQueuingScrollView` page-next
         /// n=1..17 vs this closed form, max |Δ| 0.25 pt (n=6: 469 vs 468.75,
@@ -362,6 +375,35 @@ extension UIView {
             animations: animations, completion: completion)
     }
 
+    /// iOS 17 spring animation. MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/nnwmiscprobe, `UIView.animate { }` with every default):
+    /// UIKit adds a CASpringAnimation with perceptualDuration 0.5, mass 1,
+    /// stiffness 157.9137 = (2π/0.5)², damping 25.1327 = 2·√k, duration
+    /// (settlingDuration) 0.8; the model value changes at once and the
+    /// completion runs with `true`. Coefficients and settling time follow
+    /// `CASpringAnimation(perceptualDuration:bounce:)`, measured in
+    /// Tools/oracle2/springsettleprobe (see UIViewSpring.coefficients).
+    public static func animate(springDuration duration: Double = 0.5,
+                               bounce: CGFloat = 0.0,
+                               initialSpringVelocity: CGFloat = 0.0,
+                               delay: Double = 0.0,
+                               options: AnimationOptions = [],
+                               animations: () -> Void,
+                               completion: ((Bool) -> Void)? = nil) {
+        let (stiffness, damping) = UIViewSpring.coefficients(
+            perceptualDuration: duration, bounce: Double(bounce))
+        runAnimationBlock(UIViewAnimationContext.Params(
+            duration: UIViewSpring.settlingDuration(stiffness: stiffness, damping: damping),
+            delay: delay,
+            timing: .springCoefficients(stiffness: stiffness, damping: damping,
+                                        initialVelocity: initialSpringVelocity),
+            beginsFromCurrentState: options.contains(.beginFromCurrentState),
+            allowsUserInteraction: options.contains(.allowUserInteraction),
+            repeats: options.contains(.repeat),
+            autoreverses: options.contains(.autoreverse)),
+            animations: animations, completion: completion)
+    }
+
     static func runAnimationBlock(_ params: UIViewAnimationContext.Params,
                                   animations: () -> Void,
                                   completion: ((Bool) -> Void)?,
@@ -595,6 +637,61 @@ extension UIViewAnimation {
 // MARK: - Spring duration fit (UIKit model)
 
 enum UIViewSpring {
+    /// `CASpringAnimation(perceptualDuration:bounce:)` coefficients (mass 1).
+    /// MEASURED on Apple QuartzCore (Tools/oracle2/springsettleprobe; the
+    /// iOS 26.1 default row matches nnwmiscprobe): stiffness = (2π/p)²;
+    /// damping = 2·√k·(1 − bounce) for bounce ≥ 0 and 2·√k / (1 + bounce)
+    /// for bounce < 0 (p 0.5: b 0.3 -> 17.5929, b 0.7 -> 7.5398,
+    /// b −0.3 -> 35.9039).
+    static func coefficients(perceptualDuration p: Double,
+                             bounce: Double) -> (stiffness: Double, damping: Double) {
+        let omega = 2 * Double.pi / Swift.max(p, 1e-9)
+        let stiffness = omega * omega
+        let critical = 2 * omega
+        let damping = bounce >= 0 ? critical * (1 - bounce) : critical / (1 + bounce)
+        return (stiffness, Swift.max(0, damping))
+    }
+
+    /// CASpringAnimation.settlingDuration for mass 1, zero initial velocity.
+    /// MEASURED on Apple QuartzCore (Tools/oracle2/springsettleprobe):
+    ///   * underdamped (ζ < 1): ln(1000·(1 + ζ/√(1−ζ²))) / (ζ·ω) exactly
+    ///     (k 100 d 10 -> 1.47270; p 0.5 b 0.3 -> 0.86296; b 0.7 -> 1.90487;
+    ///     p 0.35 b 0.15 -> 0.51566);
+    ///   * critically damped: the first 0.1 s step (accumulated, so 0.8 is
+    ///     0.7999999999999999) at which (1 + ω·t)·e^(−ω·t) < 0.001
+    ///     (p 0.25 -> 0.4, 0.5 -> 0.8, 1.0 -> 1.5);
+    ///   * undamped: Float.greatestFiniteMagnitude.
+    /// Overdamped springs (bounce < 0) use the critical rule here; QuartzCore
+    /// measures differently there (p 0.5 b −0.3 -> 1.1): KNOWN_GAPS.
+    static func settlingDuration(stiffness: Double, damping: Double) -> Double {
+        let omega = stiffness.squareRoot()
+        guard omega > 0 else { return 0 }
+        if damping <= 0 { return Double(Float.greatestFiniteMagnitude) }
+        let zeta = damping / (2 * omega)
+        if zeta < 1 - 1e-9 {
+            let r = (1 - zeta * zeta).squareRoot()
+            return _ln(1000 * (1 + zeta / r)) / (zeta * omega)
+        }
+        var t = 0.0
+        for _ in 0..<100_000 {
+            t += 0.1
+            if (1 + omega * t) * _expNegative(omega * t) < 0.001 { break }
+        }
+        return t
+    }
+
+    /// e^(−x) for x ≥ 0 via _ln-free range reduction (this file has no libm).
+    static func _expNegative(_ x: Double) -> Double {
+        var n = 0
+        var y = x
+        while y > 0.5 { y /= 2; n += 1 }
+        // Taylor on the reduced argument, then square back up.
+        var term = 1.0, sum = 1.0
+        for i in 1...20 { term *= -y / Double(i); sum += term }
+        for _ in 0..<n { sum *= sum }
+        return sum
+    }
+
     /// Natural (undamped) angular frequency ω_n of the spring UIKit builds
     /// for `animate(withDuration:usingSpringWithDamping:...)`. mass = 1,
     /// stiffness = ω_n², damping coefficient = 2·ζ·ω_n. See file header for

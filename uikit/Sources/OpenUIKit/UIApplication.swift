@@ -1211,6 +1211,21 @@ open class UIScene: UIResponder {
     /// `UISceneConnectionOptions`.
     public typealias ConnectionOptions = UISceneConnectionOptions
 
+    // MEASURED iPhone 16 / iOS 26.1 (Tools/oracle2/nnwmiscprobe): the raw
+    // values. OpenUIKit does not post these yet (KNOWN_GAPS).
+    public nonisolated static let willConnectNotification =
+        Notification.Name("UISceneWillConnectNotification")
+    public nonisolated static let didDisconnectNotification =
+        Notification.Name("UISceneDidDisconnectNotification")
+    public nonisolated static let didActivateNotification =
+        Notification.Name("UISceneDidActivateNotification")
+    public nonisolated static let willDeactivateNotification =
+        Notification.Name("UISceneWillDeactivateNotification")
+    public nonisolated static let willEnterForegroundNotification =
+        Notification.Name("UISceneWillEnterForegroundNotification")
+    public nonisolated static let didEnterBackgroundNotification =
+        Notification.Name("UISceneDidEnterBackgroundNotification")
+
     public let session: UISceneSession
     /// UIKit's public delegate property is weak. The application host retains
     /// a delegate supplied through `_hostConnectWindowScene` until disconnect,
