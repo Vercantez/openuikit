@@ -744,4 +744,30 @@ extension UIView {
                 animations: animations, completion: completion)
     }
 }
+// MARK: - Delegates and data sources (@objc protocols; objc-protocols.md)
+
+extension UIScrollView {
+    @objc(delegate) public var __objc_delegate: UIScrollViewDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(zoomScale) public var __objc_zoomScale: CGFloat { get { zoomScale } set { zoomScale = newValue } }
+    @objc(minimumZoomScale) public var __objc_minimumZoomScale: CGFloat {
+        get { minimumZoomScale } set { minimumZoomScale = newValue }
+    }
+    @objc(maximumZoomScale) public var __objc_maximumZoomScale: CGFloat {
+        get { maximumZoomScale } set { maximumZoomScale = newValue }
+    }
+    @objc(setZoomScale:animated:) public func __objc_setZoomScale(_ scale: CGFloat, animated: Bool) {
+        setZoomScale(scale, animated: animated)
+    }
+}
+
+extension UITableView {
+    @objc(dataSource) public var __objc_dataSource: UITableViewDataSource? {
+        get { dataSource } set { dataSource = newValue }
+    }
+    @objc(rectForRowAtIndexPath:) public func __objc_rectForRow(at indexPath: IndexPath) -> CGRect {
+        rectForRow(at: indexPath)
+    }
+}
 #endif

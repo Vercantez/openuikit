@@ -13,9 +13,17 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+// NSObject-derived, as in UIKit (the SDK declares it `: NSObject`), so it can
+// cross the `@objc` delegate / data-source protocols on the Apple toolchain
+// (objc-protocols.md). Same provider choice as UIColor.swift.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 
 @preconcurrency @MainActor
-open class UIContextualAction {
+open class UIContextualAction: NSObject {
     public enum Style: Int, Sendable {
         case normal = 0
         case destructive
@@ -33,6 +41,7 @@ open class UIContextualAction {
         self.style = style
         self.title = title
         self.handler = handler
+        super.init()
         switch style {
         case .destructive:
             // MEASURED TableEditor t900 edit disc, iPhone SE 2x / iOS 26.1:
@@ -52,12 +61,13 @@ open class UIContextualAction {
 }
 
 @preconcurrency @MainActor
-open class UISwipeActionsConfiguration {
+open class UISwipeActionsConfiguration: NSObject {
     public let actions: [UIContextualAction]
     public var performsFirstActionWithFullSwipe: Bool = true
 
     public init(actions: [UIContextualAction]) {
         self.actions = actions
+        super.init()
     }
 }
 
@@ -71,10 +81,10 @@ extension UITableView {
         let config: UISwipeActionsConfiguration?
         if edge.contains(.left) {
             config = (delegate as? UITableViewDelegate)?
-                .tableView(self, leadingSwipeActionsConfigurationForRowAt: indexPath)
+                ._leadingSwipe(self, indexPath)
         } else {
             config = (delegate as? UITableViewDelegate)?
-                .tableView(self, trailingSwipeActionsConfigurationForRowAt: indexPath)
+                ._trailingSwipe(self, indexPath)
         }
         guard let config else { return }
         cell._openRevealSwipe(config, edge: edge, progress: progress)

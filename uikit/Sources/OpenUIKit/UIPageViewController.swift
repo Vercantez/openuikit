@@ -13,6 +13,11 @@
 // UIKit's public configuration and required controller-count validation, but
 // contains/renders only the first retained page as a flat swap; there is no
 // portable 3-D paper mesh or two-page containment lifecycle.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 
 /// UIKit's private root class name. Keeping the name also lets layout dumps
 /// prune the same container boundary when a page controller enters a scene.
@@ -28,10 +33,10 @@ final class _UIQueuingScrollView: UIScrollView {}
 /// `UIPageViewController` does not publicly conform to UIScrollViewDelegate,
 /// so an app subclass remains free to declare identically named methods.
 @preconcurrency @MainActor
-private final class _UIPageViewControllerScrollDelegate: UIScrollViewDelegate {
+private final class _UIPageViewControllerScrollDelegate: NSObject, UIScrollViewDelegate {
     weak var owner: UIPageViewController?
 
-    init(owner: UIPageViewController) { self.owner = owner }
+    init(owner: UIPageViewController) { self.owner = owner; super.init() }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         owner?._pageScrollViewDidScroll(scrollView)

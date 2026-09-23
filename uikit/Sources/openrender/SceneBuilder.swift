@@ -11,6 +11,15 @@
 // transform LAST), same color parsing, same layout dump keys and rounding.
 
 import OpenUIKit
+// UIKit's delegate / data-source protocols refine NSObjectProtocol where the
+// Objective-C runtime exists (objc-protocols.md), so the scene drivers derive
+// from NSObject there. A scoped import: this file must not import Foundation.
+#if canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+typealias _SceneDriverBase = NSObject
+#else
+class _SceneDriverBase { init() {} }
+#endif
 
 typealias SceneJSON = [String: JSONValue]
 
@@ -696,7 +705,7 @@ func makeButton(_ j: SceneJSON) -> UIButton {
 /// UITableView holds dataSource/delegate weakly, like real UIKit.
 var sceneTableDrivers: [SceneTableDriver] = []
 
-final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
+final class SceneTableDriver: _SceneDriverBase, UITableViewDataSource, UITableViewDelegate {
     struct Row {
         let style: UITableViewCell.CellStyle
         let text: String
@@ -875,7 +884,7 @@ final class SceneCollectionSupplementary: UICollectionReusableView {
     }
 }
 
-final class SceneCollectionDriver: UICollectionViewDataSource,
+final class SceneCollectionDriver: _SceneDriverBase, UICollectionViewDataSource,
                                    UICollectionViewDelegateFlowLayout {
     struct Item {
         let text: String
@@ -1004,7 +1013,7 @@ func makeCollectionView(_ j: SceneJSON) -> UICollectionView {
 
 var sceneListDrivers: [SceneListDriver] = []
 
-final class SceneListDriver: UICollectionViewDataSource, UICollectionViewDelegate {
+final class SceneListDriver: _SceneDriverBase, UICollectionViewDataSource, UICollectionViewDelegate {
     struct Item {
         let text: String
         let secondaryText: String?

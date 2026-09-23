@@ -998,6 +998,17 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // UIKit's delegate / data-source protocols as @objc protocols
+    // (docs/agent_reports/objc-protocols.md): the scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcprotocolprobe/run.sh).
+    .target(name: "OpenUIKitObjCProtocolFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcprotocolprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCProtocolTests",
+                dependencies: ["OpenUIKitObjCProtocolFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCProtocolTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

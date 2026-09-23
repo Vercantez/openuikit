@@ -101,8 +101,11 @@ final class ObjCBridgeTests: XCTestCase {
         let c = UIEdgeInsetsObjC(top: 1, left: 2, bottom: 3, right: 4)
         let swift = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)   // OpenUIKit's, unambiguous
         XCTAssertEqual(c.left, swift.left)
-        XCTAssertEqual(NSStringFromProtocol(UITableViewDelegateObjC.self), "UITableViewDelegate")
-        XCTAssertEqual(NSStringFromProtocol(UITableViewDataSourceObjC.self), "UITableViewDataSource")
+        XCTAssertEqual(NSStringFromProtocol(UITextViewDelegateObjC.self), "UITextViewDelegate")
+        // The table protocols are OpenUIKit's own @objc protocols now, under
+        // UIKit's runtime names (objc-protocols.md).
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDelegate.self), "UITableViewDelegate")
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDataSource.self), "UITableViewDataSource")
     }
 
     /// UIColor is NSObject-derived now (simplenote-objc-core), so the color

@@ -3,6 +3,14 @@
 // update engine.
 
 #if canImport(Foundation)
+// NSObject-derived, as in UIKit (the SDK declares it `: NSObject`), so it can
+// cross the `@objc` delegate / data-source protocols on the Apple toolchain
+// (objc-protocols.md). Same provider choice as UIColor.swift.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 import struct Foundation.IndexPath
 #endif
 
@@ -244,7 +252,7 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
 
 @preconcurrency @MainActor
 open class UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>:
-    UITableViewDataSource
+    NSObject, UITableViewDataSource
 where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
     public typealias Snapshot = NSDiffableDataSourceSnapshot<SectionIdentifierType,
                                                             ItemIdentifierType>
@@ -260,6 +268,7 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
     public init(tableView: UITableView, cellProvider: @escaping CellProvider) {
         self.tableView = tableView
         self.cellProvider = cellProvider
+        super.init()
         tableView.dataSource = self
     }
 

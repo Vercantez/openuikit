@@ -46,6 +46,7 @@
 // scoped declaration import keeps its geometry out of this file (UIView.swift).
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
+import protocol ObjectiveC.NSObjectProtocol
 #endif
 
 #if canImport(CoreGraphics)
@@ -57,6 +58,75 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+// Apple toolchain (OPENUIKIT_OBJC_SUBCLASSING): UIKit's own shape, an `@objc`
+// protocol with UIKit's runtime name, NSObjectProtocol refinement, SDK
+// selectors and SDK required/optional split, so Swift code writes
+// `delegate?.method?(…)` and an Objective-C class adopts the same protocol
+// (docs/agent_reports/objc-protocols.md). OpenUIKit's own call sites go
+// through UIKitProtocolDispatch.swift. Linux ELF and the Foundation-hidden
+// guest have no `@objc`: the Swift protocol below with default
+// implementations, unchanged.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITableViewDataSource) @preconcurrency @MainActor
+public protocol UITableViewDataSource: NSObjectProtocol {
+    @objc(tableView:numberOfRowsInSection:)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    @objc(tableView:cellForRowAtIndexPath:)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    @objc(numberOfSectionsInTableView:)
+    optional func numberOfSections(in tableView: UITableView) -> Int
+    @objc(tableView:titleForHeaderInSection:)
+    optional func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    @objc(tableView:titleForFooterInSection:)
+    optional func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String?
+    @objc(tableView:canEditRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
+    @objc(tableView:canMoveRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool
+    @objc(tableView:commitEditingStyle:forRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                            forRowAt indexPath: IndexPath)
+    @objc(tableView:moveRowAtIndexPath:toIndexPath:)
+    optional func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath,
+                            to destinationIndexPath: IndexPath)
+}
+
+@objc(UITableViewDelegate) @preconcurrency @MainActor
+public protocol UITableViewDelegate: UIScrollViewDelegate {
+    @objc(tableView:willDisplayCell:forRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
+                            forRowAt indexPath: IndexPath)
+    @objc(tableView:heightForRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    @objc(tableView:heightForHeaderInSection:)
+    optional func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
+    @objc(tableView:heightForFooterInSection:)
+    optional func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat
+    @objc(tableView:viewForHeaderInSection:)
+    optional func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    @objc(tableView:viewForFooterInSection:)
+    optional func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
+    @objc(tableView:didHighlightRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath)
+    @objc(tableView:didUnhighlightRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath)
+    @objc(tableView:didSelectRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    @objc(tableView:didDeselectRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath)
+    @objc(tableView:editingStyleForRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView,
+                            editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle
+    @objc(tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView,
+                            leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration?
+    @objc(tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView,
+                            trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration?
+}
+#else
 @preconcurrency @MainActor
 public protocol UITableViewDataSource: AnyObject {
     func numberOfSections(in tableView: UITableView) -> Int
@@ -136,6 +206,7 @@ public extension UITableViewDelegate {
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? { nil }
 }
+#endif
 
 // MARK: - Card view (inset-grouped section background)
 
@@ -662,12 +733,20 @@ open class UITableView: UIScrollView {
         return l
     }()
 
+    /// True when the row's height comes from its cell, not from a fixed
+    /// number: the delegate answers `automaticDimension`, or it does not
+    /// answer and `rowHeight` is `automaticDimension`.
+    final func _rowIsSelfSized(_ path: IndexPath) -> Bool {
+        if let h = tableDelegate?._heightForRow(self, path) { return h < 0 }
+        return rowHeight < 0
+    }
+
     private final func resolveRowHeight(_ path: IndexPath) -> CGFloat {
-        if let d = tableDelegate {
-            let h = d.tableView(self, heightForRowAt: path)
+        if let h = tableDelegate?._heightForRow(self, path) {
             if h >= 0 { return h }
+        } else if rowHeight >= 0 {
+            return rowHeight
         }
-        if rowHeight >= 0 { return rowHeight }
         // `automaticDimension`: the row is as tall as its cell's content
         // demands, but a row whose cell does not exist yet cannot be measured
         // — so metrics use the ESTIMATE and `refineSelfSizedRows` replaces it
@@ -706,12 +785,9 @@ open class UITableView: UIScrollView {
     /// them at `defaultRowHeight` (53), which put every view below them 24 pt
     /// too high.
     private final func refineSelfSizedRows() -> Bool {
-        guard rowHeight < 0 else { return false }
         var changed = false
         for (path, cell) in visibleCellsByPath.views {
-            if let d = tableDelegate, d.tableView(self, heightForRowAt: path) >= 0 {
-                continue
-            }
+            if !_rowIsSelfSized(path) { continue }
             var height: CGFloat?
             if UITableView.isIOSChrome, style == .plain,
                cell.style == .subtitle {
@@ -762,7 +838,7 @@ open class UITableView: UIScrollView {
     /// leaves the title-driven chrome path untouched.
     private final func delegateHeaderView(for s: Int) -> UIView? {
         if let cached = headerViews[s] { return cached }
-        guard let view = tableDelegate?.tableView(self, viewForHeaderInSection: s)
+        guard let view = tableDelegate?._viewForHeader(self, s)
         else { return nil }
         headerViews[s] = view
         addSubview(view)
@@ -771,7 +847,7 @@ open class UITableView: UIScrollView {
 
     private final func delegateFooterView(for s: Int) -> UIView? {
         if let cached = footerViews[s] { return cached }
-        guard let view = tableDelegate?.tableView(self, viewForFooterInSection: s)
+        guard let view = tableDelegate?._viewForFooter(self, s)
         else { return nil }
         footerViews[s] = view
         addSubview(view)
@@ -815,15 +891,15 @@ open class UITableView: UIScrollView {
                                  height: headerHeight + footerHeight)
             return
         }
-        let sections = ds.numberOfSections(in: self)
+        let sections = ds._numberOfSections(self)
         metrics.reserveCapacity(sections)
         var y: CGFloat = headerHeight
         for s in 0..<sections {
             var m = SectionMetrics()
-            m.headerTitle = ds.tableView(self, titleForHeaderInSection: s)
-            m.footerTitle = ds.tableView(self, titleForFooterInSection: s)
+            m.headerTitle = ds._titleForHeader(self, s)
+            m.footerTitle = ds._titleForFooter(self, s)
 
-            var headerH = tableDelegate?.tableView(self, heightForHeaderInSection: s)
+            var headerH = tableDelegate?._heightForHeader(self, s)
                 ?? UITableView.automaticDimension
             let rows = ds.tableView(self, numberOfRowsInSection: s)
             var rowsH: CGFloat = 0
@@ -933,7 +1009,7 @@ open class UITableView: UIScrollView {
             }
             y = rowY
 
-            var footerH = tableDelegate?.tableView(self, heightForFooterInSection: s)
+            var footerH = tableDelegate?._heightForFooter(self, s)
                 ?? UITableView.automaticDimension
             if footerH < 0, let view = delegateFooterView(for: s),
                let selfSized = sectionFooterHeight >= 0
@@ -1003,8 +1079,7 @@ open class UITableView: UIScrollView {
         // accessory. MEASURED 2026-09-07 tableprobe, iPhone 16 3x / iOS
         // 26.1: "Default no accessory" (`.value1`, detail, no accessory,
         // `estimatedRowHeight = automaticDimension`) `rectForRow` height 52.
-        if rowHeight < 0,
-           (tableDelegate?.tableView(self, heightForRowAt: path) ?? -1) < 0 {
+        if _rowIsSelfSized(path) {
             return 0
         }
         if let c = valueCellPaddingCache[path] { return c }
@@ -1085,13 +1160,13 @@ open class UITableView: UIScrollView {
     /// Editing style the data source reports for this bound cell.
     final func _editingStyle(for cell: UITableViewCell) -> UITableViewCell.EditingStyle {
         guard let path = indexPath(for: cell), let ds = dataSource else { return .delete }
-        if !ds.tableView(self, canEditRowAt: path) { return .none }
-        return ds.tableView(self, editingStyleForRowAt: path)
+        if !ds._canEdit(self, path) { return .none }
+        return _editingStyle(path)
     }
 
     final func _canMove(_ cell: UITableViewCell) -> Bool {
         guard let path = indexPath(for: cell), let ds = dataSource else { return false }
-        return ds.tableView(self, canMoveRowAt: path)
+        return ds._canMove(self, path)
     }
 
     public final var visibleCells: [UITableViewCell] {
@@ -2066,7 +2141,7 @@ open class UITableView: UIScrollView {
                 cell.setEditing(isEditing, animated: false)
                 visibleCellsByPath[path] = cell
                 addSubview(cell)
-                tableDelegate?.tableView(self, willDisplay: cell, forRowAt: path)
+                tableDelegate?._willDisplay(self, cell, path)
             }
             cell.setNeedsLayout()
         }
@@ -2360,9 +2435,9 @@ open class UITableView: UIScrollView {
     final func cellHighlightDidChange(_ cell: UITableViewCell, highlighted: Bool) {
         guard let path = indexPath(for: cell) else { return }
         if highlighted {
-            tableDelegate?.tableView(self, didHighlightRowAt: path)
+            tableDelegate?._didHighlight(self, path)
         } else {
-            tableDelegate?.tableView(self, didUnhighlightRowAt: path)
+            tableDelegate?._didUnhighlight(self, path)
         }
     }
 
@@ -2377,7 +2452,7 @@ open class UITableView: UIScrollView {
         if permitsMultiple {
             if indexPathForSelectedRow == path || additionalSelectedRows.contains(path) {
                 deselectRow(at: path, animated: false)
-                tableDelegate?.tableView(self, didDeselectRowAt: path)
+                tableDelegate?._didDeselect(self, path)
             } else {
                 if indexPathForSelectedRow == nil {
                     indexPathForSelectedRow = path
@@ -2386,18 +2461,18 @@ open class UITableView: UIScrollView {
                 }
                 cell.setSelected(true, animated: false)
                 updateSeparators()
-                tableDelegate?.tableView(self, didSelectRowAt: path)
+                tableDelegate?._didSelect(self, path)
             }
             return
         }
         if let old = indexPathForSelectedRow, old != path {
             visibleCellsByPath[old]?.setSelected(false, animated: false)
-            tableDelegate?.tableView(self, didDeselectRowAt: old)
+            tableDelegate?._didDeselect(self, old)
         }
         additionalSelectedRows.removeAll()
         indexPathForSelectedRow = path
         cell.setSelected(true, animated: false)
         updateSeparators()
-        tableDelegate?.tableView(self, didSelectRowAt: path)
+        tableDelegate?._didSelect(self, path)
     }
 }

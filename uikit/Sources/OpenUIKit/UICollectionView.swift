@@ -35,7 +35,52 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+// `@objc` protocols (OPENUIKIT_OBJC_SUBCLASSING) need Foundation's IndexPath
+// bridging in scope; scoped imports keep its other names out of this file.
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 
+// Apple toolchain (OPENUIKIT_OBJC_SUBCLASSING): UIKit's own shape, an `@objc`
+// protocol with UIKit's runtime name, NSObjectProtocol refinement, SDK
+// selectors and SDK required/optional split, so Swift code writes
+// `delegate?.method?(…)` and an Objective-C class adopts the same protocol
+// (docs/agent_reports/objc-protocols.md). OpenUIKit's own call sites go
+// through UIKitProtocolDispatch.swift. Linux ELF and the Foundation-hidden
+// guest have no `@objc`: the Swift protocol below with default
+// implementations, unchanged.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UICollectionViewDataSource) @preconcurrency @MainActor
+public protocol UICollectionViewDataSource: NSObjectProtocol {
+    @objc(collectionView:numberOfItemsInSection:)
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    @objc(collectionView:cellForItemAtIndexPath:)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    @objc(numberOfSectionsInCollectionView:)
+    optional func numberOfSections(in collectionView: UICollectionView) -> Int
+    @objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView
+}
+
+@objc(UICollectionViewDelegate) @preconcurrency @MainActor
+public protocol UICollectionViewDelegate: UIScrollViewDelegate {
+    @objc(collectionView:shouldSelectItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool
+    @objc(collectionView:didSelectItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    @objc(collectionView:didDeselectItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath)
+    @objc(collectionView:willDisplayCell:forItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
+                                 forItemAt indexPath: IndexPath)
+    @objc(collectionView:didEndDisplayingCell:forItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
+                                 forItemAt indexPath: IndexPath)
+}
+#else
 @preconcurrency @MainActor
 public protocol UICollectionViewDataSource: AnyObject {
     func numberOfSections(in collectionView: UICollectionView) -> Int
@@ -90,6 +135,7 @@ public extension UICollectionViewDelegate {
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {}
 }
+#endif
 
 /// Per-section overrides for the flow layout.
 ///
@@ -275,7 +321,7 @@ open class UICollectionView: UIScrollView {
         countsDirty = false
         sectionItemCounts.removeAll()
         guard let ds = dataSource else { return }
-        let n = ds.numberOfSections(in: self)
+        let n = ds._numberOfSections(self)
         sectionItemCounts.reserveCapacity(n)
         for s in 0..<n {
             sectionItemCounts.append(ds.collectionView(self, numberOfItemsInSection: s))
@@ -652,8 +698,7 @@ open class UICollectionView: UIScrollView {
         visibleViews.retire(keeping: needed) { key, view in
             view.removeFromSuperview()
             if key.kind == nil, let cell = view as? UICollectionViewCell {
-                collectionDelegate?.collectionView(self, didEndDisplaying: cell,
-                                                   forItemAt: key.indexPath)
+                collectionDelegate?._didEndDisplaying(self, cell, key.indexPath)
             }
             recycle(view)
         }
@@ -669,8 +714,7 @@ open class UICollectionView: UIScrollView {
             }
             let view: UICollectionReusableView
             if let kind = a.representedElementKind {
-                let supp = ds.collectionView(self, viewForSupplementaryElementOfKind: kind,
-                                             at: a.indexPath)
+                let supp = ds._supplementary(self, kind, a.indexPath)
                 supp.elementKind = kind
                 view = supp
             } else {
@@ -685,8 +729,7 @@ open class UICollectionView: UIScrollView {
             view.apply(a)
             view.setNeedsLayout()
             if let cell = view as? UICollectionViewCell {
-                collectionDelegate?.collectionView(self, willDisplay: cell,
-                                                   forItemAt: a.indexPath)
+                collectionDelegate?._willDisplay(self, cell, a.indexPath)
             }
         }
 
@@ -764,24 +807,24 @@ open class UICollectionView: UIScrollView {
     /// A bound cell finished a tap.
     func commitItemTap(on cell: UICollectionViewCell) {
         guard allowsSelection, let path = indexPath(for: cell) else { return }
-        guard collectionDelegate?.collectionView(self, shouldSelectItemAt: path) ?? true else {
+        guard collectionDelegate?._shouldSelect(self, path) ?? true else {
             return
         }
         if allowsMultipleSelection, selectedPaths.contains(path) {
             deselectItem(at: path, animated: false)
-            collectionDelegate?.collectionView(self, didDeselectItemAt: path)
+            collectionDelegate?._didDeselect(self, path)
             return
         }
         if !allowsMultipleSelection {
             for old in selectedPaths where old != path {
                 cellForItem(at: old)?.isSelected = false
                 selectedPaths.remove(old)
-                collectionDelegate?.collectionView(self, didDeselectItemAt: old)
+                collectionDelegate?._didDeselect(self, old)
             }
         }
         selectedPaths.insert(path)
         cell.isSelected = true
-        collectionDelegate?.collectionView(self, didSelectItemAt: path)
+        collectionDelegate?._didSelect(self, path)
     }
 
     // MARK: Scrolling to an item
