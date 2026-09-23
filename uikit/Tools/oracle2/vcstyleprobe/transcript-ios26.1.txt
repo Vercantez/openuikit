@@ -1,0 +1,9 @@
+# VCStyleProbe, iPhone 16 simulator, iOS 26.1 (23B86), simctl launch --console, 2026-09-23
+FACT default override=unspecified isViewLoaded=false
+FACT after set (unloaded): override=dark isViewLoaded=false vc.trait=dark
+FACT loaded, detached: view.override=unspecified view.trait=dark sub.trait=light vc.trait=dark
+FACT child: child.override=unspecified child.trait=dark child.view.trait=light
+FACT in window: root.trait=light vc.trait=dark vc.view.trait=dark sub.trait=dark
+FACT reset: vc.trait=light sub.trait=dark
+FACT view override only: vc.override=unspecified vc.trait=light
+DONE
