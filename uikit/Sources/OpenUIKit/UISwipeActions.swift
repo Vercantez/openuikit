@@ -5,6 +5,15 @@
 // (iPhone SE 2x / iOS 26.1). Destructive fill is systemRed
 // (1.000, 0.220, 0.235) = (255, 56, 60), the same TableEditor t900 disc.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+@_exported import struct Foundation.IndexPath
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint

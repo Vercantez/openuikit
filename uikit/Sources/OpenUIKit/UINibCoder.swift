@@ -20,8 +20,16 @@
 //     and before any outlet is connected;
 //   * outlets connect in archive order, then `awakeFromNib` runs.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
-import class Foundation.NSCoder
+@_exported import class Foundation.NSCoder
 import class Foundation.NSObject
 import class Foundation.NSArray
 #elseif canImport(ObjectiveC)

@@ -37,6 +37,14 @@
 // `.shift` in its modifierFlags — verified against UIKit's documented
 // behaviour, not measured, since key handling has no pixels).
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import class Foundation.NSObject
 #elseif canImport(ObjectiveC)

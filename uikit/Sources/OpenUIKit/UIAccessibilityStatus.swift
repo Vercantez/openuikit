@@ -6,6 +6,14 @@
 // a default iPhone reports. Only members measured on the oracle are declared.
 
 /// UIKit's `UIAccessibility` namespace.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import struct Foundation.Notification
+#endif
+
 public enum UIAccessibility {
     /// iOS 26.1, default iPhone 16 simulator (iososswallsprobe
     /// `misc.isBoldTextEnabled`): false.

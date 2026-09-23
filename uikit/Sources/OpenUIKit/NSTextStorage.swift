@@ -41,6 +41,17 @@
 // also adds `editedAttributes` to the mask the did-callbacks see. OpenUIKit
 // has no UIFont object to insert and resolves fallback fonts at layout time.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+#if canImport(Foundation) && canImport(ObjectiveC)
+@_exported import class Foundation.NotificationCenter
+#endif
+
 #if canImport(ObjectiveC) && canImport(Foundation)
 import Foundation
 import ObjectiveC
@@ -331,7 +342,7 @@ open class NSTextStorage: NSMutableAttributedString {
 // MARK: - Portable NSTextStorage (no Foundation or no Objective-C runtime)
 
 #if canImport(Foundation)
-import struct Foundation.Notification
+@_exported import struct Foundation.Notification
 #endif
 
 public protocol NSTextStorageDelegate: AnyObject {

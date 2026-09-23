@@ -14,6 +14,14 @@
 // There is no document-picker service, so a successful pick is only
 // possible through the host SPI `_hostPick(urls:)`.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint

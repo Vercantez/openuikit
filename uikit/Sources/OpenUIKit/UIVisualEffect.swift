@@ -13,7 +13,7 @@
 // so CoreGraphics' names do not collide with OpenCoreGraphics (the same rule
 // used by UIViewPropertyAnimator and the text-input NSObject family).
 #if canImport(Foundation)
-import class Foundation.NSCoder
+@_exported import class Foundation.NSCoder
 import protocol Foundation.NSCopying
 import class Foundation.NSKeyedArchiver
 import class Foundation.NSObject

@@ -6,6 +6,9 @@
 // not AppKit (the Catalyst apps, every test target) does not see that
 // category's initializer, so the port declares it itself; declaring it in
 // a file that also imports AppKit would collide with the category.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+
 #if canImport(Foundation)
 import Foundation
 
@@ -23,7 +26,11 @@ import Foundation
 /// `IndexPath(item: 3, section: 1)`; the round trip back to `NSIndexPath`
 /// keeps both components. Signal-iOS demand (2 uses): the two
 /// initializers followed by `as IndexPath`.
-public typealias NSIndexPath = Foundation.NSIndexPath
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import class Foundation.NSIndexPath
 
 extension NSIndexPath {
     /// Table-view index path, stored `[section, row]` like UIKit's.

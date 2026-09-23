@@ -75,6 +75,14 @@
 // `UINib.unhandledKeys` records every one, so the gap is countable rather than
 // silent.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.Bundle
+#endif
+
 #if canImport(ObjectiveC)
 import ObjectiveC
 #endif

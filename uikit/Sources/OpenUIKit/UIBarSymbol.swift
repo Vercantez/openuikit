@@ -26,6 +26,14 @@
 // Stroke weight: SF Symbols "regular" at 17 pt draws ~1.6 pt strokes with
 // round caps and joins (measured off the golden's plus / xmark stems).
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 struct _BarSymbol {
     /// Bounding box, in points — MEASURED from real iOS 26 (see header).
     let size: CGSize

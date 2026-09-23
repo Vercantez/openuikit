@@ -46,6 +46,14 @@
 // retains until the returned token is removed. Foundation+Objective-C builds
 // use Foundation's ownership behavior directly.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import Foundation
 #endif
@@ -60,10 +68,18 @@ import ObjectiveC
 /// Foundation's canonical posted-notification value. Keeping the alias in
 /// OpenUIKit's namespace makes Foundation-only extensions and UIKit-facing
 /// APIs share one declaration rather than two lookalikes.
-public typealias Notification = Foundation.Notification
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import struct Foundation.Notification
 
 /// Foundation's canonical Objective-C notification carrier.
-public typealias NSNotification = Foundation.NSNotification
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import class Foundation.NSNotification
 
 #else
 
@@ -166,7 +182,11 @@ extension Notification: _ObjectiveCBridgeable {
 /// Foundation's canonical queue identity. The native Foundation center honors
 /// it; OpenUIKit's native-ELF center accepts it but deliberately delivers
 /// inline.
-public typealias OperationQueue = Foundation.OperationQueue
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import class Foundation.OperationQueue
 
 #else
 
@@ -219,7 +239,11 @@ public final class NotificationToken {
 #if canImport(Foundation) && canImport(ObjectiveC)
 
 /// Foundation's canonical notification center on native Apple builds.
-public typealias NotificationCenter = Foundation.NotificationCenter
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import class Foundation.NotificationCenter
 
 #else
 

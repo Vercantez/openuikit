@@ -1054,6 +1054,11 @@ let simplenoteTargets: [Target] = [
     // importing UIKit and Foundation names one Timer, Foundation's.
     .testTarget(name: "TimerUnifyTests", dependencies: ["UIKit", "OpenUIKit"],
                 path: "Tests/TimerUnifyTests"),
+    // Collection sugar (`[X]()`, `[K: X]()`) for every name OpenUIKit shares
+    // with an Apple framework, in a file importing UIKit and Foundation
+    // (docs/agent_reports/sugar-unify.md).
+    .testTarget(name: "NameUnifyTests", dependencies: ["UIKit", "OpenUIKit"],
+                path: "Tests/NameUnifyTests"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],
