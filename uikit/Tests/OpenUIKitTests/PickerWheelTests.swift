@@ -16,12 +16,14 @@
 import XCTest
 @testable import OpenUIKit
 
-/// The tests only need a class to hold the delegate; OpenUIKit has no
-/// NSObject and the protocols are `AnyObject`-bound.
-#if !os(Linux)
-@MainActor
-#endif
+/// The picker protocols are UIKit's @objc protocols on the Apple toolchain
+/// (conformers are NSObjects there) and `AnyObject`-bound Swift protocols on
+/// Linux.
+#if canImport(ObjectiveC)
+private typealias NSObjectStandIn = NSObject
+#else
 private class NSObjectStandIn {}
+#endif
 
 #if !os(Linux)
 @MainActor
@@ -198,7 +200,12 @@ final class PickerWheelTests: XCTestCase {
         pv.reloadAllComponents()
         XCTAssertEqual(pv.numberOfComponents, 2)
         XCTAssertEqual(pv.numberOfRows(inComponent: 1), 5)
-        pv.selectRow(3, inComponent: 1, animated: false)
+        // MEASURED iOS 26.1 (objcprotocolprobe2 "## picker"): a programmatic
+        // selectRow does not call didSelectRow; a user (wheel) selection does.
+        pv.selectRow(2, inComponent: 1, animated: false)
+        XCTAssertEqual(pv.selectedRow(inComponent: 1), 2)
+        XCTAssertEqual(rec.picked.count, 0)
+        pv._userSelectRow(3, inComponent: 1)
         XCTAssertEqual(pv.selectedRow(inComponent: 1), 3)
         XCTAssertEqual(rec.picked.count, 1)
         XCTAssertEqual(rec.picked[0].0, 3)

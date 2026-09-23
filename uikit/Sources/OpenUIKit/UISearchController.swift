@@ -1,3 +1,6 @@
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 // UISearchController. Owner: viewcontroller module (conformance app Tabs).
 //
 // The public surface a UINavigationItem.searchController assignment needs:
@@ -36,6 +39,31 @@ extension UISearchResultsUpdating {
                                      selecting searchSuggestion: UISearchSuggestion) {}
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- `@objc`,
+/// UIKit's runtime name, NSObjectProtocol, SDK selectors and required /
+/// optional split (checked against the SDK in Tests/ObjCProtocols2Tests).
+/// Portable builds keep the Swift protocol with default implementations.
+@objc(UISearchControllerDelegate) @preconcurrency @MainActor
+public protocol UISearchControllerDelegate: NSObjectProtocol {
+    @objc(willPresentSearchController:)
+    optional func willPresentSearchController(_ searchController: UISearchController)
+    @objc(didPresentSearchController:)
+    optional func didPresentSearchController(_ searchController: UISearchController)
+    @objc(willDismissSearchController:)
+    optional func willDismissSearchController(_ searchController: UISearchController)
+    @objc(didDismissSearchController:)
+    optional func didDismissSearchController(_ searchController: UISearchController)
+    @objc(presentSearchController:)
+    optional func presentSearchController(_ searchController: UISearchController)
+    @objc(searchController:willChangeToSearchBarPlacement:)
+    optional func searchController(_ searchController: UISearchController,
+                                   willChangeTo newPlacement: UINavigationItem.SearchBarPlacement)
+    @objc(searchController:didChangeFromSearchBarPlacement:)
+    optional func searchController(_ searchController: UISearchController,
+                                   didChangeFrom previousPlacement: UINavigationItem.SearchBarPlacement)
+}
+#else
 @preconcurrency @MainActor
 public protocol UISearchControllerDelegate: AnyObject {
     func willPresentSearchController(_ searchController: UISearchController)
@@ -60,6 +88,7 @@ extension UISearchControllerDelegate {
     public func searchController(_ searchController: UISearchController,
                                  didChangeFrom previousPlacement: UINavigationItem.SearchBarPlacement) {}
 }
+#endif
 
 @preconcurrency @MainActor
 open class UISearchController: UIViewController, UISearchBarDelegate,
@@ -169,10 +198,10 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
 
     func applyActiveState() {
         if isActive {
-            delegate?.willPresentSearchController(self)
-            delegate?.presentSearchController(self)
+            delegate?._willPresent(self)
+            delegate?._present(self)
         } else {
-            delegate?.willDismissSearchController(self)
+            delegate?._willDismiss(self)
         }
         if automaticallyShowsCancelButton {
             searchBar.setShowsCancelButton(isActive, animated: false)
@@ -197,9 +226,9 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
         searchResultsUpdater?.updateSearchResults(for: self)
         _item?._bar?._searchPresentationChanged()
         if isActive {
-            delegate?.didPresentSearchController(self)
+            delegate?._didPresent(self)
         } else {
-            delegate?.didDismissSearchController(self)
+            delegate?._didDismiss(self)
         }
     }
 
@@ -248,11 +277,11 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
     }
 
     func _placementWillChange(to newPlacement: UINavigationItem.SearchBarPlacement) {
-        delegate?.searchController(self, willChangeTo: newPlacement)
+        delegate?._willChangeTo(self, newPlacement)
     }
 
     func _placementDidChange(from previous: UINavigationItem.SearchBarPlacement) {
-        delegate?.searchController(self, didChangeFrom: previous)
+        delegate?._didChangeFrom(self, previous)
     }
 
     /// Host / test seam: select a suggestion the way the iOS menu does.
@@ -309,3 +338,27 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
         transitionContext.completeTransition(true)
     }
 }
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern)
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+extension UISearchControllerDelegate {
+    func _willPresent(_ c: UISearchController) { willPresentSearchController?(c) }
+    func _didPresent(_ c: UISearchController) { didPresentSearchController?(c) }
+    func _willDismiss(_ c: UISearchController) { willDismissSearchController?(c) }
+    func _didDismiss(_ c: UISearchController) { didDismissSearchController?(c) }
+    func _present(_ c: UISearchController) { presentSearchController?(c) }
+    func _willChangeTo(_ c: UISearchController, _ p: UINavigationItem.SearchBarPlacement) { searchController?(c, willChangeTo: p) }
+    func _didChangeFrom(_ c: UISearchController, _ p: UINavigationItem.SearchBarPlacement) { searchController?(c, didChangeFrom: p) }
+}
+#else
+extension UISearchControllerDelegate {
+    func _willPresent(_ c: UISearchController) { willPresentSearchController(c) }
+    func _didPresent(_ c: UISearchController) { didPresentSearchController(c) }
+    func _willDismiss(_ c: UISearchController) { willDismissSearchController(c) }
+    func _didDismiss(_ c: UISearchController) { didDismissSearchController(c) }
+    func _present(_ c: UISearchController) { presentSearchController(c) }
+    func _willChangeTo(_ c: UISearchController, _ p: UINavigationItem.SearchBarPlacement) { searchController(c, willChangeTo: p) }
+    func _didChangeFrom(_ c: UISearchController, _ p: UINavigationItem.SearchBarPlacement) { searchController(c, didChangeFrom: p) }
+}
+#endif

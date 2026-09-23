@@ -966,4 +966,52 @@ extension UITableView {
         rectForRow(at: indexPath)
     }
 }
+
+// MARK: - Delegates of the second @objc protocol set (objc-protocols-3)
+
+extension UIPickerView {
+    @objc(dataSource) public var __objc_dataSource: UIPickerViewDataSource? {
+        get { dataSource } set { dataSource = newValue }
+    }
+    @objc(delegate) public var __objc_delegate: UIPickerViewDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(numberOfComponents) public var __objc_numberOfComponents: Int { numberOfComponents }
+    @objc(numberOfRowsInComponent:) public func __objc_numberOfRows(inComponent c: Int) -> Int {
+        numberOfRows(inComponent: c)
+    }
+    @objc(selectedRowInComponent:) public func __objc_selectedRow(inComponent c: Int) -> Int {
+        selectedRow(inComponent: c)
+    }
+    @objc(selectRow:inComponent:animated:) public func __objc_selectRow(_ r: Int, inComponent c: Int, animated: Bool) {
+        selectRow(r, inComponent: c, animated: animated)
+    }
+    @objc(reloadAllComponents) public func __objc_reloadAllComponents() { reloadAllComponents() }
+}
+
+extension UISearchBar {
+    @objc(delegate) public var __objc_delegate: UISearchBarDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(text) public var __objc_text: String? { get { text } set { text = newValue } }
+}
+
+extension UITabBar {
+    @objc(delegate) public var __objc_delegate: UITabBarDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+extension UISearchController {
+    @objc(delegate) public var __objc_delegate: UISearchControllerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+extension UIGestureRecognizer {
+    @objc(delegate) public var __objc_gestureDelegate: UIGestureRecognizerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
 #endif

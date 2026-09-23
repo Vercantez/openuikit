@@ -27,7 +27,7 @@ private final class MinimalTextViewDelegate: NSObject, UITextViewDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalGestureDelegate: UIGestureRecognizerDelegate {}
+private final class MinimalGestureDelegate: NSObject, UIGestureRecognizerDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -47,7 +47,7 @@ private final class MinimalPopoverDelegate: UIPopoverPresentationControllerDeleg
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalSearchBarDelegate: UISearchBarDelegate {}
+private final class MinimalSearchBarDelegate: NSObject, UISearchBarDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -74,11 +74,20 @@ final class DelegateDeclarationTests: XCTestCase {
         XCTAssertTrue(MinimalTextFieldDelegate().textFieldShouldReturn(UITextField()))
 #endif
         XCTAssertTrue(MinimalTextViewDelegate().textViewShouldBeginEditing(UITextView()))
+#if canImport(ObjectiveC)
+        // Optional @objc requirements; the dispatch helpers give the absent
+        // answers (begin YES, simultaneous NO).
+        XCTAssertTrue(MinimalGestureDelegate()._shouldBegin(UIGestureRecognizer()))
+        XCTAssertFalse(MinimalGestureDelegate()._simultaneous(UIGestureRecognizer(), UIGestureRecognizer()))
+        XCTAssertTrue(MinimalSearchBarDelegate()._shouldBegin(UISearchBar()))
+#else
         XCTAssertTrue(MinimalGestureDelegate()
             .gestureRecognizerShouldBegin(UIGestureRecognizer()))
         XCTAssertFalse(MinimalGestureDelegate()
             .gestureRecognizer(UIGestureRecognizer(),
                                shouldRecognizeSimultaneouslyWith: UIGestureRecognizer()))
+        XCTAssertTrue(MinimalSearchBarDelegate().searchBarShouldBeginEditing(UISearchBar()))
+#endif
 #if canImport(ObjectiveC)
         // Apple toolchain: UIKit's @objc protocol, where the method is an
         // unimplemented `optional` requirement (objc-protocols.md).
@@ -87,7 +96,6 @@ final class DelegateDeclarationTests: XCTestCase {
 #else
         XCTAssertTrue(MinimalScrollDelegate().scrollViewShouldScrollToTop(UIScrollView()))
 #endif
-        XCTAssertTrue(MinimalSearchBarDelegate().searchBarShouldBeginEditing(UISearchBar()))
         XCTAssertTrue(MinimalTabBarControllerDelegate()
             .tabBarController(UITabBarController(), shouldSelect: UIViewController()))
         let vc = UIViewController()
@@ -278,7 +286,7 @@ final class TextViewDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class GestureDelegate: UIGestureRecognizerDelegate {
+private final class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
     var allowBegin = true
     var allowSimultaneous = false
     var refuseTouches = false
@@ -616,7 +624,7 @@ final class AdaptivePresentationDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class SearchDelegate: UISearchBarDelegate {
+private final class SearchDelegate: NSObject, UISearchBarDelegate {
     var texts: [String] = []
     var searches = 0
     var cancels = 0

@@ -22,6 +22,8 @@
  * build compiles everything. */
 #if OUK_OPENUIKIT
 #define OUK_P2_TEXTFIELD 1
+#define OUK_P2_PICKER 1
+#define OUK_P2_SEARCHBAR 1
 #else
 #define OUK_P2_TEXTFIELD 1
 #define OUK_P2_TEXTVIEW 1

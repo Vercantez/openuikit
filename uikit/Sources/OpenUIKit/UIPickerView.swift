@@ -1,3 +1,6 @@
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 // UIPickerView — the wheel, MEASURED, plus a documented flat approximation
 // of the one part that cannot be reproduced portably.
 // Owner: controls module (app-compat cluster "controls2").
@@ -129,6 +132,35 @@
 //     — an offscreen picker receives no gesture — and closing it needs the
 //     Simulator drag route (docs/KNOWN_GAPS.md).
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- `@objc`,
+/// UIKit's runtime name, NSObjectProtocol, SDK selectors and required /
+/// optional split (checked against the SDK in Tests/ObjCProtocols2Tests).
+/// Portable builds keep the Swift protocol with default implementations.
+@objc(UIPickerViewDataSource) @preconcurrency @MainActor
+public protocol UIPickerViewDataSource: NSObjectProtocol {
+    @objc(numberOfComponentsInPickerView:)
+    func numberOfComponents(in pickerView: UIPickerView) -> Int
+    @objc(pickerView:numberOfRowsInComponent:)
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+}
+
+@objc(UIPickerViewDelegate) @preconcurrency @MainActor
+public protocol UIPickerViewDelegate: NSObjectProtocol {
+    @objc(pickerView:titleForRow:forComponent:)
+    optional func pickerView(_ pickerView: UIPickerView, titleForRow row: Int,
+                             forComponent component: Int) -> String?
+    @objc(pickerView:attributedTitleForRow:forComponent:)
+    optional func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int,
+                             forComponent component: Int) -> NSAttributedString?
+    @objc(pickerView:widthForComponent:)
+    optional func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat
+    @objc(pickerView:rowHeightForComponent:)
+    optional func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat
+    @objc(pickerView:didSelectRow:inComponent:)
+    optional func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+}
+#else
 @preconcurrency @MainActor
 public protocol UIPickerViewDataSource: AnyObject {
     func numberOfComponents(in pickerView: UIPickerView) -> Int
@@ -158,6 +190,7 @@ extension UIPickerViewDelegate {
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int,
                            inComponent component: Int) {}
 }
+#endif
 
 @preconcurrency @MainActor
 open class UIPickerView: UIView {
@@ -248,7 +281,19 @@ open class UIPickerView: UIView {
         guard selection[component] != clamped else { return }
         selection[component] = clamped
         setNeedsLayout()
-        delegate?.pickerView(self, didSelectRow: clamped, inComponent: component)
+        // MEASURED iOS 26.1 (objcprotocolprobe2 "## picker"): a programmatic
+        // selectRow sends the delegate nothing; didSelectRow is the user's.
+    }
+
+    /// A USER selection (wheel interaction): selects and reports
+    /// `pickerView(_:didSelectRow:inComponent:)`.
+    final func _userSelectRow(_ row: Int, inComponent component: Int) {
+        guard selection.indices.contains(component) else { return }
+        let before = selection[component]
+        selectRow(row, inComponent: component, animated: false)
+        if selection[component] != before {
+            delegate?._didSelect(self, selection[component], component)
+        }
     }
 
     public func reloadAllComponents() {
@@ -294,12 +339,12 @@ open class UIPickerView: UIView {
     // MARK: The measured wheel (file header)
 
     func rowHeight(_ component: Int) -> CGFloat {
-        let d = delegate?.pickerView(self, rowHeightForComponent: component) ?? -1
+        let d = delegate?._rowHeight(self, component) ?? -1
         return d > 0 ? d : UIPickerView.defaultRowHeight
     }
 
     func componentWidth(_ component: Int) -> CGFloat {
-        let d = delegate?.pickerView(self, widthForComponent: component) ?? -1
+        let d = delegate?._width(self, component) ?? -1
         if d > 0 { return d }
         let n = max(1, numberOfComponents)
         let usable = bounds.width - 2 * UIPickerView.sideInset
@@ -423,9 +468,8 @@ open class UIPickerView: UIView {
                 guard row >= 0, row < rowCounts[c] else { continue }
                 guard let rect = wheel.rowRect(offset: d, x: x, width: w) else { continue }
                 guard rect.maxY > 0, rect.minY < bounds.height else { continue }
-                let title = delegate?.pickerView(self, titleForRow: row, forComponent: c)
-                let attributed = delegate?.pickerView(self, attributedTitleForRow: row,
-                                                      forComponent: c)
+                let title = delegate?._title(self, row, c) ?? nil
+                let attributed = delegate?._attributedTitle(self, row, c) ?? nil
                 guard title != nil || attributed != nil else { continue }
                 let selected = d == 0
                 let l = dequeueLabel(used)
@@ -451,3 +495,27 @@ open class UIPickerView: UIView {
         for i in used..<rowLabels.count { rowLabels[i].isHidden = true }
     }
 }
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern)
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+extension UIPickerViewDelegate {
+    func _title(_ p: UIPickerView, _ r: Int, _ c: Int) -> String? { pickerView?(p, titleForRow: r, forComponent: c) ?? nil }
+    func _attributedTitle(_ p: UIPickerView, _ r: Int, _ c: Int) -> NSAttributedString? {
+        pickerView?(p, attributedTitleForRow: r, forComponent: c) ?? nil
+    }
+    func _width(_ p: UIPickerView, _ c: Int) -> CGFloat { pickerView?(p, widthForComponent: c) ?? -1 }
+    func _rowHeight(_ p: UIPickerView, _ c: Int) -> CGFloat { pickerView?(p, rowHeightForComponent: c) ?? -1 }
+    func _didSelect(_ p: UIPickerView, _ r: Int, _ c: Int) { pickerView?(p, didSelectRow: r, inComponent: c) }
+}
+#else
+extension UIPickerViewDelegate {
+    func _title(_ p: UIPickerView, _ r: Int, _ c: Int) -> String? { pickerView(p, titleForRow: r, forComponent: c) }
+    func _attributedTitle(_ p: UIPickerView, _ r: Int, _ c: Int) -> NSAttributedString? {
+        pickerView(p, attributedTitleForRow: r, forComponent: c)
+    }
+    func _width(_ p: UIPickerView, _ c: Int) -> CGFloat { pickerView(p, widthForComponent: c) }
+    func _rowHeight(_ p: UIPickerView, _ c: Int) -> CGFloat { pickerView(p, rowHeightForComponent: c) }
+    func _didSelect(_ p: UIPickerView, _ r: Int, _ c: Int) { pickerView(p, didSelectRow: r, inComponent: c) }
+}
+#endif

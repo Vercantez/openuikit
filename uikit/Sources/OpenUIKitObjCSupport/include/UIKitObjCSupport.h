@@ -517,11 +517,7 @@ NS_SWIFT_NAME(UITextViewDelegateObjC) @protocol UITextViewDelegate <NSObject>
 
 /* UITextFieldDelegate: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 
-NS_SWIFT_NAME(UIGestureRecognizerDelegateObjC) @protocol UIGestureRecognizerDelegate <NSObject>
-@optional
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
-@end
+/* UIGestureRecognizerDelegate: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 
 NS_SWIFT_NAME(UIViewControllerTransitionCoordinatorContextObjC) @protocol UIViewControllerTransitionCoordinatorContext <NSObject>
 - (BOOL)isAnimated;
@@ -563,16 +559,8 @@ NS_SWIFT_NAME(UINavigationControllerDelegateObjC) @protocol UINavigationControll
                                                 fromViewController:(UIViewController *)fromVC
                                                   toViewController:(UIViewController *)toVC;
 @end
-NS_SWIFT_NAME(UIPickerViewDataSourceObjC) @protocol UIPickerViewDataSource <NSObject>
-@required
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView;
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
-@end
-NS_SWIFT_NAME(UIPickerViewDelegateObjC) @protocol UIPickerViewDelegate <NSObject>
-@optional
-- (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component;
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
-@end
+/* UIPickerViewDataSource: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
+/* UIPickerViewDelegate: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 
 /* NSLayoutConstraint.h: the visual format options and
  * NSDictionaryOfVariableBindings (ORStackView). Objective-C side only on the

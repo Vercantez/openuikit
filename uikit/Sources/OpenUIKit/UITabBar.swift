@@ -1,3 +1,6 @@
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 // UITabBar. Owner: viewcontroller module (M10 chrome).
 //
 // iOS 26 "liquid glass" floating tab bar, metrics measured from the real-
@@ -77,10 +80,32 @@ public class UITabBarItem: UIBarItem {
     }
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- `@objc`,
+/// UIKit's runtime name, NSObjectProtocol, SDK selectors and required /
+/// optional split (checked against the SDK in Tests/ObjCProtocols2Tests).
+/// Portable builds keep the Swift protocol with default implementations.
+/// The customizing callbacks are declared (SDK selectors) and never sent:
+/// OpenUIKit has no tab-bar customizing sheet.
+@objc(UITabBarDelegate) @preconcurrency @MainActor
+public protocol UITabBarDelegate: NSObjectProtocol {
+    @objc(tabBar:didSelectItem:)
+    optional func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem)
+    @objc(tabBar:willBeginCustomizingItems:)
+    optional func tabBar(_ tabBar: UITabBar, willBeginCustomizing items: [UITabBarItem])
+    @objc(tabBar:didBeginCustomizingItems:)
+    optional func tabBar(_ tabBar: UITabBar, didBeginCustomizing items: [UITabBarItem])
+    @objc(tabBar:willEndCustomizingItems:changed:)
+    optional func tabBar(_ tabBar: UITabBar, willEndCustomizing items: [UITabBarItem], changed: Bool)
+    @objc(tabBar:didEndCustomizingItems:changed:)
+    optional func tabBar(_ tabBar: UITabBar, didEndCustomizing items: [UITabBarItem], changed: Bool)
+}
+#else
 @preconcurrency @MainActor
 public protocol UITabBarDelegate: AnyObject {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem)
 }
+#endif
 
 /// One item slot: tinted icon + title, tap → selection. All drawing state
 /// (tint) is pushed in by the bar.
@@ -545,7 +570,7 @@ public final class UITabBar: UIView {
             v.addTarget(for: .touchUpInside) { [weak self] control, _ in
                 guard let self, let iv = control as? _UITabBarItemView else { return }
                 self.selectedItem = iv.item
-                self.delegate?.tabBar(self, didSelect: iv.item)
+                self.delegate?._didSelect(self, iv.item)
             }
             platter.addSubview(v)
             return v
@@ -908,4 +933,14 @@ final class _UITabBarScrollEdgeEffectView: UIView {
                                   in: CGRect(x: 0, y: 0, width: 1, height: 1))
         canvas.restore()
     }
+}
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern)
+
+extension UITabBarDelegate {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    func _didSelect(_ b: UITabBar, _ item: UITabBarItem) { tabBar?(b, didSelect: item) }
+#else
+    func _didSelect(_ b: UITabBar, _ item: UITabBarItem) { tabBar(b, didSelect: item) }
+#endif
 }

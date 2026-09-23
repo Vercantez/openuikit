@@ -85,6 +85,9 @@ public class UINavigationItem: NSObject {
     /// iOS 16 / 26 placement of `searchController`'s bar. Ledger/Tabs
     /// chrome is a separate measured rule (`usesBottomSearch`); this enum
     /// is the stored preferred placement the search controller reports.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UINavigationItemSearchBarPlacement)
+#endif
     public enum SearchBarPlacement: Int, Sendable {
         case automatic = 0
         case integrated = 1

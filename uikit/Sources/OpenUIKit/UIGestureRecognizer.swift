@@ -1,3 +1,6 @@
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 // UIGestureRecognizer + tap / pan / long-press. Owner: event module (M7).
 //
 // The base class implements UIKit's state machine:
@@ -60,6 +63,35 @@ import class ObjectiveC.NSObject
 /// NOT modelled: failure requirements. `shouldRequireFailureOf` /
 /// `shouldBeRequiredToFailBy` are declared so conformances compile, but no
 /// recognizer here waits on another's failure (docs/KNOWN_GAPS.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- `@objc`,
+/// UIKit's runtime name, NSObjectProtocol, SDK selectors and required /
+/// optional split (checked against the SDK in Tests/ObjCProtocols2Tests).
+/// Portable builds keep the Swift protocol with default implementations.
+@objc(UIGestureRecognizerDelegate) @preconcurrency @MainActor
+public protocol UIGestureRecognizerDelegate: NSObjectProtocol {
+    @objc(gestureRecognizerShouldBegin:)
+    optional func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool
+    @objc(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)
+    optional func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool
+    @objc(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)
+    optional func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldRequireFailureOf other: UIGestureRecognizer) -> Bool
+    @objc(gestureRecognizer:shouldBeRequiredToFailByGestureRecognizer:)
+    optional func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldBeRequiredToFailBy other: UIGestureRecognizer) -> Bool
+    @objc(gestureRecognizer:shouldReceiveTouch:)
+    optional func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldReceive touch: UITouch) -> Bool
+    @objc(gestureRecognizer:shouldReceivePress:)
+    optional func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldReceive press: UIPress) -> Bool
+    @objc(gestureRecognizer:shouldReceiveEvent:)
+    optional func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                    shouldReceive event: UIEvent) -> Bool
+}
+#else
 @preconcurrency @MainActor
 public protocol UIGestureRecognizerDelegate: AnyObject {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool
@@ -89,6 +121,7 @@ public extension UIGestureRecognizerDelegate {
     func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool { true }
     func gestureRecognizer(_ g: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool { true }
 }
+#endif
 
 @preconcurrency @MainActor
 open class UIGestureRecognizer: NSObject {
@@ -210,7 +243,7 @@ open class UIGestureRecognizer: NSObject {
         // exclusion rule against already-recognized peers applies.
         let recognizing = newState == .began || (newState == .ended && old == .possible)
         if recognizing {
-            if let d = delegate, !d.gestureRecognizerShouldBegin(self) {
+            if let d = delegate, !d._shouldBegin(self) {
                 _state = .failed
                 return
             }
@@ -262,10 +295,10 @@ open class UIGestureRecognizer: NSObject {
 
     /// UIKit asks BOTH delegates; either saying yes allows both to run.
     func _mayRecognizeSimultaneously(with other: UIGestureRecognizer) -> Bool {
-        if let d = delegate, d.gestureRecognizer(self, shouldRecognizeSimultaneouslyWith: other) {
+        if let d = delegate, d._simultaneous(self, other) {
             return true
         }
-        if let d = other.delegate, d.gestureRecognizer(other, shouldRecognizeSimultaneouslyWith: self) {
+        if let d = other.delegate, d._simultaneous(other, self) {
             return true
         }
         return false
@@ -879,3 +912,24 @@ public struct UIScrollTypeMask: OptionSet, Sendable {
     public static let continuous = UIScrollTypeMask(rawValue: 2)
     public static let all: UIScrollTypeMask = [.discrete, .continuous]
 }
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern). The
+// absent answers are the portable defaults above (UIKit's documented ones).
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+extension UIGestureRecognizerDelegate {
+    func _shouldBegin(_ g: UIGestureRecognizer) -> Bool { gestureRecognizerShouldBegin?(g) ?? true }
+    func _simultaneous(_ g: UIGestureRecognizer, _ o: UIGestureRecognizer) -> Bool {
+        gestureRecognizer?(g, shouldRecognizeSimultaneouslyWith: o) ?? false
+    }
+    func _shouldReceive(_ g: UIGestureRecognizer, _ t: UITouch) -> Bool { gestureRecognizer?(g, shouldReceive: t) ?? true }
+}
+#else
+extension UIGestureRecognizerDelegate {
+    func _shouldBegin(_ g: UIGestureRecognizer) -> Bool { gestureRecognizerShouldBegin(g) }
+    func _simultaneous(_ g: UIGestureRecognizer, _ o: UIGestureRecognizer) -> Bool {
+        gestureRecognizer(g, shouldRecognizeSimultaneouslyWith: o)
+    }
+    func _shouldReceive(_ g: UIGestureRecognizer, _ t: UITouch) -> Bool { gestureRecognizer(g, shouldReceive: t) }
+}
+#endif

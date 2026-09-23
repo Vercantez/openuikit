@@ -13,7 +13,7 @@ final class SystemPickerTests: XCTestCase {
     // MARK: UISearchController delegate
 
     func testSearchControllerDelegateOrderOnActivateAndCancel() {
-        final class Probe: UISearchControllerDelegate, UISearchResultsUpdating {
+        final class Probe: NSObject, UISearchControllerDelegate, UISearchResultsUpdating {
             var log: [String] = []
             func willPresentSearchController(_ searchController: UISearchController) { log.append("willPresent") }
             func didPresentSearchController(_ searchController: UISearchController) { log.append("didPresent") }
@@ -37,7 +37,7 @@ final class SystemPickerTests: XCTestCase {
     }
 
     func testSearchSuggestionsSelectClearsListAndUpdates() {
-        final class Probe: UISearchResultsUpdating {
+        final class Probe: NSObject, UISearchResultsUpdating {
             var selected: String?
             var updates = 0
             func updateSearchResults(for searchController: UISearchController) { updates += 1 }
@@ -60,7 +60,7 @@ final class SystemPickerTests: XCTestCase {
     }
 
     func testPreferredSearchBarPlacementNotifiesDelegate() {
-        final class Probe: UISearchControllerDelegate {
+        final class Probe: NSObject, UISearchControllerDelegate {
             var willTo: UINavigationItem.SearchBarPlacement?
             var didFrom: UINavigationItem.SearchBarPlacement?
             func searchController(_ searchController: UISearchController,
@@ -116,7 +116,7 @@ final class SystemPickerTests: XCTestCase {
     // MARK: Document picker
 
     func testDocumentPickerOpeningStoresTypesAndCancels() {
-        final class Probe: UIDocumentPickerDelegate {
+        final class Probe: NSObject, UIDocumentPickerDelegate {
             var cancelled = 0
             var picked: [URL] = []
             func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) { cancelled += 1 }
@@ -155,7 +155,7 @@ final class SystemPickerTests: XCTestCase {
         XCTAssertFalse(UIImagePickerController.isFlashAvailable(for: .rear))
         XCTAssertNil(UIImagePickerController.availableCaptureModes(for: .front))
 
-        final class Probe: UIImagePickerControllerDelegate {
+        final class Probe: NSObject, UIImagePickerControllerDelegate {
             var cancelled = 0
             var info: [UIImagePickerController.InfoKey: Any]?
             func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { cancelled += 1 }
@@ -185,7 +185,7 @@ final class SystemPickerTests: XCTestCase {
     // MARK: Color picker
 
     func testColorPickerSelectedColorAndDelegate() {
-        final class Probe: UIColorPickerViewControllerDelegate {
+        final class Probe: NSObject, UIColorPickerViewControllerDelegate {
             var colors: [UIColor] = []
             var continuous: [Bool] = []
             var finished = 0
@@ -220,7 +220,7 @@ final class SystemPickerTests: XCTestCase {
     // MARK: Font picker
 
     func testFontPickerCancelAndHostPick() {
-        final class Probe: UIFontPickerViewControllerDelegate {
+        final class Probe: NSObject, UIFontPickerViewControllerDelegate {
             var cancelled = 0
             var picked = 0
             func fontPickerViewControllerDidCancel(_ viewController: UIFontPickerViewController) { cancelled += 1 }
@@ -275,7 +275,7 @@ final class SystemPickerTests: XCTestCase {
     // MARK: Document browser
 
     func testDocumentBrowserHostPickAndUnavailableReveal() {
-        final class Probe: UIDocumentBrowserViewControllerDelegate {
+        final class Probe: NSObject, UIDocumentBrowserViewControllerDelegate {
             var urls: [URL] = []
             func documentBrowser(_ controller: UIDocumentBrowserViewController,
                                   didPickDocumentsAt documentURLs: [URL]) {
@@ -345,7 +345,7 @@ final class SystemPickerTests: XCTestCase {
 
 #if !os(Linux)
     func testPHPickerFailClosedEmptyAndHostEnqueue() {
-        final class Probe: PHPickerViewControllerDelegate {
+        final class Probe: NSObject, PHPickerViewControllerDelegate {
             var results: [PHPickerResult]?
             func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
                 self.results = results

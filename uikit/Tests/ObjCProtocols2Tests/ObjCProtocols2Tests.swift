@@ -36,6 +36,9 @@ final class ObjCProtocols2Tests: XCTestCase {
     /// sections under OpenUIKit).
     static let converted: [(section: String, protocols: [String])] = [
         ("textfield", ["UITextFieldDelegate"]),
+        ("picker", ["UIPickerViewDataSource", "UIPickerViewDelegate"]),
+        ("searchbar", ["UISearchBarDelegate"]),
+        ("", ["UISearchControllerDelegate", "UITabBarDelegate", "UIGestureRecognizerDelegate"]),
     ]
 
     private var savedCut: FontEngine.SystemFontCut = .macOS
@@ -59,7 +62,7 @@ final class ObjCProtocols2Tests: XCTestCase {
 
     func testConvertedSectionsMatchiOS() throws {
         let expected = try oracle()
-        for (section, _) in Self.converted {
+        for (section, _) in Self.converted where !section.isEmpty {
             let (window, view) = host()
             let box = Lines()
             OUKProtocols2Run(section, Unmanaged.passUnretained(view).toOpaque(), { line, context in
