@@ -58,7 +58,8 @@ final class PresentableFrameworksTests: XCTestCase {
         let safari = SFSafariViewController(url: url, configuration: config)
         XCTAssertTrue(safari.configuration.entersReaderIfAvailable)
         XCTAssertFalse(safari.configuration.barCollapsingEnabled)
-        XCTAssertEqual(safari.dismissButtonStyle, .done)
+        // iOS 26.1 default (safariobjcprobe: dismissButtonStyle 1).
+        XCTAssertEqual(safari.dismissButtonStyle, .close)
         XCTAssertEqual(safari.modalPresentationStyle, .fullScreen)
 
         config.entersReaderIfAvailable = false

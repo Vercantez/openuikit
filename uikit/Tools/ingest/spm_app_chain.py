@@ -82,6 +82,34 @@ ROOTS = ("corpus", "checkouts", "openuikit", "generated")
 # sees Apple's declarations. Same set as xcodeproj_to_package.py.
 IOS_SDK_SUPPLIED_PRODUCTS = {"MobileCoreServices"}
 
+# OpenUIKit products whose Objective-C view is a separate Clang product with
+# the framework's module name and `export *` (SwiftPM's generated map for the
+# Swift target re-exports nothing, and a second map of the same module name
+# is a redefinition): an Objective-C target's `@import SafariServices;` must
+# resolve to the Clang one (docs/agent_reports/safari-objc.md).
+OBJC_MODULE_PRODUCTS = {"SafariServices": "SafariServicesObjC"}
+
+CLANG_SOURCE_SUFFIXES = (".m", ".mm", ".c", ".cc", ".cpp")
+
+# The define pair every Clang consumer of OpenUIKit's generated headers gets
+# (xcodeproj_to_package.OBJC_SUBCLASSING_DEFINES; simplenote-objc-core): the
+# vtable-free chain classes (UIViewController, …) are subclassable, every
+# other generated interface stays objc_subclassing_restricted.
+OBJC_SUBCLASSING_DEFINES = [
+    "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) __attribute__((objc_subclassing_restricted)) SWIFT_CLASS_EXTRA",
+    "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+]
+
+
+def is_clang_target(target_dir: str) -> bool:
+    """A materialized target with C-family sources and no Swift ones."""
+    swift = clang = False
+    for dp, _, fn in os.walk(target_dir, followlinks=True):
+        for f in fn:
+            swift |= f.endswith(".swift")
+            clang |= f.endswith(CLANG_SOURCE_SUFFIXES)
+    return clang and not swift
+
 
 IOS_PLATFORM_FLOOR = '.iOS("26.0")'
 
@@ -122,7 +150,7 @@ def swift_string_list(items: list[str]) -> str:
     return ", ".join(json.dumps(i) for i in items)
 
 
-def render_target(t: dict, shims: set[str]) -> str:
+def render_target(t: dict, shims: set[str], clang: bool = False) -> str:
     deps = []
     for d in t.get("deps", []):
         if isinstance(d, dict):
@@ -134,9 +162,15 @@ def render_target(t: dict, shims: set[str]) -> str:
             deps.append(f'.product(name: {json.dumps(d["product"])}, package: {json.dumps(d["package"])}{alias})')
         else:
             deps.append(json.dumps(d))
+    c_settings = list(t.get("c_settings", []))
     for p in t.get("openuikit", []):
         condition = (", condition: .when(platforms: [.macOS, .linux])"
                      if p in IOS_SDK_SUPPLIED_PRODUCTS else "")
+        if clang and p in OBJC_MODULE_PRODUCTS:
+            p = OBJC_MODULE_PRODUCTS[p]
+            flags = ".unsafeFlags([%s])" % ", ".join(json.dumps(d) for d in OBJC_SUBCLASSING_DEFINES)
+            if flags not in c_settings:
+                c_settings.append(flags)
         deps.append(f'.product(name: {json.dumps(p)}, package: "OpenUIKit"{condition})')
     lines = [
         "        .target(",
@@ -158,8 +192,8 @@ def render_target(t: dict, shims: set[str]) -> str:
         settings.append(f".unsafeFlags([{json.dumps(f)}])")
     if settings:
         lines.append(f"            swiftSettings: [{', '.join(settings)}],")
-    if t.get("c_settings"):
-        lines.append(f"            cSettings: [{', '.join(t['c_settings'])}],")
+    if c_settings:
+        lines.append(f"            cSettings: [{', '.join(c_settings)}],")
     lines[-1] = lines[-1].rstrip(",")
     lines.append("        ),")
     return "\n".join(lines)
@@ -313,7 +347,8 @@ def main() -> int:
                                                "replace": spec["openuikit_manifest_filter"],
                                                "sha256": sha256(os.path.join(filtered, "Package.swift"))}]
         openuikit_path = filtered
-    rendered = "\n".join(render_target(t, shim_names) for t in targets)
+    rendered = "\n".join(render_target(t, shim_names, is_clang_target(os.path.join(out, "Sources", t["name"])))
+                          for t in targets)
     extra_packages = "".join(
         f'        .package(name: {json.dumps(pk["name"])}, path: {json.dumps(os.path.join(roots[pk.get("root", "openuikit")], pk["path"]))}),\n'
         for pk in spec.get("packages", []))

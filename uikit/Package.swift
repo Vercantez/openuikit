@@ -531,7 +531,13 @@ let frameworkTargets: [Target] = [
     ),
     .target(
         name: "SafariServices",
-        dependencies: ["OpenUIKit", "UIKit"]
+        dependencies: ["OpenUIKit", "UIKit"],
+        // Objective-C exceptions from -initWithURL: (safari-objc.md): Apple
+        // toolchains only. The Mach-O guest compiles this source too, with
+        // objc4 and a Foundation facade that has no NSException (MEASURED
+        // build_full: "cannot find 'NSException' in scope").
+        swiftSettings: [.define("OPENUIKIT_OBJC_EXCEPTIONS",
+                                .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]
     ),
     .target(
         name: "MessageUI",
@@ -955,7 +961,15 @@ let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
     "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge",
-].map { .library(name: $0, targets: [$0]) }
+].map { .library(name: $0, targets: [$0]) } + [
+    // The Clang module `SafariServices` for Objective-C targets
+    // (Sources/SafariServicesObjC/include/module.modulemap). OpenUIKit is in
+    // the product so a consumer depends on it DIRECTLY: SwiftPM orders a
+    // Clang target after only its direct Swift dependencies' generated
+    // headers (MEASURED: "OpenUIKit-Swift.h not found" compiling
+    // NetNewsWireObjC when OpenUIKit came in through SafariServicesObjC).
+    .library(name: "SafariServicesObjC", targets: ["SafariServicesObjC", "OpenUIKit"]),
+]
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
@@ -976,6 +990,22 @@ let openUIKitObjCSubclassingCFlags: CSetting = .unsafeFlags(openUIKitObjCSubclas
 let openUIKitObjCSubclassingSwiftFlags: SwiftSetting =
     .unsafeFlags(openUIKitObjCSubclassingDefines.flatMap { ["-Xcc", $0] })
 let simplenoteTargets: [Target] = [
+    // Objective-C view of SafariServices, module name `SafariServices` with
+    // `export *` (docs/agent_reports/safari-objc.md). Objective-C app targets
+    // depend on this product; Swift targets on the Swift `SafariServices`.
+    .target(name: "SafariServicesObjC", dependencies: ["OpenUIKit"],
+            path: "Sources/SafariServicesObjC", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags]),
+    // NetNewsWire's SFSafariViewController+Extras shape against it; the
+    // scenario is the SAME .m the iOS 26.1 oracle runs
+    // (Tools/oracle2/safariobjcprobe/run.sh).
+    .target(name: "OpenUIKitSafariFixtures", dependencies: ["SafariServicesObjC", "OpenUIKit"],
+            path: "Tools/oracle2/safariobjcprobe/scenario", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "SafariObjCTests",
+                dependencies: ["OpenUIKitSafariFixtures", "SafariServices", "OpenUIKit"],
+                path: "Tests/SafariObjCTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
     // Route (b) Objective-C declarations that OpenUIKit-Swift.h cannot carry
     // (enums, structs, protocols, typed strings). Pure declarations; values
