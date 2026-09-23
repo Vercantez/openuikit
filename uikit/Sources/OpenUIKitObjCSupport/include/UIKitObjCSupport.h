@@ -153,10 +153,15 @@ typedef NS_OPTIONS(NSUInteger, UIControlEvents) {
     UIControlEventAllTouchEvents = 0x00000FFF, UIControlEventAllEditingEvents = 0x000F0000,
     UIControlEventAllEvents = 0xFFFFFFFF,
 } NS_SWIFT_NAME(UIControlEventsObjC);
-typedef NS_OPTIONS(NSUInteger, UIControlState) {
-    UIControlStateNormal = 0, UIControlStateHighlighted = 1 << 0, UIControlStateDisabled = 1 << 1,
-    UIControlStateSelected = 1 << 2, UIControlStateFocused = 1 << 3,
-} NS_SWIFT_NAME(UIControlStateObjC);
+/* UIControlState is OpenUIKit's own UIControl.State (cportableio.h). */
+typedef OUKControlState UIControlState;
+#define UIControlStateNormal OUKControlStateNormal
+#define UIControlStateHighlighted OUKControlStateHighlighted
+#define UIControlStateDisabled OUKControlStateDisabled
+#define UIControlStateSelected OUKControlStateSelected
+#define UIControlStateFocused OUKControlStateFocused
+#define UIControlStateApplication OUKControlStateApplication
+#define UIControlStateReserved OUKControlStateReserved
 typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
     UIGestureRecognizerStatePossible, UIGestureRecognizerStateBegan, UIGestureRecognizerStateChanged,
     UIGestureRecognizerStateEnded, UIGestureRecognizerStateCancelled, UIGestureRecognizerStateFailed,

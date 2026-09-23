@@ -16,6 +16,22 @@ final class Swift4NamesTests: XCTestCase {
         XCTAssertTrue(UIViewAutoresizing.self == UIView.AutoresizingMask.self)
     }
 
+    @MainActor
+    func testSwift4MemberNames() {
+        XCTAssertEqual(UIEdgeInsetsMake(1, 2, 3, 4), UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4))
+        let parent = UIViewController(), child = UIViewController()
+        parent.addChild(child)
+        XCTAssertTrue(parent.childViewControllers.first === child)
+        let v = UIView(), a = UIView(), b = UIView()
+        v.addSubview(a); v.addSubview(b)
+        v.bringSubview(toFront: a)
+        XCTAssertTrue(v.subviews.last === a)
+        v.sendSubview(toBack: a)
+        XCTAssertTrue(v.subviews.first === a)
+        XCTAssertEqual(NSUnderlineStyle.styleSingle, NSUnderlineStyle.single)
+        XCTAssertEqual(UIScrollViewDecelerationRateFast, UIScrollView.DecelerationRate.fast)
+    }
+
     func testSwift4NotificationNames() {
         XCTAssertEqual(NSNotification.Name.UIApplicationDidBecomeActive,
                        UIApplication.didBecomeActiveNotification)

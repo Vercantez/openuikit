@@ -46,6 +46,36 @@ class Swift4NamesTest(unittest.TestCase):
         for line in open(SWIFT).read().split('\n'):
             self.assertIn(line, full_lines, line)
 
+    @unittest.skipUnless(os.path.exists(NOTES), 'iPhoneSimulator26.1 SDK not installed')
+    def test_member_spellings_are_the_sdks(self):
+        """Swift4Members.swift: every (old, new) pair is in UIKit.apinotes'
+        Swift 4 section (or, for the deceleration globals, UIScrollView.h)."""
+        import yaml
+        d = yaml.safe_load(open(NOTES))
+        v4 = [v for v in d['SwiftVersions'] if v['Version'] == 4][0]
+        text = open(os.path.join(HERE, '..', '..', 'Sources/OpenUIKit/Swift4Members.swift')).read()
+        def v4_member(cls, name):
+            for c in v4.get('Classes', []):
+                if c['Name'] == cls:
+                    for m in c.get('Properties', []) + c.get('Methods', []):
+                        if m.get('SwiftName') == name:
+                            return True
+            return False
+        self.assertTrue(v4_member('UIViewController', 'childViewControllers'))
+        self.assertTrue(v4_member('UIView', 'bringSubview(toFront:)'))
+        self.assertTrue(v4_member('UIView', 'sendSubview(toBack:)'))
+        enumerators = {e['Name']: e.get('SwiftName') for e in v4.get('Enumerators', [])}
+        for c, swift in [('NSUnderlineStyleSingle', 'styleSingle'), ('NSUnderlineStyleThick', 'styleThick'),
+                         ('NSUnderlineStyleDouble', 'styleDouble'), ('NSUnderlineStyleNone', 'styleNone')]:
+            self.assertEqual(enumerators.get(c), swift)
+        functions = {f['Name']: f.get('SwiftName') for f in v4.get('Functions', [])}
+        self.assertEqual(functions.get('UIEdgeInsetsMake'), 'UIEdgeInsetsMake')
+        header = open(os.path.join(os.path.dirname(NOTES), 'UIScrollView.h')).read()
+        self.assertIn('UIScrollViewDecelerationRateFast', header)
+        for name in ['childViewControllers', 'bringSubview(toFront', 'sendSubview(toBack', 'styleSingle',
+                     'styleThick', 'styleDouble', 'styleNone', 'UIEdgeInsetsMake', 'UIScrollViewDecelerationRateFast']:
+            self.assertIn(name, text)
+
 
 if __name__ == '__main__':
     unittest.main()

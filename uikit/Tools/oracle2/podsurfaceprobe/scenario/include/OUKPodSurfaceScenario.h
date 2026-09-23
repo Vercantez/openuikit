@@ -16,6 +16,13 @@ typedef void (*OUKPodSurfaceSink)(const char *line, void *context);
 
 /* Section names in transcript order; NULL past the last. */
 const char *_Nullable OUKPodSurfaceSection(int index);
+#if __has_include("UIKitObjCSupport.h")
+#import "UIKitObjCSupport.h"
+/* An Objective-C function typed like Artsy-UIButtons'
+ * -setBorderColor:forState:animated: (UIControlState): Swift passes
+ * UIControl.State to it directly, as with UIKit. Returns the raw value. */
+unsigned long OUKPodSurfaceStateRawValue(UIControlState state);
+#endif
 /* Runs section `name` ("view", "label", ...), emitting its lines. */
 void OUKPodSurfaceRun(const char *name, OUKPodSurfaceSink sink, void *context);
 

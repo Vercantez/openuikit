@@ -50,6 +50,17 @@ final class PodSurfaceTests: XCTestCase {
         super.tearDown()
     }
 
+    /// UIControl.State is the C UIControlState (UIControl.h raw values), so
+    /// Swift hands it straight to an Objective-C pod API typed UIControlState.
+    /// Before the unification this did not compile (two option sets).
+    func testUIControlStateIsTheObjectiveCType() {
+        XCTAssertEqual(OUKPodSurfaceStateRawValue(.normal), 0)
+        XCTAssertEqual(OUKPodSurfaceStateRawValue([.highlighted, .selected]), 0b101)
+        XCTAssertEqual(OUKPodSurfaceStateRawValue(.disabled), 2)
+        XCTAssertEqual(UIControl.State.focused.rawValue, 8)
+        XCTAssertEqual(UIControl.State.application.rawValue, 0x00FF_0000)
+    }
+
     func testEverySectionMatchesiOS() throws {
         let expected = try oracle()
         var compared = 0

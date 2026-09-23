@@ -388,3 +388,7 @@ void OUKPodSurfaceRun(const char *name, OUKPodSurfaceSink sink, void *context) {
     else if (!strcmp(name, "pasteboard")) pasteboardSection();
     else if (!strcmp(name, "windowlevel")) windowLevelSection();
 }
+
+#if OUK_OPENUIKIT
+unsigned long OUKPodSurfaceStateRawValue(UIControlState state) { return (unsigned long)state; }
+#endif
