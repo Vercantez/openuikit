@@ -28,17 +28,15 @@ python3 - "$STAGE/build_full.sh" <<'PY'
 import sys
 p = sys.argv[1]
 s = open(p).read()
-loop = '''for probe in GuestBoundaryTests LaunchProbe FuziProbe; do
-    compile_app_module "$probe" "$OUT/$probe.o" "$W/full/focus-ios/$probe.swift"
-    link_app_executable "$OUT/$probe" "$OUT/$probe.o"
-done
-'''
-assert loop in s, "build_full.sh probe loop not found"
-s = s.replace(loop, loop + '''
-# DIAGNOSTIC (uikit/scripts/nib_guest_probe.sh): storyboard runtime probe.
+# Anchor: the staging step after every guest executable is linked (stable
+# across build_full's serial and parallel probe-link layouts).
+anchor = "# Match SwiftPM's executable bundle metadata and stage Focus startup assets.\n"
+assert anchor in s, "build_full.sh staging anchor not found"
+s = s.replace(anchor, '''# DIAGNOSTIC (uikit/scripts/nib_guest_probe.sh): storyboard runtime probe.
 compile_app_module NibGuestProbe "$OUT/NibGuestProbe.o" "$UIKIT/Tools/nibguest/NibGuestProbe.swift"
 link_app_executable "$OUT/NibGuestProbe" "$OUT/NibGuestProbe.o"
-''')
+
+''' + anchor, 1)
 s += '''
 # DIAGNOSTIC (uikit/scripts/nib_guest_probe.sh): run it under machorun.
 (

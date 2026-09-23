@@ -1373,6 +1373,9 @@ extension UINavigationController {
     /// the view is not loaded yet.
     func _setArchivedViewControllers(_ controllers: [UIViewController]) {
         for controller in controllers { _adoptArchivedChild(controller) }
-        viewControllers = controllers
+        // The stored stack directly: the public `viewControllers` setter is
+        // `setViewControllers(_:animated:)`, which sends didMove(toParent:)
+        // (NibRuntimeTests.testStoryboardScenarioMatchesiOS, events.afterInstantiate).
+        _viewControllerStack = controllers
     }
 }
