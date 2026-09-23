@@ -1,5 +1,5 @@
 {
-  "_comment": "Eidolon's absent Objective-C pods at their Podfile.lock versions (commit resolved by tag, 2026-09-22), and the source subdirectory objc_pod_census.py compiles. Artsy+UIFonts 3.1.3 is private (licensed fonts); its OSS twin Artsy+OSSUIFonts is checked at master because its lock tag was not found. CardFlight-v4 4.3.1: repository not found (eidolon-launch-oracle.md). The sources are not vendored.",
+  "_comment": "Eidolon's absent Objective-C pods at their Podfile.lock versions (commit resolved by tag, 2026-09-22), and the source subdirectory objc_pod_census.py compiles. Artsy+UIFonts 3.1.3 is artsy/Specs' spec pointing at the OPEN Artsy-OSSUIFonts repository, tag 3.1.3 (spec sha1 = the lock's d38c8263...), not a private pod. Artsy+UIColors 3.1.0's spec names no tag (HEAD at install time); tag 3.1.0 is used. CardFlight-v4 4.3.1: repository not found (eidolon-launch-oracle.md). The sources are not vendored.",
   "versions": {
     "ARCollectionViewMasonryLayout": [
       "2.0.0",
@@ -27,9 +27,9 @@
       "a80556b7d5fc9a30f962fcba747888d46657ff20"
     ],
     "Artsy-OSSUIFonts": [
-      "master (lock names private Artsy+UIFonts 3.1.3)",
+      "3.1.3",
       "https://github.com/artsy/Artsy-OSSUIFonts.git",
-      null
+      "cc476e600439fd2450eef65524682408cfb98126"
     ],
     "DZNWebViewController": [
       "checkout",
@@ -80,6 +80,11 @@
       "0.2.3 (tag v0.2.3; DZNWebViewController dependency)",
       "https://github.com/ninjinkun/NJKWebViewProgress.git",
       "90b694a8e6b8aa1c93f3c3a18e4a45e2039f2c56"
+    ],
+    "ISO8601DateFormatter": [
+      "0.8",
+      "https://github.com/boredzo/iso-8601-date-formatter.git",
+      "c361d097e19ca1cafd8eb21427467004f511c381"
     ]
   },
   "spec": {
@@ -126,5 +131,402 @@
       "UIView+BooleanAnimations",
       "UIView_BooleanAnimations"
     ]
-  }
+  },
+  "podspecs": {
+    "ARCollectionViewMasonryLayout": {
+      "name": "ARCollectionViewMasonryLayout",
+      "module": "ARCollectionViewMasonryLayout",
+      "version": "2.0.0",
+      "spec_checksum": "164b82010cf8ec99bc7a38cffe59a179d7e5a116",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/ARCollectionViewMasonryLayout.podspec.json",
+      "source": {
+        "git": "https://github.com/AshFurrow/ARCollectionViewMasonryLayout.git",
+        "tag": "2.0.0"
+      },
+      "source_files": [
+        "ARCollectionViewMasonryLayout.{h,m}"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "UIKit"
+      ],
+      "resources": []
+    },
+    "ARTiledImageView": {
+      "name": "ARTiledImageView",
+      "module": "ARTiledImageView",
+      "version": "1.1.1",
+      "spec_checksum": "8c6fd11d9e8459a853d94394adea3a5e8c9329ba",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/ARTiledImageView.podspec.json",
+      "source": {
+        "git": "https://github.com/dblock/ARTiledImage.git",
+        "tag": "1.1.1"
+      },
+      "source_files": [
+        "Classes"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [
+        "SDWebImage"
+      ],
+      "frameworks": [
+        "CoreGraphics",
+        "Foundation",
+        "UIKit"
+      ],
+      "resources": []
+    },
+    "Artsy-OSSUIFonts": {
+      "name": "Artsy+UIFonts",
+      "module": "Artsy_UIFonts",
+      "version": "3.1.3",
+      "spec_checksum": "d38c82636e000b1dee31b7bec0268e1841dac17f",
+      "spec_checksum_verified": true,
+      "spec_source": "artsy-specs/Artsy+UIFonts/3.1.3/Artsy+UIFonts.podspec",
+      "source": {
+        "git": "https://github.com/artsy/Artsy-OSSUIFonts.git",
+        "tag": "3.1.3"
+      },
+      "source_files": [
+        "Pod/Classes"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "CoreText",
+        "UIKit"
+      ],
+      "resources": [
+        "Pod/Assets/*"
+      ]
+    },
+    "Artsy-UIButtons": {
+      "name": "Artsy-UIButtons",
+      "module": "Artsy_UIButtons",
+      "version": "2.1.0",
+      "spec_checksum": "cdcc3ccf4d0d31ee80f45c1d11ffd2d772695b74",
+      "spec_checksum_verified": true,
+      "spec_source": "artsy-specs/Artsy-UIButtons/2.1.0/Artsy-UIButtons.podspec",
+      "source": {
+        "git": "https://github.com/artsy/Artsy-UIButtons.git",
+        "tag": "2.1.0"
+      },
+      "source_files": [
+        "Pod/Classes"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [
+        "Artsy+UIColors",
+        "Artsy+UIFonts",
+        "UIView+BooleanAnimations"
+      ],
+      "frameworks": [
+        "UIKit"
+      ],
+      "resources": []
+    },
+    "Artsy-UIColors": {
+      "name": "Artsy+UIColors",
+      "module": "Artsy_UIColors",
+      "version": "3.1.0",
+      "spec_checksum": "31c03c4146f5e6618a9b950f37dfe02dd9ac09a6",
+      "spec_checksum_verified": true,
+      "spec_source": "artsy-specs/Artsy+UIColors/3.1.0/Artsy+UIColors.podspec",
+      "source": {
+        "git": "https://github.com/Artsy/Artsy-UIColors.git"
+      },
+      "source_files": [
+        "Classes"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "UIKit"
+      ],
+      "resources": []
+    },
+    "Artsy-UILabels": {
+      "name": "Artsy+UILabels",
+      "module": "Artsy_UILabels",
+      "version": "2.2.0",
+      "spec_checksum": "7cb6e290a4f70dddba037b7dbeb21e90b49d7275",
+      "spec_checksum_verified": true,
+      "spec_source": "artsy-specs/Artsy+UILabels/2.2.0/Artsy+UILabels.podspec",
+      "source": {
+        "git": "https://github.com/artsy/Artsy-UILabels.git",
+        "tag": "2.2.0"
+      },
+      "source_files": [
+        "Pod/Classes"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [
+        "Artsy+UIColors",
+        "Artsy+UIFonts"
+      ],
+      "frameworks": [
+        "UIKit"
+      ],
+      "resources": [
+        "Pod/Assets/*.png"
+      ]
+    },
+    "DZNWebViewController": {
+      "name": "DZNWebViewController",
+      "module": "DZNWebViewController",
+      "version": "2.0",
+      "spec_checksum": "54e8ee1c5bcc43e341ad77737631098d0d76db69",
+      "spec_checksum_verified": true,
+      "spec_source": "checkout:DZNWebViewController/DZNWebViewController.podspec",
+      "source": {
+        "git": "https://github.com/dzenbot/DZNWebViewController.git",
+        "tag": "v2.0"
+      },
+      "source_files": [
+        "Classes",
+        "Source/Classes/**/*.*"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [
+        "NJKWebViewProgress"
+      ],
+      "frameworks": [],
+      "resources": [
+        "Source/Resources/*.*",
+        "Source/Scripts/*.js"
+      ]
+    },
+    "ECPhoneNumberFormatter": {
+      "name": "ECPhoneNumberFormatter",
+      "module": "ECPhoneNumberFormatter",
+      "version": "0.1.1",
+      "spec_checksum": "061041e7715f8d3f2e8e2a069ddf28c52f7bd314",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/ECPhoneNumberFormatter.podspec.json",
+      "source": {
+        "git": "https://github.com/enriquez/ECPhoneNumberFormatter.git",
+        "tag": "0.1.1"
+      },
+      "source_files": [
+        "ECPhoneNumberFormatter"
+      ],
+      "exclude_files": [],
+      "requires_arc": false,
+      "dependencies": [],
+      "frameworks": [],
+      "resources": []
+    },
+    "FLKAutoLayout": {
+      "name": "FLKAutoLayout",
+      "module": "FLKAutoLayout",
+      "version": "0.1.1",
+      "spec_checksum": "95b12c5cd9652100235140b68652f063f7437851",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/FLKAutoLayout.podspec.json",
+      "source": {
+        "git": "https://github.com/dkduck/FLKAutoLayout.git",
+        "tag": "0.1.1"
+      },
+      "source_files": [
+        "FLKAutoLayout/*"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [],
+      "resources": []
+    },
+    "ISO8601DateFormatter": {
+      "name": "ISO8601DateFormatter",
+      "module": "ISO8601DateFormatter",
+      "version": "0.8",
+      "spec_checksum": "4551b6ce4f83185425f583b0b3feb3c7b59b942c",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/ISO8601DateFormatter.podspec.json",
+      "source": {
+        "git": "https://github.com/boredzo/iso-8601-date-formatter.git",
+        "tag": "0.8"
+      },
+      "source_files": [
+        "ISO8601DateFormatter.{h,m}"
+      ],
+      "exclude_files": [
+        "test*.m",
+        "timetrial.m",
+        "unparse*.m",
+        "ISO8601ForCocoa/ISO8601ForCocoa{,Touch}Tests/**/*.m"
+      ],
+      "requires_arc": false,
+      "dependencies": [],
+      "frameworks": [],
+      "resources": []
+    },
+    "NJKWebViewProgress": {
+      "name": "NJKWebViewProgress",
+      "module": "NJKWebViewProgress",
+      "version": "0.2.3",
+      "spec_checksum": "f481fd424cb5ecc27eacae11b5397db92fba9a4d",
+      "spec_checksum_verified": true,
+      "spec_source": "checkout:NJKWebViewProgress/NJKWebViewProgress.podspec",
+      "source": {
+        "git": "https://github.com/ninjinkun/NJKWebViewProgress.git",
+        "tag": "v0.2.3"
+      },
+      "source_files": [
+        "NJKWebViewProgress/NJKWebViewProgress.{h,m}",
+        "NJKWebViewProgress/NJKWebViewProgressView.{h,m}"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [],
+      "resources": []
+    },
+    "ORStackView": {
+      "name": "ORStackView",
+      "module": "ORStackView",
+      "version": "2.0.0",
+      "spec_checksum": "5df6b1b990b0648d8ef6f69f89361ea8648e8f64",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/ORStackView.podspec.json",
+      "source": {
+        "git": "https://github.com/orta/ORStackView.git",
+        "tag": "2.0.0"
+      },
+      "source_files": [
+        "Classes/ios/*",
+        "Classes/ios/private/*"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [
+        "FLKAutoLayout"
+      ],
+      "frameworks": [],
+      "resources": []
+    },
+    "SDWebImage": {
+      "name": "SDWebImage",
+      "module": "SDWebImage",
+      "version": "3.8.2",
+      "spec_checksum": "098e97e6176540799c27e804c96653ee0833d13c",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/SDWebImage.podspec.json",
+      "source": {
+        "git": "https://github.com/rs/SDWebImage.git",
+        "tag": "3.8.2"
+      },
+      "source_files": [
+        "SDWebImage/{NS,SD,UI}*.{h,m}"
+      ],
+      "exclude_files": [
+        "SDWebImage/UIImage+WebP.{h,m}"
+      ],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "ImageIO"
+      ],
+      "resources": []
+    },
+    "SVProgressHUD": {
+      "name": "SVProgressHUD",
+      "module": "SVProgressHUD",
+      "version": "2.2.3",
+      "spec_checksum": "a5eaeff664a82dda89809c409ace40183ce91523",
+      "spec_checksum_verified": true,
+      "spec_source": "checkout:SVProgressHUD/SVProgressHUD.podspec",
+      "source": {
+        "git": "https://github.com/SVProgressHUD/SVProgressHUD.git",
+        "tag": "2.2.3"
+      },
+      "source_files": [
+        "SVProgressHUD/*.{h,m}"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "QuartzCore"
+      ],
+      "resources": [
+        "SVProgressHUD/SVProgressHUD.bundle"
+      ]
+    },
+    "UIImageViewAligned": {
+      "name": "UIImageViewAligned",
+      "module": "UIImageViewAligned",
+      "version": "0.0.1",
+      "spec_checksum": "5726c9651898342c19588a02e2115cace59342ee",
+      "spec_checksum_verified": true,
+      "spec_source": "checkout:UIImageViewAligned/UIImageViewAligned.podspec",
+      "source": {
+        "git": "https://github.com/ashfurrow/UIImageViewAligned.git",
+        "tag": "0.0.1.unofficial"
+      },
+      "source_files": [
+        "UIImageViewAligned"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "UIKit"
+      ],
+      "resources": []
+    },
+    "UIView-BooleanAnimations": {
+      "name": "UIView+BooleanAnimations",
+      "module": "UIView_BooleanAnimations",
+      "version": "1.0.2",
+      "spec_checksum": "a760be9a066036e55f298b7b7350a6cb14cfcd97",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/UIView+BooleanAnimations.podspec.json",
+      "source": {
+        "git": "https://github.com/ashfurrow/UIView-BooleanAnimations.git",
+        "tag": "1.0.2"
+      },
+      "source_files": [
+        "UIView+BooleanAnimations.{h,m}"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [
+        "UIKit"
+      ],
+      "resources": []
+    },
+    "XNGMarkdownParser": {
+      "name": "XNGMarkdownParser",
+      "module": "XNGMarkdownParser",
+      "version": "0.3.2",
+      "spec_checksum": "aed98c14f0c0eb20064184ddf9bac26c482722b2",
+      "spec_checksum_verified": true,
+      "spec_source": "trunkspecs/XNGMarkdownParser.podspec.json",
+      "source": {
+        "git": "https://github.com/xing/XNGMarkdownParser.git",
+        "tag": "0.3.2"
+      },
+      "source_files": [
+        "src/*.{h,m,c}"
+      ],
+      "exclude_files": [],
+      "requires_arc": true,
+      "dependencies": [],
+      "frameworks": [],
+      "resources": []
+    }
+  },
+  "_comment_podspecs": "Each pod's locked spec as `pod ipc spec` resolves it (subspecs the lock selects flattened: SDWebImage/Core, NJKWebViewProgress/Core+ProgressView). spec_checksum_verified: sha1 of the spec file (artsy/Specs or trunk) equals the Podfile.lock SPEC CHECKSUMS entry. requires_arc defaults to true (CocoaPods 1.x)."
 }
