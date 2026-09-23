@@ -79,7 +79,7 @@ struct _UIKeyboardResolved {
             keyboard = v.keyboardType
             ret = v.returnKeyType
             text = v.text ?? ""
-            cursor = v.caretOffset
+            cursor = v.selectedRange.upperBound
         }
 
         r.shifted = shouldShift(text: text, cursor: cursor, autocap: autocap)

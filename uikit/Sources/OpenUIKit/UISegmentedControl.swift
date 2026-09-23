@@ -72,6 +72,8 @@ open class UISegmentedControl: UIControl {
 
     private var titles: [String] = []
     private var labels: [UISegmentLabel] = []
+    /// Per-segment enabled flags, parallel to `titles`.
+    private var segmentEnabled: [Bool] = []
 
     public var selectedSegmentIndex: Int = UISegmentedControl.noSegment {
         didSet {
@@ -110,6 +112,9 @@ open class UISegmentedControl: UIControl {
     public func insertSegment(withTitle title: String?, at index: Int, animated: Bool = false) {
         let i = Swift.max(0, Swift.min(index, titles.count))
         titles.insert(title ?? "", at: i)
+        // MEASURED (textviewinputprobe `insert z at 0`): a new segment is
+        // enabled and existing flags shift with their segments.
+        segmentEnabled.insert(true, at: i)
         let label = UISegmentLabel()
         label.font = .systemFont(ofSize: UISegmentedControl.titleFontSize)
         label.textAlignment = .center
@@ -122,15 +127,26 @@ open class UISegmentedControl: UIControl {
     public func removeSegment(at index: Int, animated: Bool = false) {
         guard titles.indices.contains(index) else { return }
         titles.remove(at: index)
+        segmentEnabled.remove(at: index)
         labels.remove(at: index).removeFromSuperview()
-        if selectedSegmentIndex >= titles.count {
-            selectedSegmentIndex = UISegmentedControl.noSegment
+        // MEASURED Tools/oracle2/textviewinputprobe (iPhone 16 / iOS 26.1),
+        // selectedSegmentIndex before -> after removeSegment(at:):
+        //   sel -1, remove 0 -> -2      sel 2, remove 0 -> 1
+        //   sel 1, remove 1 (selected) -> -2      sel 0, remove 1 -> 0
+        // i.e. removing the selected segment reads -2, and a removal before
+        // the selection -- or any removal with no selection -- decrements.
+        let sel = selectedSegmentIndex
+        if index == sel {
+            selectedSegmentIndex = -2
+        } else if sel < 0 || index < sel {
+            selectedSegmentIndex = sel - 1
         }
         setNeedsLayout()
     }
 
     public func removeAllSegments() {
         titles.removeAll()
+        segmentEnabled.removeAll()
         for l in labels { l.removeFromSuperview() }
         labels.removeAll()
         selectedSegmentIndex = UISegmentedControl.noSegment
@@ -142,6 +158,28 @@ open class UISegmentedControl: UIControl {
         titles[index] = title ?? ""
         updateLabels()
         setNeedsLayout()
+    }
+
+    /// MEASURED (textviewinputprobe, iPhone 16 / iOS 26.1): segments start
+    /// enabled; disabling the SELECTED segment deselects it (reads -1);
+    /// a disabled segment can still be selected programmatically; the
+    /// control's own `isEnabled` does not change the per-segment flags.
+    /// An index outside 0..<numberOfSegments raises NSRangeException
+    /// ("index 7 beyond bounds [0 .. 2]"); here it traps.
+    public func setEnabled(_ enabled: Bool, forSegmentAt segment: Int) {
+        precondition(segmentEnabled.indices.contains(segment),
+                     "setEnabled(_:forSegmentAt:): index \(segment) beyond bounds [0 .. \(segmentEnabled.count - 1)]")
+        segmentEnabled[segment] = enabled
+        if !enabled, segment == selectedSegmentIndex {
+            selectedSegmentIndex = UISegmentedControl.noSegment
+        }
+    }
+
+    /// MEASURED: out-of-range indices raise NSRangeException; here it traps.
+    public func isEnabledForSegment(at segment: Int) -> Bool {
+        precondition(segmentEnabled.indices.contains(segment),
+                     "isEnabledForSegment(at:): index \(segment) beyond bounds [0 .. \(segmentEnabled.count - 1)]")
+        return segmentEnabled[segment]
     }
 
     public func titleForSegment(at index: Int) -> String? {

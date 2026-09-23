@@ -26,7 +26,28 @@
 // Editing: tap focuses (isEditable), caret at nearest glyph boundary;
 // insertText/deleteBackward edit at the caret; left/right/up/down move it;
 // return inserts a newline. The view auto-scrolls to keep the caret
-// visible. Selection is out of scope (docs/KNOWN_GAPS.md).
+// visible.
+//
+// UITextInput document model (UTF-16 offsets, like UITextField): MEASURED
+// iPhone 16 / iOS 26.1, Tools/oracle2/textviewinputprobe/transcript-ios26.1.txt
+// (scenario Tests/OpenUIKitTests/TextViewTextInputScenario.swift):
+//   - programmatic `text` / `attributedText`: selection moves to the end of
+//     the new text; `textViewDidChangeSelection` only if it moved; no
+//     `textViewDidChange`, no notification.
+//   - `insertText` / `deleteBackward` / `replace(_:withText:)` work without
+//     first responder and never ask `shouldChangeTextIn` (only the keyboard
+//     path does); each edit reports didChangeSelection (if the selection
+//     moved, or marked text was committed), then textViewDidChange, then
+//     UITextViewTextDidChangeNotification. `replace` puts the caret at the
+//     end of the replacement.
+//   - marked text: `setMarkedText` replaces marked ?? selection; the
+//     selection may leave the marked range without unmarking it;
+//     `unmarkText` collapses the selection to its start and reports
+//     didChangeSelection twice, then didChange + notification; clearing
+//     marked text (nil / "") reports two full rounds.
+//   - `selectedTextRange = nil` reads back nil while `selectedRange` reads
+//     {0, 0}; the next selection write restores a range.
+//   - becoming first responder keeps the selection.
 
 // M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
 // defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
@@ -52,7 +73,13 @@ import Foundation
 #endif
 #if canImport(Foundation)
 import struct Foundation.URL
+// `Notification.Name` for the public notification names (see UITextField).
+import struct Foundation.Notification
 #endif
+
+/// Identity carried by every position minted for one text view (positions
+/// from another editor are rejected, as in UITextField).
+private final class UITextViewDocumentIdentity {}
 
 
 /// Content canvas (private name — layout dumps stay comparable; real
@@ -187,7 +214,19 @@ public extension UITextViewDelegate {
 @objc(UITextView)
 #endif
 @preconcurrency @MainActor
-open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretHosting {
+open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaretHosting {
+
+    /// MEASURED (textviewinputprobe): posted after didChange for every
+    /// UITextInput edit (insertText, deleteBackward, replace, marked text),
+    /// never for programmatic `text` assignment. Object = the text view.
+    nonisolated public static let textDidChangeNotification =
+        Notification.Name("UITextViewTextDidChangeNotification")
+    /// MEASURED: posted after `textViewDidBeginEditing`.
+    nonisolated public static let textDidBeginEditingNotification =
+        Notification.Name("UITextViewTextDidBeginEditingNotification")
+    /// MEASURED: posted after `textViewDidEndEditing`.
+    nonisolated public static let textDidEndEditingNotification =
+        Notification.Name("UITextViewTextDidEndEditingNotification")
 
     /// UIKit's `delegate` on a text view is the text-view delegate; because
     /// `UITextViewDelegate` refines `UIScrollViewDelegate`, assigning it also
@@ -227,11 +266,20 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         didSet {
             if text == nil { text = "" }
             _attributed = nil
-            if caretOffset > UITextCaretMath.scalarCount(text) {
-                caretOffset = UITextCaretMath.scalarCount(text)
-            }
             contentDidChange()
+            if _textMutationDepth == 0 { _textWasAssigned() }
         }
+    }
+
+    /// > 0 while OpenUIKit itself rewrites `text` (edits, storage sync):
+    /// those paths manage the selection and delegate calls themselves.
+    final var _textMutationDepth = 0
+
+    /// Programmatic assignment (MEASURED): marked text is dropped and the
+    /// selection moves to the end; didChangeSelection only if it moved.
+    final func _textWasAssigned() {
+        _markedUTF16Range = nil
+        _storeSelection(NSRange(location: _utf16Length, length: 0), notify: true)
     }
 
     /// Attributed content (M12). Wrapping and drawing go through
@@ -252,10 +300,8 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             // Assign through the storage directly (the `text` observer would
             // clear `_attributed` again).
             _plainBacking = s
-            if caretOffset > UITextCaretMath.scalarCount(s) {
-                caretOffset = UITextCaretMath.scalarCount(s)
-            }
             contentDidChange()
+            _textWasAssigned()
         }
     }
     final var _attributed: NSAttributedString?
@@ -264,7 +310,9 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         get { text }
         set {
             let saved = _attributed
+            _textMutationDepth += 1
             text = newValue
+            _textMutationDepth -= 1
             _attributed = saved
         }
     }
@@ -332,8 +380,25 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     final let contentView = UITextViewCanvasView()
     final var caretView: UIView?
     public private(set) final var isEditing = false
-    /// Caret position as a unicode-scalar offset into `text`.
-    public internal(set) final var caretOffset: Int = 0
+    /// Caret position as a unicode-scalar offset into `text` (the end of the
+    /// selection). Kept for the M8 caret/line math; `selectedRange` is the
+    /// app API. Setting it collapses the selection without delegate calls.
+    public internal(set) final var caretOffset: Int {
+        get { _scalarOffset(forUTF16: _selectedUTF16Range.upperBound) }
+        set {
+            let n = Swift.min(Swift.max(0, newValue), UITextCaretMath.scalarCount(text))
+            _storeSelection(NSRange(location: _utf16Offset(forScalar: n), length: 0),
+                            notify: false)
+        }
+    }
+
+    // UITextInput state (UTF-16 offsets into `text`).
+    private final let _documentIdentity = UITextViewDocumentIdentity()
+    final var _selectedUTF16Range = NSRange(location: 0, length: 0)
+    /// MEASURED: after `selectedTextRange = nil` the getter reads nil while
+    /// `selectedRange` reads {0, 0}.
+    final var _selectedTextRangeIsNil = false
+    final var _markedUTF16Range: NSRange?
     /// Preferred caret x (text space) preserved across up/down moves.
     final var preferredCaretX: CGFloat?
 
@@ -520,13 +585,15 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         }
         guard super.becomeFirstResponder() else { return false }
         if !isEditing {
+            // MEASURED (textviewinputprobe `becomeFirstResponder`): the
+            // selection is kept; shouldBegin, didBegin, then the notification.
             isEditing = true
-            caretOffset = UITextCaretMath.scalarCount(text)
             UITextInputState.focus(self, at: OpenUIKitRuntime.animationTime)
             ensureCaretView()
             caretView?.isHidden = false
             setNeedsLayout()
             textViewDelegate?.textViewDidBeginEditing(self)
+            NotificationCenter.default.post(name: Self.textDidBeginEditingNotification, object: self)
         }
         // Same as UITextField: keyboard sync during super runs before
         // caretOffset is at document end. MEASURED kbstateprobe textview
@@ -546,6 +613,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             UITextInputState.unfocus(self)
             caretView?.isHidden = true
             textViewDelegate?.textViewDidEndEditing(self)
+            NotificationCenter.default.post(name: Self.textDidEndEditingNotification, object: self)
         }
         return r
     }
@@ -613,45 +681,314 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     public final var hasText: Bool { !text.isEmpty }
 
-    public final func insertText(_ str: String) {
-        guard isEditing else { return }
-        if let d = textViewDelegate,
-           !d.textView(self, shouldChangeTextIn: NSRange(location: caretOffset, length: 0),
-                       replacementText: str) { return }
-        let i = UITextCaretMath.index(text, atScalarOffset: caretOffset)
-        text.insert(contentsOf: str, at: i)
-        caretOffset += UITextCaretMath.scalarCount(str)
-        preferredCaretX = nil
-        afterEdit()
+    /// MEASURED: works without first responder, never asks
+    /// `shouldChangeTextIn`; replaces marked text, else the selection.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func insertText(_ str: String) {
+        let hadMarked = _markedUTF16Range != nil
+        let target = _markedUTF16Range ?? _selectedUTF16Range
+        _edit(target, with: str, forceSelectionNotify: hadMarked)
     }
 
-    public final func deleteBackward() {
-        guard isEditing, caretOffset > 0 else { return }
+    /// MEASURED: deletes the selection, else the composed character before
+    /// the caret (a whole surrogate pair), without first responder and
+    /// without asking the delegate.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func deleteBackward() {
+        guard let target = _deleteBackwardRange() else { return }
+        _edit(target, with: "", forceSelectionNotify: false)
+    }
+
+    final func _deleteBackwardRange() -> NSRange? {
+        let sel = _selectedUTF16Range
+        if sel.length > 0 { return sel }
+        guard sel.location > 0 else { return nil }
+        let bounds = _characterBoundaries
+        let previous = bounds.last(where: { $0 < sel.location }) ?? 0
+        let end = bounds.contains(sel.location)
+            ? sel.location : (bounds.first(where: { $0 > sel.location }) ?? _utf16Length)
+        return NSRange(location: previous, length: end - previous)
+    }
+
+    /// Keyboard path (host `UIWindow.sendText` / backspace / return): the
+    /// same edit, gated by `textView(_:shouldChangeTextIn:replacementText:)`
+    /// as UIKit's keyboard does.
+    final func _keyboardInsertText(_ str: String) {
+        guard isEditing else { return }
+        let target = _markedUTF16Range ?? _selectedUTF16Range
         if let d = textViewDelegate,
-           !d.textView(self, shouldChangeTextIn: NSRange(location: caretOffset - 1, length: 1),
-                       replacementText: "") { return }
-        let end = UITextCaretMath.index(text, atScalarOffset: caretOffset)
-        let start = UITextCaretMath.index(text, atScalarOffset: caretOffset - 1)
-        text.removeSubrange(start..<end)
-        caretOffset -= 1
+           !d.textView(self, shouldChangeTextIn: target, replacementText: str) { return }
+        insertText(str)
+    }
+
+    final func _keyboardDeleteBackward() {
+        guard isEditing, let target = _deleteBackwardRange() else { return }
+        if let d = textViewDelegate,
+           !d.textView(self, shouldChangeTextIn: target, replacementText: "") { return }
+        _edit(target, with: "", forceSelectionNotify: false)
+    }
+
+    /// One edit: replace `range`, caret after the replacement, marked text
+    /// dropped, then (MEASURED order) didChangeSelection — when the
+    /// selection moved or `forceSelectionNotify` — didChange, notification.
+    final func _edit(_ range: NSRange, with str: String, forceSelectionNotify: Bool) {
+        _replaceText(range, with: str)
+        _markedUTF16Range = nil
+        let moved = _storeSelection(NSRange(location: range.location + str.utf16.count, length: 0),
+                                    notify: false)
         preferredCaretX = nil
         afterEdit()
+        _emitEditRound(selection: moved || forceSelectionNotify)
+    }
+
+    final func _emitEditRound(selection: Bool) {
+        if selection { textViewDelegate?.textViewDidChangeSelection(self) }
+        textViewDelegate?.textViewDidChange(self)
+        NotificationCenter.default.post(name: Self.textDidChangeNotification, object: self)
     }
 
     final func afterEdit() {
         contentDidChange()
-        caretView?.isHidden = false
+        caretView?.isHidden = !isEditing
         layoutIfNeeded()
         scrollCaretToVisible()
-        textViewDelegate?.textViewDidChange(self)
+    }
+
+    // MARK: UITextInput document model (UTF-16)
+
+    final var _utf16Length: Int { text.utf16.count }
+
+    /// Replace a UTF-16 range of `text` (no selection or delegate work).
+    final func _replaceText(_ range: NSRange, with str: String) {
+        var units = Array(text.utf16)
+        let r = _clamped(range)
+        units.replaceSubrange(r.location..<r.upperBound, with: str.utf16)
+        _textMutationDepth += 1
+        text = String(decoding: units, as: UTF16.self)
+        _textMutationDepth -= 1
+    }
+
+    final func _clampedOffset(_ o: Int) -> Int { Swift.min(Swift.max(0, o), _utf16Length) }
+
+    final func _clamped(_ r: NSRange) -> NSRange {
+        let start = _clampedOffset(r.location)
+        let (sum, overflow) = r.location.addingReportingOverflow(Swift.max(0, r.length))
+        let end = _clampedOffset(overflow ? Int.max : sum)
+        return NSRange(location: Swift.min(start, end), length: Swift.abs(end - start))
+    }
+
+    /// Store the selection; true when it changed. `notify` sends
+    /// didChangeSelection on a change (MEASURED: an unchanged assignment
+    /// sends nothing).
+    @discardableResult
+    final func _storeSelection(_ r: NSRange, notify: Bool) -> Bool {
+        let clamped = _clamped(r)
+        _selectedTextRangeIsNil = false
+        guard clamped != _selectedUTF16Range else { return false }
+        _selectedUTF16Range = clamped
+        if isEditing { caretView?.isHidden = false }
+        setNeedsLayout()
+        if notify { textViewDelegate?.textViewDidChangeSelection(self) }
+        return true
+    }
+
+    /// UTF-16 offsets at Character boundaries (backspace granularity).
+    final var _characterBoundaries: [Int] {
+        var result: [Int] = [0]
+        var o = 0
+        for ch in text { o += ch.utf16.count; result.append(o) }
+        return result
+    }
+
+    /// Scalar offset containing UTF-16 offset `u` (a position inside a
+    /// surrogate pair maps to that pair's scalar).
+    final func _scalarOffset(forUTF16 u: Int) -> Int {
+        var units = 0, n = 0
+        for sc in text.unicodeScalars {
+            let w = sc.value > 0xFFFF ? 2 : 1
+            if units + w > u { break }
+            units += w
+            n += 1
+        }
+        return n
+    }
+
+    final func _utf16Offset(forScalar n: Int) -> Int {
+        var units = 0, i = 0
+        for sc in text.unicodeScalars {
+            if i == n { break }
+            units += sc.value > 0xFFFF ? 2 : 1
+            i += 1
+        }
+        return units
+    }
+
+    final func _position(_ o: Int) -> UITextPosition {
+        UITextPosition(document: _documentIdentity, utf16Offset: o)
+    }
+
+    final func _offset(_ p: UITextPosition) -> Int? {
+        guard p._document === _documentIdentity, let o = p._utf16Offset,
+              o >= 0, o <= _utf16Length else { return nil }
+        return o
+    }
+
+    final func _range(_ r: UITextRange) -> NSRange? {
+        guard r._isOpenUIKitRange, let a = _offset(r.start), let b = _offset(r.end) else { return nil }
+        return NSRange(location: Swift.min(a, b), length: Swift.abs(b - a))
+    }
+
+    final func _textRange(_ r: NSRange) -> UITextRange {
+        UITextRange(start: _position(r.location), end: _position(r.upperBound))
+    }
+
+    /// UIKit's `selectedRange` (UTF-16). MEASURED: a fresh view reads {0, 0};
+    /// assignment reports didChangeSelection only when it changes.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var selectedRange: NSRange {
+        get { _selectedUTF16Range }
+        set { _storeSelection(newValue, notify: true) }
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var selectedTextRange: UITextRange? {
+        get { _selectedTextRangeIsNil ? nil : _textRange(_selectedUTF16Range) }
+        set {
+            guard let newValue else {
+                _storeSelection(NSRange(location: 0, length: 0), notify: true)
+                _selectedTextRangeIsNil = true
+                return
+            }
+            guard let r = _range(newValue) else { return }
+            _storeSelection(r, notify: true)
+        }
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var markedTextRange: UITextRange? {
+        _markedUTF16Range.map(_textRange)
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var beginningOfDocument: UITextPosition { _position(0) }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var endOfDocument: UITextPosition { _position(_utf16Length) }
+
+    /// MEASURED: a range splitting a surrogate pair yields U+FFFD for the
+    /// lone half once bridged to a Swift String.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(textInRange:)
+#endif
+    open dynamic func text(in range: UITextRange) -> String? {
+        guard let r = _range(range) else { return nil }
+        let units = Array(text.utf16)
+        return String(decoding: units[r.location..<r.upperBound], as: UTF16.self)
+    }
+
+    /// MEASURED: no `shouldChangeTextIn`; caret at the end of the
+    /// replacement; didChangeSelection only if the selection moved, then
+    /// didChange + notification (even when the text is unchanged).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(replaceRange:withText:)
+#endif
+    open dynamic func replace(_ range: UITextRange, withText text: String) {
+        guard let r = _range(range) else { return }
+        _edit(r, with: text, forceSelectionNotify: false)
+    }
+
+    /// MEASURED: a reversed pair is normalized (textRange(3, 1) = [1, 3]).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(textRangeFromPosition:toPosition:)
+#endif
+    open dynamic func textRange(from fromPosition: UITextPosition,
+                                to toPosition: UITextPosition) -> UITextRange? {
+        guard let a = _offset(fromPosition), let b = _offset(toPosition) else { return nil }
+        return _textRange(NSRange(location: Swift.min(a, b), length: Swift.abs(b - a)))
+    }
+
+    /// MEASURED: nil outside [0, length]; offsets inside a surrogate pair
+    /// are valid positions.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(positionFromPosition:offset:)
+#endif
+    open dynamic func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
+        guard let start = _offset(position) else { return nil }
+        let (sum, overflow) = start.addingReportingOverflow(offset)
+        guard !overflow, sum >= 0, sum <= _utf16Length else { return nil }
+        return _position(sum)
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(offsetFromPosition:toPosition:)
+#endif
+    open dynamic func offset(from: UITextPosition, to: UITextPosition) -> Int {
+        guard let a = _offset(from), let b = _offset(to) else { return 0 }
+        return b - a
+    }
+
+    /// MEASURED: replaces marked ?? selection; the selection lands at
+    /// `selectedRange` relative to the marked text; one round of
+    /// didChangeSelection / didChange / notification. nil or "" deletes the
+    /// marked text and reports two rounds.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+        guard let markedText, !markedText.isEmpty else {
+            // Without marked text this is not measured; nothing happens.
+            guard let marked = _markedUTF16Range else { return }
+            _edit(marked, with: "", forceSelectionNotify: true)
+            _emitEditRound(selection: true)
+            return
+        }
+        let oldMarked = _markedUTF16Range
+        let target = oldMarked ?? _selectedUTF16Range
+        _replaceText(target, with: markedText)
+        let length = markedText.utf16.count
+        let marked = NSRange(location: target.location, length: length)
+        _markedUTF16Range = marked
+        let start = Swift.min(Swift.max(0, selectedRange.location), length)
+        let len = Swift.min(Swift.max(0, selectedRange.length), length - start)
+        let moved = _storeSelection(NSRange(location: target.location + start, length: len),
+                                    notify: false)
+        preferredCaretX = nil
+        afterEdit()
+        _emitEditRound(selection: moved || oldMarked != marked)
+    }
+
+    /// MEASURED: the selection collapses to its start; didChangeSelection
+    /// twice, then didChange + notification. No marked text: nothing.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func unmarkText() {
+        guard _markedUTF16Range != nil else { return }
+        _markedUTF16Range = nil
+        _storeSelection(NSRange(location: _selectedUTF16Range.location, length: 0), notify: false)
         textViewDelegate?.textViewDidChangeSelection(self)
+        _emitEditRound(selection: true)
     }
 
     final func handleKey(_ key: UIKeyEventKey) {
         guard isEditing else { return }
         switch key {
         case .backspace:
-            deleteBackward()
+            _keyboardDeleteBackward()
             return
         case .left:
             if caretOffset > 0 { caretOffset -= 1 }
@@ -662,7 +999,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         case .up, .down:
             moveCaretVertically(by: key == .down ? 1 : -1)
         case .return:
-            insertText("\n")
+            _keyboardInsertText("\n")
             return
         }
         caretView?.isHidden = false
@@ -692,6 +1029,11 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     /// (line index, scalar offset within the line) for the caret.
     final func caretLine(in runs: [LineRun]) -> (Int, Int)? {
+        caretLine(in: runs, at: caretOffset)
+    }
+
+    /// (line index, scalar offset within the line) for scalar offset `caretOffset`.
+    final func caretLine(in runs: [LineRun], at caretOffset: Int) -> (Int, Int)? {
         for (i, r) in runs.enumerated() {
             if caretOffset < r.end { return (i, Swift.max(0, caretOffset - r.start)) }
             if caretOffset == r.end {
@@ -705,6 +1047,96 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         }
         guard let last = runs.indices.last else { return nil }
         return (last, runs[last].end - runs[last].start)
+    }
+
+    // MARK: UITextInput geometry
+    //
+    // MEASURED textviewinputprobe (iPhone 16 / iOS 26.1, "geometry" lines;
+    // 17 pt and 12 pt system font, 320 pt wide, default insets):
+    //   pitch          P = lineHeight ceiled to the pixel (20.33 @ 17 pt 3x)
+    //   caretRect      x = text x - 1, y = floor(top - 0.75) + line * P
+    //                  (7, 27.33), width 2, height floor(lineHeight + 2)
+    //                  (22 @ 17 pt, 16 @ 12 pt).
+    //   firstRect      empty range: (text x, top + line * P, 0, P);
+    //                  within one line: caret y/height from start to end x;
+    //                  continuing past the line: to the fragment's end
+    //                  (width - padding), height P + 1 (21.33).
+    //   selectionRects one per line fragment spanned (count measured only).
+    // Text x uses the port's glyph advances (within 0.5 pt of Apple's here).
+
+    /// (line, x in view space) for UTF-16 offset `o`.
+    final func _lineAndX(forUTF16 o: Int) -> (line: Int, x: CGFloat) {
+        let runs = lineRuns()
+        let s = _scalarOffset(forUTF16: o)
+        guard let (line, within) = caretLine(in: runs, at: s) else {
+            return (0, textContainerInset.left + UITextView.lineFragmentPadding)
+        }
+        let scale = traitCollection.displayScale > 0 ? traitCollection.displayScale : 2
+        let px = FontEngine.roundToPixel(
+            UITextCaretMath.prefixWidth(String(runs[line].text), count: within,
+                                        font: effectiveFont), scale: scale)
+        return (line, textContainerInset.left + UITextView.lineFragmentPadding + px)
+    }
+
+    final var _linePitch: CGFloat {
+        let scale = traitCollection.displayScale > 0 ? traitCollection.displayScale : 2
+        return FontEngine.ceilToPixel(lineHeight, scale: scale)
+    }
+
+    final func _caretY(line: Int) -> CGFloat {
+        (textContainerInset.top - 0.75).rounded(.down) + CGFloat(line) * _linePitch
+    }
+
+    final var _caretHeight: CGFloat { (lineHeight + 2).rounded(.down) }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(caretRectForPosition:)
+#endif
+    open dynamic func caretRect(for position: UITextPosition) -> CGRect {
+        guard let o = _offset(position) else { return .zero }
+        let (line, x) = _lineAndX(forUTF16: o)
+        return CGRect(x: x - 1, y: _caretY(line: line), width: 2, height: _caretHeight)
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(firstRectForRange:)
+#endif
+    open dynamic func firstRect(for range: UITextRange) -> CGRect {
+        guard let r = _range(range) else { return .zero }
+        let (line, x1) = _lineAndX(forUTF16: r.location)
+        if r.length == 0 {
+            return CGRect(x: x1, y: textContainerInset.top + CGFloat(line) * _linePitch,
+                          width: 0, height: _linePitch)
+        }
+        let (endLine, x2) = _lineAndX(forUTF16: r.upperBound)
+        if endLine == line {
+            return CGRect(x: x1, y: _caretY(line: line), width: Swift.max(0, x2 - x1),
+                          height: _caretHeight)
+        }
+        let right = bounds.width - textContainerInset.right - UITextView.lineFragmentPadding
+        return CGRect(x: x1, y: _caretY(line: line), width: Swift.max(0, right - x1),
+                      height: _linePitch + 1)
+    }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(selectionRectsForRange:)
+#endif
+    open dynamic func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+        guard let r = _range(range), r.length > 0 else { return [] }
+        let (l1, x1) = _lineAndX(forUTF16: r.location)
+        let (l2, x2) = _lineAndX(forUTF16: r.upperBound)
+        let left = textContainerInset.left + UITextView.lineFragmentPadding
+        let right = bounds.width - textContainerInset.right - UITextView.lineFragmentPadding
+        var out: [UITextSelectionRect] = []
+        for line in l1...Swift.max(l1, l2) {
+            let a = line == l1 ? x1 : left
+            let b = line == l2 ? x2 : right
+            out.append(UITextSelectionRect(
+                rect: CGRect(x: a, y: _caretY(line: line), width: Swift.max(0, b - a),
+                             height: _caretHeight),
+                containsStart: line == l1, containsEnd: line == l2))
+        }
+        return out
     }
 
     // MARK: Caret geometry (measured — see header)
@@ -843,8 +1275,14 @@ extension UITextView: NSTextStorageDelegate {
         suppressingStorage = true
         _attributed = NSAttributedString(attributedString: textStorage)
         let saved = _attributed
+        _textMutationDepth += 1
         text = textStorage.string
+        _textMutationDepth -= 1
         _attributed = saved
+        // Direct storage edits are not measured for selection side effects:
+        // keep the selection, clamped to the new length, silently.
+        _storeSelection(_selectedUTF16Range, notify: false)
+        if let m = _markedUTF16Range, m.upperBound > _utf16Length { _markedUTF16Range = nil }
         suppressingStorage = false
         contentView.setNeedsDisplay()
         setNeedsLayout()
