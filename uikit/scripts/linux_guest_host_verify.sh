@@ -65,40 +65,70 @@ def top(t):
 checks = [
     (0.5, 'launch: URL bar first responder, keyboard up',
      lambda: state[0.5]['keyboardUp'] and field(0.5)['isFirstResponder']),
-    (1.6, 'tap cancel: editing ends, keyboard down',
+    (1.6, 'tap Cancel: editing ends, keyboard down',
      lambda: not state[1.6]['keyboardUp'] and not field(1.6)['isEditing']),
-    (2.6, 'tap URL bar: editing, keyboard up',
-     lambda: state[2.6]['keyboardUp'] and field(2.6)['isEditing']),
+    (2.6, 'tap URL bar: editing, keyboard up, field 263 pt wide (iOS 26.1)',
+     lambda: state[2.6]['keyboardUp'] and field(2.6)['isEditing']
+     and field(2.6)['frameInWindow'] == [48, 28.5, 263, 39.5]),
     (3.3, 'type "mozilla": the field holds it',
      lambda: field(3.3)['text'] == 'mozilla' and field(3.3)['isEditing']),
-    (4.2, 'tap cancel: editing ends, field cleared',
-     lambda: not state[4.2]['keyboardUp'] and field(4.2)['text'] == ''),
-    (5.0, 'tap menu: Help / Settings platter',
-     lambda: 'contextMenuView' in state[5.0]['labels']
-     and {'Help', 'Settings'} <= set(state[5.0]['labels'])),
-    (6.0, 'tap Settings: SettingsViewController presented',
-     lambda: top(6.0) == 'SettingsViewController'),
-    (7.0, 'tap Theme: ThemeViewController pushed',
-     lambda: top(7.0) == 'ThemeViewController'),
-    (8.0, 'tap back: popped to SettingsViewController',
-     lambda: top(8.0) == 'SettingsViewController'),
-    (9.5, 'tap Done: Settings dismissed',
-     lambda: state[9.5]['presented'] == []),
+    (3.9, 'tap the keyboard\'s "a" key: "mozillaa"',
+     lambda: field(3.9)['text'] == 'mozillaa'),
+    (4.5, 'tap the keyboard\'s delete key: "mozilla"',
+     lambda: field(4.5)['text'] == 'mozilla'),
+    (5.5, 'tap Cancel: editing ends, field cleared',
+     lambda: not state[5.5]['keyboardUp'] and field(5.5)['text'] == ''),
+    (6.3, 'tap menu: Help / Settings platter',
+     lambda: 'contextMenuView' in state[6.3]['labels']
+     and {'Help', 'Settings'} <= set(state[6.3]['labels'])),
+    (7.3, 'tap Settings: SettingsViewController presented',
+     lambda: top(7.3) == 'SettingsViewController'),
+    (8.3, 'tap Theme: ThemeViewController pushed',
+     lambda: top(8.3) == 'ThemeViewController'),
+    (9.3, 'tap back: popped to SettingsViewController',
+     lambda: top(9.3) == 'SettingsViewController'),
+    (10.9, 'tap Done: Settings dismissed',
+     lambda: state[10.9]['presented'] == []),
 ]
 for t, what, ok in checks:
     assert ok(), 'FAILED t=%s %s: %s' % (t, what, json.dumps(state[t])[:600])
     print('  t=%-4s %s' % (t, what))
 pngs = {t: (run1 / (stem(t) + '.png')).read_bytes() for t in captures}
-# Each step that changes what is on screen must change the frame. (1.6 and
-# 4.2 are both the dismissed home screen; 9.5 is Done's completion
-# re-activating the URL bar, i.e. the 2.6 screen again.)
-for a, b in [(0.5, 1.6), (1.6, 2.6), (4.2, 5.0), (5.0, 6.0), (6.0, 7.0), (7.0, 8.0), (8.0, 9.5)]:
+# Each step that changes what is on screen must change the frame.
+for a, b in [(0.5, 1.6), (1.6, 2.6), (2.6, 3.3), (3.3, 3.9), (3.9, 4.5), (5.5, 6.3),
+             (6.3, 7.3), (7.3, 8.3), (8.3, 9.3), (9.3, 10.9)]:
     assert pngs[a] != pngs[b], 'frames t=%s and t=%s are identical' % (a, b)
-if pngs[2.6] == pngs[3.3]:
-    # Known gap, reported rather than hidden: the typed text is in the field
-    # (asserted above) but the port's editing-mode URL bar layout collapses
-    # the field to 40 pt, so the glyphs are not drawn.
-    print('  note: typed text not visible in the frame (URL bar editing layout gap)')
+# Typed text is DRAWN: the URL field's pixels (48..311 x 30..66 pt, 2x)
+# change when "mozilla" is typed, and the "a"/delete taps undo each other.
+import struct, zlib
+def rgba(png):
+    # Minimal PNG decode (8-bit RGBA, filter types 0-4) -- no PIL on the gate.
+    pos, w, h, idat = 8, 0, 0, b''
+    while pos < len(png):
+        n = struct.unpack('>I', png[pos:pos+4])[0]; kind = png[pos+4:pos+8]; body = png[pos+8:pos+8+n]
+        if kind == b'IHDR': w, h = struct.unpack('>II', body[:8])
+        if kind == b'IDAT': idat += body
+        pos += 12 + n
+    raw, stride, out, prev = zlib.decompress(idat), w * 4, [], bytearray(w * 4)
+    for y in range(h):
+        f, line = raw[y*(stride+1)], bytearray(raw[y*(stride+1)+1:(y+1)*(stride+1)])
+        for i in range(stride):
+            a = line[i-4] if i >= 4 else 0; b = prev[i]; c = prev[i-4] if i >= 4 else 0
+            if f == 1: line[i] = (line[i] + a) & 255
+            elif f == 2: line[i] = (line[i] + b) & 255
+            elif f == 3: line[i] = (line[i] + (a + b) // 2) & 255
+            elif f == 4:
+                p = a + b - c; pa, pb, pc = abs(p-a), abs(p-b), abs(p-c)
+                line[i] = (line[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        out.append(bytes(line)); prev = line
+    return w, out
+def region(png, x0, y0, x1, y1):
+    w, rows = rgba(png)
+    return b''.join(r[x0*4:x1*4] for r in rows[y0:y1])
+url = (96, 60, 622, 132)  # the URL field, device pixels
+assert region(pngs[2.6], *url) != region(pngs[3.3], *url), 'typed text is not drawn in the URL field'
+assert region(pngs[3.3], *url) == region(pngs[4.5], *url), '"a" then delete did not restore the field'
+print('  typed text drawn in the URL field; key tap + delete restore it')
 log = (work / 'run1.log').read_text()
 misses = [l for l in log.splitlines() if l.startswith('HOST_FULL_INK_MISSES')]
 print('%d captures byte-identical across 2 runs; %s' % (len(captures), misses[0][:80] if misses else 'no ink report'))

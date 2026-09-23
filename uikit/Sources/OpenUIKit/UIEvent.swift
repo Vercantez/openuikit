@@ -268,6 +268,12 @@ open class UIWindow: UIView {
     @discardableResult
     public func sendTouch(_ phase: UITouch.Phase, at point: CGPoint,
                           timestamp: TimeInterval, touchID: Int = 0) -> UITouch? {
+        // The software keyboard is a window above this one (iOS: a remote
+        // keyboard window): touches on its keys never reach the app.
+        if touchID == 0,
+           _UIKeyboardChrome.routeTouch(phase, at: point, appWindow: self, timestamp: timestamp) {
+            return nil
+        }
         let touch: UITouch
         switch phase {
         case .began:

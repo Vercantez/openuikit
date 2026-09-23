@@ -1546,6 +1546,16 @@ open class UIView: UIResponder, CALayerDelegate {
         // Layout entire subtree (top-down), like a simplified layout pass.
         _layoutSubtree()
     }
+    /// Live hosts: whether a `layoutIfNeeded()` on this subtree could do
+    /// anything — some view or its layer is marked for layout, or has
+    /// pending constraint updates. When false (and nothing visual changed)
+    /// a live host skips the pass; renders always lay out first.
+    public final var _hostSubtreeNeedsLayout: Bool {
+        if needsLayout || _needsUpdateConstraints || layer.needsLayout() { return true }
+        for s in subviews where s._hostSubtreeNeedsLayout { return true }
+        return false
+    }
+
     final func _layoutSubtree() {
         if needsLayout {
             // Clear before callbacks so setNeedsLayout() from inside an

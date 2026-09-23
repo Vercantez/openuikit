@@ -32,6 +32,13 @@ public enum OpenUIKitRuntime {
     /// When empty, the font engine falls back to platform-known locations
     /// (e.g. /System/Library/Fonts/SFNS.ttf on macOS).
     public static var fontPaths: [String: String] = [:]
+
+    /// Called when the Auto Layout engine breaks a required constraint to
+    /// recover from an unsatisfiable system (UIKit's "Will attempt to
+    /// recover by breaking constraint"): the broken constraint and the
+    /// mutually exclusive set it was chosen from. Diagnostics only.
+    public static var constraintBreakObserver:
+        ((_ broken: NSLayoutConstraint, _ mutuallyExclusive: [NSLayoutConstraint]) -> Void)?
     /// Which CUT of the San Francisco system font the metrics tables should
     /// describe (see `FontEngine.SystemFontCut`). Apple ships two different
     /// builds of SF: `.SFNS` on macOS / Mac Catalyst and `.SFUI` on iOS, and

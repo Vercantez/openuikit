@@ -172,7 +172,13 @@ open class NSLayoutConstraint: NSObject {
         holder.setNeedsLayout()
     }
 
+    /// UIKit broke this required constraint to recover from an
+    /// unsatisfiable system (LayoutEngine.solve). It stays broken, pulling
+    /// just above every optional priority, until it is deactivated.
+    final var _brokenInEngine = false
+
     func deactivate() {
+        _brokenInEngine = false
         guard let holder = _holder else { return }
         holder._installedConstraints.removeAll { $0 === self }
         _holder = nil

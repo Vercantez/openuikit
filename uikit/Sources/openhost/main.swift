@@ -78,6 +78,7 @@ let usage = """
 usage: openhost <scene.json> [--scale N] [--script events.json --record outdir]
        openhost --app <name> [--scale N] [--ipad] [--landscape] [--script events.json --record outdir]
        openhost --nav-demo   [--scale N] [--script events.json --record outdir]
+       (live modes also take --live-seconds N and --timer-selftest)
 
 --app boots one of the DemoApp apps in a live window (see AppMode.swift):
   demo      the Settings app (docs/APP_FEEL.md)
@@ -112,6 +113,8 @@ if ProcessInfo.processInfo.environment["OPENUIKIT_CONFORMANCE_LANDSCAPE"] == "1"
     conformanceLandscape = true
 }
 var appName: String? = nil
+var liveSeconds: Double? = nil
+var timerSelfTest = false
 
 var it = CommandLine.arguments.dropFirst().makeIterator()
 while let arg = it.next() {
@@ -128,6 +131,14 @@ while let arg = it.next() {
         // SE 2x landscapeLeft: 667×375 window, compact-height traits.
         // Portrait `--app` (no flag) is unchanged.
         conformanceLandscape = true
+    case "--live-seconds":
+        // Live mode: stop after N seconds (self-tests).
+        guard let v = it.next(), let n = Double(v), n > 0 else { print(usage); exit(1) }
+        liveSeconds = n
+    case "--timer-selftest":
+        // Live mode: a Timer-driven label must reach presented frames
+        // (HostLoop.swift HostTimerSelfTest); prints HOST_TIMER_SELFTEST.
+        timerSelfTest = true
     case "--nav-demo":
         navDemo = true
     case "--large-titles":
@@ -260,6 +271,26 @@ try MainActor.assumeIsolated {
         exit(0)
     }
 
-    runLive(scene)
+    // LIVE: the app's Foundation run loop turns with the event pump
+    // (Foundation Timers, delayed performSelector, run-loop sources and, on
+    // Darwin, the dispatch main queue), and a frame is re-rendered when
+    // what it would draw changed. Scripted replays (above) stay on the host
+    // clock alone, so they remain byte-identical.
+    var liveHooks = HostLoopHooks()
+    liveHooks.beginTurn = {
+        _ = Foundation.RunLoop.main.run(mode: .default, before: Date())
+    }
+    liveHooks.idleRedrawInterval = 0.05
+    liveHooks.frameFingerprint = { window, scale in
+        _UIKeyboardChrome._hostFrameFingerprint(appWindow: window, scale: scale)
+    }
+    liveHooks.liveSeconds = liveSeconds
+    let selfTest = timerSelfTest ? HostTimerSelfTest(window: scene.window) : nil
+    if let selfTest { liveHooks.didPresent = { _ in selfTest.noteFrame() } }
+    runLive(scene, hooks: liveHooks)
+    if let selfTest {
+        print(selfTest.verdict)
+        exit(selfTest.verdict.hasPrefix("HOST_TIMER_SELFTEST ok") ? 0 : 1)
+    }
 
 }

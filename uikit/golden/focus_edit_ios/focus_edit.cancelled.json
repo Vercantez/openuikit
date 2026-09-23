@@ -1,0 +1,2462 @@
+{
+  "barInWindow" : [
+    0,
+    20,
+    375,
+    56
+  ],
+  "constraints" : [
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263d320@URLBar.swift#325 UILayoutGuide:0x600003b057a0.centerY == Firefox_Focus.URLBar:0x103367930.centerY>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 40,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263e220@URLBar.swift#326 UILayoutGuide:0x600003b057a0.height == 40.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 40,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263d6e0@URLBar.swift#327 UILayoutGuide:0x600003b057a0.width == 40.0 ^UILayoutPriority(rawValue: 900.0)>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 900,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 10,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263e880@URLBar.swift#329 UILayoutGuide:0x600003b057a0.leading == UILayoutGuide:0x600003b057a0.leading + 10.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:@URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f780@URLBar.swift#336 UILayoutGuide:0x600003b05a40.centerY == Firefox_Focus.URLBar:0x103367930.centerY>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 40,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f660@URLBar.swift#337 UILayoutGuide:0x600003b05a40.height == 40.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : -110,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263eb20@URLBar.swift#339 UILayoutGuide:0x600003b05a40.trailing == UIButton:0x10336c520.leading - 110.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton#HomeView.settingsButton",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 10,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263cc60@URLBar.swift#345 UIButton:0x10336aca0.leading == UILayoutGuide:0x600003b02140.leading + 10.0>",
+      "first" : "UIButton",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263d0e0@URLBar.swift#346 UIButton:0x10336aca0.centerY == Firefox_Focus.URLBar:0x103367930.centerY>",
+      "first" : "UIButton",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263de60@URLBar.swift#347 UIButton:0x10336aca0.width == Firefox_Focus.URLBar:0x103367930.width * 0.05000000074505806>",
+      "first" : "UIButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 0.05000000074505806,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 7
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263dfe0@URLBar.swift#351 UIButton:0x10336af90.leading == UIButton:0x10336aca0.trailing>",
+      "first" : "UIButton",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f720@URLBar.swift#352 UIButton:0x10336af90.centerY == Firefox_Focus.URLBar:0x103367930.centerY>",
+      "first" : "UIButton",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263de00@URLBar.swift#353 UIButton:0x10336af90.width == UIButton:0x10336aca0.width>",
+      "first" : "UIButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton",
+      "secondAttribute" : 7
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263d4a0@URLBar.swift#353 UIButton:0x10336af90.height == UIButton:0x10336aca0.height>",
+      "first" : "UIButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton",
+      "secondAttribute" : 8
+    },
+    {
+      "active" : true,
+      "constant" : -14,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f420@URLBar.swift#360 UIButton:0x10336c520.trailing == UILayoutGuide:0x600003b02140.trailing - 14.0>",
+      "first" : "UIButton#HomeView.settingsButton",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f120@URLBar.swift#362 UIButton:0x10336c520.centerY == Firefox_Focus.URLBar:0x103367930.centerY>",
+      "first" : "UIButton#HomeView.settingsButton",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : -16,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263ed00@URLBar.swift#367 UIButton:0x10336b890.trailing == UIButton:0x10336c520.leading - 16.0>",
+      "first" : "UIButton#URLBar.deleteButton",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton#HomeView.settingsButton",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263ea60@URLBar.swift#368 UIButton:0x10336b890.centerY == Firefox_Focus.URLBar:0x103367930.centerY>",
+      "first" : "UIButton#URLBar.deleteButton",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263ca20@URLBar.swift#369 UIButton:0x10336b890.width == UIButton:0x10336aca0.width>",
+      "first" : "UIButton#URLBar.deleteButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton",
+      "secondAttribute" : 7
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263d7a0@URLBar.swift#369 UIButton:0x10336b890.height == UIButton:0x10336aca0.height>",
+      "first" : "UIButton#URLBar.deleteButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton",
+      "secondAttribute" : 8
+    },
+    {
+      "active" : true,
+      "constant" : 10,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263da40@URLBar.swift#374 UIView:0x103372e60.top == Firefox_Focus.URLBar:0x103367930.top + 10.0>",
+      "first" : "UIView",
+      "firstAttribute" : 3,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : -10,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263d500@URLBar.swift#374 UIView:0x103372e60.bottom == Firefox_Focus.URLBar:0x103367930.bottom - 10.0>",
+      "first" : "UIView",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : -14,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f6c0@URLBar.swift#380 UIView:0x103372e60.trailing == UIButton:0x10336c520.leading - 14.0>",
+      "first" : "UIView",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton#HomeView.settingsButton",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263cf60@URLBar.swift#383 UIView:0x103372e60.trailing == UILayoutGuide:0x600003b05a40.trailing>",
+      "first" : "UIView",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:@URLBar",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fb40@URLBar.swift#399 UIButton:0x10336f170.leading == UILayoutGuide:0x600003b057a0.leading>",
+      "first" : "UIButton#URLBar.cancelButton",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:@URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fcc0@URLBar.swift#399 UIButton:0x10336f170.trailing == UILayoutGuide:0x600003b057a0.trailing>",
+      "first" : "UIButton#URLBar.cancelButton",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:@URLBar",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fc60@URLBar.swift#400 UIButton:0x10336f170.top == Firefox_Focus.URLBar:0x103367930.top>",
+      "first" : "UIButton#URLBar.cancelButton",
+      "firstAttribute" : 3,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fba0@URLBar.swift#400 UIButton:0x10336f170.bottom == Firefox_Focus.URLBar:0x103367930.bottom>",
+      "first" : "UIButton#URLBar.cancelButton",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 5,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644240@URLBar.swift#422 _TtC13Firefox_FocusP33_84F3566C7FCE440F0D856A80C4A8A1BF12URLTextField:0x104875600.leading == UIButton:0x103389120.trailing + 5.0>",
+      "first" : "URLTextField#URLBar.urlText",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton#URLBar.trackingProtectionIcon",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026442a0@URLBar.swift#431 Firefox_Focus.GradientProgressBar:0x10338a4c0.leading == Firefox_Focus.URLBar:0x103367930.leading>",
+      "first" : "GradientProgressBar",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644120@URLBar.swift#431 Firefox_Focus.GradientProgressBar:0x10338a4c0.trailing == Firefox_Focus.URLBar:0x103367930.trailing>",
+      "first" : "GradientProgressBar",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 1.5,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644300@URLBar.swift#432 Firefox_Focus.GradientProgressBar:0x10338a4c0.bottom == Firefox_Focus.URLBar:0x103367930.bottom + 1.5>",
+      "first" : "GradientProgressBar",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 8,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026443c0@URLBar.swift#437 UITextView:0x104872c00.centerY == Firefox_Focus.URLBar:0x103367930.centerY + 8.0>",
+      "first" : "UITextView#Collapsed.truncatedUrlText",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026445a0@URLBar.swift#443 UIView:0x103373260.centerX == Firefox_Focus.URLBar:0x103367930.centerX>",
+      "first" : "UIView",
+      "firstAttribute" : 9,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 9
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002649b60@URLBar.swift#603 UIButton:0x103389120.top == Firefox_Focus.URLBar:0x103367930.top>",
+      "first" : "UIButton#URLBar.trackingProtectionIcon",
+      "firstAttribute" : 3,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002649bc0@URLBar.swift#603 UIButton:0x103389120.bottom == Firefox_Focus.URLBar:0x103367930.bottom>",
+      "first" : "UIButton#URLBar.trackingProtectionIcon",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 9,
+      "description" : "<SnapKit.LayoutConstraint:0x600002649c20@URLBar.swift#604 UIButton:0x103389120.leading == UILayoutGuide:0x600003b057a0.leading + 9.0>",
+      "first" : "UIButton#URLBar.trackingProtectionIcon",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:@URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 10,
+      "description" : "<SnapKit.LayoutConstraint:0x600002649ce0@URLBar.swift#620 UILayoutGuide:0x600003b057a0.leading == UILayoutGuide:0x600003b02140.leading + 10.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : -60,
+      "description" : "<SnapKit.LayoutConstraint:0x600002649d40@URLBar.swift#629 UILayoutGuide:0x600003b05a40.trailing >= UIButton:0x10336c520.leading - 60.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 1,
+      "second" : "UIButton#HomeView.settingsButton",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 10,
+      "description" : "<SnapKit.LayoutConstraint:0x600002658cc0@URLBar.swift#833 UILayoutGuide:0x600003b057a0.leading == UILayoutGuide:0x600003b02140.leading + 10.0>",
+      "first" : "UILayoutGuide:@URLBar",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : -8,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263db60@URLBar.swift#387 UIView:0x103372e60.leading == UIButton:0x103389120.leading - 8.0>",
+      "first" : "UIView",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIButton#URLBar.trackingProtectionIcon",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<NSLayoutConstraint:0x600002157840 'UIViewSafeAreaLayoutGuide-bottom' V:[UILayoutGuide:0x600003b02140'UIViewSafeAreaLayoutGuide']-(0)-|   (active, names: '|':Firefox_Focus.URLBar:0x103367930 )>",
+      "first" : "URLBar",
+      "firstAttribute" : 4,
+      "identifier" : "UIViewSafeAreaLayoutGuide-bottom",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<NSLayoutConstraint:0x6000021576b0 'UIViewSafeAreaLayoutGuide-left' H:|-(0)-[UILayoutGuide:0x600003b02140'UIViewSafeAreaLayoutGuide'](LTR)   (active, names: '|':Firefox_Focus.URLBar:0x103367930 )>",
+      "first" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "firstAttribute" : 1,
+      "identifier" : "UIViewSafeAreaLayoutGuide-left",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 1
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<NSLayoutConstraint:0x600002157750 'UIViewSafeAreaLayoutGuide-right' H:[UILayoutGuide:0x600003b02140'UIViewSafeAreaLayoutGuide']-(0)-|(LTR)   (active, names: '|':Firefox_Focus.URLBar:0x103367930 )>",
+      "first" : "URLBar",
+      "firstAttribute" : 2,
+      "identifier" : "UIViewSafeAreaLayoutGuide-right",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "secondAttribute" : 2
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<NSLayoutConstraint:0x600002157430 'UIViewSafeAreaLayoutGuide-top' V:|-(0)-[UILayoutGuide:0x600003b02140'UIViewSafeAreaLayoutGuide']   (active, names: '|':Firefox_Focus.URLBar:0x103367930 )>",
+      "first" : "UILayoutGuide:UIViewSafeAreaLayoutGuide@URLBar",
+      "firstAttribute" : 3,
+      "identifier" : "UIViewSafeAreaLayoutGuide-top",
+      "installedOn" : "",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "URLBar",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : 18,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002644cc0 UIButton:0x10336aca0.width == 18 Hug:250 CompressionResistance:750   (active)>",
+      "first" : "UIButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 22,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002644c60 UIButton:0x10336aca0.height == 22 Hug:250 CompressionResistance:750   (active)>",
+      "first" : "UIButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 18,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002644f60 UIButton:0x10336af90.width == 18 Hug:250 CompressionResistance:750   (active)>",
+      "first" : "UIButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "1",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 22,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002644d20 UIButton:0x10336af90.height == 22 Hug:250 CompressionResistance:750   (active)>",
+      "first" : "UIButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "1",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 24,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002645260 URLBar.deleteButton.width == 24 Hug:250 CompressionResistance:750   (active, names: URLBar.deleteButton:0x10336b890 )>",
+      "first" : "UIButton#URLBar.deleteButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "2",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 24,
+      "description" : "<NSContentSizeLayoutConstraint:0x6000026452c0 URLBar.deleteButton.height == 24 Hug:250 CompressionResistance:750   (active, names: URLBar.deleteButton:0x10336b890 )>",
+      "first" : "UIButton#URLBar.deleteButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "2",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 24,
+      "description" : "<NSContentSizeLayoutConstraint:0x6000026453e0 HomeView.settingsButton.width == 24 Hug:1000 CompressionResistance:1000   (active, names: HomeView.settingsButton:0x10336c520 )>",
+      "first" : "UIButton#HomeView.settingsButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "3",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 24,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002645440 HomeView.settingsButton.height == 24 Hug:250 CompressionResistance:750   (active, names: HomeView.settingsButton:0x10336c520 )>",
+      "first" : "UIButton#HomeView.settingsButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "3",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 36,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263ebe0@URLBar.swift#363 UIButton:0x10336c520.width == 36.0>",
+      "first" : "UIButton#HomeView.settingsButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "3",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 36,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263f000@URLBar.swift#363 UIButton:0x10336c520.height == 36.0>",
+      "first" : "UIButton#HomeView.settingsButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "3",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 8.5,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002645620 URLBar.cancelButton.width == 8.5 Hug:250 CompressionResistance:1000   (active, names: URLBar.cancelButton:0x10336f170 )>",
+      "first" : "UIButton#URLBar.cancelButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "4",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 22,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002645680 URLBar.cancelButton.height == 22 Hug:250 CompressionResistance:750   (active, names: URLBar.cancelButton:0x10336f170 )>",
+      "first" : "UIButton#URLBar.cancelButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "4",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 36,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263dc80@URLBar.swift#373 UIView:0x103372e60.height == 36.0 ^UILayoutPriority(rawValue: 500.0)>",
+      "first" : "UIView",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 500,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 36,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263cc00@URLBar.swift#376 UIView:0x103372e60.height == 36.0>",
+      "first" : "UIView",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000262f7e0@URLBar.swift#415 UIButton:0x103371080.trailing == UIView:0x103372e60.trailing>",
+      "first" : "UIButton#BrowserToolset.stopReloadButton",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : -40,
+      "description" : "<SnapKit.LayoutConstraint:0x60000262fde0@URLBar.swift#416 UIButton:0x103371080.leading == UIView:0x103372e60.trailing - 40.0>",
+      "first" : "UIButton#BrowserToolset.stopReloadButton",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026655c0@URLBar.swift#852 UIView:0x10336a640.left == UIView:0x103372e60.left>",
+      "first" : "UIView",
+      "firstAttribute" : 1,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 1
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002665680@URLBar.swift#852 UIView:0x10336a640.top == UIView:0x103372e60.top>",
+      "first" : "UIView",
+      "firstAttribute" : 3,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002665620@URLBar.swift#852 UIView:0x10336a640.right == UIView:0x103372e60.right>",
+      "first" : "UIView",
+      "firstAttribute" : 2,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 2
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002665740@URLBar.swift#852 UIView:0x10336a640.bottom == UIView:0x103372e60.bottom>",
+      "first" : "UIView",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "5",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fc00@URLBar.swift#404 UIView:0x10336e710.top == UIView:0x10336a640.top>",
+      "first" : "UIView",
+      "firstAttribute" : 3,
+      "identifier" : "",
+      "installedOn" : "5.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fd80@URLBar.swift#404 UIView:0x10336e710.bottom == UIView:0x10336a640.bottom>",
+      "first" : "UIView",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "5.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000262f660@URLBar.swift#405 UIView:0x10336e710.leading == UIView:0x10336a640.leading ^UILayoutPriority(rawValue: 999.0)>",
+      "first" : "UIView",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "5.0",
+      "multiplier" : 1,
+      "priority" : 999,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000262f8a0@URLBar.swift#406 UIView:0x10336e710.trailing == UIView:0x10336a640.trailing>",
+      "first" : "UIView",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "5.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263ff60@URLBar.swift#411 UIView:0x10336e710.centerX == UIView:0x10336a640.centerX>",
+      "first" : "UIView",
+      "firstAttribute" : 9,
+      "identifier" : "",
+      "installedOn" : "5.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 9
+    },
+    {
+      "active" : true,
+      "constant" : 30,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263ff00@URLBar.swift#410 UIView:0x10336e710.leading == UIView:0x10336a640.leading + 30.0>",
+      "first" : "UIView",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "5.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x60000263fea0@URLBar.swift#417 UIButton:0x103371080.centerX == UIView:0x10336e710.centerX>",
+      "first" : "UIButton#BrowserToolset.stopReloadButton",
+      "firstAttribute" : 9,
+      "identifier" : "",
+      "installedOn" : "5.0.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 9
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644000@URLBar.swift#417 UIButton:0x103371080.centerY == UIView:0x10336e710.centerY>",
+      "first" : "UIButton#BrowserToolset.stopReloadButton",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "5.0.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026441e0@URLBar.swift#421 _TtC13Firefox_FocusP33_84F3566C7FCE440F0D856A80C4A8A1BF12URLTextField:0x104875600.centerY == UIView:0x10336e710.centerY>",
+      "first" : "URLTextField#URLBar.urlText",
+      "firstAttribute" : 10,
+      "identifier" : "",
+      "installedOn" : "5.0.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 10
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026440c0@URLBar.swift#426 _TtC13Firefox_FocusP33_84F3566C7FCE440F0D856A80C4A8A1BF12URLTextField:0x104875600.trailing == UIView:0x10336e710.trailing>",
+      "first" : "URLTextField#URLBar.urlText",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "5.0.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 18,
+      "description" : "<NSContentSizeLayoutConstraint:0x6000026458c0 BrowserToolset.stopReload....width == 18 Hug:250 CompressionResistance:750   (active, names: BrowserToolset.stopReload...:0x103371080 )>",
+      "first" : "UIButton#BrowserToolset.stopReloadButton",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "5.0.0.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 18,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002645920 BrowserToolset.stopReload....height == 18 Hug:250 CompressionResistance:750   (active, names: BrowserToolset.stopReload...:0x103371080 )>",
+      "first" : "UIButton#BrowserToolset.stopReloadButton",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "5.0.0.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 180.5,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002649da0 URLBar.urlText.width == 180.5 Hug:250 CompressionResistance:750   (active, names: URLBar.urlText:0x104875600 )>",
+      "first" : "URLTextField#URLBar.urlText",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "5.0.0.1",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 39.5,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002649e00 URLBar.urlText.height == 39.5 Hug:1000 CompressionResistance:750   (active, names: URLBar.urlText:0x104875600 )>",
+      "first" : "URLTextField#URLBar.urlText",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "5.0.0.1",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644420@URLBar.swift#438 UITextView:0x104872c00.leading == UIView:0x103373260.leading>",
+      "first" : "UITextView#Collapsed.truncatedUrlText",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644480@URLBar.swift#438 UITextView:0x104872c00.trailing == UIView:0x103373260.trailing>",
+      "first" : "UITextView#Collapsed.truncatedUrlText",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 5,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026444e0@URLBar.swift#439 UITextView:0x104872c00.bottom == UIView:0x103373260.bottom + 5.0>",
+      "first" : "UITextView#Collapsed.truncatedUrlText",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UIView",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644600@URLBar.swift#444 UIView:0x103373260.top == UITextView:0x104872c00.top>",
+      "first" : "UIView",
+      "firstAttribute" : 3,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UITextView#Collapsed.truncatedUrlText",
+      "secondAttribute" : 3
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644660@URLBar.swift#444 UIView:0x103373260.bottom == UITextView:0x104872c00.bottom>",
+      "first" : "UIView",
+      "firstAttribute" : 4,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UITextView#Collapsed.truncatedUrlText",
+      "secondAttribute" : 4
+    },
+    {
+      "active" : true,
+      "constant" : 22,
+      "description" : "<SnapKit.LayoutConstraint:0x6000026446c0@URLBar.swift#445 UIView:0x103373260.height == 22.0>",
+      "first" : "UIView",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644720@URLBar.swift#446 UIView:0x103373260.leading == UITextView:0x104872c00.leading>",
+      "first" : "UIView",
+      "firstAttribute" : 5,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UITextView#Collapsed.truncatedUrlText",
+      "secondAttribute" : 5
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644780@URLBar.swift#447 UIView:0x103373260.trailing == UITextView:0x104872c00.trailing>",
+      "first" : "UIView",
+      "firstAttribute" : 6,
+      "identifier" : "",
+      "installedOn" : "6",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "UITextView#Collapsed.truncatedUrlText",
+      "secondAttribute" : 6
+    },
+    {
+      "active" : true,
+      "constant" : 0,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002648180 Collapsed.truncatedUrlTex....width == 0 Hug:250 CompressionResistance:750   (active, names: Collapsed.truncatedUrlTex...:0x104872c00 )>",
+      "first" : "UITextView#Collapsed.truncatedUrlText",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "6.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 30.5,
+      "description" : "<NSContentSizeLayoutConstraint:0x6000026481e0 Collapsed.truncatedUrlTex....height == 30.5 Hug:1000 CompressionResistance:750   (active, names: Collapsed.truncatedUrlTex...:0x104872c00 )>",
+      "first" : "UITextView#Collapsed.truncatedUrlText",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "6.0",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 18.5,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002648300 URLBar.trackingProtection....width == 18.5 Hug:1000 CompressionResistance:1000   (active, names: URLBar.trackingProtection...:0x103389120 )>",
+      "first" : "UIButton#URLBar.trackingProtectionIcon",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "7",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 20,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002648360 URLBar.trackingProtection....height == 20 Hug:250 CompressionResistance:750   (active, names: URLBar.trackingProtection...:0x103389120 )>",
+      "first" : "UIButton#URLBar.trackingProtectionIcon",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "7",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 24,
+      "description" : "<SnapKit.LayoutConstraint:0x600002649c80@URLBar.swift#605 UIButton:0x103389120.width == 24.0>",
+      "first" : "UIButton#URLBar.trackingProtectionIcon",
+      "firstAttribute" : 7,
+      "identifier" : "",
+      "installedOn" : "7",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 1.5,
+      "description" : "<NSContentSizeLayoutConstraint:0x600002648480 Firefox_Focus.GradientProgressBar:0x10338a4c0.height == 1.5 Hug:750 CompressionResistance:750   (active)>",
+      "first" : "GradientProgressBar",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "8",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    },
+    {
+      "active" : true,
+      "constant" : 1.5,
+      "description" : "<SnapKit.LayoutConstraint:0x600002644360@URLBar.swift#433 Firefox_Focus.GradientProgressBar:0x10338a4c0.height == 1.5>",
+      "first" : "GradientProgressBar",
+      "firstAttribute" : 8,
+      "identifier" : "",
+      "installedOn" : "8",
+      "multiplier" : 1,
+      "priority" : 1000,
+      "relation" : 0,
+      "second" : "nil",
+      "secondAttribute" : 0
+    }
+  ],
+  "guides" : [
+    {
+      "frame" : [
+        10,
+        8,
+        40,
+        40
+      ],
+      "identifier" : ""
+    },
+    {
+      "frame" : [
+        215,
+        8,
+        0,
+        40
+      ],
+      "identifier" : ""
+    },
+    {
+      "frame" : [
+        0,
+        0,
+        375,
+        56
+      ],
+      "identifier" : "UIViewSafeAreaLayoutGuide"
+    }
+  ],
+  "state" : "cancelled",
+  "views" : [
+    {
+      "alpha" : 1,
+      "class" : "URLBar",
+      "frame" : [
+        0,
+        20,
+        375,
+        56
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        0,
+        0,
+        375,
+        56
+      ],
+      "path" : ""
+    },
+    {
+      "alpha" : 0,
+      "class" : "UIButton",
+      "frame" : [
+        10,
+        16,
+        19,
+        24
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        10,
+        16,
+        19,
+        24
+      ],
+      "path" : "0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        0.5,
+        4,
+        18,
+        16
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        10.5,
+        20,
+        18,
+        16
+      ],
+      "path" : "0.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "UIButton",
+      "frame" : [
+        29,
+        16,
+        18.5,
+        24
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        29,
+        16,
+        18.5,
+        24
+      ],
+      "path" : "1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        4,
+        18,
+        16
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        29,
+        20,
+        18,
+        16
+      ],
+      "path" : "1.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "UIButton",
+      "frame" : [
+        290.5,
+        16,
+        18.5,
+        24
+      ],
+      "hidden" : true,
+      "id" : "URLBar.deleteButton",
+      "inBar" : [
+        290.5,
+        16,
+        18.5,
+        24
+      ],
+      "path" : "2"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        18.5,
+        24
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        290.5,
+        16,
+        18.5,
+        24
+      ],
+      "path" : "2.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIButton",
+      "frame" : [
+        325,
+        10,
+        36,
+        36
+      ],
+      "hidden" : false,
+      "id" : "HomeView.settingsButton",
+      "inBar" : [
+        325,
+        10,
+        36,
+        36
+      ],
+      "path" : "3"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        6,
+        6,
+        24,
+        24
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        331,
+        16,
+        24,
+        24
+      ],
+      "path" : "3.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "UIButton",
+      "frame" : [
+        10,
+        0,
+        40,
+        56
+      ],
+      "hidden" : true,
+      "id" : "URLBar.cancelButton",
+      "inBar" : [
+        10,
+        0,
+        40,
+        56
+      ],
+      "path" : "4"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        15.5,
+        20,
+        8.5,
+        16
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        25.5,
+        20,
+        8.5,
+        16
+      ],
+      "path" : "4.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        11,
+        10,
+        300,
+        36
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        11,
+        10,
+        300,
+        36
+      ],
+      "path" : "5"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        300,
+        36
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        11,
+        10,
+        300,
+        36
+      ],
+      "path" : "5.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        30,
+        0,
+        270,
+        36
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        41,
+        10,
+        270,
+        36
+      ],
+      "path" : "5.0.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "UIButton",
+      "frame" : [
+        230,
+        9,
+        40,
+        18
+      ],
+      "hidden" : true,
+      "id" : "BrowserToolset.stopReloadButton",
+      "inBar" : [
+        271,
+        19,
+        40,
+        18
+      ],
+      "path" : "5.0.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        11,
+        0,
+        18,
+        18
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        282,
+        19,
+        18,
+        18
+      ],
+      "path" : "5.0.0.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "URLTextField",
+      "firstResponder" : false,
+      "frame" : [
+        7,
+        -1.5,
+        263,
+        39.5
+      ],
+      "hidden" : false,
+      "id" : "URLBar.urlText",
+      "inBar" : [
+        48,
+        8.5,
+        263,
+        39.5
+      ],
+      "path" : "5.0.0.1",
+      "text" : ""
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITouchPassthroughView",
+      "frame" : [
+        0,
+        0,
+        247,
+        19.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        247,
+        19.5
+      ],
+      "path" : "5.0.0.1.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextSelectionHighlightView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextSelectionRangeView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.0.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextUnderlineView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.0.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextSelectionRangeView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.0.1.0"
+    },
+    {
+      "alpha" : 0.31999999284744263,
+      "class" : "_UITextCursorTrailingGlowView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.0.2"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UIShapeView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48,
+        8.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.0.2.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UITextFieldLabel",
+      "frame" : [
+        8,
+        11,
+        247,
+        18
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        56,
+        19.5,
+        247,
+        18
+      ],
+      "path" : "5.0.0.1.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        8,
+        10,
+        247,
+        19.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        56,
+        18.5,
+        247,
+        19.5
+      ],
+      "path" : "5.0.0.1.2"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        0,
+        1,
+        0,
+        18
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        56,
+        19.5,
+        0,
+        18
+      ],
+      "path" : "5.0.0.1.2.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIStandardTextCursorView",
+      "frame" : [
+        0,
+        0,
+        2,
+        19.5
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        56,
+        18.5,
+        2,
+        19.5
+      ],
+      "path" : "5.0.0.1.2.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        2,
+        19.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        56,
+        18.5,
+        2,
+        19.5
+      ],
+      "path" : "5.0.0.1.2.1.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextSelectionRangeAdjustmentContainerView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : true,
+      "id" : "_UITextSelectionRangeAdjustmentContainerView",
+      "inBar" : [
+        56,
+        18.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.2"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextSelectionLollipopView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : true,
+      "id" : "com.apple.text.grabber.leading",
+      "inBar" : [
+        56,
+        18.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.2.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        2,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        56,
+        18.5,
+        2,
+        0
+      ],
+      "path" : "5.0.0.1.2.2.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        -7.25,
+        -13.5,
+        16.5,
+        16.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48.75,
+        5,
+        16.5,
+        16.5
+      ],
+      "path" : "5.0.0.1.2.2.0.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextSelectionLollipopView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : true,
+      "id" : "com.apple.text.grabber.leading",
+      "inBar" : [
+        56,
+        18.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.2.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        2,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        56,
+        18.5,
+        2,
+        0
+      ],
+      "path" : "5.0.0.1.2.2.1.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        -7.25,
+        -13.5,
+        16.5,
+        16.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        48.75,
+        5,
+        16.5,
+        16.5
+      ],
+      "path" : "5.0.0.1.2.2.1.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UICursorAccessoryHostView",
+      "frame" : [
+        0,
+        0,
+        247,
+        19.5
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        56,
+        18.5,
+        247,
+        19.5
+      ],
+      "path" : "5.0.0.1.2.3"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UICursorAccessoryView",
+      "frame" : [
+        1,
+        23,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        57,
+        41.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.3.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UIVisualEffectContentView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        57,
+        41.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.3.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        57,
+        41.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.3.0.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        57,
+        41.5,
+        0,
+        0
+      ],
+      "path" : "5.0.0.1.2.3.0.0.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        187.5,
+        25,
+        0,
+        22
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        187.5,
+        25,
+        0,
+        22
+      ],
+      "path" : "6"
+    },
+    {
+      "alpha" : 0,
+      "class" : "UITextView",
+      "frame" : [
+        0,
+        0,
+        0,
+        22
+      ],
+      "hidden" : false,
+      "id" : "Collapsed.truncatedUrlText",
+      "inBar" : [
+        187.5,
+        25,
+        0,
+        22
+      ],
+      "path" : "6.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextLayoutView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        187.5,
+        25,
+        0,
+        0
+      ],
+      "path" : "6.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextContainerView",
+      "frame" : [
+        0,
+        0,
+        0,
+        22
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        187.5,
+        25,
+        0,
+        22
+      ],
+      "path" : "6.0.1"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        0,
+        0,
+        0,
+        22
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        187.5,
+        25,
+        0,
+        22
+      ],
+      "path" : "6.0.1.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        22
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        187.5,
+        25,
+        0,
+        22
+      ],
+      "path" : "6.0.1.0.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -5,
+        8,
+        0,
+        12
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        182.5,
+        33,
+        0,
+        12
+      ],
+      "path" : "6.0.1.0.1"
+    },
+    {
+      "alpha" : 0,
+      "class" : "_UIScrollViewScrollIndicator",
+      "frame" : [
+        -6,
+        -17,
+        3,
+        36
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        181.5,
+        8,
+        3,
+        36
+      ],
+      "path" : "6.0.2"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        3,
+        36
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        181.5,
+        8,
+        3,
+        36
+      ],
+      "path" : "6.0.2.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "_UIScrollViewScrollIndicator",
+      "frame" : [
+        -39,
+        16,
+        36,
+        3
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        148.5,
+        41,
+        36,
+        3
+      ],
+      "path" : "6.0.3"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        36,
+        3
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        148.5,
+        41,
+        36,
+        3
+      ],
+      "path" : "6.0.3.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIButton",
+      "frame" : [
+        19,
+        0,
+        24,
+        56
+      ],
+      "hidden" : false,
+      "id" : "URLBar.trackingProtectionIcon",
+      "inBar" : [
+        19,
+        0,
+        24,
+        56
+      ],
+      "path" : "7"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        2.5,
+        18,
+        18.5,
+        20
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        21.5,
+        18,
+        18.5,
+        20
+      ],
+      "path" : "7.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "GradientProgressBar",
+      "frame" : [
+        0,
+        56,
+        375,
+        2.5
+      ],
+      "hidden" : true,
+      "id" : "",
+      "inBar" : [
+        0,
+        56,
+        375,
+        2.5
+      ],
+      "path" : "8"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        375,
+        2.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        0,
+        56,
+        375,
+        2.5
+      ],
+      "path" : "8.0"
+    },
+    {
+      "alpha" : 1,
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        375,
+        2.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        0,
+        56,
+        375,
+        2.5
+      ],
+      "path" : "8.0.0"
+    },
+    {
+      "alpha" : 0,
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        8,
+        2.5
+      ],
+      "hidden" : false,
+      "id" : "",
+      "inBar" : [
+        0,
+        56,
+        8,
+        2.5
+      ],
+      "path" : "8.0.1"
+    }
+  ]
+}

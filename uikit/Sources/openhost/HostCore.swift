@@ -369,18 +369,18 @@ extension SDLHost: HostSurface {
 // MARK: - openhost entry points (HostLoop.swift over an SDL window)
 
 @MainActor
-func runLive(_ scene: HostScene) {
+func runLive(_ scene: HostScene, hooks: HostLoopHooks = HostLoopHooks()) {
     let host = SDLHost(title: scene.name, sizePt: scene.sizePt, scale: scene.scale)
-    runLive(scene, host: host)
+    runLive(scene, host: host, hooks: hooks)
 }
 
 @MainActor
 func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
-                 outdir: String) throws -> [String] {
+                 outdir: String, hooks: HostLoopHooks = HostLoopHooks()) throws -> [String] {
     let host = SDLHost(title: "\(scene.name) [scripted]",
                        sizePt: scene.sizePt, scale: scene.scale)
     return try runScripted(scene, events: events, captures: captures, outdir: outdir,
-                           host: host, save: { bytes, path in
+                           host: host, hooks: hooks, save: { bytes, path in
                                try writeBinaryFile(bytes, path: path)
                            })
 }
