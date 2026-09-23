@@ -47,6 +47,14 @@
 // Catalyst keeps 1/8 s. Default-color core over white is (156,156,159)
 // — the same invert as the frozen control_activity measurement.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 public enum UIActivityIndicatorViewStyle: Int, Sendable {
     // iOS 26.1 raw values (iososswallsprobe lens.activity.style.raws).
     case medium = 100, large = 101

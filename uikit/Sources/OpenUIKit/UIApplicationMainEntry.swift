@@ -34,8 +34,16 @@
 //   sceneDidBecomeActive                   scene foregroundActive (0), a later turn
 // The application delegate gets no applicationDidBecomeActive in a scene app.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation) && canImport(ObjectiveC)
+@_exported import class Foundation.NotificationCenter
+#endif
+
 #if canImport(Foundation)
-import class Foundation.Bundle
+@_exported import class Foundation.Bundle
 import class Foundation.ProcessInfo
 import struct Foundation.Data
 import struct Foundation.URL

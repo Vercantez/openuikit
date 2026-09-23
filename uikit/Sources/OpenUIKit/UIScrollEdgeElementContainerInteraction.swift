@@ -44,7 +44,7 @@
 // on the Foundation-hidden guest route, where ObjectiveC has no NSCoder.
 #if canImport(Foundation)
 import class Foundation.NSObject
-import class Foundation.NSCoder
+@_exported import class Foundation.NSCoder
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #else

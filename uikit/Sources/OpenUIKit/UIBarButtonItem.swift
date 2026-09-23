@@ -57,6 +57,17 @@
 // text-backed system items, custom titles and synthesized template images,
 // all of which are exact.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 /// A button (or a space) in a `UINavigationBar` / `UIToolbar`.
 ///
 /// SDK EVIDENCE (iOS 26.1, UIKit.framework/Headers/UIBarButtonItem.h:69):

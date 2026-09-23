@@ -62,6 +62,14 @@
 // tabs.map(uiTab(for:))`, `selectedIndex`, `delegate = self` with the
 // legacy `shouldSelect`/`didSelect` pair, `UITab.badgeValue`.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 /// Content container (same class name real UIKit dumps — compare.py prunes
 /// this subtree on both sides).
 @preconcurrency @MainActor

@@ -3,6 +3,14 @@
 // fixtures/oracles/inputview-ios26.1.json.
 // The host has no input-view keyboard presenter or click-audio backend.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(Foundation)
 import Foundation
 #endif

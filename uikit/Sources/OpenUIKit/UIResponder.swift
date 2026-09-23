@@ -48,6 +48,17 @@
 // Every supported production build has one of these two providers; failing
 // closed keeps a new substrate from silently reverting responders to plain
 // Swift classes and breaking `@objc` parameter representability.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import typealias Foundation.TimeInterval
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import class Foundation.NSObject
 #if !os(Linux)

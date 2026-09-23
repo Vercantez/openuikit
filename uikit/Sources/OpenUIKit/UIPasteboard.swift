@@ -31,6 +31,18 @@
 // color identifiers; it is not a general Uniform Type Identifier conformance
 // engine (for example, UTF-16 text conversion is not implemented).
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import struct Foundation.IndexSet
+@_exported import struct Foundation.Notification
+#endif
+#if canImport(Foundation) && canImport(ObjectiveC)
+@_exported import class Foundation.NotificationCenter
+#endif
+
 import CPortableIO
 
 #if canImport(ObjectiveC)

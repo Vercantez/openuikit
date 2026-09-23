@@ -46,6 +46,17 @@
 // empty), `replaceChildren(ofMenu:from:)` beyond the obvious, and any
 // drawing — no OpenUIKit host has a menu bar or a shortcut HUD.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.Bundle
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import Foundation
 #elseif canImport(ObjectiveC)

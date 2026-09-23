@@ -18,6 +18,14 @@
 //     model restored to the FROM value (alpha 1 after 1→0).
 //   * finishAnimation(at: .start) from stopped → inactive, model at start.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import typealias Foundation.TimeInterval
+#endif
+
 public enum UIViewAnimatingPosition: Int, Sendable {
     case end = 0
     case start = 1

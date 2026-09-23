@@ -57,6 +57,9 @@
 //     own frame-loop work runs on `_HostClockTimer`, the SCRIPTED host clock
 //     (`UIWindow.tick(timestamp:)`), never on a wall clock. See Timer.swift.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+
 #if canImport(Foundation)
 import Foundation
 
@@ -75,7 +78,11 @@ import AppKit
 /// Foundation's `IndexPath`. Real UIKit does not declare its own either — it
 /// adds the two-component conveniences below to Foundation's type, which is
 /// exactly what this extension does.
-public typealias IndexPath = Foundation.IndexPath
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import struct Foundation.IndexPath
 
 #elseif canImport(FoundationEssentials)
 
@@ -152,30 +159,46 @@ extension IndexPath {
 
 #if canImport(Foundation)
 
-public typealias IndexSet = Foundation.IndexSet
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import struct Foundation.IndexSet
 
 // MARK: - Ranges and time
 
 /// Foundation's `NSRange`: `location`/`length` in UTF-16 code units, with
 /// `upperBound`, `lowerBound` and `contains(_:)` already on it.
 @_exported import typealias Foundation.NSRange
-public typealias NSRangePointer = Foundation.NSRangePointer
+@_exported import typealias Foundation.NSRangePointer
 
 /// Foundation's `TimeInterval` (`Double`, seconds). OpenUIKit's clock is the
 /// host tick timestamp, not a wall clock — the UNIT is all that is shared.
-public typealias TimeInterval = Foundation.TimeInterval
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import typealias Foundation.TimeInterval
 
 /// Foundation's keyed-archive decoder base class.  UIKit's view initializer
 /// names this exact type; keeping the alias in OpenUIKit's namespace lets an
 /// app import Foundation and OpenUIKit together without creating a second
 /// initializer signature.
-public typealias NSCoder = Foundation.NSCoder
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import class Foundation.NSCoder
 
 // MARK: - Bundle
 
 /// Foundation's resource bundle type. UIViewController's nib initializer
 /// exposes it even when the controller is otherwise entirely programmatic.
-public typealias Bundle = Foundation.Bundle
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import class Foundation.Bundle
 
 #else
 

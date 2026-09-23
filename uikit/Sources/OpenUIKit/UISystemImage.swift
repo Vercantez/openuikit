@@ -7,7 +7,7 @@
 // font, resource, or "close enough" lookup fallback.
 
 #if canImport(Foundation)
-import class Foundation.NSCoder
+@_exported import class Foundation.NSCoder
 import protocol Foundation.NSCopying
 import class Foundation.NSObject
 import protocol Foundation.NSSecureCoding

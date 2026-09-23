@@ -6,7 +6,7 @@
 // explicit resource-root contract.
 
 #if canImport(Foundation)
-import class Foundation.Bundle
+@_exported import class Foundation.Bundle
 #endif
 
 enum BundleAssetLookup {
