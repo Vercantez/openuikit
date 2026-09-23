@@ -13,6 +13,14 @@
 // UIKit's public configuration and required controller-count validation, but
 // contains/renders only the first retained page as a flat swap; there is no
 // portable 3-D paper mesh or two-page containment lifecycle.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(Foundation)
 import class Foundation.NSObject
 #elseif canImport(ObjectiveC)

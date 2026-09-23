@@ -56,6 +56,14 @@
 //     label at (10, 48.5, width−20, 0) under the spinner — height ZERO and
 //     alpha 0 with no title, i.e. the fixture cannot see it either.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 @preconcurrency @MainActor
 open class UIRefreshControl: UIControl {
     /// Measured: the control is always 60 pt tall.

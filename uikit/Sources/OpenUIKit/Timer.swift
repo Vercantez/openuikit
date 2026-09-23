@@ -60,6 +60,17 @@
 
 /// The run-loop mode argument of `_HostClockRunLoop.add(_:forMode:)`. Accepted and
 /// ignored — see the file header.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import typealias Foundation.TimeInterval
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 public struct _HostClockRunLoopMode: Hashable, RawRepresentable, Sendable {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }

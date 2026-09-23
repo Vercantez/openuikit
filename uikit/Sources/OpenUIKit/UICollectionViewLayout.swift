@@ -25,6 +25,14 @@ import class ObjectiveC.NSObject
 import ObjectiveC
 #endif
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import struct Foundation.IndexPath
+#endif
+
 /// Geometry (and a little presentation state) for one element of a
 /// collection view: a cell, or a supplementary/decoration view.
 #if OPENUIKIT_OBJC_SUBCLASSING

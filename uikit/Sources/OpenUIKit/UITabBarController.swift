@@ -64,6 +64,14 @@
 
 /// Content container (same class name real UIKit dumps — compare.py prunes
 /// this subtree on both sides).
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 @preconcurrency @MainActor
 final class UITransitionView: UIView {}
 @preconcurrency @MainActor

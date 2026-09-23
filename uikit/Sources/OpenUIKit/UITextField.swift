@@ -47,6 +47,17 @@
 // type; spell it `Array<CGFloat>(...)`.
 // `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
 // scoped declaration import keeps its geometry out of this file (UIView.swift).
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+#if canImport(Foundation) && canImport(ObjectiveC)
+@_exported import class Foundation.NotificationCenter
+#endif
+
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
 #endif
@@ -65,7 +76,7 @@ import Foundation
 // defining module must be visible where the public static notification name
 // is emitted, including on Darwin where the scoped CoreGraphics branch above
 // deliberately avoids an umbrella Foundation import.
-import struct Foundation.Notification
+@_exported import struct Foundation.Notification
 #endif
 
 

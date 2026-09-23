@@ -35,6 +35,14 @@
 // The interposers only act on layers the port has state for, or forward
 // unchanged. Linux ELF and the Mach-O guest (no Apple frameworks) keep
 // OpenUIKit's own CALayer family (UIView.swift, CoreAnimation.swift).
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(CoreGraphics)
 import QuartzCore
 import ObjectiveC

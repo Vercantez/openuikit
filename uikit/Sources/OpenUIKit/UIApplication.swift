@@ -35,6 +35,20 @@
 // guest. See Sources/OpenUIKit/NotificationCenter.swift for the exact seam.
 // The delegate method runs first, then the observers.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import struct Foundation.Notification
+#endif
+#if canImport(Foundation) && canImport(ObjectiveC)
+@_exported import class Foundation.NotificationCenter
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import protocol Foundation.NSCopying
 import protocol Foundation.NSMutableCopying
@@ -42,7 +56,7 @@ import protocol Foundation.NSSecureCoding
 import class Foundation.NSPredicate
 import struct Foundation.NSZone
 import struct Foundation.URL
-import class Foundation.Bundle
+@_exported import class Foundation.Bundle
 import class Foundation.NSError
 #if !os(Linux)
 import class Foundation.UndoManager

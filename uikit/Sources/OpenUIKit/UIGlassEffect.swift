@@ -12,7 +12,7 @@
 //   interiors byte-match regular).
 
 #if canImport(Foundation)
-import class Foundation.NSCoder
+@_exported import class Foundation.NSCoder
 import class Foundation.NSObject
 import struct Foundation.NSZone
 #elseif canImport(ObjectiveC)

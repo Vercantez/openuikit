@@ -34,6 +34,17 @@
 // native builds, and the ObjectiveC root class in the Foundation-hidden Mach-O
 // guest build. A plain Swift root here breaks legitimate app source such as
 // `@objc func handlePan(_ recognizer: UIPanGestureRecognizer)`.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import typealias Foundation.TimeInterval
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import class Foundation.NSObject
 #elseif canImport(ObjectiveC)

@@ -129,6 +129,14 @@
 //     — an offscreen picker receives no gesture — and closing it needs the
 //     Simulator drag route (docs/KNOWN_GAPS.md).
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 @preconcurrency @MainActor
 public protocol UIPickerViewDataSource: AnyObject {
     func numberOfComponents(in pickerView: UIPickerView) -> Int

@@ -5,6 +5,14 @@
 // print and the old UIMenuController never present chrome. Drag/drop uses
 // the shared measured family in UIDragDrop.swift.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 #if canImport(Foundation)
 import Foundation
 #elseif canImport(ObjectiveC)
