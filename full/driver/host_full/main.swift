@@ -256,6 +256,28 @@ MainActor.assumeIsolated {
     // One run-loop turn also runs what the app queued on the main queue
     // (Focus activates its URL field from DispatchQueue.main.async).
     var hooks = realAppHostHooks(drainMainQueue: { _ = openui_sdl_host_v1_drain_main_queue() })
+    // HOST_FULL_PROFILE=1: per-frame cost breakdown on stderr — layout, the
+    // app window's render and which compositor path it took, the keyboard
+    // composite (renderCapture minus a plain render).
+    if hostEnv("HOST_FULL_PROFILE") == "1" {
+        let freq = Double(openui_sdl_host_v1_performance_frequency()) / 1000
+        func ms(_ a: UInt64, _ b: UInt64) -> Double { Double(b &- a) / freq }
+        hooks.render = { window, scale in
+            let t0 = openui_sdl_host_v1_performance_counter()
+            window.layoutIfNeeded()
+            let t1 = openui_sdl_host_v1_performance_counter()
+            let layers = UIRenderer.usesLayerCompositor(window)
+            let t2 = openui_sdl_host_v1_performance_counter()
+            _ = UIRenderer.render(window, scale: scale)
+            let t3 = openui_sdl_host_v1_performance_counter()
+            let out = _UIKeyboardChrome.renderCapture(appWindow: window, scale: scale)
+            let t4 = openui_sdl_host_v1_performance_counter()
+            hostWarn("HOST_FULL_PROFILE layout \(fmt3(ms(t0, t1))) path \(layers ? "layers" : "renderpass")"
+                     + " probe \(fmt3(ms(t1, t2))) render \(fmt3(ms(t2, t3)))"
+                     + " keyboard \(fmt3(ms(t3, t4) - ms(t2, t3)))")
+            return out
+        }
+    }
 
     if let scriptPath = hostScriptPath, let recordDir = hostRecordDir {
         guard let bytes = ResourceIO.readFile(scriptPath),

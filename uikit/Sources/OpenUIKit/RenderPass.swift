@@ -229,6 +229,14 @@ public enum UIRenderer {
     /// retained QZLayer has no public color-matrix node yet. Select the same
     /// deterministic render-pass fallback used by backdrop filters rather
     /// than silently dropping the authored effect.
+    /// Diagnostics: whether `render(root, …)` takes the retained QZLayer
+    /// compositor (true) or the render-pass fallback (false).
+    public static func usesLayerCompositor(_ root: UIView) -> Bool {
+        OpenUIKitRuntime.compositor == .layers
+            && OpenUIKitRuntime.renderBackend == .quartz
+            && !containsRenderPassOnlyEffect(root)
+    }
+
     static func containsRenderPassOnlyEffect(_ view: UIView) -> Bool {
         if let backdrop = view as? _UIVisualEffectBackdropView,
            let effectView = backdrop.superview as? UIVisualEffectView,
