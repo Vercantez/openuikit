@@ -388,6 +388,26 @@ MainActor.assumeIsolated {
                 dumpLayout(scene.window, path: "", into: &views)
                 try hostWrite(Array(hostJSONText(.array(views)).utf8),
                               "\(recordDir)/\(stem).layout.json")
+                // Diagnostic: the installed constraints of views of the class
+                // named by HOST_FULL_CONSTRAINTS_OF (e.g. URLBar).
+                if let cls = hostEnv("HOST_FULL_CONSTRAINTS_OF") {
+                    var lines: [String] = []
+                    func name(_ o: AnyObject?) -> String {
+                        guard let o else { return "nil" }
+                        return "\(type(of: o))@\(UInt(bitPattern: ObjectIdentifier(o).hashValue) & 0xffff)"
+                    }
+                    func walk(_ v: UIView) {
+                        if String(describing: type(of: v)) == cls {
+                            for c in v.constraints {
+                                lines.append("\(c.isActive ? "on " : "off") \(name(c.firstItem)).\(c.firstAttribute.rawValue) \(c.relation.rawValue) \(name(c.secondItem)).\(c.secondAttribute.rawValue) *\(c.multiplier) +\(c.constant) @\(c.priority.rawValue)")
+                            }
+                        }
+                        v.subviews.forEach(walk)
+                    }
+                    walk(scene.window)
+                    try hostWrite(Array(lines.joined(separator: "\n").utf8),
+                                  "\(recordDir)/\(stem).constraints.txt")
+                }
             }
         }
         let surface = GuestSDLSurface(title: "\(scene.name) [scripted]",
