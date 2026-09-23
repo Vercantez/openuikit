@@ -25,6 +25,8 @@ On main bb773f63, `swift test` (clean `.build`, all 2018 cases, default order) f
 | `UIScrollEdgeEffectTests/testHardPlateUnderNavigationAndTabBarsMatchesTheMeasuredGeometry` | no | same leak | same | Same fix. |
 | `ValueTypeTailTests/testShortcutDeliveryPrefersWindowSceneDelegate` | no (flaky) | long-standing leak: scenes left connected | test isolation | The test sets leftover scenes aside, and the two suites that leaked a scene now disconnect it. |
 | `UIButtonConfigurationTests/testAttributedTitleFontAndColourWin` | yes | **b1a50a20, attrstring-unify (today)** | real regression | **Known failure** (see below). |
+| `CollectionLayoutAnchorTests/testBadgesAreTiledPerItemAndDoNotGrowContent` (reported on c0dca164) | no (flaky; **crashes the run**) | the test arrived in fe74874f (nnw-batch-b); the underlying bug is older | real port bug (address-keyed side table) | The list configuration is now stored on the section or layout object, and the test no longer indexes an empty array. |
+| `RasterizerTests/testFillPerformanceBudget` (reported under gate load) | no (flaky under load) | long-standing | environment (wall-clock budget) | The budget is now measured in thread CPU time (`CLOCK_THREAD_CPUTIME_ID`). |
 
 ### Causes
 
@@ -39,6 +41,12 @@ Other tests use the same pattern and pass today because their windows happen to 
 **Edit-menu identifier.** The measured properties are kept: each identifier is distinct, its description has the UUID form, it is not a `UUID`, and it is not equal to its own description. `UIEditMenuInteractionTests` still pass.
 
 **Appearance proxy.** A bar's synthesized default depends on the cut: opaque on Catalyst, default background on iOS. The proxy froze whichever default applied when it was first read, and every later bar copied it. UIKit's proxy only replays the setters the app called.
+
+**Address-keyed side table.** `_ListConfigBox` and `_LayoutListBox` (`UICollectionViewListCell.swift`) stored the list configuration in a static `[ObjectIdentifier: …]` map and never removed entries.
+
+A new section or layout allocated at a dead one's address inherited that configuration and was laid out as a list. The test then saw a content height of 2720 instead of 2660 and no badges, and `badges[0]` trapped (`Index out of range`), which ended the xctest process and hid every suite after it. This reproduced in 2 of 3 runs of the A–C suites.
+
+With the configuration stored on the object, 4 of 4 runs pass. The two other address-keyed tables in the port (`_UIAccessibilityStorage`, `_UIStoryboardStates`) already check a weak owner, so they are safe.
 
 **Scene leak.** `connectedScenes` is a `Set`, and shortcut delivery picks the first window scene it iterates. A scene left connected by an earlier suite could therefore win or lose depending on hash order, so the test failed only in some runs.
 
@@ -94,4 +102,4 @@ So the stage added **0 s of wall time** in that run. The cost is CPU contention 
   * Catalyst 124/124.
   * Unit tests: 2042 cases, 1 known failure.
   * The verdict was stamped.
-* `scripts/ops/local_guest_verify.sh <worktree>`: see the final message.
+* `scripts/ops/local_guest_verify.sh <worktree>` and the re-run of the gate on the final head (after merging main c0dca164+ and the two fixes above) are reported in the handback.
