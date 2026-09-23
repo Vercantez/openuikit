@@ -1,0 +1,10 @@
+CG point.double 1.5 -1.5
+CG point.int 2.0 -3.0
+CG size.double 1.5 3.0
+CG size.int 2.0 3.0
+CG vector.double 1.5 2.25
+CG vector.int 2.0 -2.0
+CG rect.double 1.5 0.25 10.5 1.5
+CG rect.int 2.0 3.0 40.0 10.0
+CG netnewswire.metadata 1200.0 630.0
+CG_GEOMETRY_DONE
