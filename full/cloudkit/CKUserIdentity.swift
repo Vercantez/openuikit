@@ -68,75 +68,79 @@ open class CKUserIdentity: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
             && hasiCloudAccount == other.hasiCloudAccount
     }
 
-    open class LookupInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        open private(set) var emailAddress: String?
-        open private(set) var phoneNumber: String?
-        open private(set) var userRecordID: CKRecord.ID?
+    public typealias LookupInfo = CKUserIdentityLookupInfo
+}
 
-        public static var supportsSecureCoding: Bool { true }
 
-        public init(emailAddress: String) {
-            self.emailAddress = emailAddress
-            super.init()
+// Apple names this class CKUserIdentityLookupInfo; CKUserIdentity.LookupInfo is a typealias of it (iOS 26.1 SDK).
+open class CKUserIdentityLookupInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    open private(set) var emailAddress: String?
+    open private(set) var phoneNumber: String?
+    open private(set) var userRecordID: CKRecord.ID?
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public init(emailAddress: String) {
+        self.emailAddress = emailAddress
+        super.init()
+    }
+
+    public init(phoneNumber: String) {
+        self.phoneNumber = phoneNumber
+        super.init()
+    }
+
+    public init(userRecordID: CKRecord.ID) {
+        self.userRecordID = userRecordID
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        if let emailAddress {
+            return CKUserIdentity.LookupInfo(emailAddress: emailAddress)
         }
-
-        public init(phoneNumber: String) {
-            self.phoneNumber = phoneNumber
-            super.init()
+        if let phoneNumber {
+            return CKUserIdentity.LookupInfo(phoneNumber: phoneNumber)
         }
-
-        public init(userRecordID: CKRecord.ID) {
-            self.userRecordID = userRecordID
-            super.init()
+        if let userRecordID {
+            return CKUserIdentity.LookupInfo(userRecordID: userRecordID)
         }
+        return CKUserIdentity.LookupInfo(emailAddress: "")
+    }
 
-        public required init?(coder: NSCoder) {
-            _ = coder
-            return nil
-        }
+    open class func lookupInfos(withEmails emails: [String]) -> [CKUserIdentity.LookupInfo] {
+        emails.map { CKUserIdentity.LookupInfo(emailAddress: $0) }
+    }
 
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
+    open class func lookupInfos(withPhoneNumbers phoneNumbers: [String]) -> [CKUserIdentity.LookupInfo] {
+        phoneNumbers.map { CKUserIdentity.LookupInfo(phoneNumber: $0) }
+    }
 
-        open func copy(with zone: NSZone? = nil) -> Any {
-            if let emailAddress {
-                return CKUserIdentity.LookupInfo(emailAddress: emailAddress)
-            }
-            if let phoneNumber {
-                return CKUserIdentity.LookupInfo(phoneNumber: phoneNumber)
-            }
-            if let userRecordID {
-                return CKUserIdentity.LookupInfo(userRecordID: userRecordID)
-            }
-            return CKUserIdentity.LookupInfo(emailAddress: "")
-        }
+    open class func lookupInfos(with recordIDs: [CKRecord.ID]) -> [CKUserIdentity.LookupInfo] {
+        recordIDs.map { CKUserIdentity.LookupInfo(userRecordID: $0) }
+    }
 
-        open class func lookupInfos(withEmails emails: [String]) -> [CKUserIdentity.LookupInfo] {
-            emails.map { CKUserIdentity.LookupInfo(emailAddress: $0) }
-        }
+    open override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(emailAddress)
+        hasher.combine(phoneNumber)
+        hasher.combine(userRecordID?.hash ?? 0)
+        return hasher.finalize()
+    }
 
-        open class func lookupInfos(withPhoneNumbers phoneNumbers: [String]) -> [CKUserIdentity.LookupInfo] {
-            phoneNumbers.map { CKUserIdentity.LookupInfo(phoneNumber: $0) }
-        }
-
-        open class func lookupInfos(with recordIDs: [CKRecord.ID]) -> [CKUserIdentity.LookupInfo] {
-            recordIDs.map { CKUserIdentity.LookupInfo(userRecordID: $0) }
-        }
-
-        open override var hash: Int {
-            var hasher = Hasher()
-            hasher.combine(emailAddress)
-            hasher.combine(phoneNumber)
-            hasher.combine(userRecordID?.hash ?? 0)
-            return hasher.finalize()
-        }
-
-        open override func isEqual(_ object: Any?) -> Bool {
-            guard let other = object as? CKUserIdentity.LookupInfo else { return false }
-            return emailAddress == other.emailAddress
-                && phoneNumber == other.phoneNumber
-                && (userRecordID?.isEqual(other.userRecordID) ?? (other.userRecordID == nil))
-        }
+    open override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? CKUserIdentity.LookupInfo else { return false }
+        return emailAddress == other.emailAddress
+            && phoneNumber == other.phoneNumber
+            && (userRecordID?.isEqual(other.userRecordID) ?? (other.userRecordID == nil))
     }
 }

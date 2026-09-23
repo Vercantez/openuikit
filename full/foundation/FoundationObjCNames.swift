@@ -386,3 +386,43 @@ open class NSException: NSObject, NSCopying, @unchecked Sendable {
 
     open func copy(with zone: NSZone? = nil) -> Any { self }
 }
+
+// MARK: - PersonNameComponents
+
+/// Foundation's name-parts value (CloudKit's CKUserIdentity.nameComponents).
+/// The guest's FoundationEssentials build does not carry it; this is the
+/// stored-property value type only (no PersonNameComponentsFormatter).
+public struct PersonNameComponents: Hashable, Codable, Sendable {
+    public var namePrefix: String?
+    public var givenName: String?
+    public var middleName: String?
+    public var familyName: String?
+    public var nameSuffix: String?
+    public var nickname: String?
+    public var phoneticRepresentation: PersonNameComponents? {
+        get { _phonetic?.value }
+        set { _phonetic = newValue.map(_Box.init) }
+    }
+    private var _phonetic: _Box?
+
+    public init() {}
+
+    public init(namePrefix: String? = nil, givenName: String? = nil, middleName: String? = nil,
+                familyName: String? = nil, nameSuffix: String? = nil, nickname: String? = nil,
+                phoneticRepresentation: PersonNameComponents? = nil) {
+        self.namePrefix = namePrefix
+        self.givenName = givenName
+        self.middleName = middleName
+        self.familyName = familyName
+        self.nameSuffix = nameSuffix
+        self.nickname = nickname
+        self.phoneticRepresentation = phoneticRepresentation
+    }
+
+    private final class _Box: Hashable, Codable, @unchecked Sendable {
+        let value: PersonNameComponents
+        init(_ value: PersonNameComponents) { self.value = value }
+        static func == (lhs: _Box, rhs: _Box) -> Bool { lhs.value == rhs.value }
+        func hash(into hasher: inout Hasher) { hasher.combine(value) }
+    }
+}

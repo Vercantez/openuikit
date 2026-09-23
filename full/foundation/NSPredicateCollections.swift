@@ -1259,6 +1259,18 @@ open class NSDictionary: NSObject, NSCopying, @unchecked Sendable {
 
     open var count: Int { entries.withLock { $0.count } }
 
+    /// Value equality with a Swift dictionary (NSDictionary.isEqual(to:)).
+    open func isEqual(to otherDictionary: [AnyHashable: Any]) -> Bool {
+        let mine = entries.withLock { $0 }
+        guard mine.count == otherDictionary.count else { return false }
+        return mine.allSatisfy { entry in
+            guard let key = entry.key as? AnyHashable, let other = otherDictionary[key] else { return false }
+            if let lhs = entry.value as? NSObject { return lhs.isEqual(other) }
+            if let lhs = entry.value as? AnyHashable, let rhs = other as? AnyHashable { return lhs == rhs }
+            return false
+        }
+    }
+
     open var allKeys: [Any] {
         entries.withLock { $0.map(\.key) }
     }
