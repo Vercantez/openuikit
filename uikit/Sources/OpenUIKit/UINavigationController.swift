@@ -659,7 +659,7 @@ open class UINavigationController: UIViewController {
         // radius 7, offset 2.5).
         platter.clipsToBounds = false
         if platter._usesIOSGlass {
-            platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+            platter.layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
             platter.layer.shadowOpacity = UITabBar.shadowOpacity
             platter.layer.shadowRadius = UITabBar.shadowRadius
             platter.layer.shadowOffset = UITabBar.shadowOffset
@@ -1102,7 +1102,7 @@ open class UINavigationController: UIViewController {
     final func setShadow(on v: UIView, enabled: Bool) {
         let l = v.layer
         if enabled {
-            l.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+            l._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
             l.shadowOpacity = UINavigationController.shadowOpacity
             l.shadowRadius = UINavigationController.shadowRadius
             l.shadowOffset = .zero

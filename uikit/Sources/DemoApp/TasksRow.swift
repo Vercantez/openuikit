@@ -46,7 +46,7 @@ final class CheckmarkFillView: UIView {
         p.move(to: CGPoint(x: 6.4, y: 12.4))
         p.addLine(to: CGPoint(x: 10.1, y: 16.1))
         p.addLine(to: CGPoint(x: 17.6, y: 8.3))
-        canvas.stroke(p, color: CGColor(red: 1, green: 1, blue: 1, alpha: 1),
+        canvas.stroke(p, color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 1),
                       lineWidth: 2.4)
     }
 }

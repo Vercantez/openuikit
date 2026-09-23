@@ -1020,6 +1020,15 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // CoreGraphics / ImageIO type unification (docs/agent_reports/cg-unify.md).
+    // The scenario is the SAME Swift the iOS 26.1 oracle runs
+    // (Tools/oracle2/cgunifyprobe/run.sh); it imports UIKit only, so it also
+    // proves the shim's re-exports. The test compares transcripts.
+    .target(name: "OpenUIKitCGUnifyFixtures", dependencies: ["UIKit", "OpenUIKit"],
+            path: "Tools/oracle2/cgunifyprobe/scenario"),
+    .testTarget(name: "CGUnifyTests",
+                dependencies: ["OpenUIKitCGUnifyFixtures", "UIKit", "OpenUIKit"],
+                path: "Tests/CGUnifyTests"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

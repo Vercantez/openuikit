@@ -51,7 +51,8 @@ public class CIColor: NSObject, @unchecked Sendable {
     }
 
     public convenience init(color: CGColor) {
-        self.init(red: color.red, green: color.green, blue: color.blue, alpha: color.alpha)
+        let c = CanvasColor(color)
+        self.init(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha)
     }
 
     public convenience init(cgColor color: CGColor) {

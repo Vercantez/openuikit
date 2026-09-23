@@ -9,11 +9,11 @@
 
 public enum SystemColors {
     /// Magenta — returned for unknown names so failures are loudly visible.
-    static let missing = CGColor(red: 1, green: 0, blue: 1, alpha: 1)
+    static let missing = CanvasColor(red: 1, green: 0, blue: 1, alpha: 1)
 
     struct Table {
-        var light: [String: CGColor] = [:]
-        var dark: [String: CGColor] = [:]
+        var light: [String: CanvasColor] = [:]
+        var dark: [String: CanvasColor] = [:]
     }
 
     /// Parsed + cached color table. `static let` gives us lazy, thread-safe,
@@ -41,15 +41,15 @@ public enum SystemColors {
         return t
     }
 
-    private static func parseStyle(_ value: JSONValue?) -> [String: CGColor] {
+    private static func parseStyle(_ value: JSONValue?) -> [String: CanvasColor] {
         guard let obj = value?.objectValue else { return [:] }
-        var out: [String: CGColor] = [:]
+        var out: [String: CanvasColor] = [:]
         out.reserveCapacity(obj.count)
         for (name, comps) in obj {
             guard let a = comps.arrayValue, a.count == 4,
                   let r = a[0].doubleValue, let g = a[1].doubleValue,
                   let b = a[2].doubleValue, let al = a[3].doubleValue else { continue }
-            out[name] = CGColor(red: CGFloat(r), green: CGFloat(g),
+            out[name] = CanvasColor(red: CGFloat(r), green: CGFloat(g),
                                 blue: CGFloat(b), alpha: CGFloat(al))
         }
         return out
@@ -57,10 +57,10 @@ public enum SystemColors {
 
     /// Resolve a semantic color name for the given traits.
     /// `.unspecified` resolves as light. Unknown names resolve to magenta.
-    static func resolve(_ name: String, traits: UITraitCollection) -> CGColor {
+    static func resolve(_ name: String, traits: UITraitCollection) -> CanvasColor {
         let t = (OpenUIKitRuntime.systemFontCut == .iOS && !tableIOS.light.isEmpty)
             ? tableIOS : table
-        let styleTable: [String: CGColor]
+        let styleTable: [String: CanvasColor]
         switch traits.userInterfaceStyle {
         case .dark: styleTable = t.dark
         case .light, .unspecified: styleTable = t.light
