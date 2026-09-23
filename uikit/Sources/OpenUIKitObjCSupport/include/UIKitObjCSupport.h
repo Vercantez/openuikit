@@ -330,6 +330,11 @@ typedef NS_ENUM(NSInteger, NSLayoutAttribute) {
 #endif
 #endif
 
+/* UITableView.h: `UIKIT_EXTERN const CGFloat UITableViewAutomaticDimension`,
+ * -1 (the value UITableView.automaticDimension carries; measured
+ * objcprotocolprobe: a new table's rowHeight reads -1). */
+extern const CGFloat UITableViewAutomaticDimension;
+
 #pragma mark - Images and views (UIImage.h, UIView.h, UIBlurEffect.h, UIApplication.h)
 
 typedef NS_ENUM(NSInteger, UIImageOrientation) {
@@ -455,36 +460,20 @@ NS_SWIFT_NAME(UIUserActivityRestoringObjC) @protocol UIUserActivityRestoring <NS
 - (void)restoreUserActivityState:(NSUserActivity *)userActivity;
 @end
 
-NS_SWIFT_NAME(UIScrollViewDelegateObjC) @protocol UIScrollViewDelegate <NSObject>
-@optional
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView;
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
-@end
-
-NS_SWIFT_NAME(UITableViewDataSourceObjC) @protocol UITableViewDataSource <NSObject>
-@required
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-@optional
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-- (nullable NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section;
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath;
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(NSInteger)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
-@end
-
-NS_SWIFT_NAME(UITableViewDelegateObjC) @protocol UITableViewDelegate <NSObject, UIScrollViewDelegate>
-@optional
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSInteger)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
-@end
-
-NS_SWIFT_NAME(UITextViewDelegateObjC) @protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
+/* UIScrollViewDelegate, UITableViewDataSource / UITableViewDelegate and
+ * UICollectionViewDataSource / UICollectionViewDelegate are OpenUIKit's own
+ * `@objc` protocols now, with UIKit's names and SDK selectors: they come from
+ * OpenUIKit-Swift.h, and one protocol serves an app's Swift and Objective-C
+ * halves (docs/agent_reports/objc-protocols.md). Repeating them here is a
+ * "different definitions in different modules" error.
+ *
+ * UITextViewDelegate below is still this header's declaration (OpenUIKit's
+ * text-view delegate is not an @objc protocol yet) and so cannot refine the
+ * generated UIScrollViewDelegate: refining a forward declaration compiles, but
+ * Swift does not export the protocol object and the link fails (MEASURED:
+ * undefined `__OBJC_PROTOCOL_$_UIScrollViewDelegate` referenced from
+ * `__OBJC_$_PROTOCOL_REFS_UITextViewDelegate`). */
+NS_SWIFT_NAME(UITextViewDelegateObjC) @protocol UITextViewDelegate <NSObject>
 @optional
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
 - (void)textViewDidBeginEditing:(UITextView *)textView;

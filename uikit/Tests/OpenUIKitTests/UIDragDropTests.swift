@@ -51,7 +51,7 @@ private final class DropSpy: UIDropInteractionDelegate {
 #if !os(Linux)
 @MainActor
 #endif
-private final class TableSource: UITableViewDataSource {
+private final class TableSource: NSObject, UITableViewDataSource {
     var rows = ["a", "b", "c"]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { rows.count }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

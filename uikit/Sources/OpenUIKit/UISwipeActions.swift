@@ -13,7 +13,9 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
-
+// NSObject-derived, as in UIKit (the SDK declares it `: NSObject`), so it can
+// cross the `@objc` delegate / data-source protocols on the Apple toolchain
+// (objc-protocols.md). Same provider choice as UIColor.swift.
 #if canImport(Foundation)
 import class Foundation.NSObject
 #elseif canImport(ObjectiveC)
@@ -79,10 +81,10 @@ extension UITableView {
         let config: UISwipeActionsConfiguration?
         if edge.contains(.left) {
             config = (delegate as? UITableViewDelegate)?
-                .tableView(self, leadingSwipeActionsConfigurationForRowAt: indexPath)
+                ._leadingSwipe(self, indexPath)
         } else {
             config = (delegate as? UITableViewDelegate)?
-                .tableView(self, trailingSwipeActionsConfigurationForRowAt: indexPath)
+                ._trailingSwipe(self, indexPath)
         }
         guard let config else { return }
         cell._openRevealSwipe(config, edge: edge, progress: progress)

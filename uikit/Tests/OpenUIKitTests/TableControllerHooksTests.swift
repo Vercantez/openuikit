@@ -33,7 +33,12 @@ final class TableControllerHooksTests: XCTestCase {
                        AnyHashable("row" as NSString))
         // The delegate path the table view already uses sees the override.
         let delegate: UITableViewDelegate = o
+#if canImport(ObjectiveC)
+        // UIKit's @objc protocol: an optional requirement (objc-protocols.md).
+        XCTAssertNotNil(delegate.tableView?(o.tableView, trailingSwipeActionsConfigurationForRowAt: ip) ?? nil)
+#else
         XCTAssertNotNil(delegate.tableView(o.tableView, trailingSwipeActionsConfigurationForRowAt: ip))
+#endif
         XCTAssertNil(UIContextMenuConfiguration(identifier: nil).identifier)
     }
 }

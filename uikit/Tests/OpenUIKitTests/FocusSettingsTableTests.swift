@@ -3,6 +3,7 @@
 // tableprobe oracle run of 2026-09-07 (agent/focus-fidelity-tables; the
 // same insetGrouped table on the iPhone 16 3x AND the iPhone SE 2x) pin
 // down. Every number below is a frame read off one of those dumps.
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
@@ -11,7 +12,7 @@ import XCTest
 /// .zero`, nil-title sections whose `heightForHeaderInSection` returns 30,
 /// a 50 pt titled header, a UIImageView(systemName:) accessory, a padded
 /// switch accessory.
-private final class FocusShapeSource: UITableViewDataSource, UITableViewDelegate {
+private final class FocusShapeSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     struct Section { let title: String?; let headerHeight: CGFloat; let rows: Int }
     let sections: [Section] = [
         Section(title: nil, headerHeight: 30, rows: 1),        // default browser

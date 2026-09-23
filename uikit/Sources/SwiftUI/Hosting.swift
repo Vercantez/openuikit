@@ -2,6 +2,9 @@
 import Foundation
 #endif
 import OpenUIKit
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
 
 @MainActor
 private extension Animation {
@@ -268,8 +271,17 @@ func _openDeliverURL(_ url: URL, in root: UIView) -> Bool {
     return delivered
 }
 
+// NSObject-derived wherever the Objective-C runtime exists: on the Apple
+// toolchain UIScrollViewDelegate is UIKit's @objc protocol refining
+// NSObjectProtocol (docs/agent_reports/objc-protocols.md).
+#if canImport(ObjectiveC)
+private typealias _SwiftUIScrollCoordinatorBase = ObjectiveC.NSObject
+#else
+private class _SwiftUIScrollCoordinatorBase { init() {} }
+#endif
+
 @MainActor
-private final class _SwiftUIScrollCoordinator: UIScrollViewDelegate {
+private final class _SwiftUIScrollCoordinator: _SwiftUIScrollCoordinatorBase, UIScrollViewDelegate {
     let storage: _OpenScrollProxyStorage
     let geometryObservers: [_OpenScrollGeometryObserver]
     let visibilityObservers: [_OpenScrollVisibilityObserver]
@@ -287,6 +299,7 @@ private final class _SwiftUIScrollCoordinator: UIScrollViewDelegate {
         self.geometryObservers = geometryObservers
         self.visibilityObservers = visibilityObservers
         self.phaseObservers = phaseObservers
+        super.init()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) { notify(scrollView) }

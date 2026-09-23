@@ -1030,6 +1030,17 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // UIKit's delegate / data-source protocols as @objc protocols
+    // (docs/agent_reports/objc-protocols.md): the scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcprotocolprobe/run.sh).
+    .target(name: "OpenUIKitObjCProtocolFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcprotocolprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCProtocolTests",
+                dependencies: ["OpenUIKitObjCProtocolFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCProtocolTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     // CoreGraphics / ImageIO type unification (docs/agent_reports/cg-unify.md).
     // The scenario is the SAME Swift the iOS 26.1 oracle runs
     // (Tools/oracle2/cgunifyprobe/run.sh); it imports UIKit only, so it also
