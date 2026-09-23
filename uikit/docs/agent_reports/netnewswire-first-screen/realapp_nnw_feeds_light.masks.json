@@ -3,9 +3,9 @@
  "masks": [
   {
    "rect": [
-    340,
+    340.333,
     213.333,
-    21,
+    20.667,
     27.333
    ],
    "reason": "unread count of 'Today' (fetched articles, live data)"

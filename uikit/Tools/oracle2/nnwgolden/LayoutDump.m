@@ -55,6 +55,21 @@ __attribute__((constructor)) static void OUKLayoutDumpInstall(void) {
         };
         NSData *data = [NSJSONSerialization dataWithJSONObject:doc options:NSJSONWritingPrettyPrinted error:nil];
         [data writeToFile:outPath atomically:YES];
+        // The app's own window, as the other real-app goldens are taken
+        // (drawHierarchy of the key window at the screen scale): system
+        // chrome drawn outside the app process (status bar, home indicator)
+        // is not part of it, exactly as it is not part of the port's render.
+        NSString *pngPath = env[@"OPENUIKIT_WINDOWSHOT_PATH"];
+        if (pngPath) {
+            UIGraphicsImageRendererFormat *format = [UIGraphicsImageRendererFormat formatForTraitCollection:key.traitCollection];
+            format.scale = key.screen.scale;
+            UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithBounds:key.bounds format:format];
+            NSData *png = [renderer PNGDataWithActions:^(UIGraphicsImageRendererContext *ctx) {
+                [key drawViewHierarchyInRect:key.bounds afterScreenUpdates:NO];
+            }];
+            [png writeToFile:pngPath atomically:YES];
+            NSLog(@"WINDOWSHOT_WRITTEN %@", pngPath);
+        }
         NSLog(@"LAYOUTDUMP_WRITTEN %@ %lu views", outPath, (unsigned long)views.count);
     });
 }
