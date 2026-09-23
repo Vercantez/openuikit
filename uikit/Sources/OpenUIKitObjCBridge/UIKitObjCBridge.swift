@@ -147,8 +147,8 @@ extension UIScrollView {
 // MARK: - UILabel / UITextView / UITextField
 
 extension UILabel {
-    @objc(text) public var __objc_text: String? { get { text } set { text = newValue } }
-    @objc(numberOfLines) public var __objc_numberOfLines: Int { get { numberOfLines } set { numberOfLines = newValue } }
+    // text / numberOfLines are native @objc members of UILabel now
+    // (vtable-free, eidolon-first-screen.md).
 }
 
 extension UITextView {
@@ -217,7 +217,6 @@ extension UIWindow {
 extension UIApplication {
     @objc(sharedApplication) public class var __objc_shared: UIApplication { UIApplication.shared }
     /// The Swift delegate object; an Objective-C caller reads it as `id`.
-    @objc(delegate) public var __objc_delegate: AnyObject? { delegate as AnyObject? }
     @objc(keyWindow) public var __objc_keyWindow: UIWindow? { keyWindow }
     @objc(windows) public var __objc_windows: [UIWindow] { windows }
     @objc(openURL:options:completionHandler:)
@@ -308,8 +307,7 @@ extension UIActivityIndicatorView {
 }
 
 extension UIImageView {
-    @objc(initWithImage:) public convenience init(__objcImage image: UIImage?) { self.init(image: image) }
-    @objc(image) public var __objc_image: UIImage? { get { image } set { image = newValue } }
+    // initWithImage: / image are native @objc members of UIImageView now.
 }
 
 extension UIImage {
@@ -426,7 +424,7 @@ extension UIView {
 }
 
 extension UILabel {
-    @objc(textColor) public var __objc_textColor: UIColor? { get { textColor } set { textColor = newValue } }
+    // textColor is a native @objc member of UILabel now.
 }
 
 extension UITextField {
@@ -459,6 +457,10 @@ extension UIColor {
     }
 }
 
+#if !canImport(QuartzCore)
+// Where OpenUIKit's own CALayer is the Core Animation layer. On Apple
+// toolchains CALayer is QuartzCore's, whose colour properties are these
+// selectors already (cg-unify phase 3).
 extension CALayer {
     @objc(borderColor) public var __objc_borderColor: CoreGraphics.CGColor? {
         get { borderColor } set { borderColor = newValue }
@@ -470,6 +472,7 @@ extension CALayer {
         get { shadowColor } set { shadowColor = newValue }
     }
 }
+#endif
 
 // MARK: - UIView.layer, font properties
 
@@ -478,7 +481,7 @@ extension UIView {
 }
 
 extension UILabel {
-    @objc(font) public var __objc_font: UIFont? { get { font } set { font = newValue } }
+    // font is a native @objc member of UILabel now.
 }
 
 extension UITextField {
@@ -574,6 +577,24 @@ extension NSLayoutConstraint {
 extension UIImage {
     @objc(imageWithContentsOfFile:) public class func __objc_image(contentsOfFile path: String) -> UIImage? {
         UIImage(contentsOfFile: path)
+    }
+    /// UIImage.h's CGImage surface (cg-unify: `CGImageRef` is CoreGraphics'
+    /// own image; UIImageOrientation is the SDK's NSInteger enum).
+    @objc(CGImage) public var __objc_CGImage: CoreGraphics.CGImage? { cgImage }
+    @objc(imageOrientation) public var __objc_imageOrientation: Int { imageOrientation.rawValue }
+    @objc(imageWithCGImage:) public class func __objc_image(cgImage: CoreGraphics.CGImage) -> UIImage {
+        UIImage(cgImage: cgImage)
+    }
+    @objc(imageWithCGImage:scale:orientation:)
+    public class func __objc_image(cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) -> UIImage {
+        UIImage(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
+    }
+    @objc(initWithCGImage:) public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage) {
+        self.init(cgImage: cgImage)
+    }
+    @objc(initWithCGImage:scale:orientation:)
+    public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) {
+        self.init(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
     }
     @objc(initWithData:) public convenience init?(__objcData data: Data) { self.init(data: [UInt8](data)) }
     @objc(imageWithData:) public class func __objc_image(data: Data) -> UIImage? { UIImage(data: [UInt8](data)) }
@@ -719,6 +740,224 @@ extension UIView {
         animate(withDuration: duration, delay: delay, usingSpringWithDamping: dampingRatio,
                 initialSpringVelocity: velocity, options: AnimationOptions(rawValue: options),
                 animations: animations, completion: completion)
+    }
+}
+
+// MARK: - Eidolon's CocoaPods (eidolon-first-screen)
+//
+// Selectors FLKAutoLayout, ORStackView, Artsy+UILabels, Artsy-UIButtons,
+// SDWebImage and NJKWebViewProgress send, as forwarding twins; values checked
+// line for line against the iOS 26.1 simulator by Tests/PodSurfaceTests
+// (Tools/oracle2/podsurfaceprobe/transcript-ios26.1.txt).
+
+private func lineBreakModeRaw(_ mode: NSLineBreakMode) -> Int {
+    switch mode {
+    case .byWordWrapping: return 0
+    case .byCharWrapping: return 1
+    case .byClipping: return 2
+    case .byTruncatingHead: return 3
+    case .byTruncatingTail: return 4
+    case .byTruncatingMiddle: return 5
+    }
+}
+private func podLineBreakMode(_ raw: Int) -> NSLineBreakMode {
+    switch raw {
+    case 1: return .byCharWrapping
+    case 2: return .byClipping
+    case 3: return .byTruncatingHead
+    case 4: return .byTruncatingTail
+    case 5: return .byTruncatingMiddle
+    default: return .byWordWrapping
+    }
+}
+private func podTextAlignment(_ raw: Int) -> NSTextAlignment { NSTextAlignment(rawValue: raw) ?? .natural }
+
+extension UIView {
+    @objc(translatesAutoresizingMaskIntoConstraints) public var __objc_translatesAutoresizingMaskIntoConstraints: Bool {
+        get { translatesAutoresizingMaskIntoConstraints } set { translatesAutoresizingMaskIntoConstraints = newValue }
+    }
+    @objc(isOpaque) public var __objc_isOpaque: Bool { get { isOpaque } set { isOpaque = newValue } }
+    @objc(opaque) public var __objc_opaque: Bool { get { isOpaque } set { isOpaque = newValue } }
+    @objc(window) public var __objc_window: UIWindow? { window }
+}
+
+extension NSLayoutConstraint {
+    @objc(priority) public var __objc_priority: Float {
+        get { priority.rawValue } set { priority = UILayoutPriority(rawValue: newValue) }
+    }
+}
+
+extension UILabel {
+    @objc(textAlignment) public var __objc_textAlignment: Int {
+        get { textAlignment.rawValue } set { textAlignment = podTextAlignment(newValue) }
+    }
+    @objc(lineBreakMode) public var __objc_lineBreakMode: Int {
+        get { lineBreakModeRaw(lineBreakMode) } set { lineBreakMode = podLineBreakMode(newValue) }
+    }
+}
+
+extension NSParagraphStyle {
+    @objc(lineSpacing) public var __objc_lineSpacing: CGFloat { lineSpacing }
+    @objc(alignment) public var __objc_alignment: Int { alignment.rawValue }
+    @objc(paragraphSpacing) public var __objc_paragraphSpacing: CGFloat { paragraphSpacing }
+    @objc(paragraphSpacingBefore) public var __objc_paragraphSpacingBefore: CGFloat { paragraphSpacingBefore }
+    @objc(firstLineHeadIndent) public var __objc_firstLineHeadIndent: CGFloat { firstLineHeadIndent }
+    @objc(headIndent) public var __objc_headIndent: CGFloat { headIndent }
+}
+
+extension NSMutableParagraphStyle {
+    @objc(setLineSpacing:) public func __objc_setLineSpacing(_ v: CGFloat) { lineSpacing = v }
+    @objc(setAlignment:) public func __objc_setAlignment(_ v: Int) { alignment = podTextAlignment(v) }
+    @objc(setParagraphSpacing:) public func __objc_setParagraphSpacing(_ v: CGFloat) { paragraphSpacing = v }
+    @objc(setParagraphSpacingBefore:) public func __objc_setParagraphSpacingBefore(_ v: CGFloat) { paragraphSpacingBefore = v }
+    @objc(setFirstLineHeadIndent:) public func __objc_setFirstLineHeadIndent(_ v: CGFloat) { firstLineHeadIndent = v }
+    @objc(setHeadIndent:) public func __objc_setHeadIndent(_ v: CGFloat) { headIndent = v }
+}
+
+extension UIButton {
+    @objc(contentEdgeInsets) public var __objc_contentEdgeInsets: OpenUIKitObjCSupport.UIEdgeInsetsObjC {
+        get { edgeInsets(contentEdgeInsets) } set { contentEdgeInsets = edgeInsets(newValue) }
+    }
+}
+
+
+extension UIActivityIndicatorView {
+    /// `-initWithActivityIndicatorStyle:` (SDWebImage UIImageView+WebCache),
+    /// including the deprecated 0/1/2 styles.
+    @objc(initWithActivityIndicatorStyle:) public convenience init(__objcStyle raw: Int) {
+        self.init(style: UIActivityIndicatorView.Style(rawValue: raw) ?? .medium)
+    }
+    @objc(activityIndicatorViewStyle) public var __objc_activityIndicatorViewStyle: Int {
+        get { style.rawValue } set { style = UIActivityIndicatorView.Style(rawValue: newValue) ?? .medium }
+    }
+    @objc(color) public var __objc_color: UIColor? { get { color } set { color = newValue } }
+    @objc(hidesWhenStopped) public var __objc_hidesWhenStopped: Bool {
+        get { hidesWhenStopped } set { hidesWhenStopped = newValue }
+    }
+}
+
+
+extension UIButton {
+    /// `+buttonWithType:`. OpenUIKit has custom (0) and system (1); the
+    /// SDK's other system-drawn types (detailDisclosure 2 … close 7) build a
+    /// system button without their glyph.
+    @objc(buttonWithType:) public class func __objc_button(withType raw: Int) -> UIButton {
+        UIButton(type: raw == 0 ? .custom : .system)
+    }
+}
+
+extension UIColor {
+    @objc(getRed:green:blue:alpha:) public func __objc_getRed(
+        _ red: UnsafeMutablePointer<CGFloat>?, green: UnsafeMutablePointer<CGFloat>?,
+        blue: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+        getRed(red, green: green, blue: blue, alpha: alpha)
+    }
+    @objc(getWhite:alpha:) public func __objc_getWhite(
+        _ white: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+        getWhite(white, alpha: alpha)
+    }
+}
+
+
+extension UIImage {
+    @objc(images) public var __objc_images: [UIImage]? { images }
+    @objc(duration) public var __objc_duration: TimeInterval { duration }
+    @objc(animatedImageWithImages:duration:)
+    public class func __objc_animatedImage(with images: [UIImage], duration: TimeInterval) -> UIImage? {
+        animatedImage(with: images, duration: duration)
+    }
+}
+
+extension UIApplication {
+    /// iOS types it `id<UIApplicationDelegate>` (NJKWebViewProgressView reads
+    /// `.delegate.window` through it); the object is the same one `delegate`
+    /// returns.
+    @objc(delegate) public var __objc_typedDelegate: UIApplicationDelegateObjC? {
+        (delegate as AnyObject?).map { unsafeBitCast($0, to: UIApplicationDelegateObjC.self) }
+    }
+}
+
+
+extension NSLayoutConstraint {
+    /// ORStackView: `+constraintsWithVisualFormat:options:metrics:views:`.
+    @objc(constraintsWithVisualFormat:options:metrics:views:)
+    public class func __objc_constraints(withVisualFormat format: String, options: UInt,
+                                          metrics: [String: Any]?, views: [String: Any]) -> [NSLayoutConstraint] {
+        constraints(withVisualFormat: format, options: FormatOptions(rawValue: options), metrics: metrics, views: views)
+    }
+}
+
+extension UIView {
+    @objc(addConstraints:) public func __objc_addConstraints(_ constraints: [NSLayoutConstraint]) {
+        addConstraints(constraints)
+    }
+    @objc(removeConstraint:) public func __objc_removeConstraint(_ constraint: NSLayoutConstraint?) {
+        if let constraint { removeConstraint(constraint) }
+    }
+    @objc(removeConstraints:) public func __objc_removeConstraints(_ constraints: [NSLayoutConstraint]) {
+        removeConstraints(constraints)
+    }
+}
+
+
+extension NSLayoutConstraint {
+    @objc(firstItem) public var __objc_firstItem: AnyObject? { firstItem }
+    @objc(secondItem) public var __objc_secondItem: AnyObject? { secondItem }
+    @objc(firstAttribute) public var __objc_firstAttribute: Int { firstAttribute.rawValue }
+    @objc(secondAttribute) public var __objc_secondAttribute: Int { secondAttribute.rawValue }
+    @objc(relation) public var __objc_relation: Int { relation.rawValue }
+    @objc(multiplier) public var __objc_multiplier: CGFloat { multiplier }
+}
+
+extension UIView {
+    @objc(layoutMarginsGuide) public var __objc_layoutMarginsGuide: UILayoutGuide { layoutMarginsGuide }
+}
+
+
+extension UIPasteboard {
+    @objc(generalPasteboard) public class var __objc_general: UIPasteboard { general }
+    @objc(pasteboardWithUniqueName) public class func __objc_withUniqueName() -> UIPasteboard { withUniqueName() }
+    @objc(removePasteboardWithName:) public class func __objc_remove(withName name: String) {
+        remove(withName: Name(name))
+    }
+    @objc(name) public var __objc_name: String { name.rawValue }
+    @objc(string) public var __objc_string: String? { get { string } set { string = newValue } }
+    @objc(URL) public var __objc_URL: URL? { get { url } set { url = newValue } }
+    @objc(numberOfItems) public var __objc_numberOfItems: Int { numberOfItems }
+    @objc(hasStrings) public var __objc_hasStrings: Bool { hasStrings }
+    @objc(hasURLs) public var __objc_hasURLs: Bool { hasURLs }
+}
+
+extension UIWindow {
+    @objc(windowLevel) public var __objc_windowLevel: CGFloat {
+        get { windowLevel.rawValue } set { windowLevel = UIWindow.Level(newValue) }
+    }
+}
+
+// MARK: - Delegates and data sources (@objc protocols; objc-protocols.md)
+
+extension UIScrollView {
+    @objc(delegate) public var __objc_delegate: UIScrollViewDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(zoomScale) public var __objc_zoomScale: CGFloat { get { zoomScale } set { zoomScale = newValue } }
+    @objc(minimumZoomScale) public var __objc_minimumZoomScale: CGFloat {
+        get { minimumZoomScale } set { minimumZoomScale = newValue }
+    }
+    @objc(maximumZoomScale) public var __objc_maximumZoomScale: CGFloat {
+        get { maximumZoomScale } set { maximumZoomScale = newValue }
+    }
+    @objc(setZoomScale:animated:) public func __objc_setZoomScale(_ scale: CGFloat, animated: Bool) {
+        setZoomScale(scale, animated: animated)
+    }
+}
+
+extension UITableView {
+    @objc(dataSource) public var __objc_dataSource: UITableViewDataSource? {
+        get { dataSource } set { dataSource = newValue }
+    }
+    @objc(rectForRowAtIndexPath:) public func __objc_rectForRow(at indexPath: IndexPath) -> CGRect {
+        rectForRow(at: indexPath)
     }
 }
 #endif

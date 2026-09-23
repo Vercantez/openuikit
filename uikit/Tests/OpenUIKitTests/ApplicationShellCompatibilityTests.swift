@@ -1,10 +1,11 @@
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
 #if !os(Linux)
 @MainActor
 #endif
-private final class AdjustedInsetRecorder: UIScrollViewDelegate {
+private final class AdjustedInsetRecorder: NSObject, UIScrollViewDelegate {
     var values: [UIEdgeInsets] = []
 
     func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {

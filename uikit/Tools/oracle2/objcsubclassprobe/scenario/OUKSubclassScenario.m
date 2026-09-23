@@ -9,6 +9,7 @@
 @import CoreGraphics;
 #import "OpenUIKit-Swift.h"
 #import "OpenUIKitObjCBridge-Swift.h"
+#import "UIKitObjCSupport.h"
 #else
 #import <UIKit/UIKit.h>
 #endif
@@ -86,6 +87,58 @@ id OUKMakeObjCView(void) {
     return [[OUKObjCView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
 }
 
+// MARK: - UILabel / UIButton / UIImageView subclasses (Eidolon's pods)
+
+/// Shaped like Artsy+UILabels' ARLabel: configures itself in -initWithFrame:
+/// and transforms text in a -setText: override.
+@interface OUKObjCLabel : UILabel
+@end
+@implementation OUKObjCLabel
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    OUKLog(@"OUKObjCLabel -initWithFrame: text=%@ lines=%ld", self.text ?: @"nil", (long)self.numberOfLines);
+    self.numberOfLines = 0;
+    return self;
+}
+- (void)setText:(NSString *)text {
+    OUKLog(@"OUKObjCLabel -setText: %@", text ?: @"nil");
+    [super setText:text.uppercaseString];
+}
+@end
+
+/// Shaped like Artsy-UIButtons' ARButton: a title set in -initWithFrame:, a
+/// -titleRectForContentRect: override.
+@interface OUKObjCButton : UIButton
+@property (nonatomic) NSInteger titleRectCalls;
+@end
+@implementation OUKObjCButton
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    [self setTitle:@"Bid" forState:UIControlStateNormal];
+    OUKLog(@"OUKObjCButton -initWithFrame: title=%@", self.titleLabel.text ?: @"nil");
+    return self;
+}
+- (CGRect)titleRectForContentRect:(CGRect)contentRect {
+    self.titleRectCalls += 1;
+    return [super titleRectForContentRect:contentRect];
+}
+@end
+
+/// Shaped like UIImageViewAligned: -initWithImage: and an -image override.
+@interface OUKObjCImageView : UIImageView
+@end
+@implementation OUKObjCImageView
+- (instancetype)initWithImage:(UIImage *)image {
+    self = [super initWithImage:image];
+    OUKLog(@"OUKObjCImageView -initWithImage: image=%@", N(image));
+    return self;
+}
+- (void)setImage:(UIImage *)image {
+    OUKLog(@"OUKObjCImageView -setImage: %@", N(image));
+    [super setImage:image];
+}
+@end
+
 // MARK: - Driver
 
 NSArray<NSString *> *OUKRunSubclassScenarios(void) {
@@ -138,6 +191,23 @@ NSArray<NSString *> *OUKRunSubclassScenarios(void) {
            [a respondsToSelector:@selector(initWithFrame:)]);
     OUKLog(@"UIView class name=%@ UIResponder class name=%@",
            NSStringFromClass([UIView class]), NSStringFromClass([UIResponder class]));
+
+    OUKLog(@"-- 9 UILabel / UIButton / UIImageView subclasses");
+    OUKObjCLabel *label = [[OUKObjCLabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
+    label.text = @"lot 12";
+    OUKLog(@"label text=%@ lines=%ld super=%@", label.text, (long)label.numberOfLines,
+           NSStringFromClass(class_getSuperclass([label class])));
+    OUKObjCButton *button = [[OUKObjCButton alloc] initWithFrame:CGRectMake(0, 0, 120, 44)];
+    [button layoutIfNeeded];
+    OUKLog(@"button title=%@ titleRectCalled=%d super=%@", button.titleLabel.text ?: @"nil",
+           button.titleRectCalls > 0, NSStringFromClass(class_getSuperclass([button class])));
+    OUKObjCImageView *imageView = [[OUKObjCImageView alloc] initWithImage:nil];
+    imageView.image = nil;
+    OUKLog(@"imageView image=%@ frame=%@ super=%@", N(imageView.image), R(imageView.frame),
+           NSStringFromClass(class_getSuperclass([imageView class])));
+    OUKLog(@"UILabel class name=%@ UIButton class name=%@ UIImageView class name=%@",
+           NSStringFromClass([UILabel class]), NSStringFromClass([UIButton class]),
+           NSStringFromClass([UIImageView class]));
     return [OUKTrace() copy];
 }
 

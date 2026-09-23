@@ -7,6 +7,10 @@
 // docs/REAL_APP_TEST.md) — each declaration below is a line the real app
 // wrote that did not compile.
 
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
+
 // MARK: - Identity comparison
 //
 // UIView inherits NSObject through UIResponder, like UIKit. NSObject supplies
@@ -275,6 +279,55 @@ public final class UITraitChangeRegistration {
     }
 }
 
+/// Delivers a trait-change action the way UIKit does. MEASURED iPhone 16 /
+/// iOS 26.1 (Tools/oracle2/nnwmiscprobe): an action taking
+/// `(_ env: UITraitEnvironment, previous: UITraitCollection)` receives the
+/// registering environment and its previous collection; a no-argument action
+/// is simply invoked; both run synchronously within the trait change.
+/// The target is held weakly (retention is not observable in the probe).
+@preconcurrency @MainActor
+func _uiTraitActionRegistration(traits: [any UITraitDefinition.Type],
+                                target: Any, action: Selector,
+                                environment: AnyObject) -> UITraitChangeRegistration {
+    weak var weakTarget = target as AnyObject
+    weak var weakEnvironment = environment
+    return UITraitChangeRegistration(traits: traits.map(ObjectIdentifier.init)) { previous in
+        guard let target = weakTarget, let environment = weakEnvironment else { return }
+#if canImport(ObjectiveC)
+        if let object = target as? NSObject, object.responds(to: action) {
+            if action.actionArity >= 2 {
+                _ = object.perform(action, with: environment, with: previous)
+            } else if action.actionArity == 1 {
+                _ = object.perform(action, with: environment)
+            } else {
+                _ = object.perform(action)
+            }
+            return
+        }
+#endif
+        if let dispatcher = target as? SelectorDispatching {
+            _ = dispatcher.perform(action.actionName, with: environment, event: nil)
+        }
+    }
+}
+
+extension UIView {
+    @discardableResult
+    public func registerForTraitChanges(_ traits: [any UITraitDefinition.Type],
+                                        target: Any, action: Selector) -> UITraitChangeRegistration {
+        let reg = _uiTraitActionRegistration(traits: traits, target: target,
+                                             action: action, environment: self)
+        _traitRegistrations.append(reg)
+        return reg
+    }
+
+    @discardableResult
+    public func registerForTraitChanges(_ traits: [any UITraitDefinition.Type],
+                                        action: Selector) -> UITraitChangeRegistration {
+        registerForTraitChanges(traits, target: self, action: action)
+    }
+}
+
 extension UIView {
     // `@_optimize(none)`: keeps this generic function out of cross-module
     // SIL serialization. Swift 6.2.4 for Linux aborts ("SILFunction type
@@ -373,6 +426,25 @@ extension UIViewController {
     @available(watchOS, unavailable)
     public func unregisterForTraitChanges(_ registration: UITraitChangeRegistration) {
         _traitRegistrations.removeAll { $0 === registration }
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @available(watchOS, unavailable)
+    @discardableResult
+    public func registerForTraitChanges(_ traits: [any UITraitDefinition.Type],
+                                        target: Any, action: Selector) -> UITraitChangeRegistration {
+        let registration = _uiTraitActionRegistration(traits: traits, target: target,
+                                                      action: action, environment: self)
+        _traitRegistrations.append(registration)
+        return registration
+    }
+
+    @available(iOS 17.0, tvOS 17.0, *)
+    @available(watchOS, unavailable)
+    @discardableResult
+    public func registerForTraitChanges(_ traits: [any UITraitDefinition.Type],
+                                        action: Selector) -> UITraitChangeRegistration {
+        registerForTraitChanges(traits, target: self, action: action)
     }
 
     func _deliverRegisteredTraitChanges(previous: UITraitCollection,

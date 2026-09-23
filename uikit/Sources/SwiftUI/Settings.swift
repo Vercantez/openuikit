@@ -151,6 +151,27 @@ public struct _OpenSection<Parent: _OpenView, Content: _OpenView, Footer: _OpenV
         footer = nil
     }
 
+    /// `Section { content } header: { header }`.
+    public init(
+        @_OpenViewBuilder content: () -> Content,
+        @_OpenViewBuilder header: () -> Parent
+    ) where Footer == _OpenEmptyView {
+        self.header = header()
+        self.content = content()
+        footer = nil
+    }
+
+    /// `Section { content } header: { header } footer: { footer }`.
+    public init(
+        @_OpenViewBuilder content: () -> Content,
+        @_OpenViewBuilder header: () -> Parent,
+        @_OpenViewBuilder footer: () -> Footer
+    ) {
+        self.header = header()
+        self.content = content()
+        self.footer = footer()
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         let headerNode = header.map { header in
             _OpenGraphContext.withStructuralScope(.sectionHeader) {
@@ -607,6 +628,13 @@ public struct _OpenMenuPickerStyle: Sendable {
 
 public typealias MenuPickerStyle = _OpenMenuPickerStyle
 
+public struct _OpenSegmentedPickerStyle: Sendable {
+    public init() {}
+    public static let segmented = _OpenSegmentedPickerStyle()
+}
+
+public typealias SegmentedPickerStyle = _OpenSegmentedPickerStyle
+
 public typealias Section<Parent, Content, Footer> =
     _OpenSection<Parent, Content, Footer>
     where Parent: _OpenView, Content: _OpenView, Footer: _OpenView
@@ -624,3 +652,70 @@ public typealias Alert = _OpenAlert
 public typealias Picker<SelectionValue, Label, Content> =
     _OpenPicker<SelectionValue, Label, Content>
     where SelectionValue: Hashable, Label: _OpenView, Content: _OpenView
+
+
+/// SwiftUI's `LabeledContent`. The automatic style puts the label leading
+/// and the value trailing in secondary colour. MEASURED iPhone 16 / iOS 26.1
+/// (nnwswiftuiprobe): in a 393-pt column it spans the full width, one caption
+/// line tall (14.33 pt). Value font/colour details beyond that are not
+/// measured (KNOWN_GAPS).
+public struct _OpenLabeledContent<Label: _OpenView, Content: _OpenView>: _OpenView {
+    let label: Label
+    let content: Content
+
+    public init(@_OpenViewBuilder content: () -> Content,
+                @_OpenViewBuilder label: () -> Label) {
+        self.content = content()
+        self.label = label()
+    }
+
+    public var body: some _OpenView {
+        HStack {
+            label
+            Spacer()
+            content.foregroundStyle(.secondary)
+        }
+    }
+}
+
+public extension _OpenLabeledContent where Label == _OpenText, Content == _OpenText {
+    init(_ title: String, value: String) {
+        self.init(content: { _OpenText(value) }, label: { _OpenText(title) })
+    }
+}
+
+public typealias LabeledContent<Label, Content> = _OpenLabeledContent<Label, Content>
+    where Label: _OpenView, Content: _OpenView
+
+#if canImport(Foundation)
+/// SwiftUI's `ShareLink`: its label, which presents the system share sheet
+/// (UIActivityViewController) for the item from the key window's front-most
+/// controller.
+public struct _OpenShareLink<Label: _OpenView>: _OpenView {
+    public typealias Body = Never
+    let items: [Any]
+    let label: Label
+
+    public init(item: String, @_OpenViewBuilder label: () -> Label) {
+        items = [item]
+        self.label = label()
+    }
+
+    public init(item: URL, @_OpenViewBuilder label: () -> Label) {
+        items = [item]
+        self.label = label()
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let items = self.items
+        return _OpenButton(action: {
+            guard var top = UIApplication.shared.keyWindow?.rootViewController else { return }
+            while let presented = top.presentedViewController { top = presented }
+            top.present(UIActivityViewController(activityItems: items, applicationActivities: nil),
+                        animated: true)
+        }, label: { label })._makeOpenUIKitNode()
+    }
+}
+
+public typealias ShareLink<Label> = _OpenShareLink<Label> where Label: _OpenView
+#endif

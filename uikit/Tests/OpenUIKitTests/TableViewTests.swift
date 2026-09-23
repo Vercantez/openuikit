@@ -81,7 +81,7 @@ private final class CustomGrandchildHeader: GrandchildBaseHeader {
 #if !os(Linux)
 @MainActor
 #endif
-private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
+private final class BigTableSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     var rows = 10_000
     var selected: [IndexPath] = []
 
@@ -105,7 +105,7 @@ private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
 #if !os(Linux)
 @MainActor
 #endif
-private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelegate {
+private final class PlainFixtureSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     let sections: [(header: String, rows: [String])] = [
         ("Fruits", ["Apple", "Banana", "Cherry"]),
         ("Vegetables", ["Asparagus", "Beetroot"]),
@@ -129,7 +129,7 @@ private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelega
 #if !os(Linux)
 @MainActor
 #endif
-private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDelegate {
+private final class GroupedFixtureSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     // (style, header, footer, row styles)
     let sections: [(header: String, footer: String, styles: [UITableViewCell.CellStyle])] = [
         ("Account", "Your account details are synced across devices.",
@@ -611,7 +611,7 @@ final class TableViewControllerTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
+private final class MovableSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     #if !os(Linux)
     @MainActor
     #endif
@@ -647,7 +647,7 @@ private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
 #if !os(Linux)
 @MainActor
 #endif
-private final class RowMoveSource: UITableViewDataSource {
+private final class RowMoveSource: NSObject, UITableViewDataSource {
     #if !os(Linux)
     @MainActor
     #endif
@@ -1112,7 +1112,7 @@ final class TableViewAnimatedUpdateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class SubtitleListSource: UITableViewDataSource, UITableViewDelegate {
+private final class SubtitleListSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     var titles = ["Alpha", "Bravo", "Charlie"]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         titles.count
@@ -1129,7 +1129,7 @@ private final class SubtitleListSource: UITableViewDataSource, UITableViewDelega
 #if !os(Linux)
 @MainActor
 #endif
-private final class DefaultListSource: UITableViewDataSource {
+private final class DefaultListSource: NSObject, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 3 }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
@@ -1728,7 +1728,7 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class NavFlowValue1Source: UITableViewDataSource, UITableViewDelegate {
+private final class NavFlowValue1Source: NSObject, UITableViewDataSource, UITableViewDelegate {
     let sections: [(String, [(String, String)])] = [
         ("General", [
             ("Notifications", "On"),

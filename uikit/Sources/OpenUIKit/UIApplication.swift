@@ -533,6 +533,16 @@ open class UIApplication: UIResponder {
     /// Home-screen quick actions. MEASURED ValuesProbe2, iPhone SE 3rd gen /
     /// iOS 26.1: the default is an empty array (not nil); assigning `nil`
     /// reads back as `[]`.
+    /// Deprecated in iOS 13 (RxCocoa UIApplication+Rx binds it). MEASURED
+    /// Tools/oracle2/textviewinputprobe (iPhone 16 / iOS 26.1): reads false
+    /// initially and after `= true`, also after a run-loop turn — the setter
+    /// is a no-op on iOS 26.1.
+    @available(iOS, deprecated: 13.0, message: "Provide a custom network activity UI in your app if desired.")
+    public final var isNetworkActivityIndicatorVisible: Bool {
+        get { false }
+        set {}
+    }
+
     private var _shortcutItems: [UIApplicationShortcutItem] = []
     public var shortcutItems: [UIApplicationShortcutItem]? {
         get { _shortcutItems }
@@ -1210,6 +1220,21 @@ open class UIScene: UIResponder {
     /// Canonical Swift spelling imported by UIKit from
     /// `UISceneConnectionOptions`.
     public typealias ConnectionOptions = UISceneConnectionOptions
+
+    // MEASURED iPhone 16 / iOS 26.1 (Tools/oracle2/nnwmiscprobe): the raw
+    // values. OpenUIKit does not post these yet (KNOWN_GAPS).
+    public nonisolated static let willConnectNotification =
+        Notification.Name("UISceneWillConnectNotification")
+    public nonisolated static let didDisconnectNotification =
+        Notification.Name("UISceneDidDisconnectNotification")
+    public nonisolated static let didActivateNotification =
+        Notification.Name("UISceneDidActivateNotification")
+    public nonisolated static let willDeactivateNotification =
+        Notification.Name("UISceneWillDeactivateNotification")
+    public nonisolated static let willEnterForegroundNotification =
+        Notification.Name("UISceneWillEnterForegroundNotification")
+    public nonisolated static let didEnterBackgroundNotification =
+        Notification.Name("UISceneDidEnterBackgroundNotification")
 
     public let session: UISceneSession
     /// UIKit's public delegate property is weak. The application host retains

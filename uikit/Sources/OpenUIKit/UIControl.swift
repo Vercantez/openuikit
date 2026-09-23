@@ -1,3 +1,6 @@
+#if OPENUIKIT_OBJC_SUBCLASSING
+import CPortableIO
+#endif
 // UIControl. Owner: controls/event module (M7).
 //
 // UIKit's control base: state (enabled/highlighted/selected), target-action
@@ -100,7 +103,12 @@ open class UIControl: UIView {
 
     // MARK: State
 
-    /// UIControl.State option set (UIKit raw values).
+    /// UIControl.State option set (UIKit raw values). On Apple toolchains it
+    /// is the C option set Objective-C code spells `UIControlState`
+    /// (cportableio.h `OUKControlState`), as UIKit's is.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    public typealias State = OUKControlState
+#else
     public struct State: OptionSet, Hashable, Sendable {
         public let rawValue: UInt
         public init(rawValue: UInt) { self.rawValue = rawValue }
@@ -108,7 +116,11 @@ open class UIControl: UIView {
         public static let highlighted = State(rawValue: 1 << 0)
         public static let disabled = State(rawValue: 1 << 1)
         public static let selected = State(rawValue: 1 << 2)
+        public static let focused = State(rawValue: 1 << 3)
+        public static let application = State(rawValue: 0x00FF_0000)
+        public static let reserved = State(rawValue: 0xFF00_0000)
     }
+#endif
 
     /// UIControl.Event option set (UIKit raw values).
     public struct Event: OptionSet, Hashable, Sendable {
@@ -459,3 +471,9 @@ open class UIControl: UIView {
         sendActions(for: .touchCancel, with: event)
     }
 }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// UIKit's UIControl.State keys dictionaries (per-state titles, colours,
+/// attributes); the imported C option set needs the conformance spelled.
+extension OUKControlState: @retroactive Hashable {}
+#endif

@@ -19,6 +19,7 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+import class CoreGraphics.CGImage
 // Re-export the SDK's declaration rather than shadowing it. Selective export
 // keeps OpenCoreGraphics' CGColor/CGAffineTransform out of the namespace.
 @_exported import enum CoreGraphics.CGBlendMode
@@ -106,6 +107,14 @@ public final class UIImage: NSObject {
     /// Pixels-per-point of the backing store (like UIImage.scale).
     public let scale: CGFloat
 
+    /// UIKit's `imageOrientation`, as given to `init(cgImage:scale:orientation:)`.
+    /// Stored only: the port draws the pixels as they are (`.up`).
+    public internal(set) var imageOrientation: Orientation = .up
+#if canImport(CoreGraphics)
+    /// The CoreGraphics image this one was made from, or made for `cgImage`.
+    var _cgImageStorage: CGImage?
+#endif
+
     /// Logical size in points (pixel size / scale), like UIImage.size.
     public var size: CGSize {
         CGSize(width: CGFloat(bitmap.width) / scale,
@@ -145,6 +154,22 @@ public final class UIImage: NSObject {
     public init(bitmap: Bitmap, scale: CGFloat = 1) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
+    }
+
+    /// The frames of an animated image (`+animatedImageWithImages:duration:`),
+    /// nil for a still image. MEASURED iOS 26.1 (podsurfaceprobe "## image"):
+    /// the result has the first frame's size and scale, keeps the frames
+    /// themselves, a zero duration becomes 1/30 s per frame, and an empty
+    /// array gives nil.
+    public private(set) var images: [UIImage]?
+    public private(set) var duration: TimeInterval = 0
+
+    public static func animatedImage(with images: [UIImage], duration: TimeInterval) -> UIImage? {
+        guard let first = images.first else { return nil }
+        let result = UIImage(bitmap: first.bitmap, scale: first.scale)
+        result.images = images
+        result.duration = duration > 0 ? duration : Double(images.count) / 30
+        return result
     }
 
     /// UIKit's empty image initializer. The resulting image has zero logical
@@ -749,6 +774,44 @@ public func UIImageWriteToSavedPhotosAlbum(
     }
 }
 
+// MARK: - Orientation and CoreGraphics images (cg-unify)
+
+extension UIImage {
+    /// UIKit's `UIImage.Orientation` (`UIImageOrientation`, SDK raw values).
+    public enum Orientation: Int, Sendable {
+        case up = 0, down = 1, left = 2, right = 3
+        case upMirrored = 4, downMirrored = 5, leftMirrored = 6, rightMirrored = 7
+    }
+}
+
+#if canImport(CoreGraphics)
+extension UIImage {
+    /// UIKit's `cgImage`: CoreGraphics' image of these pixels (the image an
+    /// `init(cgImage:)` was made from, else premultiplied sRGB RGBA8, as
+    /// MEASURED iOS 26.1 cgunifyprobe `## uiimage cgImage`).
+    public var cgImage: CGImage? {
+        if let image = _cgImageStorage { return image }
+        let image = bitmap._premultipliedCGImage()
+        _cgImageStorage = image
+        return image
+    }
+
+    /// UIKit's `init(cgImage:)`: scale 1, orientation up.
+    public convenience init(cgImage: CGImage) {
+        self.init(cgImage: cgImage, scale: 1, orientation: .up)
+    }
+
+    /// UIKit's `init(cgImage:scale:orientation:)`. The pixels are drawn 1:1
+    /// into the renderer's straight-alpha sRGB bitmap; `cgImage` returns the
+    /// original image.
+    public convenience init(cgImage: CGImage, scale: CGFloat, orientation: Orientation) {
+        self.init(bitmap: Bitmap(cgImage) ?? Bitmap(width: 0, height: 0), scale: scale)
+        imageOrientation = orientation
+        _cgImageStorage = cgImage
+    }
+}
+#endif
+
 // MARK: - Drawing (M14, real-app harness)
 //
 // `UIImage.draw(in:)` / `draw(at:)` are how app code composites an image into
@@ -758,7 +821,7 @@ public func UIImageWriteToSavedPhotosAlbum(
 extension UIImage {
     /// Draw the image scaled into `rect` in the CURRENT context.
     public func draw(in rect: CGRect) {
-        UIGraphicsGetCurrentContext()?.draw(bitmap, in: rect)
+        UIGraphics.draw { $0.draw(bitmap, in: rect) }
     }
 
     /// Draw at natural size with its top-left at `point`.
@@ -773,7 +836,11 @@ extension UIImage {
     /// translucent source pixels. Unsupported blend modes currently use the
     /// same source-over path; see `CGBlendMode`'s declaration.
     public func draw(at point: CGPoint, blendMode: CGBlendMode, alpha: CGFloat) {
-        guard let canvas = UIGraphicsGetCurrentContext() else { return }
+        UIGraphics.draw { _draw(at: point, blendMode: blendMode, alpha: alpha, in: $0) }
+    }
+
+    private func _draw(at point: CGPoint, blendMode: CGBlendMode, alpha: CGFloat,
+                       in canvas: Canvas) {
         let rect = CGRect(origin: point, size: size)
         let opacity = Swift.min(Swift.max(alpha, 0), 1)
         guard opacity > 0 else { return }

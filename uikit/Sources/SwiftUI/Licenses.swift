@@ -24,6 +24,26 @@ public struct _OpenList<Content: _OpenView>: _OpenView {
         self.content = content()
     }
 
+    /// `List(_:id:rowContent:)`: one row per element, like
+    /// `List { ForEach(data, id: id, content: rowContent) }`.
+    public init<Data, ID, RowContent>(
+        _ data: Data,
+        id: KeyPath<Data.Element, ID>,
+        @_OpenViewBuilder rowContent: @escaping @MainActor (Data.Element) -> RowContent
+    ) where Content == _OpenForEach<Data, ID, RowContent>,
+            Data: RandomAccessCollection, ID: Hashable, RowContent: _OpenView {
+        content = _OpenForEach(data, id: id, content: rowContent)
+    }
+
+    /// `List(_:rowContent:)` over Identifiable elements.
+    public init<Data, RowContent>(
+        _ data: Data,
+        @_OpenViewBuilder rowContent: @escaping @MainActor (Data.Element) -> RowContent
+    ) where Content == _OpenForEach<Data, Data.Element.ID, RowContent>,
+            Data: RandomAccessCollection, Data.Element: Identifiable, RowContent: _OpenView {
+        content = _OpenForEach(data, id: \.id, content: rowContent)
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(
             .list(

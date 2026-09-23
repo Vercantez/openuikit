@@ -2,6 +2,7 @@
 // NSCollectionLayoutAnchor (2 uses). Every expected number is a row of
 // Tools/oracle2/firefoxrowsprobe/ios-26.1-iphone16.json (iPhone 16, 3x);
 // each test names its row.
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
@@ -140,7 +141,7 @@ final class ToolbarDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class BadgeSource: UICollectionViewDataSource {
+private final class BadgeSource: NSObject, UICollectionViewDataSource {
     let sections: Int
     init(sections: Int) { self.sections = sections }
     func numberOfSections(in collectionView: UICollectionView) -> Int { sections }

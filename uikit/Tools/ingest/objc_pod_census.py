@@ -3,6 +3,7 @@
 route (b)'s <UIKit/UIKit.h> and classify every error.
 
     python3 Tools/ingest/objc_pod_census.py PODS_DIR SPEC.json OUT.json
+    python3 Tools/ingest/objc_pod_census.py --ios-sdk CURATED_SDK PODS_DIR SPEC.json OUT.json
 
 PODS_DIR holds one checkout per pod (at the Podfile.lock version). SPEC.json
 maps pod name -> source subdirectory holding its .h/.m, e.g.
@@ -42,6 +43,12 @@ SURFACE = re.compile(r"\b(UI[A-Z]\w+|CA[A-Z]\w+|NSLayout\w+|NSTextAlignment\w*|N
 UMBRELLA = """#ifndef OPENUIKIT_ROUTE_B_UIKIT_H
 #define OPENUIKIT_ROUTE_B_UIKIT_H
 #import <Foundation/Foundation.h>
+/* Apple's <UIKit/UIKit.h> imports QuartzCore, and on Apple toolchains
+ * OpenUIKit's Core Animation classes ARE QuartzCore's (cg-unify phase 3). */
+#if __has_include(<QuartzCore/QuartzCore.h>)
+#import <CoreGraphics/CoreGraphics.h>
+#import <QuartzCore/QuartzCore.h>
+#endif
 #import "OpenUIKit-Swift.h"
 #import "UIKitObjCSupport.h"
 #if !__swift__
@@ -60,31 +67,62 @@ def classify(msg):
     return 'pod-internal-or-cascade', None
 
 
-def main(pods_dir, spec_path, out_path):
+def main(pods_dir, spec_path, out_path, ios_sdk=None):
+    """`ios_sdk`: a curated iPhoneSimulator SDK (Tools/ingest/ios_target_sdk.py).
+    The TUs are then compiled for arm64-apple-ios26.1-simulator against it and
+    against the iOS-triple build of OpenUIKit (`swift build --triple
+    arm64-apple-ios26.1-simulator --sdk <curated> --target OpenUIKitObjCBridge`),
+    which is how route (b) builds an app's Objective-C half now
+    (ios-target-route.md)."""
+    pods_dir = os.path.abspath(pods_dir)
+    build = BUILD
+    triple = []
+    if ios_sdk:
+        build = os.path.join(UIKIT, '.build', 'arm64-apple-ios-simulator', 'debug')
+        triple = ['-target', 'arm64-apple-ios26.1-simulator', '-isysroot', ios_sdk]
     spec = json.load(open(spec_path))
+    # The fixture form carries {"spec": {...}, "header_names": {pod: [...]}}.
+    header_names = spec.get('header_names', {}) if 'spec' in spec else {}
+    spec = spec.get('spec', spec)
     shim = os.path.join(os.path.dirname(os.path.abspath(out_path)), 'objc_pod_census_shim')
     os.makedirs(os.path.join(shim, 'UIKit'), exist_ok=True)
     open(os.path.join(shim, 'UIKit', 'UIKit.h'), 'w').write(UMBRELLA)
-    header_dirs = []
+    # CocoaPods' Pods/Headers/Public/<Pod>/: every public header of a pod,
+    # flattened, under the pod's name and its module-name spellings
+    # (`<FLKAutoLayout/UIView+FLKAutoLayout.h>`, `<Artsy+UIColors/...>`).
+    public = os.path.join(shim, 'PodHeaders')
+    for pod, sub in spec.items():
+        headers = []
+        for dp, dn, fn in os.walk(os.path.join(pods_dir, pod, sub)):
+            dn[:] = [d for d in dn if d not in SKIP_DIRS]
+            headers += [os.path.join(dp, f) for f in fn if f.endswith('.h')]
+        for name in [pod] + header_names.get(pod, []):
+            d = os.path.join(public, name)
+            os.makedirs(d, exist_ok=True)
+            for h in headers:
+                link = os.path.join(d, os.path.basename(h))
+                if not os.path.lexists(link):
+                    os.symlink(h, link)
+    header_dirs = [public]
     for pod, sub in spec.items():
         for dp, dn, fn in os.walk(os.path.join(pods_dir, pod, sub)):
             dn[:] = [d for d in dn if d not in SKIP_DIRS]
             if any(f.endswith('.h') for f in fn):
                 header_dirs.append(dp)
-    base = ['xcrun', 'clang', '-fsyntax-only', '-ferror-limit=0', '-fobjc-arc', '-fmodules',
+    base = ['xcrun', 'clang', '-fsyntax-only', '-ferror-limit=0', '-fobjc-arc', '-fmodules'] + triple + [
             '-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) '
             '__attribute__((objc_subclassing_restricted)) SWIFT_CLASS_EXTRA',
             '-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA',
-            '-fmodule-map-file=' + os.path.join(BUILD, 'OpenUIKitObjCSupport.build', 'module.modulemap'),
+            '-fmodule-map-file=' + os.path.join(build, 'OpenUIKitObjCSupport.build', 'module.modulemap'),
             # UIKitObjCSupport.h includes cportableio.h (attrstring-unify's
             # NSTextStorage edit mask); without these every TU stops at
             # "'cportableio.h' file not found" (MEASURED objc-surface.md).
-            '-fmodule-map-file=' + os.path.join(BUILD, 'CPortableIO.build', 'module.modulemap'),
+            '-fmodule-map-file=' + os.path.join(build, 'CPortableIO.build', 'module.modulemap'),
             '-I', os.path.join(UIKIT, 'Sources', 'CPortableIO', 'include'),
             '-include', 'UIKit/UIKit.h', '-I', shim,
-            '-I', os.path.join(BUILD, 'OpenUIKit.build', 'include'),
+            '-I', os.path.join(build, 'OpenUIKit.build', 'include'),
             '-I', os.path.join(UIKIT, 'Sources', 'OpenUIKitObjCSupport', 'include'),
-            '-I', os.path.join(BUILD, 'OpenUIKitObjCBridge.build', 'include')]
+            '-I', os.path.join(build, 'OpenUIKitObjCBridge.build', 'include')]
     base += sum((['-I', d] for d in sorted(set(header_dirs))), [])
     pods = {}
     classes = collections.Counter()
@@ -119,6 +157,10 @@ def main(pods_dir, spec_path, out_path):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
+    args = sys.argv[1:]
+    sdk = None
+    if len(args) == 5 and args[0] == '--ios-sdk':
+        sdk, args = args[1], args[2:]
+    if len(args) != 3:
         sys.exit(__doc__)
-    main(*sys.argv[1:])
+    main(*args, ios_sdk=sdk)

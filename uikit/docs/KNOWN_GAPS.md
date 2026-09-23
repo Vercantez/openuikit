@@ -2892,3 +2892,50 @@ Inter-Regular 16 pt at 35.025 pt and in Inter-Regular_SemiBold at 36.05 pt.
 (gray white != RGB white).
 
 `UIDevice.identifierForVendor` is nil (the simulator reports a UUID).
+
+NetNewsWire batch D (Tools/oracle2/nnwmiscprobe, springsettleprobe):
+- `UISlider.trackConfiguration` snaps values to the nearest tick. Tick marks,
+  titles and images are not drawn, and `enabledRange` / `neutralValue` are
+  stored but have no effect. Tie-breaking between two equidistant ticks was
+  not measured.
+- `UIView.animate(springDuration:bounce:...)` settling time matches
+  QuartzCore for bounce >= 0. For overdamped springs (bounce < 0) QuartzCore
+  reports a longer settling time (p 0.5, b -0.3 -> 1.1 s); OpenUIKit uses the
+  critical-damping rule (0.8 s). Settling ignores initial velocity.
+- The `UIScene` notification names exist, but OpenUIKit does not post them
+  on scene transitions yet.
+- `registerForTraitChanges(_:target:action:)` holds the target weakly
+  (retention not measured). On platforms without ObjC, the selector goes
+  through `SelectorDispatching` with the environment as sender, and
+  `previous` is not delivered.
+- `UIContentSizeCategory` raw values are OpenUIKit spellings ("large"). iOS
+  uses "UICTContentSizeCategoryL".
+
+NetNewsWire SwiftUI rows (Tools/oracle2/nnwswiftuiprobe). These views compile
+and run, but some are only partly implemented:
+- `VerticalAlignment.firstTextBaseline` / `.lastTextBaseline` are separate
+  values but are laid out as `.center`. OpenUIKit does not compute text
+  baselines. Measured on iOS: HStack(image, footnote, title) puts all three
+  baselines at y ≈ 513.7.
+- `.baselineOffset(_:)` has no layout effect.
+- `.textSelection(_:)` is accepted, but there is no selection UI.
+- `.help(_:)` is not surfaced.
+- `ScrollView(_:showsIndicators:)` records its axes, but the scroll host is
+  vertical only.
+- `Button(role:action:)` without a label draws "xmark" for `.close`, as
+  measured. Glyphs for the other roles were not measured, so they draw
+  nothing. In an alert, `.close` and `.confirm` map to UIAlertAction
+  `.default`, which was not measured.
+- The `.navigationSubtitle` value lands on `navigationItem.subtitle`. iOS
+  draws it at 12 pt secondaryLabel under a 15-pt title; OpenUIKit's
+  navigation bar does not draw subtitles.
+- `LabeledContent` puts the label leading and the value trailing in
+  secondary colour. Only its full-width, one-line frame was measured.
+- `ShareLink` presents UIActivityViewController. Items are strings or URLs
+  only.
+- `onChange(of:initial:_:)` does not deliver the `initial: true` call.
+- `Text(_:tableName:bundle:comment:)` shows the key (the development
+  language). No bundle lookup is done.
+- On the iOS triple, `AttributedString(NSAttributedString)` is Foundation's
+  initializer. The resulting runs carry only attributes whose scopes
+  Foundation knows, so OpenUIKit's font and colour keys are dropped.

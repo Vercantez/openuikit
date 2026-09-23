@@ -345,7 +345,13 @@ let coreTargets: [Target] = [
     // (docs/agent_reports/simplenote-objc-core.md). Linux ELF and the
     // Foundation-hidden guest library route compile the same sources without
     // it (no `@objc` there); their behaviour is unchanged.
-    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"],
+    // cg-unify phase 3: on Apple platforms Core Animation is QuartzCore's; a
+    // load-time constructor installs OpenUIKit's CALayer/CATransaction
+    // interposers (Sources/OpenUIKit/QuartzCoreUnification.swift).
+    .target(name: "OpenUIKitQuartzBootstrap", path: "Sources/OpenUIKitQuartzBootstrap"),
+    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz",
+                                              .target(name: "OpenUIKitQuartzBootstrap",
+                                                      condition: .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS]))],
             swiftSettings: [.define("OPENUIKIT_OBJC_SUBCLASSING",
                                     .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]),
     .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
@@ -525,7 +531,13 @@ let frameworkTargets: [Target] = [
     ),
     .target(
         name: "SafariServices",
-        dependencies: ["OpenUIKit", "UIKit"]
+        dependencies: ["OpenUIKit", "UIKit"],
+        // Objective-C exceptions from -initWithURL: (safari-objc.md): Apple
+        // toolchains only. The Mach-O guest compiles this source too, with
+        // objc4 and a Foundation facade that has no NSException (MEASURED
+        // build_full: "cannot find 'NSException' in scope").
+        swiftSettings: [.define("OPENUIKIT_OBJC_EXCEPTIONS",
+                                .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]
     ),
     .target(
         name: "MessageUI",
@@ -702,6 +714,14 @@ let testTargets: [Target] = [
         dependencies: ["OpenUIKit"],
         path: "Tests/NibRuntimeTests",
         swiftSettings: [.unsafeFlags(["-swift-version", "5"])]
+    ),
+    // Compiled in Swift 4 mode, like Eidolon: the Swift 4 UIKit spellings
+    // (Sources/OpenUIKit/Swift4Names.swift) must resolve.
+    .testTarget(
+        name: "Swift4NamesTests",
+        dependencies: ["OpenUIKit"],
+        path: "Tests/Swift4NamesTests",
+        swiftSettings: [.unsafeFlags(["-swift-version", "4"])]
     ),
     .testTarget(
         name: "OpenUIKitCTests",
@@ -949,7 +969,15 @@ let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
     "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge",
-].map { .library(name: $0, targets: [$0]) }
+].map { .library(name: $0, targets: [$0]) } + [
+    // The Clang module `SafariServices` for Objective-C targets
+    // (Sources/SafariServicesObjC/include/module.modulemap). OpenUIKit is in
+    // the product so a consumer depends on it DIRECTLY: SwiftPM orders a
+    // Clang target after only its direct Swift dependencies' generated
+    // headers (MEASURED: "OpenUIKit-Swift.h not found" compiling
+    // NetNewsWireObjC when OpenUIKit came in through SafariServicesObjC).
+    .library(name: "SafariServicesObjC", targets: ["SafariServicesObjC", "OpenUIKit"]),
+]
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
@@ -970,6 +998,22 @@ let openUIKitObjCSubclassingCFlags: CSetting = .unsafeFlags(openUIKitObjCSubclas
 let openUIKitObjCSubclassingSwiftFlags: SwiftSetting =
     .unsafeFlags(openUIKitObjCSubclassingDefines.flatMap { ["-Xcc", $0] })
 let simplenoteTargets: [Target] = [
+    // Objective-C view of SafariServices, module name `SafariServices` with
+    // `export *` (docs/agent_reports/safari-objc.md). Objective-C app targets
+    // depend on this product; Swift targets on the Swift `SafariServices`.
+    .target(name: "SafariServicesObjC", dependencies: ["OpenUIKit"],
+            path: "Sources/SafariServicesObjC", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags]),
+    // NetNewsWire's SFSafariViewController+Extras shape against it; the
+    // scenario is the SAME .m the iOS 26.1 oracle runs
+    // (Tools/oracle2/safariobjcprobe/run.sh).
+    .target(name: "OpenUIKitSafariFixtures", dependencies: ["SafariServicesObjC", "OpenUIKit"],
+            path: "Tools/oracle2/safariobjcprobe/scenario", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "SafariObjCTests",
+                dependencies: ["OpenUIKitSafariFixtures", "SafariServices", "OpenUIKit"],
+                path: "Tests/SafariObjCTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
     // Route (b) Objective-C declarations that OpenUIKit-Swift.h cannot carry
     // (enums, structs, protocols, typed strings). Pure declarations; values
@@ -991,8 +1035,15 @@ let simplenoteTargets: [Target] = [
     .target(name: "OpenUIKitObjCSubclassFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
             path: "Tools/oracle2/objcsubclassprobe/scenario", publicHeadersPath: "include",
             cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    // Objective-C UICollectionViewFlowLayout subclasses shaped like Eidolon's
+    // ARCollectionViewMasonryLayout (eidolon-flowlayout). The scenario is the
+    // SAME .m the iOS 26.1 oracle runs (Tools/oracle2/flowlayoutprobe/run.sh).
+    .target(name: "OpenUIKitFlowLayoutFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
+            path: "Tools/oracle2/flowlayoutprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
     .testTarget(name: "ObjCSubclassingTests",
-                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitFlowLayoutFixtures",
+                               "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSubclassingTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     // The Objective-C surface of UIFont / CALayer / CGColorRef
@@ -1010,6 +1061,15 @@ let simplenoteTargets: [Target] = [
                 "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
                 "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
             ])]),
+    // Eidolon's CocoaPods' UIKit selectors (eidolon-first-screen): the SAME
+    // .m Tools/oracle2/podsurfaceprobe/run.sh runs on the iOS 26.1 simulator.
+    .target(name: "OpenUIKitPodSurfaceFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/podsurfaceprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "PodSurfaceTests",
+                dependencies: ["OpenUIKitPodSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/PodSurfaceTests"),
     .testTarget(name: "ObjCSurfaceTests",
                 dependencies: ["OpenUIKitObjCSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSurfaceTests",
@@ -1023,6 +1083,17 @@ let simplenoteTargets: [Target] = [
     .testTarget(name: "AttributedStringUnifyTests",
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // UIKit's delegate / data-source protocols as @objc protocols
+    // (docs/agent_reports/objc-protocols.md): the scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcprotocolprobe/run.sh).
+    .target(name: "OpenUIKitObjCProtocolFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcprotocolprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCProtocolTests",
+                dependencies: ["OpenUIKitObjCProtocolFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCProtocolTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     // CoreGraphics / ImageIO type unification (docs/agent_reports/cg-unify.md).
     // The scenario is the SAME Swift the iOS 26.1 oracle runs
@@ -1093,9 +1164,13 @@ let eidolonDependencyTargets: [Target] = [
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "RxCocoaRuntime", path: "Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime",
             publicHeadersPath: "include", cSettings: [.unsafeFlags(["-fobjc-arc"])]),
-    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit"],
+    // The upstream iOS/ sources are `#if os(iOS)`: on the iOS triple (route
+    // b) they compile against OpenUIKit's `UIKit` and are the branch Eidolon
+    // uses (UIButton.rx.tap); on macOS they compile out.
+    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit",
+                                            .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/RxSwift/RxCocoa",
-            exclude: ["Runtime", "iOS", "RxCocoa.h"],
+            exclude: ["Runtime", "RxCocoa.h"],
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Result", path: "Sources/EidolonDependencies/Result/Result",
             exclude: ["Result.h"], swiftSettings: eidolonDependencySwiftSettings),
@@ -1105,7 +1180,9 @@ let eidolonDependencyTargets: [Target] = [
             exclude: ["SwiftyJSON.h"], swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Reachability", path: "Sources/EidolonDependencies/Reachability/Reachability",
             swiftSettings: eidolonDependencySwiftSettings),
-    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift"],
+    // Moya's iOS branch imports UIKit.UIImage (route b, iOS triple).
+    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift",
+                                         .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/Moya/Sources",
             swiftSettings: eidolonDependencySwiftSettings + [.define("COCOAPODS")]),
     .target(name: "Action", dependencies: ["RxSwift", "RxCocoa"],

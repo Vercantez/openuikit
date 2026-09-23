@@ -72,6 +72,14 @@ open class UISlider: UIControl {
             if value != oldValue { setNeedsDisplay() }
         }
     }
+    /// iOS 26 tick-mark track. MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/nnwmiscprobe): defaults to nil. With a configuration
+    /// whose `allowsTickValuesOnly` is true, setting `value` snaps it to the
+    /// nearest tick, a tick's `position` (0...1) being a fraction of
+    /// minimumValue...maximumValue (0...5 with 6 ticks: 0.4 -> 0, 0.6 -> 1,
+    /// 2.49 -> 2, 2.51 -> 3, 5 -> 5). Tick marks are not drawn yet
+    /// (KNOWN_GAPS).
+    public var trackConfiguration: TrackConfiguration? { didSet { setNeedsDisplay() } }
     /// UIKit: continuous sliders fire .valueChanged while dragging.
     public var isContinuous: Bool = true
 
@@ -103,6 +111,18 @@ open class UISlider: UIControl {
         let hi = Swift.max(minimumValue, maximumValue)
         if value < lo { value = lo }
         if value > hi { value = hi }
+        if let config = trackConfiguration, config.allowsTickValuesOnly,
+           !config.ticks.isEmpty {
+            let span = maximumValue - minimumValue
+            var best = value
+            var bestDistance = Float.infinity
+            for tick in config.ticks {
+                let candidate = minimumValue + tick.position * span
+                let distance = (candidate - value).magnitude
+                if distance < bestDistance { best = candidate; bestDistance = distance }
+            }
+            if best != value { value = best }
+        }
     }
 
     /// 0...1 position of `value` in the min...max range.
@@ -226,5 +246,62 @@ open class UISlider: UIControl {
         canvas.fill(Path.roundedRect(thumb, cornerRadius: thumb.height / 2),
                     color: thumbColor)
         canvas.restore()
+    }
+}
+
+extension UISlider {
+    /// iOS 26 `UISlider.TrackConfiguration` (the Swift refinement of
+    /// UISliderTrackConfiguration). MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/nnwmiscprobe): `allowsTickValuesOnly` defaults to true,
+    /// `neutralValue` to 0, `enabledRange` to 0...1; `numberOfTicks: n` makes
+    /// n ticks evenly spaced over 0...1 (6 -> 0, 0.2, ..., 1; 3 -> 0, 0.5, 1).
+    public struct TrackConfiguration: Hashable {
+        public struct Tick: Hashable {
+            public let position: Float
+            public var title: String?
+            public var image: UIImage?
+
+            public init(position: Float, title: String? = nil, image: UIImage? = nil) {
+                self.position = position
+                self.title = title
+                self.image = image
+            }
+
+            public static func == (a: Tick, b: Tick) -> Bool {
+                a.position == b.position && a.title == b.title && a.image === b.image
+            }
+
+            public func hash(into hasher: inout Hasher) {
+                hasher.combine(position)
+                hasher.combine(title)
+                hasher.combine(image.map(ObjectIdentifier.init))
+            }
+        }
+
+        public var allowsTickValuesOnly: Bool
+        public var neutralValue: Float
+        public var enabledRange: ClosedRange<Float>
+        public let ticks: [Tick]
+
+        public init(allowsTickValuesOnly: Bool = true, neutralValue: Float = 0,
+                    enabledRange: ClosedRange<Float> = 0...1, ticks: [Tick]) {
+            self.allowsTickValuesOnly = allowsTickValuesOnly
+            self.neutralValue = neutralValue
+            self.enabledRange = enabledRange
+            self.ticks = ticks
+        }
+
+        public init(allowsTickValuesOnly: Bool = true, neutralValue: Float = 0,
+                    enabledRange: ClosedRange<Float> = 0...1, numberOfTicks: Int) {
+            var ticks: [Tick] = []
+            if numberOfTicks == 1 {
+                ticks = [Tick(position: 0)]
+            } else if numberOfTicks > 1 {
+                let last = Float(numberOfTicks - 1)
+                ticks = (0..<numberOfTicks).map { Tick(position: Float($0) / last) }
+            }
+            self.init(allowsTickValuesOnly: allowsTickValuesOnly, neutralValue: neutralValue,
+                      enabledRange: enabledRange, ticks: ticks)
+        }
     }
 }

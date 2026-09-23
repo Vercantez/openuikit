@@ -19,6 +19,7 @@
 
 const UIEdgeInsets UIEdgeInsetsZero = {0, 0, 0, 0};
 const UIOffset UIOffsetZero = {0, 0};
+const CGFloat UITableViewAutomaticDimension = -1;
 
 const UIFontWeight UIFontWeightUltraLight = -0.8;
 const UIFontWeight UIFontWeightThin = -0.6;
@@ -43,6 +44,9 @@ NSAttributedStringKey const NSForegroundColorAttributeName = @"NSColor";
 NSAttributedStringKey const NSParagraphStyleAttributeName = @"NSParagraphStyle";
 NSAttributedStringKey const NSLinkAttributeName = @"NSLink";
 NSAttributedStringKey const NSAttachmentAttributeName = @"NSAttachment";
+NSAttributedStringKey const NSUnderlineStyleAttributeName = @"NSUnderline";          /* NSAttributedString.swift underlineStyle */
+NSAttributedStringKey const NSStrikethroughStyleAttributeName = @"NSStrikethrough";  /* NSAttributedString.swift strikethroughStyle */
+const CGFloat UIViewNoIntrinsicMetric = -1;                                          /* UIView.noIntrinsicMetric */
 NSNotificationName const UIApplicationDidEnterBackgroundNotification = @"UIApplicationDidEnterBackgroundNotification";
 NSNotificationName const UIApplicationDidBecomeActiveNotification = @"UIApplicationDidBecomeActiveNotification";
 NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
@@ -58,3 +62,29 @@ NSString * const UICollectionElementKindSectionFooter = @"UICollectionElementKin
 NSString * const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
 NSString * const UIKeyInputUpArrow = @"UIKeyInputUpArrow";
 NSString * const UIKeyInputDownArrow = @"UIKeyInputDownArrow";
+
+/* NSDictionaryOfVariableBindings(view, other) -> @{@"view": view, @"other": other}
+ * (MEASURED iOS 26.1, podsurfaceprobe "## vfl": the keys are the argument
+ * spellings, whitespace dropped). */
+#if TARGET_OS_IPHONE || !__swift__
+NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSeparatedKeysString, id firstValue, ...) {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    NSArray<NSString *> *keys = [commaSeparatedKeysString componentsSeparatedByString:@","];
+    va_list args;
+    va_start(args, firstValue);
+    id value = firstValue;
+    for (NSString *raw in keys) {
+        if (!value) break;
+        NSString *key = [raw stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        result[key] = value;
+        value = va_arg(args, id);
+    }
+    va_end(args);
+    return [result copy];
+}
+#endif
+
+/* UIWindow.Level (UIEvent.swift), MEASURED iOS 26.1 podsurfaceprobe "## windowlevel". */
+const UIWindowLevel UIWindowLevelNormal = 0;
+const UIWindowLevel UIWindowLevelStatusBar = 1000;
+const UIWindowLevel UIWindowLevelAlert = 2000;

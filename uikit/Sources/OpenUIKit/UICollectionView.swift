@@ -1,3 +1,7 @@
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope.
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
 // UICollectionView. Owner: collection module (M13, docs/APP_COMPAT.md
 // cluster #1 — 498 uses across 23 types, all four corpus apps).
 //
@@ -35,7 +39,75 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+// `@objc` protocols (OPENUIKIT_OBJC_SUBCLASSING) need Foundation's IndexPath
+// bridging in scope; scoped imports keep its other names out of this file.
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 
+// Apple toolchain (OPENUIKIT_OBJC_SUBCLASSING): UIKit's own shape, an `@objc`
+// protocol with UIKit's runtime name, NSObjectProtocol refinement, SDK
+// selectors and SDK required/optional split, so Swift code writes
+// `delegate?.method?(…)` and an Objective-C class adopts the same protocol
+// (docs/agent_reports/objc-protocols.md). OpenUIKit's own call sites go
+// through UIKitProtocolDispatch.swift. Linux ELF and the Foundation-hidden
+// guest have no `@objc`: the Swift protocol below with default
+// implementations, unchanged.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UICollectionViewDataSource) @preconcurrency @MainActor
+public protocol UICollectionViewDataSource: NSObjectProtocol {
+    @objc(collectionView:numberOfItemsInSection:)
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    @objc(collectionView:cellForItemAtIndexPath:)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    @objc(numberOfSectionsInCollectionView:)
+    optional func numberOfSections(in collectionView: UICollectionView) -> Int
+    @objc(collectionView:viewForSupplementaryElementOfKind:atIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView
+    @objc(collectionView:canMoveItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool
+}
+
+@objc(UICollectionViewDelegate) @preconcurrency @MainActor
+public protocol UICollectionViewDelegate: UIScrollViewDelegate {
+    @objc(collectionView:shouldSelectItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool
+    @objc(collectionView:didSelectItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    @objc(collectionView:didDeselectItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath)
+    @objc(collectionView:willDisplayCell:forItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
+                                 forItemAt indexPath: IndexPath)
+    @objc(collectionView:didEndDisplayingCell:forItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
+                                 forItemAt indexPath: IndexPath)
+    // NetNewsWire's MainFeedCollectionViewController / MainTimelineDataSource
+    // implement these (netnewswire-first-screen); SDK selectors.
+    @objc(collectionView:canPerformPrimaryActionForItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 canPerformPrimaryActionForItemAt indexPath: IndexPath) -> Bool
+    @objc(collectionView:performPrimaryActionForItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 performPrimaryActionForItemAt indexPath: IndexPath)
+    @objc(collectionView:shouldShowMenuForItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 shouldShowMenuForItemAt indexPath: IndexPath) -> Bool
+    @objc(collectionView:canPerformAction:forItemAtIndexPath:withSender:)
+    optional func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector,
+                                 forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool
+    @objc(collectionView:performAction:forItemAtIndexPath:withSender:)
+    optional func collectionView(_ collectionView: UICollectionView, performAction action: Selector,
+                                 forItemAt indexPath: IndexPath, withSender sender: Any?)
+    @objc(collectionView:contextMenuConfigurationForItemAtIndexPath:point:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 contextMenuConfigurationForItemAt indexPath: IndexPath,
+                                 point: CGPoint) -> UIContextMenuConfiguration?
+}
+#else
 @preconcurrency @MainActor
 public protocol UICollectionViewDataSource: AnyObject {
     func numberOfSections(in collectionView: UICollectionView) -> Int
@@ -130,6 +202,7 @@ public extension UICollectionViewDelegate {
                         contextMenuConfigurationForItemAt indexPath: IndexPath,
                         point: CGPoint) -> UIContextMenuConfiguration? { nil }
 }
+#endif
 
 /// Per-section overrides for the flow layout.
 ///
@@ -283,6 +356,9 @@ open class UICollectionView: UIScrollView {
 
     // MARK: Init
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(initWithFrame:collectionViewLayout:)
+#endif
     public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         collectionViewLayout = layout
         super.init(frame: frame)
@@ -308,6 +384,7 @@ open class UICollectionView: UIScrollView {
     }
 
     private func configureCollectionView(with layout: UICollectionViewLayout) {
+        _configured = true
         layout.collectionView = self
         backgroundColor = .systemBackground
         alwaysBounceVertical = false
@@ -323,7 +400,7 @@ open class UICollectionView: UIScrollView {
         countsDirty = false
         sectionItemCounts.removeAll()
         guard let ds = dataSource else { return }
-        let n = ds.numberOfSections(in: self)
+        let n = ds._numberOfSections(self)
         sectionItemCounts.reserveCapacity(n)
         for s in 0..<n {
             sectionItemCounts.append(ds.collectionView(self, numberOfItemsInSection: s))
@@ -451,19 +528,26 @@ open class UICollectionView: UIScrollView {
 
     public func layoutAttributesForItem(at indexPath: IndexPath)
         -> UICollectionViewLayoutAttributes? {
+        flushReloadInvalidation()
         ensureCounts()
+        if collectionViewLayout.isPrepared,
+           let cached = _queriedAttributes[ElementKey(kind: nil, indexPath: indexPath)] {
+            return cached
+        }
         return collectionViewLayout.layoutAttributesForItem(at: indexPath)
     }
 
     public func layoutAttributesForSupplementaryElement(ofKind elementKind: String,
                                                         at indexPath: IndexPath)
         -> UICollectionViewLayoutAttributes? {
+        flushReloadInvalidation()
         ensureCounts()
         return collectionViewLayout.layoutAttributesForSupplementaryView(ofKind: elementKind,
                                                                          at: indexPath)
     }
 
     public func indexPathForItem(at point: CGPoint) -> IndexPath? {
+        flushReloadInvalidation()
         ensureCounts()
         collectionViewLayout.prepareIfNeeded()
         let probe = CGRect(x: point.x, y: point.y, width: 1, height: 1)
@@ -483,8 +567,22 @@ open class UICollectionView: UIScrollView {
         }
         selectedPaths.removeAll()
         countsDirty = true
-        collectionViewLayout.invalidateLayout()
+        // MEASURED flowlayoutprobe section 5 (iPhone 16 / iOS 26.1): setting
+        // the data source (a reload) sends the layout nothing; its
+        // -invalidateLayout arrives at the start of the next layout pass,
+        // immediately before -prepareLayout.
+        reloadInvalidationPending = true
         setNeedsLayout()
+    }
+
+    /// A `reloadData()` whose layout invalidation the next layout pass (or
+    /// geometry query) still owes.
+    private var reloadInvalidationPending = false
+
+    private func flushReloadInvalidation() {
+        guard reloadInvalidationPending else { return }
+        reloadInvalidationPending = false
+        collectionViewLayout.invalidateLayout()
     }
 
     /// PORTABLE FALLBACK, documented divergence: UIKit animates inserts,
@@ -530,12 +628,72 @@ open class UICollectionView: UIScrollView {
 
     /// The layout told us its cache is stale.
     func _layoutInvalidated() {
+        _queriedAttributes.removeAll()
         setNeedsLayout()
     }
 
     // MARK: Tiling
 
     private var inTile = false
+
+    /// One element query: the grid-aligned rect, then the content size
+    /// UIKit reads right after it.
+    private func _queryElements(_ visibleRect: CGRect) -> [UICollectionViewLayoutAttributes] {
+        let queried = collectionViewLayout.layoutAttributesForElements(in: _tilingQueryRect(visibleRect)) ?? []
+        let size = collectionViewLayout.collectionViewContentSize
+        if size != contentSize { contentSize = size }
+        _queriedAttributes.removeAll(keepingCapacity: true)
+        for a in queried { _queriedAttributes[a.elementKey] = a }
+        return queried
+    }
+
+    /// Asks the layout about the bounds clamped into the scrollable range
+    /// when the offset lies outside it; true when that invalidated.
+    @discardableResult
+    private func _revalidateOffsetBounds() -> Bool {
+        let lo = minContentOffset, hi = maxContentOffset
+        // `+ 0` turns the -0 of a negated zero inset into 0.
+        let clamped = CGPoint(x: max(lo.x, min(hi.x, contentOffset.x)) + 0,
+                              y: max(lo.y, min(hi.y, contentOffset.y)) + 0)
+        guard clamped != contentOffset else { return false }
+        guard case .invalidate(let context) = boundsQuestion(for: CGRect(origin: clamped, size: bounds.size)) else {
+            return false
+        }
+        invalidateForBoundsChange(context)
+        return true
+    }
+
+    /// MEASURED flowlayoutprobe section 10: leaving the window with the
+    /// offset outside the scrollable range asks the layout about the clamped
+    /// bounds (and invalidates on YES), inside `-removeFromSuperview`.
+    open override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window == nil, _configured, !inTile, dataSource != nil {
+            _revalidateOffsetBounds()
+        }
+    }
+
+    /// `prepare()` if the layout is stale and, when it ran, the content size
+    /// it produced.
+    private func _prepareLayoutAndContentSize() {
+        guard collectionViewLayout.prepareIfNeeded() else { return }
+        let size = collectionViewLayout.collectionViewContentSize
+        if size != contentSize { contentSize = size }
+    }
+
+    /// The rect UIKit hands `layoutAttributesForElements(in:)`: the visible
+    /// bounds widened to whole multiples of the bounds size on the grid
+    /// anchored at the origin. MEASURED flowlayoutprobe (bounds height H,
+    /// offset y): H 480 y 0 -> {0, 480}; y 100 -> {0, 960}; y -59 ->
+    /// {-480, 960}; H 200 y 0 -> {0, 200} (x likewise with the width).
+    final func _tilingQueryRect(_ visible: CGRect) -> CGRect {
+        guard visible.width > 0, visible.height > 0 else { return visible }
+        let x0 = (visible.minX / visible.width).rounded(.down) * visible.width
+        let x1 = (visible.maxX / visible.width).rounded(.up) * visible.width
+        let y0 = (visible.minY / visible.height).rounded(.down) * visible.height
+        let y1 = (visible.maxY / visible.height).rounded(.up) * visible.height
+        return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
+    }
 
     /// Context produced by `invalidationContext(forBoundsChange:)` while the
     /// bounds were still the old value; consumed when the bounds have moved.
@@ -553,6 +711,16 @@ open class UICollectionView: UIScrollView {
     private var boundsInvalidationPending = false
     /// Whether the bounds set in flight invalidated the layout.
     private var invalidatedForCurrentBoundsChange = false
+    /// False while `super.init(frame:)` sets the first frame: MEASURED
+    /// flowlayoutprobe section 5, `-initWithFrame:collectionViewLayout:`
+    /// sends the layout nothing.
+    private var _configured = false
+    /// The last element query's attributes, by element: what
+    /// `layoutAttributesForItem(at:)` answers from (MEASURED flowlayoutprobe
+    /// section 5: `-[UICollectionView layoutAttributesForItemAtIndexPath:]`
+    /// for a laid-out item does not reach the layout's override). Dropped
+    /// on every invalidation.
+    private var _queriedAttributes: [ElementKey: UICollectionViewLayoutAttributes] = [:]
 
     // MEASURED signalrowsprobe invalidate.* (2026-09-09) and
     // signalrowsprobe/offset.swift (2026-09-10), iPhone 16 / iOS 26.1: EVERY
@@ -574,7 +742,7 @@ open class UICollectionView: UIScrollView {
         willSet {
             invalidatedForCurrentBoundsChange = false
             pendingBoundsContext = nil
-            guard newValue != bounds, !inTile else { preMoveChainResult = nil; return }
+            guard newValue != bounds, !inTile, _configured else { preMoveChainResult = nil; return }
             if let invalidated = preMoveChainResult {
                 preMoveChainResult = nil
                 invalidatedForCurrentBoundsChange = invalidated
@@ -592,8 +760,10 @@ open class UICollectionView: UIScrollView {
             consumePendingBoundsContext()
             if invalidatedForCurrentBoundsChange, bounds.size != oldValue.size,
                dataSource != nil, bounds.width > 0, bounds.height > 0 {
-                ensureCounts()
-                collectionViewLayout.prepareIfNeeded()
+                // MEASURED flowlayoutprobe section 6: inside -setFrame:,
+                // -prepareLayout then -collectionViewContentSize; the
+                // element query waits for the layout pass.
+                _prepareLayoutAndContentSize()
             }
         }
     }
@@ -682,14 +852,39 @@ open class UICollectionView: UIScrollView {
         defer { inTile = false }
         guard dataSource != nil, bounds.width > 0, bounds.height > 0 else { return }
 
-        ensureCounts()
-        collectionViewLayout.prepareIfNeeded()
-        let size = collectionViewLayout.collectionViewContentSize
-        if size != contentSize { contentSize = size }
+        // MEASURED flowlayoutprobe sections 5-9 (iPhone 16 / iOS 26.1), the
+        // order UIKit sends a layout (an Objective-C subclass included):
+        // [-invalidateLayout owed by a reload], -prepareLayout (the data
+        // source's counts are fetched lazily, inside it, when the layout
+        // first asks), -collectionViewContentSize, then
+        // -layoutAttributesForElementsInRect: and -collectionViewContentSize
+        // again; without a pending invalidation only the last two.
+        flushReloadInvalidation()
+        let sizeBeforePass = contentSize
+        _prepareLayoutAndContentSize()
         backgroundView?.frame = CGRect(origin: contentOffset, size: bounds.size)
 
         let visibleRect = CGRect(origin: contentOffset, size: bounds.size)
-        let attributes = collectionViewLayout.layoutAttributesForElements(in: visibleRect) ?? []
+        var queried = _queryElements(visibleRect)
+        // MEASURED flowlayoutprobe section 8: when the pass changed the
+        // content size and the offset now lies outside the scrollable range,
+        // UIKit asks -shouldInvalidateLayoutForBoundsChange: with the CLAMPED
+        // bounds; a YES invalidates, and the same pass prepares and queries
+        // again. The offset itself does not move.
+        if contentSize != sizeBeforePass,_revalidateOffsetBounds() {
+            _prepareLayoutAndContentSize()
+            queried = _queryElements(visibleRect)
+        }
+        // Views exist only for what intersects the visible bounds (section 7:
+        // the query returned 6 elements, 3 cells were visible) and for items
+        // the collection view knows of: an invalidation does not refetch the
+        // counts, so an item the data source added since is not shown
+        // (section 8: 7 attributes, count still 5, 3 cells).
+        let attributes = queried.filter { a in
+            guard a.frame.intersects(visibleRect) else { return false }
+            guard a.representedElementCategory == .cell else { return true }
+            return a.indexPath.item < numberOfItems(inSection: a.indexPath.section)
+        }
 
         var needed = Set<ElementKey>()
         needed.reserveCapacity(attributes.count)
@@ -700,8 +895,7 @@ open class UICollectionView: UIScrollView {
         visibleViews.retire(keeping: needed) { key, view in
             view.removeFromSuperview()
             if key.kind == nil, let cell = view as? UICollectionViewCell {
-                collectionDelegate?.collectionView(self, didEndDisplaying: cell,
-                                                   forItemAt: key.indexPath)
+                collectionDelegate?._didEndDisplaying(self, cell, key.indexPath)
             }
             recycle(view)
         }
@@ -717,8 +911,7 @@ open class UICollectionView: UIScrollView {
             }
             let view: UICollectionReusableView
             if let kind = a.representedElementKind {
-                let supp = ds.collectionView(self, viewForSupplementaryElementOfKind: kind,
-                                             at: a.indexPath)
+                let supp = ds._supplementary(self, kind, a.indexPath)
                 supp.elementKind = kind
                 view = supp
             } else {
@@ -739,8 +932,7 @@ open class UICollectionView: UIScrollView {
                 cell._updateConfigurationIfNeeded()
             }
             if let cell = view as? UICollectionViewCell {
-                collectionDelegate?.collectionView(self, willDisplay: cell,
-                                                   forItemAt: a.indexPath)
+                collectionDelegate?._willDisplay(self, cell, a.indexPath)
             }
         }
 
@@ -818,24 +1010,24 @@ open class UICollectionView: UIScrollView {
     /// A bound cell finished a tap.
     func commitItemTap(on cell: UICollectionViewCell) {
         guard allowsSelection, let path = indexPath(for: cell) else { return }
-        guard collectionDelegate?.collectionView(self, shouldSelectItemAt: path) ?? true else {
+        guard collectionDelegate?._shouldSelect(self, path) ?? true else {
             return
         }
         if allowsMultipleSelection, selectedPaths.contains(path) {
             deselectItem(at: path, animated: false)
-            collectionDelegate?.collectionView(self, didDeselectItemAt: path)
+            collectionDelegate?._didDeselect(self, path)
             return
         }
         if !allowsMultipleSelection {
             for old in selectedPaths where old != path {
                 cellForItem(at: old)?.isSelected = false
                 selectedPaths.remove(old)
-                collectionDelegate?.collectionView(self, didDeselectItemAt: old)
+                collectionDelegate?._didDeselect(self, old)
             }
         }
         selectedPaths.insert(path)
         cell.isSelected = true
-        collectionDelegate?.collectionView(self, didSelectItemAt: path)
+        collectionDelegate?._didSelect(self, path)
     }
 
     // MARK: Scrolling to an item

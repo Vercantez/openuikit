@@ -10,6 +10,7 @@
 //   2. that the members which really GATE behaviour do gate it: the text
 //      field's editing/return/should-change hooks and the gesture
 //      recognizer's should-begin / simultaneity / should-receive.
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
@@ -22,7 +23,7 @@ private final class MinimalTextFieldDelegate: UITextFieldDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalTextViewDelegate: UITextViewDelegate {}
+private final class MinimalTextViewDelegate: NSObject, UITextViewDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -30,7 +31,7 @@ private final class MinimalGestureDelegate: UIGestureRecognizerDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalScrollDelegate: UIScrollViewDelegate {}
+private final class MinimalScrollDelegate: NSObject, UIScrollViewDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -70,7 +71,14 @@ final class DelegateDeclarationTests: XCTestCase {
         XCTAssertFalse(MinimalGestureDelegate()
             .gestureRecognizer(UIGestureRecognizer(),
                                shouldRecognizeSimultaneouslyWith: UIGestureRecognizer()))
+#if canImport(ObjectiveC)
+        // Apple toolchain: UIKit's @objc protocol, where the method is an
+        // unimplemented `optional` requirement (objc-protocols.md).
+        XCTAssertFalse(MinimalScrollDelegate().responds(
+            to: #selector(UIScrollViewDelegate.scrollViewShouldScrollToTop(_:))))
+#else
         XCTAssertTrue(MinimalScrollDelegate().scrollViewShouldScrollToTop(UIScrollView()))
+#endif
         XCTAssertTrue(MinimalSearchBarDelegate().searchBarShouldBeginEditing(UISearchBar()))
         XCTAssertTrue(MinimalTabBarControllerDelegate()
             .tabBarController(UITabBarController(), shouldSelect: UIViewController()))
@@ -237,7 +245,7 @@ final class TextFieldDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class RecordingTextViewDelegate: UITextViewDelegate {
+private final class RecordingTextViewDelegate: NSObject, UITextViewDelegate {
     var changes = 0
     var allowChange = true
     var didBegin = 0
@@ -380,7 +388,7 @@ final class GestureDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class RetargetingScrollDelegate: UIScrollViewDelegate {
+private final class RetargetingScrollDelegate: NSObject, UIScrollViewDelegate {
     var target: CGPoint?
     var seenVelocity: CGPoint = .zero
     var natural: CGPoint = .zero
@@ -660,6 +668,9 @@ private final class TestActivity: UIActivity {
     override var activityTitle: String? { title }
     override var activityType: UIActivity.ActivityType? { UIActivity.ActivityType("test.\(title)") }
     override func perform() { performed += 1; activityDidFinish(true) }
+    // UIActivity's default is NO (MEASURED iOS 26.1, podsurfaceprobe
+    // "## activity2"): an activity that can run says so.
+    override func canPerform(withActivityItems activityItems: [Any]) -> Bool { true }
 }
 
 #if !os(Linux)

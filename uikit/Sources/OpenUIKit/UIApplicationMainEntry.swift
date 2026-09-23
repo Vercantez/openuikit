@@ -7,8 +7,12 @@
 // UIApplicationSceneManifest -- connects the scene the manifest names:
 // the scene delegate class by name, the storyboard's initial controller in a
 // window UIKit creates and hands to the delegate, then the foreground
-// transition. OpenUIKit has no run loop of its own (UIApplication.swift
-// header), so `main()` drives a headless one on the main dispatch queue.
+// transition. `main()` then runs the main thread's CFRunLoop, as
+// UIApplicationMain does: the main dispatch queue, Foundation's Timers and
+// RunLoop sources are all serviced by it. OpenUIKit's own host clock
+// (animations, transitions, scroll physics, the host-clock timers) advances
+// only through `UIWindow.tick(timestamp:)`, so the loop carries a display-rate
+// ticker that feeds it (`_installHeadlessTicker`).
 //
 // MEASURED Tools/oracle2/scenelaunchprobe/transcript-ios26.1.txt (iPhone 16,
 // iOS 26.1, the probe app has exactly NetNewsWire's manifest shape):
@@ -41,6 +45,9 @@ import func Foundation.NSClassFromString
 #endif
 #if canImport(Foundation) && canImport(Dispatch)
 import Dispatch
+#endif
+#if canImport(Foundation) && canImport(ObjectiveC)
+import CoreFoundation
 #endif
 #if canImport(ObjectiveC)
 import ObjectiveC
@@ -258,11 +265,36 @@ extension UIApplication {
                 }
             }
         }
-        dispatchMain()
+        _installHeadlessTicker()
+        CFRunLoopRun()
+        exit(0)
 #else
         fatalError("UIApplicationDelegate.main() needs Foundation, Dispatch and the ObjC runtime")
 #endif
     }
+
+#if canImport(Foundation) && canImport(ObjectiveC)
+    /// Adds a 60 Hz CFRunLoop timer (common modes) to the main run loop. Each
+    /// fire sets `OpenUIKitRuntime.animationTime` to the seconds since the
+    /// ticker started and ticks the key window (or the first window): the
+    /// host-clock steppers are process-wide, so one tick per frame advances
+    /// all of them. Returns the timer so a host (or test) can invalidate it.
+    @MainActor
+    @discardableResult
+    public static func _installHeadlessTicker(interval: CFTimeInterval = 1.0 / 60) -> CFRunLoopTimer {
+        let start = CFAbsoluteTimeGetCurrent()
+        let timer = CFRunLoopTimerCreateWithHandler(nil, start + interval, interval, 0, 0) { _ in
+            MainActor.assumeIsolated {
+                let now = CFAbsoluteTimeGetCurrent() - start
+                OpenUIKitRuntime.animationTime = now
+                let app = UIApplication.shared
+                (app.keyWindow ?? app.windows.first)?.tick(timestamp: now)
+            }
+        }!
+        CFRunLoopAddTimer(CFRunLoopGetMain(), timer, .commonModes)
+        return timer
+    }
+#endif
 
 #if canImport(Foundation)
     @MainActor

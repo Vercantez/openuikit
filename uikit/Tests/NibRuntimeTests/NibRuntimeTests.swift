@@ -191,5 +191,24 @@ final class NibRuntimeTests: XCTestCase {
         XCTAssertEqual(known.subtracting(differing), [],
                        "known divergences that no longer differ: remove them from the list")
     }
+
+    /// ibtool archives a `white="1"` gray as `UISystemColorName = whiteColor`
+    /// plus its components, and a label's default text colour as
+    /// `labelColor` (fixtures/nibruntime/NibGuest.storyboardc). `whiteColor`
+    /// is one of UIColor.h's fixed class colours (not appearance-dependent),
+    /// so its archived components are the colour: nothing is unhandled.
+    func testFixedNamedColorsDecodeFromComponents() throws {
+        OpenUIKitRuntime.nibSearchPaths = [NibRuntimeTests.uikitRoot + "/fixtures/nibruntime"]
+        let controller = try XCTUnwrap(UIStoryboard(name: "NibGuest", bundle: nil)
+            .instantiateInitialViewController())
+        let background = try XCTUnwrap(controller.view.backgroundColor)
+        var white: CGFloat = -1, alpha: CGFloat = -1
+        XCTAssertTrue(background.getWhite(&white, alpha: &alpha))
+        XCTAssertEqual(white, 1, accuracy: 0.001)
+        XCTAssertEqual(alpha, 1, accuracy: 0.001)
+        // (The probe's own classes live in the guest module, so class /
+        // outlet misses are expected here; colours are what this checks.)
+        XCTAssertEqual(UINib.unhandledKeys.filter { $0.hasPrefix("UISystemColorName") || $0.hasPrefix("UIColor") }, [])
+    }
 }
 #endif

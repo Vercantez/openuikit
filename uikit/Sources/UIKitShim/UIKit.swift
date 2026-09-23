@@ -52,6 +52,12 @@
 #if canImport(ImageIO)
 @_exported import ImageIO
 #endif
+// cg-unify phase 3: Apple's `import UIKit` re-exports QuartzCore too
+// (reexports-ios26.1.json: `CADisplayLink`, `CATransform3DIdentity`), and
+// OpenUIKit's Core Animation types are QuartzCore's own there.
+#if canImport(QuartzCore)
+@_exported import QuartzCore
+#endif
 #endif
 // iOS 26.1 (ios-oss-launch3): a file that imports only UIKit can name
 // UserNotifications types (`UNAuthorizationStatus` compiles with
@@ -65,6 +71,16 @@
 // :93; Tools/iostarget/probe `userNotificationsVisibleThroughUIKit`).
 #if (canImport(AppKit) || os(iOS)) && canImport(UserNotifications)
 @_exported import UserNotifications
+#endif
+
+// Apple's UIKit headers import CoreText (NSAdaptiveImageGlyph.h, NSText.h)
+// and export it: a file importing only UIKit names CTFont and the SFNT
+// layout constants (typecheck against iPhoneSimulator26.1; NetNewsWire
+// NSAttributedString+Extensions.swift:358 `kVerticalPositionType`;
+// Tools/iostarget/probe `coreTextVisibleThroughUIKit`). On the macOS host
+// AppKit already exports it.
+#if os(iOS) && canImport(CoreText)
+@_exported import CoreText
 #endif
 
 // UIKit owns the typed AttributedString keys for font and text decoration.
@@ -343,7 +359,10 @@ public typealias NSNotification = OpenUIKit.NSNotification
 #endif
 public typealias NotificationCenter = OpenUIKit.NotificationCenter
 public typealias OperationQueue = OpenUIKit.OperationQueue
-public typealias Timer = OpenUIKit.Timer
+// `Timer` is not re-declared here: OpenUIKit re-exports Foundation's class
+// wherever Foundation exists, and a second declaration of the name breaks
+// collection sugar (`[Timer]()`, timer-unify.md). The Foundation-hidden guest
+// gets OpenUIKit's host-clock `Timer` through the re-export of OpenUIKit.
 
 // Foundation/AppKit also ships an NSDiffableDataSourceSnapshot declaration.
 // UIKit applications must resolve the snapshot paired with this shim's
@@ -365,8 +384,10 @@ public typealias UICollectionViewDiffableDataSource<SectionIdentifierType, ItemI
 // TextKit-1 types live in OpenUIKit and shadow Foundation's names. UIKit
 // applications resolve the portable ones through this module, matching
 // `import UIKit` on iOS (where Foundation's types are the only ones).
+#if !(canImport(ObjectiveC) && canImport(Foundation))
 public typealias NSAttributedString = OpenUIKit.NSAttributedString
 public typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
+#endif
 public typealias NSTextAttachment = OpenUIKit.NSTextAttachment
 public typealias NSTextStorage = OpenUIKit.NSTextStorage
 public typealias NSTextContainer = OpenUIKit.NSTextContainer

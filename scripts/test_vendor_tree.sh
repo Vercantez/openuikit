@@ -68,6 +68,25 @@ trap - EXIT
 expect_ok 'clean after dirty-file removal' \
     assert_vendor_tree "$ROOT" uikit "$ROOT/uikit" "$EXPECTED_INREPO_UIKIT_TREE" OpenUIKit
 
+# Regression test for the virtiofs false-positive fix: vendor_status_of now
+# runs with --no-optional-locks -c core.checkStat=minimal -c core.trustctime=false
+# so a bind-mounted worktree whose dev/ino/uid churn under Docker's virtiofs
+# (mtime/size unchanged) is no longer reported dirty. checkStat=minimal must
+# not swallow a REAL edit to an already-tracked file (content+mtime+size all
+# change, not just dev/ino/uid), so prove that path is still caught.
+tracked=$ROOT/uikit/REPORT.md
+tracked_backup=$(mktemp /tmp/vendor-tree-test-report.XXXXXX)
+cp -- "$tracked" "$tracked_backup"
+restore_tracked() { cp -- "$tracked_backup" "$tracked"; rm -f -- "$tracked_backup"; }
+trap restore_tracked EXIT
+printf '\nvendor-tree-test-modified-content\n' >> "$tracked"
+expect_refuse 'modified tracked file in uikit subtree' \
+    assert_vendor_tree "$ROOT" uikit "$ROOT/uikit" "$EXPECTED_INREPO_UIKIT_TREE" OpenUIKit
+restore_tracked
+trap - EXIT
+expect_ok 'clean after tracked-file restore' \
+    assert_vendor_tree "$ROOT" uikit "$ROOT/uikit" "$EXPECTED_INREPO_UIKIT_TREE" OpenUIKit
+
 echo "vendor_tree_test: $pass passed, $fail failed (denominator=$((pass + fail)))"
 [ "$fail" -eq 0 ]
 printf 'VENDOR_TREE_ATTESTATION_OK uikit=%s machorun=%s checks=%s/%s\n' \

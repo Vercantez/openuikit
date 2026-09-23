@@ -80,9 +80,10 @@ public struct CanvasColor: Equatable, Sendable {
 /// CoreGraphics' colour. OpenUIKit's public colour API (`UIColor.cgColor`,
 /// CALayer's colour properties) speaks this type; the renderer converts it
 /// to `CanvasColor` at each use.
-public typealias CGColor = CoreGraphics.CGColor
-public typealias CGColorSpace = CoreGraphics.CGColorSpace
-public typealias CGImageAlphaInfo = CoreGraphics.CGImageAlphaInfo
+// (Re-exported, not re-declared: see Geometry.swift on collection sugar.)
+@_exported import class CoreGraphics.CGColor
+@_exported import class CoreGraphics.CGColorSpace
+@_exported import enum CoreGraphics.CGImageAlphaInfo
 
 extension CanvasColor {
     /// The renderer's value for a CoreGraphics colour. The model is kept: a
@@ -473,6 +474,23 @@ public final class Canvas: NSObject {
         let image = Bitmap(width: bitmap.width, height: bitmap.height)
         image.pixels = bitmap.pixels
         return image
+    }
+
+    /// The premultiplied RGBA8 backing the Quartz backend renders into, when
+    /// another bitmap context may share it (cg-unify: UIKit's CGContext).
+    public func _sharedPremultipliedBacking() -> (data: UnsafeMutableRawPointer, bytesPerRow: Int)? {
+        (backend as? QuartzBackend)?._sharedBacking
+    }
+
+    /// Makes pixels drawn into the shared backing by another context visible
+    /// in `bitmap`.
+    public func _syncSharedBackingToBitmap() {
+        (backend as? QuartzBackend)?._syncAllFromBacking()
+    }
+
+    /// Replaces the CTM (as a concatenation, so both backends follow).
+    public func _setCTM(_ t: CGAffineTransform) {
+        concatenate(t.concatenating(ctm.inverted()))
     }
 
     public func save() { _save(); backend.saveState() }
