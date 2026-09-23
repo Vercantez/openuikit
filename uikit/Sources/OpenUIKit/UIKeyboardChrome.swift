@@ -44,6 +44,14 @@
 //     0.3833 / curve 7 / windowLevel 1. Placeholder [4.667, 517, 384, 335].
 //     Conformance apps run on the SE; this file draws the SE 260 pt layout.
 //
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint

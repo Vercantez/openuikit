@@ -347,18 +347,18 @@ public macro Preview(
 )
 #endif
 
-// These local aliases deliberately win unqualified lookup through the
-// re-exporting UIKit module. On Foundation-visible builds OpenUIKit's
-// Notification, NSNotification and OperationQueue aliases already have
-// Foundation identity, and Foundation+Objective-C also aliases the center;
-// importing UIKit plus Foundation therefore names one declaration. Portable
-// builds retain OpenUIKit's selector-capable center behind the same spelling.
-public typealias Notification = OpenUIKit.Notification
-#if canImport(Foundation) || canImport(ObjectiveC)
-public typealias NSNotification = OpenUIKit.NSNotification
-#endif
+// Notification, NSNotification, NotificationCenter and OperationQueue are not
+// re-declared here. Wherever OpenUIKit's name IS Foundation's, OpenUIKit
+// re-exports Foundation's declaration, and a second declaration — even a
+// typealias of the same type — stops Swift folding collection sugar
+// (`[Notification]()`) into a type (docs/agent_reports/sugar-unify.md,
+// Tests/NameUnifyTests). The Foundation-hidden guest reaches OpenUIKit's own
+// types through the re-export of OpenUIKit. Native Linux keeps OpenUIKit's
+// selector-registry NotificationCenter, a different class from corelibs'
+// Foundation one, so there this alias still decides unqualified lookup.
+#if !canImport(ObjectiveC)
 public typealias NotificationCenter = OpenUIKit.NotificationCenter
-public typealias OperationQueue = OpenUIKit.OperationQueue
+#endif
 // `Timer` is not re-declared here: OpenUIKit re-exports Foundation's class
 // wherever Foundation exists, and a second declaration of the name breaks
 // collection sugar (`[Timer]()`, timer-unify.md). The Foundation-hidden guest

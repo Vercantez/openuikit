@@ -19,6 +19,15 @@
 // English month/weekday abbreviations are not an iOS pixel reproduction.
 // Those visual and locale gaps are recorded in docs/KNOWN_GAPS.md.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+@_exported import typealias Foundation.TimeInterval
+#endif
+
 #if canImport(Foundation)
 import Foundation
 #elseif canImport(FoundationEssentials)
