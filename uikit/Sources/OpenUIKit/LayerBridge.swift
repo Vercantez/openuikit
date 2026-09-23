@@ -416,6 +416,23 @@ public enum LayerBridge {
         return info
     }
 
+    /// Diagnostics for live hosts: the subtree fingerprint of every view down
+    /// to `depth`, by subview-index path and class — diffing two calls shows
+    /// which subtree keeps a frame from being "unchanged".
+    public static func _hostFingerprints(_ root: UIView, scale: CGFloat, depth: Int) -> [String: UInt64] {
+        frameStamp &+= 1
+        var out: [String: UInt64] = [:]
+        func walk(_ v: UIView, _ path: String, _ d: Int) {
+            out[path + ":" + String(describing: type(of: v))] = analyze(v, scale: scale).fingerprint
+            guard d < depth else { return }
+            for (i, s) in v.subviews.enumerated() where !s.isHidden {
+                walk(s, path.isEmpty ? "\(i)" : "\(path).\(i)", d + 1)
+            }
+        }
+        walk(root, "", 0)
+        return out
+    }
+
     static func isTranslationOnly(_ t: CGAffineTransform) -> Bool {
         t.a == 1 && t.b == 0 && t.c == 0 && t.d == 1
     }
