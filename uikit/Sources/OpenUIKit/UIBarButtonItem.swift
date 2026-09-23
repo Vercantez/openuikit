@@ -114,6 +114,22 @@ public class UIBarButtonItem: UIBarItem {
     /// (Sources/ConformanceApps/NavFlow, docs/OBJC_RUNTIME.md).
     public var primaryAction: UIAction?
 
+    /// The item's menu (iOS 14). Stored; nil by default (MEASURED iOS 26.1).
+    /// Presenting it on tap is OPEN.
+    public var menu: UIMenu?
+
+    /// MEASURED iOS 26.1: no title, no image, width 0, enabled, no target
+    /// or action.
+    public static func flexibleSpace() -> UIBarButtonItem {
+        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    }
+    /// MEASURED iOS 26.1: `fixedSpace(12).width == 12`.
+    public static func fixedSpace(_ width: CGFloat) -> UIBarButtonItem {
+        let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        item.width = width
+        return item
+    }
+
     /// SwiftUI-installed image items (Hackers settings / search) keep their
     /// own 44×44 platter. MEASURED realapp_hackers_feed_light, iPhone 16 @3x:
     /// settings `[277, 0, 44, 44]` and search `[333, 0, 44, 44]`, gap 12,
@@ -519,7 +535,7 @@ final class _UIBarButtonItemView: UIControl {
         isOpaque = false
         platter.isOpaque = false
         platter.layer.cornerRadius = _UIBarMetrics.platterRadius
-        platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        platter.layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
         platter.layer.shadowOpacity = _UIBarMetrics.shadowOpacity
         platter.layer.shadowRadius = _UIBarMetrics.shadowRadius
         platter.layer.shadowOffset = _UIBarMetrics.shadowOffset
@@ -747,7 +763,7 @@ final class _UIBarSharedPlatterView: UIView {
         isOpaque = false
         _usesIOSGlass = true
         layer.cornerRadius = _UIBarMetrics.platterRadius
-        layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
         layer.shadowOpacity = _UIBarMetrics.shadowOpacity
         layer.shadowRadius = _UIBarMetrics.shadowRadius
         layer.shadowOffset = _UIBarMetrics.shadowOffset

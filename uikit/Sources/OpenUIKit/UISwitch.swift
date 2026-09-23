@@ -259,7 +259,7 @@ open class UISwitch: UIControl {
         }
 
         // Static state (or settled animation): the original exact drawing.
-        let trackColor: CGColor = isOn
+        let trackColor: CanvasColor = isOn
             ? effectiveOnColor.resolvedCGColor(with: traits)
             : effectiveOffColor.resolvedCGColor(with: traits)
         canvas.fill(trackPath, color: trackColor)

@@ -182,11 +182,11 @@ private struct SettingsNavigationDestinationFixture: View {
 #endif
 final class SwiftUISettingsTests: XCTestCase {
     func testSettingsControlsRoundTripBindingsEffectsAndDisabledState() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let model = SettingsModel()
@@ -288,11 +288,11 @@ final class SwiftUISettingsTests: XCTestCase {
     }
 
     func testPickerPrefersExplicitTagsOverForEachIdentity() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         struct ExplicitTagFixture: View {
@@ -457,7 +457,7 @@ final class SwiftUISettingsTests: XCTestCase {
         XCTAssertEqual(shadow.layer.shadowOffset, CGSize(width: 2, height: 3))
         XCTAssertEqual(shadow.layer.shadowOpacity, 0.5, accuracy: 0.001)
         XCTAssertEqual(
-            try XCTUnwrap(shadow.layer.shadowColor).blue,
+            try XCTUnwrap(shadow.layer.shadowColor).canvasColor.blue,
             1,
             accuracy: 0.001
         )
@@ -485,11 +485,11 @@ final class SwiftUISettingsTests: XCTestCase {
     }
 
     func testSheetAndNavigationDestinationDriveRealControllerState() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let sheetHost = UIHostingController(rootView: SettingsSheetFixture())
@@ -552,8 +552,8 @@ final class SwiftUISettingsTests: XCTestCase {
     }
 
     private func flush(_ host: UIView) {
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
     }
 

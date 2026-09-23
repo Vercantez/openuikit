@@ -31,6 +31,7 @@ import Foundation
 // ordinary Darwin build. Keep that dependency conditional: the cold guest
 // builds OpenUIKit before the app-facing Foundation facade exists.
 #if canImport(Foundation)
+import struct Foundation.Data
 import class Foundation.NSError
 import class Foundation.NSObject
 #endif
@@ -42,6 +43,14 @@ import ObjectiveC
 /// How a UIImage's pixels are used when it is drawn: as-is, or as a
 /// silhouette tinted with the destination's tint color.
 
+
+/// iPhoneSimulator26.1.sdk UIImage.h:76 declares `NS_SWIFT_SENDABLE
+/// @interface UIImage`: images are immutable once built. The port keeps that
+/// contract (its stored metadata is written only inside initializers, and its
+/// bitmap is never drawn into after construction), so the conformance is
+/// unchecked exactly as Apple's is. NetNewsWire Images
+/// SingleFaviconDownloader.swift:102 depends on it.
+extension UIImage: @unchecked Sendable {}
 
 public enum UIImageRenderingMode: Sendable {
     case automatic, alwaysOriginal, alwaysTemplate
@@ -421,13 +430,24 @@ public final class UIImage: NSObject {
 
     // MARK: Encoding
 
+#if canImport(Foundation)
     /// PNG representation of the backing store (straight alpha, RGBA8).
-    public func pngData() -> [UInt8]? { ImageCodec.encodePNG(bitmap) }
+    /// `Data?`, as UIKit declares it (UIImage.h UIImagePNGRepresentation;
+    /// NetNewsWire RSImage.swift:105 returns it from a `-> Data?` func).
+    public func pngData() -> Data? { ImageCodec.encodePNG(bitmap).map { Data($0) } }
 
     /// JPEG representation. `compressionQuality` is UIKit's 0...1.
+    public func jpegData(compressionQuality: CGFloat) -> Data? {
+        ImageCodec.encodeJPEG(bitmap, quality: compressionQuality).map { Data($0) }
+    }
+#else
+    /// Foundation-hidden guest: the same bytes, without Foundation.Data.
+    public func pngData() -> [UInt8]? { ImageCodec.encodePNG(bitmap) }
+
     public func jpegData(compressionQuality: CGFloat) -> [UInt8]? {
         ImageCodec.encodeJPEG(bitmap, quality: compressionQuality)
     }
+#endif
 
     // MARK: CG-compatible resampling
     //

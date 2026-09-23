@@ -1,0 +1,53 @@
+## color
+red.cgColor model=rgb n=4 [1.0 0 0 1.0] space=ExtendedSRGB
+white.cgColor model=gray n=2 [1.0 1.0] space=ExtendedGray
+clear.cgColor model=gray n=2 [0 0] space=ExtendedGray
+black.cgColor model=gray n=2 [0 1.0] space=ExtendedGray
+rgb(0.2,0.4,0.6,0.8).cgColor model=rgb n=4 [0.2 0.4 0.6 0.8] space=ExtendedSRGB
+white(0.5,1).cgColor model=gray n=2 [0.5 1.0] space=ExtendedGray
+rgb(1.2,-0.1,0.5,1).cgColor model=rgb n=4 [1.2 -0.1 0.5 1.0] space=ExtendedSRGB
+UIColor(cgColor: gray 0.25/0.5).cgColor model=gray n=2 [0.25 0.5] space=GenericGray
+UIColor(cgColor: srgb).cgColor model=rgb n=4 [0.1 0.2 0.3 1.0] space=SRGB
+UIColor(cgColor: srgb) == UIColor(red:0.1,…) false
+UIColor(cgColor: red.cgColor) == red true
+## layer
+CALayer().backgroundColor nil
+CALayer().borderColor model=rgb n=4 [0 0 0 1.0] space=SRGB
+CALayer().shadowColor model=rgb n=4 [0 0 0 1.0] space=SRGB
+backgroundColor = srgb -> model=rgb n=4 [0.1 0.2 0.3 1.0] space=SRGB same-object true
+view(white 0.5).layer.backgroundColor model=gray n=2 [0.5 1.0] space=ExtendedGray
+view.layer.backgroundColor = red -> view.backgroundColor model=rgb n=4 [1.0 0 0 1.0] space=ExtendedSRGB
+gradient.colors model=rgb n=4 [1.0 0 0 1.0] space=ExtendedSRGB | model=rgb n=4 [0.1 0.2 0.3 1.0] space=SRGB
+## transform
+rotation(pi/2) [0 1.0 -1.0 0 0 0]
+rotation(pi/6) [0.866025 0.5 -0.5 0.866025 0 0]
+translate(10,20).scaled(2,3).rotated(pi/4) [1.414214 2.12132 -1.414214 2.12132 10.0 20.0]
+inverted [0.353553 -0.353553 0.235702 0.235702 -8.249579 -1.178511]
+point(1,1).applying (10.0, 24.242640687119284)
+rect(0,0,10,10).applying (-4.142135623730949, 20.0, 28.284271247461902, 42.42640687119285)
+view.transform=scale2 frame=(-10.0, 0.0, 80.0, 40.0) transform=[2.0 0 0 2.0 0 0]
+identity.isIdentity true
+## bitmap context
+makeImage 2x2 row0 255,0,0,255 0,0,0,0
+## imageio
+destination finalize true
+source count=1 type=public.png
+pixelWidth=2 pixelHeight=2
+thumbnail 1x1
+## renderer context
+same-as-current true
+ctm=[1.0 0 0 -1.0 0 2.0] clip=(0.0, 0.0, 4.0, 2.0)
+translated ctm=[1.0 0 0 -1.0 0 1.0]
+image 4x2 scale=1.0
+row0 255,0,0,255 0,0,255,255 0,0,255,255 0,0,255,255
+row1 0,255,0,255 0,0,255,255 0,0,255,255 0,0,0,0
+## draw(_:)
+draw rect=(0.0, 0.0, 4.0, 2.0) clip=(0.0, 0.0, 4.0, 2.0)
+row0 255,0,0,255 0,0,255,255 0,0,255,255 0,0,255,255
+row1 0,255,0,255 0,0,255,255 0,0,0,255 0,0,0,255
+## uiimage cgImage
+cgImage 2x1 bpc=8 bpp=32
+pixels 128,0,0,128 0,0,0,0
+UIImage(cgImage:) size=(2.0, 1.0) scale=1.0
+UIImage(cgImage:scale:2) size=(1.0, 0.5) scale=2.0
+round trip pixels 128,0,0,128 0,0,0,0

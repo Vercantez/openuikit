@@ -659,7 +659,7 @@ open class UINavigationController: UIViewController {
         // radius 7, offset 2.5).
         platter.clipsToBounds = false
         if platter._usesIOSGlass {
-            platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+            platter.layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
             platter.layer.shadowOpacity = UITabBar.shadowOpacity
             platter.layer.shadowRadius = UITabBar.shadowRadius
             platter.layer.shadowOffset = UITabBar.shadowOffset
@@ -1073,6 +1073,27 @@ open class UINavigationController: UIViewController {
         delegate?.navigationController(self, didShow: to, animated: true)
     }
 
+    /// Pops until `viewController` is on top and returns the popped
+    /// controllers in stack order; nil when it is not in the stack or is
+    /// already on top (MEASURED iOS 26.1,
+    /// Tools/oracle2/scenelaunchprobe/transcript-poporder-ios26.1.txt:
+    /// [a b c d] popTo(b) -> [c d]). Same mechanics as popToRoot.
+    @discardableResult
+    public final func popToViewController(_ viewController: UIViewController,
+                                          animated: Bool) -> [UIViewController]? {
+        guard let index = viewControllers.firstIndex(where: { $0 === viewController }),
+              index < viewControllers.count - 1 else { return nil }
+        finishActiveTransition()
+        let removed = Array(viewControllers[(index + 1)..<(viewControllers.count - 1)])
+        for vc in removed {
+            vc.willMove(toParent: nil)
+            detachFromParent(vc)
+        }
+        _viewControllerStack.removeSubrange((index + 1)..<(viewControllers.count - 1))
+        guard let top = popViewController(animated: animated) else { return removed }
+        return removed + [top]
+    }
+
     @discardableResult
     public final func popToRootViewController(animated: Bool) -> [UIViewController]? {
         guard viewControllers.count > 1 else { return nil }
@@ -1102,7 +1123,7 @@ open class UINavigationController: UIViewController {
     final func setShadow(on v: UIView, enabled: Bool) {
         let l = v.layer
         if enabled {
-            l.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+            l._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
             l.shadowOpacity = UINavigationController.shadowOpacity
             l.shadowRadius = UINavigationController.shadowRadius
             l.shadowOffset = .zero

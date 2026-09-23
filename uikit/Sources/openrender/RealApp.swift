@@ -80,7 +80,7 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     // the Linux byte-identity fixture stays at 2. Pad goldens are the
     // iPad (A16) at native 2x — never resampled up to 3.
     let scale = variant.idiom == .pad ? variant.nativeScale : realAppScale
-    Timer._reset()
+    _HostClockTimer._reset()
     GlyphInkTable.windowCompositing = false
     OpenUIKitRuntime.systemFontCut = .iOS
     let savedIdiom = UIDevice.current.userInterfaceIdiom

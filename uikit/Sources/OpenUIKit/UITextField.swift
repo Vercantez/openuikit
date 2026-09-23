@@ -179,7 +179,7 @@ final class UITextFieldClearButton: UIControl {
                             width: circleDiameter, height: circleDiameter)
         }
         let baseCircleColor = circleColor.resolvedCGColor(with: traitCollection)
-        // CGColor.withAlpha multiplies the existing component, so pass only
+        // CanvasColor.withAlpha multiplies the existing component, so pass only
         // the state factor (passing the resolved alpha again would square it).
         let color = baseCircleColor.withAlpha(isHighlighted ? 0.65 : 1)
         canvas.fill(Path.roundedRect(circle, cornerRadius: circle.height / 2),
@@ -438,16 +438,16 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// Light: black 20 %; dark resolution is unverified (KNOWN_GAPS).
     static let chromeBorderColor = UIColor(.dynamic { t in
         if OpenUIKitRuntime.systemFontCut == .iOS, t.userInterfaceStyle != .dark {
-            return CGColor(red: 219 / 255, green: 219 / 255, blue: 220 / 255, alpha: 1)
+            return CanvasColor(red: 219 / 255, green: 219 / 255, blue: 220 / 255, alpha: 1)
         }
         return t.userInterfaceStyle == .dark
-            ? CGColor(red: 1, green: 1, blue: 1, alpha: 0.2)
-            : CGColor(red: 0, green: 0, blue: 0, alpha: 0.2)
+            ? CanvasColor(red: 1, green: 1, blue: 1, alpha: 0.2)
+            : CanvasColor(red: 0, green: 0, blue: 0, alpha: 0.2)
     })
     static let chromeFillColor = UIColor(.dynamic { t in
         t.userInterfaceStyle == .dark
-            ? CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-            : CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+            ? CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
+            : CanvasColor(red: 1, green: 1, blue: 1, alpha: 1)
     })
 
     // MARK: Internal views
@@ -1093,7 +1093,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             backgroundView.backgroundColor = UITextField.chromeFillColor
             backgroundView.layer.cornerRadius = UITextField.roundedRectCornerRadius
             backgroundView.layer.borderWidth = UITextField.roundedRectBorderWidth
-            backgroundView.layer.borderColor =
+            backgroundView.layer._borderColorValue =
                 UITextField.chromeBorderColor.resolvedCGColor(with: traitCollection)
         }
         if let leftView {

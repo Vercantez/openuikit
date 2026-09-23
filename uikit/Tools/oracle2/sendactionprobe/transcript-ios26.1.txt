@@ -1,0 +1,8 @@
+# SendActionProbe, iPhone 16 simulator, iOS 26.1 (23B86), simctl launch --console, 2026-09-23
+FACT nil target, no first responder returned=false hits=[]
+FACT nil target, sender=field, no first responder returned=true hits=["UITextField sender=UITextField"]
+FACT field.isFirstResponder=true
+FACT nil target, field first responder returned=true hits=["UITextField sender=nil"]
+FACT explicit target returned=true hits=["Target.ping sender=RootVC"]
+FACT nil target, nobody implements returned=false hits=[]
+# (the last case, an explicit target without the method, raised: unrecognized selector -- no FACT line)

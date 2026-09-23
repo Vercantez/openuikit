@@ -325,6 +325,11 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
         return cell
     }
 
+    /// Overridable, as in UIKit (NetNewsWire MainTimelineDataSource.swift:20).
+    /// Not movable by default; drag reordering is OPEN in the port.
+    open func collectionView(_ collectionView: UICollectionView,
+                             canMoveItemAt indexPath: IndexPath) -> Bool { false }
+
     open func collectionView(_ collectionView: UICollectionView,
                              viewForSupplementaryElementOfKind kind: String,
                              at indexPath: IndexPath) -> UICollectionReusableView {

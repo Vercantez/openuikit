@@ -505,8 +505,17 @@ private func _openCAFilterMask(_ bitmap: Bitmap) -> CanvasBackdropFilterMask? {
 /// `perform(_:with:)` dispatch reaches the exact class selector
 /// `filterWithType:`. Only the implemented variable blur type is admitted;
 /// every unknown filter name returns nil and therefore fails closed.
-#if canImport(ObjectiveC)
+///
+/// The runtime name is `CAFilter` only where OpenUIKit is the process's
+/// Core Animation (the Mach-O guest). Where Apple's QuartzCore exists (the
+/// macOS host, route (b)'s iOS simulator) QuartzCore registers `CAFilter`
+/// itself; a second class of that name is undefined behaviour in objc4
+/// ("Class CAFilter is implemented in both …", printed by every Darwin
+/// `swift test`), so the port's class is `OUKCAFilter` there.
+#if canImport(ObjectiveC) && !canImport(QuartzCore)
 @objc(CAFilter)
+#elseif canImport(ObjectiveC)
+@objc(OUKCAFilter)
 #endif
 @preconcurrency @MainActor
 final class _OpenCAFilter: NSObject {

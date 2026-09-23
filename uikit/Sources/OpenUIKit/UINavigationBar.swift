@@ -1821,7 +1821,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer, UIBarPositionin
         // to (209–230) against a golden near-black (0, 0, 0) pocket.
         // `.systemBackground` is white in light (navbar_inline / Feed t2800
         // unchanged) and black in dark.
-        let bg = (backgroundColorForPocket ?? .systemBackground).cgColor
+        let bg = (backgroundColorForPocket ?? .systemBackground)._canvasColor
         let bitmap = UINavigationBar.pocketBitmap(from: snapshot, scale: scale,
                                                  background: bg)
         pocketView.image = UIImage(bitmap: bitmap, scale: scale)
@@ -1863,7 +1863,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer, UIBarPositionin
 
     /// Blur + wash + fade the top of `src` into the pocket bitmap.
     static func pocketBitmap(from src: Bitmap, scale: CGFloat,
-                             background: CGColor) -> Bitmap {
+                             background: CanvasColor) -> Bitmap {
         let w = src.width
         let outH = min(Int((pocketHeight * scale).rounded()), src.height)
         let sigma = pocketBlurSigma * scale

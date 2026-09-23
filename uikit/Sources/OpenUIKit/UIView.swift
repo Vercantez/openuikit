@@ -118,7 +118,7 @@ open class CALayer: NSObject {
     private final var storedPosition: CGPoint = .zero
     private final var storedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     private final var storedSublayers: [CALayer] = []
-    private final var storedBackgroundColor: CGColor?
+    private final var storedBackgroundColor = _LayerColor(value: nil)
     private final var storedOpacity: Float = 1
     private final var storedHidden = false
     private final var storedMask: CALayer?
@@ -258,12 +258,45 @@ open class CALayer: NSObject {
         parent._setNeedsLayoutFromMutation()
     }
 
+    /// Core Animation's colour properties speak CoreGraphics' `CGColor`
+    /// (cg-unify); the renderer reads the `_…Value` twins, which hold its
+    /// value colour, so no frame converts.
+    /// MEASURED iOS 26.1 (cgunifyprobe `## layer`): the colour object
+    /// assigned is the one read back (its colour space included), a backing
+    /// layer reports its view's `UIColor.cgColor`, and a new layer's
+    /// border and shadow colours are opaque black in `kCGColorSpaceSRGB`.
     public final var backgroundColor: CGColor? {
+        get {
+            if let owner {
+                return owner.backgroundColor?._cgColorObject(with: owner.traitCollection)
+            }
+            return storedBackgroundColor.cgColor
+        }
+        set {
+            if let owner {
+                owner.backgroundColor = newValue.map { UIColor(cgColor: $0) }
+            } else {
+                storedBackgroundColor.set(newValue)
+            }
+        }
+    }
+    public final var borderColor: CGColor? {
+        get { storedBorderColor.cgColor }
+        set { storedBorderColor.set(newValue) }
+    }
+    public final var shadowColor: CGColor? {
+        get { storedShadowColor.cgColor }
+        set { storedShadowColor.set(newValue) }
+    }
+    private final var storedBorderColor = _LayerColor(object: CanvasColor._layerDefaultBlack)
+    private final var storedShadowColor = _LayerColor(object: CanvasColor._layerDefaultBlack)
+
+    final var _backgroundColorValue: CanvasColor? {
         get {
             if let owner {
                 return owner.backgroundColor?.resolvedCGColor(with: owner.traitCollection)
             }
-            return storedBackgroundColor
+            return storedBackgroundColor.value
         }
         set {
             if let owner {
@@ -271,7 +304,7 @@ open class CALayer: NSObject {
                     UIColor(red: $0.red, green: $0.green, blue: $0.blue, alpha: $0.alpha)
                 }
             } else {
-                storedBackgroundColor = newValue
+                storedBackgroundColor.value = newValue
             }
         }
     }
@@ -318,7 +351,10 @@ open class CALayer: NSObject {
             }
         }
     }
-    public final var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    final var _borderColorValue: CanvasColor? {
+        get { storedBorderColor.value }
+        set { storedBorderColor.value = newValue }
+    }
     public final var masksToBounds: Bool = false
     /// Core Animation's opaque-content optimization hint. It does not alter
     /// composited pixels by itself; renderers may use it to skip alpha work
@@ -358,7 +394,10 @@ open class CALayer: NSObject {
     // Shadow (spec v2) — CALayer defaults: opaque black, opacity 0 (off),
     // offset (0, -3) (up, in iOS's top-left geometry), radius 3.
     // Invisible while masksToBounds is true, like CoreAnimation.
-    public final var shadowColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    final var _shadowColorValue: CanvasColor? {
+        get { storedShadowColor.value }
+        set { storedShadowColor.value = newValue }
+    }
     public final var shadowOpacity: Float = 0 {
         didSet {
             if shadowOpacity != oldValue {
@@ -604,12 +643,40 @@ open class CALayer: NSObject {
     }
 }
 
+/// One Core Animation colour property: the renderer's value colour plus the
+/// CoreGraphics object an app assigned, so the object (and its colour space)
+/// reads back unchanged. An internal write of the value drops the object.
+struct _LayerColor {
+    var value: CanvasColor? { didSet { object = nil } }
+    private var object: CGColor?
+    init(value: CanvasColor?) { self.value = value }
+    init(object: CGColor) {
+        self.value = CanvasColor(object)
+        self.object = object
+    }
+    var cgColor: CGColor? { object ?? value?.cgColor }
+    mutating func set(_ color: CGColor?) {
+        value = color.map(CanvasColor.init)
+        object = color
+    }
+}
+
 /// Axial Core Animation gradient layer. The render pipelines route these
 /// stops through the same oracle-calibrated Generic-RGB interpolation used by
 /// UIGradientView (or quartz's calibrated QZGradientLayer implementation).
 @preconcurrency @MainActor
 public final class CAGradientLayer: CALayer {
-    public var colors: [CGColor]?
+    /// CoreGraphics colours, as Core Animation takes them (cg-unify). The
+    /// renderer reads `_colorValues`.
+    public var colors: [CGColor]? {
+        get { storedColorObjects ?? _colorValues?.map(\.cgColor) }
+        set {
+            _colorValues = newValue?.map(CanvasColor.init)
+            storedColorObjects = newValue
+        }
+    }
+    private var storedColorObjects: [CGColor]?
+    var _colorValues: [CanvasColor]? { didSet { storedColorObjects = nil } }
     public var locations: [CGFloat]?
     public var startPoint = CGPoint(x: 0.5, y: 0)
     public var endPoint = CGPoint(x: 0.5, y: 1)
@@ -720,7 +787,11 @@ open class UIView: UIResponder, CALayerDelegate {
     /// model free of compositor types.
     final var _layerCacheState: AnyObject?
 
-    public final var frame: CGRect {
+    /// Overridable, as in UIKit (NetNewsWire ImageScrollView overrides it).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var frame: CGRect {
         get {
             if transform.isIdentity {
                 return CGRect(x: center.x - bounds.width / 2, y: center.y - bounds.height / 2,

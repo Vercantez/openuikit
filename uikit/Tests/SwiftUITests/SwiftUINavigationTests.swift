@@ -278,11 +278,11 @@ final class SwiftUINavigationTests: XCTestCase {
     }
 
     func testSheetOnDismissRunsAfterConcreteDismissalExactlyOnce() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let recorder = ApplicationShellRecorder()
@@ -347,8 +347,8 @@ final class SwiftUINavigationTests: XCTestCase {
     }
 
     private func flush(_ host: UIView) {
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
     }
 

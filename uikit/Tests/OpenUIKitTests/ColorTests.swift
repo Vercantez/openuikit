@@ -102,7 +102,7 @@ final class ColorTests: XCTestCase {
     func testUnknownNameResolvesToMagenta() {
         let c = UIColor(semantic: "definitelyNotAColor")
             .resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .light))
-        XCTAssertEqual(c, CGColor(red: 1, green: 0, blue: 1, alpha: 1))
+        XCTAssertEqual(c, CanvasColor(red: 1, green: 0, blue: 1, alpha: 1))
     }
 
     func testLightAndDarkDiffer() {
@@ -117,7 +117,7 @@ final class ColorTests: XCTestCase {
     func testWithAlphaComponentOnFixedColor() {
         let c = UIColor.red.withAlphaComponent(0.25)
             .resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .light))
-        XCTAssertEqual(c, CGColor(red: 1, green: 0, blue: 0, alpha: 0.25))
+        XCTAssertEqual(c, CanvasColor(red: 1, green: 0, blue: 0, alpha: 0.25))
     }
 
     /// withAlphaComponent on a semantic color stays dynamic: RGB still follows
@@ -141,8 +141,8 @@ final class ColorTests: XCTestCase {
         }
         let l = color.resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .light))
         let d = color.resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .dark))
-        XCTAssertEqual(l, CGColor(red: 0, green: 0, blue: 0, alpha: 1))
-        XCTAssertEqual(d, CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+        XCTAssertEqual(l, CanvasColor(red: 0, green: 0, blue: 0, alpha: 1))
+        XCTAssertEqual(d, CanvasColor(red: 1, green: 1, blue: 1, alpha: 1))
     }
 
     func testDynamicProviderCanWrapSemanticColors() {
@@ -173,13 +173,13 @@ final class ColorTests: XCTestCase {
         defer { UITraitCollection.current = saved }
 
         UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light)
-        let lightResolved = UIColor.label.cgColor
+        let lightResolved = UIColor.label.cgColor.canvasColor
         XCTAssertEqual(
             lightResolved,
             UIColor.label.resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .light)))
 
         UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark)
-        let darkResolved = UIColor.label.cgColor
+        let darkResolved = UIColor.label.cgColor.canvasColor
         XCTAssertEqual(
             darkResolved,
             UIColor.label.resolvedCGColor(with: UITraitCollection(userInterfaceStyle: .dark)))
@@ -189,7 +189,7 @@ final class ColorTests: XCTestCase {
         // tracks the current traits.
         let snapshot = UIColor.label.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark))
         UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light)
-        XCTAssertEqual(snapshot.cgColor, darkResolved)
+        XCTAssertEqual(snapshot.cgColor.canvasColor, darkResolved)
 
         // == compares through .current: label equals its dark snapshot only in dark.
         UITraitCollection.current = UITraitCollection(userInterfaceStyle: .dark)

@@ -373,7 +373,7 @@ open class UIDatePicker: UIControl {
     /// Interpret that exact finite value in Foundation's reference-date domain
     /// so identical host traces construct identical controls and renders.
     private static func initialModelDate() -> Date {
-        let hostTime = Timer.currentTime.isFinite ? Timer.currentTime : 0
+        let hostTime = _HostClockTimer.currentTime.isFinite ? _HostClockTimer.currentTime : 0
         return Date.init(timeIntervalSinceReferenceDate: hostTime)
     }
 
@@ -468,7 +468,7 @@ open class UIDatePicker: UIControl {
     /// clock is explicit, so this transition stays repeatable. If that time is
     /// outside the bounded Foundation calendar range, retain the prior value.
     private func resetDateForCountdownEntry() {
-        let hostTime = Timer.currentTime
+        let hostTime = _HostClockTimer.currentTime
         guard hostTime.isFinite else { return }
         let hostDate = Date.init(timeIntervalSinceReferenceDate: hostTime)
         guard Self.isSupportedDate(hostDate) else { return }

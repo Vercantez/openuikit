@@ -19,7 +19,7 @@
 //     only where Foundation provides the C structs;
 //   * String and Array bridge through Foundation, so NSString / NSArray
 //     members exist only where Foundation does.
-// CGColorRef members (UIColor.CGColor, CALayer.borderColor, …) need Apple's
+// CGColorRef members (UIColor.CanvasColor, CALayer.borderColor, …) need Apple's
 // CoreGraphics and live in OpenUIKitObjCBridge.
 //
 // Linux ELF has no Objective-C runtime; this file is empty there.

@@ -113,6 +113,24 @@ open class UIStoryboard: NSObject {
         return instantiateViewController(withIdentifier: entry)
     }
 
+    /// iOS 13 generic spelling (UIKit.swiftinterface:
+    /// `instantiateViewController<ViewController: UIViewController>(identifier:creator:)`).
+    /// `creator` (build the controller from the archive's coder yourself)
+    /// is OPEN in the NIB runtime: a non-nil creator traps loudly rather
+    /// than being silently ignored.
+    public func instantiateViewController<ViewController: UIViewController>(
+        identifier: String,
+        creator: ((NSCoder) -> ViewController?)? = nil
+    ) -> ViewController {
+        precondition(creator == nil,
+                     "UIStoryboard.instantiateViewController(identifier:creator:) with a creator is not supported by OpenUIKit yet")
+        let vc = instantiateViewController(withIdentifier: identifier)
+        guard let typed = vc as? ViewController else {
+            fatalError("Storyboard (\(name)) view controller '\(identifier)' is \(type(of: vc)), not \(ViewController.self)")
+        }
+        return typed
+    }
+
     /// UIKit raises NSInvalidArgumentException for an unknown identifier.
     open func instantiateViewController(withIdentifier identifier: String) -> UIViewController {
         let directory = requireDirectory()

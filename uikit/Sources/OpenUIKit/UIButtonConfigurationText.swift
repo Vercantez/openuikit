@@ -3,7 +3,7 @@
 // WHY A SEPARATE FILE
 // -------------------
 // UIButton.swift imports CoreGraphics by SCOPED declaration on purpose (its
-// header explains: an unscoped import would put CoreGraphics' `CGColor` and
+// header explains: an unscoped import would put CoreGraphics' `CanvasColor` and
 // `CGAffineTransform` in the same file as OpenCoreGraphics' own). `import
 // Foundation` re-exports those same names on Darwin, so the three members
 // that need `AttributedString`, `AttributeContainer` and `AttributeScopes` —
