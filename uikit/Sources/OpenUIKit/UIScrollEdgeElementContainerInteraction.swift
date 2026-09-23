@@ -229,7 +229,7 @@ final class _UITouchPassthroughView: UIView {
         }
         let overshoot = UIScrollEdgeElementContainerInteraction.fadeOvershoot
         let inner = edge == .top ? bounds.height - overshoot : overshoot
-        let black = UIColor.black.cgColor
+        let black = UIColor.black._canvasColor
         var y: CGFloat = 0
         while y < bounds.height {
             let mid = y + 0.5

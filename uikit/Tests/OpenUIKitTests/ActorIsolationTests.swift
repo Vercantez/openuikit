@@ -119,7 +119,7 @@ final class ActorIsolationTests: XCTestCase {
             let canvas = Canvas(bitmap: bitmap, scale: 2)
             UILabel.drawGlyphLine("Hi", at: CGPoint(x: 2, y: 14), in: canvas,
                                   font: UIFont.systemFont(ofSize: 12), dark: false,
-                                  color: CGColor(red: 0, green: 0, blue: 0, alpha: 1),
+                                  color: CanvasColor(red: 0, green: 0, blue: 0, alpha: 1),
                                   glyphFont: nil)
             return bitmap.pixels.contains { $0 != 0 }
         }

@@ -32,8 +32,20 @@ let environment = "device"
     return r.width > 0
 }
 
+// Apple's UIKit headers import UserNotifications (UNNotificationResponse.h)
+// and export it, so a file importing only UIKit names UN* types
+// (typecheck against iPhoneSimulator26.1: NetNewsWire AppDelegate.swift:24
+// `UNUserNotificationCenterDelegate`, :93 `requestAuthorization`,
+// `UIBackgroundFetchResult`). The port's UIKit must re-export it on iOS too.
+func userNotificationsVisibleThroughUIKit() -> String {
+    let options: UNAuthorizationOptions = [.badge, .sound, .alert]
+    let presentation: UNNotificationPresentationOptions = [.list, .banner]
+    return "\(String(reflecting: UNUserNotificationCenter.self)) \(options.rawValue) \(presentation.rawValue)"
+}
+
 @MainActor func runProbe() {
     _ = stringDrawingCompiles()
+    _ = userNotificationsVisibleThroughUIKit()
     print("# iostarget-probe os=iOS environment=\(environment) UIView=\(String(reflecting: UIView.self)) runtime-name=\(NSStringFromClass(UIView.self)) textstorage=\(NSStringFromClass(NSTextStorage.self)) font-key=\(NSAttributedString.Key.font.rawValue)")
     _ = ProbeViewController()
     print("## superclasses")

@@ -80,8 +80,8 @@ public enum IconGlyph {
 /// is the opaque backing color, used by glyphs that carve a bite out of
 /// their silhouette (.moon).
 func drawIconGlyph(_ glyph: IconGlyph, in canvas: Canvas, bounds: CGRect,
-                   color: CGColor,
-                   tileColor: CGColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)) {
+                   color: CanvasColor,
+                   tileColor: CanvasColor = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)) {
     // Normalize to the 29x29 design space.
     canvas.save()
     defer { canvas.restore() }
@@ -281,11 +281,11 @@ func iconImage(_ glyph: IconGlyph, size: CGFloat, scale: CGFloat = 2) -> UIImage
     let px = Int((size * scale).rounded())
     let bitmap = Bitmap(width: px, height: px)
     let canvas = Canvas(bitmap: bitmap, scale: scale)
-    let white = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+    let white = CanvasColor(red: 1, green: 1, blue: 1, alpha: 1)
     drawIconGlyph(glyph, in: canvas, bounds: CGRect(x: 0, y: 0, width: size,
                                                     height: size),
                   color: white,
-                  tileColor: CGColor(red: 0, green: 0, blue: 0, alpha: 0))
+                  tileColor: CanvasColor(red: 0, green: 0, blue: 0, alpha: 0))
     return UIImage(bitmap: bitmap, scale: scale)
 }
 
@@ -311,7 +311,7 @@ public final class IconTile: UIView {
     public required init?(coder: NSCoder) { fatalError() }
 
     public override func drawContent(in canvas: Canvas, bounds: CGRect) {
-        let white = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
+        let white = CanvasColor(red: 1, green: 1, blue: 1, alpha: 1)
         let tile = (backgroundColor ?? .black).resolvedCGColor(with: traitCollection)
         drawIconGlyph(glyph, in: canvas, bounds: bounds, color: white,
                       tileColor: tile)

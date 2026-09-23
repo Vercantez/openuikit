@@ -293,6 +293,8 @@ let frameworkProducts: [Product] = [
     .library(name: libkernModule, targets: [libkernModule]),
     .library(name: "FocusAppServices", targets: ["FocusAppServices"]),
     .library(name: "LocalAuthentication", targets: ["LocalAuthentication"]),
+    .library(name: "AuthenticationServices", targets: ["AuthenticationServices"]),
+    .library(name: "WidgetKit", targets: ["WidgetKit"]),
     .library(name: "PassKit", targets: ["PassKit"]),
     .library(name: "Network", targets: ["Network"]),
     .library(name: "MobileCoreServices", targets: ["MobileCoreServices"]),
@@ -559,6 +561,17 @@ let frameworkTargets: [Target] = [
         path: "Sources/libkern"
     ),
     .target(name: "FocusAppServices"),
+    // Fail-closed ASWebAuthenticationSession (NetNewsWire's OAuth sign-in);
+    // the curated iOS SDK drops Apple's (it imports UIKit). MEASURED
+    // Tools/oracle2/webauthsessionprobe.
+    // WidgetCenter for an app with no widget extension (NetNewsWire);
+    // MEASURED Tools/oracle2/widgetcenterprobe.
+    .target(name: "WidgetKit", path: "Sources/WidgetKit"),
+    .target(
+        name: "AuthenticationServices",
+        dependencies: ["OpenUIKit", "UIKit"],
+        path: "Sources/AuthenticationServices"
+    ),
     .target(
         name: "LocalAuthentication",
         dependencies: [
@@ -749,6 +762,15 @@ let testTargets: [Target] = [
     // NWPathMonitor contract measured on Network.framework
     // (Tools/oracle2/nwpathprobe/transcript-macos.txt).
     .testTarget(name: "NetworkTests", dependencies: ["Network"]),
+    .testTarget(name: "AuthenticationServicesTests", dependencies: ["AuthenticationServices"]),
+    .testTarget(name: "WidgetKitTests", dependencies: ["WidgetKit"]),
+    // Swift 6 language mode: Sendable conformances the SDK declares
+    // (NS_SWIFT_SENDABLE) are compile errors here, not warnings.
+    .testTarget(
+        name: "SendabilityTests",
+        dependencies: ["UIKit"],
+        swiftSettings: [.unsafeFlags(["-swift-version", "6"], .when(platforms: [.macOS]))]
+    ),
     .testTarget(
         name: "OSTests",
         dependencies: ["os"],
@@ -1022,6 +1044,15 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // CoreGraphics / ImageIO type unification (docs/agent_reports/cg-unify.md).
+    // The scenario is the SAME Swift the iOS 26.1 oracle runs
+    // (Tools/oracle2/cgunifyprobe/run.sh); it imports UIKit only, so it also
+    // proves the shim's re-exports. The test compares transcripts.
+    .target(name: "OpenUIKitCGUnifyFixtures", dependencies: ["UIKit", "OpenUIKit"],
+            path: "Tools/oracle2/cgunifyprobe/scenario"),
+    .testTarget(name: "CGUnifyTests",
+                dependencies: ["OpenUIKitCGUnifyFixtures", "UIKit", "OpenUIKit"],
+                path: "Tests/CGUnifyTests"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

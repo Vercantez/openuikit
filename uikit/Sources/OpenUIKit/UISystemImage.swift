@@ -432,7 +432,7 @@ private enum _UISystemImageRenderer {
         let bounds = CGRect(origin: .zero, size: size)
         let minSide = Swift.min(size.width, size.height)
         let stroke = minSide * strokeFraction(for: weight)
-        let black = CGColor.black
+        let black = CanvasColor.black
 
         switch name {
         case "calendar":

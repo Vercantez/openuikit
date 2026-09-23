@@ -336,7 +336,8 @@
    ],
    "openuikit": [
     "UIKit",
-    "os"
+    "os",
+    "AuthenticationServices"
    ],
    "swift_settings": [
     ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
@@ -412,7 +413,8 @@
     "WebKit",
     "MessageUI",
     "os",
-    "Intents"
+    "Intents",
+    "WidgetKit"
    ],
    "files": [
     "NetNewsWire/Shared/AccountStats/AccountStatsViewModel.swift",

@@ -38,13 +38,32 @@
 @_exported import OpenUIKitObjectiveC
 #endif
 @_exported import OpenUIKit
+// cg-unify (docs/agent_reports/cg-unify.md): Apple's `import UIKit`
+// re-exports CoreGraphics and ImageIO (MEASURED,
+// Tools/oracle2/uikitreexportprobe_ios/reexports-ios26.1.json: `CGContext`,
+// `CGBitmapInfo`, `CGImageSourceCreateWithData`, `kCGImagePropertyOrientation`
+// all resolve with `import UIKit` alone). OpenUIKit's CoreGraphics names are
+// CoreGraphics' own types wherever CoreGraphics exists, so re-exporting it
+// adds names without making any ambiguous. ImageIO is Apple's framework on
+// the Apple toolchain (the port's ImageIO module is `OpenUIKitImageIO` there,
+// and the literal `ImageIO` only on Linux, which has no CoreGraphics).
+#if canImport(CoreGraphics)
+@_exported import CoreGraphics
+#if canImport(ImageIO)
+@_exported import ImageIO
+#endif
+#endif
 // iOS 26.1 (ios-oss-launch3): a file that imports only UIKit can name
 // UserNotifications types (`UNAuthorizationStatus` compiles with
 // `import UIKit` alone against the iPhoneSimulator 26.1 SDK — ios-oss
 // Library KSRAnalytics.swift:1573). OpenUIKit has no UserNotifications port;
 // on the Apple host the SDK's module is re-exported (it loads Foundation and
 // Combine only, no AppKit). Not on the guest route, which has no AppKit.
-#if canImport(AppKit) && canImport(UserNotifications)
+// On the iOS triple (curated iPhoneSimulator SDK, which keeps Apple's
+// UserNotifications) the same holds: Apple's UIKit headers import
+// UNNotificationResponse.h and export it (NetNewsWire AppDelegate.swift:24,
+// :93; Tools/iostarget/probe `userNotificationsVisibleThroughUIKit`).
+#if (canImport(AppKit) || os(iOS)) && canImport(UserNotifications)
 @_exported import UserNotifications
 #endif
 

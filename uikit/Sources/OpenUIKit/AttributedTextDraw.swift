@@ -202,7 +202,7 @@ extension AttributedTextLayout {
     /// Fill a decoration rect through a smoothed coverage mask so the edges
     /// match CG's text filter (see `smoothingTap`).
     static func fillRule(_ canvas: Canvas, x: CGFloat, y: CGFloat,
-                         width: CGFloat, height: CGFloat, color: CGColor) {
+                         width: CGFloat, height: CGFloat, color: CanvasColor) {
         guard width > 0, height > 0, color.alpha > 0 else { return }
         let ctm = canvas.ctm
         guard ctm.b == 0, ctm.c == 0, ctm.a > 0, ctm.d > 0 else {

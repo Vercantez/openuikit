@@ -140,17 +140,17 @@ public struct _OpenStrokeStyle: Hashable, Sendable {
 
     private static func lineCapCode(_ value: OpenUIKit.CGLineCap) -> UInt8 {
         switch value {
-        case .butt: 0
         case .round: 1
         case .square: 2
+        default: 0
         }
     }
 
     private static func lineJoinCode(_ value: OpenUIKit.CGLineJoin) -> UInt8 {
         switch value {
-        case .miter: 0
         case .round: 1
         case .bevel: 2
+        default: 0
         }
     }
 }

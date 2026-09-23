@@ -75,7 +75,7 @@ public final class PriorityOptionButton: UIControl {
         super.layoutSubviews()
         // Resolve the outline against the live traits (dark mode gives the
         // system colors different components).
-        layer.borderColor = priority.color.resolvedCGColor(with: traitCollection)
+        layer.borderColor = priority.color.resolvedCGColor(with: traitCollection).cgColor
         for label in [tintTitle, whiteTitle] {
             let s = label.intrinsicContentSize
             label.frame = CGRect(x: (bounds.width - s.width) / 2,

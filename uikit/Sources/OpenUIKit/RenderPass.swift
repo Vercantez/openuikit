@@ -494,7 +494,7 @@ public enum UIRenderer {
                                         cornerRadii: presentation.cornerRadii))
         }
 
-        if let background = layer.backgroundColor, background.alpha > 0,
+        if let background = layer._backgroundColorValue, background.alpha > 0,
            !bounds.isEmpty {
             c.fill(layerRoundedRect(bounds,
                                     cornerRadius: presentation.cornerRadius,
@@ -535,7 +535,7 @@ public enum UIRenderer {
     ) -> (alpha: CGFloat, clip: Path)? {
         precondition(mask._orderedSublayers.isEmpty,
                      "OpenUIKit's pure-Swift renderer supports only a solid CALayer mask")
-        guard !mask.isHidden, let color = mask.backgroundColor else { return nil }
+        guard !mask.isHidden, let color = mask._backgroundColorValue else { return nil }
         let state = mask._presentationState(at: OpenUIKitRuntime.animationTime)
         let alpha = CGFloat(Swift.min(Swift.max(
             color.alpha * CGFloat(state.opacity), 0), 1))
@@ -572,7 +572,7 @@ public enum UIRenderer {
     static func renderGradientLayer(_ layer: CAGradientLayer, bounds: CGRect,
                                     locations presentedLocations: [CGFloat]? = nil,
                                     into c: Canvas) {
-        guard !bounds.isEmpty, let colors = layer.colors, colors.count >= 2 else { return }
+        guard !bounds.isEmpty, let colors = layer._colorValues, colors.count >= 2 else { return }
         let n = colors.count
         let locations: [CGFloat]
         if let requested = presentedLocations ?? layer.locations,
@@ -599,7 +599,7 @@ public enum UIRenderer {
                              cornerRadii: _CACornerRadii? = nil,
                              into c: Canvas) {
         let width = borderWidth ?? layer.borderWidth
-        guard width > 0, !bounds.isEmpty, let color = layer.borderColor,
+        guard width > 0, !bounds.isEmpty, let color = layer._borderColorValue,
               color.alpha > 0 else { return }
         let radius = cornerRadius ?? layer.cornerRadius
         let corners = maskedCorners ?? layer.maskedCorners
@@ -628,11 +628,11 @@ public enum UIRenderer {
         bounds: CGRect,
         presentation: _CALayerPresentationState
     )
-        -> (color: CGColor, offset: CGSize, blur: CGFloat)? {
+        -> (color: CanvasColor, offset: CGSize, blur: CGFloat)? {
         let l = v.layer
         guard presentation.shadowOpacity > 0,
               !l.masksToBounds, !bounds.isEmpty,
-              let sc = l.shadowColor else { return nil }
+              let sc = l._shadowColorValue else { return nil }
         let opacity = CGFloat(min(max(presentation.shadowOpacity, 0), 1))
         let color = sc.withAlpha(opacity)
         guard color.alpha > 0 else { return nil }
@@ -656,7 +656,7 @@ public enum UIRenderer {
         }
 
         let bw = borderWidth
-        if bw > 0, let bc = v.layer.borderColor, bc.alpha > 0 {
+        if bw > 0, let bc = v.layer._borderColorValue, bc.alpha > 0 {
             let innerRect = bounds.insetBy(dx: bw, dy: bw)
             if !innerRect.isNull && innerRect.width > 0 && innerRect.height > 0 {
                 var ring = layerRoundedRect(bounds, cornerRadius: radius,
@@ -678,7 +678,7 @@ public enum UIRenderer {
                              cornerRadii radii: _CACornerRadii? = nil,
                              hardEdges: Bool, into c: Canvas) {
         let bw = borderWidth
-        guard bw > 0, !bounds.isEmpty, let bc = v.layer.borderColor, bc.alpha > 0
+        guard bw > 0, !bounds.isEmpty, let bc = v.layer._borderColorValue, bc.alpha > 0
         else { return }
         let outer = layerRoundedRect(bounds, cornerRadius: radius,
                                      maskedCorners: corners, cornerRadii: radii)

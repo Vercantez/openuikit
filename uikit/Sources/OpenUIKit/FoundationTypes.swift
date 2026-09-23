@@ -25,7 +25,7 @@
 // Aliasing rather than `@_exported import Foundation` is deliberate: it puts
 // the names in OpenUIKit's namespace, so the other ~100 source files keep
 // compiling without a per-file Foundation import, and OpenCoreGraphics'
-// `CGAffineTransform` / `CGColor` never have to fight CoreGraphics' for the
+// `CGAffineTransform` / `CanvasColor` never have to fight CoreGraphics' for the
 // name on Darwin (docs/PORTABILITY.md).
 //
 // WHAT IS DELIBERATELY *NOT* ALIASED

@@ -85,7 +85,7 @@ enum _CAGradientColorSpace {
 
     /// One color's interpolation-space representation (RGB; alpha is
     /// carried through linearly outside this conversion).
-    static func encode(_ c: CGColor) -> (CGFloat, CGFloat, CGFloat) {
+    static func encode(_ c: CanvasColor) -> (CGFloat, CGFloat, CGFloat) {
         let lr = srgbToLinear(c.red), lg = srgbToLinear(c.green), lb = srgbToLinear(c.blue)
         func row(_ i: Int) -> CGFloat {
             max(0, m[i] * lr + m[i + 1] * lg + m[i + 2] * lb)
@@ -94,20 +94,20 @@ enum _CAGradientColorSpace {
         return (pow(row(0), inv), pow(row(3), inv), pow(row(6), inv))
     }
 
-    static func decode(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, alpha: CGFloat) -> CGColor {
+    static func decode(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, alpha: CGFloat) -> CanvasColor {
         let jr = pow(max(0, r), gamma), jg = pow(max(0, g), gamma), jb = pow(max(0, b), gamma)
         func row(_ i: Int) -> CGFloat {
             max(0, mInv[i] * jr + mInv[i + 1] * jg + mInv[i + 2] * jb)
         }
-        return CGColor(red: linearToSRGB(row(0)), green: linearToSRGB(row(3)),
+        return CanvasColor(red: linearToSRGB(row(0)), green: linearToSRGB(row(3)),
                        blue: linearToSRGB(row(6)), alpha: alpha)
     }
 
     /// Convert CA-space stops into a densified gamma-sRGB stop list that
     /// piecewise-linearly approximates CA's interpolation (for Canvas's
     /// sRGB-lerp gradient contract). 24 subdivisions per segment.
-    static func densify(colors: [CGColor], locations: [CGFloat])
-        -> ([CGColor], [CGFloat]) {
+    static func densify(colors: [CanvasColor], locations: [CGFloat])
+        -> ([CanvasColor], [CGFloat]) {
         // MEASURED 2026-09-04 (scripts/ios_suite.sh, gradient_basic on the
         // iOS 26.1 simulator): real iOS interpolates CAGradientLayer stops
         // LINEARLY IN sRGB — every sample of three gradients matched the
@@ -118,10 +118,10 @@ enum _CAGradientColorSpace {
         let enc = colors.map { c -> (CGFloat, CGFloat, CGFloat) in
             ios ? (c.red, c.green, c.blue) : encode(c)
         }
-        func decodeStop(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, alpha: CGFloat) -> CGColor {
-            ios ? CGColor(red: r, green: g, blue: b, alpha: alpha) : decode(r, g, b, alpha: alpha)
+        func decodeStop(_ r: CGFloat, _ g: CGFloat, _ b: CGFloat, alpha: CGFloat) -> CanvasColor {
+            ios ? CanvasColor(red: r, green: g, blue: b, alpha: alpha) : decode(r, g, b, alpha: alpha)
         }
-        var outColors: [CGColor] = [colors[0]]
+        var outColors: [CanvasColor] = [colors[0]]
         var outLocs: [CGFloat] = [locations[0]]
         let sub = 24
         for i in 1..<colors.count {

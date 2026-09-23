@@ -171,7 +171,7 @@ extension Canvas {
     /// start→end axis; piecewise-linear stop interpolation on gamma-encoded
     /// sRGB components, clamped to the end colors — CanvasEffects contract).
     /// Rect edge anti-aliasing uses the same analytic coverage as fills.
-    func _drawLinearGradient(_ colors: [CGColor], _ locations: [CGFloat],
+    func _drawLinearGradient(_ colors: [CanvasColor], _ locations: [CGFloat],
                              _ start: CGPoint, _ end: CGPoint, _ rect: CGRect) {
         let axis = CGPoint(x: end.x - start.x, y: end.y - start.y)
         let len2 = axis.x * axis.x + axis.y * axis.y
@@ -217,8 +217,8 @@ extension Canvas {
 
     /// Piecewise-linear stop lookup; clamps outside the location span.
     /// Mirrors libquartz's grad_lerp so backend outputs match to rounding.
-    static func _gradientColor(_ colors: [CGColor], _ locations: [CGFloat],
-                               at t: CGFloat) -> CGColor {
+    static func _gradientColor(_ colors: [CanvasColor], _ locations: [CGFloat],
+                               at t: CGFloat) -> CanvasColor {
         if t <= locations[0] { return colors[0] }
         if t >= locations[locations.count - 1] { return colors[colors.count - 1] }
         for i in 1..<locations.count {
@@ -226,7 +226,7 @@ extension Canvas {
                 let span = locations[i] - locations[i - 1]
                 let u = span > 0 ? (t - locations[i - 1]) / span : 0
                 let a = colors[i - 1], b = colors[i]
-                return CGColor(red: a.red + (b.red - a.red) * u,
+                return CanvasColor(red: a.red + (b.red - a.red) * u,
                                green: a.green + (b.green - a.green) * u,
                                blue: a.blue + (b.blue - a.blue) * u,
                                alpha: a.alpha + (b.alpha - a.alpha) * u)

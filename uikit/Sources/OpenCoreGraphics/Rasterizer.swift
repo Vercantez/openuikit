@@ -451,14 +451,14 @@ extension Canvas {
 
     // MARK: Fill
 
-    func _fill(_ path: Path, _ color: CGColor, _ evenOdd: Bool) {
+    func _fill(_ path: Path, _ color: CanvasColor, _ evenOdd: Bool) {
         guard color.alpha > 0 else { return }
         let subpaths = _flattenSubpaths(path, transform: state.ctm)
         _fillDeviceSubpaths(subpaths, color: color, evenOdd: evenOdd)
     }
 
     /// Fill already-flattened device-space subpaths (implicitly closed).
-    func _fillDeviceSubpaths(_ subpaths: [_Subpath], color: CGColor, evenOdd: Bool) {
+    func _fillDeviceSubpaths(_ subpaths: [_Subpath], color: CanvasColor, evenOdd: Bool) {
         guard let box = _bounds(of: subpaths) else { return }
         guard var acc = _CoverageAccumulator(clippingBoxMinX: box.0, minY: box.1,
                                              maxX: box.2, maxY: box.3,
@@ -592,7 +592,7 @@ extension Canvas {
 
     // MARK: Stroke
 
-    func _stroke(_ path: Path, _ color: CGColor, _ lineWidth: CGFloat) {
+    func _stroke(_ path: Path, _ color: CanvasColor, _ lineWidth: CGFloat) {
         guard color.alpha > 0, lineWidth > 0 else { return }
         let t = state.ctm
         // Uniform-scale approximation of the CTM for the stroke width.
@@ -737,7 +737,7 @@ extension Canvas {
 
     // MARK: Glyph masks
 
-    func _drawMask(_ mask: [UInt8], _ w: Int, _ h: Int, _ ox: Int, _ oy: Int, _ color: CGColor) {
+    func _drawMask(_ mask: [UInt8], _ w: Int, _ h: Int, _ ox: Int, _ oy: Int, _ color: CanvasColor) {
         guard color.alpha > 0, w > 0, h > 0 else { return }
         let bw = bitmap.width
         let clip = state.clipMask

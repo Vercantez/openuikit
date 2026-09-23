@@ -53,7 +53,7 @@ final class CardView: UIView {
                    color: UIGraphicsCurrentFillColor())
             c.fill(.roundedRect(CGRect(x: 16, y: 86, width: 120, height: 34),
                                 cornerRadius: 8),
-                   color: CGColor(red: 0.20, green: 0.45, blue: 0.85, alpha: 0.30))
+                   color: CanvasColor(red: 0.20, green: 0.45, blue: 0.85, alpha: 0.30))
         }
     }
 }

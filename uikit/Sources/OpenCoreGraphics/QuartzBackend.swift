@@ -195,7 +195,7 @@ final class QuartzBackend: CanvasBackend {
 
     // MARK: Drawing
 
-    func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool) {
+    func fill(_ path: Path, color: CanvasColor, evenOdd: Bool, hardEdges: Bool) {
         guard color.alpha > 0 else { return }
         // Layer shadow (Canvas.state.shadow): QZ composites a blurred,
         // offset silhouette beneath the fill within the same op. The offset
@@ -245,7 +245,7 @@ final class QuartzBackend: CanvasBackend {
         syncRegion(deviceBounds(of: path, margin: margin))
     }
 
-    func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+    func drawLinearGradient(colors: [CanvasColor], locations: [CGFloat],
                             start: CGPoint, end: CGPoint, in rect: CGRect) {
         var locs = [QZFloat]()
         var comps = [QZFloat]()
@@ -272,13 +272,13 @@ final class QuartzBackend: CanvasBackend {
         syncRegion(deviceBounds(of: .rect(rect), margin: 2))
     }
 
-    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) {
+    func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat) {
         // Match the Swift rasterizer's stroking model: butt caps, round joins.
         stroke(path, color: color, lineWidth: lineWidth, cap: .butt, join: .round,
                miterLimit: 10)
     }
 
-    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+    func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat,
                 cap: CanvasLineCap, join: CanvasLineJoin, miterLimit: CGFloat) {
         guard color.alpha > 0, lineWidth > 0 else { return }
         QZContextSetRGBStrokeColor(ctx, color.red, color.green, color.blue, color.alpha)
@@ -323,7 +323,7 @@ final class QuartzBackend: CanvasBackend {
     }
 
     func drawMask(_ mask: [UInt8], width w: Int, height h: Int,
-                  atPixelX ox: Int, pixelY oy: Int, color: CGColor) {
+                  atPixelX ox: Int, pixelY oy: Int, color: CanvasColor) {
         guard color.alpha > 0, w > 0, h > 0 else { return }
         guard let data = QZBitmapContextGetData(ctx) else { return }
         let px = data.assumingMemoryBound(to: UInt8.self)
