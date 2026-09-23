@@ -63,6 +63,8 @@ public protocol UICollectionViewDataSource: NSObjectProtocol {
     optional func collectionView(_ collectionView: UICollectionView,
                                  viewForSupplementaryElementOfKind kind: String,
                                  at indexPath: IndexPath) -> UICollectionReusableView
+    @objc(collectionView:canMoveItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool
 }
 
 @objc(UICollectionViewDelegate) @preconcurrency @MainActor
@@ -79,6 +81,27 @@ public protocol UICollectionViewDelegate: UIScrollViewDelegate {
     @objc(collectionView:didEndDisplayingCell:forItemAtIndexPath:)
     optional func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell,
                                  forItemAt indexPath: IndexPath)
+    // NetNewsWire's MainFeedCollectionViewController / MainTimelineDataSource
+    // implement these (netnewswire-first-screen); SDK selectors.
+    @objc(collectionView:canPerformPrimaryActionForItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 canPerformPrimaryActionForItemAt indexPath: IndexPath) -> Bool
+    @objc(collectionView:performPrimaryActionForItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 performPrimaryActionForItemAt indexPath: IndexPath)
+    @objc(collectionView:shouldShowMenuForItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 shouldShowMenuForItemAt indexPath: IndexPath) -> Bool
+    @objc(collectionView:canPerformAction:forItemAtIndexPath:withSender:)
+    optional func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector,
+                                 forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool
+    @objc(collectionView:performAction:forItemAtIndexPath:withSender:)
+    optional func collectionView(_ collectionView: UICollectionView, performAction action: Selector,
+                                 forItemAt indexPath: IndexPath, withSender sender: Any?)
+    @objc(collectionView:contextMenuConfigurationForItemAtIndexPath:point:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 contextMenuConfigurationForItemAt indexPath: IndexPath,
+                                 point: CGPoint) -> UIContextMenuConfiguration?
 }
 #else
 @preconcurrency @MainActor

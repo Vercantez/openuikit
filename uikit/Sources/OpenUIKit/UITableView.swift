@@ -125,6 +125,15 @@ public protocol UITableViewDelegate: UIScrollViewDelegate {
     optional func tableView(_ tableView: UITableView,
                             trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration?
+    // UITableViewController implements these (netnewswire-first-screen);
+    // SDK selectors.
+    @objc(tableView:shouldHighlightRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool
+    @objc(tableView:indentationLevelForRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int
+    @objc(tableView:contextMenuConfigurationForRowAtIndexPath:point:)
+    optional func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
+                            point: CGPoint) -> UIContextMenuConfiguration?
 }
 #else
 @preconcurrency @MainActor

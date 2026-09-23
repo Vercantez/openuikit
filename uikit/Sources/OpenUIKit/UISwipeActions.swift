@@ -22,12 +22,6 @@ import class Foundation.NSObject
 import class ObjectiveC.NSObject
 #endif
 
-#if canImport(Foundation)
-import class Foundation.NSObject
-#elseif canImport(ObjectiveC)
-import class ObjectiveC.NSObject
-#endif
-
 @preconcurrency @MainActor
 open class UIContextualAction: NSObject {
     public enum Style: Int, Sendable {
@@ -47,7 +41,6 @@ open class UIContextualAction: NSObject {
         self.style = style
         self.title = title
         self.handler = handler
-        super.init()
         switch style {
         case .destructive:
             // MEASURED TableEditor t900 edit disc, iPhone SE 2x / iOS 26.1:
