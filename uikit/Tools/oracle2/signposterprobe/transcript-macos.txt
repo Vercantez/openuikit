@@ -1,0 +1,8 @@
+# swiftc main.swift -o main && ./main  (host macOS 27.0 26A428, Xcode 26.1, real os overlay, 2026-09-22)
+isEnabled(pointsOfInterest)=true
+isEnabled(plain category)=true
+isEnabled(init())=true
+isEnabled(disabled log)=false
+makeSignpostID distinct=true valid=true
+withIntervalSignpost returns=42
+exclusive raw=0xeeeeb0b5b2b2eeee invalid=18446744073709551615 null=0x0

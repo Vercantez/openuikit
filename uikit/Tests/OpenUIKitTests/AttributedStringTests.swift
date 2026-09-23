@@ -5,9 +5,9 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
-// OpenUIKit's attributed-text types SHADOW Foundation's (docs/KNOWN_GAPS.md):
-// tests import both, so name them explicitly — this file is also the worked
-// example of the disambiguation an app has to write.
+// Where Foundation and the Objective-C runtime exist these names are
+// Foundation's own types (NSAttributedString.swift); elsewhere OpenUIKit's
+// portable ones. Spelling them `OpenUIKit.` works on both.
 private typealias NSAttributedString = OpenUIKit.NSAttributedString
 private typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
 private typealias NSParagraphStyle = OpenUIKit.NSParagraphStyle
@@ -120,7 +120,11 @@ final class AttributedStringTests: XCTestCase {
         var count = 0
         s.enumerateAttribute(.kern, in: s.fullRange) { _, _, stop in
             count += 1
-            stop = true
+#if canImport(ObjectiveC)
+            stop.pointee = true      // Foundation's NSAttributedString
+#else
+            stop = true              // the portable one
+#endif
         }
         XCTAssertEqual(count, 1)
     }
@@ -181,8 +185,11 @@ final class AttributedStringTests: XCTestCase {
         XCTAssertEqual(sub.runs.map { $0.length }, [1, 2])
         XCTAssertEqual(sub.attribute(.font, at: 0, effectiveRange: nil) as? UIFont, f17)
         XCTAssertEqual(sub.attribute(.font, at: 1, effectiveRange: nil) as? UIFont, b17)
-        // Out-of-range slices clamp instead of trapping.
+#if !canImport(ObjectiveC)
+        // The portable type clamps out-of-range slices; Foundation's raises
+        // NSRangeException (measured, textstorageprobe "substring past end").
         XCTAssertEqual(s.attributedSubstring(from: NSRange(location: 4, length: 99)).string, "ef")
+#endif
     }
 
     func testIsEqualTo() {

@@ -156,6 +156,31 @@ void OUKSurfaceFontScenario(OUKSurfaceSink sink, void *context) {
     equalityLine("UILabel.font set", label.font, bold17);
     NSDictionary *attributes = @{NSFontAttributeName: sys17};
     equalityLine("attributes[NSFontAttributeName]", attributes[NSFontAttributeName], sys17);
+    // A font as an attribute value of Foundation's NSAttributedString.
+    NSAttributedString *text = [[NSAttributedString alloc] initWithString:@"Font"
+                                                               attributes:@{NSFontAttributeName: bold17}];
+    UIFont *back = [text attribute:NSFontAttributeName atIndex:2 effectiveRange:NULL];
+    emit("NSAttributedString font identical=%s", B(back == bold17));
+    equalityLine("NSAttributedString font", back, bold17);
+    NSMutableAttributedString *mutable = [text mutableCopy];
+    [mutable addAttribute:NSFontAttributeName value:sys18 range:NSMakeRange(0, 2)];
+    NSRange range;
+    UIFont *first = [mutable attribute:NSFontAttributeName atIndex:0 effectiveRange:&range];
+    emit("addAttribute range={%lu, %lu} pointSize=%g", (unsigned long)range.location, (unsigned long)range.length,
+         first.pointSize);
+    __block int runs = 0;
+    [mutable enumerateAttribute:NSFontAttributeName inRange:NSMakeRange(0, mutable.length) options:0
+                     usingBlock:^(id value, NSRange r, BOOL *stop) { runs += 1; }];
+    emit("font runs=%d", runs);
+    [mutable addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:NSMakeRange(2, 2)];
+    runs = 0;
+    [mutable enumerateAttribute:NSFontAttributeName inRange:NSMakeRange(0, mutable.length) options:0
+                     usingBlock:^(id value, NSRange r, BOOL *stop) { runs += 1; }];
+    emit("equal fonts coalesce runs=%d", runs);
+    emit("copy isEqual=%s", B([[mutable copy] isEqual:mutable]));
+    NSMutableAttributedString *other = [[NSMutableAttributedString alloc] initWithString:@"Font"
+        attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:18]}];
+    emit("equal-font strings isEqual=%s", B([other isEqual:mutable]));
 #endif
 }
 

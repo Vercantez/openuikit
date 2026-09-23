@@ -38,6 +38,106 @@ public struct NSUnderlineStyle: OptionSet, Hashable, Sendable {
     public static let byWord = NSUnderlineStyle(rawValue: 0x8000)
 }
 
+// MARK: - Foundation's attributed strings (Apple toolchain)
+//
+// When the port is compiled with BOTH Foundation and the Objective-C runtime
+// (the Apple toolchain: the macOS host and route (b)'s iOS triple), UIKit's
+// attributed-string types ARE Foundation's, exactly as on iOS: UIKit adds
+// attribute keys and drawing to Foundation's NSAttributedString, it does not
+// declare one of its own. A file that imports both Foundation and UIKit then
+// sees one NSAttributedString (Kickstarter Library: 12 files were ambiguous),
+// Foundation API taking NSAttributedString accepts OpenUIKit's
+// (`Formatter.attributedString(for:withDefaultAttributes:)`), and
+// NSTextStorage can subclass Foundation's NSMutableAttributedString so
+// Objective-C can subclass it in turn (Simplenote's SPInteractiveTextStorage).
+//
+// Every behaviour the text system relies on was measured against the iOS
+// 26.1 simulator (Tools/oracle2/textstorageprobe, transcript-ios26.1.txt) and
+// is Foundation's own here: run coalescing with isEqual:, enumeration with
+// longest effective ranges, replacement attributes, UTF-16 indices, and
+// NSRangeException past the end (the portable type clamps instead; every
+// OpenUIKit call site is bounds-checked).
+//
+// The portable run list below stays for builds without Foundation or without
+// the Objective-C runtime: the native Linux ELF build (corelibs Foundation
+// traps on plain Swift attribute values, see FoundationTypes.swift) and the
+// Foundation-hidden guest library route (build_full.sh).
+#if canImport(ObjectiveC) && canImport(Foundation)
+import Foundation
+
+public typealias NSAttributedString = Foundation.NSAttributedString
+public typealias NSMutableAttributedString = Foundation.NSMutableAttributedString
+
+// UIKit's attribute keys (raw values are iOS 26.1's). On the macOS host AppKit
+// already declares every one of these with the same raw value on the same
+// Foundation type; declaring them again there would make `.font` ambiguous in
+// every client (coordinated with ios-target: gate on canImport(AppKit), the
+// AppKit-visible host; the iOS triple has no AppKit and needs them).
+#if !canImport(AppKit)
+extension NSAttributedString.Key {
+    /// `UIFont`.
+    public static let font = NSAttributedString.Key("NSFont")
+    /// `UIColor`.
+    public static let foregroundColor = NSAttributedString.Key("NSColor")
+    /// `UIColor` filling the run's line-box rect.
+    public static let backgroundColor = NSAttributedString.Key("NSBackgroundColor")
+    /// `NSParagraphStyle`.
+    public static let paragraphStyle = NSAttributedString.Key("NSParagraphStyle")
+    /// `CGFloat` — points added to every character's advance. A value of 0
+    /// DISABLES the font's pair kerning (see AttributedTextLayout).
+    public static let kern = NSAttributedString.Key("NSKern")
+    /// `Int` (`NSUnderlineStyle.rawValue`).
+    public static let underlineStyle = NSAttributedString.Key("NSUnderline")
+    /// `UIColor`; defaults to the run's foreground color.
+    public static let underlineColor = NSAttributedString.Key("NSUnderlineColor")
+    /// `Int` (`NSUnderlineStyle.rawValue`).
+    public static let strikethroughStyle = NSAttributedString.Key("NSStrikethrough")
+    /// `UIColor`; defaults to the run's foreground color.
+    public static let strikethroughColor = NSAttributedString.Key("NSStrikethroughColor")
+    /// `CGFloat` — points the run's glyphs are raised above the baseline.
+    public static let baselineOffset = NSAttributedString.Key("NSBaselineOffset")
+    /// `UIColor` (stroke color; stroking itself is not implemented).
+    public static let strokeColor = NSAttributedString.Key("NSStrokeColor")
+    /// `CGFloat` (stroke width; stroking itself is not implemented).
+    public static let strokeWidth = NSAttributedString.Key("NSStrokeWidth")
+    /// Any value; carried through untouched (link handling is app-side).
+    public static let link = NSAttributedString.Key("NSLink")
+    /// `CGFloat` — points of extra tracking.
+    public static let tracking = NSAttributedString.Key("NSTracking")
+    /// `NSTextAttachment`. The run's character is U+FFFC.
+    public static let attachment = NSAttributedString.Key("NSAttachment")
+}
+#endif
+
+extension NSAttributedString {
+    /// One maximal span of equal attributes, as Foundation's storage reports
+    /// it (`attributes(at:effectiveRange:)`). `length` is in UTF-16 units.
+    struct Run {
+        var length: Int
+        var attributes: [NSAttributedString.Key: Any]
+    }
+
+    /// The runs, in order. The text layout reads one style per run.
+    var runs: [Run] {
+        var out: [Run] = []
+        let n = length
+        var i = 0
+        while i < n {
+            var r = NSRange(location: 0, length: 0)
+            let a = attributes(at: i, effectiveRange: &r)
+            let end = Swift.max(i + 1, r.location + r.length)
+            out.append(Run(length: end - i, attributes: a))
+            i = end
+        }
+        return out
+    }
+
+    /// Whole-string range.
+    var fullRange: NSRange { NSRange(location: 0, length: length) }
+}
+
+#else
+
 // MARK: - NSAttributedString
 
 open class NSAttributedString {
@@ -397,6 +497,8 @@ open class NSMutableAttributedString: NSAttributedString {
         set { replaceCharacters(in: fullRange, with: newValue) }
     }
 }
+
+#endif // canImport(ObjectiveC) && canImport(Foundation)
 
 // MARK: - Attribute value comparison
 //

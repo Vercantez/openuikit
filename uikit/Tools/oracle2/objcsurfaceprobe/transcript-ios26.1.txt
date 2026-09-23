@@ -27,6 +27,13 @@ copy isEqual=YES sameHash=YES
 UILabel.font default pointSize=17 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
 UILabel.font set isEqual=YES sameHash=YES
 attributes[NSFontAttributeName] isEqual=YES sameHash=YES
+NSAttributedString font identical=YES
+NSAttributedString font isEqual=YES sameHash=YES
+addAttribute range={0, 2} pointSize=18
+font runs=2
+equal fonts coalesce runs=1
+copy isEqual=YES
+equal-font strings isEqual=YES
 ## layer
 +layer class=CALayer
 defaults bounds={{0, 0}, {0, 0}} position={0, 0} anchorPoint={0.5, 0.5} frame={{0, 0}, {0, 0}}

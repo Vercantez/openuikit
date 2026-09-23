@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-DIAG = re.compile(r"^(?P<file>/[^:\n]+\.swift):(?P<line>\d+):(?P<col>\d+): (?P<kind>error|warning|note): (?P<msg>.*)$")
+DIAG = re.compile(r"^(?P<file>/[^:\n]+\.(?:swift|mm|m|h|c)):(?P<line>\d+):(?P<col>\d+): (?P<kind>error|warning|note): (?P<msg>.*)$")
 QUOTED = re.compile(r"'([^']*)'")
 
 
@@ -52,16 +52,27 @@ def is_own(path: str, own_roots: list[str]) -> bool:
     return any(real == r or real.startswith(r + os.sep) for r in own_roots)
 
 
+def own_roots_for(pkg: str, name: str) -> list[str]:
+    """Sources/<name> plus everything its symlinks resolve to, at any depth.
+
+    A plain target is one directory symlink. A target with generated files
+    (spm_app_chain "generated"/"overlay") or a file-list target ("files") is
+    a real directory of per-entry symlinks, nested for a file list; the
+    compiler may report either the link or the resolved upstream path.
+    """
+    own_dir = os.path.join(pkg, "Sources", name)
+    roots = [os.path.realpath(own_dir), os.path.abspath(own_dir)]
+    if os.path.isdir(own_dir) and not os.path.islink(own_dir):
+        for dp, dns, fns in os.walk(own_dir):
+            for entry in dns + fns:
+                child = os.path.join(dp, entry)
+                if os.path.islink(child):
+                    roots.append(os.path.realpath(child))
+    return roots
+
+
 def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
-    own_dir = os.path.realpath(os.path.join(pkg, "Sources", name))
-    # A target with generated files (spm_app_chain "generated") is a real
-    # directory of per-entry symlinks; its files resolve into those entries.
-    own_roots = [own_dir]
-    if os.path.isdir(own_dir):
-        for entry in os.listdir(own_dir):
-            child = os.path.join(own_dir, entry)
-            if os.path.islink(child):
-                own_roots.append(os.path.realpath(child))
+    own_roots = own_roots_for(pkg, name)
     cmd = ["swift", "build", "--target", name, "-j", str(jobs)]
     t0 = time.time()
     try:
@@ -110,6 +121,15 @@ def run_target(pkg: str, name: str, timeout: int, jobs: int) -> dict:
     }
 
 
+def resumable(prev: dict, spec_path: str, order: list[str], only: list[str] | None) -> list[dict]:
+    """Passed rows of a previous run that may be reused: same spec, still in the order,
+    not named by --only. (A shared scratch dir can hold another app's out file.)"""
+    if prev.get("spec") != spec_path:
+        return []
+    return [r for r in prev.get("targets", [])
+            if r.get("status") == "passed" and r.get("target") in order and r.get("target") not in (only or [])]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -127,7 +147,7 @@ def main() -> int:
     results = []
     if os.path.exists(args.out):
         try:
-            results = [r for r in json.load(open(args.out))["targets"] if r["status"] == "passed" and r["target"] not in (args.only or [])]
+            results = resumable(json.load(open(args.out)), os.path.abspath(args.spec), order, args.only)
         except Exception:
             results = []
     done = {r["target"] for r in results}

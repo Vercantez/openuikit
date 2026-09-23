@@ -160,13 +160,22 @@ final class ObjCSurfaceTests: XCTestCase {
     }
 
     /// Kickstarter Library's attribute literals: heterogeneous values typed
-    /// `[NSAttributedString.Key: Any]` need an object UIFont.
-    func testFontIsAnObjectAttributeValue() {
-        let attributes: [OpenUIKit.NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 12), .foregroundColor: UIColor.red,
-        ]
-        XCTAssertEqual(attributes[.font] as? UIFont, .systemFont(ofSize: 12))
+    /// `[NSAttributedString.Key: Any]` need an object UIFont; the font then
+    /// rides through Foundation's NSAttributedString (attrstring-unify) as the
+    /// same object, and equal fonts coalesce into one run, as on iOS 26.1
+    /// (objcsurfaceprobe `## font`, "NSAttributedString font identical=YES",
+    /// "equal fonts coalesce runs=1").
+    func testFontIsAnObjectAttributeValueThroughFoundation() {
+        let font = UIFont.boldSystemFont(ofSize: 17)
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: UIColor.red]
         XCTAssertTrue((attributes[.font] as AnyObject) is NSObject)
+        let text = NSAttributedString(string: "Font", attributes: attributes)
+        XCTAssertTrue(text.attribute(.font, at: 2, effectiveRange: nil) as AnyObject === font)
+        let mutable = NSMutableAttributedString(string: "Font", attributes: [.font: UIFont.systemFont(ofSize: 18)])
+        mutable.addAttribute(.font, value: UIFont.systemFont(ofSize: 18), range: NSRange(location: 2, length: 2))
+        var runs = 0
+        mutable.enumerateAttribute(.font, in: NSRange(location: 0, length: 4)) { _, _, _ in runs += 1 }
+        XCTAssertEqual(runs, 1)
     }
 
     /// The structural rule for Objective-C subclassing (simplenote-objc-core):

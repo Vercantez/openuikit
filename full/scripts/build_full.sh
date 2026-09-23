@@ -156,15 +156,16 @@ run_jobs() {
 # Two stages depend on nothing under uikit/ and dominate the build: the
 # FoundationEssentials closure (collections, os, C shims, FE, compat objects)
 # and FoundationInternationalization (474 ICU TUs + 61 Swift files). With the
-# cache on, each stage's complete output tree is stored as a tar under
+# cache on, each stage's complete output tree is copied (see stage_copy) under
 # BUILD_FULL_STAGE_CACHE_DIR, keyed by a SHA-256 over the stage's inputs:
 # every source/script/patch by CONTENT, the pinned upstream trees, the compile
 # sysroot's content, the compiler/linker binaries and version strings, the
 # relevant flags/environment, the absolute paths the stage writes, and (for FI)
 # the upstream stage outputs it links. A hit restores the exact bytes a cold
 # run of the same inputs wrote (cold runs of this script are deterministic);
-# a miss runs the stage normally and then records it. Off by default: the
-# authority routes keep compiling everything.
+# a miss, or an entry that fails verification, runs the stage normally and then
+# records it; a recording failure only warns. Off by default: the authority
+# routes keep compiling everything.
 BUILD_FULL_STAGE_CACHE=${BUILD_FULL_STAGE_CACHE:-0}
 BUILD_FULL_STAGE_CACHE_DIR=${BUILD_FULL_STAGE_CACHE_DIR:-$OUT.stage-cache}
 case "$BUILD_FULL_STAGE_CACHE" in
@@ -205,86 +206,185 @@ toolchain_identity() {
         sha256sum < "$(readlink -f "$(command -v "$tool")")"
     done
 }
-# tree_manifest <root> <rel>...: type, mode, path and content hash (files) or
-# link target (symlinks) of every entry at and under each <root>/<rel>, sorted.
-tree_manifest() {
-    local root=$1
-    shift
-    (
-        cd "$root" || exit 2
-        find "$@" -printf '%y %m %p\n' | LC_ALL=C sort -k3 \
-            | while read -r type mode rel; do
-                case "$type" in
-                    f) printf '%s %s %s %s\n' "$type" "$mode" "$rel" "$(sha256sum < "$rel" | cut -d' ' -f1)" ;;
-                    l) printf '%s %s %s -> %s\n' "$type" "$mode" "$rel" "$(readlink "$rel")" ;;
-                    *) printf '%s %s %s\n' "$type" "$mode" "$rel" ;;
-                esac
-            done
-    )
+# >>> stage-cache functions (extracted by full/scripts/test_build_full_stage_cache.py)
+# Entries never go through cp or tar. Both trust the file system's inode
+# identity, and Docker Desktop's bind mount (virtiofs) does not keep it stable
+# under load:
+#   * GNU tar's delayed symlink/directory-status extraction came back with
+#     empty placeholder files and exit 2;
+#   * GNU cp 9.x compares the dev/ino it saw while scanning with fstat() of the
+#     opened file and refuses with "skipping file ..., as it was replaced while
+#     being copied" when a FUSE inode was evicted and looked up again (seen on
+#     the main checkout, 2026-09-22, right after the FE stage).
+# stage_copy copies BYTES (cat), then sets the mode and mtime from the source,
+# and every copy is proven by a content manifest instead.
+
+# stage_path_manifest <path>: type, mode, name (relative to <path>) and content
+# hash (files) or link target (symlinks) of <path> and everything under it,
+# sorted. Returns non-zero if <path> cannot be listed or read.
+stage_path_manifest() {
+    local base=$1 listing type mode rel p digest
+    if [ -d "$base" ] && [ ! -L "$base" ]; then
+        listing=$(cd -- "$base" && find . -printf '%y %m %p\n') || return 1
+    else
+        listing=$(find "$base" -maxdepth 0 -printf '%y %m .\n') || return 1
+    fi
+    while read -r type mode rel; do
+        if [ "$rel" = . ]; then p=$base; else p=$base/${rel#./}; fi
+        case "$type" in
+            f) digest=$(sha256sum < "$p") || return 1
+               printf '%s %s %s %s\n' "$type" "$mode" "$rel" "${digest%% *}" ;;
+            l) printf '%s %s %s -> %s\n' "$type" "$mode" "$rel" "$(readlink -- "$p")" ;;
+            *) printf '%s %s %s\n' "$type" "$mode" "$rel" ;;
+        esac
+    done < <(LC_ALL=C sort -k3 <<<"$listing")
 }
-# Entries are plain `cp -a` copies of each recorded path, not tarballs: GNU
-# tar's delayed symlink/directory-status extraction relies on stable inode
-# numbers, which Docker Desktop bind mounts do not provide (measured: symlinks
-# came back as empty placeholder files and tar exited 2).
-#
-# stage_cache_restore <stage> <key> <path>...: on a hit, replace <path>... with
-# the recorded tree and return 0; on a miss return 1. The entry is checked
-# against its manifest before anything is touched, and the restored paths are
-# checked against it afterwards. This runs as an `if` condition, where errexit
-# is off, so every step checks its own status.
+# stage_copy <src> <dst>: copy a file, symlink or directory tree to <dst>
+# (which must not exist) with modes and mtimes, reading file contents with cat.
+# Every step checks its own status: callers run it where errexit is off.
+stage_copy() {
+    local src=$1 dst=$2 listing type mode rel
+    if [ -L "$src" ]; then
+        ln -s -- "$(readlink -- "$src")" "$dst" || return 1
+        touch -h -r "$src" "$dst" || return 1
+        return 0
+    fi
+    if [ ! -d "$src" ]; then
+        cat -- "$src" > "$dst" || return 1
+        chmod "$(stat -c %a -- "$src")" "$dst" || return 1
+        touch -r "$src" "$dst" || return 1
+        return 0
+    fi
+    mkdir -- "$dst" || return 1
+    # Pre-order listing: every directory is created before its children.
+    listing=$(cd -- "$src" && find . -mindepth 1 -printf '%y %m %p\n') || return 1
+    while read -r type mode rel; do
+        [ -n "$rel" ] || continue
+        rel=${rel#./}
+        case "$type" in
+            d) mkdir -- "$dst/$rel" || return 1 ;;
+            l) ln -s -- "$(readlink -- "$src/$rel")" "$dst/$rel" || return 1
+               touch -h -r "$src/$rel" "$dst/$rel" || return 1 ;;
+            f) cat -- "$src/$rel" > "$dst/$rel" || return 1
+               chmod "$mode" "$dst/$rel" || return 1
+               touch -r "$src/$rel" "$dst/$rel" || return 1 ;;
+            *) echo "   stage cache: unsupported file type '$type' at $src/$rel" >&2
+               return 1 ;;
+        esac
+    done <<<"$listing"
+    # Directory modes and mtimes last, deepest first, so filling a directory
+    # cannot bump a timestamp that was already set.
+    while read -r type mode rel; do
+        [ "$type" = d ] || continue
+        rel=${rel#./}
+        chmod "$mode" "$dst/$rel" || return 1
+        touch -r "$src/$rel" "$dst/$rel" || return 1
+    done < <(sort -r -k3 <<<"$listing")
+    chmod "$(stat -c %a -- "$src")" "$dst" || return 1
+    touch -r "$src" "$dst" || return 1
+}
+# stage_entry_manifest <root> <rel>...: one "== <rel>" section per path.
+stage_entry_manifest() {
+    local root=$1 rel
+    shift
+    for rel in "$@"; do
+        printf '== %s\n' "$rel"
+        stage_path_manifest "$root/$rel" || return 1
+    done
+}
+
+# stage_cache_restore <stage> <key> <path>...: on a hit, replace <path>... (and
+# every recorded path) with the recorded tree and return 0. Anything short of a
+# verified hit returns 1 with the outputs untouched, and the caller builds the
+# stage: the entry is checked against its manifest, each recorded path is
+# copied to a sibling "<path>.stage-restore" and checked again, and only then
+# are the outputs removed and the siblings renamed into place (a rename within
+# one directory, never a copy).
 stage_cache_restore() {
-    local stage=$1 key=$2 entry p rel
+    local stage=$1 key=$2 entry rel p ok=1
     local -a rels=()
     shift 2
     [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 1
     entry=$BUILD_FULL_STAGE_CACHE_DIR/$stage/$key
-    [ -d "$entry/payload" ] && [ -f "$entry/manifest" ] && [ -f "$entry/paths" ] || {
+    if [ ! -d "$entry/payload" ] || [ ! -f "$entry/manifest" ] || [ ! -f "$entry/paths" ]; then
         echo "   stage cache: $stage miss key=${key:0:12}"
         return 1
-    }
+    fi
     mapfile -t rels < "$entry/paths" || return 1
-    if ! tree_manifest "$entry/payload" "${rels[@]}" | cmp -s - "$entry/manifest"; then
+    if ! cmp -s <(stage_entry_manifest "$entry/payload" "${rels[@]}") "$entry/manifest"; then
         echo "   stage cache: $stage entry ${key:0:12} does not match its manifest; rebuilding" >&2
         rm -rf -- "$entry"
+        return 1
+    fi
+    for rel in "${rels[@]}"; do
+        rm -rf -- "/$rel.stage-restore"
+        if ! mkdir -p -- "/$(dirname -- "$rel")" \
+            || ! stage_copy "$entry/payload/$rel" "/$rel.stage-restore" \
+            || ! cmp -s <(stage_path_manifest "/$rel.stage-restore") \
+                        <(stage_path_manifest "$entry/payload/$rel"); then
+            ok=0
+            break
+        fi
+    done
+    if [ "$ok" != 1 ]; then
+        for rel in "${rels[@]}"; do rm -rf -- "/$rel.stage-restore"; done
+        echo "   stage cache: $stage entry ${key:0:12} could not be staged; rebuilding" >&2
         return 1
     fi
     for p in "$@"; do
         rm -rf -- "$p" || die "stage cache: cannot remove $p"
     done
     for rel in "${rels[@]}"; do
-        mkdir -p "/$(dirname "$rel")" && cp -a "$entry/payload/$rel" "/$rel" \
-            || die "stage cache: restoring /$rel failed"
+        rm -rf -- "/$rel" || die "stage cache: cannot remove /$rel"
+        mv -T -- "/$rel.stage-restore" "/$rel" || die "stage cache: cannot rename /$rel.stage-restore"
     done
-    tree_manifest / "${rels[@]}" | cmp -s - "$entry/manifest" \
+    cmp -s <(stage_entry_manifest / "${rels[@]}") "$entry/manifest" \
         || die "stage cache: restored $stage paths differ from entry ${key:0:12}"
     echo "   stage cache: $stage restored key=${key:0:12}"
 }
-# stage_cache_store <stage> <key> <path>...: record the existing <path>...
-# (absolute), replacing any older entry for <stage>.
+# stage_cache_store <stage> <key> <path>...: record the existing absolute
+# <path>..., replacing any older entry for <stage>. Never fails the build: a
+# copy that cannot be made or does not match the outputs byte for byte is
+# discarded with a warning.
 stage_cache_store() {
+    [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 0
+    local stage=$1 key=$2
+    # Called from `||`, so errexit is off inside and each step checks itself.
+    stage_cache_store_entry "$@" || {
+        rm -rf -- "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp."* 2>/dev/null
+        echo "   stage cache: WARNING: $stage not recorded (key=${key:0:12}); the build continues uncached" >&2
+    }
+    return 0
+}
+stage_cache_store_entry() {
     local stage=$1 key=$2 entry tmp p
     local -a rels=()
     shift 2
-    [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 0
     entry=$BUILD_FULL_STAGE_CACHE_DIR/$stage/$key
-    mkdir -p "$BUILD_FULL_STAGE_CACHE_DIR/$stage"
-    tmp=$(mktemp -d "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp.XXXXXX")
+    mkdir -p -- "$BUILD_FULL_STAGE_CACHE_DIR/$stage" || return 1
+    tmp=$(mktemp -d "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp.XXXXXX") || return 1
     for p in "$@"; do
-        case "$p" in /*) ;; *) die "stage cache path must be absolute: $p" ;; esac
-        [ -e "$p" ] || [ -L "$p" ] || die "stage cache: $stage output missing: $p"
+        case "$p" in
+            /*) ;;
+            *) echo "   stage cache: path must be absolute: $p" >&2; return 1 ;;
+        esac
+        [ -e "$p" ] || [ -L "$p" ] || { echo "   stage cache: $stage output missing: $p" >&2; return 1; }
         rels+=("${p#/}")
-        mkdir -p "$tmp/payload$(dirname "$p")"
-        cp -a "$p" "$tmp/payload$p"
+        mkdir -p -- "$tmp/payload$(dirname -- "$p")" || return 1
+        stage_copy "$p" "$tmp/payload$p" || return 1
     done
-    printf '%s\n' "${rels[@]}" > "$tmp/paths"
-    tree_manifest "$tmp/payload" "${rels[@]}" > "$tmp/manifest"
-    tree_manifest / "${rels[@]}" | cmp -s - "$tmp/manifest" \
-        || die "stage cache: copy of $stage outputs differs from the originals"
+    printf '%s\n' "${rels[@]}" > "$tmp/paths" || return 1
+    stage_entry_manifest "$tmp/payload" "${rels[@]}" > "$tmp/manifest" || return 1
+    if ! cmp -s <(stage_entry_manifest / "${rels[@]}") "$tmp/manifest"; then
+        echo "   stage cache: copy of $stage outputs differs from the originals" >&2
+        return 1
+    fi
     find "$BUILD_FULL_STAGE_CACHE_DIR/$stage" -mindepth 1 -maxdepth 1 \
-        ! -name "$(basename "$tmp")" -exec rm -rf -- {} +
-    mv "$tmp" "$entry"
+        ! -name "$(basename -- "$tmp")" -exec rm -rf -- {} + || return 1
+    mv -T -- "$tmp" "$entry" || return 1
     echo "   stage cache: $stage stored key=${key:0:12}"
 }
+# <<< stage-cache functions
 
 # The DTS route is explicit and fail-closed. Standalone mode builds the
 # canonical target source, external mode consumes an all-or-none attested trio,
