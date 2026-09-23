@@ -138,6 +138,22 @@ public final class UIImage: NSObject {
         self.scale = scale > 0 ? scale : 1
     }
 
+    /// The frames of an animated image (`+animatedImageWithImages:duration:`),
+    /// nil for a still image. MEASURED iOS 26.1 (podsurfaceprobe "## image"):
+    /// the result has the first frame's size and scale, keeps the frames
+    /// themselves, a zero duration becomes 1/30 s per frame, and an empty
+    /// array gives nil.
+    public private(set) var images: [UIImage]?
+    public private(set) var duration: TimeInterval = 0
+
+    public static func animatedImage(with images: [UIImage], duration: TimeInterval) -> UIImage? {
+        guard let first = images.first else { return nil }
+        let result = UIImage(bitmap: first.bitmap, scale: first.scale)
+        result.images = images
+        result.duration = duration > 0 ? duration : Double(images.count) / 30
+        return result
+    }
+
     /// UIKit's empty image initializer. The resulting image has zero logical
     /// size and is useful as a sentinel (for example, to suppress navigation
     /// bar background and shadow artwork).

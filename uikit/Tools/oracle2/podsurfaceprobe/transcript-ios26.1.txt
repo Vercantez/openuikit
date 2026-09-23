@@ -38,3 +38,22 @@ style 100 -> activityIndicatorViewStyle=100 size={20, 20} animating=NO hidesWhen
 style 100 color rgb=YES {0.235, 0.235, 0.263, 0.600}
 style 101 -> activityIndicatorViewStyle=101 size={37, 37} animating=NO hidesWhenStopped=YES
 style 101 color rgb=YES {0.235, 0.235, 0.263, 0.600}
+## image
+still images=nil duration=0 size={2, 3}
+animated images.count=2 duration=0.5 size={2, 3} scale=1 first-is-a=YES
+single images.count=1 duration=0.0333333 size={4, 4}
+three frames duration 0 -> duration=0.1
+mixed sizes -> size={4, 4}
+empty -> nil
+## imageview
+highlighted=NO highlightedImage=nil animationImages=nil isAnimating=NO duration=0 repeat=0
+startAnimating without images -> isAnimating=NO
+animationImages set -> count=2 isAnimating=NO duration=0
+startAnimating -> isAnimating=YES image-is-a=YES
+stopAnimating -> isAnimating=NO
+highlightedImage set -> identical=YES image-is-a=YES frame=2,3
+setHighlighted YES -> highlighted=YES image-is-a=YES
+initWithImage:highlightedImage: image-is-a=YES highlighted-is-b=YES highlighted=NO frame=2,3
+animated image -> isAnimating=NO animationImages=nil image.images.count=2
+## appdelegate
+delegate=nil

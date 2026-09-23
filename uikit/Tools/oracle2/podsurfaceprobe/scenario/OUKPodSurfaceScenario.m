@@ -40,7 +40,8 @@ static const char *E(UIEdgeInsets i) {
 }
 
 static const char *const kSections[] = {
-    "view", "constraint", "label", "paragraph", "attributes", "button", "activity", NULL,
+    "view", "constraint", "label", "paragraph", "attributes", "button", "activity", "image", "imageview",
+    "appdelegate", NULL,
 };
 
 // FLKAutoLayout (translatesAutoresizingMaskIntoConstraints), Artsy+UILabels
@@ -147,6 +148,77 @@ static void activitySection(void) {
     }
 }
 
+/* 2x3 and 4x4 opaque red PNGs. */
+static UIImage *PNG(BOOL big) {
+    NSString *b64 = big ? @"iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVR4nGP4z8DwHxkzkC4AADxAH+HggXe0AAAAAElFTkSuQmCC"
+                        : @"iVBORw0KGgoAAAANSUhEUgAAAAIAAAADCAYAAAC56t6BAAAAEUlEQVR4nGP4z8DwH4QZMBgAoXkL9U3EmgcAAAAASUVORK5CYII=";
+    return [UIImage imageWithData:[[NSData alloc] initWithBase64EncodedString:b64 options:0]];
+}
+static const char *SZ(CGSize s) {
+    static char buf[4][48];
+    static int n;
+    char *out = buf[n++ & 3];
+    snprintf(out, 48, "{%g, %g}", s.width, s.height);
+    return out;
+}
+
+// SDWebImage UIImage+GIF / SDWebImageCompat: +animatedImageWithImages:duration:,
+// `.images`, `.duration`.
+static void imageSection(void) {
+    UIImage *a = PNG(NO), *b = PNG(YES);
+    emit("still images=%s duration=%g size=%s", a.images ? "array" : "nil", a.duration, SZ(a.size));
+    UIImage *anim = [UIImage animatedImageWithImages:@[a, b] duration:0.5];
+    emit("animated images.count=%lu duration=%g size=%s scale=%g first-is-a=%s",
+         (unsigned long)anim.images.count, anim.duration, SZ(anim.size), anim.scale, B(anim.images[0] == a));
+    UIImage *one = [UIImage animatedImageWithImages:@[b] duration:0];
+    emit("single images.count=%lu duration=%g size=%s", (unsigned long)one.images.count, one.duration, SZ(one.size));
+    UIImage *zero = [UIImage animatedImageWithImages:@[a, b, a] duration:0];
+    emit("three frames duration 0 -> duration=%g", zero.duration);
+    UIImage *mixed = [UIImage animatedImageWithImages:@[b, a] duration:1];
+    emit("mixed sizes -> size=%s", SZ(mixed.size));
+    UIImage *none = [UIImage animatedImageWithImages:@[] duration:1];
+    emit("empty -> %s", none ? "image" : "nil");
+}
+
+// SDWebImage UIImageView+WebCache / +HighlightedWebCache, UIImageViewAligned.
+static void imageViewSection(void) {
+    UIImage *a = PNG(NO), *b = PNG(YES);
+    UIImageView *view = [[UIImageView alloc] initWithImage:a];
+    emit("highlighted=%s highlightedImage=%s animationImages=%s isAnimating=%s duration=%g repeat=%ld",
+         B(view.highlighted), view.highlightedImage ? "image" : "nil", view.animationImages ? "array" : "nil",
+         B(view.isAnimating), view.animationDuration, (long)view.animationRepeatCount);
+    [view startAnimating];
+    emit("startAnimating without images -> isAnimating=%s", B(view.isAnimating));
+    view.animationImages = @[a, b];
+    emit("animationImages set -> count=%lu isAnimating=%s duration=%g", (unsigned long)view.animationImages.count,
+         B(view.isAnimating), view.animationDuration);
+    [view startAnimating];
+    emit("startAnimating -> isAnimating=%s image-is-a=%s", B(view.isAnimating), B(view.image == a));
+    [view stopAnimating];
+    emit("stopAnimating -> isAnimating=%s", B(view.isAnimating));
+    view.animationImages = nil;
+    view.highlightedImage = b;
+    emit("highlightedImage set -> identical=%s image-is-a=%s frame=%g,%g", B(view.highlightedImage == b),
+         B(view.image == a), view.frame.size.width, view.frame.size.height);
+    view.highlighted = YES;
+    emit("setHighlighted YES -> highlighted=%s image-is-a=%s", B(view.highlighted), B(view.image == a));
+    UIImageView *both = [[UIImageView alloc] initWithImage:a highlightedImage:b];
+    emit("initWithImage:highlightedImage: image-is-a=%s highlighted-is-b=%s highlighted=%s frame=%g,%g",
+         B(both.image == a), B(both.highlightedImage == b), B(both.highlighted), both.frame.size.width,
+         both.frame.size.height);
+    UIImageView *animated = [[UIImageView alloc] initWithImage:[UIImage animatedImageWithImages:@[a, b] duration:2]];
+    emit("animated image -> isAnimating=%s animationImages=%s image.images.count=%lu",
+         B(animated.isAnimating), animated.animationImages ? "array" : "nil",
+         (unsigned long)animated.image.images.count);
+}
+
+// NJKWebViewProgressView: `[UIApplication sharedApplication].delegate.window`
+// is typed through id<UIApplicationDelegate>.
+static void appDelegateSection(void) {
+    id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+    emit("delegate=%s", delegate ? "object" : "nil");
+}
+
 const char *OUKPodSurfaceSection(int index) {
     return index >= 0 && index < (int)(sizeof kSections / sizeof kSections[0]) ? kSections[index] : NULL;
 }
@@ -161,4 +233,7 @@ void OUKPodSurfaceRun(const char *name, OUKPodSurfaceSink sink, void *context) {
     else if (!strcmp(name, "attributes")) attributesSection();
     else if (!strcmp(name, "button")) buttonSection();
     else if (!strcmp(name, "activity")) activitySection();
+    else if (!strcmp(name, "image")) imageSection();
+    else if (!strcmp(name, "imageview")) imageViewSection();
+    else if (!strcmp(name, "appdelegate")) appDelegateSection();
 }

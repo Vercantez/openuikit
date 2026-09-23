@@ -217,7 +217,6 @@ extension UIWindow {
 extension UIApplication {
     @objc(sharedApplication) public class var __objc_shared: UIApplication { UIApplication.shared }
     /// The Swift delegate object; an Objective-C caller reads it as `id`.
-    @objc(delegate) public var __objc_delegate: AnyObject? { delegate as AnyObject? }
     @objc(keyWindow) public var __objc_keyWindow: UIWindow? { keyWindow }
     @objc(windows) public var __objc_windows: [UIWindow] { windows }
     @objc(openURL:options:completionHandler:)
@@ -856,6 +855,25 @@ extension UIColor {
     @objc(getWhite:alpha:) public func __objc_getWhite(
         _ white: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
         getWhite(white, alpha: alpha)
+    }
+}
+
+
+extension UIImage {
+    @objc(images) public var __objc_images: [UIImage]? { images }
+    @objc(duration) public var __objc_duration: TimeInterval { duration }
+    @objc(animatedImageWithImages:duration:)
+    public class func __objc_animatedImage(with images: [UIImage], duration: TimeInterval) -> UIImage? {
+        animatedImage(with: images, duration: duration)
+    }
+}
+
+extension UIApplication {
+    /// iOS types it `id<UIApplicationDelegate>` (NJKWebViewProgressView reads
+    /// `.delegate.window` through it); the object is the same one `delegate`
+    /// returns.
+    @objc(delegate) public var __objc_typedDelegate: UIApplicationDelegateObjC? {
+        (delegate as AnyObject?).map { unsafeBitCast($0, to: UIApplicationDelegateObjC.self) }
     }
 }
 

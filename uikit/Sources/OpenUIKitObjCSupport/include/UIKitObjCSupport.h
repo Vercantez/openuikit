@@ -582,6 +582,13 @@ NS_SWIFT_NAME(UIPickerViewDelegateObjC) @protocol UIPickerViewDelegate <NSObject
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 @end
 
+/* UILayoutSupport (UIViewController.h), which ORStackView's header names for
+ * a view controller's top/bottom layout guide. Declaration only: no OpenUIKit
+ * object conforms yet. */
+NS_SWIFT_NAME(UILayoutSupportObjC) @protocol UILayoutSupport <NSObject>
+@property (nonatomic, readonly) CGFloat length;
+@end
+
 NS_ASSUME_NONNULL_END
 
 #endif /* OPENUIKIT_OBJC_SUPPORT_H */
