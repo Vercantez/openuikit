@@ -1960,6 +1960,20 @@ EXPORT void dispatch_once_f(long *pred, void *ctx, void (*fn)(void *))
     }
 }
 
+/* dispatch_once: the block form every Objective-C singleton uses (FMDB,
+ * NSString+RSDatabase). A block literal is {isa, flags, reserved, invoke, ...};
+ * invoke takes the block itself. Same per-token state machine as above. */
+static void mr_once_invoke_block(void *block)
+{
+    void (*invoke)(void *) = *(void (**)(void *))((char *)block + 16);
+    invoke(block);
+}
+
+EXPORT void dispatch_once(long *pred, void *block)
+{
+    dispatch_once_f(pred, block, mr_once_invoke_block);
+}
+
 /* memset_s: C11 Annex K. Darwin has it; glibc does not. Not host-bindable.
  * ERANGE still wipes smax bytes. glibc_memset is the labelled seam so clang
  * cannot elide the store (Darwin's "not optimised away" guarantee). */

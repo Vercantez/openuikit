@@ -490,7 +490,14 @@ if vendor_is_inrepo "$W" uikit "$UIKIT"; then
     EXPECTED_UIKIT_TREE=$(git -C "$W" rev-parse --verify HEAD:uikit)
 fi
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
-assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+# Same rule for an agent branch that edits machorun/ (guest-objc-foundation:
+# the libSystem names SQLite links): attest the committed in-repo tree; a dirty
+# machorun/ is still refused, and an external MACHORUN keeps the pin.
+EXPECTED_MACHORUN_TREE=$EXPECTED_INREPO_MACHORUN_TREE
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    EXPECTED_MACHORUN_TREE=$(git -C "$W" rev-parse --verify HEAD:machorun)
+fi
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_MACHORUN_TREE" machorun
 SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}
 SWIFT_CORE_RUNTIME_EXPECTED_SHA256=${SWIFT_CORE_RUNTIME_EXPECTED_SHA256:-}
 # REFUSE WITHOUT THE MOUNT, rather than silently building half a root.
@@ -909,6 +916,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'
+    printf 'local\tdarwin/usr/lib/libsqlite3.dylib\t-\tbuilt from the pinned SQLite 3.51.0 amalgamation by full/sqlite/build_sqlite_guest.sh\n'
 } > "$ROOTDIR/.manifest"
 
 # Reduced form for hosts that cannot finish quartz / OpenUIKit / UIHelpers
@@ -974,6 +982,16 @@ QZN=$(llvm-nm-18 --extern-only --defined-only "$ROOTDIR/darwin/usr/lib/libquartz
 echo "   -> libquartz.dylib ($QZN QZ exports)"
 # A .tbd is not needed: link the guest directly against the dylib we just built.
 QUARTZLIB=$ROOTDIR/darwin/usr/lib/libquartz.dylib
+
+# ---- libsqlite3, SQLite 3.51.0's amalgamation (full/sqlite) ----------------
+# /usr/lib/libsqlite3.dylib as on iOS, with the simulator's measured compile
+# options. Only executables that link it (-lsqlite3) load it; render_full and
+# the Focus guest do not.
+echo "== libsqlite3 (SQLite 3.51.0 amalgamation, pinned)"
+env W="$W" SYS="$SYS" OUT="$OUT" TARGET="$TARGET" ARCH="$ARCH" ROOTDIR="$ROOTDIR" \
+    MINOS="$MINOS" LINK_PLATFORM="$LINK_PLATFORM" LINK_SDK_VERSION="$LINK_SDK_VERSION" \
+    bash "$W/full/sqlite/build_sqlite_guest.sh"
+SQLITE_INCLUDE=$OUT/sqlite/include
 
 # ---- C targets: compiled from ~/uikit's own sources ------------------------
 echo "== C targets (CPortableIO, CSTBTrueType)"
@@ -1857,6 +1875,58 @@ compile_app_module() {
         -emit-object -o "$outfile" \
         "$@"
 }
+# ---- Objective-C Foundation + Objective-C / C app targets (full/objcfoundation)
+# The Objective-C view of the one Foundation above: <Foundation/Foundation.h>
+# declares the facade's classes by their runtime names, FoundationObjCBridge
+# gives them Objective-C selectors and adds the classes the facade lacks, and
+# src/OFFoundation.m holds what Swift cannot declare. Built into
+# $OUT/objcfoundation only (never APPINC / APPMODS_CINC), so no Swift module
+# compiled above or below sees it unless it asks: render_full and the Focus
+# graph are unchanged. Executables with Objective-C link
+# OBJC_FOUNDATION_LINK_OBJECTS; compile their sources with the helpers below.
+OBJC_FOUNDATION=$OUT/objcfoundation
+OBJC_FOUNDATION_INCLUDE=$W/full/objcfoundation/include
+echo "== Objective-C Foundation (FoundationObjCBridge + OFFoundation.m)"
+rm -rf "$OBJC_FOUNDATION"
+mkdir -p "$OBJC_FOUNDATION/clang-modules"
+"${SWIFTC[@]}" -D OPENUIKIT_GUEST -parse-as-library "${FEMODULES[@]}" "${APPMODS_CINC[@]}" \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" "${APP_AVAILABILITY_FLAGS[@]}" \
+    -module-name FoundationObjCBridge \
+    -emit-module -emit-module-path "$OBJC_FOUNDATION/FoundationObjCBridge.swiftmodule" \
+    -emit-object -o "$OBJC_FOUNDATION/foundation_objc_bridge.o" \
+    "$W"/full/objcfoundation/bridge/*.swift
+# Objective-C as Xcode compiles it by default: ARC, modules, the guest's
+# Foundation headers and SQLite3 module; Apple's Objective-C runtime ABI.
+OBJC_CFLAGS=(-fobjc-arc -fmodules -fmodules-cache-path="$OBJC_FOUNDATION/clang-modules"
+    -fobjc-runtime=macosx-15.0 -I "$OBJC_FOUNDATION_INCLUDE" -I "$SQLITE_INCLUDE"
+    -Wno-nullability-completeness)
+"${CC[@]}" "${OBJC_CFLAGS[@]}" -c "$W/full/objcfoundation/src/OFFoundation.m" \
+    -o "$OBJC_FOUNDATION/foundation_objc.o"
+OBJC_FOUNDATION_LINK_OBJECTS=("$OBJC_FOUNDATION/foundation_objc_bridge.o" "$OBJC_FOUNDATION/foundation_objc.o")
+# Every class the headers bind must exist under the runtime name they give it.
+python3 -B "$W/full/objcfoundation/check_runtime_names.py" "$OBJC_FOUNDATION_INCLUDE" \
+    "$OUT/foundation_guest.o" "$OBJC_FOUNDATION/foundation_objc_bridge.o"
+# compile_app_objc <out.o> <source.m> [clang flags...]: one Objective-C TU.
+compile_app_objc() {
+    local out=$1 source=$2; shift 2
+    "${CC[@]}" "${OBJC_CFLAGS[@]}" "$@" -c "$source" -o "$out"
+}
+# compile_app_c <out.o> <source.c> [clang flags...]: one C TU.
+compile_app_c() {
+    local out=$1 source=$2; shift 2
+    "${CC[@]}" -I "$SQLITE_INCLUDE" "$@" -c "$source" -o "$out"
+}
+# Flags for a Swift module that imports Objective-C modules (their headers
+# import <Foundation/Foundation.h>): add them to the swiftc line together with
+# the importing module's own -Xcc -fmodule-map-file.
+# The implicit import makes FoundationObjCBridge's classes (NSDate, NSSet, ...)
+# resolvable when a Clang header names them, as the SDK's Foundation always
+# is; without it swift-frontend 6.2.4 crashes lowering such a call (measured).
+OBJC_SWIFT_FLAGS=(-Xfrontend -import-module -Xfrontend FoundationObjCBridge -I "$OBJC_FOUNDATION"
+    -Xcc -fmodule-map-file="$OBJC_FOUNDATION_INCLUDE/Foundation/module.modulemap"
+    -Xcc -I"$OBJC_FOUNDATION_INCLUDE"
+    -Xcc -fmodule-map-file="$SQLITE_INCLUDE/module.modulemap" -Xcc -I"$SQLITE_INCLUDE")
+
 compile_app_module Glean "$OUT/glean.o" \
     "$UIKIT"/Sources/RealAppProbe/FocusModules/Glean/*.swift
 compile_app_module Intents "$OUT/intents_stub.o" \

@@ -1,0 +1,12 @@
+F_SETLK F_RDLCK 1073741824+1 rc=0 errno=0
+F_SETLK F_WRLCK 1073741825+1 rc=0 errno=0
+F_GETLK F_WRLCK 1073741824+510 rc=0 errno=0 -> F_UNLCK whence=0 1073741824+510
+F_SETLKW F_WRLCK 1073741826+510 rc=0 errno=0
+F_SETLK F_UNLCK 0+0 rc=0 errno=0
+F_GETLK F_RDLCK 3+4 rc=0 errno=0 -> F_UNLCK whence=0 3+4
+F_SETLK bad type rc=-1 errno=EINVAL
+F_SETLK bad fd rc=-1 errno=EBADF
+F_FULLFSYNC rc=0 errno=0
+F_FULLFSYNC bad fd rc=-1 errno=EBADF
+F_SETFD rc=0 F_GETFD=1
+F_DUPFD ok=1 cloexec=0

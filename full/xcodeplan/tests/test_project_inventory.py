@@ -1975,7 +1975,6 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
             "INSTALL_PATH",
             "OBJROOT",
             "PACKAGE_TYPE",
-            "PRODUCT_MODULE_NAME",
             "SHALLOW_BUNDLE",
             "SHALLOW_BUNDLE_PLATFORM",
             "SHALLOW_BUNDLE_TRIPLE",
@@ -2006,6 +2005,34 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                             project_inventory.build_project_inventory(
                                 project, **arguments
                             )
+
+    def test_explicit_product_module_name_renames_only_the_module(self) -> None:
+        # Xcode 26.1, measured on MiniApp: PRODUCT_MODULE_NAME = NetNewsWire
+        # leaves PRODUCT_NAME/EXECUTABLE_NAME/WRAPPER_NAME target-derived.
+        for owner in ("project", "target"):
+            with self.subTest(owner=owner), tempfile.TemporaryDirectory() as directory:
+                _, project = self.copied_modern_fixture(directory)
+                self.add_selected_build_setting(
+                    project, owner, "PRODUCT_MODULE_NAME", "NetNewsWire"
+                )
+                inventory = project_inventory.build_project_inventory(
+                    project, scheme_name="ModernApp"
+                )
+                settings = inventory["configuration"][owner]["build_settings"]
+                self.assertEqual(settings["PRODUCT_MODULE_NAME"], "NetNewsWire")
+                self.assertEqual(inventory["target"]["product_name"], "ModernApp")
+        for value in ('"Hijacked/Output"', '"Has-Dash"', '"9Digit"'):
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as directory:
+                _, project = self.copied_modern_fixture(directory)
+                self.add_selected_build_setting(
+                    project, "target", "PRODUCT_MODULE_NAME", value
+                )
+                with self.assertRaisesRegex(
+                    project_inventory.PlanError, "literal ASCII module identifier"
+                ):
+                    project_inventory.build_project_inventory(
+                        project, scheme_name="ModernApp"
+                    )
 
     def test_base_configuration_identity_settings_are_evaluated_and_validated(self) -> None:
         modes = (
@@ -2061,53 +2088,56 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                     ):
                         project_inventory.build_project_inventory(project, **arguments)
 
+    def install_base_xcconfig(self, project: Path) -> None:
+        pbxproj = project / "project.pbxproj"
+        contents = pbxproj.read_text(encoding="utf-8")
+        child_marker = "\t\t\t\t000000000000000000000003,"
+        object_marker = "\t\t000000000000000000000004 = {"
+        configuration_marker = (
+            "\t\t400000000000000000000002 = {\n"
+            "\t\t\tisa = XCBuildConfiguration;"
+        )
+        target_product = '\t\t\t\tPRODUCT_NAME = "$(TARGET_NAME)";'
+        target_bundle = (
+            "\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = example.ModernApp;"
+        )
+        for marker in (
+            child_marker,
+            object_marker,
+            configuration_marker,
+            target_product,
+            target_bundle,
+        ):
+            self.assertIn(marker, contents)
+        contents = contents.replace(
+            child_marker,
+            child_marker + "\n\t\t\t\t100000000000000000000003,",
+            1,
+        ).replace(
+            object_marker,
+            "\t\t100000000000000000000003 = {\n"
+            "\t\t\tisa = PBXFileReference;\n"
+            "\t\t\tlastKnownFileType = text.xcconfig;\n"
+            "\t\t\tpath = Base.xcconfig;\n"
+            "\t\t\tsourceTree = \"<group>\";\n"
+            "\t\t};\n"
+            + object_marker,
+            1,
+        ).replace(
+            configuration_marker,
+            configuration_marker
+            + "\n\t\t\tbaseConfigurationReference = "
+            "100000000000000000000003;",
+            1,
+        ).replace(target_product + "\n", "", 1).replace(
+            target_bundle + "\n", "", 1
+        )
+        pbxproj.write_text(contents, encoding="utf-8")
+
     def test_base_configuration_includes_expand_product_identity_with_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root, project = self.copied_modern_fixture(directory)
-            pbxproj = project / "project.pbxproj"
-            contents = pbxproj.read_text(encoding="utf-8")
-            child_marker = "\t\t\t\t000000000000000000000003,"
-            object_marker = "\t\t000000000000000000000004 = {"
-            configuration_marker = (
-                "\t\t400000000000000000000002 = {\n"
-                "\t\t\tisa = XCBuildConfiguration;"
-            )
-            target_product = '\t\t\t\tPRODUCT_NAME = "$(TARGET_NAME)";'
-            target_bundle = (
-                "\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = example.ModernApp;"
-            )
-            for marker in (
-                child_marker,
-                object_marker,
-                configuration_marker,
-                target_product,
-                target_bundle,
-            ):
-                self.assertIn(marker, contents)
-            contents = contents.replace(
-                child_marker,
-                child_marker + "\n\t\t\t\t100000000000000000000003,",
-                1,
-            ).replace(
-                object_marker,
-                "\t\t100000000000000000000003 = {\n"
-                "\t\t\tisa = PBXFileReference;\n"
-                "\t\t\tlastKnownFileType = text.xcconfig;\n"
-                "\t\t\tpath = Base.xcconfig;\n"
-                "\t\t\tsourceTree = \"<group>\";\n"
-                "\t\t};\n"
-                + object_marker,
-                1,
-            ).replace(
-                configuration_marker,
-                configuration_marker
-                + "\n\t\t\tbaseConfigurationReference = "
-                "100000000000000000000003;",
-                1,
-            ).replace(target_product + "\n", "", 1).replace(
-                target_bundle + "\n", "", 1
-            )
-            pbxproj.write_text(contents, encoding="utf-8")
+            self.install_base_xcconfig(project)
             (root / "Base.xcconfig").write_text(
                 '#include "Names.xcconfig"\n'
                 "PRODUCT_NAME = $(APP_NAME)\n"
@@ -2138,6 +2168,66 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
             )
             self.assertTrue(all(len(item["sha256"]) == 64 for item in base["files"]))
             self.assertEqual(base["assignment_count"], 3)
+
+    def test_base_configuration_optional_includes_and_conditionals(self) -> None:
+        # NetNewsWire's xcconfigs use #include? for developer-local settings
+        # outside the checkout and [sdk=...] conditional signing identities.
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            self.install_base_xcconfig(project)
+            (root / "Base.xcconfig").write_text(
+                '#include? "../../SharedXcodeSettings/ProjectSettings.xcconfig"\n'
+                '#include? "Missing.xcconfig"\n'
+                '#include? "Names.xcconfig"\n'
+                "CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer\n"
+                "CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;\n"
+                "PRODUCT_NAME = $(APP_NAME)\n"
+                "PRODUCT_BUNDLE_IDENTIFIER = example.$(APP_NAME)\n",
+                encoding="utf-8",
+            )
+            (root / "Names.xcconfig").write_text(
+                "APP_NAME = ModernApp\n", encoding="utf-8"
+            )
+
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="ModernApp"
+            )
+
+            project_configuration = inventory["configuration"]["project"]
+            settings = project_configuration["build_settings"]
+            self.assertEqual(settings["PRODUCT_NAME"], "ModernApp")
+            self.assertEqual(
+                settings["CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION"], "YES_AGGRESSIVE"
+            )
+            self.assertNotIn("CODE_SIGN_IDENTITY", settings)
+            base = project_configuration["base_configuration"]
+            self.assertEqual(
+                [item["path"] for item in base["files"]],
+                ["Base.xcconfig", "Names.xcconfig"],
+            )
+            self.assertEqual(
+                [item.get("skipped") for item in base["includes"]],
+                ["absent-outside-source-root", "absent", None],
+            )
+            self.assertEqual(base["destination_conditional_keys"], ["CODE_SIGN_IDENTITY"])
+            self.assertEqual(
+                base["conditional_assignments"][0]["conditions"], ["[sdk=iphoneos*]"]
+            )
+
+    def test_conditional_product_identity_in_xcconfig_is_refused(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root, project = self.copied_modern_fixture(directory)
+            self.install_base_xcconfig(project)
+            (root / "Base.xcconfig").write_text(
+                "PRODUCT_NAME = ModernApp\n"
+                "PRODUCT_NAME[sdk=iphoneos*] = DeviceApp\n"
+                "PRODUCT_BUNDLE_IDENTIFIER = example.ModernApp\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                project_inventory.PlanError, "conditional build settings: Base.xcconfig:2:PRODUCT_NAME"
+            ):
+                project_inventory.build_project_inventory(project, scheme_name="ModernApp")
 
     def test_present_bundle_identifiers_use_a_safe_literal_grammar(self) -> None:
         invalid = (
@@ -3489,6 +3579,60 @@ class ProjectInventoryPathSafetyTests(unittest.TestCase):
                     project,
                     scheme_name="Focus",
                 )
+
+    def test_copy_phase_embeds_package_products_by_name(self) -> None:
+        # NetNewsWire's "Embed Frameworks" copy phase lists dynamic Swift
+        # package products (RSDatabase, Account, ...) next to file references.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mini"
+            shutil.copytree(MINI_FIXTURE, root)
+            project = root / "Blockzilla.xcodeproj"
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            object_marker = (
+                "\t\t200000000000000000000005 = {isa = PBXBuildFile; "
+                "fileRef = 100000000000000000000005; };"
+            )
+            phase_marker = "\t\t\tfiles = (200000000000000000000006, );"
+            self.assertIn(object_marker, contents)
+            self.assertIn(phase_marker, contents)
+            contents = contents.replace(
+                object_marker,
+                "\t\t200000000000000000000007 = {isa = PBXBuildFile; "
+                "productRef = 600000000000000000000001; "
+                "settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };\n" + object_marker,
+                1,
+            ).replace(
+                phase_marker,
+                "\t\t\tfiles = (200000000000000000000006, 200000000000000000000007, );",
+                1,
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="Focus"
+            )
+
+            [phase] = [
+                item
+                for item in inventory["build_phases"]
+                if item["phase_id"] == "300000000000000000000008"
+            ]
+            self.assertEqual(
+                [item["build_file_id"] for item in phase["files"]],
+                ["200000000000000000000006"],
+            )
+            self.assertEqual(
+                phase["package_products"],
+                [
+                    {
+                        "build_file_id": "200000000000000000000007",
+                        "product_ref_id": "600000000000000000000001",
+                        "name": "LocalKit",
+                        "settings": {"ATTRIBUTES": ["CodeSignOnCopy"]},
+                    }
+                ],
+            )
 
     def test_framework_phase_rejects_distinct_build_files_for_one_product(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

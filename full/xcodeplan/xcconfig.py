@@ -6,18 +6,27 @@ Xcode's configuration language.  This module intentionally models that subset
 as a real, ordered language rather than searching configuration bytes for a
 few interesting setting names:
 
-* required quoted ``#include`` directives are evaluated at their textual
-  position;
+* quoted ``#include`` directives are evaluated at their textual position;
+  ``#include?`` (optional) directives are evaluated the same way when their
+  file exists inside the source root and are recorded as skipped when it does
+  not exist (Xcode 26.1, measured: a missing optional include is silent);
+* an optional include that leaves the source root is skipped only when no
+  file exists there, and refused otherwise (Xcode would read it, and a
+  portable inventory must not depend on files outside the checkout);
+* one trailing unquoted ``;`` ends a value (Xcode 26.1, measured:
+  ``SEMI = value;`` evaluates to ``value``);
 * ``=``, ``+=`` and ``?=`` assignments update one ordered setting layer;
 * C/C++ comments, quoted values and backslash-newline continuation are parsed;
 * every input is a regular, non-symlink file beneath one canonical source root;
-* include cycles, missing/ambiguous files and unmodelled directives or
-  conditional assignments fail closed; and
+* include cycles, missing/ambiguous files, unmodelled directives and
+  malformed conditions fail closed; and
 * every evaluated file occurrence is recorded with its content digest.
 
-Destination-conditional assignments and optional includes are deliberately not
-accepted.  Selecting either requires SDK/destination state that the portable
-inventory does not possess.
+Destination-conditional assignments (``KEY[sdk=iphoneos*] = ...``) are
+recorded in ``Evaluation.conditional`` and never applied: selecting one needs
+the SDK/architecture/configuration of a destination, which the portable
+inventory does not possess.  A consumer that reads a key listed there is
+reading a destination-dependent setting and must say so.
 """
 
 from __future__ import annotations
@@ -41,8 +50,12 @@ _ASSIGNMENT = re.compile(
     r"(?P<key>[A-Za-z_][A-Za-z0-9_]*)(?P<conditions>(?:\s*\[[^\]\r\n]+\])*)"
     r"\s*(?P<operator>\?=|\+=|=)\s*(?P<value>.*)\Z"
 )
-_INCLUDE = re.compile(r'#\s*include\s+"(?P<path>[^"\r\n]+)"\s*\Z')
+_INCLUDE = re.compile(
+    r'#\s*include(?P<optional>\?)?\s+"(?P<path>[^"\r\n]+)"\s*\Z'
+)
 _VARIABLE = re.compile(r"\$\(([^)]+)\)|\$\{([^}]+)\}")
+_CONDITION = re.compile(r"\[([^\]\r\n]+)\]")
+_CONDITION_TERM = re.compile(r"(?:sdk|arch|config|variant)=[A-Za-z0-9_.*-]+(?:,(?:sdk|arch|config|variant)=[A-Za-z0-9_.*-]+)*")
 
 
 @dataclass(frozen=True)
@@ -54,6 +67,7 @@ class Evaluation:
     includes: tuple[dict[str, Any], ...]
     assignment_count: int
     entry_path: str
+    conditional: tuple[dict[str, Any], ...] = ()
 
 
 def _portable_name(value: str) -> str:
@@ -128,6 +142,7 @@ class _Evaluator:
         self.assigned: dict[str, str] = {}
         self.files: list[dict[str, Any]] = []
         self.includes: list[dict[str, Any]] = []
+        self.conditional: list[dict[str, Any]] = []
         self.assignment_count = 0
         self._active: list[str] = []
         self._bytes: dict[str, bytes] = {}
@@ -294,7 +309,10 @@ class _Evaluator:
         index = 0
         while index < len(raw):
             character = raw[index]
-            if character == '"':
+            if character == ";" and not quote and not raw[index + 1:].strip():
+                # One trailing unquoted semicolon terminates the value.
+                index += 1
+            elif character == '"':
                 quote = not quote
                 index += 1
             elif character == "\\":
@@ -318,6 +336,7 @@ class _Evaluator:
         base: str,
         included_from: str | None,
         include_line: int | None,
+        optional: bool = False,
     ) -> str:
         context = "xcconfig entry" if included_from is None else "xcconfig include"
         relative = self._canonical_path(base, requested, context)
@@ -329,14 +348,15 @@ class _Evaluator:
         digest = hashlib.sha256(data).hexdigest()
         self.files.append({"path": relative, "sha256": digest})
         if included_from is not None:
-            self.includes.append(
-                {
-                    "from": included_from,
-                    "line": include_line,
-                    "path": relative,
-                    "requested_path": requested,
-                }
-            )
+            record: dict[str, Any] = {
+                "from": included_from,
+                "line": include_line,
+                "path": relative,
+                "requested_path": requested,
+            }
+            if optional:
+                record["optional"] = True
+            self.includes.append(record)
         try:
             text = data.decode("utf-8-sig")
         except UnicodeDecodeError as exc:
@@ -356,6 +376,14 @@ class _Evaluator:
                         raise PlanError(
                             f"xcconfig {relative}:{line_number} uses an unsupported directive"
                         )
+                    if include.group("optional"):
+                        self._evaluate_optional(
+                            include.group("path"),
+                            base=posixpath.dirname(relative),
+                            included_from=relative,
+                            include_line=line_number,
+                        )
+                        continue
                     self._evaluate_file(
                         include.group("path"),
                         base=posixpath.dirname(relative),
@@ -368,15 +396,33 @@ class _Evaluator:
                     raise PlanError(
                         f"xcconfig {relative}:{line_number} has a malformed assignment"
                     )
-                if assignment.group("conditions").strip():
-                    raise PlanError(
-                        f"xcconfig {relative}:{line_number} uses an unsupported conditional "
-                        f"assignment for {assignment.group('key')}"
-                    )
                 key = assignment.group("key")
                 value = self._value(
                     assignment.group("value"), relative, line_number
                 )
+                conditions = _CONDITION.findall(assignment.group("conditions"))
+                if conditions:
+                    # Selecting a condition needs the destination (sdk, arch,
+                    # config), which this portable layer does not have. The
+                    # assignment is recorded, not applied, and its key is
+                    # reported as destination-conditional.
+                    for condition in conditions:
+                        if _CONDITION_TERM.fullmatch(condition) is None:
+                            raise PlanError(
+                                f"xcconfig {relative}:{line_number} has a malformed "
+                                f"condition [{condition}] for {key}"
+                            )
+                    self.conditional.append(
+                        {
+                            "conditions": [f"[{item}]" for item in conditions],
+                            "key": key,
+                            "line": line_number,
+                            "operator": assignment.group("operator"),
+                            "path": relative,
+                            "value": value,
+                        }
+                    )
+                    continue
                 apply_assignment(
                     self.state,
                     self.assigned,
@@ -388,6 +434,53 @@ class _Evaluator:
         finally:
             self._active.pop()
         return relative
+
+    def _evaluate_optional(
+        self,
+        requested: str,
+        *,
+        base: str,
+        included_from: str,
+        include_line: int,
+    ) -> None:
+        """Evaluate ``#include?``: present files like ``#include``, absent ones skipped."""
+
+        context = "xcconfig optional include"
+        requested = self._safe_requested_path(requested, context)
+        normalized = posixpath.normpath(posixpath.join(base, requested))
+        record: dict[str, Any] = {
+            "from": included_from,
+            "line": include_line,
+            "optional": True,
+            "requested_path": requested,
+        }
+        if normalized in {"", ".", ".."} or normalized.startswith("../"):
+            # Only an existence probe, never a read: the file outside the
+            # checkout is either absent (Xcode skips it too) or refused.
+            outside = Path(os.path.normpath(os.path.join(self.root, normalized)))
+            if os.path.lexists(outside):
+                raise PlanError(
+                    f"{context} {requested!r} names an existing file outside the "
+                    "xcconfig source root; Xcode would read it"
+                )
+            record["skipped"] = "absent-outside-source-root"
+            self.includes.append(record)
+            return
+        try:
+            self._canonical_path(base, requested, context)
+        except PlanError as exc:
+            if not str(exc).startswith(f"missing {context}:"):
+                raise
+            record["skipped"] = "absent"
+            self.includes.append(record)
+            return
+        self._evaluate_file(
+            requested,
+            base=base,
+            included_from=included_from,
+            include_line=include_line,
+            optional=True,
+        )
 
     def evaluate(self, entry_path: str) -> Evaluation:
         entry = self._evaluate_file(
@@ -402,6 +495,7 @@ class _Evaluator:
             includes=tuple(dict(item) for item in self.includes),
             assignment_count=self.assignment_count,
             entry_path=entry,
+            conditional=tuple(dict(item) for item in self.conditional),
         )
 
 

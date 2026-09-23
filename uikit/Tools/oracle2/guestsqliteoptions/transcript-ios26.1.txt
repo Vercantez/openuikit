@@ -1,0 +1,135 @@
+libversion 3.51.0 threadsafe 2
+sourceid 2025-06-12 13:14:41 f0ca7bba1c5e232e5d279fad6338121ab55af0c8c68c84cdfb18ba5114dcaapl
+opt ATOMIC_INTRINSICS=1
+opt BUG_COMPATIBLE_20160819
+opt CCCRYPT256
+opt CODEC=see-cccrypt
+opt COMPILER=clang-17.0.0
+opt DEFAULT_AUTOVACUUM
+opt DEFAULT_CACHE_SIZE=128
+opt DEFAULT_CKPTFULLFSYNC
+opt DEFAULT_FILE_FORMAT=4
+opt DEFAULT_JOURNAL_SIZE_LIMIT=32768
+opt DEFAULT_LOOKASIDE=1200,40
+opt DEFAULT_MEMSTATUS=0
+opt DEFAULT_MMAP_SIZE=0
+opt DEFAULT_PAGE_SIZE=4096
+opt DEFAULT_PCACHE_INITSZ=20
+opt DEFAULT_RECURSIVE_TRIGGERS
+opt DEFAULT_SECTOR_SIZE=4096
+opt DEFAULT_SYNCHRONOUS=2
+opt DEFAULT_WAL_AUTOCHECKPOINT=1000
+opt DEFAULT_WAL_SYNCHRONOUS=1
+opt DEFAULT_WORKER_THREADS=0
+opt DIRECT_OVERFLOW_READ
+opt DQS=3
+opt ENABLE_API_ARMOR
+opt ENABLE_BYTECODE_VTAB
+opt ENABLE_COLUMN_METADATA
+opt ENABLE_DBSTAT_VTAB
+opt ENABLE_FTS3
+opt ENABLE_FTS3_PARENTHESIS
+opt ENABLE_FTS3_TOKENIZER
+opt ENABLE_FTS4
+opt ENABLE_FTS5
+opt ENABLE_LOCKING_STYLE=1
+opt ENABLE_MATH_FUNCTIONS
+opt ENABLE_NORMALIZE
+opt ENABLE_PREUPDATE_HOOK
+opt ENABLE_RTREE
+opt ENABLE_SESSION
+opt ENABLE_SETLK_TIMEOUT
+opt ENABLE_SNAPSHOT
+opt ENABLE_SQLLOG
+opt ENABLE_STMT_SCANSTATUS
+opt ENABLE_UNKNOWN_SQL_FUNCTION
+opt ENABLE_UPDATE_DELETE_LIMIT
+opt HAS_CODEC_RESTRICTED
+opt HAVE_ISNAN
+opt MALLOC_SOFT_LIMIT=1024
+opt MAX_ATTACHED=10
+opt MAX_COLUMN=2000
+opt MAX_COMPOUND_SELECT=500
+opt MAX_DEFAULT_PAGE_SIZE=8192
+opt MAX_EXPR_DEPTH=1000
+opt MAX_FUNCTION_ARG=127
+opt MAX_LENGTH=2147483645
+opt MAX_LIKE_PATTERN_LENGTH=50000
+opt MAX_MMAP_SIZE=20971520
+opt MAX_PAGE_COUNT=1073741823
+opt MAX_PAGE_SIZE=65536
+opt MAX_SQL_LENGTH=1000000000
+opt MAX_TRIGGER_DEPTH=1000
+opt MAX_VARIABLE_NUMBER=500000
+opt MAX_VDBE_OP=250000000
+opt MAX_WORKER_THREADS=8
+opt MUTEX_UNFAIR
+opt OMIT_AUTORESET
+opt OMIT_LOAD_EXTENSION
+opt STMTJRNL_SPILL=131072
+opt SUBSTR_COMPATIBILITY
+opt SYSTEM_MALLOC
+opt TEMP_STORE=1
+opt THREADSAFE=2
+opt USE_URI
+pragma memory auto_vacuum 0
+pragma memory recursive_triggers 0
+pragma memory page_size 4096
+pragma memory cache_size 128
+pragma memory synchronous 2
+pragma memory journal_mode memory
+pragma memory temp_store 0
+pragma memory foreign_keys 0
+pragma memory journal_size_limit 32768
+pragma memory wal_autocheckpoint 1000
+pragma memory encoding UTF-8
+pragma file auto_vacuum 0
+pragma file recursive_triggers 0
+pragma file page_size 4096
+pragma file cache_size 128
+pragma file synchronous 2
+pragma file journal_mode delete
+pragma file temp_store 0
+pragma file foreign_keys 0
+pragma file journal_size_limit 32768
+pragma file mmap_size 0
+pragma file wal_autocheckpoint 1000
+pragma file encoding UTF-8
+crud open rc=0
+crud wal journal_mode=memory
+crud prepare rc=0 params=5
+crud insert rc=101 changes=1 rowid=1
+crud insert rc=101 changes=1 rowid=2
+crud insert rc=101 changes=1 rowid=3
+crud select rc=0 index=1 columns=7
+crud row id:1=2 name:3=béta n:1=1048576 x:2=1.5 b:4=01ff00 z:5 length(name):1=4 data_count=7
+crud row id:1=3 name:3=gamma n:1=1099511627776 x:2=3.0 b:4=02ff00 z:5 length(name):1=5 data_count=7
+crud done rc=101
+crud fts match rowid=1 title=Linux guests
+crud fts match rowid=2 title=SQLite
+crud fts snippet s=an <b>amalgamation</b> built as a dylib
+crud json j={"a":1,"b":[2,3]}
+crud math r=1.414214
+crud error rc=1 error=no such table: missing_table
+crud syntax rc=1 errcode=1 errmsg=near "SELEKT": syntax error
+crud count c=3
+crud close rc=0
+crud open rc=0
+crud wal journal_mode=wal
+crud prepare rc=0 params=5
+crud insert rc=101 changes=1 rowid=1
+crud insert rc=101 changes=1 rowid=2
+crud insert rc=101 changes=1 rowid=3
+crud select rc=0 index=1 columns=7
+crud row id:1=2 name:3=béta n:1=1048576 x:2=1.5 b:4=01ff00 z:5 length(name):1=4 data_count=7
+crud row id:1=3 name:3=gamma n:1=1099511627776 x:2=3.0 b:4=02ff00 z:5 length(name):1=5 data_count=7
+crud done rc=101
+crud fts match rowid=1 title=Linux guests
+crud fts match rowid=2 title=SQLite
+crud fts snippet s=an <b>amalgamation</b> built as a dylib
+crud json j={"a":1,"b":[2,3]}
+crud math r=1.414214
+crud error rc=1 error=no such table: missing_table
+crud syntax rc=1 errcode=1 errmsg=near "SELEKT": syntax error
+crud count c=3
+crud close rc=0

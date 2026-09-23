@@ -97,8 +97,17 @@ Each root and included file must be a regular, non-symlink source-root input and
 is recorded in deterministic evaluation order with its SHA-256. Includes are
 canonicalized to the unique tracked spelling (including the case-only spelling
 drift found in Simplenote), while missing/ambiguous inputs, cycles, escapes,
-optional or unknown directives, malformed assignments, and destination-
-conditional settings fail closed. Variables that depend on an unmodeled
+unknown directives and malformed assignments fail closed. Optional
+`#include?` directives follow Xcode 26.1 as measured with `xcodebuild
+-showBuildSettings -xcconfig`: a present file inside the source root is
+evaluated in place, an absent one is recorded as `skipped` (NetNewsWire's
+`../../SharedXcodeSettings/*.xcconfig`), and an existing file outside the
+source root is refused because Xcode would read it. One trailing unquoted `;`
+ends a value (`KEY = YES_AGGRESSIVE;` is `YES_AGGRESSIVE`, measured).
+Destination-conditional assignments (`KEY[sdk=iphoneos*] = ...`) are never
+applied: they are recorded under `conditional_assignments` and their keys
+under `destination_conditional_keys`, because choosing one needs a
+destination. Product-identity settings still refuse conditionals. Variables that depend on an unmodeled
 platform default remain visibly unresolved and cannot pass the literal product-
 identity validators.
 

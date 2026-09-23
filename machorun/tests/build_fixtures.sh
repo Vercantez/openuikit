@@ -611,6 +611,19 @@ want copyfile            && build copyfile            "$CHAINED_TARGET" copyfile
 # conformance app's loopback HTTP server (guest row six).
 want socket_loopback     && build socket_loopback     "$CHAINED_TARGET" socket_loopback     socket_loopback.c --
 
+# file_attrs. fchown / strspn, two libSystem names SQLite links that the guest
+# libSystem did not export (a plain forward, pinned).
+want file_attrs          && build file_attrs          "$CHAINED_TARGET" file_attrs          file_attrs.c --
+
+# fcntl_locks. F_GETLK/F_SETLK/F_SETLKW ROTATE between the systems (a
+# forwarded lock query acquires), l_type rotates, struct flock is 24 bytes
+# against 32; plus F_FULLFSYNC. SQLite's unix VFS locks every database so.
+want fcntl_locks         && build fcntl_locks         "$CHAINED_TARGET" fcntl_locks         fcntl_locks.c --
+
+# dispatch_once_block. The block form of dispatch_once (Objective-C singletons:
+# FMDB, NetNewsWire): once per token, nested tokens.
+want dispatch_once_block && build dispatch_once_block "$CHAINED_TARGET" dispatch_once_block dispatch_once_block.c --
+
 # pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
 # the signature word IS the type -- a constant nothing at any call site names,
 # because the guest's compiler laid it down. CoreFoundation's CFLockInit is the

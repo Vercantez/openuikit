@@ -794,6 +794,7 @@ EXPORT const char *dispatch_queue_get_label(void *q)
 /* --- BSD/Darwin libc that glibc either lacks or spells differently ------- */
 extern int    glibc_strcasecmp(const char *, const char *)          GLIBCSYM(strcasecmp);
 extern size_t glibc_strcspn(const char *, const char *)             GLIBCSYM(strcspn);
+extern size_t glibc_strspn(const char *, const char *)              GLIBCSYM(strspn);
 extern ssize_t glibc_pread(int, void *, size_t, off_t)              GLIBCSYM(pread);
 extern int    glibc_geteuid(void)                                   GLIBCSYM(geteuid);
 extern void   glibc_getrandom_fill(void *, size_t, unsigned)        GLIBCSYM(getrandom);
@@ -807,6 +808,7 @@ extern char  *glibc_dlerror(void)                                   GLIBCSYM(dle
 
 EXPORT int    strcasecmp(const char *a, const char *b) { return glibc_strcasecmp(a, b); }
 EXPORT size_t strcspn(const char *s, const char *r)    { return glibc_strcspn(s, r); }
+EXPORT size_t strspn(const char *s, const char *a)     { return glibc_strspn(s, a); }
 /* strtoull already lives in posix.c, with the Darwin errno translation. */
 EXPORT ssize_t pread(int fd, void *b, size_t n, off_t o) { return glibc_pread(fd, b, n, o); }
 EXPORT int    geteuid(void) { return glibc_geteuid(); }

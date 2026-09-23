@@ -1,0 +1,100 @@
+string constant length=11 utf8=hello world kind=YES
+string nonascii length=10 char1=00e9 char8=d83d
+string utf8 length=10 equal=YES upper=CAFÉ CRÈME lower=mixed
+format ints -42 7 42 -1234567890 -9223372036854775807 18446744073709551615 12345678901234 ff FF 10    42|42   |00042
+format floats 3.141590 2.00 1.234568e+04 0.0001 1e+20 0.667    -1.5000
+format strings obj cstr x é % <null> 42 3.25
+format objects (
+    1,
+    two,
+        (
+        3
+    )
+) | {
+    k = v;
+}
+format pointer-free    ab|cd    |ef
+substring from=world to=hello range=lo w
+range found=4,3 missing=YES contains=YES
+prefix=YES suffix=NO compare=-1 1 0 caseInsensitive=0
+append=foobar replace=a+b+c appendFormat=n=5
+components count=4 joined=one|two||three
+values int=42 integer=-17 longlong=9007199254740993 double=350 float=0.25 bool=YES NO
+data length=3 back=hé equalHash=YES
+mutable <DDle> 3 length=8 kind=YES copyKind=YES
+category ?,?,? [x]
+respondsToSelector length=YES nope=NO
+number int=-7 double=2.5 bool=1 longlong=1099511627776 ull=18446744073709551615
+number values -7 2.5 1099511627776 YES 2 2
+number objCType i d q f
+number stringValue -7 2.5 0.1
+number compare -1 0 equal=YES NO
+number literals 1 0 65 7 0.25
+number short=-3 ushort=65535 uint=4000000000 long=-5 ulong=6 uinteger=7 float=0.1
+array count=3 first=b last=c at1=a sub=c index=2 contains=YES
+array sorted=a,b,c
+array adding=4 equal=YES description=(
+    b,
+    a,
+    c
+)
+mutable array 0,two count=2 fast=0;two; blockSum=3
+array copy count=2 after removeAll=0
+dict count=3 keys=count,name,nested name=feed count=3 missing=nil
+mutable dict b=2,c=3 fast=b,c equal=YES
+dict single=v counted=2 looked=y,<null>
+dict description={
+    k = v;
+}
+set count=2 contains=YES member=x mutable=1 any=p description={(
+    p
+)}
+set passing=y
+error domain=OFDomain code=7 description=Error Domain=OFDomain Code=7 "Seven happened" UserInfo={NSLocalizedDescription=Seven happened} localized=Seven happened
+error bare=Error Domain=OFDomain Code=3 "(null)" localized=The operation couldn’t be completed. (OFDomain error 3.) userInfo=0
+error cocoa=NSCocoaErrorDomain key=NSLocalizedDescription
+data length=4 last=ff equal=YES mutable=5 description={length = 4, bytes = 0x616200ff}
+date since1970=0 sinceRef=-9.78307e+08 later=86400.5 compare=-1 description=1970-01-02 00:00:00 +0000
+date ref=2001-01-01 00:00:00 +0000 equal=YES
+null same=YES description=<null>
+value nonretained same=YES
+lock tryWhileHeld=NO tryAfter=YES
+runtime class=NSObject selector=compare: lookup=YES range={2, 3}
+bridge greeting Hello, Swïft (5) 5
+bridge length 8
+bridge record 6 Café 12 0.5 true a+b true
+bridge describe a:string=x b:number=2 c:array=(
+    1,
+    2
+) d:dictionary={
+    k = v;
+}
+bridge sum 46
+bridge words one|two|three
+bridge data [100, 195, 164, 116, 97]
+bridge set x,y
+bridge date 1234.5
+bridge error none
+bridge error OFBridgeDomain 42 bridge failure
+bridge block [ABC!]
+fmdb open=YES path=(memory) threadsafe=YES version=3.51.0
+fmdb statements=YES tableExists=YES columnExists=YES missingColumn=NO
+fmdb insert=YES rowid=1 changes=1
+fmdb inTransaction=YES commit=YES inTransaction=NO
+fmdb row a1 title=Café news read=0 bool=NO score=1.5 long=0 data=12 date=1.7e+09 nullBody=NO published=number columnCount=7
+fmdb row a3 title=Title 3 read=1 bool=YES score=0.75 long=1 data=0 date=0 nullBody=YES published=null columnCount=7
+fmdb resultDictionary articleID:string,body:data,score:number,title:string title=Café news
+fmdb placeholders=(?, ?, ?) keys=(a, b) pairs=x=?, y=?
+fmdb rsInsert=YES rsUpdate=YES ids=a1,a2,a3,a4,a9 feeds=3 exists=YES empty=NO
+fmdb read=a2,a3,a4,a9 deleted=YES changes=2 remaining=3
+fmdb bad=NO hadError=YES code=1 message=no such table: nowhere lastError=FMDatabase 1
+fmdb close=YES
+swift fmdb open true
+swift fmdb create true
+swift fmdb insert true 1 1
+swift fmdb rs insert true
+swift fmdb row feed1 Daring Fireball 7 1700000000.0 false
+swift fmdb row feed2 Six Colors 0 -1 true
+swift fmdb ids feed1,feed2
+swift fmdb placeholders (?, ?)
+swift fmdb close true
