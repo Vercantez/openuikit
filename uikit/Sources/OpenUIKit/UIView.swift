@@ -1288,8 +1288,11 @@ open class UIView: UIResponder, CALayerDelegate {
     open class dynamic func userInterfaceLayoutDirection(
         for semanticContentAttribute: UISemanticContentAttribute
     ) -> UIUserInterfaceLayoutDirection {
-        userInterfaceLayoutDirection(for: semanticContentAttribute,
-                                     relativeTo: .leftToRight)
+        // `self` is an ObjCClassWrapper for an Objective-C subclass; message
+        // the class object (MEASURED: an ObjC UIButton subclass's layout
+        // SIGSEGV'd at 0x310 here; ObjCSubclassing.swift `_objcMessageable`).
+        _objcMessageable(self).userInterfaceLayoutDirection(for: semanticContentAttribute,
+                                                            relativeTo: .leftToRight)
     }
 
 #if OPENUIKIT_OBJC_SUBCLASSING

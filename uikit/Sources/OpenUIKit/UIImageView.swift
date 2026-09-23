@@ -99,7 +99,10 @@ open class UIImageView: UIView {
 #endif
     public dynamic init(image: UIImage?) {
         super.init(frame: CGRect(origin: .zero, size: image?.size ?? .zero))
-        self.image = image
+        // Through the (dynamic) setter, not the init's direct store: UIKit's
+        // -initWithImage: sends -setImage:, nil included, so a subclass
+        // override runs (MEASURED objcsubclassprobe section 9).
+        _setImageThroughAccessor(image)
         // UIKit: image views do not receive touches by default.
         isUserInteractionEnabled = false
     }
@@ -107,6 +110,10 @@ open class UIImageView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
+    }
+
+    final func _setImageThroughAccessor(_ image: UIImage?) {
+        self.image = image
     }
 
     public required init?(coder: NSCoder) {
