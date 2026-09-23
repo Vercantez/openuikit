@@ -147,7 +147,13 @@ func realAppHostHooks(drainMainQueue: @escaping @MainActor () -> Void) -> HostLo
     }
     hooks.beginTurn = drainMainQueue
     hooks.escapeQuits = false
-    hooks.idleRedrawInterval = 0.5
+    // Check for change every 50 ms (a main-queue block or Timer can change
+    // the screen with no input), but render only when the frame's
+    // fingerprint changed: an unchanged screen costs one analysis pass.
+    hooks.idleRedrawInterval = 0.05
+    hooks.frameFingerprint = { window, scale in
+        _UIKeyboardChrome._hostFrameFingerprint(appWindow: window, scale: scale)
+    }
     hooks.scriptStepHz = 60
     return hooks
 }

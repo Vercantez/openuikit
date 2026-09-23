@@ -219,11 +219,13 @@ func reportInkMisses() {
     print("HOST_FULL_INK_MISSES \(missed.count)" + (missed.isEmpty ? "" : ": " + missed.joined(separator: " ")))
 }
 
-let hostUsage = "usage: host_full [--app focus] [--assets DIR] [--script events.json --record outdir]"
+let hostUsage = "usage: host_full [--app focus] [--assets DIR] [--script events.json --record outdir] [--live-seconds N] [--timer-selftest]"
 var hostAppName = "focus"
 var hostAssets = "/uikit/fixtures/realapp/assets"
 var hostScriptPath: String? = nil
 var hostRecordDir: String? = nil
+var hostLiveSeconds: Double? = nil
+var hostTimerSelfTest = false
 var hostArgs = CommandLine.arguments.dropFirst().makeIterator()
 while let arg = hostArgs.next() {
     switch arg {
@@ -231,6 +233,10 @@ while let arg = hostArgs.next() {
     case "--assets": guard let v = hostArgs.next() else { hostWarn(hostUsage); hostExit(2) }; hostAssets = v
     case "--script": guard let v = hostArgs.next() else { hostWarn(hostUsage); hostExit(2) }; hostScriptPath = v
     case "--record": guard let v = hostArgs.next() else { hostWarn(hostUsage); hostExit(2) }; hostRecordDir = v
+    case "--live-seconds":
+        guard let v = hostArgs.next(), let n = Double(v), n > 0 else { hostWarn(hostUsage); hostExit(2) }
+        hostLiveSeconds = n
+    case "--timer-selftest": hostTimerSelfTest = true
     case "-h", "--help": print(hostUsage); hostExit(0)
     default: hostWarn(hostUsage); hostExit(2)
     }
@@ -337,7 +343,22 @@ MainActor.assumeIsolated {
 
     let surface = GuestSDLSurface(title: "Firefox Focus (OpenUIKit guest)",
                                   sizePt: scene.sizePt, scale: scene.scale)
+    hooks.liveSeconds = hostLiveSeconds
+    // --timer-selftest: a Timer-driven label must reach presented frames. In
+    // the guest the app's Timer is the host-clock timer (its Foundation has
+    // no CFRunLoop: full/appshim aliases OpenUIKit's RunLoop), which the
+    // live loop's UIWindow.tick fires on the SDL clock.
+    let selfTest = hostTimerSelfTest ? HostTimerSelfTest(window: scene.window) : nil
+    // Frame statistics for HOST_FULL_LIVE_STATS (rendered vs unchanged-skipped).
+    var rendered = 0, skipped = 0
+    hooks.frameObserver = { r, s in if r { rendered += 1 }; if s { skipped += 1 } }
+    if let selfTest { hooks.didPresent = { _ in selfTest.noteFrame() } }
     runLive(scene, host: surface, hooks: hooks)
+    hostWarn("HOST_FULL_LIVE_STATS rendered=\(rendered) unchanged_skipped=\(skipped)")
+    if let selfTest {
+        hostWarn(selfTest.verdict)
+        hostExit(selfTest.verdict.hasPrefix("HOST_TIMER_SELFTEST ok") ? 0 : 1)
+    }
     reportInkMisses()
     hostExit(0)
 }

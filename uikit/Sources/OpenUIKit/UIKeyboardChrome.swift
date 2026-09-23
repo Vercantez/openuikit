@@ -201,6 +201,32 @@ public enum _UIKeyboardChrome {
         sync(from: appWindow)
     }
 
+    /// A fingerprint of everything `renderCapture(appWindow:scale:)` draws:
+    /// LayerBridge's subtree fingerprint of the app window (bounds, colors,
+    /// content versions, text, children, placement, active animations
+    /// salted with the clock) and of the keyboard window when it shows.
+    /// Equal fingerprints mean the capture would produce the same pixels,
+    /// so a live host can skip re-rendering an unchanged frame. Live hosts
+    /// only: the extra analysis pass advances the layer caches' stability
+    /// counters (which never changes pixels, but scripted captures keep
+    /// their exact render sequence by not calling this).
+    public static func _hostFrameFingerprint(appWindow: UIWindow, scale: CGFloat) -> UInt64 {
+        LayerBridge.frameStamp &+= 1
+        var h = Hasher()
+        h.combine(LayerBridge.analyze(appWindow, scale: scale).fingerprint)
+        h.combine(scale)
+        h.combine(appWindow.bounds.width)
+        h.combine(appWindow.bounds.height)
+        if isIOS, let kb = attached, !kb.isHidden, appWindow.firstResponder is UIKeyInput {
+            h.combine(LayerBridge.analyze(kb, scale: scale).fingerprint)
+            h.combine(_UIKeyboardResolved.resolve(from: appWindow.firstResponder).signature)
+            h.combine(kb.panel.frame.minY)
+        } else {
+            h.combine(0 as UInt8)
+        }
+        return UInt64(bitPattern: Int64(h.finalize()))
+    }
+
     /// Composite the keyboard window above `app` when it is showing.
     public static func renderCapture(appWindow: UIWindow, scale: CGFloat) -> Bitmap {
         let base = UIRenderer.render(appWindow, scale: scale)
