@@ -6,7 +6,9 @@ import XCTest
 /// configuration), Tools/oracle2/toolbaredgeprobe (the automatic bottom
 /// material), Tools/oracle2/listheaderprobe ROWS=10 (safe area of scrolled
 /// content).
+#if !os(Linux)
 @MainActor
+#endif
 final class ToolbarItemsTests: XCTestCase {
     private var saved: (FontEngine.SystemFontCut, UIUserInterfaceIdiom, UITraitCollection, CGRect, CGFloat)!
     private var savedImageScale: CGFloat = 0
