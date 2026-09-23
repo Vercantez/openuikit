@@ -365,7 +365,9 @@ MainActor.assumeIsolated {
             // Which subtrees' fingerprints move between two back-to-back
             // analyses with no input in between (clock-salted content).
             let a = LayerBridge._hostFingerprints(scene.window, scale: scene.scale, depth: 12)
+            OpenUIKitRuntime.animationTime = now + 0.25
             let b = LayerBridge._hostFingerprints(scene.window, scale: scene.scale, depth: 12)
+            OpenUIKitRuntime.animationTime = now
             let moving = a.keys.filter { a[$0] != b[$0] }.sorted { $0.count > $1.count }.prefix(6)
             hostWarn("HOST_FULL_PROFILE unstable subtrees (deepest first): \(Array(moving))")
         }
