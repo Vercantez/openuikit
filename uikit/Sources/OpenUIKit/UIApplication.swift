@@ -390,7 +390,13 @@ extension UIApplicationDelegate {
     public func application(_ application: UIApplication,
                             configurationForConnecting connectingSceneSession: UISceneSession,
                             options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        // An app delegate that does not implement this (the ObjC-optional
+        // requirement) gets the session's configuration: the Info.plist
+        // manifest entry. MEASURED: NetNewsWire implements no
+        // configurationForConnecting and iOS 26.1 connects its manifest
+        // SceneDelegate and Main storyboard
+        // (docs/agent_reports/netnewswire-first-screen/realapp_nnw_feeds_light).
+        connectingSceneSession.configuration
     }
     public func application(_ application: UIApplication,
                             didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}

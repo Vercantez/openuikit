@@ -41,5 +41,21 @@ final class HeadlessRunLoopTests: XCTestCase {
         XCTAssertEqual(completed, [true], "the host clock advanced past the animation's end")
         XCTAssertGreaterThan(OpenUIKitRuntime.animationTime, 0.05)
     }
+
+    func testBundledOpenUIKitResourcesAreAdoptedOnlyWhenPresent() throws {
+        let saved = OpenUIKitRuntime.resourceRoot
+        defer { OpenUIKitRuntime.resourceRoot = saved }
+        let fm = FileManager.default
+        let app = fm.temporaryDirectory.appendingPathComponent("res-\(UUID().uuidString).app")
+        try fm.createDirectory(at: app, withIntermediateDirectories: true)
+        defer { try? fm.removeItem(at: app) }
+        XCTAssertFalse(UIApplication._adoptBundledOpenUIKitResources(bundleResourcePath: app.path))
+        XCTAssertEqual(OpenUIKitRuntime.resourceRoot, saved)
+        let res = app.appendingPathComponent("OpenUIKit")
+        try fm.createDirectory(at: res, withIntermediateDirectories: true)
+        try Data("{}".utf8).write(to: res.appendingPathComponent("font_metrics.json"))
+        XCTAssertTrue(UIApplication._adoptBundledOpenUIKitResources(bundleResourcePath: app.path))
+        XCTAssertEqual(OpenUIKitRuntime.resourceRoot, res.path)
+    }
 }
 #endif

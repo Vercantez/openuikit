@@ -282,11 +282,25 @@ public final class UIImage: NSObject {
     /// `OpenUIKitRuntime.imageScreenScale`, then lower scales, then the
     /// unsuffixed file. Results are cached by the complete lookup environment
     /// (UIKit caches `named:` lookups too).
+    /// Where `UIImage(named:)` looks. UIKit's `init(named:)` is
+    /// `init(named:in: nil, compatibleWith: nil)`: the MAIN BUNDLE. A host
+    /// that configures `OpenUIKitRuntime.imageSearchPaths` (openrender scenes,
+    /// the Foundation-hidden guest) keeps its explicit roots; otherwise the
+    /// main bundle's resource root is used, as on iOS (NetNewsWire
+    /// Assets.swift:43 `UIImage(named: "faviconTemplateImage")!` from the
+    /// app's own catalog).
+    static var _namedSearchPaths: [String] {
+        let configured = OpenUIKitRuntime.imageSearchPaths
+        guard configured.isEmpty else { return configured }
+        return BundleAssetLookup.resourceRoots(in: nil)
+    }
+
     public static func named(_ name: String) -> UIImage? {
         let traits = UITraitCollection.current
+        let searchPaths = _namedSearchPaths
         let key = _NamedCacheKey(
             name: name,
-            searchPaths: OpenUIKitRuntime.imageSearchPaths,
+            searchPaths: searchPaths,
             scale: BundleAssetLookup.assetScale(
                 OpenUIKitRuntime.imageScreenScale
             ),
@@ -295,7 +309,7 @@ public final class UIImage: NSObject {
         )
         if let hit = _namedCache[key] { return hit }
         guard let img = loadNamed(name,
-                                  searchPaths: OpenUIKitRuntime.imageSearchPaths,
+                                  searchPaths: searchPaths,
                                   preferredScale: OpenUIKitRuntime.imageScreenScale,
                                   traits: traits) else {
             return nil

@@ -241,6 +241,9 @@ extension UIApplication {
     public static func _runMain(delegateType: UIApplicationDelegate.Type) -> Never {
 #if canImport(Foundation) && canImport(ObjectiveC) && canImport(Dispatch)
         let env = ProcessInfo.processInfo.environment
+        if let resources = Bundle.main.resourcePath {
+            _ = _adoptBundledOpenUIKitResources(bundleResourcePath: resources)
+        }
         _configureHeadlessScreen(env)
         let app = _mainLaunch(delegateType: delegateType)
         let entries = UIApplication._sceneManifestEntries(infoDictionary: Bundle.main.infoDictionary)
@@ -308,6 +311,10 @@ extension UIApplication {
             if parts.count == 2, let s = Double(parts[1]) { scale = CGFloat(s) }
         }
         OpenUIKitRuntime.imageScreenScale = scale
+        // An `@main` UIApplicationDelegate is an iOS app: iOS's SF cut and the
+        // iOS-harvested symbol ink, as every other iOS host sets
+        // (openrender RealApp.swift, openhost, host_full).
+        OpenUIKitRuntime.systemFontCut = .iOS
         UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
         let insets = (env["OPENUIKIT_SAFE_AREA"] ?? "59,0,34,0")
             .split(separator: ",").compactMap { Double($0) }
@@ -315,6 +322,23 @@ extension UIApplication {
             _headlessSafeArea = UIEdgeInsets(top: insets[0], left: insets[1],
                                              bottom: insets[2], right: insets[3])
         }
+    }
+
+    /// An app bundle that carries OpenUIKit's measured tables (metrics, glyph
+    /// and symbol ink, system colours) in `<resources>/OpenUIKit/` -- the way
+    /// a framework's resource bundle ships inside an iOS app -- uses them;
+    /// otherwise the configured `resourceRoot` stays. Returns whether the
+    /// bundled tables were adopted. Fonts are not required here (the glyph
+    /// rasterizer's own lookup applies), unlike the SwiftUI packaged-app
+    /// contract (`configureApplicationBundleResources`).
+    @MainActor
+    @discardableResult
+    static func _adoptBundledOpenUIKitResources(bundleResourcePath: String) -> Bool {
+        let root = bundleResourcePath + "/OpenUIKit"
+        guard ResourceIO.readFile(root + "/font_metrics.json") != nil else { return false }
+        OpenUIKitRuntime.resourceRoot = root
+        UIImage.clearNamedCache()
+        return true
     }
 
     /// Applied to every window the headless host creates (UIWindow's

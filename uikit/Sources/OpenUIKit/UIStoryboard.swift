@@ -83,7 +83,7 @@ open class UIStoryboard: NSObject {
     static func locate(_ name: String, bundle: Bundle?)
         -> (String?, String?, [String: String]) {
         var directories = OpenUIKitRuntime.nibSearchPaths
-        if let resources = _resourceDirectory(of: bundle) { directories.append(resources) }
+        directories += _resourceDirectories(of: bundle, name: name, type: "storyboardc")
         for directory in directories {
             let path = "\(directory)/\(name).storyboardc"
             guard let bytes = ResourceIO.readFile("\(path)/Info.plist"),
@@ -428,8 +428,20 @@ extension NibDecoder {
             controller._storyboardState(create: true)!
         }
         var children: [UIViewController]? = nil
+        var splitChildren: [UIViewController] = []
+        var splitDisplayMode: Int?, splitBehavior: Int?, splitBackground: Int?, splitEdge: Int?
         for pair in object.values {
             switch pair.key {
+            case "UIChildViewControllers" where controller is UISplitViewController:
+                if case .reference(let i) = pair.value {
+                    splitChildren = arrayElements(at: i).compactMap { $0 as? UIViewController }
+                }
+            case "UISplitViewControllerStyle":
+                continue   // read by UISplitViewController.init(coder:)
+            case "UISplitViewControllerPreferredDisplayMode": splitDisplayMode = int(pair.value)
+            case "UISplitViewControllerPreferredSplitBehavior": splitBehavior = int(pair.value)
+            case "UISplitViewControllerPrimaryBackgroundStyle": splitBackground = int(pair.value)
+            case "UISplitViewControllerPrimaryEdge": splitEdge = int(pair.value)
             case "UINibName", "UIClassName", "UIOriginalClassName", "UIParentViewController",
                  "UIChildViewControllers", "UICustomizableViewControllers":
                 continue
@@ -490,6 +502,11 @@ extension NibDecoder {
         }
         if let children, let tabs = controller as? UITabBarController {
             tabs._setArchivedViewControllers(children)
+        }
+        if let split = controller as? UISplitViewController {
+            split._applyArchivedConfiguration(children: splitChildren, displayMode: splitDisplayMode,
+                                              splitBehavior: splitBehavior, backgroundStyle: splitBackground,
+                                              primaryEdge: splitEdge)
         }
     }
 }
