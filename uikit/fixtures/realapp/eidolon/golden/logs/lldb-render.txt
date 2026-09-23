@@ -1,0 +1,22 @@
+(lldb) process attach --pid 4882
+Process 4882 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+    frame #0: 0x000000010386cb5c libsystem_kernel.dylib`mach_msg2_trap + 8
+libsystem_kernel.dylib`mach_msg2_trap:
+->  0x10386cb5c <+8>: ret    
+
+libsystem_kernel.dylib`macx_swapon:
+    0x10386cb60 <+0>: mov    x16, #-0x30               ; =-48 
+    0x10386cb64 <+4>: svc    #0x80
+    0x10386cb68 <+8>: ret    
+Target 0: (Kiosk) stopped.
+Executable binary set to "/Users/miguelsalinas/Library/Developer/CoreSimulator/Devices/BF744ACB-5716-44AC-955A-4CA5590DF285/data/Containers/Bundle/Application/113CB451-B2FF-48A9-BD83-6009A4F7470E/Kiosk.app/Kiosk".
+Architecture set to: arm64-apple-ios-simulator.
+(lldb) command source -s 0 '/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/render.lldb'
+Executing commands in '/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/render.lldb'.
+(lldb) expr -l swift -- import UIKit
+(lldb) expr -l swift -- let w = UIApplication.shared.delegate!.window!!; let f = UIGraphicsImageRendererFormat(); f.scale = 2; f.opaque = true; let img = UIGraphicsImageRenderer(bounds: w.bounds, format: f).image { _ in _ = w.drawHierarchy(in: w.bounds, afterScreenUpdates: false) }; let ok = (try? img.pngData()!.write(to: URL(fileURLWithPath: "/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/shots/eidolon-window-render-1024x768@2x.png"))) != nil; print("render ok=\(ok) size=\(img.size) scale=\(img.scale)")
+() $R0 = {}
+(lldb) detach
+Process 4882 detached
+(lldb) quit

@@ -1,0 +1,9 @@
+expr -l objc -O -- [[[UIApplication sharedApplication] delegate] window]
+expr -l objc -O -- @([[UIApplication sharedApplication] statusBarOrientation])
+expr -l objc -O -- NSStringFromCGRect([[UIScreen mainScreen] bounds])
+expr -l objc -O -- @([[UIScreen mainScreen] scale])
+expr -l objc -O -- [[[[[UIApplication sharedApplication] delegate] window] rootViewController] _printHierarchy]
+expr -l objc -O -- [[[[UIApplication sharedApplication] delegate] window] recursiveDescription]
+expr -l objc -O -- [[[[UIApplication sharedApplication] delegate] window] _autolayoutTrace]
+detach
+quit

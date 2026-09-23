@@ -1,0 +1,4 @@
+expr -l swift -- import UIKit
+expr -l swift -- let w = UIApplication.shared.delegate!.window!!; let f = UIGraphicsImageRendererFormat(); f.scale = 2; f.opaque = true; let img = UIGraphicsImageRenderer(bounds: w.bounds, format: f).image { _ in _ = w.drawHierarchy(in: w.bounds, afterScreenUpdates: false) }; let ok = (try? img.pngData()!.write(to: URL(fileURLWithPath: "__SHOTS__/eidolon-window-render-1024x768@2x.png"))) != nil; print("render ok=\(ok) size=\(img.size) scale=\(img.scale)")
+detach
+quit

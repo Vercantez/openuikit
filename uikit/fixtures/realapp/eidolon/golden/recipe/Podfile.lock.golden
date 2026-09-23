@@ -1,0 +1,222 @@
+PODS:
+  - Action (3.5.0):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - Alamofire (4.6.0)
+  - Analytics (4.1.8)
+  - ARAnalytics/CoreIOS (5.0.1)
+  - ARAnalytics/Segmentio (5.0.1):
+    - Analytics (>= 3)
+    - ARAnalytics/CoreIOS
+  - ARCollectionViewMasonryLayout (2.0.0)
+  - ARTiledImageView (1.1.1):
+    - SDWebImage
+  - "Artsy+UIColors (3.1.0)"
+  - "Artsy+UIFonts (3.1.3)"
+  - "Artsy+UILabels (2.2.0)":
+    - "Artsy+UIColors (~> 3.0)"
+    - "Artsy+UIFonts"
+  - Artsy-UIButtons (2.1.0):
+    - "Artsy+UIColors (~> 3.0)"
+    - "Artsy+UIFonts"
+    - "UIView+BooleanAnimations"
+  - CardFlight-v4 (4.3.1)
+  - DZNWebViewController (2.0):
+    - NJKWebViewProgress (~> 0.2)
+  - ECPhoneNumberFormatter (0.1.1)
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - FLKAutoLayout (0.1.1)
+  - Forgeries (1.0.0):
+    - Forgeries/Core (= 1.0.0)
+  - Forgeries/Core (1.0.0)
+  - ISO8601DateFormatter (0.8)
+  - Keys (1.0.1)
+  - Moya/Core (11.0.0):
+    - Alamofire (~> 4.1)
+    - Result (~> 3.0)
+  - Moya/RxSwift (11.0.0):
+    - Moya/Core
+    - RxSwift (~> 4.0)
+  - Nimble (7.0.3)
+  - Nimble-Snapshots (6.3.0):
+    - Nimble-Snapshots/Core (= 6.3.0)
+  - Nimble-Snapshots/Core (6.3.0):
+    - FBSnapshotTestCase (~> 2.0)
+    - Nimble (~> 7.0)
+  - NJKWebViewProgress (0.2.3):
+    - NJKWebViewProgress/Core (= 0.2.3)
+    - NJKWebViewProgress/ProgressView (= 0.2.3)
+  - NJKWebViewProgress/Core (0.2.3)
+  - NJKWebViewProgress/ProgressView (0.2.3)
+  - "NSObject+Rx (4.2.0)":
+    - RxSwift (~> 4.0)
+  - ORStackView (2.0.0):
+    - FLKAutoLayout (~> 0.1)
+  - Quick (1.2.0)
+  - ReachabilitySwift (4.1.0)
+  - Result (3.2.4)
+  - RxBlocking (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxCocoa (4.1.2):
+    - RxSwift (~> 4.0)
+  - RxNimble (4.1.0):
+    - Nimble (~> 7.0)
+    - RxBlocking (~> 4.0)
+    - RxSwift (~> 4.0)
+  - RxOptional (3.3.0):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - RxSwift (4.1.2)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+  - Stripe (12.1.0)
+  - SVProgressHUD (2.2.3)
+  - SwiftyJSON (4.0.0)
+  - UIImageViewAligned (0.0.1)
+  - "UIView+BooleanAnimations (1.0.2)"
+  - XNGMarkdownParser (0.3.2)
+
+DEPENDENCIES:
+  - Action
+  - ARAnalytics/Segmentio
+  - ARCollectionViewMasonryLayout (~> 2.0.0)
+  - ARTiledImageView
+  - "Artsy+UIColors"
+  - "Artsy+UIFonts"
+  - "Artsy+UILabels"
+  - Artsy-UIButtons
+  - CardFlight-v4 (from `/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/CardFlightShim`)
+  - DZNWebViewController (from `https://github.com/orta/DZNWebViewController.git`)
+  - ECPhoneNumberFormatter
+  - FBSnapshotTestCase
+  - FLKAutoLayout (= 0.1.1)
+  - Forgeries
+  - ISO8601DateFormatter
+  - Keys (from `Pods/CocoaPodsKeys`)
+  - Moya/RxSwift
+  - Nimble
+  - Nimble-Snapshots
+  - "NSObject+Rx"
+  - ORStackView (= 2.0)
+  - Quick
+  - ReachabilitySwift
+  - RxBlocking
+  - RxCocoa
+  - RxNimble
+  - RxOptional
+  - RxSwift
+  - SDWebImage (~> 3.7)
+  - Stripe (from `/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/StripeShim`)
+  - SVProgressHUD
+  - SwiftyJSON
+  - UIImageViewAligned (from `https://github.com/ashfurrow/UIImageViewAligned.git`)
+  - "UIView+BooleanAnimations"
+  - XNGMarkdownParser
+
+SPEC REPOS:
+  https://github.com/artsy/Specs.git:
+    - "Artsy+UIColors"
+    - "Artsy+UIFonts"
+    - "Artsy+UILabels"
+    - Artsy-UIButtons
+  trunk:
+    - Action
+    - Alamofire
+    - Analytics
+    - ARAnalytics
+    - ARCollectionViewMasonryLayout
+    - ARTiledImageView
+    - ECPhoneNumberFormatter
+    - FBSnapshotTestCase
+    - FLKAutoLayout
+    - Forgeries
+    - ISO8601DateFormatter
+    - Moya
+    - Nimble
+    - Nimble-Snapshots
+    - NJKWebViewProgress
+    - "NSObject+Rx"
+    - ORStackView
+    - Quick
+    - ReachabilitySwift
+    - Result
+    - RxBlocking
+    - RxCocoa
+    - RxNimble
+    - RxOptional
+    - RxSwift
+    - SDWebImage
+    - SVProgressHUD
+    - SwiftyJSON
+    - "UIView+BooleanAnimations"
+    - XNGMarkdownParser
+
+EXTERNAL SOURCES:
+  CardFlight-v4:
+    :path: "/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/CardFlightShim"
+  DZNWebViewController:
+    :git: https://github.com/orta/DZNWebViewController.git
+  Keys:
+    :path: Pods/CocoaPodsKeys
+  Stripe:
+    :path: "/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/StripeShim"
+  UIImageViewAligned:
+    :git: https://github.com/ashfurrow/UIImageViewAligned.git
+
+CHECKOUT OPTIONS:
+  DZNWebViewController:
+    :commit: 9121386901af95072fb19eaa3df7060ca46fc337
+    :git: https://github.com/orta/DZNWebViewController.git
+  UIImageViewAligned:
+    :commit: 6f8cb5669b219ef08c90c2e2e5a082cadfe7565b
+    :git: https://github.com/ashfurrow/UIImageViewAligned.git
+
+SPEC CHECKSUMS:
+  Action: d60087ebce41b969d1afdad01e2fa1372a82f26e
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  Analytics: 9655e0e1c71ea98107cfcb2b14891168acc6c6c9
+  ARAnalytics: 896e530551168721fbb8852e044b8afb9baffdde
+  ARCollectionViewMasonryLayout: 164b82010cf8ec99bc7a38cffe59a179d7e5a116
+  ARTiledImageView: 8c6fd11d9e8459a853d94394adea3a5e8c9329ba
+  "Artsy+UIColors": 31c03c4146f5e6618a9b950f37dfe02dd9ac09a6
+  "Artsy+UIFonts": d38c82636e000b1dee31b7bec0268e1841dac17f
+  "Artsy+UILabels": 7cb6e290a4f70dddba037b7dbeb21e90b49d7275
+  Artsy-UIButtons: cdcc3ccf4d0d31ee80f45c1d11ffd2d772695b74
+  CardFlight-v4: 5e1cb1bfe44e41bbd4f9642e375cd99f07f6067a
+  DZNWebViewController: 54e8ee1c5bcc43e341ad77737631098d0d76db69
+  ECPhoneNumberFormatter: 061041e7715f8d3f2e8e2a069ddf28c52f7bd314
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  FLKAutoLayout: 95b12c5cd9652100235140b68652f063f7437851
+  Forgeries: 64ced144ea8341d89a7eec9d1d7986f0f1366250
+  ISO8601DateFormatter: 4551b6ce4f83185425f583b0b3feb3c7b59b942c
+  Keys: 5a3d4641c63dae86179a2d18ff566a948fa06b20
+  Moya: be29766339783963a70d1279d69c891ab3a1393c
+  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
+  Nimble-Snapshots: f5459b5b091678dc942d03ec4741cacb58ba4a52
+  NJKWebViewProgress: f481fd424cb5ecc27eacae11b5397db92fba9a4d
+  "NSObject+Rx": cbbc05e3cb3ad446cdbced3e00e39c9efaf02925
+  ORStackView: 5df6b1b990b0648d8ef6f69f89361ea8648e8f64
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  ReachabilitySwift: 6849231cd4e06559f3b9ef4a97a0a0f96d41e09f
+  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
+  RxBlocking: f6054985901412fc8c02daa84e92d4ba68c61389
+  RxCocoa: d88ba0f1f6abf040011a9eb4b539324fc426843a
+  RxNimble: e5a34bf3b18d85406fc2a6e2cbc73aa2b4a858f0
+  RxOptional: e5448d3e21024489e07c31f6a262f2b50c975367
+  RxSwift: e49536837d9901277638493ea537394d4b55f570
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  Stripe: adec218e091fae74dc374072aa91ae7b514e4127
+  SVProgressHUD: a5eaeff664a82dda89809c409ace40183ce91523
+  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+  UIImageViewAligned: 5726c9651898342c19588a02e2115cace59342ee
+  "UIView+BooleanAnimations": a760be9a066036e55f298b7b7350a6cb14cfcd97
+  XNGMarkdownParser: aed98c14f0c0eb20064184ddf9bac26c482722b2
+
+PODFILE CHECKSUM: ca5f544c086830995859395bceefc2c785214b46
+
+COCOAPODS: 1.15.2

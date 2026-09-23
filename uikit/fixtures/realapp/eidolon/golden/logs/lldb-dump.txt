@@ -1,0 +1,329 @@
+(lldb) process attach --pid 4882
+Process 4882 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+    frame #0: 0x000000010386cb5c libsystem_kernel.dylib`mach_msg2_trap + 8
+libsystem_kernel.dylib`mach_msg2_trap:
+->  0x10386cb5c <+8>: ret    
+
+libsystem_kernel.dylib`macx_swapon:
+    0x10386cb60 <+0>: mov    x16, #-0x30               ; =-48 
+    0x10386cb64 <+4>: svc    #0x80
+    0x10386cb68 <+8>: ret    
+Target 0: (Kiosk) stopped.
+Executable binary set to "/Users/miguelsalinas/Library/Developer/CoreSimulator/Devices/BF744ACB-5716-44AC-955A-4CA5590DF285/data/Containers/Bundle/Application/113CB451-B2FF-48A9-BD83-6009A4F7470E/Kiosk.app/Kiosk".
+Architecture set to: arm64-apple-ios-simulator.
+(lldb) command source -s 0 '/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/dump.lldb'
+Executing commands in '/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/dump.lldb'.
+(lldb) expr -l objc -O -- [[[UIApplication sharedApplication] delegate] window]
+<UIWindow: 0x1043060a0; frame = (0 0; 1024 768); autoresize = W+H; gestureRecognizers = <NSArray: 0x600000c08a20>; layer = <UIWindowLayer: 0x6000017341c0>>
+
+(lldb) expr -l objc -O -- @([[UIApplication sharedApplication] statusBarOrientation])
+3
+
+(lldb) expr -l objc -O -- NSStringFromCGRect([[UIScreen mainScreen] bounds])
+{{0, 0}, {1024, 768}}
+
+(lldb) expr -l objc -O -- @([[UIScreen mainScreen] scale])
+2
+
+(lldb) expr -l objc -O -- [[[[[UIApplication sharedApplication] delegate] window] rootViewController] _printHierarchy]
+<Kiosk.AppViewController: 0x107813600>, state: appeared, view: <UIView: 0x104112cb0>
+   | <UINavigationController: 0x105845400>, state: appeared, view: <UILayoutContainerView: 0x104114f80>
+   |    | <Kiosk.ListingsViewController: 0x105845a00>, state: appeared, view: <UIView: 0x103c19770>
+   | <Kiosk.OfflineViewController: 0x104126320>, state: appeared, view: <UIView: 0x104124bc0>
+
+(lldb) expr -l objc -O -- [[[[UIApplication sharedApplication] delegate] window] recursiveDescription]
+<UIWindow: 0x1043060a0; frame = (0 0; 1024 768); autoresize = W+H; gestureRecognizers = <NSArray: 0x600000c08a20>; layer = <UIWindowLayer: 0x6000017341c0>>
+   | <UITransitionView: 0x10420f140; frame = (0 0; 1024 768); autoresize = W+H; layer = <CALayer: 0x600000c440f0>>
+   |    | <UIDropShadowView: 0x1042103c0; frame = (0 0; 1024 768); autoresize = W+H; layer = <CALayer: 0x600000c447e0>>
+   |    |    | <UIView: 0x104210940; frame = (0 0; 1024 768); autoresize = W+H; layer = <CALayer: 0x600000c44810>>
+   |    |    |    | <UIView: 0x104112cb0; frame = (0 0; 1024 768); autoresize = W+H; backgroundColor = UIExtendedSRGBColorSpace 1 1 1 1; layer = <CALayer: 0x600000c0bfc0>>
+   |    |    |    |    | <UIView: 0x104111600; frame = (0 0; 1024 743); opaque = NO; autoresize = RM+BM; layer = <CALayer: 0x600000c0bba0>>
+   |    |    |    |    |    | <UILayoutContainerView: 0x104114f80; frame = (0 0; 1024 743); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x60000026f480>; layer = <CALayer: 0x600000c34c30>>
+   |    |    |    |    |    |    | <UINavigationTransitionView: 0x10411f890; frame = (0 0; 1024 743); autoresize = W+H; layer = <CALayer: 0x600000c36910>>
+   |    |    |    |    |    |    |    | <UIViewControllerWrapperView: 0x103b141a0; frame = (0 0; 1024 743); autoresize = W+H; layer = <CALayer: 0x600000c4a4f0>>
+   |    |    |    |    |    |    |    |    | <UIView: 0x103c19770; frame = (0 0; 1024 743); autoresize = W+H; backgroundColor = UIExtendedSRGBColorSpace 1 1 1 1; layer = <CALayer: 0x600000c435d0>>
+   |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104408d30; frame = (0 0; 80 80); clipsToBounds = YES; opaque = NO; autoresize = RM+BM; image = <UIImage:0x600003004bd0 CGImage "StubbingFlag"; (80 80)@2>; layer = <CALayer: 0x600000c039f0>>
+   |    |    |    |    |    |    |    |    |    | <UICollectionView: 0x105873000; frame = (0 136; 1024 607); clipsToBounds = YES; gestureRecognizers = <NSArray: 0x600000c4c150>; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c3ebb0>; contentOffset: {0, -40}; contentSize: {1024, 1018}; adjustedContentInset: {40, 0, 80, 0} topEdge=<style=automatic backgroundCapture=color> bottomEdge=<style=automatic backgroundCapture=color>; layout: <ARCollectionViewMasonryLayout: 0x103b13ae0>; dataSource: <Kiosk.ListingsViewController: 0x105845a00>>
+   |    |    |    |    |    |    |    |    |    |    | <Kiosk.MasonryCollectionViewCell: 0x103b12ba0; baseClass = UICollectionViewCell; frame = (66 0; 254 559); layer = <CALayer: 0x600000c5a310>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x103c1d190; frame = (0 0; 254 551); gestureRecognizers = <NSArray: 0x600000009550>; layer = <CALayer: 0x600000c5aa00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    | <ORTagBasedAutoStackView: 0x103b12ee0; frame = (0 0; 254 551); layer = <CALayer: 0x600000c538a0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x103b10350; frame = (0 0; 254 334); gestureRecognizers = <NSArray: 0x60000000cb10>; backgroundColor = UIExtendedSRGBColorSpace 0.972549 0.972549 0.972549 1; image = <(null):0x0 (null) anonymous; (0 0)@0>; layer = <CALayer: 0x600000c539f0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x103b10680; baseClass = UILabel; frame = (0 354; 254 20); text = 'John Baldessari'; userInteractionEnabled = NO; tag = 2; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c3f300>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARItalicsSerifLabel: 0x103b19480; baseClass = UILabel; frame = (0 384; 254 16); text = 'Sediment: Hair and Goose,...'; userInteractionEnabled = NO; tag = 3; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c3d380>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104121120; frame = (0 413; 254 31); tag = 5; layer = <CALayer: 0x600000c645a0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x103b1a990; baseClass = UILabel; frame = (0 13; 119.5 18); text = 'Starting Bid: 35,000'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c3d300>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x103c06860; baseClass = UILabel; frame = (254 13; 0 18); text = ''; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c40180>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <CAShapeLayer: 0x600000c67540> (layer)
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.ActionButton: 0x103c05270; baseClass = UIButton; frame = (0 457; 254 50); clipsToBounds = YES; opaque = NO; tag = 6; gestureRecognizers = <NSArray: 0x60000029c320>; backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c582d0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x103c09a20; frame = (117 15; 20.5 20.5); text = 'BID'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c37500>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSansSerifLabelWithChevron: 0x103c09f60; baseClass = UILabel; frame = (0 507; 254 44); text = 'MORE INFO'; tintColor = UIExtendedGrayColorSpace 0 1; tag = 7; gestureRecognizers = <NSArray: 0x60000000cca0>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c34f80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x103c1be00; frame = (101 16; 8 13); opaque = NO; userInteractionEnabled = NO; image = <UIImage:0x600003000f30 CGImage anonymous; (8 12)@2>; layer = <CALayer: 0x600000c5a2b0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.WhitespaceGobbler: 0x10410e6b0; frame = (0 551; 254 0); tag = 8; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c64420>>
+   |    |    |    |    |    |    |    |    |    |    | <Kiosk.MasonryCollectionViewCell: 0x104123d80; baseClass = UICollectionViewCell; frame = (385 0; 254 478); layer = <CALayer: 0x600000c677e0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104141b80; frame = (0 0; 254 471); gestureRecognizers = <NSArray: 0x60000000f1e0>; layer = <CALayer: 0x600000c67e40>>
+   |    |    |    |    |    |    |    |    |    |    |    |    | <ORTagBasedAutoStackView: 0x104127e20; frame = (0 0; 254 471); layer = <CALayer: 0x600000c64d80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104115960; frame = (0 0; 254 254); gestureRecognizers = <NSArray: 0x60000000f530>; backgroundColor = UIExtendedSRGBColorSpace 0.972549 0.972549 0.972549 1; image = <(null):0x0 (null) anonymous; (0 0)@0>; layer = <CALayer: 0x600000c658c0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10412eff0; baseClass = UILabel; frame = (0 274; 254 20); text = 'Nate Lowman'; userInteractionEnabled = NO; tag = 2; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c50700>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARItalicsSerifLabel: 0x1041282c0; baseClass = UILabel; frame = (0 304; 254 16); text = 'January Tree, 2013'; userInteractionEnabled = NO; tag = 3; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c50780>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x10410ffb0; frame = (0 333; 254 31); tag = 5; layer = <CALayer: 0x600000c57600>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x104137760; baseClass = UILabel; frame = (0 13; 121 18); text = 'Current Bid: 19,000'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c50e80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10410d5a0; baseClass = UILabel; frame = (254 13; 0 18); text = ''; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c50800>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <CAShapeLayer: 0x600000c48d20> (layer)
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.ActionButton: 0x10413d010; baseClass = UIButton; frame = (0 377; 254 50); clipsToBounds = YES; opaque = NO; tag = 6; gestureRecognizers = <NSArray: 0x600000238260>; backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c65b90>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10413d310; frame = (117 15; 20.5 20.5); text = 'BID'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c51200>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSansSerifLabelWithChevron: 0x10413d650; baseClass = UILabel; frame = (0 427; 254 44); text = 'MORE INFO'; tintColor = UIExtendedGrayColorSpace 0 1; tag = 7; gestureRecognizers = <NSArray: 0x60000000f560>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c51180>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104141330; frame = (101 16; 8 13); opaque = NO; userInteractionEnabled = NO; image = <UIImage:0x600003005b90 CGImage anonymous; (8 12)@2>; layer = <CALayer: 0x600000c677b0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.WhitespaceGobbler: 0x104105740; frame = (0 471; 254 0); tag = 8; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c54f90>>
+   |    |    |    |    |    |    |    |    |    |    | <Kiosk.MasonryCollectionViewCell: 0x10413d990; baseClass = UICollectionViewCell; frame = (704 0; 254 421); layer = <CALayer: 0x600000c24390>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x1046054c0; frame = (0 0; 254 414); gestureRecognizers = <NSArray: 0x60000002c100>; layer = <CALayer: 0x600000c24810>>
+   |    |    |    |    |    |    |    |    |    |    |    |    | <ORTagBasedAutoStackView: 0x10413dcd0; frame = (0 0; 254 414); layer = <CALayer: 0x600000c48e70>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x10413e5d0; frame = (0 0; 254 197); gestureRecognizers = <NSArray: 0x60000002c6c0>; backgroundColor = UIExtendedSRGBColorSpace 0.972549 0.972549 0.972549 1; image = <(null):0x0 (null) anonymous; (0 0)@0>; layer = <CALayer: 0x600000c49b00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10413f1a0; baseClass = UILabel; frame = (0 217; 254 20); text = 'Julie Mehretu'; userInteractionEnabled = NO; tag = 2; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c54a00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARItalicsSerifLabel: 0x10413f4d0; baseClass = UILabel; frame = (0 247; 254 16); text = 'Untitled, 2013'; userInteractionEnabled = NO; tag = 3; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c54a80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104606760; frame = (0 276; 254 31); tag = 5; layer = <CALayer: 0x600000c24b40>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10413fb30; baseClass = UILabel; frame = (0 13; 124 18); text = 'Current Bid: 48,000'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c54b80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10413fe60; baseClass = UILabel; frame = (254 13; 0 18); text = ''; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c54c00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <CAShapeLayer: 0x600000c26b50> (layer)
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.ActionButton: 0x104144670; baseClass = UIButton; frame = (0 320; 254 50); clipsToBounds = YES; opaque = NO; tag = 6; gestureRecognizers = <NSArray: 0x60000026c9c0>; backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c49800>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x104144970; frame = (117 14.5; 20.5 20.5); text = 'BID'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c54c80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSansSerifLabelWithChevron: 0x104144cb0; baseClass = UILabel; frame = (0 370; 254 44); text = 'MORE INFO'; tintColor = UIExtendedGrayColorSpace 0 1; tag = 7; gestureRecognizers = <NSArray: 0x60000002c6f0>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c54d00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104604c70; frame = (101 16; 8 13); opaque = NO; userInteractionEnabled = NO; image = <UIImage:0x600003020120 CGImage anonymous; (8 12)@2>; layer = <CALayer: 0x600000c24150>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.WhitespaceGobbler: 0x104606400; frame = (0 414; 254 0); tag = 8; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c249f0>>
+   |    |    |    |    |    |    |    |    |    |    | <Kiosk.MasonryCollectionViewCell: 0x104608580; baseClass = UICollectionViewCell; frame = (704 441; 254 531); layer = <CALayer: 0x600000c271b0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104611780; frame = (0 0; 254 523); gestureRecognizers = <NSArray: 0x60000002c840>; layer = <CALayer: 0x600000c27690>>
+   |    |    |    |    |    |    |    |    |    |    |    |    | <ORTagBasedAutoStackView: 0x1046065a0; frame = (0 0; 254 523); layer = <CALayer: 0x600000c24030>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104608d20; frame = (0 0; 254 306); gestureRecognizers = <NSArray: 0x60000002ccf0>; backgroundColor = UIExtendedSRGBColorSpace 0.972549 0.972549 0.972549 1; image = <(null):0x0 (null) anonymous; (0 0)@0>; layer = <CALayer: 0x600000c25200>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x104609050; baseClass = UILabel; frame = (0 326; 254 20); text = 'Walead Beshty'; userInteractionEnabled = NO; tag = 2; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c58800>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARItalicsSerifLabel: 0x1046095e0; baseClass = UILabel; frame = (0 356; 254 16); text = 'Two Sided Picture (YR), J...'; userInteractionEnabled = NO; tag = 3; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c58880>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104612990; frame = (0 385; 254 31); tag = 5; layer = <CALayer: 0x600000c279c0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10460a3d0; baseClass = UILabel; frame = (0 13; 112.5 18); text = 'Current Bid: 8,500'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c58980>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10460a960; baseClass = UILabel; frame = (254 13; 0 18); text = ''; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c58a00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <CAShapeLayer: 0x600000c37450> (layer)
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.ActionButton: 0x10460aef0; baseClass = UIButton; frame = (0 429; 254 50); clipsToBounds = YES; opaque = NO; tag = 6; gestureRecognizers = <NSArray: 0x600000226920>; backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c26220>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10460c3f0; frame = (117 15; 20.5 20.5); text = 'BID'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c58a80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSansSerifLabelWithChevron: 0x10460c730; baseClass = UILabel; frame = (0 479; 254 44); text = 'MORE INFO'; tintColor = UIExtendedGrayColorSpace 0 1; tag = 7; gestureRecognizers = <NSArray: 0x60000002cd20>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c58b00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104610ee0; frame = (101 16; 8 13); opaque = NO; userInteractionEnabled = NO; image = <UIImage:0x600003020a20 CGImage anonymous; (8 12)@2>; layer = <CALayer: 0x600000c27150>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.WhitespaceGobbler: 0x1046126c0; frame = (0 523; 254 0); tag = 8; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c27870>>
+   |    |    |    |    |    |    |    |    |    |    | <Kiosk.MasonryCollectionViewCell: 0x104609ea0; baseClass = UICollectionViewCell; frame = (385 498; 254 394); layer = <CALayer: 0x600000c53fc0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x103b1a730; frame = (0 0; 254 386.5); gestureRecognizers = <NSArray: 0x6000000052b0>; layer = <CALayer: 0x600000c414d0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    | <ORTagBasedAutoStackView: 0x104609380; frame = (0 0; 254 386.5); layer = <CALayer: 0x600000c3fea0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x104609910; frame = (0 0; 254 169.5); gestureRecognizers = <NSArray: 0x600000005e40>; backgroundColor = UIExtendedSRGBColorSpace 0.972549 0.972549 0.972549 1; image = <(null):0x0 (null) anonymous; (0 0)@0>; layer = <CALayer: 0x600000c3fd20>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10460ccd0; baseClass = UILabel; frame = (0 189.5; 254 20); text = 'Dustin Yellin'; userInteractionEnabled = NO; tag = 2; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0ca80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARItalicsSerifLabel: 0x10460d000; baseClass = UILabel; frame = (0 219.5; 254 16); text = 'Flatland, 2013'; userInteractionEnabled = NO; tag = 3; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0cc00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x103b1b450; frame = (0 248.5; 254 31); tag = 5; layer = <CALayer: 0x600000c3cf30>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10460d660; baseClass = UILabel; frame = (0 13; 114.5 18); text = 'Current Bid: 4,500'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0ee00>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSerifLabel: 0x10460dac0; baseClass = UILabel; frame = (254 13; 0 18); text = ''; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0f700>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <CAShapeLayer: 0x600000c6d680> (layer)
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.ActionButton: 0x10460e810; baseClass = UIButton; frame = (0 292.5; 254 50); clipsToBounds = YES; opaque = NO; tag = 6; gestureRecognizers = <NSArray: 0x6000002a0e80>; backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c3fde0>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10460f500; frame = (117 14.5; 20.5 20.5); text = 'BID'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c0e280>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <ARSansSerifLabelWithChevron: 0x10460f970; baseClass = UILabel; frame = (0 342.5; 254 44); text = 'MORE INFO'; tintColor = UIExtendedGrayColorSpace 0 1; tag = 7; gestureRecognizers = <NSArray: 0x600000005e70>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0ee80>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    | <UIImageView: 0x103b24940; frame = (101 16; 8 13); opaque = NO; userInteractionEnabled = NO; image = <UIImage:0x600003008510 CGImage anonymous; (8 12)@2>; layer = <CALayer: 0x600000c53e70>>
+   |    |    |    |    |    |    |    |    |    |    |    |    |    | <Kiosk.WhitespaceGobbler: 0x103b1b2b0; frame = (0 386.5; 254 0); tag = 8; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c3d3b0>>
+   |    |    |    |    |    |    |    |    |    |    | <_UIScrollViewScrollIndicator: 0x103b176c0; frame = (1018 450; 3 114); alpha = 0; autoresize = LM; gestureRecognizers = <NSArray: 0x600000c4b8d0>; layer = <CALayer: 0x600000c4b660>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x103b17890; frame = (0 0; 3 114); backgroundColor = UIExtendedGrayColorSpace 0 0.35; layer = <CALayer: 0x600000c4b690>>
+   |    |    |    |    |    |    |    |    |    |    | <_UIScrollViewScrollIndicator: 0x103b166b0; frame = (1014 561; 7 3); alpha = 0; autoresize = TM; gestureRecognizers = <NSArray: 0x600000c4b570>; layer = <CALayer: 0x600000c4a8e0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x103b16a80; frame = (0 0; 7 3); backgroundColor = UIExtendedGrayColorSpace 0 0.35; layer = <CALayer: 0x600000c4b330>>
+   |    |    |    |    |    |    |    |    |    | <Kiosk.Spinner: 0x104408850; frame = (497 369; 30 30); hidden = YES; autoresize = RM+BM; animations = { spin=<CABasicAnimation: 0x600000280ba0>; }; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c02fd0>>
+   |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104112850; frame = (5 12.5; 20 5); backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c3d440>>
+   |    |    |    |    |    |    |    |    |    | <_UILayoutGuide: 0x103c19910; frame = (0 0; 0 0); hidden = YES; layer = <CALayer: 0x600000c43630>>
+   |    |    |    |    |    |    |    |    |    | <_UILayoutGuide: 0x103c19ac0; frame = (0 743; 0 0); hidden = YES; layer = <CALayer: 0x600000c42310>>
+   |    |    |    |    |    |    |    |    |    | <Kiosk.SwitchView: 0x104119030; frame = (65 90; 894 46); layer = <CALayer: 0x600000c3e820>>
+   |    |    |    |    |    |    |    |    |    |    | <UIButton: 0x1041254f0; frame = (0 2; 149 42); opaque = NO; gestureRecognizers = <NSArray: 0x600000281020>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <CALayer: 0x600000c3d830>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10412b230; frame = (58.5 10.5; 32 21); text = 'GRID'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0a980>>
+   |    |    |    |    |    |    |    |    |    |    | <UIButton: 0x10412b900; frame = (149 2; 149 42); opaque = NO; gestureRecognizers = <NSArray: 0x600000281560>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <CALayer: 0x600000c3dbf0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10412c0d0; frame = (42 10.5; 65 21); text = 'LEAST BIDS'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0a300>>
+   |    |    |    |    |    |    |    |    |    |    | <UIButton: 0x10412c7a0; frame = (298 2; 149 42); opaque = NO; gestureRecognizers = <NSArray: 0x600000281840>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <CALayer: 0x600000c3de00>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10412cf70; frame = (41.5 10.5; 66 21); text = 'MOST BIDS'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0aa00>>
+   |    |    |    |    |    |    |    |    |    |    | <UIButton: 0x10412d640; frame = (447 2; 149 42); opaque = NO; gestureRecognizers = <NSArray: 0x600000281a80>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <CALayer: 0x600000c3e040>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10412de10; frame = (36.5 10.5; 76 21); text = 'HIGHEST BID'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c0b700>>
+   |    |    |    |    |    |    |    |    |    |    | <UIButton: 0x10412e4e0; frame = (596 2; 149 42); opaque = NO; gestureRecognizers = <NSArray: 0x600000281d20>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <CALayer: 0x600000c3e280>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10412ecb0; frame = (38.5 10.5; 72 21); text = 'LOWEST BID'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c05300>>
+   |    |    |    |    |    |    |    |    |    |    | <UIButton: 0x10412f380; frame = (745 2; 149 42); opaque = NO; gestureRecognizers = <NSArray: 0x600000281f80>; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <CALayer: 0x600000c3e4c0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIButtonLabel: 0x10412ffa0; frame = (63 10.5; 23 21); text = 'A–Z'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 1; layer = <_UILabelLayer: 0x600002c39400>>
+   |    |    |    |    |    |    |    |    |    |    | <CALayer: 0x600000c3d7d0> (layer)
+   |    |    |    |    |    |    |    |    |    |    | <CALayer: 0x600000c3d800> (layer)
+   |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104130670; frame = (0 0; 149 46); layer = <CALayer: 0x600000c3e790>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x104130810; frame = (0 0; 149 2); backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c3e7c0>>
+   |    |    |    |    |    |    |    |    |    |    |    | <UIView: 0x1041309b0; frame = (0 44; 149 2); backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c3e7f0>>
+   |    |    |    |    |    |    | <UINavigationBar: 0x104113e70; frame = (0 -54; 1024 54); hidden = YES; opaque = NO; autoresize = W; gestureRecognizers = <NSArray: 0x600000c36850>; layer = <CALayer: 0x600000c34d50>> delegate=0x105845400
+   |    |    |    |    |    |    |    | <_UIBarBackground: 0x10411bda0; frame = (0 -10; 1024 64); userInteractionEnabled = NO; layer = <CALayer: 0x600000c34d20>>
+   |    |    |    |    |    |    |    | <UIKit.NavigationBarContentView: 0x10581f400; frame = (0 0; 1024 54); gestureRecognizers = <NSArray: 0x600000c35140>; layer = <CALayer: 0x600000c35230>> contentView=0x000000010581f400
+   |    |    |    |    |    |    |    |    | <UIKit.NavigationBarTransitionContainer: 0x104114520; frame = (0 0; 1024 54); layer = <CALayer: 0x600000c34f60>>
+   |    |    |    |    |    |    |    |    |    | <_UINavigationBarHostedViewContainer: 0x104114890; frame = (0 0; 1024 54); layer = <CALayer: 0x600000c35020>>
+   |    |    |    |    |    |    |    |    |    | <UIView: 0x1041146f0; frame = (0 0; 1024 54); userInteractionEnabled = NO; layer = <CALayer: 0x600000c34fc0>>
+   |    |    |    |    |    |    |    |    |    | <UIKit.NavigationBarPlatterContainer: 0x104114c50; frame = (0 0; 1024 54); layer = <CALayer: 0x600000c35050>>
+   |    |    |    |    |    |    |    | <_UIPointerInteractionAssistantEffectContainerView: 0x104219fa0; frame = (0 0; 0 0); userInteractionEnabled = NO; layer = <CALayer: 0x600000c47180>>
+   |    |    |    |    |    |    | <_UIFloatingBarContainerView: 0x104121310; frame = (0 0; 1024 743); layer = <CALayer: 0x600000c36fa0>>
+   |    |    |    |    |    |    |    | <_TtGC5UIKitP10$186d076ac22FloatingBarHostingViewVS_20FloatingBarContainer_: 0x104122e60; frame = (0 0; 1024 743); gestureRecognizers = <NSArray: 0x600000c34cf0>; layer = <CALayer: 0x600000c37480>>
+   |    |    |    |    |    |    |    | <_UIPointerInteractionAssistantEffectContainerView: 0x104125020; frame = (0 0; 0 0); userInteractionEnabled = NO; layer = <CALayer: 0x600000c373f0>>
+   |    |    |    |    | <Kiosk.ActionButton: 0x104111940; baseClass = UIButton; frame = (783 20; 176 50); clipsToBounds = YES; opaque = NO; autoresize = RM+BM; gestureRecognizers = <NSArray: 0x60000022f1e0>; backgroundColor = UIExtendedGrayColorSpace 0 1; layer = <CALayer: 0x600000c0bd80>>
+   |    |    |    |    |    | <UIButtonLabel: 0x103b0e150; frame = (38.5 15; 99.5 20.5); text = 'REGISTER TO BID'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c02300>>
+   |    |    |    |    | <UIView: 0x10420c020; frame = (352 -9; 320 107); autoresize = RM+BM; gestureRecognizers = <NSArray: 0x60000000ccd0>; backgroundColor = UIExtendedSRGBColorSpace 0 0 0 0; layer = <CALayer: 0x600000c2e250>>
+   |    |    |    |    |    | <UIView: 0x10420c3c0; frame = (20 20; 280 67); clipsToBounds = YES; autoresize = RM+BM; userInteractionEnabled = NO; backgroundColor = UIExtendedSRGBColorSpace 0 0 0 0; layer = <CALayer: 0x600000c2e280>>
+   |    |    |    |    |    |    | <UILabel: 0x10420c560; frame = (67 17; 148 21); text = 'CLOSED'; opaque = NO; autoresize = RM+BM; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c0cf00>>
+   |    |    |    |    |    |    | <UILabel: 0x1041106e0; frame = (72 41; 39 26); text = 'HRS'; hidden = YES; opaque = NO; autoresize = RM+BM; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c13b00>>
+   |    |    |    |    |    |    | <UILabel: 0x104110e70; frame = (170 41; 39 26); text = 'SEC'; hidden = YES; opaque = NO; autoresize = RM+BM; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c34000>>
+   |    |    |    |    |    |    | <UILabel: 0x1041111a0; frame = (121 41; 39 26); text = 'MIN'; hidden = YES; opaque = NO; autoresize = RM+BM; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c34080>>
+   |    |    |    |    | <UIView: 0x1041117a0; frame = (0 0; 1024 768); hidden = YES; opaque = NO; autoresize = RM+BM; layer = <CALayer: 0x600000c0bc00>>
+   |    |    |    |    |    | <UIView: 0x104124bc0; frame = (0 0; 1024 768); clipsToBounds = YES; opaque = NO; autoresize = W+H; backgroundColor = UIExtendedSRGBColorSpace 0 0 0 0.85; layer = <CALayer: 0x600000c3c2d0>>
+   |    |    |    |    |    |    | <UILabel: 0x104126710; frame = (218 287; 588 56); text = 'No Internet Connection'; opaque = NO; autoresize = RM+BM; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c36580>>
+   |    |    |    |    |    |    | <UILabel: 0x104126a40; frame = (196 361; 632 56); text = 'Please notify an Artsy re...'; opaque = NO; autoresize = RM+BM; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c36780>>
+   |    |    |    |    |    |    | <_UILayoutGuide: 0x1041251c0; frame = (0 0; 0 0); hidden = YES; layer = <CALayer: 0x600000c3c300>>
+   |    |    |    |    |    |    | <_UILayoutGuide: 0x104126fd0; frame = (0 743; 0 25); hidden = YES; layer = <CALayer: 0x600000c3c3f0>>
+   |    |    |    |    | <_UILayoutGuide: 0x104112e50; frame = (0 0; 0 0); hidden = YES; layer = <CALayer: 0x600000c34000>>
+   |    |    |    |    | <_UILayoutGuide: 0x104113200; frame = (0 743; 0 25); hidden = YES; layer = <CALayer: 0x600000c340f0>>
+   | <Kiosk.MenuButton: 0x103c0bbf0; baseClass = UIButton; frame = (955 699; 45 45); clipsToBounds = YES; opaque = NO; gestureRecognizers = <NSArray: 0x600000279160>; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <CALayer: 0x600000c404b0>>
+   |    | <CALayer: 0x600000c40600> (layer)
+   |    | <UIButtonLabel: 0x103c0c9e0; frame = (9.5 13.5; 26.5 18.5); text = 'HELP'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer: 0x600002c31280>>
+   |    | <UIImageView: 0x103c15ef0; frame = (9 22.5; 0 0); clipsToBounds = YES; hidden = YES; opaque = NO; userInteractionEnabled = NO; image = <(null):0x0 (null) anonymous; (0 0)@0>; layer = <CALayer: 0x600000c41b00>>
+
+(lldb) expr -l objc -O -- [[[[UIApplication sharedApplication] delegate] window] _autolayoutTrace]
+
+•UIWindow:0x1043060a0 - AMBIGUOUS LAYOUT
+|   UITransitionView:0x10420f140
+|   |   UIDropShadowView:0x1042103c0
+|   |   |   UIView:0x104210940
+|   |   |   |   •UIView:0x104112cb0
+|   |   |   |   |   *UIView:0x104111600
+|   |   |   |   |   |   •UILayoutContainerView:0x104114f80
+|   |   |   |   |   |   |   *<UIFocusContainerGuide: 0x600003e30800 - "UINavigationControllerContentFocusContainerGuide", layoutFrame = {{0, 0}, {1024, 743}}, owningView = <UILayoutContainerView: 0x104114f80; frame = (0 0; 1024 743); clipsToBounds = YES; autoresize = W+H; gestureRecognizers = <NSArray: 0x60000026f480>; layer = <CALayer: 0x600000c34c30>>>, isEnabled: YES
+|   |   |   |   |   |   |   UINavigationTransitionView:0x10411f890
+|   |   |   |   |   |   |   |   UIViewControllerWrapperView:0x103b141a0
+|   |   |   |   |   |   |   |   |   •UIView:0x103c19770
+|   |   |   |   |   |   |   |   |   |   UIImageView:0x104408d30
+|   |   |   |   |   |   |   |   |   |   *UICollectionView:0x105873000
+|   |   |   |   |   |   |   |   |   |   |   •Kiosk.MasonryCollectionViewCell:0x103b12ba0'MasonryCell'
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x103c1d190- AMBIGUOUS LAYOUT for UIView:0x103c1d190.minX{id: 331}, UIView:0x103c1d190.minY{id: 328}
+|   |   |   |   |   |   |   |   |   |   |   |   |   *ORTagBasedAutoStackView:0x103b12ee0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIImageView:0x103b10350
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x103b10680
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARItalicsSerifLabel:0x103b19480
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x104121120
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x103b1a990
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x103c06860
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.ActionButton:0x103c05270
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIButtonLabel:0x103c09a20
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSansSerifLabelWithChevron:0x103c09f60
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   UIImageView:0x103c1be00
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.WhitespaceGobbler:0x10410e6b0
+|   |   |   |   |   |   |   |   |   |   |   •Kiosk.MasonryCollectionViewCell:0x104123d80'MasonryCell'
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x104141b80- AMBIGUOUS LAYOUT for UIView:0x104141b80.minX{id: 492}, UIView:0x104141b80.minY{id: 489}
+|   |   |   |   |   |   |   |   |   |   |   |   |   *ORTagBasedAutoStackView:0x104127e20
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIImageView:0x104115960
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10412eff0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARItalicsSerifLabel:0x1041282c0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x10410ffb0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x104137760
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10410d5a0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.ActionButton:0x10413d010
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIButtonLabel:0x10413d310
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSansSerifLabelWithChevron:0x10413d650
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   UIImageView:0x104141330
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.WhitespaceGobbler:0x104105740
+|   |   |   |   |   |   |   |   |   |   |   •Kiosk.MasonryCollectionViewCell:0x10413d990'MasonryCell'
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x1046054c0- AMBIGUOUS LAYOUT for UIView:0x1046054c0.minX{id: 653}, UIView:0x1046054c0.minY{id: 650}
+|   |   |   |   |   |   |   |   |   |   |   |   |   *ORTagBasedAutoStackView:0x10413dcd0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIImageView:0x10413e5d0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10413f1a0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARItalicsSerifLabel:0x10413f4d0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x104606760
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10413fb30
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10413fe60
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.ActionButton:0x104144670
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIButtonLabel:0x104144970
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSansSerifLabelWithChevron:0x104144cb0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   UIImageView:0x104604c70
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.WhitespaceGobbler:0x104606400
+|   |   |   |   |   |   |   |   |   |   |   •Kiosk.MasonryCollectionViewCell:0x104608580'MasonryCell'
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x104611780- AMBIGUOUS LAYOUT for UIView:0x104611780.minX{id: 814}, UIView:0x104611780.minY{id: 811}
+|   |   |   |   |   |   |   |   |   |   |   |   |   *ORTagBasedAutoStackView:0x1046065a0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIImageView:0x104608d20
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x104609050
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARItalicsSerifLabel:0x1046095e0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x104612990
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10460a3d0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10460a960
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.ActionButton:0x10460aef0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIButtonLabel:0x10460c3f0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSansSerifLabelWithChevron:0x10460c730
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   UIImageView:0x104610ee0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.WhitespaceGobbler:0x1046126c0
+|   |   |   |   |   |   |   |   |   |   |   •Kiosk.MasonryCollectionViewCell:0x104609ea0'MasonryCell'
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x103b1a730- AMBIGUOUS LAYOUT for UIView:0x103b1a730.minX{id: 975}, UIView:0x103b1a730.minY{id: 972}
+|   |   |   |   |   |   |   |   |   |   |   |   |   *ORTagBasedAutoStackView:0x104609380
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIImageView:0x104609910
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10460ccd0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARItalicsSerifLabel:0x10460d000
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x103b1b450
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10460d660
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSerifLabel:0x10460dac0
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.ActionButton:0x10460e810
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   *UIButtonLabel:0x10460f500
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *ARSansSerifLabelWithChevron:0x10460f970
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   UIImageView:0x103b24940
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   *Kiosk.WhitespaceGobbler:0x103b1b2b0
+|   |   |   |   |   |   |   |   |   |   |   _UIScrollViewScrollIndicator:0x103b176c0
+|   |   |   |   |   |   |   |   |   |   |   |   UIView:0x103b17890
+|   |   |   |   |   |   |   |   |   |   |   _UIScrollViewScrollIndicator:0x103b166b0
+|   |   |   |   |   |   |   |   |   |   |   |   UIView:0x103b16a80
+|   |   |   |   |   |   |   |   |   |   Kiosk.Spinner:0x104408850
+|   |   |   |   |   |   |   |   |   |   |   UIView:0x104112850
+|   |   |   |   |   |   |   |   |   |   *_UILayoutGuide:0x103c19910
+|   |   |   |   |   |   |   |   |   |   *_UILayoutGuide:0x103c19ac0
+|   |   |   |   |   |   |   |   |   |   *Kiosk.SwitchView:0x104119030
+|   |   |   |   |   |   |   |   |   |   |   *UIButton:0x1041254f0
+|   |   |   |   |   |   |   |   |   |   |   |   UIButtonLabel:0x10412b230
+|   |   |   |   |   |   |   |   |   |   |   *UIButton:0x10412b900
+|   |   |   |   |   |   |   |   |   |   |   |   UIButtonLabel:0x10412c0d0
+|   |   |   |   |   |   |   |   |   |   |   *UIButton:0x10412c7a0
+|   |   |   |   |   |   |   |   |   |   |   |   UIButtonLabel:0x10412cf70
+|   |   |   |   |   |   |   |   |   |   |   *UIButton:0x10412d640
+|   |   |   |   |   |   |   |   |   |   |   |   UIButtonLabel:0x10412de10
+|   |   |   |   |   |   |   |   |   |   |   *UIButton:0x10412e4e0
+|   |   |   |   |   |   |   |   |   |   |   |   UIButtonLabel:0x10412ecb0
+|   |   |   |   |   |   |   |   |   |   |   *UIButton:0x10412f380
+|   |   |   |   |   |   |   |   |   |   |   |   UIButtonLabel:0x10412ffa0
+|   |   |   |   |   |   |   |   |   |   |   *UIView:0x104130670
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x104130810
+|   |   |   |   |   |   |   |   |   |   |   |   *UIView:0x1041309b0
+|   |   |   |   |   |   |   •UINavigationBar:0x104113e70
+|   |   |   |   |   |   |   |   _UIBarBackground:0x10411bda0
+|   |   |   |   |   |   |   |   UIKit.NavigationBarContentView:0x10581f400
+|   |   |   |   |   |   |   |   |   UIKit.NavigationBarTransitionContainer:0x104114520
+|   |   |   |   |   |   |   |   |   |   _UINavigationBarHostedViewContainer:0x104114890
+|   |   |   |   |   |   |   |   |   |   UIView:0x1041146f0
+|   |   |   |   |   |   |   |   |   |   UIKit.NavigationBarPlatterContainer:0x104114c50
+|   |   |   |   |   |   |   |   |   |   |   UIKit._GlassGroupView:0x104115140
+|   |   |   |   |   |   |   |   _UIPointerInteractionAssistantEffectContainerView:0x104219fa0
+|   |   |   |   |   |   |   _UIFloatingBarContainerView:0x104121310
+|   |   |   |   |   |   |   |   _TtGC5UIKitP10$186d076ac22FloatingBarHostingViewVS_20FloatingBarContainer_:0x104122e60
+|   |   |   |   |   |   |   |   _UIPointerInteractionAssistantEffectContainerView:0x104125020
+|   |   |   |   |   +Kiosk.ActionButton:0x104111940
+|   |   |   |   |   |   *UIButtonLabel:0x103b0e150
+|   |   |   |   |   UIView:0x10420c020
+|   |   |   |   |   |   UIView:0x10420c3c0
+|   |   |   |   |   |   |   UILabel:0x10420c560
+|   |   |   |   |   |   |   UILabel:0x1041106e0
+|   |   |   |   |   |   |   UILabel:0x104110e70
+|   |   |   |   |   |   |   UILabel:0x1041111a0
+|   |   |   |   |   UIView:0x1041117a0
+|   |   |   |   |   |   •UIView:0x104124bc0
+|   |   |   |   |   |   |   UILabel:0x104126710
+|   |   |   |   |   |   |   UILabel:0x104126a40
+|   |   |   |   |   |   |   *_UILayoutGuide:0x1041251c0
+|   |   |   |   |   |   |   *_UILayoutGuide:0x104126fd0
+|   |   |   |   |   *_UILayoutGuide:0x104112e50
+|   |   |   |   |   *_UILayoutGuide:0x104113200
+|   *Kiosk.MenuButton:0x103c0bbf0
+|   |   *UIButtonLabel:0x103c0c9e0
+|   |   UIImageView:0x103c15ef0
+
+Legend:
+	* - is laid out with auto layout
+	+ - is laid out manually, but is represented in the layout engine because translatesAutoresizingMaskIntoConstraints = YES
+	• - layout engine host
+
+(lldb) detach
+Process 4882 detached
+(lldb) quit

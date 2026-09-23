@@ -1,0 +1,46 @@
+(lldb) process attach --pid 4882
+Process 4882 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+    frame #0: 0x000000010386cb5c libsystem_kernel.dylib`mach_msg2_trap + 8
+libsystem_kernel.dylib`mach_msg2_trap:
+->  0x10386cb5c <+8>: ret    
+
+libsystem_kernel.dylib`macx_swapon:
+    0x10386cb60 <+0>: mov    x16, #-0x30               ; =-48 
+    0x10386cb64 <+4>: svc    #0x80
+    0x10386cb68 <+8>: ret    
+Target 0: (Kiosk) stopped.
+Executable binary set to "/Users/miguelsalinas/Library/Developer/CoreSimulator/Devices/BF744ACB-5716-44AC-955A-4CA5590DF285/data/Containers/Bundle/Application/113CB451-B2FF-48A9-BD83-6009A4F7470E/Kiosk.app/Kiosk".
+Architecture set to: arm64-apple-ios-simulator.
+(lldb) command source -s 0 '/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/orient.lldb'
+Executing commands in '/private/tmp/claude-501/-Users-miguelsalinas-openuikit/aef835fc-6f53-4d0d-ab62-e3783e289290/scratchpad/golden/orient.lldb'.
+(lldb) expr -l objc -O -- @([[UIDevice currentDevice] orientation])
+0
+
+(lldb) expr -l objc -O -- [[[[UIApplication sharedApplication] delegate] window] windowScene]
+<UIWindowScene: 0x1042081f0; role: UIWindowSceneSessionRoleApplication; activationState: UISceneActivationStateForegroundActive> {
+    session = <UISceneSession: 0x600002111270; persistentIdentifier: 967D5C12-02B5-4929-977B-29C69F6B983C> {
+        configuration = <UISceneConfiguration: 0x6000021323f0; name: 0x0>;
+    };
+    delegate = (nil);
+    effectiveGeometry = <UIWindowSceneGeometry: 0x6000021007d0; coordinateSpace.bounds: {{0, 0}, {1024, 768}}; interfaceOrientation: landscapeRight (3); isInteractivelyResizing: NO>;
+    screen = <UIScreen: 0x103c05610; bounds: {{0, 0}, {1024, 768}}; mode: <UIScreenMode: 0x600000209c20; size = 1536.000000 x 2048.000000>>;
+    windows = {
+        <UIWindow: 0x1043060a0; frame = (0 0; 1024 768); autoresize = W+H; gestureRecognizers = <NSArray: 0x600000c08a20>; layer = <UIWindowLayer: 0x6000017341c0>>;
+    }
+}
+
+(lldb) expr -l objc -O -- [[[[[UIApplication sharedApplication] delegate] window] windowScene] effectiveGeometry]
+<UIWindowSceneGeometry: 0x6000021323f0> {
+    coordinateSpace.bounds: {{0, 0}, {1024, 768}};
+    interfaceOrientation: landscapeRight (3);
+    isInterfaceOrientationLocked: NO;
+    isInteractivelyResizing: NO;
+}
+
+(lldb) expr -l objc -O -- NSStringFromCGRect([[UIScreen mainScreen] nativeBounds])
+{{0, 0}, {1536, 2048}}
+
+(lldb) detach
+Process 4882 detached
+(lldb) quit

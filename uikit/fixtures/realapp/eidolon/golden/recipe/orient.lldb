@@ -1,0 +1,6 @@
+expr -l objc -O -- @([[UIDevice currentDevice] orientation])
+expr -l objc -O -- [[[[UIApplication sharedApplication] delegate] window] windowScene]
+expr -l objc -O -- [[[[[UIApplication sharedApplication] delegate] window] windowScene] effectiveGeometry]
+expr -l objc -O -- NSStringFromCGRect([[UIScreen mainScreen] nativeBounds])
+detach
+quit
