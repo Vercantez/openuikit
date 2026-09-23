@@ -219,7 +219,7 @@ final class AppDrawingTests: XCTestCase {
     func testRectAndRoundedRectConstruction() {
         let r = CGRect(x: 10, y: 20, width: 100, height: 50)
         let rect = UIBezierPath(rect: r)
-        XCTAssertEqual(rect.cgPath.elements.count, 5)  // move + 3 lines + close
+        XCTAssertEqual(rect._path.elements.count, 5)  // move + 3 lines + close
         XCTAssertEqual(rect.bounds, r)
         XCTAssertTrue(rect.contains(CGPoint(x: 11, y: 21)))
         XCTAssertFalse(rect.contains(CGPoint(x: 9, y: 21)))
@@ -279,7 +279,7 @@ final class AppDrawingTests: XCTestCase {
         let outer = UIBezierPath(rect: CGRect(x: 0, y: 0, width: 40, height: 40))
         let inner = UIBezierPath(rect: CGRect(x: 10, y: 10, width: 20, height: 20))
         outer.append(inner)
-        XCTAssertEqual(outer.cgPath.elements.count, 10)
+        XCTAssertEqual(outer._path.elements.count, 10)
         // Nonzero: both squares wind the same way, so the middle is filled.
         XCTAssertTrue(outer.contains(CGPoint(x: 20, y: 20)))
         outer.usesEvenOddFillRule = true

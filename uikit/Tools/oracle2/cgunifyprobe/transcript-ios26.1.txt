@@ -27,6 +27,11 @@ point(1,1).applying (10.0, 24.242640687119284)
 rect(0,0,10,10).applying (-4.142135623730949, 20.0, 28.284271247461902, 42.42640687119285)
 view.transform=scale2 frame=(-10.0, 0.0, 80.0, 40.0) transform=[2.0 0 0 2.0 0 0]
 identity.isIdentity true
+## path
+rect.cgPath m(1.0, 2.0) l(4.0, 2.0) l(4.0, 6.0) l(1.0, 6.0) z
+oval.cgPath m(4.0, 1.0) c(2.0, 2.0) c(0.0, 1.0) c(2.0, 0.0) c(4.0, 1.0) z
+UIBezierPath(cgPath: ellipse).bounds (0.0, 0.0, 4.0, 2.0) same-elements true
+cgPath = rect -> bounds (0.0, 0.0, 2.0, 2.0) elements m(0.0, 0.0) l(2.0, 0.0) l(2.0, 2.0) l(0.0, 2.0) z
 ## bitmap context
 makeImage 2x2 row0 255,0,0,255 0,0,0,0
 ## imageio

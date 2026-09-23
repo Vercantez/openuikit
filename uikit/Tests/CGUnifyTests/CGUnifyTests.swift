@@ -35,7 +35,7 @@ final class CGUnifyTests: XCTestCase {
 
     @MainActor
     func testTypesTranscriptMatchesIOS26_1() throws {
-        let expected = try oracle(sections: ["color", "layer", "transform", "bitmap context", "imageio"])
+        let expected = try oracle(sections: ["color", "layer", "transform", "path", "bitmap context", "imageio"])
         let actual = cgUnifyTypesTranscript()
         XCTAssertFalse(expected.isEmpty)
         for (index, pair) in zip(expected, actual).enumerated() where pair.0 != pair.1 {
