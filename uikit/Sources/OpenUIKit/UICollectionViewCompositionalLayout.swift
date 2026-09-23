@@ -374,6 +374,12 @@ public final class NSCollectionLayoutSection {
     public var orthogonalScrollingBehavior: UICollectionLayoutSectionOrthogonalScrollingBehavior = .none
     public var boundarySupplementaryItems: [NSCollectionLayoutBoundarySupplementaryItem] = []
     public var supplementariesFollowContentInsets = true
+    /// `NSCollectionLayoutSection.list(using:)`'s configuration
+    /// (UICollectionViewListCell.swift). Stored on the object: an
+    /// ObjectIdentifier-keyed side table outlived its sections, and a new
+    /// section allocated at a dead one's address inherited its list
+    /// configuration (CollectionLayoutAnchorTests, flaky with the heap).
+    var _listConfigurationSlot: UICollectionLayoutListConfiguration?
 
     public init(group: NSCollectionLayoutGroup) {
         self.group = group
@@ -435,6 +441,10 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
     }
 
     private let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider
+    /// `init(list:)`'s configuration, on the object for the same reason as
+    /// `NSCollectionLayoutSection._listConfigurationSlot`. `final`: no
+    /// Swift vtable slot (the Objective-C subclassing rule).
+    final var _listConfigurationSlot: UICollectionLayoutListConfiguration?
 
     public init(section: NSCollectionLayoutSection) {
         self.configuration = UICollectionViewCompositionalLayoutConfiguration()

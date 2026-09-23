@@ -123,6 +123,9 @@ final class UIEnvironmentCompatTests: XCTestCase {
         let scene = UIWindowScene()
         scene._hostConfigure(interfaceOrientation: .portraitUpsideDown)
         let sceneWindow = UIWindow(windowScene: scene)
+        // A window scene connects on assignment; leave none behind for
+        // later suites (ValueTypeTailTests shortcut delivery).
+        defer { UIApplication.shared._disconnect(scene: scene) }
         XCTAssertTrue(sceneWindow.windowScene === scene)
         XCTAssertEqual(sceneWindow.windowScene?.interfaceOrientation,
                        .portraitUpsideDown)

@@ -124,12 +124,26 @@ private final class RecordingFieldDelegate: UITextFieldDelegate {
 #endif
 final class TextFieldDelegateTests: XCTestCase {
 
+    /// The window each test focuses in. UIApplication holds its windows
+    /// WEAKLY (as UIKit does: an unretained window is deallocated even after
+    /// makeKeyAndVisible), so a test that wrote `let (_, f) = makeField(d)`
+    /// lost the window as soon as the optimizer chose to release it, the
+    /// field had no window, and becomeFirstResponder() failed — pass or fail
+    /// depended on codegen, not on the port. The test owns it instead.
+    private var window: UIWindow?
+
+    override func tearDown() {
+        window = nil
+        super.tearDown()
+    }
+
     private func makeField(_ d: RecordingFieldDelegate) -> (UIWindow, UITextField) {
         let w = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         let f = UITextField(frame: CGRect(x: 10, y: 10, width: 200, height: 34))
         f.delegate = d
         w.addSubview(f)
         w.makeKeyAndVisible()
+        window = w
         return (w, f)
     }
 

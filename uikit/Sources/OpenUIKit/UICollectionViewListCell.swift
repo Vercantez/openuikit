@@ -151,46 +151,10 @@ extension NSCollectionLayoutSection {
     }
 }
 
-// Stored beside the section object. A section is a class, so this lives on
-// the instance through objc-style associated storage without Foundation.
 extension NSCollectionLayoutSection {
-    // Box so the value type can hang off the class.
     fileprivate var _listConfigurationStorage: UICollectionLayoutListConfiguration? {
-        get { _ListConfigBox.get(self) }
-        set { _ListConfigBox.set(self, newValue) }
-    }
-}
-
-/// One boxed list configuration and the object it belongs to. The owner is
-/// held weakly and compared on every read: an ObjectIdentifier is only an
-/// address, and a later section or layout allocated at a freed one's address
-/// must not inherit its list configuration (that leak turned plain
-/// compositional layouts into 52-pt list rows in whichever test ran after a
-/// list-layout test).
-private struct _OwnedListConfiguration {
-    weak var owner: AnyObject?
-    let configuration: UICollectionLayoutListConfiguration
-}
-
-@MainActor
-private enum _ListConfigBox {
-    static var map: [ObjectIdentifier: _OwnedListConfiguration] = [:]
-    static func get(_ section: NSCollectionLayoutSection) -> UICollectionLayoutListConfiguration? {
-        guard let entry = map[ObjectIdentifier(section)] else { return nil }
-        guard entry.owner === section else {
-            map.removeValue(forKey: ObjectIdentifier(section))
-            return nil
-        }
-        return entry.configuration
-    }
-    static func set(_ section: NSCollectionLayoutSection,
-                    _ value: UICollectionLayoutListConfiguration?) {
-        map = map.filter { $0.value.owner != nil }
-        if let value {
-            map[ObjectIdentifier(section)] = _OwnedListConfiguration(owner: section, configuration: value)
-        } else {
-            map.removeValue(forKey: ObjectIdentifier(section))
-        }
+        get { _listConfigurationSlot }
+        set { _listConfigurationSlot = newValue }
     }
 }
 
@@ -211,30 +175,8 @@ extension UICollectionViewCompositionalLayout {
     }
 
     var _storedListConfiguration: UICollectionLayoutListConfiguration? {
-        get { _LayoutListBox.get(self) }
-        set { _LayoutListBox.set(self, newValue) }
-    }
-}
-
-@MainActor
-private enum _LayoutListBox {
-    static var map: [ObjectIdentifier: _OwnedListConfiguration] = [:]
-    static func get(_ layout: UICollectionViewCompositionalLayout) -> UICollectionLayoutListConfiguration? {
-        guard let entry = map[ObjectIdentifier(layout)] else { return nil }
-        guard entry.owner === layout else {
-            map.removeValue(forKey: ObjectIdentifier(layout))
-            return nil
-        }
-        return entry.configuration
-    }
-    static func set(_ layout: UICollectionViewCompositionalLayout,
-                    _ value: UICollectionLayoutListConfiguration?) {
-        map = map.filter { $0.value.owner != nil }
-        if let value {
-            map[ObjectIdentifier(layout)] = _OwnedListConfiguration(owner: layout, configuration: value)
-        } else {
-            map.removeValue(forKey: ObjectIdentifier(layout))
-        }
+        get { _listConfigurationSlot }
+        set { _listConfigurationSlot = newValue }
     }
 }
 

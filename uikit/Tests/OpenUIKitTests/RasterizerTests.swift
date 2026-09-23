@@ -1,6 +1,21 @@
 // Tests for the rasterizer module (Sources/OpenCoreGraphics/Rasterizer.swift).
 import XCTest
 @testable import OpenCoreGraphics
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
+
+/// CPU seconds this thread has run. The fill budget below is measured in CPU
+/// time, not wall time: under the merge gate's load (renders, docker, other
+/// agents: load average 200+ on 16 cores) wall time stretched past the budget
+/// while the work did not change (it failed once under the gate, passed alone).
+private func threadCPUSeconds() -> Double {
+    var ts = timespec()
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts)
+    return Double(ts.tv_sec) + Double(ts.tv_nsec) / 1e9
+}
 
 // XCTest re-exports Foundation/CoreGraphics on Apple platforms; pin the
 // geometry types to the OpenCoreGraphics implementations under test.
@@ -407,7 +422,7 @@ final class RasterizerTests: XCTestCase {
         // 1400x1000) canvas must finish well within the suite budget even in
         // debug builds. This is a smoke test, not a benchmark.
         let c = makeCanvas(width: 1400, height: 1000, scale: 2)
-        let start = Date()
+        let start = threadCPUSeconds()
         for i in 0..<300 {
             let x = CGFloat((i * 37) % 600), y = CGFloat((i * 53) % 400)
             c.fill(Path.roundedRect(CGRect(x: x, y: y, width: 90, height: 70), cornerRadius: 12),
@@ -418,8 +433,8 @@ final class RasterizerTests: XCTestCase {
             c.fill(Path.roundedRect(CGRect(x: x, y: y, width: 60, height: 60), cornerRadius: 30),
                    color: CanvasColor(red: 0.9, green: 0.4, blue: 0.2, alpha: 0.6))
         }
-        let elapsed = Date().timeIntervalSince(start)
-        XCTAssertLessThan(elapsed, 10.0, "400 large AA fills took \(elapsed)s")
+        let elapsed = threadCPUSeconds() - start
+        XCTAssertLessThan(elapsed, 10.0, "400 large AA fills took \(elapsed) s of CPU")
     }
 
     // MARK: transforms

@@ -406,6 +406,9 @@ final class CollectionLayoutAnchorTests: XCTestCase {
         XCTAssertEqual(cv.contentSize, CGSize(width: 300, height: 2660))
         let badges = cv.visibleSupplementaryViews(ofKind: kind)
         XCTAssertEqual(badges.count, 8, "4 rows × 2 badges within 600 pt")
+        // A failure here must not trap: an index-out-of-range crash ends the
+        // whole xctest process and hides every suite after this one.
+        guard badges.count >= 2 else { return }
         XCTAssertEqual(badges[0].frame, CGRect(x: 135, y: 20, width: 20, height: 20))
         XCTAssertEqual(badges[1].frame, CGRect(x: 280, y: 20, width: 20, height: 20))
         XCTAssertTrue(cv.supplementaryView(forElementKind: kind, at: IndexPath(item: 1, section: 0)) === badges[1])
