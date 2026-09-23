@@ -1,0 +1,185 @@
+{
+ "source": "golden layout dump; Tools/compare/nnw_feed_masks.py",
+ "masks": [
+  {
+   "rect": [
+    340,
+    213.333,
+    21,
+    27.333
+   ],
+   "reason": "unread count of 'Today' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    329.667,
+    263.667,
+    31.333,
+    27.333
+   ],
+   "reason": "unread count of 'All Unread' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    351,
+    418.333,
+    10,
+    27.333
+   ],
+   "reason": "unread count of 'Craig Hockenberry' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    419.667,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Craig Hockenberry' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    340,
+    468.667,
+    21,
+    27.333
+   ],
+   "reason": "unread count of 'Daring Fireball' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    470,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Daring Fireball' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    351.667,
+    519,
+    9.333,
+    27.333
+   ],
+   "reason": "unread count of 'inessential' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    520.333,
+    24,
+    24
+   ],
+   "reason": "favicon of 'inessential' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    340.333,
+    569.333,
+    20.667,
+    27.333
+   ],
+   "reason": "unread count of 'Jason Kottke' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    570.667,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Jason Kottke' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    340.667,
+    619.667,
+    20.333,
+    27.333
+   ],
+   "reason": "unread count of 'Julia Evans' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    621,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Julia Evans' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    341,
+    670,
+    20,
+    27.333
+   ],
+   "reason": "unread count of 'Manton Reece' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    671.333,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Manton Reece' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    332.667,
+    720.333,
+    28.333,
+    27.333
+   ],
+   "reason": "unread count of 'Michael Tsai' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    721.667,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Michael Tsai' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    343,
+    770.667,
+    18,
+    27.333
+   ],
+   "reason": "unread count of 'NetNewsWire Blog' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    772,
+    24,
+    24
+   ],
+   "reason": "favicon of 'NetNewsWire Blog' (downloaded, or a placeholder until it is)"
+  },
+  {
+   "rect": [
+    340.333,
+    820.667,
+    20.667,
+    27.333
+   ],
+   "reason": "unread count of 'Scripting News' (fetched articles, live data)"
+  },
+  {
+   "rect": [
+    32,
+    822,
+    24,
+    24
+   ],
+   "reason": "favicon of 'Scripting News' (downloaded, or a placeholder until it is)"
+  }
+ ]
+}

@@ -333,7 +333,22 @@ def missing_content(gluma, oluma, scale, comps):
     return worst
 
 
-def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1):
+def mask_array(shape, masks, scale):
+    """Boolean (H, W) array, True inside any mask. Each mask is a dict with
+    `rect` = [x, y, w, h] in POINTS (scaled by `scale` to pixels, outward to
+    whole pixels) and a `reason`."""
+    m = np.zeros(shape[:2], dtype=bool)
+    for mask in masks or []:
+        x, y, w, h = mask["rect"]
+        x0 = max(0, int(np.floor(x * scale))); y0 = max(0, int(np.floor(y * scale)))
+        x1 = min(shape[1], int(np.ceil((x + w) * scale)))
+        y1 = min(shape[0], int(np.ceil((y + h) * scale)))
+        if x1 > x0 and y1 > y0:
+            m[y0:y1, x0:x1] = True
+    return m
+
+
+def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1, masks=None):
     """Composite both images over white (each with its own alpha encoding)
     and compare the result plus the raw alpha channel.
 
@@ -359,7 +374,18 @@ def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1)
     # identically on both sides, so it is still compared directly)
     delta = np.maximum(np.abs(gw - ow).max(axis=2), np.abs(ga - oa)[..., 0])
     match = (delta <= PIXEL_TOL)
-    score = 100.0 * match.mean()
+    unmasked_score = 100.0 * match.mean()
+    masked = mask_array(delta.shape, masks, scale) if masks else None
+    if masked is not None:
+        # Masked pixels (live-data regions) are left out of the score and of
+        # the structural gates. The unmasked score is reported alongside, so a
+        # mask is never read as fidelity.
+        keep = ~masked
+        score = 100.0 * match[keep].mean() if keep.any() else 100.0
+        delta = np.where(masked, 0.0, delta)
+        gw = np.where(masked[..., None], ow, gw)
+    else:
+        score = unmasked_score
     mae = float(delta.mean())
     comps = severe_components(delta)
     blob, bbox = largest_diff_blob(delta, scale, comps)
@@ -371,6 +397,9 @@ def compare_pixels(gpath, opath, diff_path, golden_premultiplied=False, scale=1)
         heat[..., 2] = np.where(delta > STRUCT_DELTA, 255, 0)  # blue = severe mask
         Image.fromarray(heat).save(diff_path)
     res = {"score": round(score, 3), "mae": round(mae, 3), "blob": round(blob, 1)}
+    if masked is not None:
+        res["unmasked_score"] = round(unmasked_score, 3)
+        res["masked_fraction"] = round(100.0 * masked.mean(), 3)
     if bbox:
         res["blob_bbox"] = [round(v, 1) for v in bbox]
     if absent:
