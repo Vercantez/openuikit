@@ -80,9 +80,10 @@ public struct CanvasColor: Equatable, Sendable {
 /// CoreGraphics' colour. OpenUIKit's public colour API (`UIColor.cgColor`,
 /// CALayer's colour properties) speaks this type; the renderer converts it
 /// to `CanvasColor` at each use.
-public typealias CGColor = CoreGraphics.CGColor
-public typealias CGColorSpace = CoreGraphics.CGColorSpace
-public typealias CGImageAlphaInfo = CoreGraphics.CGImageAlphaInfo
+// (Re-exported, not re-declared: see Geometry.swift on collection sugar.)
+@_exported import class CoreGraphics.CGColor
+@_exported import class CoreGraphics.CGColorSpace
+@_exported import enum CoreGraphics.CGImageAlphaInfo
 
 extension CanvasColor {
     /// The renderer's value for a CoreGraphics colour. The model is kept: a
