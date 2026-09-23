@@ -28,8 +28,10 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
-import enum CoreGraphics.CGLineCap
-import enum CoreGraphics.CGLineJoin
+// cg-unify: CoreGraphics' own enums, re-exported (not re-declared: see
+// OpenCoreGraphics/Geometry.swift on collection sugar).
+@_exported import enum CoreGraphics.CGLineCap
+@_exported import enum CoreGraphics.CGLineJoin
 import class CoreGraphics.CGPath
 #elseif canImport(Foundation)
 import Foundation
@@ -49,12 +51,7 @@ public struct UIRectCorner: OptionSet, Sendable {
     public static let allCorners: UIRectCorner = [.topLeft, .topRight, .bottomLeft, .bottomRight]
 }
 
-#if canImport(CoreGraphics)
-// cg-unify: CoreGraphics' own enums where CoreGraphics exists, as UIKit's
-// `UIBezierPath.lineCapStyle` / `lineJoinStyle` declare them.
-public typealias CGLineCap = CoreGraphics.CGLineCap
-public typealias CGLineJoin = CoreGraphics.CGLineJoin
-#else
+#if !canImport(CoreGraphics)
 /// CG line cap styles (`CGLineCap`).
 public enum CGLineCap: Sendable { case butt, round, square }
 /// CG line join styles (`CGLineJoin`).

@@ -85,6 +85,26 @@ final class CGUnifyTests: XCTestCase {
         XCTAssertEqual(actual.count, expected.count)
     }
 
+    /// Collection-type sugar over the unified names folds into a type in a
+    /// client that imports Foundation, CoreGraphics, QuartzCore and UIKit
+    /// together (a name visible once as the type and once as a re-declared
+    /// typealias parsed `[String: CGSize]()` as a dictionary literal of
+    /// metatypes: NetNewsWire SingleLineUILabelSizer.swift:16). Before the
+    /// fix this test did not compile.
+    func testCollectionSugarOverUnifiedNamesIsAType() {
+        var sizes = [String: CGSize]()
+        sizes["a"] = CGSize(width: 1, height: 2)
+        let floats = [CGFloat](repeating: 1.5, count: 2)
+        var colors = [String: CGColor]()
+        colors["red"] = UIColor.red.cgColor
+        let layers = [CALayer]()
+        let transforms = [CGAffineTransform](repeating: .identity, count: 1)
+        let rects = [CGRect: Int]()
+        let points = [CGPoint]()
+        XCTAssertEqual(sizes.count + floats.count + colors.count + layers.count
+                       + transforms.count + rects.count + points.count, 5)
+    }
+
     /// The port's Core Animation names are QuartzCore's own classes.
     func testPortCoreAnimationNamesAreQuartzCore() {
         XCTAssertTrue(OpenUIKit.CALayer.self == QuartzCore.CALayer.self)

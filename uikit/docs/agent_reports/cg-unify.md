@@ -102,6 +102,24 @@ port type stays there.
   CALayer is a real KVC container (`opaque`, arbitrary keys, `filters.<name>.<key>`
   resolved by the filter's `name`; the port's filter tokens became key-value objects).
 
+### Phase 4: re-exported, not re-declared
+
+Every unified name was first a `public typealias X = Apple.X`. A client that
+imports Foundation/CoreGraphics/QuartzCore and UIKit then sees the name twice, and
+Swift parses `[String: CGSize]()`, `[CGFloat](repeating:count:)`, `[CALayer]()`,
+`[String: CGColor]()`, `[CGAffineTransform](…)` as collection LITERALS of metatypes
+("cannot call value of non-function type '[AnyHashable : CGSize.Type]'";
+NetNewsWire SingleLineUILabelSizer.swift:16, found by netnewswire-launch for the
+geometry names; measured for every unified name). All of them are now scoped
+`@_exported import`s of the one declaration: `struct Foundation.CGFloat`,
+`struct CoreFoundation.CGPoint/CGSize/CGRect` (`CoreFoundation.CGFloat` does not
+resolve for importers — measured), `CoreGraphics.CGVector/CGAffineTransform/
+CGColor/CGColorSpace/CGImageAlphaInfo/CGLineCap/CGLineJoin`, the eleven QuartzCore
+types, and `UniformTypeIdentifiers.UTType`. Linux re-exports `Foundation.CGFloat/
+CGPoint/CGSize/CGRect`; the guest (no Foundation) keeps the portable structs.
+`CGUnifyTests.testCollectionSugarOverUnifiedNamesIsAType` did not compile before.
+Pixels 193/193 byte-identical to main c0dca164; Linux build green.
+
 ## Tests (each fails before, passes after)
 
 * `Tests/CGUnifyTests` replays `Tools/oracle2/cgunifyprobe` (the same Swift the iOS
@@ -131,6 +149,8 @@ port type stays there.
 | `scripts/ops/local_guest_verify.sh` (747ef006) | `FOCUS_REAL_APPDELEGATE_LAUNCHED`, `rendered 15 screens; existing screens byte-identical 14/14`, **`REAL-APP SCREEN VERIFIED ON LINUX`**, `GUEST HOST INTERACTION VERIFIED ON LINUX` |
 | `full/iostarget/ios_guest.sh` (747ef006) | `IOS_TARGET_PROBE_MATCHES_IOS_26_1 lines=14`, `REAL-APP SCREEN VERIFIED ON LINUX`, **`IOS_TARGET_GUEST_VERIFIED target=arm64-apple-ios26.0-simulator`** (run right after local_guest_verify: run alone after host git activity it stops at "OpenUIKit subtree is dirty" listing the 5 tracked symlinks — the container's view of the host index; the coordinator owns that) |
 | Linux `swift:6.2-noble` (openrender, ConformanceApps, OpenUIKitTests) | green after the test fix |
+| final gate: `CHECK_ONLY=1 agent_merge.sh agent/cg-unify-phase3` (1b8aa78d) | `124/124 scenes pass`, `GUEST_ROUTE_CHECK_OK`, Linux build, **`checks passed (CHECK_ONLY)`** |
+| phase 4 gate: `CHECK_ONLY=1 agent_merge.sh agent/cg-unify-phase4` (286370f0) | `124/124 scenes pass`, `GUEST_ROUTE_CHECK_OK`, Linux build, **`checks passed (CHECK_ONLY)`**; `local_guest_verify.sh` on 286370f0: 14/14 byte-identical, `REAL-APP SCREEN VERIFIED ON LINUX`. `ios_guest.sh` on 286370f0 stopped before compiling at the container's "subtree is dirty" check (symlinks; then `machorun/tests/bin/.../libdup_link.dylib`); phase 4 changes no guest-compiled code (all under `canImport(CoreGraphics)` or the Foundation branch the guest does not take), and ios_guest passed on 747ef006 |
 | render time, gate scenes (main binary vs phase 3, alternating) | 25.2 s / 20.2 s, 19.4 s / 15.8 s: no slowdown from the interposers |
 
 ## What stays on the port's own types, and why

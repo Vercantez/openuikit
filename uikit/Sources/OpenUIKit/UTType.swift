@@ -9,8 +9,7 @@
 // its identifiers are the UTI strings the iOS 26.1 document-picker headers
 // name.
 #if canImport(CoreGraphics) && canImport(UniformTypeIdentifiers)
-import UniformTypeIdentifiers
-public typealias UTType = UniformTypeIdentifiers.UTType
+@_exported import struct UniformTypeIdentifiers.UTType
 #else
 public struct UTType: Hashable, Sendable {
     public let identifier: String
