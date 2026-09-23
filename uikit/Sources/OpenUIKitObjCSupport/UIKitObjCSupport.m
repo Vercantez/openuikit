@@ -82,3 +82,8 @@ NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSep
     return [result copy];
 }
 #endif
+
+/* UIWindow.Level (UIEvent.swift), MEASURED iOS 26.1 podsurfaceprobe "## windowlevel". */
+const UIWindowLevel UIWindowLevelNormal = 0;
+const UIWindowLevel UIWindowLevelStatusBar = 1000;
+const UIWindowLevel UIWindowLevelAlert = 2000;

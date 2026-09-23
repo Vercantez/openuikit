@@ -41,7 +41,7 @@ static const char *E(UIEdgeInsets i) {
 
 static const char *const kSections[] = {
     "view", "constraint", "label", "paragraph", "attributes", "button", "activity", "image", "imageview",
-    "appdelegate", "vfl", NULL,
+    "appdelegate", "vfl", "webview", "activity2", "pasteboard", "windowlevel", NULL,
 };
 
 // FLKAutoLayout (translatesAutoresizingMaskIntoConstraints), Artsy+UILabels
@@ -284,6 +284,87 @@ static void vflSection(void) {
     } @catch (NSException *e) { emit("unknown view -> exception %s", e.name.UTF8String); }
 }
 
+// NJKWebViewProgress / DZNWebViewController / Eidolon's AppDelegate: UIWebView.
+@interface OUKWebDelegate : NSObject <UIWebViewDelegate>
+@end
+@implementation OUKWebDelegate
+- (BOOL)webView:(UIWebView *)w shouldStartLoadWithRequest:(NSURLRequest *)r navigationType:(UIWebViewNavigationType)t {
+    emit("shouldStartLoad url=%s navigationType=%ld mainDocument=%s", r.URL.absoluteString.UTF8String, (long)t,
+         r.mainDocumentURL ? r.mainDocumentURL.absoluteString.UTF8String : "nil");
+    return YES;
+}
+- (void)webViewDidStartLoad:(UIWebView *)w { emit("didStartLoad loading=%s", B(w.loading)); }
+- (void)webViewDidFinishLoad:(UIWebView *)w { emit("didFinishLoad loading=%s", B(w.loading)); }
+- (void)webView:(UIWebView *)w didFailLoadWithError:(NSError *)e { emit("didFail %s %ld", e.domain.UTF8String, (long)e.code); }
+@end
+
+static void webViewSection(void) {
+    UIWebView *web = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 100, 80)];
+    emit("superclass=%s scrollView isKindOfUIScrollView=%s frame=%g,%g", class_getName(class_getSuperclass([UIWebView class])),
+         B([web.scrollView isKindOfClass:[UIScrollView class]]), web.scrollView.frame.size.width,
+         web.scrollView.frame.size.height);
+    emit("delegate=%s request=%s loading=%s canGoBack=%s canGoForward=%s scalesPageToFit=%s", web.delegate ? "set" : "nil",
+         web.request ? "set" : "nil", B(web.loading), B(web.canGoBack), B(web.canGoForward), B(web.scalesPageToFit));
+    emit("UIWebViewNavigationType LinkClicked=%ld FormSubmitted=%ld BackForward=%ld Reload=%ld FormResubmitted=%ld Other=%ld",
+         (long)UIWebViewNavigationTypeLinkClicked, (long)UIWebViewNavigationTypeFormSubmitted,
+         (long)UIWebViewNavigationTypeBackForward, (long)UIWebViewNavigationTypeReload,
+         (long)UIWebViewNavigationTypeFormResubmitted, (long)UIWebViewNavigationTypeOther);
+    OUKWebDelegate *delegate = [OUKWebDelegate new];
+    web.delegate = delegate;
+    [web loadHTMLString:@"<p>x</p>" baseURL:nil];
+    emit("after loadHTMLString (same turn) loading=%s request=%s", B(web.loading),
+         web.request ? web.request.URL.absoluteString.UTF8String : "nil");
+    NSDate *until = [NSDate dateWithTimeIntervalSinceNow:2];
+    while (web.loading || !web.request) {
+        if ([until timeIntervalSinceNow] < 0) break;
+        [[NSRunLoop mainRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    }
+    [[NSRunLoop mainRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    emit("settled loading=%s request=%s", B(web.loading), web.request ? web.request.URL.absoluteString.UTF8String : "nil");
+    web.delegate = nil;
+}
+
+// DZNPolyActivity : UIActivity (no overrides of the queried members).
+@interface OUKPlainActivity : UIActivity
+@end
+@implementation OUKPlainActivity
+@end
+
+static void activity2Section(void) {
+    OUKPlainActivity *activity = [[OUKPlainActivity alloc] init];
+    emit("superclass=%s activityCategory=%ld UIActivityCategoryAction=%ld UIActivityCategoryShare=%ld",
+         class_getName(class_getSuperclass([OUKPlainActivity class])), (long)[OUKPlainActivity activityCategory],
+         (long)UIActivityCategoryAction, (long)UIActivityCategoryShare);
+    emit("activityType=%s activityTitle=%s activityImage=%s activityViewController=%s canPerform=%s",
+         S(activity.activityType), S(activity.activityTitle), activity.activityImage ? "image" : "nil",
+         activity.activityViewController ? "vc" : "nil", B([activity canPerformWithActivityItems:@[@"x"]]));
+    [activity prepareWithActivityItems:@[@"x"]];
+    [activity activityDidFinish:YES];
+    emit("activityDidFinish: returned");
+}
+
+// DZNPolyActivity: [[UIPasteboard generalPasteboard] setURL:].
+static void pasteboardSection(void) {
+    UIPasteboard *board = [UIPasteboard pasteboardWithUniqueName];
+    emit("unique name empty=%s", B(board.name.length == 0));
+    board.URL = [NSURL URLWithString:@"https://artsy.net/x"];
+    emit("URL=%s string=%s numberOfItems=%ld hasURLs=%s hasStrings=%s", board.URL.absoluteString.UTF8String,
+         S(board.string), (long)board.numberOfItems, B(board.hasURLs), B(board.hasStrings));
+    board.string = @"hello";
+    emit("string=%s URL=%s numberOfItems=%ld", S(board.string), board.URL ? board.URL.absoluteString.UTF8String : "nil",
+         (long)board.numberOfItems);
+    [UIPasteboard removePasteboardWithName:board.name];
+}
+
+// SVProgressHUD: UIWindowLevel.
+static void windowLevelSection(void) {
+    emit("UIWindowLevelNormal=%g StatusBar=%g Alert=%g", UIWindowLevelNormal, UIWindowLevelStatusBar, UIWindowLevelAlert);
+    UIWindow *w = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    emit("new window level=%g", w.windowLevel);
+    w.windowLevel = UIWindowLevelAlert + 1;
+    emit("set Alert+1 -> %g", w.windowLevel);
+}
+
 const char *OUKPodSurfaceSection(int index) {
     return index >= 0 && index < (int)(sizeof kSections / sizeof kSections[0]) ? kSections[index] : NULL;
 }
@@ -302,4 +383,8 @@ void OUKPodSurfaceRun(const char *name, OUKPodSurfaceSink sink, void *context) {
     else if (!strcmp(name, "imageview")) imageViewSection();
     else if (!strcmp(name, "appdelegate")) appDelegateSection();
     else if (!strcmp(name, "vfl")) vflSection();
+    else if (!strcmp(name, "webview")) webViewSection();
+    else if (!strcmp(name, "activity2")) activity2Section();
+    else if (!strcmp(name, "pasteboard")) pasteboardSection();
+    else if (!strcmp(name, "windowlevel")) windowLevelSection();
 }

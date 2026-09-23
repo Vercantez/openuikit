@@ -603,6 +603,31 @@ typedef NS_OPTIONS(NSUInteger, NSLayoutFormatOptions) {
 extern NSDictionary<NSString *, id> *_NSDictionaryOfVariableBindings(NSString *commaSeparatedKeysString, _Nullable id firstValue, ...);
 #endif
 
+/* UIActivity.h / UIWindow.h (iOS 26.1 SDK values). */
+typedef NS_ENUM(NSInteger, UIActivityCategory) {
+    UIActivityCategoryAction, UIActivityCategoryShare,
+} NS_SWIFT_NAME(UIActivityCategoryObjC);
+typedef CGFloat UIWindowLevel NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UIWindowLevelObjC);
+extern const UIWindowLevel UIWindowLevelNormal;
+extern const UIWindowLevel UIWindowLevelAlert;
+extern const UIWindowLevel UIWindowLevelStatusBar;
+
+/* UIWebView.h (iOS 26.1 SDK): the navigation types and the delegate
+ * protocol NJKWebViewProgress and DZNWebViewController implement. */
+@class UIWebView;
+typedef NS_ENUM(NSInteger, UIWebViewNavigationType) {
+    UIWebViewNavigationTypeLinkClicked, UIWebViewNavigationTypeFormSubmitted,
+    UIWebViewNavigationTypeBackForward, UIWebViewNavigationTypeReload,
+    UIWebViewNavigationTypeFormResubmitted, UIWebViewNavigationTypeOther,
+} NS_SWIFT_NAME(UIWebViewNavigationTypeObjC);
+NS_SWIFT_NAME(UIWebViewDelegateObjC) @protocol UIWebViewDelegate <NSObject>
+@optional
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
+@end
+
 /* UILayoutSupport (UIViewController.h), which ORStackView's header names for
  * a view controller's top/bottom layout guide. Declaration only: no OpenUIKit
  * object conforms yet. */

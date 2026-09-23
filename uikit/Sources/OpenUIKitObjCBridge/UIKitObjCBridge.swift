@@ -890,4 +890,25 @@ extension UIView {
     @objc(layoutMarginsGuide) public var __objc_layoutMarginsGuide: UILayoutGuide { layoutMarginsGuide }
 }
 
+
+extension UIPasteboard {
+    @objc(generalPasteboard) public class var __objc_general: UIPasteboard { general }
+    @objc(pasteboardWithUniqueName) public class func __objc_withUniqueName() -> UIPasteboard { withUniqueName() }
+    @objc(removePasteboardWithName:) public class func __objc_remove(withName name: String) {
+        remove(withName: Name(name))
+    }
+    @objc(name) public var __objc_name: String { name.rawValue }
+    @objc(string) public var __objc_string: String? { get { string } set { string = newValue } }
+    @objc(URL) public var __objc_URL: URL? { get { url } set { url = newValue } }
+    @objc(numberOfItems) public var __objc_numberOfItems: Int { numberOfItems }
+    @objc(hasStrings) public var __objc_hasStrings: Bool { hasStrings }
+    @objc(hasURLs) public var __objc_hasURLs: Bool { hasURLs }
+}
+
+extension UIWindow {
+    @objc(windowLevel) public var __objc_windowLevel: CGFloat {
+        get { windowLevel.rawValue } set { windowLevel = UIWindow.Level(newValue) }
+    }
+}
+
 #endif

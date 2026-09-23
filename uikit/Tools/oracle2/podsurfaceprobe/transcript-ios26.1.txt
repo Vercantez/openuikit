@@ -111,3 +111,24 @@ V:[view]-(-4)-[other] -> 1
   other.top == view.bottom x1 -4 @1000
 DirectionLeadingToTrailing option=0 -> 1
 unknown view -> exception NSInvalidArgumentException
+## webview
+superclass=UIView scrollView isKindOfUIScrollView=YES frame=100,80
+delegate=nil request=nil loading=NO canGoBack=NO canGoForward=NO scalesPageToFit=NO
+UIWebViewNavigationType LinkClicked=0 FormSubmitted=1 BackForward=2 Reload=3 FormResubmitted=4 Other=5
+after loadHTMLString (same turn) loading=NO request=nil
+shouldStartLoad url=about:blank navigationType=5 mainDocument=about:blank
+didStartLoad loading=YES
+didFinishLoad loading=NO
+settled loading=NO request=about:blank
+## activity2
+superclass=UIActivity activityCategory=0 UIActivityCategoryAction=0 UIActivityCategoryShare=1
+activityType=nil activityTitle=nil activityImage=nil activityViewController=nil canPerform=NO
+activityDidFinish: returned
+## pasteboard
+unique name empty=NO
+URL=https://artsy.net/x string=https://artsy.net/x numberOfItems=1 hasURLs=YES hasStrings=YES
+string=hello URL=nil numberOfItems=1
+## windowlevel
+UIWindowLevelNormal=0 StatusBar=1000 Alert=2000
+new window level=0
+set Alert+1 -> 2001
