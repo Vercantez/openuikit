@@ -1328,6 +1328,9 @@ open class UIScrollView: UIView {
     /// The `.hard` plate under a navigation bar / toolbar / tab bar.
     final var _topEdgePocket: _UIScrollEdgeEffectView?
     final var _bottomEdgePocket: _UIScrollEdgeEffectView?
+    /// The untouched `.automatic` material under a navigation controller's
+    /// toolbar (`_UIScrollEdgeToolbarMaterialView`).
+    final var _bottomToolbarMaterial: _UIScrollEdgeToolbarMaterialView?
 
     /// The effect for the top edge of the scroll view.
     public final var topEdgeEffect: UIScrollEdgeEffect {
@@ -1394,7 +1397,7 @@ open class UIScrollView: UIView {
     /// Table and collection views add cells after the scroll step ran; they
     /// call this after tiling so the pockets stay above the new cells.
     final func _frontScrollEdgePockets() {
-        for pocket in [_topEdgePocket, _bottomEdgePocket] {
+        for pocket in [_topEdgePocket, _bottomEdgePocket, _bottomToolbarMaterial] as [UIView?] {
             if let pocket, pocket.superview === self, !pocket.isHidden {
                 bringSubviewToFront(pocket)
             }

@@ -154,6 +154,7 @@ public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
             let v = _UIBarButtonItemView(item: item)
             v.platterHeight = _UIBarMetrics.toolbarPlatterHeightForCurrentTraits
             v.appliesRefraction = false     // measured: toolbars have no band
+            v._inToolbar = true
             v.barTintColor = barTintColor ?? tintColor ?? .systemBlue
             v.addTarget(for: .touchUpInside) { [weak item] control, event in
                 guard let item else { return }
@@ -195,7 +196,25 @@ public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
         _UIBarItemLayout.layout(itemViews, in: bounds.width, y: y, height: h,
                                 sideMargin: _platterSideInset
                                     ?? _UIBarMetrics.toolbarSideMarginForCurrentTraits)
+        // iOS 26: a run of adjacent image-only items shares one glass
+        // platter in the toolbar too (MEASURED toolbaritemsprobe: Settings +
+        // Current Activity under one [28, 776, 106.67, 48] platter).
+        let shared = _UIBarItemLayout.sharedPlatterFrames(itemViews)
+        while sharedPlatterViews.count > shared.count { sharedPlatterViews.removeLast().removeFromSuperview() }
+        while sharedPlatterViews.count < shared.count {
+            let p = _UIBarSharedPlatterView(frame: .zero)
+            p._isToolbarPlatter = true
+            if let first = itemViews.first { insertSubview(p, belowSubview: first) } else { addSubview(p) }
+            sharedPlatterViews.append(p)
+        }
+        for (p, f) in zip(sharedPlatterViews, shared) {
+            p.frame = f
+            p.isHidden = !(itemViews.first?.showsPlatter ?? true)
+        }
     }
+
+    /// The shared platters behind runs of image-only items.
+    var sharedPlatterViews: [_UIBarSharedPlatterView] = []
 
     public override var intrinsicContentSize: CGSize {
         CGSize(width: UIView.noIntrinsicMetric, height: UIToolbar.defaultHeight)

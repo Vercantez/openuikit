@@ -473,6 +473,13 @@ extension NibDecoder {
                 if let item = self.object(pair.value) as? UINavigationItem {
                     controller._navigationItem = item
                 }
+            case "UIToolbarItems":
+                // The scene's toolbar items (Interface Builder "Toolbar
+                // Items"; NetNewsWire's Feeds: Settings, flexible space,
+                // Add), shown by the navigation controller's toolbar.
+                if case .reference(let i) = pair.value {
+                    controller.toolbarItems = arrayElements(at: i).compactMap { $0 as? UIBarButtonItem }
+                }
             case "UIStoryboardIdentifier":
                 state.storyboardIdentifier = string(pair.value)
             case "UIStoryboardSegueTemplates":

@@ -170,6 +170,148 @@ final class _UIScrollEdgeEffectView: UIView {
     }
 }
 
+// MARK: - The automatic material under a navigation controller's toolbar
+
+/// The untouched (`.automatic`) bottom edge effect under a navigation
+/// controller's iOS 26 toolbar, as a window capture shows it.
+///
+/// MEASURED Tools/oracle2/toolbaredgeprobe (iPhone 16 / iOS 26.1, the key
+/// window's drawHierarchy — the golden captures' route; transcript and
+/// captures committed, `fit.py` → `edge-model-ios26.1.json`): at rest with
+/// content running under the toolbar, Apple's bottom `ScrollEdgeEffectView`
+/// is `[0, 711.2, 393, 140.8]` (the toolbar slot is `[0, 766, 393, 86]`); its
+/// `LuminanceAdjustment` holds a `BackdropView` at alpha 0.85 whose
+/// background is the SCROLL VIEW's `backgroundColor` (white / 242,242,247 /
+/// black in the three runs), under a `PocketMask`; the variable blur is
+/// hidden. Over seven colour columns on three backdrops every pixel is
+/// `in·(1 − a(y)) + 0.98·B·a(y)` within 2.5 / 255 (B = the scroll view's
+/// background): `a` is 0 above y 726, 0.30 at 776, 0.64 at 801, 0.81 at 831,
+/// 0.74 at the screen bottom. Two captures of the same state are identical.
+/// Only this geometry (phone, 86 pt slot) was measured; a scroll view with
+/// no background colour paints nothing (the backdrop colour is unknown).
+@preconcurrency @MainActor
+final class _UIScrollEdgeToolbarMaterialView: UIView {
+    /// `a(y)` in thousandths, one entry per 1/3 pt from the view's top.
+    static let alphaPerThirdPoint: [UInt16] = [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2,
+        2, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8, 8, 8,
+        8, 10, 11, 11, 11, 12, 12, 12, 13, 14, 15, 15, 16, 16, 16, 16,
+        18, 19, 20, 20, 20, 20, 20, 22, 22, 22, 23, 24, 25, 26, 28, 28,
+        28, 30, 31, 31, 31, 35, 35, 35, 39, 39, 39, 43, 43, 43, 47, 47,
+        47, 51, 51, 55, 55, 55, 59, 59, 63, 63, 67, 67, 67, 71, 71, 74,
+        75, 78, 80, 82, 84, 86, 88, 90, 92, 95, 96, 99, 102, 106, 110, 114,
+        118, 118, 122, 124, 127, 129, 132, 136, 137, 141, 145, 149, 149, 153, 157, 159,
+        162, 165, 169, 172, 176, 180, 184, 187, 190, 194, 198, 201, 205, 209, 213, 217,
+        221, 225, 229, 233, 237, 241, 245, 249, 253, 257, 261, 265, 269, 274, 278, 282,
+        287, 291, 295, 300, 304, 308, 312, 317, 321, 326, 332, 336, 340, 344, 348, 356,
+        360, 364, 368, 372, 379, 383, 387, 392, 397, 403, 407, 412, 417, 421, 427, 431,
+        435, 440, 445, 450, 454, 459, 463, 467, 473, 478, 482, 486, 491, 496, 502, 506,
+        510, 516, 522, 526, 529, 533, 537, 544, 549, 553, 557, 561, 565, 569, 574, 578,
+        582, 586, 590, 594, 599, 603, 608, 612, 616, 620, 623, 627, 632, 635, 639, 643,
+        647, 651, 655, 658, 662, 666, 669, 673, 677, 680, 683, 687, 690, 693, 696, 698,
+        702, 705, 709, 712, 713, 717, 720, 724, 724, 728, 732, 732, 736, 739, 741, 744,
+        747, 750, 752, 754, 755, 759, 759, 763, 764, 767, 769, 771, 773, 776, 777, 778,
+        780, 782, 783, 786, 786, 790, 790, 793, 794, 796, 797, 797, 797, 800, 801, 801,
+        802, 804, 805, 805, 806, 807, 808, 809, 808, 809, 810, 810, 811, 811, 812, 812,
+        814, 814, 814, 814, 814, 814, 814, 814, 814, 815, 815, 815, 815, 815, 815, 814,
+        813, 812, 812, 812, 812, 812, 812, 811, 810, 810, 809, 808, 808, 807, 806, 805,
+        804, 804, 803, 802, 802, 800, 799, 797, 796, 794, 792, 791, 789, 788, 786, 784,
+        783, 781, 780, 777, 776, 774, 772, 771, 769, 768, 765, 764, 762, 760, 758, 755,
+        753, 749, 748, 745, 741, 739,
+    ]
+    /// Height of the measured material (points).
+    static let height: CGFloat = 140.8
+    /// The backdrop colour's luminance factor (fit: 0.98).
+    static let backdropFactor: CGFloat = 0.98
+
+    var backdropColor: UIColor? { didSet { setNeedsDisplay() } }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+        isOpaque = false
+        backgroundColor = nil
+    }
+
+    required init?(coder: NSCoder) { super.init(coder: coder) }
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? { nil }
+
+    /// The material's alpha `y` points below its top edge.
+    static func alpha(at y: CGFloat) -> CGFloat {
+        let table = alphaPerThirdPoint
+        let i = Int((y * 3).rounded(.down))
+        guard i >= 0 else { return 0 }
+        return CGFloat(table[min(i, table.count - 1)]) / 1000
+    }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        guard bounds.width > 0, bounds.height > 0, let backdropColor else { return }
+        let base = backdropColor.resolvedCGColor(with: traitCollection)
+        let k = Self.backdropFactor
+        let color = CanvasColor(red: base.red * k, green: base.green * k, blue: base.blue * k, alpha: 1)
+        let step: CGFloat = 1.0 / 3.0
+        var y: CGFloat = 0
+        while y < bounds.height {
+            let a = Self.alpha(at: y)
+            if a > 0 {
+                let h = min(step, bounds.height - y)
+                canvas.fill(rect: CGRect(x: bounds.minX, y: bounds.minY + y, width: bounds.width, height: h),
+                            color: color.withAlpha(a * base.alpha))
+            }
+            y += step
+        }
+    }
+}
+
+extension UIScrollView {
+    /// Show / place the automatic toolbar material: an untouched or
+    /// `.automatic`, shown bottom effect, under a navigation controller's
+    /// iOS toolbar slot, with content passing the toolbar's glass edge and
+    /// no container interaction painting the edge.
+    func _updateToolbarMaterial() {
+        let existing = _bottomToolbarMaterial
+        func hide() { existing?.isHidden = true }
+        guard OpenUIKitRuntime.systemFontCut == .iOS, !UINavigationBar.isPad else { return hide() }
+        if let effect = _edgeEffectIfPresent(.bottom), effect.paintsNothing || effect.style !== UIScrollEdgeEffect.Style.automatic {
+            return hide()
+        }
+        guard !_scrollEdgeInteractions.contains(where: { ref in
+                  ref.interaction.map { $0.edge == .bottom && $0.view != nil } ?? false }),
+              let background = backgroundColor,
+              let vc = _nearestViewController, let nav = vc.navigationController,
+              !nav.isToolbarHidden, nav.toolbarHeight > 0,
+              nav.toolbar.window != nil, nav.toolbar.window === window else { return hide() }
+        let slot = nav.toolbar.convert(nav.toolbar.bounds, to: self)
+        guard slot.midY > bounds.midY else { return hide() }
+        let glassEdge = slot.minY + _UIBarMetrics.toolbarSlotTopPadding
+        guard contentSize.height - glassEdge > UIScrollEdgeEffect.engagementThreshold else { return hide() }
+        let material: _UIScrollEdgeToolbarMaterialView
+        if let existing, existing.superview === self {
+            material = existing
+        } else {
+            existing?.removeFromSuperview()
+            material = _UIScrollEdgeToolbarMaterialView(frame: .zero)
+            addSubview(material)
+            _bottomToolbarMaterial = material
+        }
+        // The measured table starts on the device pixel row nearest the
+        // effect view's top (711.2 → row 2134 at 3x) and advances one row
+        // per pixel; a fractional origin would split every row across two
+        // pixels and under-apply the alpha.
+        let scale = max(1, traitCollection.displayScale)
+        let top = ((slot.maxY - _UIScrollEdgeToolbarMaterialView.height) * scale).rounded() / scale
+        let frame = CGRect(x: bounds.minX, y: top, width: bounds.width, height: slot.maxY - top)
+        if material.frame != frame { material.frame = frame }
+        if material.backdropColor != background { material.backdropColor = background }
+        material.isHidden = false
+        bringSubviewToFront(material)
+        _frontIndicatorsOverPockets()
+    }
+}
+
 extension UIScrollEdgeEffect {
     /// MEASURED light only (white 230 over both red and black). Dark is
     /// unmeasured: the plate follows the system background there.
@@ -291,6 +433,7 @@ extension UIScrollView {
     /// edge (one painter per edge, measured), and content passes under the
     /// bar's glass edge.
     func _updateScrollEdgeEffects() {
+        _updateToolbarMaterial()
         for edge in [UIRectEdge.top, .bottom] {
             let existing = edge == .top ? _topEdgePocket : _bottomEdgePocket
             guard let effect = _edgeEffectIfPresent(edge), effect.isHard,

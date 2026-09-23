@@ -40,7 +40,7 @@ final class Row: UICollectionViewCell {
 
 final class VC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     override func numberOfSections(in collectionView: UICollectionView) -> Int { 2 }
-    override func collectionView(_ cv: UICollectionView, numberOfItemsInSection s: Int) -> Int { 3 }
+    override func collectionView(_ cv: UICollectionView, numberOfItemsInSection s: Int) -> Int { Int(ProcessInfo.processInfo.environment["ROWS"] ?? "3") ?? 3 }
     override func collectionView(_ cv: UICollectionView, cellForItemAt ip: IndexPath) -> UICollectionViewCell {
         let c = cv.dequeueReusableCell(withReuseIdentifier: "row", for: ip) as! Row
         c.label.text = "Row \(ip.section).\(ip.item)"
@@ -99,6 +99,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                     let img = (v as? UIImageView)?.image ?? (v as? UIButton)?.image(for: .normal)
                     print("FACT nibsymbol \(type(of: v)) image=\(img != nil) symbol=\(img?.isSymbolImage ?? false) size=\(img?.size ?? .zero) equalsSystem=\(img.map { i in ["chevron.down", "line.3.horizontal.decrease"].contains { UIImage(systemName: $0)?.size == i.size } } ?? false)")
                 }
+            }
+            for c in cv.visibleCells.sorted(by: { $0.frame.minY < $1.frame.minY }) where ProcessInfo.processInfo.environment["ROWS"] != nil {
+                print("FACT safe \(cv.indexPath(for: c).map { "\($0)" } ?? "?") frame=\(c.frame) cell=\(c.safeAreaInsets) content=\(c.contentView.safeAreaInsets) cv=\(cv.safeAreaInsets) adjusted=\(cv.adjustedContentInset) insetsFromSafeArea=\(c.contentView.insetsLayoutMarginsFromSafeArea)")
             }
             print("DONE")
             exit(0)

@@ -1,0 +1,89 @@
+# ToolbarEdgeProbe, iPhone 16 simulator, iOS 26.1 (23B86), simctl launch --console, 2026-09-23
+# BACKDROP=white
+FACT backdrop=white offset=(0.0, -113.0) adjusted=UIEdgeInsets(top: 113.0, left: 0.0, bottom: 86.0, right: 0.0) bottomEffect=<UIScrollEdgeEffectStyle: 0x600000010390> hidden=false
+FACT column white x=150..170
+FACT column gray242 x=170..190
+FACT column gray200 x=190..210
+FACT column gray128 x=210..230
+FACT column black x=230..250
+FACT column red x=250..270
+FACT column blue x=270..290
+FACT edge        ScrollEdgeEffectView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         TouchBlocker [0.00, 852.00, 393.00, 0.00] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketMask [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketBlur [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=0 bg=nil
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=1 bg=nil
+FACT edge         LuminanceAdjustment [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          BackdropView [0.00, 711.20, 393.00, 140.80] alpha=0.8500000238418579 hidden=false filters=0 bg=UIExtendedGrayColorSpace 1 1
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=0.0 hidden=false filters=0 bg=UIExtendedGrayColorSpace 0 1
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         UIImageView [-120.00, 716.00, 633.00, 272.00] alpha=0.009999999776482582 hidden=false filters=0 bg=nil
+FACT wrote edge-white.png 247052
+DONE
+# BACKDROP=gray
+FACT backdrop=gray offset=(0.0, -113.0) adjusted=UIEdgeInsets(top: 113.0, left: 0.0, bottom: 86.0, right: 0.0) bottomEffect=<UIScrollEdgeEffectStyle: 0x600000018730> hidden=false
+FACT column white x=150..170
+FACT column gray242 x=170..190
+FACT column gray200 x=190..210
+FACT column gray128 x=210..230
+FACT column black x=230..250
+FACT column red x=250..270
+FACT column blue x=270..290
+FACT edge        ScrollEdgeEffectView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         TouchBlocker [0.00, 852.00, 393.00, 0.00] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketMask [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketBlur [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=0 bg=nil
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=1 bg=nil
+FACT edge         LuminanceAdjustment [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          BackdropView [0.00, 711.20, 393.00, 140.80] alpha=0.8500000238418579 hidden=false filters=0 bg=UIExtendedSRGBColorSpace 0.94902 0.94902 0.968627 1
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=0.0 hidden=false filters=0 bg=UIExtendedGrayColorSpace 0 1
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         UIImageView [-120.00, 716.00, 633.00, 272.00] alpha=0.009999999776482582 hidden=false filters=0 bg=nil
+FACT wrote edge-gray.png 438355
+DONE
+# BACKDROP=black
+FACT backdrop=black offset=(0.0, -113.0) adjusted=UIEdgeInsets(top: 113.0, left: 0.0, bottom: 86.0, right: 0.0) bottomEffect=<UIScrollEdgeEffectStyle: 0x600000010bc0> hidden=false
+FACT column white x=150..170
+FACT column gray242 x=170..190
+FACT column gray200 x=190..210
+FACT column gray128 x=210..230
+FACT column black x=230..250
+FACT column red x=250..270
+FACT column blue x=270..290
+FACT edge        ScrollEdgeEffectView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         TouchBlocker [0.00, 852.00, 393.00, 0.00] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketMask [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketBlur [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=0 bg=nil
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=1 bg=nil
+FACT edge         LuminanceAdjustment [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          BackdropView [0.00, 711.20, 393.00, 140.80] alpha=0.8500000238418579 hidden=false filters=0 bg=UIExtendedGrayColorSpace 0 1
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=0.0 hidden=false filters=0 bg=UIExtendedGrayColorSpace 0 1
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         UIImageView [-120.00, 716.00, 633.00, 272.00] alpha=0.009999999776482582 hidden=false filters=0 bg=nil
+FACT wrote edge-black.png 248094
+DONE
+# BACKDROP=white
+FACT backdrop=white offset=(0.0, -113.0) adjusted=UIEdgeInsets(top: 113.0, left: 0.0, bottom: 86.0, right: 0.0) bottomEffect=<UIScrollEdgeEffectStyle: 0x6000000107f0> hidden=false
+FACT column white x=150..170
+FACT column gray242 x=170..190
+FACT column gray200 x=190..210
+FACT column gray128 x=210..230
+FACT column black x=230..250
+FACT column red x=250..270
+FACT column blue x=270..290
+FACT edge        ScrollEdgeEffectView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         TouchBlocker [0.00, 852.00, 393.00, 0.00] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketMask [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         PocketBlur [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=0 bg=nil
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=true filters=1 bg=nil
+FACT edge         LuminanceAdjustment [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge          BackdropView [0.00, 711.20, 393.00, 140.80] alpha=0.8500000238418579 hidden=false filters=0 bg=UIExtendedGrayColorSpace 1 1
+FACT edge          UIView [0.00, 711.20, 393.00, 140.80] alpha=0.0 hidden=false filters=0 bg=UIExtendedGrayColorSpace 0 1
+FACT edge          _UIPortalView [0.00, 711.20, 393.00, 140.80] alpha=1.0 hidden=false filters=0 bg=nil
+FACT edge         UIImageView [-120.00, 716.00, 633.00, 272.00] alpha=0.009999999776482582 hidden=false filters=0 bg=nil
+FACT wrote edge-white.png 247052
+DONE

@@ -40,5 +40,10 @@ xcrun simctl install "$DEV" "$APP"
     SIMCTL_CHILD_CELL_BG=$bg timeout 60 xcrun simctl launch --console "$DEV" org.openuikit.listheaderprobe 2>&1 | grep -E "^(EV|FACT|DONE)"
     xcrun simctl terminate "$DEV" org.openuikit.listheaderprobe >/dev/null 2>&1 || true
   done
+  # ten rows a section: the lower rows run under the home-indicator safe
+  # area; their safe-area insets (NetNewsWire's FeedCell pins its labels to
+  # the content view's safe-area guide)
+  echo "# ROWS=10"
+  SIMCTL_CHILD_ROWS=10 timeout 60 xcrun simctl launch --console "$DEV" org.openuikit.listheaderprobe 2>&1 | grep -E "^(FACT safe|DONE)"
 } > "$HERE/transcript-ios26.1.txt"
 cat "$HERE/transcript-ios26.1.txt"

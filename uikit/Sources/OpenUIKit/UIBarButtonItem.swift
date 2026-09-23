@@ -451,6 +451,17 @@ public enum _UIBarMetrics {
     /// end). In item-view terms — each view already carries 4 pt of
     /// platter on either side — that is an 8 pt gap between the views.
     public static let groupedImageGap: CGFloat = 8
+    /// The toolbar's version, MEASURED Tools/oracle2/toolbaritemsprobe
+    /// (iPhone 16 / iOS 26.1, NetNewsWire's Settings + Current Activity
+    /// run): shared platter [28, 776, 106.67, 48] around `_UIButtonBarButton`s
+    /// [33, 781, 41.67, 38] and [88.67, 781, 41, 38] — 5 pt of platter at
+    /// each end and 14 pt between the buttons, i.e. item views that each
+    /// carry 5 pt a side with a 4 pt gap between them.
+    public static let toolbarGroupedImageGap: CGFloat = 4
+    /// Toolbar symbol items (same probe): 7 pt from the configured image to
+    /// the `_UIButtonBarButton` edge, 5 pt from there to the platter edge.
+    public static let toolbarSymbolButtonInset: CGFloat = 7
+    public static let toolbarSymbolPlatterPad: CGFloat = 5
     /// Gap accounting (measured, `toolbar_basic`): a 12 pt gap separates
     /// consecutive bar items, EXCEPT after a space item — a fixed space of
     /// 40 pt shows up as 12 + 40 before the next item, and the item after a
@@ -596,12 +607,36 @@ final class _UIBarButtonItemView: UIControl {
         return UIImage(systemName: name, withConfiguration: config)
     }
 
+    /// Whether the owning bar is a `UIToolbar` (set by the toolbar).
+    var _inToolbar = false
+
+    /// The system symbol as the bar draws it. MEASURED
+    /// Tools/oracle2/toolbaritemsprobe (iPhone 16 / iOS 26.1): the item's
+    /// `_UIModernBarButton` image view carries `preferredSymbolConfiguration`
+    /// textStyle body, weight medium, scale large (body @ Large = 17 pt, the
+    /// harvested `17|medium|large`, byte-identical per symbolinkprobe), so
+    /// its frame is that configuration's size — toolbar "gear" 27.67 x 27.67,
+    /// "text.pad.header" 27 x 24, "plus" 23.33 x 22; navigation-bar
+    /// "line.3.horizontal.decrease" 27.33 x 17 — not the unconfigured
+    /// image's 21.33 x 20.33 / 20.67 x 17.33 / 18 x 16 / 21 x 12. The
+    /// accessibility categories (a larger body) have no harvest and keep the
+    /// item's own image (OPEN).
+    var configuredSymbolImage: UIImage? {
+        guard OpenUIKitRuntime.systemFontCut == .iOS, !item._isolatesPlatter,
+              let image = item.image, image.isSymbolImage,
+              let name = image._systemSymbolName else { return nil }
+        let cat = traitCollection.preferredContentSizeCategory
+        if cat.isAccessibilityCategory || cat == .extraExtraExtraLarge { return nil }
+        let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium, scale: .large)
+        return UIImage(systemName: name, withConfiguration: config)
+    }
+
     func applyColors() {
         let color = contentColor
         titleLabel.textColor = color
         symbolView.color = color
         symbolView.symbol = item._symbol
-        if let image = item.image ?? harvestedSystemImage {
+        if let image = configuredSymbolImage ?? item.image ?? harvestedSystemImage {
             imageView.image = UITabBar.templateImage(
                 image, tint: color.resolvedColor(with: UITraitCollection.current))
         } else {
@@ -632,10 +667,23 @@ final class _UIBarButtonItemView: UIControl {
         didSet { if appliesRefraction != oldValue { applyColors() } }
     }
 
+    /// Whether the item draws its title. MEASURED
+    /// Tools/oracle2/toolbaritemsprobe (iPhone 16 / iOS 26.1): an item with
+    /// both a title and an image (NetNewsWire's storyboard Settings "gear" and
+    /// Add "plus"; a navigation-bar "Filter" item) draws only the image, in
+    /// the toolbar and in the navigation bar alike: its `_UIModernBarButton`
+    /// has no title and the same 38 / 36 pt button as an image-only item, and
+    /// it joins a shared glass platter with the image item next to it.
+    var displaysTitle: Bool {
+        guard item.title != nil else { return false }
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return true }
+        return item.image == nil && item._symbol == nil
+    }
+
     /// An item that shows only an image / symbol (no title, no custom
     /// view): iOS 26 merges runs of these into one platter.
     var isImageOnly: Bool {
-        item.customView == nil && item.title == nil && !item._isSpace
+        item.customView == nil && !displaysTitle && !item._isSpace
             && (item.image != nil || item._symbol != nil
                 || item.iOSHarvestedSystemImageName != nil)
     }
@@ -651,7 +699,7 @@ final class _UIBarButtonItemView: UIControl {
             let s = cv.bounds.size
             return s == .zero ? cv.sizeThatFits(.zero) : s
         }
-        if item.title != nil { return titleLabel.intrinsicContentSize }
+        if displaysTitle { return titleLabel.intrinsicContentSize }
         if let image = item.image { return image.size }
         if let harvested = harvestedSystemImage { return harvested.size }
         if let symbol = item._symbol { return symbol.size }
@@ -677,7 +725,16 @@ final class _UIBarButtonItemView: UIControl {
             // not 24+2×11 = 46. ax1 30×35 is still the 44 platter.
             return CGSize(width: platterHeight, height: platterHeight)
         }
-        if item.title == nil, item.image != nil || item._symbol != nil {
+        if _inToolbar, !displaysTitle, let configured = configuredSymbolImage {
+            // MEASURED toolbaritemsprobe: a toolbar symbol item is its
+            // configured image + 7 pt a side (the `_UIButtonBarButton`, at
+            // least 38) + 5 pt of platter a side: "gear" 27.67 → 51.67,
+            // "text.pad.header" 27 → 51, "plus" 23.33 → 48.
+            let w = configured.size.width + 2 * (_UIBarMetrics.toolbarSymbolButtonInset
+                                                 + _UIBarMetrics.toolbarSymbolPlatterPad)
+            return CGSize(width: max(w, platterHeight), height: platterHeight)
+        }
+        if !displaysTitle, item.image != nil || item._symbol != nil {
             // Image / symbol items: see `_UIBarMetrics.imageContentMinWidth`.
             // Never narrower than the platter is tall: 22 + 2×11 = 44 is
             // the nav-bar circle, but a TOOLBAR platter is 48 and its
@@ -717,10 +774,20 @@ final class _UIBarButtonItemView: UIControl {
             platter.isHidden = !(showsPlatter && item._showsPlatterWithCustomView)
             return
         }
-        let s = contentSize
+        let configured = displaysTitle ? nil : configuredSymbolImage
+        let s = configured?.size ?? contentSize
         var f = CGRect(x: ((bounds.width - s.width) / 2).rounded() ,
                        y: ((bounds.height - s.height) / 2).rounded(),
                        width: s.width, height: s.height)
+        if configured != nil {
+            // MEASURED toolbaritemsprobe: the configured symbol sits on the
+            // device pixel grid, x centred, y one pixel below the floor of
+            // the centre (gear 10.33 in a 48 platter, text.pad.header 12.33,
+            // plus 13.33; the navigation bar's filter 13.67 in 44).
+            let scale = max(1, UIScreen.main.scale)
+            f.origin.x = ((bounds.width - s.width) / 2 * scale).rounded() / scale
+            f.origin.y = ((bounds.height - s.height) / 2 * scale + 1).rounded(.down) / scale
+        }
         if OpenUIKitRuntime.systemFontCut == .iOS,
            item._isolatesPlatter, item.image?.isSymbolImage == true {
             // MEASURED HackersRowMetrics, iPhone 16 @3x / iOS 26.1:
@@ -742,7 +809,7 @@ final class _UIBarButtonItemView: UIControl {
         titleLabel.frame = f
         imageView.frame = f
         symbolView.frame = f
-        titleLabel.isHidden = item.title == nil
+        titleLabel.isHidden = !displaysTitle
         imageView.isHidden = item.image == nil && harvestedSystemImage == nil
         symbolView.isHidden = item._symbol == nil || harvestedSystemImage != nil
     }
@@ -789,8 +856,23 @@ final class _UIBarSharedPlatterView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError("not decodable") }
 
+    /// A toolbar's shared platter: a 48 pt capsule (radius half its height)
+    /// with no refractive band and the toolbar's glass mix, as the toolbar's
+    /// own item platters (`_UIBarButtonItemView.appliesRefraction`).
+    var _isToolbarPlatter = false {
+        didSet {
+            _usesIOSDarkBarGlass = _isToolbarPlatter
+            setNeedsLayout()
+        }
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
+        if _isToolbarPlatter {
+            layer.cornerRadius = bounds.height / 2
+            refractionHost.isHidden = true
+            return
+        }
         refractionHost.frame = bounds
         refractionBand.frame = CGRect(x: 0, y: 0, width: bounds.width,
                                       height: _UIBarMetrics.platterRefractionHeight)
@@ -825,7 +907,8 @@ enum _UIBarItemLayout {
            views[i - 1].isImageOnly, views[i].isImageOnly,
            !views[i - 1].item._isolatesPlatter,
            !views[i].item._isolatesPlatter {
-            return _UIBarMetrics.groupedImageGap
+            return views[i]._inToolbar ? _UIBarMetrics.toolbarGroupedImageGap
+                : _UIBarMetrics.groupedImageGap
         }
         return _UIBarMetrics.gap
     }

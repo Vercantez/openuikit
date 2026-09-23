@@ -26,6 +26,14 @@ sampled columns), dark-mode `.hard` (light only measured), left / right
 edges (store-only). A second container interaction on the same edge paints
 its own plate; Apple has one painter per edge.
 
+The untouched bottom effect under a navigation controller's TOOLBAR is
+painted (2026-09-23, `Tools/oracle2/toolbaredgeprobe`, window drawHierarchy):
+`out = in·(1 − a(y)) + 0.98·B·a(y)` over the measured `[0, 711.2, 393, 140.8]`,
+B = the scroll view's `backgroundColor` (within 2.5/255 on white, gray and
+black backdrops). Only the phone 86 pt slot was measured; the pad and
+compact-height slots, dark-mode traits, and a scroll view with no background
+colour (nothing is painted) are not.
+
 ## Large-title push: what `Tools/oracle2/navprobe` did NOT measure (2026-09-04)
 
 The bar transition is now the measured iOS 26 one — both sides translate with
@@ -2941,9 +2949,13 @@ and run, but some are only partly implemented:
   entry for the NSKey is not modelled; an app that ships translated
   storyboard tables would show the base text.
 - A plain `UICollectionViewCell` in a list section self-sizes by Auto
-  Layout on its content view. Supplementary (header/footer) views do not
-  self-size yet: NetNewsWire's section headers are 40.5 pt against iOS's
-  36.33.
+  Layout on its content view; supplementary section headers of grouped /
+  insetGrouped lists self-size too (listheaderprobe). Footers do not.
+- An item with a title AND an image draws only the image on the iOS cut
+  (toolbaritemsprobe). A title-only toolbar item's platter width was not
+  checked against that probe's reading (64.33 for "Edit").
+- The body/medium/large symbol configuration of bar items applies to system
+  symbols only; the accessibility sizes keep the unconfigured image.
 - `UIViewController.overrideUserInterfaceStyle` resolves through the
   controller, its view subtree and its children. It is not modelled in
   three ways (Tools/oracle2/vcstyleprobe):

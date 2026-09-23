@@ -376,10 +376,26 @@ extension UIView {
             changed = true
         }
         let b = bounds
+        // A scroll view that folds its safe area into `adjustedContentInset`
+        // hands its content none of the vertical part. MEASURED
+        // Tools/oracle2/listheaderprobe (ROWS=10, iPhone 16 / iOS 26.1): a
+        // list cell scrolled under the 34 pt home-indicator inset reads
+        // safeAreaInsets (and contentView.safeAreaInsets) 0 on every edge
+        // while the collection view's own are [59, 0, 34, 0] = its
+        // adjustedContentInset. NetNewsWire's FeedCell pins its labels to the
+        // content view's safe-area guide, so rows under the toolbar grew.
+        // (Horizontal edges keep the clamp rule: not measured here.)
+        let absorbsVertical = (self as? UIScrollView).map {
+            $0.contentInsetAdjustmentBehavior != .never
+        } ?? false
         for sub in subviews {
-            let derived = UIView._derivedSafeArea(parentInsets: mine,
+            var derived = UIView._derivedSafeArea(parentInsets: mine,
                                                   parentBounds: b,
                                                   childFrame: sub.frame)
+            if absorbsVertical {
+                derived.top = 0
+                derived.bottom = 0
+            }
             if sub._propagateSafeArea(inherited: derived) { changed = true }
         }
         return changed
