@@ -248,6 +248,19 @@ func collectState(_ v: UIView, path: String, into fields: inout [JSONValue],
     if shown, let b = v as? UIButton, let t = b.currentTitle, !t.isEmpty {
         labels.append(.string(t))
     }
+    if shown, let b = v as? UIButton, b.showsMenuAsPrimaryAction, let menu = b.menu {
+        // What a tap on this button would present: its menu's rows.
+        func rows(_ m: UIMenu) -> [String] {
+            m.children.flatMap { child -> [String] in
+                if let sub = child as? UIMenu { return rows(sub) }
+                return [child.title]
+            }
+        }
+        labels.append(.string("menuButton:" + rows(menu).joined(separator: "|")))
+    }
+    if shown, String(describing: type(of: v)) == "_UIContextMenuView" {
+        labels.append(.string("contextMenuView"))
+    }
     for (i, sub) in v.subviews.enumerated() {
         collectState(sub, path: path.isEmpty ? "\(i)" : "\(path).\(i)",
                      into: &fields, labels: &labels, visible: shown)
