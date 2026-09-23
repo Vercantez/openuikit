@@ -1,0 +1,30 @@
+# CellConfigProbe, iPhone 16 simulator, iOS 26.1 (23B86), simctl launch --console, 2026-09-23
+EV cellForItemAt 0 bg=nil
+EV cell0.updateConfiguration selected=false highlighted=false disabled=false editing=false window=true bg=nil
+EV cellForItemAt 1 bg=nil
+EV cell1.updateConfiguration selected=false highlighted=false disabled=false editing=false window=true bg=nil
+EV --- after appear: configurationState selected=false highlighted=false
+EV setNeedsUpdateConfiguration begin
+EV setNeedsUpdateConfiguration returned
+EV isSelected=true returned
+EV cell0.updateConfiguration selected=true highlighted=false disabled=false editing=false window=true bg=nil
+EV layoutIfNeeded returned
+EV next turn
+FACT UICollectionViewCell().backgroundConfiguration=nil contentConfiguration=nil automaticallyUpdatesBackgroundConfiguration=true automaticallyUpdatesContentConfiguration=true
+FACT UICollectionViewListCell().backgroundConfiguration=set
+FACT listCell() backgroundColor=<UIDynamicSystemColor: 0x600001703500; name = tableCellPlainBackgroundColor> insets=NSDirectionalEdgeInsets(top: 0.0, leading: 0.0, bottom: 0.0, trailing: 0.0) cornerRadius=0.0
+FACT clear() backgroundColor=UIExtendedGrayColorSpace 0 0
+FACT UIFont.systemFontSize=14.0 smallSystemFontSize=12.0 labelFontSize=17.0 buttonFontSize=18.0
+FACT UILabel isEnabled=true highlightedTextColor=nil isHighlighted=false
+FACT UIScrollView contentInsetAdjustmentBehavior=0 bouncesZoom=true zoomScale=1.0 min=1.0 max=1.0
+FACT UIScrollView.ContentInsetAdjustmentBehavior automatic=0 scrollableAxes=1 never=2 always=3
+FACT definesPresentationContext=false toolbarItems=nil
+FACT setToolbarItems -> toolbarItems=1
+FACT pan.allowedScrollTypesMask=0 UIScrollTypeMask.all=3
+FACT UISearchBar barTintColor=nil scopeBarBackgroundImage=nil autocapitalizationType=2
+FACT compositional contentInsetsReference=2 safeArea=2 automatic=0 none=1 layoutMargins=3 readableContent=4
+FACT UIAccessibility.Notification.announcement=1008 isVoiceOverRunning=false
+FACT UIScene.didEnterBackgroundNotification=UISceneDidEnterBackgroundNotification
+FACT UIPointerInteraction delegate=nil isEnabled=true
+FACT snapshot.reconfiguredItemIdentifiers=[1] reloaded=[]
+DONE

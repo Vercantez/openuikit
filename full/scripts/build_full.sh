@@ -38,6 +38,13 @@ die() {
 # shellcheck disable=SC1091
 . "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 UIKIT=${UIKIT:-$W/uikit}
+# Extra guest probe executables (uikit/Tools/guestprobes/README.md): every
+# <Name>.probe.sh in this directory defines build_extra_probe_<Name>, which
+# is linked through run_jobs/build_final_executable like the built-in probes,
+# and run_extra_probe_<Name>, which uikit/scripts/linux_guest_realapp_verify.sh
+# runs under machorun. Set to the empty string to build none. The probes add
+# executables and OpenUIKit's Objective-C header; render_full is unchanged.
+BUILD_FULL_EXTRA_PROBES=${BUILD_FULL_EXTRA_PROBES-$UIKIT/Tools/guestprobes}
 MINOS=${MINOS:-15.0}
 LINK_PLATFORM=${LINK_PLATFORM:-macos}
 LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MINOS}
@@ -1139,9 +1146,24 @@ echo "== OpenCoreGraphics ($(ls "$UIKIT"/Sources/OpenCoreGraphics/*.swift | wc -
 # ---- OpenUIKit (canonical FE IndexPath + remaining fallback names) ----------
 UIKIT_SRCS=()
 while IFS= read -r f; do UIKIT_SRCS+=("$f"); done < <(find "$UIKIT/Sources/OpenUIKit" -name '*.swift' | sort)
+# Extra probes may compile Objective-C against OpenUIKit's generated header
+# ($OUT/objc-include/OpenUIKit-Swift.h); emitting it does not change the object.
+EXTRA_PROBES=()
+OPENUIKIT_OBJC_HEADER_FLAGS=()
+if [ -n "$BUILD_FULL_EXTRA_PROBES" ]; then
+    for probe_file in "$BUILD_FULL_EXTRA_PROBES"/*.probe.sh; do
+        [ -f "$probe_file" ] || continue
+        EXTRA_PROBES+=("$(basename "$probe_file" .probe.sh)")
+        # shellcheck source=/dev/null
+        . "$probe_file"
+    done
+    mkdir -p "$OUT/objc-include"
+    OPENUIKIT_OBJC_HEADER_FLAGS=(-emit-objc-header-path "$OUT/objc-include/OpenUIKit-Swift.h")
+fi
 echo "== OpenUIKit (${#UIKIT_SRCS[@]} files verbatim, incl. AutoLayout/ + FoundationNames.swift)"
 "${SWIFTC[@]}" "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" -module-name OpenUIKit \
     -emit-object -emit-module -emit-module-path "$OUT/OpenUIKit.swiftmodule" \
+    "${OPENUIKIT_OBJC_HEADER_FLAGS[@]}" \
     -o "$OUT/openuikit.o" \
     "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
 
@@ -2073,7 +2095,9 @@ build_final_executable() {
             compile_app_module IOSTargetGuestProbe "$OUT/IOSTargetGuestProbe.o" \
                 "$W/full/iostarget/IOSTargetGuestProbe.swift"
             link_app_executable "$OUT/IOSTargetGuestProbe" "$OUT/IOSTargetGuestProbe.o" ;;
-        *) die "unknown final executable $1" ;;
+        *)
+            declare -F "build_extra_probe_$1" >/dev/null || die "unknown final executable $1"
+            "build_extra_probe_$1" ;;
     esac
 }
 FINAL_EXECUTABLES=(render_full GuestBoundaryTests LaunchProbe FuziProbe
@@ -2085,6 +2109,8 @@ if [ "$BUILD_HOST_FULL" = 1 ]; then
         || { tail -40 "$OUT/host-opt/compile.log" >&2; die "host_full -O rendering objects failed"; }
     FINAL_EXECUTABLES+=(host_full)
 fi
+FINAL_EXECUTABLES+=("${EXTRA_PROBES[@]}")
+[ "${#EXTRA_PROBES[@]}" -eq 0 ] || echo "== extra guest probes: ${EXTRA_PROBES[*]}"
 run_jobs build_final_executable "${FINAL_EXECUTABLES[@]}"
 
 # Match SwiftPM's executable bundle metadata and stage Focus startup assets.

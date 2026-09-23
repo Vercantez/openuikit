@@ -22,6 +22,12 @@ import class Foundation.NSObject
 import class ObjectiveC.NSObject
 #endif
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
 @preconcurrency @MainActor
 open class UIContextualAction: NSObject {
     public enum Style: Int, Sendable {
@@ -52,6 +58,7 @@ open class UIContextualAction: NSObject {
         case .normal:
             backgroundColor = .systemGray
         }
+        super.init()
     }
 
     public static func contextualAction(style: Style, title: String?,

@@ -426,6 +426,10 @@ public final class UITapGestureRecognizer: UIGestureRecognizer {
 
 @preconcurrency @MainActor
 open class UIPanGestureRecognizer: UIGestureRecognizer {
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe): empty by default.
+    /// The port has no indirect (trackpad / wheel) scroll input, so the
+    /// mask is stored and reported only.
+    public var allowedScrollTypesMask: UIScrollTypeMask = []
     public var minimumNumberOfTouches: Int = 1
     public var maximumNumberOfTouches: Int = Int.max
     /// Activation slop: the touch must move this far (points, straight-line)
@@ -865,4 +869,13 @@ open class UIHoverGestureRecognizer: UIGestureRecognizer {
         super.reset()
         hoverLocationInWindow = .zero
     }
+}
+
+/// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): discrete 1, continuous 2, all 3.
+public struct UIScrollTypeMask: OptionSet, Sendable {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+    public static let discrete = UIScrollTypeMask(rawValue: 1)
+    public static let continuous = UIScrollTypeMask(rawValue: 2)
+    public static let all: UIScrollTypeMask = [.discrete, .continuous]
 }

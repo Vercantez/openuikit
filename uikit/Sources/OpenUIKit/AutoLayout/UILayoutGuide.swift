@@ -394,6 +394,9 @@ extension UIView {
         // safeAreaInsetsDidChange when a safe-area change moves the margins.
         if marginsMoved { layoutMarginsDidChange() }
         safeAreaInsetsDidChange()
+        if let vc = _managingViewController, vc.viewIfLoaded === self {
+            vc.viewSafeAreaInsetsDidChange()
+        }
     }
 
     func _notifyLayoutMarginsChanged() {
