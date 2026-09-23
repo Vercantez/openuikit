@@ -188,6 +188,11 @@ final class ObjCSubclassingTests: XCTestCase {
             ("UILabel", UILabel.self),
             ("UIButton", UIButton.self),
             ("UIImageView", UIImageView.self),
+            // ARCollectionViewMasonryLayout : UICollectionViewFlowLayout
+            // (eidolon-flowlayout; FlowLayoutObjCTests).
+            ("UICollectionViewLayout", UICollectionViewLayout.self),
+            ("UICollectionViewFlowLayout", UICollectionViewFlowLayout.self),
+            ("UICollectionViewLayoutAttributes", UICollectionViewLayoutAttributes.self),
         ]
         for (name, cls) in chain {
             let entries = introducedVTableEntries(cls)
@@ -212,6 +217,10 @@ final class ObjCSubclassingTests: XCTestCase {
             ("UITableViewCell", UITableViewCell.self), ("UIViewController", UIViewController.self),
             ("UINavigationController", UINavigationController.self),
             ("UITableViewController", UITableViewController.self),
+            ("UICollectionViewLayout", UICollectionViewLayout.self),
+            ("UICollectionViewFlowLayout", UICollectionViewFlowLayout.self),
+            ("UICollectionViewLayoutAttributes", UICollectionViewLayoutAttributes.self),
+            ("UICollectionViewLayoutInvalidationContext", UICollectionViewLayoutInvalidationContext.self),
         ]
         for (name, cls) in chain {
             XCTAssertEqual(NSStringFromClass(cls), name)

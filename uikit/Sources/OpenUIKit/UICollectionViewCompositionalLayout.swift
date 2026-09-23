@@ -915,8 +915,8 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         return makeAttributes(p, in: cache)
     }
 
-    override func handleScrollToItem(at indexPath: IndexPath,
-                                     at position: UICollectionView.ScrollPosition) -> Bool {
+    final func _handleScrollToItem(at indexPath: IndexPath,
+                                   at position: UICollectionView.ScrollPosition) -> Bool {
         guard indexPath.section >= 0, indexPath.section < sections.count else { return false }
         var cache = sections[indexPath.section]
         guard cache.orthogonal else { return false }

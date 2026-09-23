@@ -973,8 +973,15 @@ let simplenoteTargets: [Target] = [
     .target(name: "OpenUIKitObjCSubclassFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
             path: "Tools/oracle2/objcsubclassprobe/scenario", publicHeadersPath: "include",
             cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    // Objective-C UICollectionViewFlowLayout subclasses shaped like Eidolon's
+    // ARCollectionViewMasonryLayout (eidolon-flowlayout). The scenario is the
+    // SAME .m the iOS 26.1 oracle runs (Tools/oracle2/flowlayoutprobe/run.sh).
+    .target(name: "OpenUIKitFlowLayoutFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCBridge"],
+            path: "Tools/oracle2/flowlayoutprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
     .testTarget(name: "ObjCSubclassingTests",
-                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitFlowLayoutFixtures",
+                               "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSubclassingTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     // The Objective-C surface of UIFont / CALayer / CGColorRef
