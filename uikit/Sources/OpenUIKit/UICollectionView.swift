@@ -989,10 +989,21 @@ open class UICollectionView: UIScrollView {
            let listCfg = layout._storedListConfiguration {
             var changed = false
             for a in attributes where a.representedElementKind == nil {
-                guard let cell = visibleViews[a.elementKey] as? UICollectionViewListCell else {
+                var h: CGFloat
+                if let cell = visibleViews[a.elementKey] as? UICollectionViewListCell {
+                    h = cell.preferredHeight(forWidth: a.frame.width)
+                } else if let cell = visibleViews[a.elementKey] as? UICollectionViewCell {
+                    // A plain cell in a list section self-sizes by Auto Layout
+                    // on its content view at the item width (UIKit's default
+                    // preferredLayoutAttributesFitting). MEASURED NetNewsWire
+                    // feed rows, iPhone 16 / iOS 26.1: 50.33 = the 20.33 body
+                    // label + 15 + 15 constraints (no 52 minimum; that is
+                    // UICollectionViewListCell's content configuration).
+                    guard let fitted = cell._fittedContentHeight(forWidth: a.frame.width) else { continue }
+                    h = fitted
+                } else {
                     continue
                 }
-                var h = cell.preferredHeight(forWidth: a.frame.width)
                 if a.indexPath.item == 0 {
                     h += UICollectionViewListCell.headerTopPadding(for: listCfg.appearance)
                 }

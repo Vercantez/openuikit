@@ -2936,6 +2936,14 @@ and run, but some are only partly implemented:
 - `onChange(of:initial:_:)` does not deliver the `initial: true` call.
 - `Text(_:tableName:bundle:comment:)` shows the key (the development
   language). No bundle lookup is done.
+- Storyboard `NSLocalizableString` decodes to its development-language text
+  (NS.bytes). UIKit's lookup of the storyboard's `<lang>.lproj/<name>.strings`
+  entry for the NSKey is not modelled; an app that ships translated
+  storyboard tables would show the base text.
+- A plain `UICollectionViewCell` in a list section self-sizes by Auto
+  Layout on its content view. Supplementary (header/footer) views do not
+  self-size yet: NetNewsWire's section headers are 40.5 pt against iOS's
+  36.33.
 - `UIViewController.overrideUserInterfaceStyle` resolves through the
   controller, its view subtree and its children. It is not modelled in
   three ways (Tools/oracle2/vcstyleprobe):

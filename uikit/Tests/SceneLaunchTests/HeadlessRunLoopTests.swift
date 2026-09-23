@@ -57,5 +57,45 @@ final class HeadlessRunLoopTests: XCTestCase {
         XCTAssertTrue(UIApplication._adoptBundledOpenUIKitResources(bundleResourcePath: app.path))
         XCTAssertEqual(OpenUIKitRuntime.resourceRoot, res.path)
     }
+
+    func testHeadlessScreenSetsThePhoneTraitEnvironment() {
+        let savedTraits = UITraitCollection.current
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedScale = OpenUIKitRuntime.imageScreenScale
+        let savedCut = OpenUIKitRuntime.systemFontCut
+        let savedBounds = UIScreen.main.bounds, savedScreenScale = UIScreen.main.scale
+        defer {
+            UITraitCollection.current = savedTraits
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            OpenUIKitRuntime.imageScreenScale = savedScale
+            OpenUIKitRuntime.systemFontCut = savedCut
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScreenScale)
+            UIApplication._headlessSafeArea = nil
+        }
+        UIApplication._configureHeadlessScreen([:])
+        XCTAssertEqual(UITraitCollection.current.userInterfaceIdiom, .phone)
+        XCTAssertEqual(UITraitCollection.current.displayScale, 3)
+        XCTAssertEqual(UITraitCollection.current.userInterfaceStyle, .light)
+        XCTAssertEqual(UITraitCollection.current.preferredContentSizeCategory, .large)
+        XCTAssertEqual(UIDevice.current.userInterfaceIdiom, .phone)
+        UIApplication._configureHeadlessScreen(["OPENUIKIT_IDIOM": "pad", "OPENUIKIT_STYLE": "dark",
+                                                "OPENUIKIT_SCREEN": "820x1180@2"])
+        XCTAssertEqual(UITraitCollection.current.userInterfaceIdiom, .pad)
+        XCTAssertEqual(UITraitCollection.current.userInterfaceStyle, .dark)
+        XCTAssertEqual(UITraitCollection.current.displayScale, 2)
+    }
+
+    func testLayoutJSONListsTheWindowTreeWithLabelText() throws {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let label = UILabel(frame: CGRect(x: 10, y: 20, width: 50, height: 20))
+        label.text = "Feeds \"x\""
+        window.addSubview(label)
+        let json = UIApplication._layoutJSON(of: window)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any])
+        let views = try XCTUnwrap(object["views"] as? [[String: Any]])
+        XCTAssertEqual(views.count, 2)
+        XCTAssertEqual(views[1]["text"] as? String, "Feeds \"x\"")
+        XCTAssertEqual(views[1]["window_frame"] as? [Double], [10, 20, 50, 20])
+    }
 }
 #endif

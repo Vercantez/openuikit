@@ -96,6 +96,20 @@ open class UICollectionReusableView: UIView, ReusableView {
 
 // MARK: - UICollectionViewCell
 
+extension UICollectionViewCell {
+    /// The Auto Layout height of the content view at `width`, or nil when
+    /// nothing constrains it vertically (then the layout's estimate stands).
+    func _fittedContentHeight(forWidth width: CGFloat) -> CGFloat? {
+        guard width > 0 else { return nil }
+        contentView.frame = CGRect(x: 0, y: 0, width: width, height: contentView.frame.height)
+        let fitting = contentView.systemLayoutSizeFitting(
+            CGSize(width: width, height: 0),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel)
+        return fitting.height > 0 ? fitting.height : nil
+    }
+}
+
 @preconcurrency @MainActor
 open class UICollectionViewCell: UICollectionReusableView {
     public let contentView: UIView = UICollectionViewCellContentView()

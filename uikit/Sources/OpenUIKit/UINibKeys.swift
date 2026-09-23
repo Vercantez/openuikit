@@ -107,6 +107,20 @@ extension NibDecoder {
             cell.imageView?.removeFromSuperview()
             boundContentView = true
         }
+        // A storyboard collection-view cell archives its content view under
+        // the same key (NetNewsWire's FeedCell prototype: `UIContentView`
+        // holds the title, count and icon with their constraints). Bound to
+        // the cell's own `contentView`, as above; before, the archived view
+        // was built as an unrelated second subview, the real content view
+        // stayed empty and Auto Layout self-sizing had nothing to measure.
+        if !scalarsOnly, !boundContentView, let cell = view as? UICollectionViewCell,
+           case .reference(let contentIndex)? = object.first("UIContentView"),
+           contentIndex >= 0, contentIndex < archive.objects.count {
+            built[contentIndex] = cell.contentView
+            applyView(archive.objects[contentIndex], to: cell.contentView)
+            awakened.append(cell.contentView)
+            boundContentView = true
+        }
 
         // `-[UIView initWithCoder:]` sets userInteractionEnabled from the
         // ABSENCE of `UIUserInteractionDisabled`: MEASURED (eidolonnibs

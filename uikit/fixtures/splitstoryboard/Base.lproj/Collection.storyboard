@@ -22,8 +22,22 @@
                                 <rect key="frame" x="16" y="60" width="370" height="54"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="CCV-00-000">
-                                    <rect key="frame" x="0.0" y="0.0" width="370" height="54"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="370" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Feed Title" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TTL-00-000">
+                                            <rect key="frame" x="16" y="15" width="200" height="30"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <viewLayoutGuide key="safeArea" id="SAF-00-000"/>
+                                    <constraints>
+                                        <constraint firstItem="TTL-00-000" firstAttribute="top" secondItem="SAF-00-000" secondAttribute="top" constant="15" id="ct1-00-000"/>
+                                        <constraint firstItem="SAF-00-000" firstAttribute="bottom" secondItem="TTL-00-000" secondAttribute="bottom" constant="15" id="ct2-00-000"/>
+                                        <constraint firstItem="TTL-00-000" firstAttribute="leading" secondItem="SAF-00-000" secondAttribute="leading" constant="16" id="ct3-00-000"/>
+                                    </constraints>
                                 </view>
                             </collectionViewCell>
                         </cells>

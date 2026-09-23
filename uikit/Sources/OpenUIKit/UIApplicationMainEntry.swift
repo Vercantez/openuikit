@@ -316,6 +316,22 @@ extension UIApplication {
         // (openrender RealApp.swift, openhost, host_full).
         OpenUIKitRuntime.systemFontCut = .iOS
         UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
+        // The process-wide trait environment an iPhone app launches into: the
+        // device idiom, the screen's scale, light style, the default Large
+        // content size. NetNewsWire keys its large title on the idiom
+        // (MainFeedCollectionViewController.swift:127 `if
+        // traitCollection.userInterfaceIdiom == .phone`); with the
+        // unspecified idiom the headless host left, the feed list never got
+        // its large "Feeds" title. OPENUIKIT_IDIOM=pad / OPENUIKIT_STYLE=dark
+        // select the iPad idiom and dark appearance.
+        let idiom: UIUserInterfaceIdiom = env["OPENUIKIT_IDIOM"] == "pad" ? .pad : .phone
+        UIDevice.current.userInterfaceIdiom = idiom
+        OpenUIKitRuntime.assetCatalogIdiom = idiom
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: env["OPENUIKIT_STYLE"] == "dark" ? .dark : .light,
+            displayScale: scale,
+            preferredContentSizeCategory: .large,
+            userInterfaceIdiom: idiom)
         let insets = (env["OPENUIKIT_SAFE_AREA"] ?? "59,0,34,0")
             .split(separator: ",").compactMap { Double($0) }
         if insets.count == 4 {
@@ -341,6 +357,44 @@ extension UIApplication {
         return true
     }
 
+    /// The key window's view tree in the shape Tools/oracle2/nnwgolden's
+    /// LayoutDump.m writes for the iOS golden: path, class, frame in the
+    /// superview, window frame, hidden, label text. A measurement aid for
+    /// comparing the port's hierarchy with the real one.
+    @MainActor
+    static func _layoutJSON(of window: UIWindow) -> String {
+        func esc(_ s: String) -> String {
+            var out = ""
+            for u in s.unicodeScalars {
+                switch u {
+                case "\"": out += "\\\""
+                case "\\": out += "\\\\"
+                case "\n": out += "\\n"
+                default:
+                    if u.value < 0x20 { out += String(format: "\\u%04x", u.value) } else { out.unicodeScalars.append(u) }
+                }
+            }
+            return out
+        }
+        func nums(_ r: CGRect) -> String { "[\(r.origin.x), \(r.origin.y), \(r.size.width), \(r.size.height)]" }
+        var rows: [String] = []
+        func walk(_ v: UIView, _ path: String) {
+            let wf = v.convert(v.bounds, to: window)
+            var row = "{\"path\": \"\(path)\", \"class\": \"\(esc(String(describing: type(of: v))))\", "
+                + "\"frame\": \(nums(v.frame)), \"window_frame\": \(nums(wf)), "
+                + "\"hidden\": \(v.isHidden || v.alpha < 0.01)"
+            if let label = v as? UILabel, let text = label.text { row += ", \"text\": \"\(esc(text))\", \"font\": \(label.font.pointSize)" }
+            rows.append(row + "}")
+            for (i, sub) in v.subviews.enumerated() {
+                walk(sub, path.isEmpty ? "\(i)" : "\(path).\(i)")
+            }
+        }
+        walk(window, "")
+        let b = window.bounds
+        return "{\"screen\": {\"scale\": \(UIScreen.main.scale), \"size\": [\(b.width), \(b.height)]}, \"views\": [\n"
+            + rows.joined(separator: ",\n") + "\n]}\n"
+    }
+
     /// Applied to every window the headless host creates (UIWindow's
     /// registration hook reads it).
     @MainActor static var _headlessSafeArea: UIEdgeInsets?
@@ -358,6 +412,10 @@ extension UIApplication {
         do {
             try Data(png).write(to: URL(fileURLWithPath: path))
             print("OPENUIKIT_SNAPSHOT_WRITTEN \(path) \(bitmap.width)x\(bitmap.height)")
+            if let layoutPath = ProcessInfo.processInfo.environment["OPENUIKIT_SNAPSHOT_LAYOUT_JSON"] {
+                try Data(_layoutJSON(of: window).utf8).write(to: URL(fileURLWithPath: layoutPath))
+                print("OPENUIKIT_LAYOUT_WRITTEN \(layoutPath)")
+            }
         } catch {
             print("OPENUIKIT_SNAPSHOT: write failed \(error)")
         }

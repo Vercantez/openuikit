@@ -811,7 +811,16 @@ final class NibDecoder {
 
     func make(_ object: NibArchive.Object, index: Int) -> AnyObject? {
         switch object.className {
-        case "NSString", "NSMutableString":
+        case "NSString", "NSMutableString",
+             // A storyboard's localizable text (IB writes titles and labels
+             // this way since Xcode 15): NS.bytes is the development-language
+             // value, NSKey the `<object id>.<property>` key of the
+             // storyboard's `.strings` table. UIKit shows the table's entry for
+             // the current language when one exists. NetNewsWire ships no
+             // Main.strings (en.lproj has only DefaultAccountNames), so its
+             // text is NS.bytes -- "Feeds" for the feed list's UITitle. The
+             // table lookup is not modelled yet (docs/KNOWN_GAPS.md).
+             "NSLocalizableString":
             if case .bytes(let raw)? = object.first("NS.bytes") {
                 return NibString(value: NibArchive.utf8String(raw))
             }
