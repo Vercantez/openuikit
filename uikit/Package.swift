@@ -1175,6 +1175,7 @@ let eidolonDependencyProducts: [Product] = [
 ].map { .library(name: $0, targets: [$0]) }
 let eidolonDependencySwiftSettings: [SwiftSetting] = [.unsafeFlags(["-swift-version", "4"])]
 let eidolonDependencyTargets: [Target] = [
+    .plugin(name: "EidolonSourceOverlay", capability: .buildTool(), path: "Plugins/EidolonSourceOverlay"),
     .target(name: "RxSwift", path: "Sources/EidolonDependencies/RxSwift/RxSwift",
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "RxCocoaRuntime", path: "Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime",
@@ -1185,8 +1186,13 @@ let eidolonDependencyTargets: [Target] = [
     .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit",
                                             .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/RxSwift/RxCocoa",
-            exclude: ["Runtime", "RxCocoa.h"],
-            swiftSettings: eidolonDependencySwiftSettings),
+            // The two DataSources files compile from build-time overlays
+            // (Sources/EidolonDependencies/overlays/README.md).
+            exclude: ["Runtime", "RxCocoa.h",
+                      "iOS/DataSources/RxTableViewReactiveArrayDataSource.swift",
+                      "iOS/DataSources/RxCollectionViewReactiveArrayDataSource.swift"],
+            swiftSettings: eidolonDependencySwiftSettings,
+            plugins: ["EidolonSourceOverlay"]),
     .target(name: "Result", path: "Sources/EidolonDependencies/Result/Result",
             exclude: ["Result.h"], swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Alamofire", path: "Sources/EidolonDependencies/Alamofire/Source",
