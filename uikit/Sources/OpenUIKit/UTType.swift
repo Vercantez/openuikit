@@ -1,10 +1,17 @@
-// Portable UTType for UIDocumentPicker / UIDocumentBrowser.
+// UTType for UIDocumentPicker / UIDocumentBrowser.
 //
-// OpenUIKit does not import UniformTypeIdentifiers: that module re-exports
-// CoreGraphics and collides with OpenCoreGraphics' CGAffineTransform (same
-// class of clash as NSAttributedString). The identifiers are the UTI strings
-// the iOS 26.1 document-picker headers name.
-
+// Where Apple's UniformTypeIdentifiers exists (the macOS host, route (b)'s
+// iOS triple) UTType IS Apple's: since cg-unify OpenCoreGraphics'
+// CGAffineTransform is CoreGraphics' own, so the module's CoreGraphics
+// re-export no longer collides, and an app that imports both UIKit and
+// UniformTypeIdentifiers sees one `UTType` (NetNewsWire RSImage.swift:200
+// `UTType.png` was ambiguous). Elsewhere the portable type below stands in;
+// its identifiers are the UTI strings the iOS 26.1 document-picker headers
+// name.
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
+public typealias UTType = UniformTypeIdentifiers.UTType
+#else
 public struct UTType: Hashable, Sendable {
     public let identifier: String
 
@@ -39,3 +46,4 @@ public struct UTType: Hashable, Sendable {
     public static let zip = UTType("public.zip-archive")
     public static let json = UTType("public.json")
 }
+#endif

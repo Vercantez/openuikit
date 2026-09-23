@@ -463,9 +463,9 @@ final class LayerContextCompatibilityTests: XCTestCase {
         guard let context = UIGraphicsGetCurrentContext() else {
             return XCTFail("begin must install a current context")
         }
-        XCTAssertEqual(context.scale, 3)
-        context.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 2),
-                     color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
+        XCTAssertEqual(abs(context.ctm.a), 3)
+        context.setFillColor(UIColor(red: 1, green: 0, blue: 0, alpha: 1).cgColor)
+        context.fill(CGRect(x: 0, y: 0, width: 4, height: 2))
 
         let first = UIGraphicsGetImageFromCurrentImageContext()
         XCTAssertEqual(first?.scale, 3)
@@ -474,8 +474,8 @@ final class LayerContextCompatibilityTests: XCTestCase {
         XCTAssertEqual(first.map { pixel($0.bitmap, x: 6, y: 3) }, [255, 0, 0, 255])
 
         // Returned images are snapshots, not aliases of the mutable context.
-        context.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 2),
-                     color: CanvasColor(red: 0, green: 0, blue: 1, alpha: 1))
+        context.setFillColor(UIColor(red: 0, green: 0, blue: 1, alpha: 1).cgColor)
+        context.fill(CGRect(x: 0, y: 0, width: 4, height: 2))
         XCTAssertEqual(first.map { pixel($0.bitmap, x: 6, y: 3) }, [255, 0, 0, 255])
         XCTAssertEqual(UIGraphicsGetImageFromCurrentImageContext().map {
             pixel($0.bitmap, x: 6, y: 3)
@@ -490,18 +490,18 @@ final class LayerContextCompatibilityTests: XCTestCase {
         CanvasBackendSelection.current = .swift
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 3, height: 3), false, 1)
         let outer = try! XCTUnwrap(UIGraphicsGetCurrentContext())
-        outer.fill(rect: CGRect(x: 0, y: 0, width: 3, height: 3),
-                   color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
+        outer.setFillColor(UIColor(red: 1, green: 0, blue: 0, alpha: 1).cgColor)
+        outer.fill(CGRect(x: 0, y: 0, width: 3, height: 3))
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 2, height: 2), true, 2)
         let inner = try! XCTUnwrap(UIGraphicsGetCurrentContext())
         XCTAssertFalse(inner === outer)
-        XCTAssertEqual(inner.scale, 2)
+        XCTAssertEqual(abs(inner.ctm.a), 2)
         XCTAssertEqual(UIGraphicsGetImageFromCurrentImageContext().map {
             pixel($0.bitmap, x: 0, y: 0)[3]
         }, 255, "opaque contexts begin with opaque pixels")
-        inner.fill(rect: CGRect(x: 0, y: 0, width: 2, height: 2),
-                   color: CanvasColor(red: 0, green: 0, blue: 1, alpha: 1))
+        inner.setFillColor(UIColor(red: 0, green: 0, blue: 1, alpha: 1).cgColor)
+        inner.fill(CGRect(x: 0, y: 0, width: 2, height: 2))
         XCTAssertEqual(UIGraphicsGetImageFromCurrentImageContext().map {
             pixel($0.bitmap, x: 2, y: 2)
         }, [0, 0, 255, 255])

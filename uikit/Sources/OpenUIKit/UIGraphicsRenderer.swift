@@ -4,9 +4,10 @@
 //
 //  1. A CURRENT-CONTEXT stack. UIKit's drawing calls
 //     (`UIBezierPath.fill()`, `UIColor.setFill()`, `UIRectFill`) act on an
-//     implicit context; here that context IS an OpenCoreGraphics `Canvas`,
-//     handed to app code by `UIGraphicsGetCurrentContext()`. The color
-//     state UIKit keeps in the CGContext lives alongside it.
+//     implicit context backed by an OpenCoreGraphics `Canvas`. App code gets
+//     it from `UIGraphicsGetCurrentContext()`: an Apple `CGContext` over the
+//     same pixels where CoreGraphics exists (UIGraphicsCoreGraphics.swift,
+//     cg-unify), the Canvas itself elsewhere (`CGContext` = `Canvas`).
 //  2. `UIGraphicsImageRenderer(size:)` / `image(actions:)` — renders into a
 //     transparent (or opaque) offscreen Bitmap at the format's scale and
 //     returns a `UIImage` at that scale.
@@ -17,18 +18,42 @@
 //     `contentVersion`, which is part of LayerBridge's content-cache key,
 //     so the cached contents image is dropped and re-rendered.
 
+#if canImport(CoreGraphics)
+import class CoreGraphics.CGContext
+#endif
+
 /// One entry of the current-context stack: the surface plus the implicit
 /// fill/stroke colors CG keeps in its graphics state.
 final class UIGraphicsState {
     let canvas: Canvas
     /// Non-nil only for a legacy UIGraphicsBeginImageContext... entry.
     let imageScale: CGFloat?
+    /// The rect a `draw(_:)` session is clipped to (user space).
+    let clip: CGRect?
     var fillColor: CanvasColor = .black
     var strokeColor: CanvasColor = .black
-    init(canvas: Canvas, imageScale: CGFloat? = nil) {
+    init(canvas: Canvas, imageScale: CGFloat? = nil, clip: CGRect? = nil) {
         self.canvas = canvas
         self.imageScale = imageScale
+        self.clip = clip
     }
+#if canImport(CoreGraphics)
+    /// The session's CoreGraphics face, made on first request.
+    var bridge: _UICoreGraphicsBridge?
+    /// False for an entry that re-pushed another entry's context.
+    var ownsBridge = true
+
+    /// UIKit's CGContext for this entry (created lazily; the UIKit colour
+    /// state set so far moves into it).
+    var coreGraphicsContext: CGContext? {
+        if bridge == nil, let made = _UICoreGraphicsBridge(canvas: canvas, clip: clip) {
+            made.context.setFillColor(fillColor.cgColor)
+            made.context.setStrokeColor(strokeColor.cgColor)
+            bridge = made
+        }
+        return bridge?.context
+    }
+#endif
 }
 
 public enum UIGraphics {
@@ -39,37 +64,108 @@ public enum UIGraphics {
     public static func pushContext(_ canvas: Canvas) {
         stack.append(UIGraphicsState(canvas: canvas))
     }
+    /// A `draw(_:)` session: the context is clipped to `clip`.
+    static func pushContext(_ canvas: Canvas, clip: CGRect) {
+        stack.append(UIGraphicsState(canvas: canvas, clip: clip))
+    }
     static func pushImageContext(_ canvas: Canvas, scale: CGFloat) {
         stack.append(UIGraphicsState(canvas: canvas, imageScale: scale))
     }
     /// Pop the current drawing context (UIGraphicsPopContext).
     public static func popContext() {
-        if !stack.isEmpty { stack.removeLast() }
+        guard let state = stack.popLast() else { return }
+#if canImport(CoreGraphics)
+        if state.ownsBridge, let bridge = state.bridge { bridge.finish() }
+#else
+        _ = state
+#endif
     }
-    /// The current drawing context, or nil outside a draw block.
+    /// The current drawing context's surface, or nil outside a draw block.
     public static var currentContext: Canvas? { stack.last?.canvas }
+
+    /// Runs one UIKit drawing call on the current surface -- under the
+    /// graphics state of UIKit's CGContext when app code holds it.
+    static func draw(_ body: (Canvas) -> Void) {
+        guard let state = top else { return }
+#if canImport(CoreGraphics)
+        if let bridge = state.bridge {
+            bridge.draw(body)
+            return
+        }
+#endif
+        body(state.canvas)
+    }
+
+    /// Makes CoreGraphics' pixels visible in the current surface's bitmap.
+    static func flushCurrent() {
+#if canImport(CoreGraphics)
+        top?.bridge?.flush()
+#endif
+    }
 }
 
-/// UIKit's `UIGraphicsGetCurrentContext()`. The "CGContext" of OpenUIKit is
-/// an OpenCoreGraphics `Canvas` (same drawing model: point user space,
-/// CTM, clip, transparency layers).
-public func UIGraphicsGetCurrentContext() -> Canvas? { UIGraphics.currentContext }
+#if canImport(CoreGraphics)
+/// UIKit's `UIGraphicsGetCurrentContext()`: CoreGraphics' own `CGContext`,
+/// drawing into the current surface (UIGraphicsCoreGraphics.swift).
+public func UIGraphicsGetCurrentContext() -> CGContext? { UIGraphics.top?.coreGraphicsContext }
+
+/// UIKit's `UIGraphicsPushContext(_:)`. A context the port made re-enters
+/// its own surface; an app-made bitmap context is drawn into directly.
+public func UIGraphicsPushContext(_ context: CGContext) {
+    if let bridge = _UICoreGraphicsBridge.bridge(for: context) {
+        let state = UIGraphicsState(canvas: bridge.canvas)
+        state.bridge = bridge
+        state.ownsBridge = false
+        UIGraphics.stack.append(state)
+    } else {
+        let bridge = _UICoreGraphicsBridge(adopting: context)
+        let state = UIGraphicsState(canvas: bridge.canvas)
+        state.bridge = bridge
+        UIGraphics.stack.append(state)
+    }
+}
+#else
+/// Without Apple's CoreGraphics the CGContext of OpenUIKit is the
+/// OpenCoreGraphics `Canvas` (same drawing model: point user space, CTM,
+/// clip, transparency layers).
+public typealias CGContext = Canvas
+
+/// UIKit's `UIGraphicsGetCurrentContext()`.
+public func UIGraphicsGetCurrentContext() -> CGContext? { UIGraphics.currentContext }
 public func UIGraphicsPushContext(_ canvas: Canvas) { UIGraphics.pushContext(canvas) }
+#endif
 public func UIGraphicsPopContext() { UIGraphics.popContext() }
 
 /// Current implicit fill / stroke colors (set by `UIColor.setFill()` /
-/// `setStroke()`; black by default, like CG).
-public func UIGraphicsCurrentFillColor() -> CanvasColor { UIGraphics.top?.fillColor ?? .black }
-public func UIGraphicsCurrentStrokeColor() -> CanvasColor { UIGraphics.top?.strokeColor ?? .black }
+/// `setStroke()`, or by the CGContext's own setters; black by default,
+/// like CG).
+public func UIGraphicsCurrentFillColor() -> CanvasColor {
+#if canImport(CoreGraphics)
+    if let color = UIGraphics.top?.bridge?.fillColor { return color }
+#endif
+    return UIGraphics.top?.fillColor ?? .black
+}
+public func UIGraphicsCurrentStrokeColor() -> CanvasColor {
+#if canImport(CoreGraphics)
+    if let color = UIGraphics.top?.bridge?.strokeColor { return color }
+#endif
+    return UIGraphics.top?.strokeColor ?? .black
+}
 
 extension UIColor {
     /// Set this color as the current context's fill color.
     public func setFill() {
         UIGraphics.top?.fillColor = resolvedCGColor(with: UITraitCollection.current)
+#if canImport(CoreGraphics)
+        UIGraphics.top?.bridge?.context.setFillColor(_cgColorObject(with: .current))
+#endif
     }
     /// Set this color as the current context's stroke color.
     public func setStroke() {
         UIGraphics.top?.strokeColor = resolvedCGColor(with: UITraitCollection.current)
+#if canImport(CoreGraphics)
+        UIGraphics.top?.bridge?.context.setStrokeColor(_cgColorObject(with: .current))
+#endif
     }
     /// Set this color as BOTH the fill and stroke color (UIKit's `set()`).
     public func set() { setFill(); setStroke() }
@@ -77,7 +173,7 @@ extension UIColor {
 
 /// UIKit's `UIRectFill` — fill a rect with the current fill color.
 public func UIRectFill(_ rect: CGRect) {
-    UIGraphicsGetCurrentContext()?.fill(rect: rect, color: UIGraphicsCurrentFillColor())
+    UIGraphics.draw { $0.fill(rect: rect, color: UIGraphicsCurrentFillColor()) }
 }
 
 // MARK: - Legacy image-context API
@@ -141,6 +237,7 @@ extension Canvas {
 /// UIGraphicsPushContext are not image contexts and therefore return nil.
 public func UIGraphicsGetImageFromCurrentImageContext() -> UIImage? {
     guard let state = UIGraphics.top, let scale = state.imageScale else { return nil }
+    UIGraphics.flushCurrent()
     let source = state.canvas.bitmap
     let snapshot = Bitmap(width: source.width, height: source.height)
     snapshot.pixels = source.pixels
@@ -173,23 +270,40 @@ public class UIGraphicsImageRendererFormat {
 
 /// The object handed to a `UIGraphicsImageRenderer` drawing block.
 public class UIGraphicsImageRendererContext {
-    /// The drawing surface (UIKit calls this `cgContext`).
-    public let cgContext: Canvas
+    /// The drawing surface.
+    let canvas: Canvas
     public let format: UIGraphicsImageRendererFormat
     /// Bounds of the image being drawn, in points.
     public let currentImage: CGRect
 
     init(canvas: Canvas, format: UIGraphicsImageRendererFormat, bounds: CGRect) {
-        self.cgContext = canvas
+        self.canvas = canvas
         self.format = format
         self.currentImage = bounds
     }
 
+    /// UIKit's `cgContext`: the renderer's current context (an Apple
+    /// `CGContext` where CoreGraphics exists; cgunifyprobe: `cgContext ===
+    /// UIGraphicsGetCurrentContext()` inside the block).
+    public var cgContext: CGContext {
+#if canImport(CoreGraphics)
+        if let state = UIGraphics.stack.last(where: { $0.canvas === canvas }),
+           let context = state.coreGraphicsContext {
+            return context
+        }
+        return _UICoreGraphicsBridge(canvas: canvas, clip: nil)!.context
+#else
+        return canvas
+#endif
+    }
+
     public func fill(_ rect: CGRect) {
-        cgContext.fill(rect: rect, color: UIGraphicsCurrentFillColor())
+        UIGraphics.draw { $0.fill(rect: rect, color: UIGraphicsCurrentFillColor()) }
     }
     public func stroke(_ rect: CGRect) {
-        cgContext.stroke(.rect(rect), color: UIGraphicsCurrentStrokeColor(), lineWidth: 1)
+        UIGraphics.draw {
+            $0.stroke(.rect(rect), color: UIGraphicsCurrentStrokeColor(), lineWidth: 1)
+        }
     }
 }
 

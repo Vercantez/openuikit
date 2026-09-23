@@ -342,36 +342,46 @@ public class UIBezierPath {
 
     /// Fill with the current context's fill color (`UIColor.setFill()`).
     public func fill() {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.fill(cgPath, color: UIGraphicsCurrentFillColor(), evenOdd: usesEvenOddFillRule)
+        UIGraphics.draw { $0.fill(cgPath, color: UIGraphicsCurrentFillColor(), evenOdd: usesEvenOddFillRule) }
     }
 
     /// Fill with an explicit color (not UIKit API, but the honest spelling
     /// for code that does not want the implicit color state).
     public func fill(with color: UIColor) {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.fill(cgPath, color: color.resolvedCGColor(with: UITraitCollection.current),
-                 evenOdd: usesEvenOddFillRule)
+        UIGraphics.draw {
+            $0.fill(cgPath, color: color.resolvedCGColor(with: UITraitCollection.current),
+                    evenOdd: usesEvenOddFillRule)
+        }
     }
 
     /// Stroke with the current context's stroke color (`UIColor.setStroke()`),
     /// honoring `lineWidth` / `lineCapStyle` / `lineJoinStyle`.
     public func stroke() {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.stroke(cgPath, color: UIGraphicsCurrentStrokeColor(), lineWidth: lineWidth,
-                   cap: canvasCap, join: canvasJoin, miterLimit: miterLimit)
+        UIGraphics.draw {
+            $0.stroke(cgPath, color: UIGraphicsCurrentStrokeColor(), lineWidth: lineWidth,
+                      cap: canvasCap, join: canvasJoin, miterLimit: miterLimit)
+        }
     }
 
     public func stroke(with color: UIColor) {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.stroke(cgPath, color: color.resolvedCGColor(with: UITraitCollection.current),
-                   lineWidth: lineWidth, cap: canvasCap, join: canvasJoin,
-                   miterLimit: miterLimit)
+        UIGraphics.draw {
+            $0.stroke(cgPath, color: color.resolvedCGColor(with: UITraitCollection.current),
+                      lineWidth: lineWidth, cap: canvasCap, join: canvasJoin,
+                      miterLimit: miterLimit)
+        }
     }
 
     /// Intersect the current context's clip with this path.
     public func addClip() {
-        UIGraphicsGetCurrentContext()?.clip(to: cgPath)
+#if canImport(CoreGraphics)
+        // With UIKit's CGContext out, the clip lives in it (an app's
+        // restoreGState() must undo it, as on iOS).
+        if let bridge = UIGraphics.top?.bridge {
+            bridge.addClip(cgPath)
+            return
+        }
+#endif
+        UIGraphics.currentContext?.clip(to: cgPath)
     }
 
     var canvasCap: CanvasLineCap { CanvasLineCap(lineCapStyle) }

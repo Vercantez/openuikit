@@ -15,6 +15,7 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+import class CoreGraphics.CGContext
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -628,6 +629,17 @@ open class CALayer: NSObject {
     /// Paint the receiver and its descendants into an existing graphics
     /// context. Like Core Animation, the root's own frame/position is not
     /// applied; only its bounds contents and descendant placement are drawn.
+#if canImport(CoreGraphics)
+    /// UIKit's `render(in:)` into a CoreGraphics context: the port's own
+    /// surface when the port made the context, else a surface over the app's
+    /// bitmap context (UIGraphicsCoreGraphics.swift).
+    public final func render(in context: CGContext) {
+        UIGraphicsPushContext(context)
+        UIGraphics.draw { render(in: $0) }
+        UIGraphicsPopContext()
+    }
+#endif
+
     public final func render(in context: Canvas) {
         // iOS 26's legacy render(in:) path was measured to round all four
         // corners regardless of maskedCorners, unlike live compositing.
@@ -902,6 +914,10 @@ open class UIView: UIResponder, CALayerDelegate {
         set { layer.masksToBounds = newValue }
     }
     public final var contentMode: UIViewContentMode = .scaleToFill
+    /// UIKit's backing-store scale for `draw(_:)`. Stored only: OpenUIKit
+    /// draws view content at the destination surface's scale (cg-unify's
+    /// probe sets 1 so the simulator draws at 1x like the port).
+    public final var contentScaleFactor: CGFloat = OpenUIKitRuntime.imageScreenScale
     public final var tag: Int = 0
 
     public struct AutoresizingMask: OptionSet, Sendable {
@@ -1818,7 +1834,7 @@ open class UIView: UIResponder, CALayerDelegate {
     @objc(_ouk_drawContentIn:bounds:)
 #endif
     open dynamic func drawContent(in canvas: Canvas, bounds: CGRect) {
-        UIGraphics.pushContext(canvas)
+        UIGraphics.pushContext(canvas, clip: bounds)
         draw(bounds)
         UIGraphics.popContext()
     }

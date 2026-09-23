@@ -575,6 +575,24 @@ extension UIImage {
     @objc(imageWithContentsOfFile:) public class func __objc_image(contentsOfFile path: String) -> UIImage? {
         UIImage(contentsOfFile: path)
     }
+    /// UIImage.h's CGImage surface (cg-unify: `CGImageRef` is CoreGraphics'
+    /// own image; UIImageOrientation is the SDK's NSInteger enum).
+    @objc(CGImage) public var __objc_CGImage: CoreGraphics.CGImage? { cgImage }
+    @objc(imageOrientation) public var __objc_imageOrientation: Int { imageOrientation.rawValue }
+    @objc(imageWithCGImage:) public class func __objc_image(cgImage: CoreGraphics.CGImage) -> UIImage {
+        UIImage(cgImage: cgImage)
+    }
+    @objc(imageWithCGImage:scale:orientation:)
+    public class func __objc_image(cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) -> UIImage {
+        UIImage(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
+    }
+    @objc(initWithCGImage:) public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage) {
+        self.init(cgImage: cgImage)
+    }
+    @objc(initWithCGImage:scale:orientation:)
+    public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) {
+        self.init(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
+    }
     @objc(initWithData:) public convenience init?(__objcData data: Data) { self.init(data: [UInt8](data)) }
     @objc(imageWithData:) public class func __objc_image(data: Data) -> UIImage? { UIImage(data: [UInt8](data)) }
     /// UIImageRenderingMode's SDK values: Automatic 0, AlwaysOriginal 1,
