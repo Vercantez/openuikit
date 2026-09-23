@@ -11,7 +11,9 @@ resolving to OpenUIKit and **no Apple UIKit, SwiftUI or AppKit in the module gra
 `#if os(iOS)` / `canImport(UIKit)` / `targetEnvironment(simulator)` branches are the ones a
 device takes. The ingest tools emit packages that build for either triple. Measured effect:
 Simplenote's Swift half **489 → 425** unique errors (85 → 77 files) at the simplenote-objc-core
-base, and **444 → 382** (81 → 73) after merging today's main. In both, the 42 `@IBAction`
+base, **444 → 382** (81 → 73) after merging main `d48096f4`, and **391 → 315** (74 → 65)
+with attrstring-unify (NSAttributedString = Foundation's) merged, which also removed the
+need for the NSTextStorage measurement shim. In all three the 42 `@IBAction`
 arity errors, the AppKit class collisions and the `OUK_` renames gone; Kickstarter's real
 Kingfisher 8.5.0 now compiles its **iOS** branch; ServerDrivenUI's AVAudioSession and
 SwiftUICore rows are gone (20 → 3 own errors, the 3 being AVKit's `VideoPlayer`).
@@ -114,6 +116,8 @@ Their `WidgetCenter` uses are counted (2).
 | files, same base | 85 | 77 |
 | unique errors, after merging main `d48096f4` | **444** | **382** |
 | files, same | 81 | 73 |
+| unique errors, with attrstring-unify (no NSTextStorage shim needed) | **391** | **315** |
+| files, same | 74 | 65 |
 | `@IBAction methods must have 1 argument` | 42 | **0** |
 | `has different definitions in different modules` (AppKit/QuartzCore vs OpenUIKit-Swift.h) | 13 | **1** (`CALayer`, QuartzCore) |
 | `OUK_NSLayoutConstraint` rename fallout (`isActive`, assignment) | 8 | 0 |
@@ -121,7 +125,7 @@ Their `WidgetCenter` uses are counted (2).
 | `SFSafariViewController` not found (macOS SafariServices) | 2 | 0 |
 | `performBatchUpdates` / `performBatchChanges` (SimplenoteFoundation took `os(macOS)`) | 2 | 0 |
 
-The row deltas below are the base pair. The after-merge pair has the same deltas row for row, except `performBatchUpdates`, which main already had.
+With attrstring-unify the 20 attributed-string rows below are gone on the iOS triple too (OpenUIKit now declares UIKit's keys on Foundation's type when `!canImport(AppKit)`; the probe checks `textstorage=NSTextStorage font-key=NSFont` at run time on the simulator). The two `different definitions` left on iOS are `CALayer` and `CAGradientLayer` vs QuartzCore. The row deltas below are the base pair. The after-merge pair has the same deltas row for row, except `performBatchUpdates`, which main already had.
 | NEW: attributed-string rows (Foundation `NSAttributedString.Key.font/.foregroundColor/.paragraphStyle/.backgroundColor` 7, `String`→`NSAttributedString` 6, `foregroundColor:` / `string:` arguments 6, cross-universe conversion 1) | 0 | 20 |
 | NEW: `WidgetCenter`, `INInteraction.intentResponse` | 0 | 3 |
 
@@ -175,7 +179,7 @@ simplenote-objc-core named, still open). SimplenoteFoundation now compiles its i
    Kingfisher from 112 → 109 errors (2 `CADisplayLink` rows and 1 `contents` row gone,
    1 new `'CALayer' is ambiguous`). It was not committed. With Apple's CoreGraphics or QuartzCore in scope next to the port, `CGColor` (OpenCoreGraphics' struct) and `CALayer` (OpenUIKit's class) are **ambiguous**; Simplenote's last `different definitions` is `CALayer`. Apple's `import UIKit` re-exports CoreGraphics, ImageIO and QuartzCore (measured by netnewswire-launch, 22 errors in RSCore); the port's shim cannot simply do the same until those types are unified. Same wall exists on the macOS triple; the iOS triple no longer hides it behind AppKit.
 2. **UI-coupled Apple frameworks the port does not ship as route-(b) products:** AVKit (Kingfisher, ServerDrivenUI), WidgetKit (Simplenote; `full/widgetkit` exists for the guest but does not compile against the SwiftPM SwiftUI), and the rest of the 107 removed modules. Each is now an explicit `no such module`.
-3. **Two NSAttributedString universes** (OpenUIKit's vs Foundation's) — 22 ambiguities + 20 attributed-string rows in Simplenote.
+3. ~~Two NSAttributedString universes~~ closed on main by attrstring-unify; measured on the iOS triple: the 22 ambiguities and 20 attributed-string rows are gone (Simplenote 382 → 315).
 4. **Route-(b) Mach-O under machorun.** The route-(b) product runs on the iOS simulator, but links Apple's Foundation/CoreGraphics `.tbd`s, which the guest does not provide (it has the port's Foundation, statically linked, and loud-abort stubs at the framework paths). Running an Xcode-built binary under machorun needs either Xcode's swiftc compiling the whole port closure (FoundationEssentials, OpenCoreGraphics, CQuartz) against the guest SDK or ABI-compatible framework dylibs at Apple's install names. **Not reached.**
 5. **ObjC subclassing inside the guest.** `build_full.sh` still compiles OpenUIKit without `OPENUIKIT_OBJC_SUBCLASSING` (the guest sysroot also has no ObjC Foundation headers for an app .m file). So the ObjC-subclass contract is proven on Apple's runtime (the simulator run above), not on objc4 under machorun. The guest probe uses a Swift UIView subclass. **Not attempted.**
 
@@ -197,7 +201,7 @@ simplenote-objc-core named, still open). SimplenoteFoundation now compiles its i
 | `scripts/ops/local_guest_verify.sh` (macOS-triple guest, full Mach-O path) | `FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController`, `rendered 15 screens; existing screens byte-identical 14/14 (including Ledger)`, **`REAL-APP SCREEN VERIFIED ON LINUX`** |
 | `full/iostarget/ios_guest.sh` (iOS-triple guest) | `POSIX_MADVISE_MATCHES_DARWIN`, `IOS_TARGET_PROBE_MATCHES_IOS_26_1 lines=14`, `FOCUS_REAL_APPDELEGATE_LAUNCHED`, `byte-identical 14/14`, **`IOS_TARGET_GUEST_VERIFIED target=arm64-apple-ios26.0-simulator`** |
 | `uikit/Tools/iostarget/run_probe.sh` (route b, simulator) | **`IOS_TARGET_PROBE_VERIFIED trace=52 lines identical to iOS 26.1 UIKit`** |
-| ingest tests (`LADDER_CORPUS=…`) | 96 passed |
+| ingest tests (`LADDER_CORPUS=…`), after merging main again (netnewswire's spec `platforms` compose with the iOS floor: kept, an iOS entry below 26.0 raised, `.iOS("26.0")` appended if absent) | 104 passed |
 | `full/xcodeplan/tests -k "true_ios or build_full"` | 48 passed |
 | `swift test --filter "TableViewBatchUpdatesTests|ObjCSubclassingTests|OpenUIKitObjCBridgeTests"` (after merge) | 19/19 |
 | corpus / pins | no vendored or pin file edited. `machorun/` edits were reverted, because machorun is pinned; the fix moved to the full/ umbrella. For about a minute there were six stray entries in `scratch/ladder-corpus/ios-oss` (see Risks); they were removed |

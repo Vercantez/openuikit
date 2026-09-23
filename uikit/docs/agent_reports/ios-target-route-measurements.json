@@ -3455,6 +3455,1534 @@
      1
     ]
    ]
+  },
+  "macos_with_attrstring_unify_no_shim": {
+   "unique_errors": 391,
+   "files": 74,
+   "errors_by_message": [
+    [
+     "@IBAction methods must have 1 argument",
+     42
+    ],
+    [
+     "method does not override any method from its superclass",
+     14
+    ],
+    [
+     "cannot find 'isEditing' in scope",
+     11
+    ],
+    [
+     "ambiguous use of 'init'",
+     10
+    ],
+    [
+     "overriding non-open property outside of its defining module",
+     8
+    ],
+    [
+     "cannot find 'selectedRange' in scope",
+     7
+    ],
+    [
+     "initializer for conditional binding must have Optional type, not 'String'",
+     7
+    ],
+    [
+     "property cannot be marked '@IBInspectable' because its type cannot be represented in Objective-C",
+     7
+    ],
+    [
+     "'Timer' is ambiguous for type lookup in this context",
+     6
+    ],
+    [
+     "value of type 'UIContextualAction' has no member 'accessibilityLabel'",
+     6
+    ],
+    [
+     "value of type 'OUK_NSLayoutConstraint' has no member 'isActive'",
+     5
+    ],
+    [
+     "type 'SPUser' does not conform to protocol 'UserProtocol'",
+     4
+    ],
+    [
+     "method cannot be marked '@objc' because the type of the parameter 2 cannot be represented in Objective-C",
+     4
+    ],
+    [
+     "cannot infer key path type from context; consider explicitly specifying a root type",
+     4
+    ],
+    [
+     "value of type 'Image' (aka '_OpenImage') has no member 'renderingMode'",
+     4
+    ],
+    [
+     "cannot infer contextual base in reference to member 'template'",
+     4
+    ],
+    [
+     "overriding non-open instance method outside of its defining module",
+     3
+    ],
+    [
+     "property does not override any property from its superclass",
+     3
+    ],
+    [
+     "'nil' requires a contextual type",
+     3
+    ],
+    [
+     "property overrides a 'final' property",
+     3
+    ],
+    [
+     "cannot infer contextual base in reference to member 'light'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'setLineWidth'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'move'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'addLine'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'strokePath'",
+     3
+    ],
+    [
+     "'SubscriptionInfo' is not a member type of struct 'OpenUIKitStoreKit.Product'",
+     3
+    ],
+    [
+     "cannot infer contextual base in reference to member 'fade'",
+     3
+    ],
+    [
+     "type 'UIAccessibility' has no member 'post'",
+     3
+    ],
+    [
+     "'SPNavigationController' cannot be constructed because it has no accessible initializers",
+     3
+    ],
+    [
+     "ambiguous use of 'present(_:animated:completion:)'",
+     3
+    ],
+    [
+     "cannot assign value of type 'NSLayoutConstraint' to type 'OUK_NSLayoutConstraint'",
+     3
+    ],
+    [
+     " property 'supportedInterfaceOrientations' declared in 'UIViewController' cannot be overridden from extension",
+     2
+    ],
+    [
+     "value of type 'UIViewController' has no member 'preferredInterfaceOrientationForPresentation'",
+     2
+    ],
+    [
+     "ambiguous use of 'textLabel'",
+     2
+    ],
+    [
+     "cannot find 'undoManager' in scope",
+     2
+    ],
+    [
+     "extra arguments at positions #1, #2 in call",
+     2
+    ],
+    [
+     "missing argument for parameter 'for' in call",
+     2
+    ],
+    [
+     "cannot find type 'UIViewControllerRestoration' in scope",
+     2
+    ],
+    [
+     "ambiguous use of 'contentSize'",
+     2
+    ],
+    [
+     "type 'UIAccessibility' has no member 'isVoiceOverRunning'",
+     2
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Value.Type'",
+     2
+    ],
+    [
+     "generic parameter 'Value' could not be inferred",
+     2
+    ],
+    [
+     "value of type 'NavigationView<Content>' (aka '_OpenNavigationView<Content>') has no member 'navigationViewStyle'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'stack'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'normal'",
+     2
+    ],
+    [
+     "property cannot be marked '@objc' because its type cannot be represented in Objective-C",
+     2
+    ],
+    [
+     "value of type 'UIViewController' has no member 'setEditing'",
+     2
+    ],
+    [
+     "argument passed to call that takes no arguments",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'none'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'default'",
+     2
+    ],
+    [
+     "cannot find 'SFSafariViewController' in scope",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'overFullScreen'",
+     2
+    ],
+    [
+     "cannot find 'UITextInputPasswordRules' in scope",
+     2
+    ],
+    [
+     "value of type 'TagListViewController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of type 'SPNoteListViewController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of type 'SPNavigationController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of type 'SPSidebarContainerViewController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of optional type 'UIViewController?' must be unwrapped to refer to member 'transitionCoordinator' of wrapped base type 'UIViewController'",
+     2
+    ],
+    [
+     "ambiguous use of 'contentInset'",
+     2
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'tintAdjustmentMode'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'layoutChanged'",
+     2
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'beginningOfDocument'",
+     2
+    ],
+    [
+     "ambiguous use of 'contentOffset'",
+     2
+    ],
+    [
+     "non-'@objc' property 'contentSize' declared in 'UIScrollView' cannot be overridden from extension",
+     1
+    ],
+    [
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "non-'@objc' property 'contentOffset' declared in 'UIScrollView' cannot be overridden from extension",
+     1
+    ],
+    [
+     " property 'contentInset' declared in 'UIScrollView' cannot be overridden from extension",
+     1
+    ],
+    [
+     "value of optional type 'NSAttributedString?' (aka 'Optional<NSAttributedString>') must be unwrapped to a value of type 'NSAttributedString'",
+     1
+    ],
+    [
+     "value of optional type 'NSAttributedString?' (aka 'Optional<NSAttributedString>') must be unwrapped to refer to member 'attributedSubstring' of wrapped base type 'NSAttributedString'",
+     1
+    ],
+    [
+     "value of type 'SPTextView' has no member 'cut'",
+     1
+    ],
+    [
+     "cannot find 'CAShapeLayer' in scope",
+     1
+    ],
+    [
+     "incorrect argument label in call (have 'cgColor:', expected 'dynamicProvider:')",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'evenOdd'",
+     1
+    ],
+    [
+     "value of type 'CALayer' has no member 'shadowPath'",
+     1
+    ],
+    [
+     "'OUK_NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "'OUK_NSTextContainer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "main actor-isolated instance method 'attachmentBounds(for:proposedLineFragment:glyphPosition:characterIndex:)' has different actor isolation from nonisolated overridden declaration",
+     1
+    ],
+    [
+     "main actor-isolated initializer 'init()' has different actor isolation from nonisolated overridden declaration",
+     1
+    ],
+    [
+     "main actor-isolated initializer 'init(data:ofType:)' has different actor isolation from nonisolated overridden declaration",
+     1
+    ],
+    [
+     "'OUK_NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     1
+    ],
+    [
+     "'OUK_NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "'OUK_NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with no designated initializer",
+     1
+    ],
+    [
+     "'OUK_NSLayoutManager' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "'trackRect' is inaccessible due to 'internal' protection level",
+     1
+    ],
+    [
+     "cannot call value of non-function type 'CGRect'",
+     1
+    ],
+    [
+     "'OUK_NSTextAttachment' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextAttachment' found 2 referenced protocols",
+     1
+    ],
+    [
+     "'NSParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "cannot override immutable 'let' property 'textLabel' with the getter of a 'var'",
+     1
+    ],
+    [
+     "value of type 'UIApplication' has no member 'setAlternateIconName'",
+     1
+    ],
+    [
+     "value of type 'SPNoteListViewController' has no member 'isEditing'",
+     1
+    ],
+    [
+     "cannot find type 'UISimpleTextPrintFormatter' in scope",
+     1
+    ],
+    [
+     "initializer does not override a designated initializer from its superclass",
+     1
+    ],
+    [
+     "'super' cannot be used in class 'SPSimpleTextPrintFormatter' because it has no superclass",
+     1
+    ],
+    [
+     "value of type 'SPSimpleTextPrintFormatter' has no member 'color'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'black'",
+     1
+    ],
+    [
+     "cannot find type 'UITextInputPasswordRules' in scope",
+     1
+    ],
+    [
+     "cannot convert return expression of type 'NSDirectionalEdgeInsetsObjC' to return type 'NSDirectionalEdgeInsets'",
+     1
+    ],
+    [
+     "cannot assign value of type 'NSDirectionalEdgeInsets' to type 'NSDirectionalEdgeInsetsObjC'",
+     1
+    ],
+    [
+     "value of optional type 'UITextContentType?' must be unwrapped to a value of type 'UITextContentType'",
+     1
+    ],
+    [
+     "value of type 'SPTextField' has no member 'passwordRules'",
+     1
+    ],
+    [
+     "type 'UINavigationController' has no member 'hideShowBarDuration'",
+     1
+    ],
+    [
+     "cannot use optional chaining on non-optional value of type '(UITextField, NSRange, String) -> Bool' (aka '(UITextField, _NSRange, String) -> Bool')",
+     1
+    ],
+    [
+     "value of type 'UITextView' has no member 'selectedRange'",
+     1
+    ],
+    [
+     "reference to member 'registerUndoCheckpoint' cannot be resolved without a contextual type",
+     1
+    ],
+    [
+     "value of type 'any UIScrollViewDelegate' has no member 'textViewDidChange'",
+     1
+    ],
+    [
+     "value of optional type 'NSAttributedString?' (aka 'Optional<NSAttributedString>') must be unwrapped to refer to member 'attribute' of wrapped base type 'NSAttributedString'",
+     1
+    ],
+    [
+     "'OUK_NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     1
+    ],
+    [
+     "'CGAffineTransform' is ambiguous for type lookup in this context",
+     1
+    ],
+    [
+     "type 'UIView' has no member 'modifyAnimations'",
+     1
+    ],
+    [
+     "method cannot be marked '@objc' because its result type cannot be represented in Objective-C",
+     1
+    ],
+    [
+     "value of type 'CALayer' has no member 'setAffineTransform'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'init'",
+     1
+    ],
+    [
+     "cannot convert value of type 'CASpringAnimation' to expected argument type 'CAAnimation'",
+     1
+    ],
+    [
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CAGradientLayer' found property",
+     1
+    ],
+    [
+     "value of type 'SPNoteEditorViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPNoteEditorViewController' has no member 'restorationIdentifier'",
+     1
+    ],
+    [
+     "cannot convert value of type 'NSAttributedString.Key.Type' to expected dictionary key type 'AnyHashable'",
+     1
+    ],
+    [
+     "cannot call value of non-function type '[AnyHashable : (any Any).Type]'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'foregroundColor'",
+     1
+    ],
+    [
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     1
+    ],
+    [
+     "argument of '#selector' refers to instance method 'doneWasPressed()' that is not exposed to Objective-C",
+     1
+    ],
+    [
+     "'SPAddCollaboratorsViewController' cannot be constructed because it has no accessible initializers",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'invalidateIntrinsicContentSize'",
+     1
+    ],
+    [
+     "type of expression is ambiguous without a type annotation",
+     1
+    ],
+    [
+     "argument of '#selector' refers to instance method 'handleTapOnDismissButton()' that is not exposed to Objective-C",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'contentInsetAdjustmentBehavior'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'always'",
+     1
+    ],
+    [
+     "method cannot be marked '@objc' because the type of the parameter 3 cannot be represented in Objective-C",
+     1
+    ],
+    [
+     "value of type 'UIWindowScene' has no member 'statusBarManager'",
+     1
+    ],
+    [
+     "value of type 'UIApplication' has no member 'userInterfaceLayoutDirection'",
+     1
+    ],
+    [
+     "type 'UIBarButtonItem' has no member 'appearance'",
+     1
+    ],
+    [
+     "value of type 'UIImage' has no member 'imageAsset'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'purelyDarkTraits'",
+     1
+    ],
+    [
+     "'@objc' can only be used with members of classes, '@objc' protocols, and concrete extensions of classes",
+     1
+    ],
+    [
+     "cannot force unwrap value of non-optional type 'String'",
+     1
+    ],
+    [
+     "value of type 'Canvas' has no member 'clear'",
+     1
+    ],
+    [
+     "value of type 'Canvas' has no member 'setShouldAntialias'",
+     1
+    ],
+    [
+     "value of type 'CALayer' has no member 'needsDisplayOnBoundsChange'",
+     1
+    ],
+    [
+     "value of type 'Dictionary<StoreProduct, Product>.Values.Element' (aka 'Product') has no member 'subscription'",
+     1
+    ],
+    [
+     "generic parameter 'T' could not be inferred",
+     1
+    ],
+    [
+     "'StateMask' is not a member type of class 'OpenUIKit.UITableViewCell'",
+     1
+    ],
+    [
+     "instance method overrides a 'final' instance method",
+     1
+    ],
+    [
+     "value of type 'UITableViewCell' has no member 'willTransition'",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'automaticallyAdjustsScrollIndicatorInsets'",
+     1
+    ],
+    [
+     "value of type 'UIMenuController' has no member 'update'",
+     1
+    ],
+    [
+     "type 'UIMenuController' has no member 'didShowMenuNotification'",
+     1
+    ],
+    [
+     "type 'UIMenuController' has no member 'didHideMenuNotification'",
+     1
+    ],
+    [
+     "'ResultsTableAnimations' initializer is inaccessible due to 'internal' protection level",
+     1
+    ],
+    [
+     "non-'@objc' property 'isFirstResponder' declared in 'UIResponder' cannot be overridden from extension",
+     1
+    ],
+    [
+     "'let' property 'title' may not be initialized directly; use \"self.init(...)\" or \"self = ...\" instead",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'clear'",
+     1
+    ],
+    [
+     "reference to member 'font' cannot be resolved without a contextual type",
+     1
+    ],
+    [
+     "reference to member 'foregroundColor' cannot be resolved without a contextual type",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'defaultPrompt'",
+     1
+    ],
+    [
+     "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+     1
+    ],
+    [
+     "cannot find 'setBackgroundImage' in scope",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'any'",
+     1
+    ],
+    [
+     "cannot find 'setSearchFieldBackgroundImage' in scope",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'searchBarBackgroundImage'",
+     1
+    ],
+    [
+     "value of type 'any UIScrollViewDelegate' has no member 'tableView'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'announcement'",
+     1
+    ],
+    [
+     "nonisolated deinitializer 'deinit' has different actor isolation from main actor-isolated overridden declaration",
+     1
+    ],
+    [
+     "'OUK_NSLayoutManager' has different definitions in different modules; first difference is definition in module 'AppKit.NSLayoutManager' found 1 referenced protocol",
+     1
+    ],
+    [
+     "'OUK_NSTextAttachmentViewProvider' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextAttachment' found method 'initWithTextAttachment:parentView:textLayoutManager:location:' with designated initializer",
+     1
+    ],
+    [
+     "ambiguous use of 'init(top:leading:bottom:trailing:)'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'formSheet'",
+     1
+    ],
+    [
+     "value of type 'SPNavigationController' has no member 'popToViewController'",
+     1
+    ],
+    [
+     "value of type 'TagListViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPNoteListViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPNavigationController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPSidebarContainerViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'UIPresentationController' has no member 'willTransition'",
+     1
+    ],
+    [
+     "argument of '#selector' refers to instance method 'shareWasPressed()' that is not exposed to Objective-C",
+     1
+    ],
+    [
+     "argument of '#selector' refers to instance method 'dismissWasPressed()' that is not exposed to Objective-C",
+     1
+    ],
+    [
+     "non-'@objc' instance method 'present(_:animated:completion:)' is declared in extension of 'UIViewController' and cannot be overridden",
+     1
+    ],
+    [
+     "cannot find type 'UIAccessibilityScrollDirection' in scope",
+     1
+    ],
+    [
+     "method cannot be marked '@objc' because the type of the parameter cannot be represented in Objective-C",
+     1
+    ],
+    [
+     "type 'UIAccessibility' has no member 'voiceOverStatusDidChangeNotification'",
+     1
+    ],
+    [
+     "value of type 'UIViewController' has no member 'encodeRestorableState'",
+     1
+    ],
+    [
+     "'SPMarkdownPreviewViewController' cannot be constructed because it has no accessible initializers",
+     1
+    ],
+    [
+     "value of type 'UIView' has no member 'resizableSnapshotView'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'zero'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'dimmed'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'automatic'",
+     1
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'checklistsFont'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'preferredFont'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'headline'",
+     1
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'selectedTextRange'",
+     1
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'textRange'",
+     1
+    ],
+    [
+     "value of type 'UIView' has no member 'accessibilityElementIsFocused'",
+     1
+    ],
+    [
+     "missing argument for parameter 'style' in call",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'performBatchChanges'",
+     1
+    ],
+    [
+     "cannot find 'setToolbarItems' in scope",
+     1
+    ],
+    [
+     "cannot find 'editButtonItem' in scope",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'scrollToNearestSelectedRow'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'disabled'",
+     1
+    ],
+    [
+     "value of type 'NSMutableAttributedString' has no member 'processChecklists'",
+     1
+    ],
+    [
+     "cannot find type 'SPAuthenticationInterface' in scope",
+     1
+    ],
+    [
+     "value of type 'UINavigationController' has no member 'overrideUserInterfaceStyle'",
+     1
+    ],
+    [
+     "argument of '#selector' refers to instance method 'contentWasPressed()' that is not exposed to Objective-C",
+     1
+    ],
+    [
+     "argument of '#selector' refers to instance method 'switchDidChange()' that is not exposed to Objective-C",
+     1
+    ],
+    [
+     "value of type 'UIScrollView' has no member 'scrollsToTop'",
+     1
+    ]
+   ]
+  },
+  "ios_with_attrstring_unify_no_shim": {
+   "unique_errors": 315,
+   "files": 65,
+   "errors_by_message": [
+    [
+     "method does not override any method from its superclass",
+     14
+    ],
+    [
+     "cannot find 'isEditing' in scope",
+     11
+    ],
+    [
+     "ambiguous use of 'init'",
+     10
+    ],
+    [
+     "overriding non-open property outside of its defining module",
+     8
+    ],
+    [
+     "cannot find 'selectedRange' in scope",
+     7
+    ],
+    [
+     "initializer for conditional binding must have Optional type, not 'String'",
+     7
+    ],
+    [
+     "property cannot be marked '@IBInspectable' because its type cannot be represented in Objective-C",
+     7
+    ],
+    [
+     "'Timer' is ambiguous for type lookup in this context",
+     6
+    ],
+    [
+     "value of type 'UIContextualAction' has no member 'accessibilityLabel'",
+     6
+    ],
+    [
+     "method cannot be marked '@objc' because the type of the parameter 2 cannot be represented in Objective-C",
+     4
+    ],
+    [
+     "type 'SPUser' does not conform to protocol 'UserProtocol'",
+     4
+    ],
+    [
+     "cannot infer key path type from context; consider explicitly specifying a root type",
+     4
+    ],
+    [
+     "value of type 'Image' (aka '_OpenImage') has no member 'renderingMode'",
+     4
+    ],
+    [
+     "cannot infer contextual base in reference to member 'template'",
+     4
+    ],
+    [
+     "property does not override any property from its superclass",
+     3
+    ],
+    [
+     "overriding non-open instance method outside of its defining module",
+     3
+    ],
+    [
+     "property overrides a 'final' property",
+     3
+    ],
+    [
+     "cannot infer contextual base in reference to member 'light'",
+     3
+    ],
+    [
+     "'nil' requires a contextual type",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'setLineWidth'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'move'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'addLine'",
+     3
+    ],
+    [
+     "value of type 'Canvas' has no member 'strokePath'",
+     3
+    ],
+    [
+     "'SubscriptionInfo' is not a member type of struct 'OpenUIKitStoreKit.Product'",
+     3
+    ],
+    [
+     "ambiguous use of 'present(_:animated:completion:)'",
+     3
+    ],
+    [
+     "'SPNavigationController' cannot be constructed because it has no accessible initializers",
+     3
+    ],
+    [
+     "type 'UIAccessibility' has no member 'post'",
+     3
+    ],
+    [
+     "cannot infer contextual base in reference to member 'default'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'normal'",
+     2
+    ],
+    [
+     " property 'supportedInterfaceOrientations' declared in 'UIViewController' cannot be overridden from extension",
+     2
+    ],
+    [
+     "value of type 'UIViewController' has no member 'preferredInterfaceOrientationForPresentation'",
+     2
+    ],
+    [
+     "cannot find type 'UIViewControllerRestoration' in scope",
+     2
+    ],
+    [
+     "value of type 'TagListViewController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of type 'SPNoteListViewController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of type 'SPNavigationController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of type 'SPSidebarContainerViewController' has no member 'restorationIdentifier'",
+     2
+    ],
+    [
+     "value of optional type 'UIViewController?' must be unwrapped to refer to member 'transitionCoordinator' of wrapped base type 'UIViewController'",
+     2
+    ],
+    [
+     "cannot find 'WidgetCenter' in scope",
+     2
+    ],
+    [
+     "ambiguous use of 'contentSize'",
+     2
+    ],
+    [
+     "type of expression is ambiguous without a type annotation",
+     2
+    ],
+    [
+     "type 'UIAccessibility' has no member 'isVoiceOverRunning'",
+     2
+    ],
+    [
+     "cannot convert value of type 'KeyPath<Root, Value>' to expected argument type 'Value.Type'",
+     2
+    ],
+    [
+     "generic parameter 'Value' could not be inferred",
+     2
+    ],
+    [
+     "value of type 'NavigationView<Content>' (aka '_OpenNavigationView<Content>') has no member 'navigationViewStyle'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'stack'",
+     2
+    ],
+    [
+     "cannot find 'undoManager' in scope",
+     2
+    ],
+    [
+     "extra arguments at positions #1, #2 in call",
+     2
+    ],
+    [
+     "missing argument for parameter 'for' in call",
+     2
+    ],
+    [
+     "ambiguous use of 'textLabel'",
+     2
+    ],
+    [
+     "property cannot be marked '@objc' because its type cannot be represented in Objective-C",
+     2
+    ],
+    [
+     "value of type 'UIViewController' has no member 'setEditing'",
+     2
+    ],
+    [
+     "ambiguous use of 'contentInset'",
+     2
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'tintAdjustmentMode'",
+     2
+    ],
+    [
+     "cannot infer contextual base in reference to member 'layoutChanged'",
+     2
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'beginningOfDocument'",
+     2
+    ],
+    [
+     "ambiguous use of 'contentOffset'",
+     2
+    ],
+    [
+     "cannot find 'UITextInputPasswordRules' in scope",
+     2
+    ],
+    [
+     "'let' property 'title' may not be initialized directly; use \"self.init(...)\" or \"self = ...\" instead",
+     1
+    ],
+    [
+     "argument passed to call that takes no arguments",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'clear'",
+     1
+    ],
+    [
+     "reference to member 'font' cannot be resolved without a contextual type",
+     1
+    ],
+    [
+     "reference to member 'foregroundColor' cannot be resolved without a contextual type",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'defaultPrompt'",
+     1
+    ],
+    [
+     "cannot convert value of type 'Selector' to expected argument type '(UIResponder) -> Bool'",
+     1
+    ],
+    [
+     "cannot find 'setBackgroundImage' in scope",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'any'",
+     1
+    ],
+    [
+     "cannot find 'setSearchFieldBackgroundImage' in scope",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'searchBarBackgroundImage'",
+     1
+    ],
+    [
+     "value of type 'any UIScrollViewDelegate' has no member 'tableView'",
+     1
+    ],
+    [
+     "value of type 'UIScrollView' has no member 'scrollsToTop'",
+     1
+    ],
+    [
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     1
+    ],
+    [
+     "cannot force unwrap value of non-optional type 'String'",
+     1
+    ],
+    [
+     "'trackRect' is inaccessible due to 'internal' protection level",
+     1
+    ],
+    [
+     "cannot call value of non-function type 'CGRect'",
+     1
+    ],
+    [
+     "non-'@objc' property 'contentSize' declared in 'UIScrollView' cannot be overridden from extension",
+     1
+    ],
+    [
+     "non-'@objc' property 'contentOffset' declared in 'UIScrollView' cannot be overridden from extension",
+     1
+    ],
+    [
+     " property 'contentInset' declared in 'UIScrollView' cannot be overridden from extension",
+     1
+    ],
+    [
+     "value of optional type 'NSAttributedString?' (aka 'Optional<NSAttributedString>') must be unwrapped to a value of type 'NSAttributedString'",
+     1
+    ],
+    [
+     "value of optional type 'NSAttributedString?' (aka 'Optional<NSAttributedString>') must be unwrapped to refer to member 'attributedSubstring' of wrapped base type 'NSAttributedString'",
+     1
+    ],
+    [
+     "value of type 'SPTextView' has no member 'cut'",
+     1
+    ],
+    [
+     "cannot find 'CAShapeLayer' in scope",
+     1
+    ],
+    [
+     "incorrect argument label in call (have 'cgColor:', expected 'dynamicProvider:')",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'evenOdd'",
+     1
+    ],
+    [
+     "value of type 'CALayer' has no member 'shadowPath'",
+     1
+    ],
+    [
+     "main actor-isolated instance method 'attachmentBounds(for:proposedLineFragment:glyphPosition:characterIndex:)' has different actor isolation from nonisolated overridden declaration",
+     1
+    ],
+    [
+     "main actor-isolated initializer 'init()' has different actor isolation from nonisolated overridden declaration",
+     1
+    ],
+    [
+     "main actor-isolated initializer 'init(data:ofType:)' has different actor isolation from nonisolated overridden declaration",
+     1
+    ],
+    [
+     "value of type 'SPNavigationController' has no member 'popToViewController'",
+     1
+    ],
+    [
+     "value of type 'TagListViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPNoteListViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPNavigationController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPSidebarContainerViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'UIPresentationController' has no member 'willTransition'",
+     1
+    ],
+    [
+     "'SPAddCollaboratorsViewController' cannot be constructed because it has no accessible initializers",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'invalidateIntrinsicContentSize'",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'contentInsetAdjustmentBehavior'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'always'",
+     1
+    ],
+    [
+     "cannot use optional chaining on non-optional value of type '(UITextField, NSRange, String) -> Bool' (aka '(UITextField, _NSRange, String) -> Bool')",
+     1
+    ],
+    [
+     "value of type 'UITextView' has no member 'selectedRange'",
+     1
+    ],
+    [
+     "reference to member 'registerUndoCheckpoint' cannot be resolved without a contextual type",
+     1
+    ],
+    [
+     "value of type 'any UIScrollViewDelegate' has no member 'textViewDidChange'",
+     1
+    ],
+    [
+     "value of optional type 'NSAttributedString?' (aka 'Optional<NSAttributedString>') must be unwrapped to refer to member 'attribute' of wrapped base type 'NSAttributedString'",
+     1
+    ],
+    [
+     "'CGAffineTransform' is ambiguous for type lookup in this context",
+     1
+    ],
+    [
+     "type 'UIView' has no member 'modifyAnimations'",
+     1
+    ],
+    [
+     "method cannot be marked '@objc' because its result type cannot be represented in Objective-C",
+     1
+    ],
+    [
+     "value of type 'CALayer' has no member 'setAffineTransform'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'init'",
+     1
+    ],
+    [
+     "cannot convert value of type 'CASpringAnimation' to expected argument type 'CAAnimation'",
+     1
+    ],
+    [
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'QuartzCore.CAGradientLayer' found property",
+     1
+    ],
+    [
+     "cannot override immutable 'let' property 'textLabel' with the getter of a 'var'",
+     1
+    ],
+    [
+     "value of type 'UIApplication' has no member 'setAlternateIconName'",
+     1
+    ],
+    [
+     "value of type 'SPNoteListViewController' has no member 'isEditing'",
+     1
+    ],
+    [
+     "cannot find type 'UISimpleTextPrintFormatter' in scope",
+     1
+    ],
+    [
+     "initializer does not override a designated initializer from its superclass",
+     1
+    ],
+    [
+     "'super' cannot be used in class 'SPSimpleTextPrintFormatter' because it has no superclass",
+     1
+    ],
+    [
+     "value of type 'SPSimpleTextPrintFormatter' has no member 'color'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'black'",
+     1
+    ],
+    [
+     "cannot find type 'UITextInputPasswordRules' in scope",
+     1
+    ],
+    [
+     "cannot convert return expression of type 'NSDirectionalEdgeInsetsObjC' to return type 'NSDirectionalEdgeInsets'",
+     1
+    ],
+    [
+     "cannot assign value of type 'NSDirectionalEdgeInsets' to type 'NSDirectionalEdgeInsetsObjC'",
+     1
+    ],
+    [
+     "value of optional type 'UITextContentType?' must be unwrapped to a value of type 'UITextContentType'",
+     1
+    ],
+    [
+     "value of type 'SPTextField' has no member 'passwordRules'",
+     1
+    ],
+    [
+     "type 'UINavigationController' has no member 'hideShowBarDuration'",
+     1
+    ],
+    [
+     "value of type 'INInteraction' has no member 'intentResponse'",
+     1
+    ],
+    [
+     "method cannot be marked '@objc' because the type of the parameter 3 cannot be represented in Objective-C",
+     1
+    ],
+    [
+     "value of type 'UIWindowScene' has no member 'statusBarManager'",
+     1
+    ],
+    [
+     "value of type 'UIApplication' has no member 'userInterfaceLayoutDirection'",
+     1
+    ],
+    [
+     "type 'UIBarButtonItem' has no member 'appearance'",
+     1
+    ],
+    [
+     "value of type 'UIImage' has no member 'imageAsset'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'purelyDarkTraits'",
+     1
+    ],
+    [
+     "'@objc' can only be used with members of classes, '@objc' protocols, and concrete extensions of classes",
+     1
+    ],
+    [
+     "value of type 'SPNoteEditorViewController' has no member 'restorationClass'",
+     1
+    ],
+    [
+     "value of type 'SPNoteEditorViewController' has no member 'restorationIdentifier'",
+     1
+    ],
+    [
+     "cannot convert value of type 'NSAttributedString.Key.Type' to expected dictionary key type 'AnyHashable'",
+     1
+    ],
+    [
+     "cannot call value of non-function type '[AnyHashable : (any Any).Type]'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'foregroundColor'",
+     1
+    ],
+    [
+     "value of type 'Canvas' has no member 'clear'",
+     1
+    ],
+    [
+     "value of type 'Canvas' has no member 'setShouldAntialias'",
+     1
+    ],
+    [
+     "value of type 'CALayer' has no member 'needsDisplayOnBoundsChange'",
+     1
+    ],
+    [
+     "value of type 'Dictionary<StoreProduct, Product>.Values.Element' (aka 'Product') has no member 'subscription'",
+     1
+    ],
+    [
+     "generic parameter 'T' could not be inferred",
+     1
+    ],
+    [
+     "'StateMask' is not a member type of class 'OpenUIKit.UITableViewCell'",
+     1
+    ],
+    [
+     "instance method overrides a 'final' instance method",
+     1
+    ],
+    [
+     "value of type 'UITableViewCell' has no member 'willTransition'",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'automaticallyAdjustsScrollIndicatorInsets'",
+     1
+    ],
+    [
+     "value of type 'UIMenuController' has no member 'update'",
+     1
+    ],
+    [
+     "type 'UIMenuController' has no member 'didShowMenuNotification'",
+     1
+    ],
+    [
+     "type 'UIMenuController' has no member 'didHideMenuNotification'",
+     1
+    ],
+    [
+     "non-'@objc' property 'isFirstResponder' declared in 'UIResponder' cannot be overridden from extension",
+     1
+    ],
+    [
+     "non-'@objc' instance method 'present(_:animated:completion:)' is declared in extension of 'UIViewController' and cannot be overridden",
+     1
+    ],
+    [
+     "cannot find type 'UIAccessibilityScrollDirection' in scope",
+     1
+    ],
+    [
+     "method cannot be marked '@objc' because the type of the parameter cannot be represented in Objective-C",
+     1
+    ],
+    [
+     "type 'UIAccessibility' has no member 'voiceOverStatusDidChangeNotification'",
+     1
+    ],
+    [
+     "value of type 'UIViewController' has no member 'encodeRestorableState'",
+     1
+    ],
+    [
+     "'SPMarkdownPreviewViewController' cannot be constructed because it has no accessible initializers",
+     1
+    ],
+    [
+     "value of type 'UIView' has no member 'resizableSnapshotView'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'zero'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'dimmed'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'automatic'",
+     1
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'checklistsFont'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'preferredFont'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'headline'",
+     1
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'selectedTextRange'",
+     1
+    ],
+    [
+     "value of type 'SPEditorTextView' has no member 'textRange'",
+     1
+    ],
+    [
+     "value of type 'UIView' has no member 'accessibilityElementIsFocused'",
+     1
+    ],
+    [
+     "missing argument for parameter 'style' in call",
+     1
+    ],
+    [
+     "cannot find 'setToolbarItems' in scope",
+     1
+    ],
+    [
+     "cannot find 'editButtonItem' in scope",
+     1
+    ],
+    [
+     "value of type 'UITableView' has no member 'scrollToNearestSelectedRow'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'none'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'disabled'",
+     1
+    ],
+    [
+     "value of type 'NSMutableAttributedString' has no member 'processChecklists'",
+     1
+    ],
+    [
+     "cannot find type 'SPAuthenticationInterface' in scope",
+     1
+    ],
+    [
+     "value of type 'UINavigationController' has no member 'overrideUserInterfaceStyle'",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'announcement'",
+     1
+    ],
+    [
+     "nonisolated deinitializer 'deinit' has different actor isolation from main actor-isolated overridden declaration",
+     1
+    ],
+    [
+     "cannot infer contextual base in reference to member 'formSheet'",
+     1
+    ]
+   ]
   }
  },
  "kickstarter": {
