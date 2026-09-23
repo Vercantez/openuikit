@@ -37,9 +37,15 @@ final class PodSurfaceTests: XCTestCase {
         super.setUp()
         savedCut = OpenUIKitRuntime.systemFontCut
         OpenUIKitRuntime.systemFontCut = .iOS
+        // The oracle is a bare process: no application delegate.
+        savedDelegate = UIApplication.shared.delegate
+        UIApplication.shared.delegate = nil
     }
 
+    private var savedDelegate: UIApplicationDelegate?
+
     override func tearDown() {
+        UIApplication.shared.delegate = savedDelegate
         OpenUIKitRuntime.systemFontCut = savedCut
         super.tearDown()
     }
