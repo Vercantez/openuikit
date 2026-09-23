@@ -19,6 +19,10 @@
 
 /// One entry of the current-context stack: the surface plus the implicit
 /// fill/stroke colors CG keeps in its graphics state.
+#if canImport(Foundation)
+import struct Foundation.Data
+#endif
+
 final class UIGraphicsState {
     let canvas: Canvas
     /// Non-nil only for a legacy UIGraphicsBeginImageContext... entry.
@@ -232,14 +236,25 @@ public class UIGraphicsImageRenderer {
         return UIImage(bitmap: bitmap, scale: scale)
     }
 
-    /// PNG data of `image(actions:)` (UIKit's `pngData(actions:)`).
-    public func pngData(actions: (UIGraphicsImageRendererContext) -> Void) -> [UInt8] {
-        image(actions: actions).pngData() ?? []
+#if canImport(Foundation)
+    /// PNG data of `image(actions:)` (UIKit's `pngData(actions:) -> Data`).
+    public func pngData(actions: (UIGraphicsImageRendererContext) -> Void) -> Data {
+        image(actions: actions).pngData() ?? Data()
     }
 
     /// JPEG data of `image(actions:)`.
     public func jpegData(withCompressionQuality quality: CGFloat,
+                         actions: (UIGraphicsImageRendererContext) -> Void) -> Data {
+        image(actions: actions).jpegData(compressionQuality: quality) ?? Data()
+    }
+#else
+    public func pngData(actions: (UIGraphicsImageRendererContext) -> Void) -> [UInt8] {
+        image(actions: actions).pngData() ?? []
+    }
+
+    public func jpegData(withCompressionQuality quality: CGFloat,
                          actions: (UIGraphicsImageRendererContext) -> Void) -> [UInt8] {
         image(actions: actions).jpegData(compressionQuality: quality) ?? []
     }
+#endif
 }

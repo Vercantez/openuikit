@@ -61,4 +61,22 @@ final class ScatteredMembersTests: XCTestCase {
         XCTAssertNil(pi.delegate)
         XCTAssertTrue(pi.isEnabled)
     }
+
+    /// iPhoneSimulator26.1 UIImage.h: `UIImagePNGRepresentation` /
+    /// `UIImageJPEGRepresentation` bridge to `pngData() -> Data?` and
+    /// `jpegData(compressionQuality:) -> Data?`; UIGraphicsImageRenderer's
+    /// `pngData(actions:)` is `Data`. NetNewsWire RSImage.swift:105 returns
+    /// `pngData()` from a `-> Data?` function.
+    func testEncodersReturnFoundationData() {
+        let image = UIImage(bitmap: Bitmap(width: 2, height: 2), scale: 1)
+        let png: Data? = image.pngData()
+        let jpeg: Data? = image.jpegData(compressionQuality: 0.5)
+        XCTAssertNotNil(png)
+        XCTAssertNotNil(jpeg)
+        XCTAssertEqual(Array(png!.prefix(8)), [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
+        XCTAssertEqual(UIImage(data: png!, scale: 1)?.size, CGSize(width: 2, height: 2))
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 2, height: 2))
+        let rendered: Data = renderer.pngData { _ in }
+        XCTAssertFalse(rendered.isEmpty)
+    }
 }
