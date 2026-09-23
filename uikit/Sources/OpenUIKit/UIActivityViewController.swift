@@ -24,12 +24,28 @@
 
 #if canImport(Foundation)
 import class Foundation.Operation
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 /// UIKit's `UIActivity` — the app-supplied activity. Subclass it and
 /// override `activityTitle` / `perform()`.
+///
+/// An NSObject with UIKit's runtime name, vtable-free for Objective-C
+/// subclasses (DZNWebViewController's DZNPolyActivity): the members UIKit
+/// sends are `@objc(<SDK selector>) dynamic`, `activityType` included
+/// (ActivityType bridges to NSString as UIKit's does) and the class-side
+/// `activityCategory` (an @objc Int enum). A Swift vtable slot here would
+/// crash an Objective-C subclass (MEASURED: SIGSEGV at 0x0 sending
+/// +activityCategory to one). MEASURED iOS 26.1 (podsurfaceprobe
+/// "## activity2"): a subclass overriding nothing reports category action (0),
+/// nil type/title/image/view controller, and cannot perform.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIActivity)
+#endif
 @preconcurrency @MainActor
-open class UIActivity {
+open class UIActivity: NSObject {
     public struct ActivityType: Hashable, Sendable, RawRepresentable, ExpressibleByStringLiteral {
         public let rawValue: String
         public init(_ rawValue: String) { self.rawValue = rawValue }
@@ -57,27 +73,61 @@ open class UIActivity {
         public static let addToHomeScreen = ActivityType("com.apple.UIKit.activity.AddToHomeScreen")
     }
 
-    public enum Category: Sendable { case action, share }
+    /// UIActivityCategory's raw values (UIActivity.h): action 0, share 1.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(OUKActivityCategory)
+#endif
+    public enum Category: Int, Sendable { case action = 0, share = 1 }
 
-    public init() {}
+    public override init() { super.init() }
 
-    open var activityType: ActivityType? { nil }
-    open var activityTitle: String? { nil }
-    open var activityImage: UIImage? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(activityType)
+#endif
+    open dynamic var activityType: ActivityType? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(activityTitle)
+#endif
+    open dynamic var activityTitle: String? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(activityImage)
+#endif
+    open dynamic var activityImage: UIImage? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(activityViewController)
+#endif
+    open dynamic var activityViewController: UIViewController? { nil }
     @MainActor
-    open class var activityCategory: Category { .action }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(activityCategory)
+#endif
+    open dynamic class var activityCategory: Category { .action }
 
-    open func canPerform(withActivityItems activityItems: [Any]) -> Bool { true }
-    open func prepare(withActivityItems activityItems: [Any]) {}
-    open func perform() { activityDidFinish(true) }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(canPerformWithActivityItems:)
+#endif
+    open dynamic func canPerform(withActivityItems activityItems: [Any]) -> Bool { false }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(prepareWithActivityItems:)
+#endif
+    open dynamic func prepare(withActivityItems activityItems: [Any]) {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(performActivity)
+#endif
+    open dynamic func perform() { activityDidFinish(true) }
 
     /// UIKit's completion signal from a custom activity.
-    public private(set) var didFinishCompleted: Bool?
-    open func activityDidFinish(_ completed: Bool) {
+    public final private(set) var didFinishCompleted: Bool?
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(activityDidFinish:)
+#endif
+    open dynamic func activityDidFinish(_ completed: Bool) {
         didFinishCompleted = completed
         _onFinish?(completed)
     }
-    var _onFinish: ((Bool) -> Void)?
+    final var _onFinish: ((Bool) -> Void)?
+
+    final var _resolvedActivityType: ActivityType? { activityType }
 }
 
 /// UIKit's protocol for items that describe themselves to activities.
@@ -168,7 +218,7 @@ open class UIActivityViewController: UIViewController,
     /// minus any that decline the items. Never any system activity.
     public var availableActivities: [UIActivity] {
         (applicationActivities ?? []).filter { a in
-            if let t = a.activityType, excludedActivityTypes?.contains(t) == true { return false }
+            if let t = a._resolvedActivityType, excludedActivityTypes?.contains(t) == true { return false }
             return a.canPerform(withActivityItems: activityItems)
         }
     }
@@ -211,7 +261,7 @@ open class UIActivityViewController: UIViewController,
         guard let handler = completionWithItemsHandler else { return }
         completionWithItemsHandler = nil
         if let picked = pickedActivity {
-            handler(picked.activityType, true, activityItems, nil)
+            handler(picked._resolvedActivityType, true, activityItems, nil)
         } else {
             handler(nil, false, nil, nil)
         }
@@ -253,3 +303,24 @@ open class UIActivityViewController: UIViewController,
         dismiss(animated: true)
     }
 }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+import class Foundation.NSString
+
+/// UIKit's `UIActivity.ActivityType` is an NSString-backed typed string, so
+/// `activityType` can be an Objective-C property (`-activityType`).
+extension UIActivity.ActivityType: _ObjectiveCBridgeable {
+    public func _bridgeToObjectiveC() -> NSString { rawValue as NSString }
+    public static func _forceBridgeFromObjectiveC(_ source: NSString, result: inout UIActivity.ActivityType?) {
+        result = UIActivity.ActivityType(source as String)
+    }
+    public static func _conditionallyBridgeFromObjectiveC(_ source: NSString,
+                                                          result: inout UIActivity.ActivityType?) -> Bool {
+        result = UIActivity.ActivityType(source as String)
+        return true
+    }
+    public static func _unconditionallyBridgeFromObjectiveC(_ source: NSString?) -> UIActivity.ActivityType {
+        UIActivity.ActivityType((source ?? "") as String)
+    }
+}
+#endif

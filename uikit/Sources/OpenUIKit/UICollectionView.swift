@@ -1,3 +1,7 @@
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope.
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
 // UICollectionView. Owner: collection module (M13, docs/APP_COMPAT.md
 // cluster #1 — 498 uses across 23 types, all four corpus apps).
 //
@@ -352,6 +356,9 @@ open class UICollectionView: UIScrollView {
 
     // MARK: Init
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(initWithFrame:collectionViewLayout:)
+#endif
     public init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         collectionViewLayout = layout
         super.init(frame: frame)
@@ -377,6 +384,7 @@ open class UICollectionView: UIScrollView {
     }
 
     private func configureCollectionView(with layout: UICollectionViewLayout) {
+        _configured = true
         layout.collectionView = self
         backgroundColor = .systemBackground
         alwaysBounceVertical = false
@@ -520,19 +528,26 @@ open class UICollectionView: UIScrollView {
 
     public func layoutAttributesForItem(at indexPath: IndexPath)
         -> UICollectionViewLayoutAttributes? {
+        flushReloadInvalidation()
         ensureCounts()
+        if collectionViewLayout.isPrepared,
+           let cached = _queriedAttributes[ElementKey(kind: nil, indexPath: indexPath)] {
+            return cached
+        }
         return collectionViewLayout.layoutAttributesForItem(at: indexPath)
     }
 
     public func layoutAttributesForSupplementaryElement(ofKind elementKind: String,
                                                         at indexPath: IndexPath)
         -> UICollectionViewLayoutAttributes? {
+        flushReloadInvalidation()
         ensureCounts()
         return collectionViewLayout.layoutAttributesForSupplementaryView(ofKind: elementKind,
                                                                          at: indexPath)
     }
 
     public func indexPathForItem(at point: CGPoint) -> IndexPath? {
+        flushReloadInvalidation()
         ensureCounts()
         collectionViewLayout.prepareIfNeeded()
         let probe = CGRect(x: point.x, y: point.y, width: 1, height: 1)
@@ -552,8 +567,22 @@ open class UICollectionView: UIScrollView {
         }
         selectedPaths.removeAll()
         countsDirty = true
-        collectionViewLayout.invalidateLayout()
+        // MEASURED flowlayoutprobe section 5 (iPhone 16 / iOS 26.1): setting
+        // the data source (a reload) sends the layout nothing; its
+        // -invalidateLayout arrives at the start of the next layout pass,
+        // immediately before -prepareLayout.
+        reloadInvalidationPending = true
         setNeedsLayout()
+    }
+
+    /// A `reloadData()` whose layout invalidation the next layout pass (or
+    /// geometry query) still owes.
+    private var reloadInvalidationPending = false
+
+    private func flushReloadInvalidation() {
+        guard reloadInvalidationPending else { return }
+        reloadInvalidationPending = false
+        collectionViewLayout.invalidateLayout()
     }
 
     /// PORTABLE FALLBACK, documented divergence: UIKit animates inserts,
@@ -599,12 +628,72 @@ open class UICollectionView: UIScrollView {
 
     /// The layout told us its cache is stale.
     func _layoutInvalidated() {
+        _queriedAttributes.removeAll()
         setNeedsLayout()
     }
 
     // MARK: Tiling
 
     private var inTile = false
+
+    /// One element query: the grid-aligned rect, then the content size
+    /// UIKit reads right after it.
+    private func _queryElements(_ visibleRect: CGRect) -> [UICollectionViewLayoutAttributes] {
+        let queried = collectionViewLayout.layoutAttributesForElements(in: _tilingQueryRect(visibleRect)) ?? []
+        let size = collectionViewLayout.collectionViewContentSize
+        if size != contentSize { contentSize = size }
+        _queriedAttributes.removeAll(keepingCapacity: true)
+        for a in queried { _queriedAttributes[a.elementKey] = a }
+        return queried
+    }
+
+    /// Asks the layout about the bounds clamped into the scrollable range
+    /// when the offset lies outside it; true when that invalidated.
+    @discardableResult
+    private func _revalidateOffsetBounds() -> Bool {
+        let lo = minContentOffset, hi = maxContentOffset
+        // `+ 0` turns the -0 of a negated zero inset into 0.
+        let clamped = CGPoint(x: max(lo.x, min(hi.x, contentOffset.x)) + 0,
+                              y: max(lo.y, min(hi.y, contentOffset.y)) + 0)
+        guard clamped != contentOffset else { return false }
+        guard case .invalidate(let context) = boundsQuestion(for: CGRect(origin: clamped, size: bounds.size)) else {
+            return false
+        }
+        invalidateForBoundsChange(context)
+        return true
+    }
+
+    /// MEASURED flowlayoutprobe section 10: leaving the window with the
+    /// offset outside the scrollable range asks the layout about the clamped
+    /// bounds (and invalidates on YES), inside `-removeFromSuperview`.
+    open override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window == nil, _configured, !inTile, dataSource != nil {
+            _revalidateOffsetBounds()
+        }
+    }
+
+    /// `prepare()` if the layout is stale and, when it ran, the content size
+    /// it produced.
+    private func _prepareLayoutAndContentSize() {
+        guard collectionViewLayout.prepareIfNeeded() else { return }
+        let size = collectionViewLayout.collectionViewContentSize
+        if size != contentSize { contentSize = size }
+    }
+
+    /// The rect UIKit hands `layoutAttributesForElements(in:)`: the visible
+    /// bounds widened to whole multiples of the bounds size on the grid
+    /// anchored at the origin. MEASURED flowlayoutprobe (bounds height H,
+    /// offset y): H 480 y 0 -> {0, 480}; y 100 -> {0, 960}; y -59 ->
+    /// {-480, 960}; H 200 y 0 -> {0, 200} (x likewise with the width).
+    final func _tilingQueryRect(_ visible: CGRect) -> CGRect {
+        guard visible.width > 0, visible.height > 0 else { return visible }
+        let x0 = (visible.minX / visible.width).rounded(.down) * visible.width
+        let x1 = (visible.maxX / visible.width).rounded(.up) * visible.width
+        let y0 = (visible.minY / visible.height).rounded(.down) * visible.height
+        let y1 = (visible.maxY / visible.height).rounded(.up) * visible.height
+        return CGRect(x: x0, y: y0, width: x1 - x0, height: y1 - y0)
+    }
 
     /// Context produced by `invalidationContext(forBoundsChange:)` while the
     /// bounds were still the old value; consumed when the bounds have moved.
@@ -622,6 +711,16 @@ open class UICollectionView: UIScrollView {
     private var boundsInvalidationPending = false
     /// Whether the bounds set in flight invalidated the layout.
     private var invalidatedForCurrentBoundsChange = false
+    /// False while `super.init(frame:)` sets the first frame: MEASURED
+    /// flowlayoutprobe section 5, `-initWithFrame:collectionViewLayout:`
+    /// sends the layout nothing.
+    private var _configured = false
+    /// The last element query's attributes, by element: what
+    /// `layoutAttributesForItem(at:)` answers from (MEASURED flowlayoutprobe
+    /// section 5: `-[UICollectionView layoutAttributesForItemAtIndexPath:]`
+    /// for a laid-out item does not reach the layout's override). Dropped
+    /// on every invalidation.
+    private var _queriedAttributes: [ElementKey: UICollectionViewLayoutAttributes] = [:]
 
     // MEASURED signalrowsprobe invalidate.* (2026-09-09) and
     // signalrowsprobe/offset.swift (2026-09-10), iPhone 16 / iOS 26.1: EVERY
@@ -643,7 +742,7 @@ open class UICollectionView: UIScrollView {
         willSet {
             invalidatedForCurrentBoundsChange = false
             pendingBoundsContext = nil
-            guard newValue != bounds, !inTile else { preMoveChainResult = nil; return }
+            guard newValue != bounds, !inTile, _configured else { preMoveChainResult = nil; return }
             if let invalidated = preMoveChainResult {
                 preMoveChainResult = nil
                 invalidatedForCurrentBoundsChange = invalidated
@@ -661,8 +760,10 @@ open class UICollectionView: UIScrollView {
             consumePendingBoundsContext()
             if invalidatedForCurrentBoundsChange, bounds.size != oldValue.size,
                dataSource != nil, bounds.width > 0, bounds.height > 0 {
-                ensureCounts()
-                collectionViewLayout.prepareIfNeeded()
+                // MEASURED flowlayoutprobe section 6: inside -setFrame:,
+                // -prepareLayout then -collectionViewContentSize; the
+                // element query waits for the layout pass.
+                _prepareLayoutAndContentSize()
             }
         }
     }
@@ -751,14 +852,39 @@ open class UICollectionView: UIScrollView {
         defer { inTile = false }
         guard dataSource != nil, bounds.width > 0, bounds.height > 0 else { return }
 
-        ensureCounts()
-        collectionViewLayout.prepareIfNeeded()
-        let size = collectionViewLayout.collectionViewContentSize
-        if size != contentSize { contentSize = size }
+        // MEASURED flowlayoutprobe sections 5-9 (iPhone 16 / iOS 26.1), the
+        // order UIKit sends a layout (an Objective-C subclass included):
+        // [-invalidateLayout owed by a reload], -prepareLayout (the data
+        // source's counts are fetched lazily, inside it, when the layout
+        // first asks), -collectionViewContentSize, then
+        // -layoutAttributesForElementsInRect: and -collectionViewContentSize
+        // again; without a pending invalidation only the last two.
+        flushReloadInvalidation()
+        let sizeBeforePass = contentSize
+        _prepareLayoutAndContentSize()
         backgroundView?.frame = CGRect(origin: contentOffset, size: bounds.size)
 
         let visibleRect = CGRect(origin: contentOffset, size: bounds.size)
-        let attributes = collectionViewLayout.layoutAttributesForElements(in: visibleRect) ?? []
+        var queried = _queryElements(visibleRect)
+        // MEASURED flowlayoutprobe section 8: when the pass changed the
+        // content size and the offset now lies outside the scrollable range,
+        // UIKit asks -shouldInvalidateLayoutForBoundsChange: with the CLAMPED
+        // bounds; a YES invalidates, and the same pass prepares and queries
+        // again. The offset itself does not move.
+        if contentSize != sizeBeforePass,_revalidateOffsetBounds() {
+            _prepareLayoutAndContentSize()
+            queried = _queryElements(visibleRect)
+        }
+        // Views exist only for what intersects the visible bounds (section 7:
+        // the query returned 6 elements, 3 cells were visible) and for items
+        // the collection view knows of: an invalidation does not refetch the
+        // counts, so an item the data source added since is not shown
+        // (section 8: 7 attributes, count still 5, 3 cells).
+        let attributes = queried.filter { a in
+            guard a.frame.intersects(visibleRect) else { return false }
+            guard a.representedElementCategory == .cell else { return true }
+            return a.indexPath.item < numberOfItems(inSection: a.indexPath.section)
+        }
 
         var needed = Set<ElementKey>()
         needed.reserveCapacity(attributes.count)

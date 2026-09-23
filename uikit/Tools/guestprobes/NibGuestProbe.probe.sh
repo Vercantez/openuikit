@@ -11,7 +11,7 @@ build_extra_probe_NibGuestProbe() {
 # embed segue with the app's prepare(for:sender:), an archived action.
 run_extra_probe_NibGuestProbe() {
     local out
-    out=$("$ROOT/machorun" "$BUILD/NibGuestProbe" "$UIKIT/fixtures/nibruntime" 2>&1 | grep -v '^objc\[' || true)
+    out=$("$ROOT/machorun" "$BUILD/NibGuestProbe" "$UIKIT/fixtures/nibruntime" "${OPENUIKIT_RESOURCE_ROOT:-$UIKIT/Sources/OpenUIKit/Resources}" 2>&1 | grep -v '^objc\[' || true)
     printf '%s\n' "$out" | tail -5
     printf '%s\n' "$out" | grep -q '^NIB_GUEST_RUNTIME_OK '
 }

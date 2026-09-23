@@ -654,6 +654,9 @@ private final class TestActivity: UIActivity {
     override var activityTitle: String? { title }
     override var activityType: UIActivity.ActivityType? { UIActivity.ActivityType("test.\(title)") }
     override func perform() { performed += 1; activityDidFinish(true) }
+    // UIActivity's default is NO (MEASURED iOS 26.1, podsurfaceprobe
+    // "## activity2"): an activity that can run says so.
+    override func canPerform(withActivityItems activityItems: [Any]) -> Bool { true }
 }
 
 #if !os(Linux)

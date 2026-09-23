@@ -1,6 +1,6 @@
 // Unchanged app source imports UIKit submodules (Kickstarter Library
 // UIStackView.swift:2 `import UIKit.UIStackView`; ten ladder-corpus files
-// `import UIKit.UIGestureRecognizerSubclass`). This file compiles only if the
+// `import UIKit.UIGestureRecognizerSubclass`; Moya 11 `import UIKit.UIImage`). This file compiles only if the
 // `UIKit` module has those Clang submodules (Sources/UIKitClangModule); before
 // that target existed the chain failed with "no such module
 // 'UIKit.UIStackView'".
@@ -10,6 +10,7 @@ import UIKit.UIGestureRecognizerSubclass
 import UIKit.UIActivity
 import UIKit.UIFont
 import UIKit.UIContextMenuConfiguration
+import UIKit.UIImage
 import XCTest
 
 @MainActor

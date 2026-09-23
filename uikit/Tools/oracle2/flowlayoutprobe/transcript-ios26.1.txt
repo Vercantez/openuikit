@@ -1,0 +1,142 @@
+# flowlayoutprobe — iOS 26.1
+## trace
+-- 1 classes
+UICollectionViewLayout:NSObject
+UICollectionViewFlowLayout:UICollectionViewLayout
+UICollectionViewLayoutAttributes:NSObject
+OUKMasonryLayout:UICollectionViewFlowLayout
+-- 2 layout attributes
+cell class=UICollectionViewLayoutAttributes indexPath=[0,3] frame={{0, 0}, {0, 0}} center={0, 0} size={0, 0}
+cell category=0 kind=nil zIndex=0 alpha=1 hidden=0
+after size frame={{-50, -30.5}, {100, 61}} center={0, 0}
+after center frame={{10.5, 9.75}, {100, 61}} center={60.5, 40.25}
+after integral frame={{10, 9}, {101, 62}} center={60.5, 40} bounds={{0, 0}, {101, 62}}
+header category=1 kind=UICollectionElementKindSectionHeader
+subclass factory class=OUKGridAttributes indexPath=[0,3]
+-- 3 flow layout defaults
+itemSize={50, 50} lineSpacing=10 interitemSpacing=10 scrollDirection=0
+sectionInset={0, 0, 0, 0} header={0, 0} footer={0, 0}
+unattached collectionView=nil contentSize={0, 0} elements=array
+base contentSize={0, 0} elements=nil item=nil shouldInvalidate=0
+-- 4 subclass init and setter invalidation
+masonry -initWithRank: 2 (enter)
+masonry -initWithRank: (exit) collectionView=nil
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+-- 5 collection view in a window
+created layout.collectionView=cv cv.layout=layout
+delegate roundtrip=1 dataSource roundtrip=1
+added to window
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+masonry -prepareLayout (enter) collectionView=UICollectionView
+source numberOfItemsInSection: 0 -> 5
+source numberOfItemsInSection: 0 -> 5
+masonry -prepareLayout (exit) items=5
+masonry -collectionViewContentSize -> {320, 215}
+masonry -layoutAttributesForElementsInRect: {{0, 0}, {320, 480}} -> 6
+masonry -collectionViewContentSize -> {320, 215}
+source cellForItemAtIndexPath: [0,0]
+source cellForItemAtIndexPath: [0,1]
+source cellForItemAtIndexPath: [0,2]
+source cellForItemAtIndexPath: [0,3]
+source cellForItemAtIndexPath: [0,4]
+source viewForSupplementaryElementOfKind: UICollectionElementKindSectionHeader [0,0]
+after layoutIfNeeded
+first visibleCells=5 contentSize={320, 215} contentOffset={0, 0}
+  cell [0,0] frame={{35, 40}, {120, 40}} hidden=0
+  cell [0,1] frame={{165, 40}, {120, 58}} hidden=0
+  cell [0,2] frame={{35, 90}, {120, 75}} hidden=0
+  cell [0,3] frame={{165, 108}, {120, 93}} hidden=0
+  cell [0,4] frame={{35, 175}, {120, 40}} hidden=0
+  header {{0, 0}, {320, 30}}
+layoutAttributesForItemAtIndexPath: via cv {{35, 90}, {120, 75}}
+-- 6 bounds size change
+masonry -shouldInvalidateLayoutForBoundsChange: {{0, 0}, {300, 480}} -> YES
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+masonry -prepareLayout (enter) collectionView=UICollectionView
+source numberOfItemsInSection: 0 -> 5
+masonry -prepareLayout (exit) items=5
+masonry -collectionViewContentSize -> {300, 215}
+frame set
+masonry -layoutAttributesForElementsInRect: {{0, 0}, {300, 480}} -> 6
+masonry -collectionViewContentSize -> {300, 215}
+resized visibleCells=5 contentSize={300, 215} contentOffset={0, 0}
+  cell [0,0] frame={{25, 40}, {120, 40}} hidden=0
+  cell [0,1] frame={{155, 40}, {120, 58}} hidden=0
+  cell [0,2] frame={{25, 90}, {120, 75}} hidden=0
+  cell [0,3] frame={{155, 108}, {120, 93}} hidden=0
+  cell [0,4] frame={{25, 175}, {120, 40}} hidden=0
+  header {{0, 0}, {300, 30}}
+-- 7 scroll
+masonry -shouldInvalidateLayoutForBoundsChange: {{0, 100}, {300, 480}} -> YES
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+offset set
+masonry -prepareLayout (enter) collectionView=UICollectionView
+source numberOfItemsInSection: 0 -> 5
+masonry -prepareLayout (exit) items=5
+masonry -collectionViewContentSize -> {300, 215}
+masonry -layoutAttributesForElementsInRect: {{0, 0}, {300, 960}} -> 6
+masonry -collectionViewContentSize -> {300, 215}
+scrolled visibleCells=3 contentSize={300, 215} contentOffset={0, 100}
+  cell [0,2] frame={{25, 90}, {120, 75}} hidden=0
+  cell [0,3] frame={{155, 108}, {120, 93}} hidden=0
+  cell [0,4] frame={{25, 175}, {120, 40}} hidden=0
+  header nil
+-- 8 explicit invalidateLayout
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+invalidated
+masonry -prepareLayout (enter) collectionView=UICollectionView
+source numberOfItemsInSection: 0 -> 6
+masonry -prepareLayout (exit) items=6
+masonry -collectionViewContentSize -> {300, 269}
+masonry -layoutAttributesForElementsInRect: {{0, 0}, {300, 960}} -> 7
+masonry -collectionViewContentSize -> {300, 269}
+masonry -shouldInvalidateLayoutForBoundsChange: {{0, 0}, {300, 480}} -> YES
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+masonry -prepareLayout (enter) collectionView=UICollectionView
+source numberOfItemsInSection: 0 -> 6
+masonry -prepareLayout (exit) items=6
+masonry -collectionViewContentSize -> {300, 269}
+masonry -layoutAttributesForElementsInRect: {{0, 0}, {300, 960}} -> 7
+masonry -collectionViewContentSize -> {300, 269}
+invalidated visibleCells=3 contentSize={300, 269} contentOffset={0, 100}
+  cell [0,2] frame={{25, 90}, {120, 75}} hidden=0
+  cell [0,3] frame={{155, 108}, {120, 93}} hidden=0
+  cell [0,4] frame={{25, 175}, {120, 40}} hidden=0
+  header nil
+-- 9 flow subclass keeps UIKit geometry
+flow -prepareLayout
+source numberOfItemsInSection: 0 -> 7
+flow -collectionViewContentSize -> {320, 195}
+flow -layoutAttributesForElementsInRect: {{0, 0}, {320, 200}} -> 7
+flow -collectionViewContentSize -> {320, 195}
+source cellForItemAtIndexPath: [0,0]
+source cellForItemAtIndexPath: [0,1]
+source cellForItemAtIndexPath: [0,2]
+source cellForItemAtIndexPath: [0,3]
+source cellForItemAtIndexPath: [0,4]
+source cellForItemAtIndexPath: [0,5]
+source cellForItemAtIndexPath: [0,6]
+flow visibleCells=7 contentSize={320, 195} contentOffset={0, 0}
+  cell [0,0] frame={{10, 10}, {100, 40}} hidden=0
+  cell [0,1] frame={{210, 10}, {100, 40}} hidden=0
+  cell [0,2] frame={{10, 55}, {100, 40}} hidden=0
+  cell [0,3] frame={{210, 55}, {100, 40}} hidden=0
+  cell [0,4] frame={{10, 100}, {100, 40}} hidden=0
+  cell [0,5] frame={{210, 100}, {100, 40}} hidden=0
+  cell [0,6] frame={{10, 145}, {100, 40}} hidden=0
+  header nil
+flow item 6 {{10, 145}, {100, 40}}
+-- 10 teardown
+masonry -shouldInvalidateLayoutForBoundsChange: {{0, 0}, {300, 480}} -> YES
+masonry -invalidateLayout (enter)
+masonry -invalidateLayout (exit)
+cv removed
+cv2 removed

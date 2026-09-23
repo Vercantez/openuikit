@@ -1,3 +1,7 @@
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope.
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
 // UICollectionViewFlowLayout. Owner: collection module (M13).
 //
 // LINE-BASED grid layout, MEASURED against real UIKit (iOS 26 Mac Catalyst,
@@ -60,6 +64,15 @@ public enum UICollectionViewScrollDirection: Sendable {
     case vertical, horizontal
 }
 
+// UIKit's runtime name: Objective-C classes subclass it (Eidolon's
+// ARCollectionViewMasonryLayout; vtable-free, ObjCSubclassing.swift). The
+// configuration properties with an Objective-C type are `@objc(<SDK
+// selector>) dynamic`; `sectionInset` (OpenUIKit's Swift UIEdgeInsets) and
+// `scrollDirection` (a Swift enum) are `final` and reach Objective-C through
+// OpenUIKitObjCBridge twins.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UICollectionViewFlowLayout)
+#endif
 @preconcurrency @MainActor
 open class UICollectionViewFlowLayout: UICollectionViewLayout {
     public typealias ScrollDirection = UICollectionViewScrollDirection
@@ -90,25 +103,40 @@ open class UICollectionViewFlowLayout: UICollectionViewLayout {
 
     // MARK: Configuration (UIKit defaults)
 
-    public var itemSize = CGSize(width: 50, height: 50) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(itemSize)
+#endif
+    public dynamic var itemSize = CGSize(width: 50, height: 50) {
         didSet { if itemSize != oldValue { invalidateLayout() } }
     }
-    public var minimumLineSpacing: CGFloat = 10 {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(minimumLineSpacing)
+#endif
+    public dynamic var minimumLineSpacing: CGFloat = 10 {
         didSet { if minimumLineSpacing != oldValue { invalidateLayout() } }
     }
-    public var minimumInteritemSpacing: CGFloat = 10 {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(minimumInteritemSpacing)
+#endif
+    public dynamic var minimumInteritemSpacing: CGFloat = 10 {
         didSet { if minimumInteritemSpacing != oldValue { invalidateLayout() } }
     }
-    public var sectionInset: UIEdgeInsets = .zero {
+    public final var sectionInset: UIEdgeInsets = .zero {
         didSet { invalidateLayout() }
     }
-    public var scrollDirection: ScrollDirection = .vertical {
+    public final var scrollDirection: ScrollDirection = .vertical {
         didSet { if scrollDirection != oldValue { invalidateLayout() } }
     }
-    public var headerReferenceSize: CGSize = .zero {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(headerReferenceSize)
+#endif
+    public dynamic var headerReferenceSize: CGSize = .zero {
         didSet { if headerReferenceSize != oldValue { invalidateLayout() } }
     }
-    public var footerReferenceSize: CGSize = .zero {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(footerReferenceSize)
+#endif
+    public dynamic var footerReferenceSize: CGSize = .zero {
         didSet { if footerReferenceSize != oldValue { invalidateLayout() } }
     }
 
@@ -132,12 +160,12 @@ open class UICollectionViewFlowLayout: UICollectionViewLayout {
         var lines: [Line] = []
     }
 
-    private(set) var sections: [SectionGeometry] = []
-    private var contentSize: CGSize = .zero
+    final private(set) var sections: [SectionGeometry] = []
+    private final var contentSize: CGSize = .zero
     /// Cross extent the cache was built for — a width change must relayout.
-    private var preparedCrossExtent: CGFloat = -1
+    private final var preparedCrossExtent: CGFloat = -1
 
-    private var isVertical: Bool { scrollDirection == .vertical }
+    private final var isVertical: Bool { scrollDirection == .vertical }
 
     // MARK: Delegate plumbing
     //
@@ -146,36 +174,36 @@ open class UICollectionViewFlowLayout: UICollectionViewLayout {
     // DEFAULT implementations return the layout's property (UIReuse-style
     // sentinels would leak into app code) — see UICollectionView.swift.
 
-    private var flowDelegate: UICollectionViewDelegateFlowLayout? {
+    private final var flowDelegate: UICollectionViewDelegateFlowLayout? {
         collectionView?.delegate as? UICollectionViewDelegateFlowLayout
     }
 
-    func itemSize(at indexPath: IndexPath) -> CGSize {
+    final func itemSize(at indexPath: IndexPath) -> CGSize {
         guard let cv = collectionView, let d = flowDelegate else { return itemSize }
         return d.collectionView(cv, layout: self, sizeForItemAt: indexPath)
     }
 
-    func sectionInset(for section: Int) -> UIEdgeInsets {
+    final func sectionInset(for section: Int) -> UIEdgeInsets {
         guard let cv = collectionView, let d = flowDelegate else { return sectionInset }
         return d.collectionView(cv, layout: self, insetForSectionAt: section)
     }
 
-    func lineSpacing(for section: Int) -> CGFloat {
+    final func lineSpacing(for section: Int) -> CGFloat {
         guard let cv = collectionView, let d = flowDelegate else { return minimumLineSpacing }
         return d.collectionView(cv, layout: self, minimumLineSpacingForSectionAt: section)
     }
 
-    func interitemSpacing(for section: Int) -> CGFloat {
+    final func interitemSpacing(for section: Int) -> CGFloat {
         guard let cv = collectionView, let d = flowDelegate else { return minimumInteritemSpacing }
         return d.collectionView(cv, layout: self, minimumInteritemSpacingForSectionAt: section)
     }
 
-    func headerSize(for section: Int) -> CGSize {
+    final func headerSize(for section: Int) -> CGSize {
         guard let cv = collectionView, let d = flowDelegate else { return headerReferenceSize }
         return d.collectionView(cv, layout: self, referenceSizeForHeaderInSection: section)
     }
 
-    func footerSize(for section: Int) -> CGSize {
+    final func footerSize(for section: Int) -> CGSize {
         guard let cv = collectionView, let d = flowDelegate else { return footerReferenceSize }
         return d.collectionView(cv, layout: self, referenceSizeForFooterInSection: section)
     }
@@ -183,7 +211,7 @@ open class UICollectionViewFlowLayout: UICollectionViewLayout {
     // MARK: Preparation
 
     /// Round to the device pixel grid (rule 3).
-    private func snap(_ v: CGFloat) -> CGFloat {
+    private final func snap(_ v: CGFloat) -> CGFloat {
         let scale = collectionView.map { $0.traitCollection.displayScale } ?? 2
         let s = scale > 0 ? scale : 2
         return (v * s).rounded() / s
@@ -457,7 +485,7 @@ open class UICollectionViewFlowLayout: UICollectionViewLayout {
         return out
     }
 
-    private func intersects(_ r: CGRect, lo: CGFloat, hi: CGFloat) -> Bool {
+    private final func intersects(_ r: CGRect, lo: CGFloat, hi: CGFloat) -> Bool {
         let a = isVertical ? r.minY : r.minX
         let b = isVertical ? r.maxY : r.maxX
         return b > lo && a < hi

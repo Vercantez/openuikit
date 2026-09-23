@@ -4,11 +4,20 @@
 // insertions appended. These are state contracts, independent of chrome cut.
 #if canImport(Foundation)
 import Foundation
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
+// NSObject-derived, as UIKit's (and so `-invalidateLayoutWithContext:` and
+// `-invalidationContextForBoundsChange:` have an Objective-C spelling for an
+// Objective-C layout subclass; eidolon-flowlayout). The layout allocates it
+// with `[[cls alloc] init]` (UICollectionViewLayout.makeInvalidationContext).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UICollectionViewLayoutInvalidationContext)
+#endif
 @preconcurrency @MainActor
-open class UICollectionViewLayoutInvalidationContext {
-    public required init() {}
+open class UICollectionViewLayoutInvalidationContext: NSObject {
+    public required dynamic override init() { super.init() }
 
     open var invalidateEverything: Bool { false }
     open var invalidateDataSourceCounts: Bool { false }
@@ -46,6 +55,9 @@ open class UICollectionViewLayoutInvalidationContext {
     }
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UICollectionViewFlowLayoutInvalidationContext)
+#endif
 @preconcurrency @MainActor
 open class UICollectionViewFlowLayoutInvalidationContext: UICollectionViewLayoutInvalidationContext {
     // collection.json flowcontext.default: both flow-specific flags are true;

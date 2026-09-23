@@ -278,7 +278,7 @@ extension NibDecoder {
                 return
             case "UIContentEdgeInsets":
                 if let m = numbers(pair.value, count: 4) {
-                    button.contentEdgeInsets = UIEdgeInsets(top: m[0], left: m[1], bottom: m[2], right: m[3])
+                    button._contentEdgeInsets = UIEdgeInsets(top: m[0], left: m[1], bottom: m[2], right: m[3])
                 }
                 return
             case "UIButtonType", "UIAdjustsImageWhenHighlighted", "UIAdjustsImageWhenDisabled",
