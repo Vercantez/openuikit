@@ -32,7 +32,7 @@ func launchRealAppHost(row name: String, assets: String, phoneScale: CGFloat,
     RealAppScreen.installFocusBundleResourcesIfNeeded()
     let size = row.windowSize
     let scale = row.idiom == .pad ? row.nativeScale : phoneScale
-    Timer._reset()
+    _HostClockTimer._reset()
     GlyphInkTable.windowCompositing = false
     OpenUIKitRuntime.systemFontCut = .iOS
     UIDevice.current.userInterfaceIdiom = row.idiom
