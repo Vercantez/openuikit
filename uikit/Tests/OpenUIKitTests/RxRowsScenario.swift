@@ -10,7 +10,9 @@ import Foundation
 @testable import OpenUIKit
 #endif
 
+#if !os(Linux)
 @MainActor
+#endif
 enum OUKRxRowsScenario {
     static func run(host: UIView, settle: () -> Void) -> [String] {
         var lines: [String] = []

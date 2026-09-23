@@ -17,7 +17,9 @@ import Foundation
 @testable import OpenUIKit
 #endif
 
+#if !os(Linux)
 @MainActor
+#endif
 final class OUKTextViewInputRecorder: NSObject, UITextViewDelegate {
     var events: [String] = []
     weak var textView: UITextView?
@@ -39,7 +41,9 @@ final class OUKTextViewInputRecorder: NSObject, UITextViewDelegate {
 
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 enum OUKTextViewInputScenario {
     static func nsRange(_ r: NSRange) -> String { "{\(r.location),\(r.length)}" }
 
