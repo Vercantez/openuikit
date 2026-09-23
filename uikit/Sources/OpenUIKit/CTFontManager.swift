@@ -273,10 +273,10 @@ extension UIFont {
     /// UIKit's `UIFont(name:size:)`: a registered PostScript (or family)
     /// name, else nil. `size <= 0` means 12 pt, as in UIKit's documentation
     /// of CTFontCreateWithName.
-    public init?(name fontName: String, size fontSize: CGFloat) {
+    public convenience init?(name fontName: String, size fontSize: CGFloat) {
         guard let face = OpenUIKitFontRegistry.face(named: fontName) else { return nil }
-        self.init(pointSize: fontSize > 0 ? fontSize : 12, weight: .regular, design: .default)
-        customFontName = face.postScriptName
+        self.init(pointSize: fontSize > 0 ? fontSize : 12, weight: .regular, design: .default,
+                  customFontName: face.postScriptName)
     }
 
     /// The registered face backing this font, if it is not the system font.
@@ -287,10 +287,14 @@ extension UIFont {
     /// UIKit's `fontName`. iOS 26.1: `.SFUI-Regular`, `.SFUI-Semibold`,
     /// `.SFUI-Bold` for the system font at those weights; a registered face
     /// reports its PostScript name.
+    /// `boldSystemFont(ofSize:)` is `.SFUI-Semibold` and
+    /// `italicSystemFont(ofSize:)` `.SFUI-RegularItalic` (iOS 26.1,
+    /// objcsurfaceprobe `## font` / `## identity`).
     public var fontName: String {
         if let customFontName { return customFontName }
-        let w = weight.name
-        return ".SFUI-" + w.prefix(1).uppercased() + w.dropFirst()
+        let w = isSymbolicBold ? UIFont.Weight.semibold.name : weight.name
+        let name = ".SFUI-" + w.prefix(1).uppercased() + w.dropFirst()
+        return design == .italic ? name + "Italic" : name
     }
 
     /// UIKit's `familyName` (iOS 26.1: `.AppleSystemUIFont` for the system

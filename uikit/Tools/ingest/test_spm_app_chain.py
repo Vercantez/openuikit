@@ -48,7 +48,7 @@ class SpmAppChainTests(unittest.TestCase):
         manifest = open(os.path.join(out, "Package.swift")).read()
         self.assertIn('swift-tools-version:6.0', manifest)
         self.assertIn('defaultLocalization: "en"', manifest)
-        self.assertIn('platforms: [.macOS("13.0")]', manifest)
+        self.assertIn('platforms: [.macOS("13.0"), .iOS("26.0")]', manifest)
         self.assertIn('.package(name: "OpenUIKit", path: "%s")' % json.dumps(self.openuikit)[1:-1], manifest)
         self.assertIn('dependencies: ["Dep", "Svc", .product(name: "UIKit", package: "OpenUIKit")]', manifest)
         self.assertIn('exclude: ["Info.plist"]', manifest)
@@ -95,7 +95,10 @@ class SpmAppChainTests(unittest.TestCase):
         p, out = self.run_tool("--generated", gen)
         self.assertEqual(p.returncode, 0, p.stderr)
         manifest = open(os.path.join(out, "Package.swift")).read()
-        self.assertIn("platforms: [.macOS(.v15), .iOS(.v17)]", manifest)
+        # The spec's platforms are kept, except that an iOS floor below
+        # OpenUIKit's .iOS("26.0") is raised to it: SwiftPM refuses a client
+        # floor below a dependency's (docs/agent_reports/ios-target-route.md).
+        self.assertIn('platforms: [.macOS(.v15), .iOS("26.0")]', manifest)
         self.assertIn('cSettings: [.headerSearchPath("include")]', manifest)
         nnw = os.path.join(out, "Sources", "NNW")
         self.assertFalse(os.path.islink(nnw))
@@ -202,7 +205,7 @@ class SpmAppChainTests(unittest.TestCase):
         json.dump(spec, open(self.spec, "w"))
         p, out = self.run_tool()
         self.assertEqual(p.returncode, 0, p.stderr)
-        self.assertIn('platforms: [.macOS("15.0")]', open(os.path.join(out, "Package.swift")).read())
+        self.assertIn('platforms: [.macOS("15.0"), .iOS("26.0")]', open(os.path.join(out, "Package.swift")).read())
 
     def test_generated_substitution_must_match(self):
         self._with_generated({"file": "Secrets.swift", "root": "corpus", "path": "Configs/Secrets.swift.example",

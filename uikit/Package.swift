@@ -949,7 +949,8 @@ let simplenoteTargets: [Target] = [
     // (enums, structs, protocols, typed strings). Pure declarations; values
     // read off the iOS 26.1 SDK and OpenUIKit's Swift raw values
     // (simplenote-launch3).
-    .target(name: "OpenUIKitObjCSupport", path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
+    .target(name: "OpenUIKitObjCSupport", dependencies: ["CPortableIO"],
+            path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
             cSettings: [.define("OPENUIKIT_OBJC_SIDE", to: "1")]),
     // Route (b) `@objc(selector)` twins of existing OpenUIKit members; the
     // generated OpenUIKitObjCBridge-Swift.h adds them as categories. Chosen
@@ -967,6 +968,35 @@ let simplenoteTargets: [Target] = [
     .testTarget(name: "ObjCSubclassingTests",
                 dependencies: ["OpenUIKitObjCSubclassFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSubclassingTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // The Objective-C surface of UIFont / CALayer / CGColorRef
+    // (docs/agent_reports/objc-surface.md). The scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcsurfaceprobe/run.sh) and the
+    // machorun guest probe compiles. CALayer keeps its mangled runtime name
+    // on the macOS host (QuartzCore's CALayer is in the process), so its
+    // generated interface is SWIFT_CLASS; this fixture lifts
+    // objc_subclassing_restricted to exercise the vtable-free CALayer from
+    // an Objective-C subclass (the guest names it CALayer and needs no lift).
+    .target(name: "OpenUIKitObjCSurfaceFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcsurfaceprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), .unsafeFlags([
+                "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+                "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
+            ])]),
+    .testTarget(name: "ObjCSurfaceTests",
+                dependencies: ["OpenUIKitObjCSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCSurfaceTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // Foundation attributed strings and the Objective-C NSTextStorage
+    // (attrstring-unify). The scenario is the SAME .m the iOS 26.1 oracle
+    // runs (Tools/oracle2/textstorageprobe/run.sh); the test compares traces.
+    .target(name: "OpenUIKitTextStorageFixtures", dependencies: ["OpenUIKit", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/textstorageprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "AttributedStringUnifyTests",
+                dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
+                path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
@@ -1058,7 +1088,7 @@ let package = Package(
     // SwiftPM was already linking these products for macOS 11. Declaring
     // it makes that explicit instead of leaving it to the default.
     // Apple-only: it has no effect on the Linux build.
-    platforms: [.macOS(.v11)],
+    platforms: [.macOS(.v11), .iOS("26.0")],
     products: coreProducts + frameworkProducts + blockzillaProducts + simplenoteProducts + eidolonServiceProducts + eidolonDependencyProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
     targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets + eidolonServiceTargets + eidolonDependencyTargets,

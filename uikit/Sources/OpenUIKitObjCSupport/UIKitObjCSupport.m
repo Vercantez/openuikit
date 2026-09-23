@@ -18,6 +18,17 @@
 @end
 
 const UIEdgeInsets UIEdgeInsetsZero = {0, 0, 0, 0};
+const UIOffset UIOffsetZero = {0, 0};
+
+const UIFontWeight UIFontWeightUltraLight = -0.8;
+const UIFontWeight UIFontWeightThin = -0.6;
+const UIFontWeight UIFontWeightLight = -0.4;
+const UIFontWeight UIFontWeightRegular = 0;
+const UIFontWeight UIFontWeightMedium = 0.23;
+const UIFontWeight UIFontWeightSemibold = 0.3;
+const UIFontWeight UIFontWeightBold = 0.4;
+const UIFontWeight UIFontWeightHeavy = 0.56;
+const UIFontWeight UIFontWeightBlack = 0.62;
 const NSDirectionalEdgeInsets NSDirectionalEdgeInsetsZero = {0, 0, 0, 0};
 
 UITransitionContextViewControllerKey const UITransitionContextFromViewControllerKey = @"UITransitionContextFromViewController";
@@ -33,11 +44,17 @@ NSAttributedStringKey const NSParagraphStyleAttributeName = @"NSParagraphStyle";
 NSAttributedStringKey const NSLinkAttributeName = @"NSLink";
 NSAttributedStringKey const NSAttachmentAttributeName = @"NSAttachment";
 NSNotificationName const UIApplicationDidEnterBackgroundNotification = @"UIApplicationDidEnterBackgroundNotification";
+NSNotificationName const UIApplicationDidBecomeActiveNotification = @"UIApplicationDidBecomeActiveNotification";
+NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification = @"UIApplicationDidReceiveMemoryWarningNotification";
 NSNotificationName const UIApplicationWillEnterForegroundNotification = @"UIApplicationWillEnterForegroundNotification";
 NSNotificationName const UIContentSizeCategoryDidChangeNotification = @"UIContentSizeCategoryDidChangeNotification";
 NSNotificationName const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotification";
+NSNotificationName const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWillProcessEditingNotification";
+NSNotificationName const NSTextStorageDidProcessEditingNotification = @"NSTextStorageDidProcessEditingNotification";
 NSNotificationName const UIKeyboardWillChangeFrameNotification = @"UIKeyboardWillChangeFrameNotification";
 NSNotificationName const UITextViewTextDidEndEditingNotification = @"UITextViewTextDidEndEditingNotification";
+NSString * const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
+NSString * const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
 NSString * const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
 NSString * const UIKeyInputUpArrow = @"UIKeyInputUpArrow";
 NSString * const UIKeyInputDownArrow = @"UIKeyInputDownArrow";

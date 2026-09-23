@@ -156,15 +156,16 @@ run_jobs() {
 # Two stages depend on nothing under uikit/ and dominate the build: the
 # FoundationEssentials closure (collections, os, C shims, FE, compat objects)
 # and FoundationInternationalization (474 ICU TUs + 61 Swift files). With the
-# cache on, each stage's complete output tree is stored as a tar under
+# cache on, each stage's complete output tree is copied (see stage_copy) under
 # BUILD_FULL_STAGE_CACHE_DIR, keyed by a SHA-256 over the stage's inputs:
 # every source/script/patch by CONTENT, the pinned upstream trees, the compile
 # sysroot's content, the compiler/linker binaries and version strings, the
 # relevant flags/environment, the absolute paths the stage writes, and (for FI)
 # the upstream stage outputs it links. A hit restores the exact bytes a cold
 # run of the same inputs wrote (cold runs of this script are deterministic);
-# a miss runs the stage normally and then records it. Off by default: the
-# authority routes keep compiling everything.
+# a miss, or an entry that fails verification, runs the stage normally and then
+# records it; a recording failure only warns. Off by default: the authority
+# routes keep compiling everything.
 BUILD_FULL_STAGE_CACHE=${BUILD_FULL_STAGE_CACHE:-0}
 BUILD_FULL_STAGE_CACHE_DIR=${BUILD_FULL_STAGE_CACHE_DIR:-$OUT.stage-cache}
 case "$BUILD_FULL_STAGE_CACHE" in
@@ -205,86 +206,185 @@ toolchain_identity() {
         sha256sum < "$(readlink -f "$(command -v "$tool")")"
     done
 }
-# tree_manifest <root> <rel>...: type, mode, path and content hash (files) or
-# link target (symlinks) of every entry at and under each <root>/<rel>, sorted.
-tree_manifest() {
-    local root=$1
-    shift
-    (
-        cd "$root" || exit 2
-        find "$@" -printf '%y %m %p\n' | LC_ALL=C sort -k3 \
-            | while read -r type mode rel; do
-                case "$type" in
-                    f) printf '%s %s %s %s\n' "$type" "$mode" "$rel" "$(sha256sum < "$rel" | cut -d' ' -f1)" ;;
-                    l) printf '%s %s %s -> %s\n' "$type" "$mode" "$rel" "$(readlink "$rel")" ;;
-                    *) printf '%s %s %s\n' "$type" "$mode" "$rel" ;;
-                esac
-            done
-    )
+# >>> stage-cache functions (extracted by full/scripts/test_build_full_stage_cache.py)
+# Entries never go through cp or tar. Both trust the file system's inode
+# identity, and Docker Desktop's bind mount (virtiofs) does not keep it stable
+# under load:
+#   * GNU tar's delayed symlink/directory-status extraction came back with
+#     empty placeholder files and exit 2;
+#   * GNU cp 9.x compares the dev/ino it saw while scanning with fstat() of the
+#     opened file and refuses with "skipping file ..., as it was replaced while
+#     being copied" when a FUSE inode was evicted and looked up again (seen on
+#     the main checkout, 2026-09-22, right after the FE stage).
+# stage_copy copies BYTES (cat), then sets the mode and mtime from the source,
+# and every copy is proven by a content manifest instead.
+
+# stage_path_manifest <path>: type, mode, name (relative to <path>) and content
+# hash (files) or link target (symlinks) of <path> and everything under it,
+# sorted. Returns non-zero if <path> cannot be listed or read.
+stage_path_manifest() {
+    local base=$1 listing type mode rel p digest
+    if [ -d "$base" ] && [ ! -L "$base" ]; then
+        listing=$(cd -- "$base" && find . -printf '%y %m %p\n') || return 1
+    else
+        listing=$(find "$base" -maxdepth 0 -printf '%y %m .\n') || return 1
+    fi
+    while read -r type mode rel; do
+        if [ "$rel" = . ]; then p=$base; else p=$base/${rel#./}; fi
+        case "$type" in
+            f) digest=$(sha256sum < "$p") || return 1
+               printf '%s %s %s %s\n' "$type" "$mode" "$rel" "${digest%% *}" ;;
+            l) printf '%s %s %s -> %s\n' "$type" "$mode" "$rel" "$(readlink -- "$p")" ;;
+            *) printf '%s %s %s\n' "$type" "$mode" "$rel" ;;
+        esac
+    done < <(LC_ALL=C sort -k3 <<<"$listing")
 }
-# Entries are plain `cp -a` copies of each recorded path, not tarballs: GNU
-# tar's delayed symlink/directory-status extraction relies on stable inode
-# numbers, which Docker Desktop bind mounts do not provide (measured: symlinks
-# came back as empty placeholder files and tar exited 2).
-#
-# stage_cache_restore <stage> <key> <path>...: on a hit, replace <path>... with
-# the recorded tree and return 0; on a miss return 1. The entry is checked
-# against its manifest before anything is touched, and the restored paths are
-# checked against it afterwards. This runs as an `if` condition, where errexit
-# is off, so every step checks its own status.
+# stage_copy <src> <dst>: copy a file, symlink or directory tree to <dst>
+# (which must not exist) with modes and mtimes, reading file contents with cat.
+# Every step checks its own status: callers run it where errexit is off.
+stage_copy() {
+    local src=$1 dst=$2 listing type mode rel
+    if [ -L "$src" ]; then
+        ln -s -- "$(readlink -- "$src")" "$dst" || return 1
+        touch -h -r "$src" "$dst" || return 1
+        return 0
+    fi
+    if [ ! -d "$src" ]; then
+        cat -- "$src" > "$dst" || return 1
+        chmod "$(stat -c %a -- "$src")" "$dst" || return 1
+        touch -r "$src" "$dst" || return 1
+        return 0
+    fi
+    mkdir -- "$dst" || return 1
+    # Pre-order listing: every directory is created before its children.
+    listing=$(cd -- "$src" && find . -mindepth 1 -printf '%y %m %p\n') || return 1
+    while read -r type mode rel; do
+        [ -n "$rel" ] || continue
+        rel=${rel#./}
+        case "$type" in
+            d) mkdir -- "$dst/$rel" || return 1 ;;
+            l) ln -s -- "$(readlink -- "$src/$rel")" "$dst/$rel" || return 1
+               touch -h -r "$src/$rel" "$dst/$rel" || return 1 ;;
+            f) cat -- "$src/$rel" > "$dst/$rel" || return 1
+               chmod "$mode" "$dst/$rel" || return 1
+               touch -r "$src/$rel" "$dst/$rel" || return 1 ;;
+            *) echo "   stage cache: unsupported file type '$type' at $src/$rel" >&2
+               return 1 ;;
+        esac
+    done <<<"$listing"
+    # Directory modes and mtimes last, deepest first, so filling a directory
+    # cannot bump a timestamp that was already set.
+    while read -r type mode rel; do
+        [ "$type" = d ] || continue
+        rel=${rel#./}
+        chmod "$mode" "$dst/$rel" || return 1
+        touch -r "$src/$rel" "$dst/$rel" || return 1
+    done < <(sort -r -k3 <<<"$listing")
+    chmod "$(stat -c %a -- "$src")" "$dst" || return 1
+    touch -r "$src" "$dst" || return 1
+}
+# stage_entry_manifest <root> <rel>...: one "== <rel>" section per path.
+stage_entry_manifest() {
+    local root=$1 rel
+    shift
+    for rel in "$@"; do
+        printf '== %s\n' "$rel"
+        stage_path_manifest "$root/$rel" || return 1
+    done
+}
+
+# stage_cache_restore <stage> <key> <path>...: on a hit, replace <path>... (and
+# every recorded path) with the recorded tree and return 0. Anything short of a
+# verified hit returns 1 with the outputs untouched, and the caller builds the
+# stage: the entry is checked against its manifest, each recorded path is
+# copied to a sibling "<path>.stage-restore" and checked again, and only then
+# are the outputs removed and the siblings renamed into place (a rename within
+# one directory, never a copy).
 stage_cache_restore() {
-    local stage=$1 key=$2 entry p rel
+    local stage=$1 key=$2 entry rel p ok=1
     local -a rels=()
     shift 2
     [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 1
     entry=$BUILD_FULL_STAGE_CACHE_DIR/$stage/$key
-    [ -d "$entry/payload" ] && [ -f "$entry/manifest" ] && [ -f "$entry/paths" ] || {
+    if [ ! -d "$entry/payload" ] || [ ! -f "$entry/manifest" ] || [ ! -f "$entry/paths" ]; then
         echo "   stage cache: $stage miss key=${key:0:12}"
         return 1
-    }
+    fi
     mapfile -t rels < "$entry/paths" || return 1
-    if ! tree_manifest "$entry/payload" "${rels[@]}" | cmp -s - "$entry/manifest"; then
+    if ! cmp -s <(stage_entry_manifest "$entry/payload" "${rels[@]}") "$entry/manifest"; then
         echo "   stage cache: $stage entry ${key:0:12} does not match its manifest; rebuilding" >&2
         rm -rf -- "$entry"
+        return 1
+    fi
+    for rel in "${rels[@]}"; do
+        rm -rf -- "/$rel.stage-restore"
+        if ! mkdir -p -- "/$(dirname -- "$rel")" \
+            || ! stage_copy "$entry/payload/$rel" "/$rel.stage-restore" \
+            || ! cmp -s <(stage_path_manifest "/$rel.stage-restore") \
+                        <(stage_path_manifest "$entry/payload/$rel"); then
+            ok=0
+            break
+        fi
+    done
+    if [ "$ok" != 1 ]; then
+        for rel in "${rels[@]}"; do rm -rf -- "/$rel.stage-restore"; done
+        echo "   stage cache: $stage entry ${key:0:12} could not be staged; rebuilding" >&2
         return 1
     fi
     for p in "$@"; do
         rm -rf -- "$p" || die "stage cache: cannot remove $p"
     done
     for rel in "${rels[@]}"; do
-        mkdir -p "/$(dirname "$rel")" && cp -a "$entry/payload/$rel" "/$rel" \
-            || die "stage cache: restoring /$rel failed"
+        rm -rf -- "/$rel" || die "stage cache: cannot remove /$rel"
+        mv -T -- "/$rel.stage-restore" "/$rel" || die "stage cache: cannot rename /$rel.stage-restore"
     done
-    tree_manifest / "${rels[@]}" | cmp -s - "$entry/manifest" \
+    cmp -s <(stage_entry_manifest / "${rels[@]}") "$entry/manifest" \
         || die "stage cache: restored $stage paths differ from entry ${key:0:12}"
     echo "   stage cache: $stage restored key=${key:0:12}"
 }
-# stage_cache_store <stage> <key> <path>...: record the existing <path>...
-# (absolute), replacing any older entry for <stage>.
+# stage_cache_store <stage> <key> <path>...: record the existing absolute
+# <path>..., replacing any older entry for <stage>. Never fails the build: a
+# copy that cannot be made or does not match the outputs byte for byte is
+# discarded with a warning.
 stage_cache_store() {
+    [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 0
+    local stage=$1 key=$2
+    # Called from `||`, so errexit is off inside and each step checks itself.
+    stage_cache_store_entry "$@" || {
+        rm -rf -- "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp."* 2>/dev/null
+        echo "   stage cache: WARNING: $stage not recorded (key=${key:0:12}); the build continues uncached" >&2
+    }
+    return 0
+}
+stage_cache_store_entry() {
     local stage=$1 key=$2 entry tmp p
     local -a rels=()
     shift 2
-    [ "$BUILD_FULL_STAGE_CACHE" = 1 ] || return 0
     entry=$BUILD_FULL_STAGE_CACHE_DIR/$stage/$key
-    mkdir -p "$BUILD_FULL_STAGE_CACHE_DIR/$stage"
-    tmp=$(mktemp -d "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp.XXXXXX")
+    mkdir -p -- "$BUILD_FULL_STAGE_CACHE_DIR/$stage" || return 1
+    tmp=$(mktemp -d "$BUILD_FULL_STAGE_CACHE_DIR/$stage/.tmp.XXXXXX") || return 1
     for p in "$@"; do
-        case "$p" in /*) ;; *) die "stage cache path must be absolute: $p" ;; esac
-        [ -e "$p" ] || [ -L "$p" ] || die "stage cache: $stage output missing: $p"
+        case "$p" in
+            /*) ;;
+            *) echo "   stage cache: path must be absolute: $p" >&2; return 1 ;;
+        esac
+        [ -e "$p" ] || [ -L "$p" ] || { echo "   stage cache: $stage output missing: $p" >&2; return 1; }
         rels+=("${p#/}")
-        mkdir -p "$tmp/payload$(dirname "$p")"
-        cp -a "$p" "$tmp/payload$p"
+        mkdir -p -- "$tmp/payload$(dirname -- "$p")" || return 1
+        stage_copy "$p" "$tmp/payload$p" || return 1
     done
-    printf '%s\n' "${rels[@]}" > "$tmp/paths"
-    tree_manifest "$tmp/payload" "${rels[@]}" > "$tmp/manifest"
-    tree_manifest / "${rels[@]}" | cmp -s - "$tmp/manifest" \
-        || die "stage cache: copy of $stage outputs differs from the originals"
+    printf '%s\n' "${rels[@]}" > "$tmp/paths" || return 1
+    stage_entry_manifest "$tmp/payload" "${rels[@]}" > "$tmp/manifest" || return 1
+    if ! cmp -s <(stage_entry_manifest / "${rels[@]}") "$tmp/manifest"; then
+        echo "   stage cache: copy of $stage outputs differs from the originals" >&2
+        return 1
+    fi
     find "$BUILD_FULL_STAGE_CACHE_DIR/$stage" -mindepth 1 -maxdepth 1 \
-        ! -name "$(basename "$tmp")" -exec rm -rf -- {} +
-    mv "$tmp" "$entry"
+        ! -name "$(basename -- "$tmp")" -exec rm -rf -- {} + || return 1
+    mv -T -- "$tmp" "$entry" || return 1
     echo "   stage cache: $stage stored key=${key:0:12}"
 }
+# <<< stage-cache functions
 
 # The DTS route is explicit and fail-closed. Standalone mode builds the
 # canonical target source, external mode consumes an all-or-none attested trio,
@@ -663,6 +763,8 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/mathpatch.o" \
         "$W/full/shims/libsystem_math_compat.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
+    # posix_madvise (iOS-triple ICU), docs/agent_reports/ios-target-route.md.
+    "${CC[@]}" -O1 -c -o "$OUT/posixpatch.o" "$W/full/shims/libsystem_posix_compat.c"
     clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/cxxpatch.o" "$W/spike/cxxpatch.cpp"
@@ -672,7 +774,7 @@ done
 
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" \
+        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/posixpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
@@ -685,7 +787,7 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
+        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/posixpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
 
     # The umbrella must DEFINE the symbols that are its whole reason to exist.
@@ -693,7 +795,7 @@ done
     # used to be __NSGetMachExecuteHeader; that moved into machorun's libSystem
     # (darwin/src/objcsupport.c). A definition here would beat libSystem.real,
     # so the umbrella must NOT define it.
-    for sym in _nan _remquo; do
+    for sym in _nan _remquo _posix_madvise; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
             | awk -v s="$sym" '$NF==s{f=1} END{exit !f}' || {
             echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
@@ -796,7 +898,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
-    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\n'
+    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo,_posix_madvise\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\tfull/shims/libsystem_posix_compat.c\n'
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'
@@ -1194,6 +1296,36 @@ cp "$W/full/foundation/include/CoreFoundation/CoreFoundation.h" \
     "$APPMODS/include/CoreFoundation/CoreFoundation.h"
 cp "$W/full/foundation/include/CoreFoundation/module.modulemap" \
     "$APPMODS/include/CoreFoundation/module.modulemap"
+# The durable OpenCombine export is a macOS-platform object; LLD refuses it in
+# an iOS-simulator link ("has platform macOS, which is different from target
+# platform iOS Simulator", MEASURED docs/agent_reports/ios-target-route.md).
+# For that platform compile the same attested 103 pinned sources for TARGET,
+# as full/xcodeplan/build_true_ios_platform_frameworks.sh does.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    echo "== pinned OpenCombine from source for $TARGET"
+    OPENCOMBINE_ARTIFACTS=$OUT/opencombine-$LINK_PLATFORM
+    rm -rf "$OPENCOMBINE_ARTIFACTS"
+    mkdir -p "$OPENCOMBINE_ARTIFACTS"
+    perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
+        "$W/full/oracle-opencombine/policy.json" "$OPENCOMBINE_SOURCE" \
+        "$OPENCOMBINE_ARTIFACTS/sources.nul" "$OPENCOMBINE_ARTIFACTS/sources.json"
+    mapfile -d '' -t opencombine_relative_sources < "$OPENCOMBINE_ARTIFACTS/sources.nul"
+    [ "${#opencombine_relative_sources[@]}" -eq 103 ] \
+        || die "OpenCombine source denominator is ${#opencombine_relative_sources[@]}, expected 103"
+    opencombine_sources=()
+    for source in "${opencombine_relative_sources[@]}"; do
+        case "$source" in
+            /*) opencombine_sources+=("$source") ;;
+            *) opencombine_sources+=("$OPENCOMBINE_SOURCE/$source") ;;
+        esac
+    done
+    "${SWIFTC[@]}" -parse-as-library \
+        -Xcc -fmodule-map-file="$APPMODS/include/COpenCombineHelpers/module.modulemap" \
+        -Xcc -I"$APPMODS/include/COpenCombineHelpers" \
+        -module-name OpenCombine \
+        -emit-module -emit-module-path "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
+        -emit-object -o "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "${opencombine_sources[@]}"
+fi
 [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" ] && \
     [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" ] \
     || die "OpenCombine artifacts missing under $OPENCOMBINE_ARTIFACTS"
@@ -1680,6 +1812,12 @@ for i in "${!OBS_SOURCES[@]}"; do OBS_SOURCES[$i]="$W/${OBS_SOURCES[$i]}"; done
     -L"$SYS/usr/lib" -lSystem -lobjc "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
 cp "$OBS_OUT/Observation.swiftmodule" "$APPINC/"
 
+# -disable-availability-checking folds every `#available` to true (MEASURED:
+# Xcode 26.1 emit-ir, 4 runtime-check references without it, 0 with it). An
+# iOS-triple guest presents iOS 26.1, so its app modules keep the real check
+# (docs/agent_reports/ios-target-route.md); the macOS-triple guest is unchanged.
+APP_AVAILABILITY_FLAGS=(-disable-availability-checking)
+[ "$LINK_PLATFORM" = ios-simulator ] && APP_AVAILABILITY_FLAGS=()
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
     echo "   module $name"
@@ -1690,7 +1828,7 @@ compile_app_module() {
     "${SWIFTC[@]}" -D OPENUIKIT_GUEST -parse-as-library "${FEMODULES[@]}" \
         "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
         -I "$OUT" -I "$APPINC" -I "$APPMODS" \
-        -disable-availability-checking \
+        "${APP_AVAILABILITY_FLAGS[@]}" \
         "${OBSERVATION_PLUGIN_FLAGS[@]}" \
         -module-name "$name" \
         -emit-module -emit-module-path "$APPINC/$name.swiftmodule" \
@@ -1836,6 +1974,13 @@ COMMON_LINK_OBJECTS=(
     "${FE_OBJECTS[@]}"
     "${PREVIEW_LINK_OBJECTS[@]}"
 )
+# `#available(iOS x, *)` answers for iOS 26.1 in iOS-triple executables
+# (full/shims/ios_availability.c); the macOS-triple guest keeps
+# libswiftcompat's always-yes.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    "${CC[@]}" -O1 -c -o "$OUT/iosavailability.o" "$W/full/shims/ios_availability.c"
+    COMMON_LINK_OBJECTS+=("$OUT/iosavailability.o")
+fi
 # Combine/OpenCombine/Dispatch are dylibs (widget/onboarding measured path).
 # Their .o files are inside those dylibs — do not object-link them as well.
 # render_full links the Foundation-visible UIKit object; the IndexPath probe
@@ -1921,11 +2066,19 @@ build_final_executable() {
                 -o "$OUT/indexpath_identity_probe" \
                 "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
                 "${COMMON_LINK_OBJECTS[@]}" ;;
+        # iOS-target guest probe (docs/agent_reports/ios-target-route.md):
+        # the source #errors unless os(iOS); full/iostarget/ios_guest.sh runs
+        # it under machorun and diffs it against the iOS 26.1 simulator.
+        IOSTargetGuestProbe)
+            compile_app_module IOSTargetGuestProbe "$OUT/IOSTargetGuestProbe.o" \
+                "$W/full/iostarget/IOSTargetGuestProbe.swift"
+            link_app_executable "$OUT/IOSTargetGuestProbe" "$OUT/IOSTargetGuestProbe.o" ;;
         *) die "unknown final executable $1" ;;
     esac
 }
-FINAL_EXECUTABLES=(render_full GuestBoundaryTests LaunchProbe
-    FuziProbe BrowserInkProbe indexpath_identity_probe)
+FINAL_EXECUTABLES=(render_full GuestBoundaryTests LaunchProbe FuziProbe
+    BrowserInkProbe indexpath_identity_probe)
+[ "$LINK_PLATFORM" = ios-simulator ] && FINAL_EXECUTABLES+=(IOSTargetGuestProbe)
 rm -f "$OUT/host_full" "$OUT/host_full.o"
 if [ "$BUILD_HOST_FULL" = 1 ]; then
     [ -n "$HOST_OPT_PID" ] && wait "$HOST_OPT_PID" \

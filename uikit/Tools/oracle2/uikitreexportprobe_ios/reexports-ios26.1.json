@@ -1,0 +1,151 @@
+{
+ "modules": {
+  "AVFoundation": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'AVPlayer' in scope",
+   "probe": "let _: AVPlayer? = nil",
+   "reexported": false
+  },
+  "Accessibility": {
+   "first_error": null,
+   "probe": "let _: AXCustomContent? = nil",
+   "reexported": true
+  },
+  "CFNetwork": {
+   "first_error": null,
+   "probe": "let _ = kCFStreamPropertySSLSettings",
+   "reexported": true
+  },
+  "Combine": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'AnyCancellable' in scope",
+   "probe": "let _: AnyCancellable? = nil",
+   "reexported": false
+  },
+  "CoreData": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'NSManagedObject' in scope",
+   "probe": "let _: NSManagedObject? = nil",
+   "reexported": false
+  },
+  "CoreFoundation": {
+   "first_error": null,
+   "probe": "let _ = CFStringGetLength(\"a\" as CFString)",
+   "reexported": true
+  },
+  "CoreGraphics": {
+   "first_error": null,
+   "probe": "let _: CGContext? = nil; let _ = CGBitmapInfo.byteOrder32Little",
+   "reexported": true
+  },
+  "CoreImage": {
+   "first_error": null,
+   "probe": "let _: CIImage? = nil",
+   "reexported": true
+  },
+  "CoreLocation": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'CLLocation' in scope",
+   "probe": "let _: CLLocation? = nil",
+   "reexported": false
+  },
+  "CoreMedia": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'CMTime' in scope",
+   "probe": "let _: CMTime? = nil",
+   "reexported": false
+  },
+  "CoreText": {
+   "first_error": null,
+   "probe": "let _ = CTFontGetSize as Any",
+   "reexported": true
+  },
+  "CoreVideo": {
+   "first_error": null,
+   "probe": "let _: CVPixelBuffer? = nil",
+   "reexported": true
+  },
+  "Darwin": {
+   "first_error": null,
+   "probe": "let _ = strlen(\"a\")",
+   "reexported": true
+  },
+  "DataDetection": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'DataDetection' in scope",
+   "probe": "let _: DataDetection.DataDetector? = nil",
+   "reexported": false
+  },
+  "Dispatch": {
+   "first_error": null,
+   "probe": "let _ = DispatchQueue.main",
+   "reexported": true
+  },
+  "FileProvider": {
+   "first_error": null,
+   "probe": "let _: NSFileProviderManager? = nil",
+   "reexported": true
+  },
+  "Foundation": {
+   "first_error": null,
+   "probe": "let _ = URL(string: \"a\")",
+   "reexported": true
+  },
+  "IOSurface": {
+   "first_error": null,
+   "probe": "let _: IOSurfaceRef? = nil",
+   "reexported": true
+  },
+  "ImageIO": {
+   "first_error": null,
+   "probe": "let _ = CGImageSourceCreateWithData as Any; let _ = kCGImagePropertyOrientation",
+   "reexported": true
+  },
+  "Metal": {
+   "first_error": null,
+   "probe": "let _: MTLDevice? = nil",
+   "reexported": true
+  },
+  "ObjectiveC": {
+   "first_error": null,
+   "probe": "let _ = class_getName(NSObject.self)",
+   "reexported": true
+  },
+  "Observation": {
+   "first_error": null,
+   "probe": "let _: ObservationRegistrar? = nil",
+   "reexported": true
+  },
+  "QuartzCore": {
+   "first_error": null,
+   "probe": "let _: CADisplayLink? = nil; let _ = CATransform3DIdentity",
+   "reexported": true
+  },
+  "Security": {
+   "first_error": null,
+   "probe": "let _ = SecRandomCopyBytes as Any",
+   "reexported": true
+  },
+  "Symbols": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'NSSymbolEffect' in scope",
+   "probe": "let _: NSSymbolEffect? = nil",
+   "reexported": false
+  },
+  "UIKitCore": {
+   "first_error": null,
+   "probe": "let _: UIView? = nil",
+   "reexported": true
+  },
+  "UniformTypeIdentifiers": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:8: error: cannot find type 'UTType' in scope",
+   "probe": "let _: UTType? = nil",
+   "reexported": false
+  },
+  "UserNotifications": {
+   "first_error": null,
+   "probe": "let _: UNNotification? = nil",
+   "reexported": true
+  },
+  "os": {
+   "first_error": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/T/tmpxt1axrmz/p.swift:2:9: error: cannot find 'OSLog' in scope",
+   "probe": "let _ = OSLog.default",
+   "reexported": false
+  }
+ },
+ "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk",
+ "triple": "arm64-apple-ios26.1-simulator"
+}

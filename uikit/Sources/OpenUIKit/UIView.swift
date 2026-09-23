@@ -100,32 +100,45 @@ public extension CALayerDelegate {
 /// `CAMediaTiming` are NOT adopted: the port has no archiver for a layer and
 /// no `CAMediaTiming` protocol, and declaring either would mean writing
 /// unmeasured stubs. Recorded in docs/KNOWN_GAPS.md.
+// Objective-C runtime name: UIKit's `CALayer` on the Foundation-hidden
+// Mach-O guest, where OpenUIKit is the only Core Animation, so the generated
+// header marks it SWIFT_CLASS_NAMED and an Objective-C app may subclass it
+// (vtable-free: every member `final` except the `@objc dynamic`
+// `layoutSublayers`; objc-surface.md). A Foundation build keeps the mangled
+// Swift name: QuartzCore's CALayer is in every macOS host process.
+#if _runtime(_ObjC) && !canImport(Foundation)
+@objc(CALayer)
+#endif
 @preconcurrency @MainActor
 open class CALayer: NSObject {
-    public weak var owner: UIView?
-    public weak var delegate: CALayerDelegate?
+    public final weak var owner: UIView?
+    public final weak var delegate: CALayerDelegate?
 
-    private var storedBounds: CGRect = .zero
-    private var storedPosition: CGPoint = .zero
-    private var storedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
-    private var storedSublayers: [CALayer] = []
-    private var storedBackgroundColor: CGColor?
-    private var storedOpacity: Float = 1
-    private var storedHidden = false
-    private var storedMask: CALayer?
-    private weak var maskOwner: CALayer?
-    private var storedCompatibilityValues: [String: Any] = [:]
-    private var _needsLayout = true
-    private var _isLayingOut = false
+    private final var storedBounds: CGRect = .zero
+    private final var storedPosition: CGPoint = .zero
+    private final var storedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+    private final var storedSublayers: [CALayer] = []
+    private final var storedBackgroundColor: CGColor?
+    private final var storedOpacity: Float = 1
+    private final var storedHidden = false
+    private final var storedMask: CALayer?
+    private final weak var maskOwner: CALayer?
+    private final var storedCompatibilityValues: [String: Any] = [:]
+    /// iOS 26.1 (objcsurfaceprobe `## layer`): a new layer reports
+    /// `needsLayout` NO, and `layoutIfNeeded` on it runs no
+    /// `layoutSublayers`. A view's backing layer starts dirty (the view's
+    /// first layout pass runs through it); `init(owner:)` sets that.
+    private final var _needsLayout = false
+    private final var _isLayingOut = false
     /// Core Animation records live in `CoreAnimation.swift`. They are kept on
     /// the portable layer rather than the transient QZLayer built for one
     /// frame, so rebuilding the renderer tree does not restart animations.
-    var _explicitAnimations: [_CALayerAnimationRecord] = []
+    final var _explicitAnimations: [_CALayerAnimationRecord] = []
 
     /// Geometry follows Core Animation's bounds/position/anchor model.
     /// A backing layer mirrors its UIView so existing view geometry remains
     /// the single source of truth.
-    public var bounds: CGRect {
+    public final var bounds: CGRect {
         get { owner?.bounds ?? storedBounds }
         set {
             if let owner { owner.bounds = newValue }
@@ -138,7 +151,7 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var position: CGPoint {
+    public final var position: CGPoint {
         get { owner?.center ?? storedPosition }
         set {
             if let owner { owner.center = newValue }
@@ -149,7 +162,7 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var anchorPoint: CGPoint {
+    public final var anchorPoint: CGPoint {
         get { storedAnchorPoint }
         set {
             if storedAnchorPoint != newValue {
@@ -159,7 +172,7 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var frame: CGRect {
+    public final var frame: CGRect {
         get {
             if let owner { return owner.frame }
             return CGRect(x: position.x - anchorPoint.x * bounds.width,
@@ -193,7 +206,7 @@ open class CALayer: NSObject {
 
     /// Explicit Core Animation children. UIKit exposes nil, rather than an
     /// empty array, when a layer has no children.
-    public var sublayers: [CALayer]? {
+    public final var sublayers: [CALayer]? {
         get { storedSublayers.isEmpty ? nil : storedSublayers }
         set {
             for child in storedSublayers where child.superlayer === self {
@@ -204,21 +217,21 @@ open class CALayer: NSObject {
             _setNeedsLayoutFromMutation()
         }
     }
-    public private(set) weak var superlayer: CALayer?
+    public private(set) final weak var superlayer: CALayer?
 
     /// The exact ordered storage used by the render pipelines (unlike the
     /// public UIKit-shaped optional, this never allocates an Optional array).
-    var _orderedSublayers: [CALayer] { storedSublayers }
+    final var _orderedSublayers: [CALayer] { storedSublayers }
 
-    public func addSublayer(_ layer: CALayer) {
+    public final func addSublayer(_ layer: CALayer) {
         _insertSublayer(layer, at: storedSublayers.count)
     }
 
-    public func insertSublayer(_ layer: CALayer, at index: UInt32) {
+    public final func insertSublayer(_ layer: CALayer, at index: UInt32) {
         _insertSublayer(layer, at: Swift.min(Int(index), storedSublayers.count))
     }
 
-    private func _insertSublayer(_ layer: CALayer, at index: Int) {
+    private final func _insertSublayer(_ layer: CALayer, at index: Int) {
         // Reject self and ancestor insertion. Without this guard a malformed
         // graph would recurse forever in both render pipelines.
         var ancestor: CALayer? = self
@@ -236,14 +249,14 @@ open class CALayer: NSObject {
         _setNeedsLayoutFromMutation()
     }
 
-    public func removeFromSuperlayer() {
+    public final func removeFromSuperlayer() {
         guard let parent = superlayer else { return }
         parent.storedSublayers.removeAll { $0 === self }
         superlayer = nil
         parent._setNeedsLayoutFromMutation()
     }
 
-    public var backgroundColor: CGColor? {
+    public final var backgroundColor: CGColor? {
         get {
             if let owner {
                 return owner.backgroundColor?.resolvedCGColor(with: owner.traitCollection)
@@ -260,21 +273,21 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var opacity: Float {
+    public final var opacity: Float {
         get { owner.map { Float($0.alpha) } ?? storedOpacity }
         set {
             if let owner { owner.alpha = CGFloat(newValue) }
             else { storedOpacity = newValue }
         }
     }
-    public var isHidden: Bool {
+    public final var isHidden: Bool {
         get { owner?.isHidden ?? storedHidden }
         set {
             if let owner { owner.isHidden = newValue }
             else { storedHidden = newValue }
         }
     }
-    public var cornerRadius: CGFloat = 0 {
+    public final var cornerRadius: CGFloat = 0 {
         didSet {
             if cornerRadius != oldValue {
                 owner?.recordAnimation(.cornerRadius, from: .scalar(oldValue),
@@ -285,17 +298,17 @@ open class CALayer: NSObject {
     /// Per-corner radii installed by `UIView.cornerConfiguration`. Non-nil
     /// radii win over `cornerRadius` (measured: `cornerRadius = 30` after
     /// a fixed-8 configuration still renders 8; UICornerConfiguration.swift).
-    var _cornerRadii: _CACornerRadii?
+    final var _cornerRadii: _CACornerRadii?
     /// Stored only; see `CALayerCornerCurve` (CoreAnimation.swift).
-    public var cornerCurve: CALayerCornerCurve = .circular
-    private var storedMaskedCorners: CACornerMask = ._allKnown
+    public final var cornerCurve: CALayerCornerCurve = .circular
+    private final var storedMaskedCorners: CACornerMask = ._allKnown
     /// Selects which corners receive `cornerRadius`. Unknown raw-value bits
     /// are discarded, matching iOS 26 Core Animation.
-    public var maskedCorners: CACornerMask {
+    public final var maskedCorners: CACornerMask {
         get { storedMaskedCorners }
         set { storedMaskedCorners = newValue.intersection(._allKnown) }
     }
-    public var borderWidth: CGFloat = 0 {
+    public final var borderWidth: CGFloat = 0 {
         didSet {
             if borderWidth != oldValue {
                 _recordImplicitAnimation(keyPath: "borderWidth",
@@ -303,24 +316,24 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-    public var masksToBounds: Bool = false
+    public final var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    public final var masksToBounds: Bool = false
     /// Core Animation's opaque-content optimization hint. It does not alter
     /// composited pixels by itself; renderers may use it to skip alpha work
     /// once they can prove the layer's contents are opaque.
-    public var isOpaque: Bool = false
+    public final var isOpaque: Bool = false
     /// Scale of the layer's backing contents. OpenUIKit's UIView renderer
     /// derives its raster scale from the host surface, but this public state
     /// is retained because app and framework code configures it directly.
-    public var contentsScale: CGFloat = 1
+    public final var contentsScale: CGFloat = 1
     /// Filters attached to this exact layer identity. QuartzCore's portable
     /// module re-exports CALayer rather than wrapping it, so assignments made
     /// through either module spelling reach this single storage location.
-    public var filters: [Any]?
+    public final var filters: [Any]?
     /// An alpha mask is retained by the receiving layer but is not a
     /// sublayer. The CQuartz compositor renders its full layer tree into an
     /// alpha surface, matching Core Animation's ownership and paint model.
-    public var mask: CALayer? {
+    public final var mask: CALayer? {
         get { storedMask }
         set {
             guard newValue !== self, storedMask !== newValue else { return }
@@ -339,12 +352,12 @@ open class CALayer: NSObject {
     /// Core Animation treats this as a rendering-policy hint; it does not
     /// alter pixels or scheduling, which is also true for this deterministic
     /// software renderer.
-    public var drawsAsynchronously: Bool = false
+    public final var drawsAsynchronously: Bool = false
     // Shadow (spec v2) — CALayer defaults: opaque black, opacity 0 (off),
     // offset (0, -3) (up, in iOS's top-left geometry), radius 3.
     // Invisible while masksToBounds is true, like CoreAnimation.
-    public var shadowColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-    public var shadowOpacity: Float = 0 {
+    public final var shadowColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    public final var shadowOpacity: Float = 0 {
         didSet {
             if shadowOpacity != oldValue {
                 _recordImplicitAnimation(keyPath: "shadowOpacity",
@@ -352,7 +365,7 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var shadowOffset: CGSize = CGSize(width: 0, height: -3) {
+    public final var shadowOffset: CGSize = CGSize(width: 0, height: -3) {
         didSet {
             if shadowOffset != oldValue {
                 _recordImplicitAnimation(keyPath: "shadowOffset",
@@ -360,7 +373,7 @@ open class CALayer: NSObject {
             }
         }
     }
-    public var shadowRadius: CGFloat = 3 {
+    public final var shadowRadius: CGFloat = 3 {
         didSet {
             if shadowRadius != oldValue {
                 _recordImplicitAnimation(keyPath: "shadowRadius",
@@ -374,15 +387,55 @@ open class CALayer: NSObject {
     /// frame and has no such cache, so this is faithful round-trip storage
     /// and nothing else — the drawn result is identical either way.
     /// Kickstarter-Prelude's `CALayerProtocol` requires it (`Lens` #9).
-    public var shouldRasterize = false
+    public final var shouldRasterize = false
     /// Companion to `shouldRasterize` (CALayer.h). Same storage-only status.
-    public var rasterizationScale: CGFloat = 1
+    public final var rasterizationScale: CGFloat = 1
 
+#if _runtime(_ObjC)
+    // With the Objective-C runtime the class is vtable-free (an Objective-C
+    // app may subclass it, see ObjCSurface.swift): no required initializer.
+    // A view creates its backing layer with an Objective-C `-init` sent to
+    // `+layerClass` (`_makeBackingLayer`), which reaches an Objective-C
+    // subclass's `-init` as UIKit does (objcsurfaceprobe `## layersubclass`).
+    public override init() {}
+    public convenience init(owner: UIView) {
+        self.init()
+        _adoptOwner(owner)
+    }
+#else
     public override init() {}
     public required init(owner: UIView) {
         self.owner = owner
         super.init()
         self.delegate = owner
+        _needsLayout = true
+    }
+#endif
+
+    /// Makes the receiver `owner`'s backing layer.
+    final func _adoptOwner(_ owner: UIView) {
+        self.owner = owner
+        self.delegate = owner
+        _needsLayout = true
+    }
+
+    /// The backing layer of a view whose `+layerClass` is `type`.
+    static func _makeBackingLayer(of type: CALayer.Type, owner: UIView) -> CALayer {
+#if _runtime(_ObjC)
+        // An Objective-C `alloc`/`init`: `NSObject.Type.init()` is sent as a
+        // message, and the conversion to the class object it performs accepts
+        // both a Swift class and the wrapper metadata Swift uses for an
+        // Objective-C subclass. The metatype is reinterpreted, never boxed:
+        // `type as AnyObject` retains the wrapper as if it were an object
+        // (MEASURED SIGSEGV in swift_unknownObjectRelease at 0x320 for an
+        // Objective-C `+layerClass`).
+        let layer = unsafeBitCast(type, to: NSObject.Type.self).init()
+        guard let layer = layer as? CALayer else { return CALayer(owner: owner) }
+        layer._adoptOwner(owner)
+        return layer
+#else
+        return type.init(owner: owner)
+#endif
     }
 
     isolated deinit {
@@ -398,7 +451,7 @@ open class CALayer: NSObject {
     /// CALayer-owned compatibility surface rather than a pretend NSObject
     /// runtime: known public properties remain strongly typed above, while
     /// private filter inputs retain their exact values under their keys.
-    func _openSetValue(_ value: Any?, forKey key: String) {
+    final func _openSetValue(_ value: Any?, forKey key: String) {
         switch key {
         case "isOpaque":
             if let value = value as? Bool { isOpaque = value }
@@ -413,7 +466,7 @@ open class CALayer: NSObject {
         }
     }
 
-    func _openValue(forKey key: String) -> Any? {
+    final func _openValue(forKey key: String) -> Any? {
         switch key {
         case "isOpaque": return isOpaque
         case "contentsScale": return contentsScale
@@ -450,6 +503,22 @@ open class CALayer: NSObject {
     open override func value(forKeyPath keyPath: String) -> Any? {
         _openValue(forKey: keyPath)
     }
+#elseif _runtime(_ObjC)
+    // Foundation-hidden Mach-O guest: objc4's root class has no KVC, and
+    // `Any?`/`String` are not Objective-C types without Foundation, so these
+    // are `final` (the class stays vtable-free for Objective-C subclasses).
+    public final func setValue(_ value: Any?, forKey key: String) {
+        _openSetValue(value, forKey: key)
+    }
+    public final func value(forKey key: String) -> Any? {
+        _openValue(forKey: key)
+    }
+    public final func setValue(_ value: Any?, forKeyPath keyPath: String) {
+        _openSetValue(value, forKey: keyPath)
+    }
+    public final func value(forKeyPath keyPath: String) -> Any? {
+        _openValue(forKey: keyPath)
+    }
 #else
     open func setValue(_ value: Any?, forKey key: String) {
         _openSetValue(value, forKey: key)
@@ -466,7 +535,7 @@ open class CALayer: NSObject {
 #endif
 
     /// Marks this layer's delegate/layout pass dirty.
-    public func setNeedsLayout() {
+    public final func setNeedsLayout() {
         _needsLayout = true
         owner?.needsLayout = true
     }
@@ -475,17 +544,17 @@ open class CALayer: NSObject {
     /// the receiving layer is already running its callback (Core Animation's
     /// documented recursion guard). Explicit `setNeedsLayout()` calls remain
     /// able to schedule a subsequent pass.
-    private func _setNeedsLayoutFromMutation() {
+    private final func _setNeedsLayoutFromMutation() {
         guard !_isLayingOut else { return }
         setNeedsLayout()
     }
 
-    public func needsLayout() -> Bool { _needsLayout }
+    public final func needsLayout() -> Bool { _needsLayout }
 
     /// Runs the nearest dirty ancestor first, then every dirty descendant.
     /// This mirrors the observable Core Animation contract while remaining
     /// synchronous and deterministic for portable hosts.
-    public func layoutIfNeeded() {
+    public final func layoutIfNeeded() {
         var root = self
         var ancestor = superlayer
         while let candidate = ancestor, candidate._needsLayout {
@@ -495,7 +564,7 @@ open class CALayer: NSObject {
         root._layoutTreeIfNeeded()
     }
 
-    private func _layoutTreeIfNeeded() {
+    private final func _layoutTreeIfNeeded() {
         if _needsLayout {
             _needsLayout = false
             _isLayingOut = true
@@ -510,14 +579,17 @@ open class CALayer: NSObject {
     /// Subclass override point. The default Core Animation implementation
     /// consults its delegate before any layout manager; OpenUIKit currently
     /// models that delegate path and has no CALayoutManager surface.
-    open func layoutSublayers() {
+#if _runtime(_ObjC)
+    @objc(layoutSublayers)
+#endif
+    open dynamic func layoutSublayers() {
         delegate?.layoutSublayers(of: self)
     }
 
     /// Paint the receiver and its descendants into an existing graphics
     /// context. Like Core Animation, the root's own frame/position is not
     /// applied; only its bounds contents and descendant placement are drawn.
-    public func render(in context: Canvas) {
+    public final func render(in context: Canvas) {
         // iOS 26's legacy render(in:) path was measured to round all four
         // corners regardless of maskedCorners, unlike live compositing.
         if let owner {
@@ -541,7 +613,9 @@ public final class CAGradientLayer: CALayer {
     public var endPoint = CGPoint(x: 0.5, y: 1)
 
     public override init() { super.init() }
+#if !_runtime(_ObjC)
     public required init(owner: UIView) { super.init(owner: owner) }
+#endif
 }
 
 /// Internal hierarchy policy for UIKit containers whose public contract does
@@ -694,7 +768,7 @@ open class UIView: UIResponder, CALayerDelegate {
     open class dynamic var layerClass: AnyClass { CALayer.self }
     public private(set) final lazy var layer: CALayer = {
         if let type = _objcMessageable(Self.self).layerClass as? CALayer.Type {
-            return type.init(owner: self)
+            return CALayer._makeBackingLayer(of: type, owner: self)
         }
         return CALayer(owner: self)
     }()

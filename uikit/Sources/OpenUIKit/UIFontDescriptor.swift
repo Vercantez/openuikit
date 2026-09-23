@@ -263,10 +263,10 @@ extension UIFont {
     }
 
     /// `size == 0` keeps the descriptor's point size (UIKit semantics).
-    public init(descriptor: UIFontDescriptor, size: CGFloat) {
+    public convenience init(descriptor: UIFontDescriptor, size: CGFloat) {
         self.init(pointSize: size > 0 ? size : descriptor.pointSize,
                   weight: descriptor.weight,
-                  design: descriptor.design)
-        customFontName = descriptor.customFontName
+                  design: descriptor.design,
+                  customFontName: descriptor.customFontName)
     }
 }

@@ -1186,6 +1186,31 @@ open class UITableView: UIScrollView {
     /// the next structural commit so a second update cannot leave a ghost.
     private final var rowAnimationOrphans: [UITableViewCell] = []
 
+    /// MEASURED tablebatchprobe (iPhone 16 / iOS 26.1,
+    /// Tools/oracle2/tablebatchprobe/transcript-ios26.1.txt): `updates` runs
+    /// inside the call and the table already reports the new rows when it
+    /// returns; the completion is never synchronous. In a window with
+    /// animations it gets `true` after the row animation; with no window it
+    /// gets `false` on the next turn; under `performWithoutAnimation` it gets
+    /// `true` on the next turn. Here "next turn" is the next completion step
+    /// of the host clock (`UIWindow.tick` / `UIView._stepAnimationCompletions`).
+    public final func performBatchUpdates(_ updates: (() -> Void)?,
+                                          completion: ((Bool) -> Void)? = nil) {
+        beginUpdates()
+        updates?()
+        endUpdates()
+        guard let completion else { return }
+        let animated = UIViewAnimationContext.animationsEnabled
+        let inWindow = window != nil
+        let finished = !(animated && !inWindow)
+        let end = OpenUIKitRuntime.animationTime
+            + (animated && inWindow ? UITableView.iOSRowAnimationDuration : 0)
+        OpenUIKitRuntime.noteAnimationWork(until: end)
+        UIViewAnimationCompletionQueue.schedule(end: end, transactionID: 0) { _ in
+            completion(finished)
+        }
+    }
+
     public final func beginUpdates() { updateNesting += 1 }
 
     public final func endUpdates() {

@@ -27,6 +27,10 @@ final class UIKitAttributedScopeTests: XCTestCase {
         )
     }
 
+    // The dictionary initializer is UIKit's shim only where the key type is
+    // OpenUIKit's portable one; with Foundation + Objective-C it is
+    // Foundation's own AttributeContainer.init(_:) (UIKit.swift).
+#if !(canImport(ObjectiveC) && canImport(Foundation))
     func testOpenUIKitDictionaryConvertsToTypedParagraphAttribute() {
         let paragraph = OpenUIKit.NSMutableParagraphStyle()
         paragraph.lineHeightMultiple = 1.25
@@ -57,4 +61,5 @@ final class UIKitAttributedScopeTests: XCTestCase {
             OpenUIKit.NSUnderlineStyle.single
         )
     }
+#endif
 }
