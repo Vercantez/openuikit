@@ -106,6 +106,22 @@ public protocol UICollectionViewDelegate: UIScrollViewDelegate {
     optional func collectionView(_ collectionView: UICollectionView,
                                  contextMenuConfigurationForItemAt indexPath: IndexPath,
                                  point: CGPoint) -> UIContextMenuConfiguration?
+    // SDK members declared for source compatibility (RxCocoa 4's
+    // UITableView+Rx / UICollectionView+Rx name them); OpenUIKit does not
+    // send them yet (unmeasured: accessory buttons, end-of-display and
+    // supplementary-view display tracking, collection highlight).
+    @objc(collectionView:didHighlightItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath)
+    @objc(collectionView:didUnhighlightItemAtIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath)
+    @objc(collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 willDisplaySupplementaryView view: UICollectionReusableView,
+                                 forElementKind elementKind: String, at indexPath: IndexPath)
+    @objc(collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:)
+    optional func collectionView(_ collectionView: UICollectionView,
+                                 didEndDisplayingSupplementaryView view: UICollectionReusableView,
+                                 forElementOfKind elementKind: String, at indexPath: IndexPath)
 }
 #else
 @preconcurrency @MainActor

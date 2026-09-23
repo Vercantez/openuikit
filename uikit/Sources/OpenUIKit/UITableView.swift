@@ -134,6 +134,15 @@ public protocol UITableViewDelegate: UIScrollViewDelegate {
     @objc(tableView:contextMenuConfigurationForRowAtIndexPath:point:)
     optional func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath,
                             point: CGPoint) -> UIContextMenuConfiguration?
+    // SDK members declared for source compatibility (RxCocoa 4's
+    // UITableView+Rx / UICollectionView+Rx name them); OpenUIKit does not
+    // send them yet (unmeasured: accessory buttons, end-of-display and
+    // supplementary-view display tracking, collection highlight).
+    @objc(tableView:accessoryButtonTappedForRowWithIndexPath:)
+    optional func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
+    @objc(tableView:didEndDisplayingCell:forRowAtIndexPath:)
+    optional func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell,
+                            forRowAt indexPath: IndexPath)
 }
 #else
 @preconcurrency @MainActor
@@ -188,6 +197,13 @@ public protocol UITableViewDelegate: UIScrollViewDelegate {
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration?
+    // SDK members declared for source compatibility (RxCocoa 4's
+    // UITableView+Rx / UICollectionView+Rx name them); OpenUIKit does not
+    // send them yet (unmeasured: accessory buttons, end-of-display and
+    // supplementary-view display tracking, collection highlight).
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath)
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath)
 }
 
 public extension UITableViewDelegate {
@@ -214,6 +230,9 @@ public extension UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? { nil }
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {}
 }
 #endif
 

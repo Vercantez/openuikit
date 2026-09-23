@@ -38,7 +38,8 @@ final class ObjCProtocols2Tests: XCTestCase {
         ("textfield", ["UITextFieldDelegate"]),
         ("picker", ["UIPickerViewDataSource", "UIPickerViewDelegate"]),
         ("searchbar", ["UISearchBarDelegate"]),
-        ("", ["UISearchControllerDelegate", "UITabBarDelegate", "UIGestureRecognizerDelegate"]),
+        ("", ["UISearchControllerDelegate", "UITabBarDelegate", "UIGestureRecognizerDelegate",
+              "UITableViewDelegate", "UICollectionViewDelegate"]),
     ]
 
     private var savedCut: FontEngine.SystemFontCut = .macOS
