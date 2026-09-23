@@ -132,3 +132,48 @@ oracle device.
 * **netnewswire-first-screen's branch** adds 7 collection and 3 table members
   to these protocols. Whichever branch reaches main second converts them to
   SDK-named optional requirements.
+
+## Increment 4 (agent/objc-protocols-4): transitioning, navigation, tab bar, text view
+
+Now `@objc` on the Apple toolchain, same pattern (portable builds keep the
+Swift protocols; call sites use `_foo` dispatch helpers):
+
+* UIViewControllerContextTransitioning, UIViewControllerAnimatedTransitioning,
+  UIViewControllerInteractiveTransitioning, UIViewControllerTransitioningDelegate.
+  Shapes checked against UIViewControllerTransitioning.h in
+  `ObjCProtocols2Tests.testTransitioningShapesAreTheSDKHeaders` (the
+  transcript's `## shapes` does not list them).
+* UINavigationControllerDelegate, UITabBarControllerDelegate (with the
+  customizing callbacks RxCocoa names: declared, never sent),
+  UITextViewDelegate (refines the @objc UIScrollViewDelegate).
+* What they needed as Objective-C types: the two transition-context keys
+  bridge to NSString; UIView.AnimationCurve, UINavigationController.Operation,
+  UIViewAnimatingState/Position, UITimingCurveType and UITextItemInteraction
+  are `@objc` Int enums; UIViewAnimating, UIViewImplicitlyAnimating,
+  UITimingCurveProvider and UIContextMenuInteractionAnimating are `@objc`
+  protocols; UIPresentationController, UIPercentDrivenInteractiveTransition,
+  UIViewPropertyAnimator, UICubic/UISpringTimingParameters, UITab and
+  UITextItem (with MenuConfiguration / MenuPreview) derive from NSObject.
+
+Left out of the `@objc` protocols. OpenUIKit never calls any of these:
+* context `presentationStyle`: UIModalPresentationStyle has OpenUIKit-only
+  cases and no Objective-C raw values.
+* context `targetTransform`: CGAffineTransform is OpenCoreGraphics' Swift
+  struct.
+* the two navigation and two tab-bar interface-orientation members.
+* the tab-bar drop-session, editing, visibility, display-order and
+  displayed-controllers members.
+* the text view's edit-menu, writing-tools, formatting, multi-range and
+  input-suggestion members.
+* UITimingCurveProvider's NSCoding / NSCopying refinement.
+
+objcprotocolprobe2 `## textview`, `## navigation` and `## tabbarcontroller`
+now match iOS 26.1. Two behaviours changed to match the transcript:
+* The legacy `tabBarController:didSelectViewController:` reports only a user
+  selection. It is not sent when the controller is shown, nor for a
+  programmatic `selectedIndex` / `selectedViewController`.
+* The initial show and unanimated push/pop send `willShow`/`didShow`
+  (animated NO). The initial show sends `didShow` twice.
+
+RxCocoa builds for arm64-apple-ios26.1-simulator. Before this increment it
+had 11 errors, all from these three delegates.
