@@ -8,7 +8,7 @@
 // `UTType.png` was ambiguous). Elsewhere the portable type below stands in;
 // its identifiers are the UTI strings the iOS 26.1 document-picker headers
 // name.
-#if canImport(UniformTypeIdentifiers)
+#if canImport(CoreGraphics) && canImport(UniformTypeIdentifiers)
 import UniformTypeIdentifiers
 public typealias UTType = UniformTypeIdentifiers.UTType
 #else

@@ -130,7 +130,7 @@ final class LayerContextCompatibilityTests: XCTestCase {
     }
 
     func testCAFilterRuntimeMetadataAndBoundedInputsFailClosed() throws {
-#if canImport(ObjectiveC) && !canImport(QuartzCore)
+#if canImport(ObjectiveC) && !canImport(CoreGraphics)
         XCTAssertEqual(NSStringFromClass(_OpenCAFilter.self), "CAFilter")
 #elseif canImport(ObjectiveC)
         // QuartzCore owns the runtime name here (cg-unify): no duplicate class.

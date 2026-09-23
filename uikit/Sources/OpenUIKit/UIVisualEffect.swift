@@ -512,7 +512,7 @@ private func _openCAFilterMask(_ bitmap: Bitmap) -> CanvasBackdropFilterMask? {
 /// itself; a second class of that name is undefined behaviour in objc4
 /// ("Class CAFilter is implemented in both …", printed by every Darwin
 /// `swift test`), so the port's class is `OUKCAFilter` there.
-#if canImport(ObjectiveC) && !canImport(QuartzCore)
+#if canImport(ObjectiveC) && !canImport(CoreGraphics)
 @objc(CAFilter)
 #elseif canImport(ObjectiveC)
 @objc(OUKCAFilter)
