@@ -142,29 +142,10 @@ extension NSCollectionLayoutSection {
     }
 }
 
-// Stored beside the section object. A section is a class, so this lives on
-// the instance through objc-style associated storage without Foundation.
 extension NSCollectionLayoutSection {
-    // Box so the value type can hang off the class.
     fileprivate var _listConfigurationStorage: UICollectionLayoutListConfiguration? {
-        get { _ListConfigBox.get(self) }
-        set { _ListConfigBox.set(self, newValue) }
-    }
-}
-
-@MainActor
-private enum _ListConfigBox {
-    static var map: [ObjectIdentifier: UICollectionLayoutListConfiguration] = [:]
-    static func get(_ section: NSCollectionLayoutSection) -> UICollectionLayoutListConfiguration? {
-        map[ObjectIdentifier(section)]
-    }
-    static func set(_ section: NSCollectionLayoutSection,
-                    _ value: UICollectionLayoutListConfiguration?) {
-        if let value {
-            map[ObjectIdentifier(section)] = value
-        } else {
-            map.removeValue(forKey: ObjectIdentifier(section))
-        }
+        get { _listConfigurationSlot }
+        set { _listConfigurationSlot = newValue }
     }
 }
 
@@ -185,24 +166,8 @@ extension UICollectionViewCompositionalLayout {
     }
 
     var _storedListConfiguration: UICollectionLayoutListConfiguration? {
-        get { _LayoutListBox.get(self) }
-        set { _LayoutListBox.set(self, newValue) }
-    }
-}
-
-@MainActor
-private enum _LayoutListBox {
-    static var map: [ObjectIdentifier: UICollectionLayoutListConfiguration] = [:]
-    static func get(_ layout: UICollectionViewCompositionalLayout) -> UICollectionLayoutListConfiguration? {
-        map[ObjectIdentifier(layout)]
-    }
-    static func set(_ layout: UICollectionViewCompositionalLayout,
-                    _ value: UICollectionLayoutListConfiguration?) {
-        if let value {
-            map[ObjectIdentifier(layout)] = value
-        } else {
-            map.removeValue(forKey: ObjectIdentifier(layout))
-        }
+        get { _listConfigurationSlot }
+        set { _listConfigurationSlot = newValue }
     }
 }
 
