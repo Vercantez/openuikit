@@ -26,6 +26,7 @@ On main bb773f63, `swift test` (clean `.build`, all 2018 cases, default order) f
 | `ValueTypeTailTests/testShortcutDeliveryPrefersWindowSceneDelegate` | no (flaky) | long-standing leak: scenes left connected | test isolation | The test sets leftover scenes aside, and the two suites that leaked a scene now disconnect it. |
 | `UIButtonConfigurationTests/testAttributedTitleFontAndColourWin` | yes | **b1a50a20, attrstring-unify (today)** | real regression | **Known failure** (see below). |
 | `CollectionLayoutAnchorTests/testBadgesAreTiledPerItemAndDoNotGrowContent` (reported on c0dca164) | no (flaky; **crashes the run**) | the test arrived in fe74874f (nnw-batch-b); the underlying bug is older | real port bug (address-keyed side table) | The list configuration is now stored on the section or layout object, and the test no longer indexes an empty array. |
+| `FoundationCoexistenceTests/testRenderPath…` again (on main e3c8c7cc) | b67ccb46 (nnw-swiftui, headless ticker) | port regression (`CFAbsoluteTimeGetCurrent` in the library) | The ticker now counts frames, one interval per fire. `HeadlessRunLoopTests`' `> 0.05` only held because of wall-clock jitter, so it is now `>=`. |
 | `RasterizerTests/testFillPerformanceBudget` (reported under gate load) | no (flaky under load) | long-standing | environment (wall-clock budget) | The budget is now measured in thread CPU time (`CLOCK_THREAD_CPUTIME_ID`). |
 
 ### Causes
@@ -46,7 +47,7 @@ Other tests use the same pattern and pass today because their windows happen to 
 
 A new section or layout allocated at a dead one's address inherited that configuration and was laid out as a list. The test then saw a content height of 2720 instead of 2660 and no badges, and `badges[0]` trapped (`Index out of range`), which ended the xctest process and hid every suite after it. This reproduced in 2 of 3 runs of the A–C suites.
 
-With the configuration stored on the object, 4 of 4 runs pass. The two other address-keyed tables in the port (`_UIAccessibilityStorage`, `_UIStoryboardStates`) already check a weak owner, so they are safe.
+With the configuration stored on the object, 4 of 4 runs pass. NetNewsWire's increment (e3c8c7cc) fixed the same leak separately, with a weak-owner check on the table. At the merge I kept the stored property, which needs no global table and no sweep, along with both sides' tests. The two other address-keyed tables in the port (`_UIAccessibilityStorage`, `_UIStoryboardStates`) already check a weak owner, so they are safe.
 
 **Scene leak.** `connectedScenes` is a `Set`, and shortcut delivery picks the first window scene it iterates. A scene left connected by an earlier suite could therefore win or lose depending on hash order, so the test failed only in some runs.
 
