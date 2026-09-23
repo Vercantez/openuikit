@@ -256,6 +256,9 @@ open class UICollectionViewCell: UICollectionReusableView {
         }()
         _plainBackgroundHost = host
         host.configuration = configuration
+        // Applying a configuration resets the host's own corner radius; a
+        // configuration update can run outside layoutSubviews (at install).
+        _applyListSectionCorners()
         setNeedsLayout()
     }
 
@@ -295,7 +298,50 @@ open class UICollectionViewCell: UICollectionReusableView {
         contentView.frame = bounds
         _plainBackgroundHost?.frame = bounds
         _plainInstalledContentView?.frame = contentView.bounds
+        _applyListSectionCorners()
     }
+
+    /// A plain cell in an insetGrouped list section is part of the section's
+    /// rounded card. MEASURED Tools/oracle2/listheaderprobe
+    /// (transcript-ios26.1.txt, plain UICollectionViewCell rows, with and
+    /// without a cell `backgroundColor` as NetNewsWire's FeedCell nib sets):
+    /// UIKit rounds the CELL, not its background view: the first row gets
+    /// `cornerConfiguration` top-left/top-right `.fixed(26)` (layer
+    /// maskedCorners 3), the last row bottom-left/bottom-right (12), middle
+    /// rows `.unspecified` (maskedCorners 0); every row clips to bounds; `layer.cornerRadius`
+    /// stays 0 and the background view keeps square corners.
+    private func _applyListSectionCorners() {
+        guard !(self is UICollectionViewListCell) else { return }
+        guard let cv = collectionView,
+              let list = (cv.collectionViewLayout as? UICollectionViewCompositionalLayout)?
+                ._storedListConfiguration,
+              list.appearance == .insetGrouped,
+              let path = cv.indexPath(for: self) else {
+            if _appliedListSectionCorners {
+                _appliedListSectionCorners = false
+                cornerConfiguration = .unspecified
+                layer.maskedCorners = ._allKnown
+            }
+            return
+        }
+        let first = path.item == 0
+        let last = path.item == cv.numberOfItems(inSection: path.section) - 1
+        let r = UICornerRadius.fixed(Double(UICollectionViewListCell.insetGroupedCornerRadius))
+        let wanted = UICornerConfiguration.corners(topLeftRadius: first ? r : nil,
+                                                  topRightRadius: first ? r : nil,
+                                                  bottomLeftRadius: last ? r : nil,
+                                                  bottomRightRadius: last ? r : nil)
+        var mask: CACornerMask = []
+        if first { mask.formUnion([.layerMinXMinYCorner, .layerMaxXMinYCorner]) }
+        if last { mask.formUnion([.layerMinXMaxYCorner, .layerMaxXMaxYCorner]) }
+        _appliedListSectionCorners = true
+        clipsToBounds = true
+        // cornerConfiguration alone leaves maskedCorners at all four
+        // (UICornerConfiguration.swift); the list sets them as well.
+        if layer.maskedCorners != mask { layer.maskedCorners = mask }
+        if cornerConfiguration != wanted { cornerConfiguration = wanted }
+    }
+    private var _appliedListSectionCorners = false
 
     // MARK: Touch handling (tap -> highlight -> select)
 

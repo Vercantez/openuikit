@@ -32,6 +32,12 @@ not linking: the chain spec has no executable app target yet.
 | b67ccb46 | headless `@main` runs the CFRunLoop with a host-clock ticker; app flags as Xcode applies them |
 | bc747373 | Feeds golden (stable state) plus live-data masks in the real-app compare |
 | 02ee39c2 | UIViewController.overrideUserInterfaceStyle (vcstyleprobe); app depends on and imports NetNewsWireObjC (bridging header in full) |
+| 87f785eb | spm_app_chain `kind: executable` and `linker_flags`: the NNW app target links |
+| 40ea242d | launch path: main-bundle images, the manifest scene configuration, Base.lproj storyboards, split storyboard columns, NNW's SF Symbols |
+| 2b8054e6 | storyboard collection views (nib-constructed UICollectionView / flow layout, prototype cells, coder chain) |
+| 06fbd351 | golden recaptured as the key window's own drawing |
+| 1659707e | storyboard cell content views, self-sizing plain list rows, NSLocalizableString titles, the phone trait environment |
+| (this) | supplementary list headers self-size and sit where UIKit puts them (listheaderprobe); Interface Builder SF Symbols (`UISystemSymbolResourceName`); inset-grouped plain cells round their section corners on the cell (`cornerConfiguration`, measured with and without a cell backgroundColor) |
 
 Every fix is measured on the iOS 26.1 simulator (oracles under
 Tools/oracle2: nnwmiscprobe, nnwswiftuiprobe, springsettleprobe, scenelaunch,
@@ -49,9 +55,22 @@ Tools/oracle2/nnwgolden/run.sh:
 
 A no-network capture needs admin rights, so the masked comparison was chosen.
 
+## Score (port render on the iOS 26.1 simulator vs the golden, bar 97.5 masked)
+
+| stage | masked | unmasked |
+|---|---|---|
+| first render (06fbd351) | 77.145 | 76.018 |
+| 1659707e | 84.9 | 83.6 |
+| list headers + nib symbols + section corners | 92.266 | 90.668 |
+
+The list's layout (headers, rows, section gaps) now matches the golden's
+frames. Largest remaining blob: the bottom glass toolbar (the port's UIToolbar
+sits off screen); then plain-cell separators and the filter button's symbol
+configuration.
+
 ## Not reached
 
-- **App link.** safari-objc and cg-unify's CG re-exports must merge. Then the
-  spec needs an executable app target with Info.plist and resources.
-- **Port render of the Feeds list.** No masked or unmasked score exists yet.
-- **Guest wiring under machorun.** Not started.
+- **Guest wiring under machorun.** Waits on guest-objc-foundation (ObjC
+  Foundation, sqlite, SafariServices, zlib) and guest-swift-modules (Foundation
+  facade gaps, Bundle.module, guest CG/Security/CloudKit module names).
+- **97.5 masked.** Toolbar, separators, filter button still open.

@@ -1011,6 +1011,18 @@ open class UICollectionView: UIScrollView {
                     changed = true
                 }
             }
+            for a in attributes where a.representedElementKind == UICollectionView.elementKindSectionHeader
+                && (listCfg.appearance == .insetGrouped || listCfg.appearance == .grouped) {
+                guard let header = visibleViews[a.elementKey] else { continue }
+                let fitting = header.systemLayoutSizeFitting(
+                    CGSize(width: a.frame.width, height: 0),
+                    withHorizontalFittingPriority: .required,
+                    verticalFittingPriority: .fittingSizeLevel)
+                if fitting.height > 0,
+                   layout._noteFittedListHeaderHeight(fitting.height, section: a.indexPath.section) {
+                    changed = true
+                }
+            }
             if changed {
                 collectionViewLayout.invalidateLayout()
                 setNeedsLayout()

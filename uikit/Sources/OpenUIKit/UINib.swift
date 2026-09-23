@@ -911,6 +911,15 @@ final class NibDecoder {
             return makeFont(object)
 
         case "UIImageNibPlaceholder", "UIImage":
+            // An SF Symbol chosen in Interface Builder archives
+            // `UISystemSymbolResourceName` (NetNewsWire's section headers:
+            // "chevron.down"; its filter button: "line.3.horizontal.decrease").
+            // UIKit loads it as `UIImage(systemName:)`, not from the bundle.
+            if let symbol = string(object.first("UISystemSymbolResourceName")) {
+                if let image = UIImage(systemName: symbol) { return image }
+                UINib.noteUnhandled("missing-symbol:\(symbol)")
+                return nil
+            }
             guard let name = string(object.first("UIResourceName")) else { return nil }
             if let image = UIImage(named: name) { return image }
             UINib.noteUnhandled("missing-image:\(name)")

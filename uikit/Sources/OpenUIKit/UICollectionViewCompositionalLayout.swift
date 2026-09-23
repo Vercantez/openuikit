@@ -489,6 +489,18 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
     private var fittedListHeights: [IndexPath: CGFloat] = [:]
     private var fittedListWidth: CGFloat = -1
 
+    private var fittedListHeaderHeights: [Int: CGFloat] = [:]
+
+    /// A list section header's Auto Layout height (UIKit self-sizes
+    /// supplementary list headers; MEASURED Tools/oracle2/listheaderprobe:
+    /// an 8 / 20.33 / 8 headline header is 36.33, not the 40.5 estimate).
+    func _noteFittedListHeaderHeight(_ height: CGFloat, section: Int) -> Bool {
+        let h = snap(height)
+        if fittedListHeaderHeights[section] == h { return false }
+        fittedListHeaderHeights[section] = h
+        return true
+    }
+
     func _noteFittedListHeight(_ height: CGFloat, at indexPath: IndexPath) -> Bool {
         let h = snap(height)
         if fittedListHeights[indexPath] == h { return false }
@@ -542,6 +554,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         preparedBoundsSize = cv.bounds.size
         if cv.bounds.width != fittedListWidth {
             fittedListHeights.removeAll()
+            fittedListHeaderHeights.removeAll()
             fittedListWidth = cv.bounds.width
         }
         let container = NSCollectionLayoutContainer(contentSize: cv.bounds.size,
@@ -577,6 +590,12 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
             let windowY = cv.convert(.zero, to: nil).y
             if windowY > 1 { insets.top = 0 }
         }
+        var listHeaderLead: CGFloat = 0
+        if let list = spec._listConfiguration, list.headerMode == .supplementary,
+           list.appearance == .insetGrouped || list.appearance == .grouped {
+            listHeaderLead = index == 0 ? 0 : 53.0 / 3.0
+            insets.top = listHeaderLead
+        }
         let containerW = env.container.effectiveContentSize.width
         let contentW = max(0, containerW - insets.leading - insets.trailing)
         // MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: NSDirectionalEdgeInsets
@@ -605,17 +624,26 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                                     containerWidth: spec.supplementariesFollowContentInsets ? contentW : containerW,
                                     containerHeight: env.container.effectiveContentSize.height)
             headerHeight = hSize.height
+            if spec._listConfiguration != nil, let fitted = fittedListHeaderHeights[index] {
+                headerHeight = fitted
+            }
             let hx: CGFloat = spec.supplementariesFollowContentInsets ? physicalLeading : 0
             let hw = spec.supplementariesFollowContentInsets ? contentW : containerW
             headerPlaced = Placed(
                 indexPath: IndexPath(item: 0, section: index),
                 kind: header.elementKind,
                 localFrame: CGRect(x: snap(hx + header.absoluteOffset.x),
-                                    y: snap(header.absoluteOffset.y),
+                                    y: snap(header.absoluteOffset.y + listHeaderLead),
                                     width: hSize.width > 0 ? hSize.width : hw,
                                     height: headerHeight))
         }
 
+        // MEASURED Tools/oracle2/listheaderprobe, iPhone 16 / iOS 26.1: an
+        // insetGrouped / grouped list with supplementary headers puts the
+        // first header at the section top and each later one 17.67 pt (53 px
+        // at 3x) below the previous section; rows follow the header
+        // directly (insets.top is that lead, set above). Without headers the
+        // 35 pt section top applies.
         let groupsY = headerHeight + insets.top
         var items: [Placed] = []
         var itemSupplementaries: [Placed] = []
