@@ -89,6 +89,17 @@ struct HostLoopHooks {
     var escapeQuits = true
     /// Called after a scripted capture's PNG is written: (file, t).
     var didCapture: @MainActor (String, Double) throws -> Void = { _, _ in }
+    /// Live loop: redraw at least this often (seconds) even when nothing
+    /// the loop can see is animating. nil (openhost): idle frames never
+    /// render. host_full sets it because work the app queued on the main
+    /// queue or on a Timer can change the screen without an input event.
+    var idleRedrawInterval: Double? = nil
+    /// Scripted replay: also turn the run loop at every 1/hz between script
+    /// steps (beginTurn + tick, no render), the way a device's run loop
+    /// keeps turning between touches. nil (openhost): the clock jumps from
+    /// step to step. host_full sets 60 so a chain of main-queue blocks and
+    /// Timers an app starts at launch has run before the next scripted touch.
+    var scriptStepHz: Double? = nil
 }
 
 // MARK: - Key commands (M13)
@@ -160,6 +171,7 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
     //     the clock and may change the hierarchy).
     // Idle frames render nothing and sleep.
     var needsRender = true // first frame renders unconditionally
+    var lastRenderTime = 0.0
 
     func animationsActive(at now: Double) -> Bool {
         mouseDown
@@ -234,8 +246,12 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
         OpenUIKitRuntime.animationTime = now
         scene.window.tick(timestamp: now)  // long-press style time advance
 
+        if let interval = hooks.idleRedrawInterval, now - lastRenderTime >= interval {
+            needsRender = true
+        }
         if needsRender || animationsActive(at: now) {
             needsRender = false
+            lastRenderTime = now
             let t0 = host.performanceCounter()
             // Layout before draw, like UIKit's commit: views added since the
             // last frame (e.g. a freshly pushed VC's screen) get their
@@ -332,7 +348,22 @@ func runScripted(_ scene: HostScene, events: [ScriptEvent], captures: [Double],
     steps.sort { ($0.t, $0.order, $0.seq) < ($1.t, $1.order, $1.seq) }
 
     var written: [String] = []
+    var lastT = 0.0
     for entry in steps {
+        if let hz = hooks.scriptStepHz, hz > 0 {
+            // Integer frame indices (as ConformanceClock does) so the turn
+            // times are the same on every run: frames strictly after the
+            // previous step and strictly before this one.
+            var frame = Int((lastT * hz).rounded(.down)) + 1
+            while Double(frame) / hz < entry.t {
+                let ft = Double(frame) / hz
+                hooks.beginTurn()
+                OpenUIKitRuntime.animationTime = ft
+                scene.window.tick(timestamp: ft)
+                frame += 1
+            }
+        }
+        lastT = entry.t
         hooks.beginTurn()
         OpenUIKitRuntime.animationTime = entry.t
         scene.window.tick(timestamp: entry.t)

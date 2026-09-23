@@ -229,8 +229,11 @@ func collectState(_ v: UIView, path: String, into fields: inout [JSONValue],
                   labels: inout [JSONValue], visible: Bool) {
     let shown = visible && !v.isHidden && v.alpha > 0.01
     if let tf = v as? UITextField {
+        let r = tf.convert(tf.bounds, to: nil)
         fields.append(.object([
             "path": .string(path),
+            "frameInWindow": .array([r.origin.x, r.origin.y, r.width, r.height]
+                .map { .number((Double($0) * 1000).rounded() / 1000) }),
             "class": .string(String(describing: type(of: tf))),
             "text": .string(tf.text ?? ""),
             "placeholder": .string(tf.placeholder ?? ""),
@@ -351,6 +354,10 @@ MainActor.assumeIsolated {
     hooks.beginTurn = { _ = openui_sdl_host_v1_drain_main_queue() }
     // Escape is a key for the app, not a quit shortcut.
     hooks.escapeQuits = false
+    // Main-queue blocks and Timers can change the screen with no input.
+    hooks.idleRedrawInterval = 0.5
+    // Replays turn the run loop at 60 Hz between steps, like a device.
+    hooks.scriptStepHz = 60
 
     if let scriptPath = hostScriptPath, let recordDir = hostRecordDir {
         guard let bytes = ResourceIO.readFile(scriptPath),
@@ -363,6 +370,12 @@ MainActor.assumeIsolated {
             let stem = file.hasSuffix(".png") ? String(file.dropLast(4)) : file
             try hostWrite(Array(hostJSONText(hostState(scene, t: t)).utf8),
                           "\(recordDir)/\(stem).state.json")
+            if hostEnv("HOST_FULL_LAYOUT_DUMP") == "1" {
+                var views: [JSONValue] = []
+                dumpLayout(scene.window, path: "", into: &views)
+                try hostWrite(Array(hostJSONText(.array(views)).utf8),
+                              "\(recordDir)/\(stem).layout.json")
+            }
         }
         let surface = GuestSDLSurface(title: "\(scene.name) [scripted]",
                                       sizePt: scene.sizePt, scale: scene.scale)
