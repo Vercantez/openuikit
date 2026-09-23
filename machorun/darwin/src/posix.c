@@ -3370,6 +3370,76 @@ EXPORT const char *inet_ntop(int af, const void *src, char *dst, unsigned size)
 #define MR_F_SETFL         4
 #define MR_F_GETNOSIGPIPE 74
 #define MR_F_SETNOSIGPIPE 73
+#define MR_F_DUPFD         0
+#define MR_F_GETFD         1
+#define MR_F_SETFD         2
+
+/* POSIX record locks: the commands ROTATE (Darwin F_GETLK 7 / F_SETLK 8 /
+ * F_SETLKW 9; Linux F_GETLK 5 / F_SETLK 6 / F_SETLKW 7, so Darwin's F_GETLK
+ * forwarded is Linux's F_SETLKW), the lock TYPES rotate (Darwin F_RDLCK 1, F_UNLCK 2,
+ * F_WRLCK 3; Linux F_RDLCK 0, F_WRLCK 1, F_UNLCK 2), and struct flock is laid
+ * out differently:
+ *     Darwin {off_t l_start; off_t l_len; pid_t l_pid; short l_type;
+ *             short l_whence;}                                  24 bytes
+ *     Linux  {short l_type; short l_whence; off_t l_start; off_t l_len;
+ *             pid_t l_pid;}                                     32 bytes
+ * SQLite's unix VFS locks every database with F_SETLK/F_GETLK, so each field
+ * is copied across and back (tests/src/fcntl_locks.c). */
+#define MR_D_F_GETLK       7
+#define MR_D_F_SETLK       8
+#define MR_D_F_SETLKW      9
+#define MR_D_F_FULLFSYNC  51
+#define MR_L_F_GETLK       5
+#define MR_L_F_SETLK       6
+#define MR_L_F_SETLKW      7
+struct mr_darwin_flock { long long l_start, l_len; int l_pid; short l_type, l_whence; };
+struct mr_linux_flock { short l_type, l_whence; long long l_start, l_len; int l_pid; };
+static int mr_lock_type_to_linux(short t)
+{
+    switch (t) {
+    case 1: return 0;           /* F_RDLCK */
+    case 2: return 2;           /* F_UNLCK */
+    case 3: return 1;           /* F_WRLCK */
+    default: return -1;
+    }
+}
+static short mr_lock_type_to_darwin(short t)
+{
+    switch (t) {
+    case 0: return 1;
+    case 1: return 3;
+    default: return 2;
+    }
+}
+static int mr_fcntl_lock(int fd, int cmd, void *arg)
+{
+    struct mr_darwin_flock *d = arg;
+    struct mr_linux_flock l;
+    int type, lcmd, rc;
+    if (!d) {
+        *mr_errno_slot() = 14;                  /* EFAULT */
+        return -1;
+    }
+    /* An unknown type stays unknown (99 is invalid on both) so the kernel
+     * picks the errno in its own order: EBADF for a bad descriptor first,
+     * then EINVAL, as macOS does (measured). */
+    type = mr_lock_type_to_linux(d->l_type);
+    l.l_type = type < 0 ? d->l_type : (short)type;
+    l.l_whence = d->l_whence;
+    l.l_start = d->l_start;
+    l.l_len = d->l_len;
+    l.l_pid = d->l_pid;
+    lcmd = cmd == MR_D_F_GETLK ? MR_L_F_GETLK : cmd == MR_D_F_SETLK ? MR_L_F_SETLK : MR_L_F_SETLKW;
+    rc = MR_ERRNO_CALL(glibc_fcntl(fd, lcmd, (long)&l));
+    if (rc == 0 && cmd == MR_D_F_GETLK) {
+        d->l_type = mr_lock_type_to_darwin(l.l_type);
+        d->l_whence = l.l_whence;
+        d->l_start = l.l_start;
+        d->l_len = l.l_len;
+        d->l_pid = l.l_pid;
+    }
+    return rc;
+}
 
 /* The reverse of linux_open_flags, for what F_GETFL hands back. Only the
  * status flags can appear in a F_GETFL result; the creation flags cannot, but
@@ -3423,6 +3493,20 @@ EXPORT int fcntl(int fd, int cmd, ...)
     case MR_F_SETNOSIGPIPE:
         *mr_errno_slot() = 45;                  /* ENOTSUP, Darwin's value */
         return -1;
+    case MR_F_DUPFD:
+    case MR_F_GETFD:
+    case MR_F_SETFD:
+        /* Same numbers on both; the FD_CLOEXEC bit is 1 on both. */
+        return MR_ERRNO_CALL(glibc_fcntl(fd, cmd, arg));
+    case MR_D_F_GETLK:
+    case MR_D_F_SETLK:
+    case MR_D_F_SETLKW:
+        return mr_fcntl_lock(fd, cmd, (void *)arg);
+    case MR_D_F_FULLFSYNC:
+        /* "Flush all data to the permanent storage device": Linux fsync(2)
+         * already asks the device to flush its cache. SQLite issues this for
+         * every checkpoint (DEFAULT_CKPTFULLFSYNC). */
+        return MR_ERRNO_CALL(glibc_fsync(fd));
     default:
         mr_bail("fcntl(): only F_GETFL, F_SETFL and the two F_*NOSIGPIPE "
                 "commands are translated. Five of the ten standard commands are "
@@ -3923,6 +4007,19 @@ EXPORT int pthread_attr_getscope(const void *a, int *out)
 EXPORT int chown(const char *path, unsigned uid, unsigned gid)
 {
     return MR_ERRNO_CALL(glibc_chown(path, uid, gid));
+}
+
+/* fchown: SQLite's unix VFS calls it on every file it creates while running
+ * as root (robust_open). uid_t and gid_t agree on both systems.
+ *
+ * fchmod and utimes are deliberately NOT exported yet: FoundationEssentials'
+ * fm_unimplemented.c defines private loud-abort copies of both, and a
+ * libSystem.tbd that also lists them reorders render_full's symbol table
+ * (measured 2026-09-23: identical code, different LINKEDIT). They land
+ * together with the change that retires those stubs. */
+EXPORT int fchown(int fd, unsigned uid, unsigned gid)
+{
+    return MR_ERRNO_CALL(glibc_fchown(fd, uid, gid));
 }
 
 EXPORT int gethostname(char *name, size_t len)

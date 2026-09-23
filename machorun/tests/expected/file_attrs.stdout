@@ -1,0 +1,4 @@
+fchown self rc=0 errno=0 owner-kept=1
+fchown unchanged rc=0 errno=0
+fchown bad fd rc=-1 errno=EBADF
+strspn 6 0 0 10

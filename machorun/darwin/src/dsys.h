@@ -212,9 +212,10 @@ extern int     glibc_lstat(const char *, void *)            GLIBCSYM(lstat);
 extern int     glibc_fstat(int, void *)                     GLIBCSYM(fstat);
 /* Linux's struct statfs is 120 bytes on aarch64 with a different field order
  * AND no f_mntonname; Darwin's is 2168. Translated in posix.c, never forwarded.
- * futimens/utimensat/fchmod/fchown/lchown are COPYFILE_METADATA's prerequisites:
- * they are NOT re-exported to guests (the handover listed them as missing);
- * copyfile() calls them on this side of the glibc seam. */
+ * futimens/utimensat/fchmod/fchown/lchown are COPYFILE_METADATA's prerequisites;
+ * copyfile() calls them on this side of the glibc seam. fchown is also
+ * re-exported to guests (SQLite's unix VFS); see posix.c for why fchmod is
+ * not yet. */
 extern int     glibc_statfs(const char *, void *)           GLIBCSYM(statfs);
 extern int     glibc_fstatfs(int, void *)                   GLIBCSYM(fstatfs);
 extern int     glibc_fchmod(int, unsigned)                  GLIBCSYM(fchmod);

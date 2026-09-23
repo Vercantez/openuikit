@@ -1847,6 +1847,13 @@ was there. Separately, `struct flock` is **24 bytes on Darwin against 32**, so
 even a correctly numbered `F_GETLK` overflows. And `fcntl` is variadic, so it
 also carries the Darwin-arm64 varargs problem below.
 
+**Implemented since (2026-09-23, for SQLite's unix VFS):** `F_GETLK`,
+`F_SETLK` and `F_SETLKW` are renumbered, `l_type` is rotated both ways and
+`struct flock` is copied field by field into the Linux layout and back;
+`F_FULLFSYNC` (51) is `fsync(2)`; `F_DUPFD`/`F_GETFD`/`F_SETFD` pass through.
+Graded by the `fcntl_locks` rung against macOS. `F_GETOWN`/`F_SETOWN` and every
+other command still bail.
+
 **`dprintf`** is variadic — same reason `printf` has its own formatter here
 rather than a forward. It must route through that.
 
