@@ -750,9 +750,26 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// screen completes any process-wide unspecified size axes so view-load
     /// code observes the same portable environment as a detached UIView.
     public final var traitCollection: UITraitCollection {
-        viewIfLoaded?.traitCollection
+        let base = viewIfLoaded?.traitCollection
             ?? parent?.traitCollection
             ?? UIScreen.main._currentTraitsResolvingSizeClasses
+        let style = overrideUserInterfaceStyle
+        guard style != .unspecified, base.userInterfaceStyle != style else { return base }
+        return base._with { $0.userInterfaceStyle = style }
+    }
+
+    /// UIKit's controller-level style override. MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/vcstyleprobe): defaults to `.unspecified`; setting it
+    /// (even before the view loads) makes the controller's traitCollection,
+    /// its root view's, the root view's subviews' and child controllers'
+    /// resolve to that style, while `view.overrideUserInterfaceStyle` itself
+    /// stays `.unspecified`. NetNewsWire sets it on SFSafariViewController
+    /// before presenting (WebViewController.swift:940).
+    public final var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified {
+        didSet {
+            guard oldValue != overrideUserInterfaceStyle else { return }
+            viewIfLoaded?.setNeedsLayout()
+        }
     }
 
     /// Which edges a full-screen child extends under. Stored; OpenUIKit's

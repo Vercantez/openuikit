@@ -1341,7 +1341,13 @@ open class UIView: UIResponder, CALayerDelegate {
         // detached view completes just those axes from UIScreen's bounds
         // rather than exposing placeholders to initializers/viewDidLoad.
         let t = superview?.traitCollection ?? UIScreen.main._currentTraitsResolvingSizeClasses
-        let style = overrideUserInterfaceStyle
+        // A controller's own override applies to its root view (and so its
+        // subtree) unless the view overrides the style itself.
+        var style = overrideUserInterfaceStyle
+        if style == .unspecified, let controller = _managingViewController,
+           controller.viewIfLoaded === self {
+            style = controller.overrideUserInterfaceStyle
+        }
         let category = traitOverrides.preferredContentSizeCategory
         if style == .unspecified && category == .unspecified { return t }
         return t._with { t in

@@ -404,7 +404,8 @@
     "Secrets",
     "Images",
     "HTMLMetadata",
-    "Zip"
+    "Zip",
+    "NetNewsWireObjC"
    ],
    "openuikit": [
     "UIKit",
@@ -584,7 +585,11 @@
     "-Xfrontend",
     "-import-module",
     "-Xfrontend",
-    "SafariServices"
+    "SafariServices",
+    "-Xfrontend",
+    "-import-module",
+    "-Xfrontend",
+    "NetNewsWireObjC"
    ]
   }
  ]

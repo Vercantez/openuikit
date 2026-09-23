@@ -2936,6 +2936,14 @@ and run, but some are only partly implemented:
 - `onChange(of:initial:_:)` does not deliver the `initial: true` call.
 - `Text(_:tableName:bundle:comment:)` shows the key (the development
   language). No bundle lookup is done.
+- `UIViewController.overrideUserInterfaceStyle` resolves through the
+  controller, its view subtree and its children. It is not modelled in
+  three ways (Tools/oracle2/vcstyleprobe):
+  - iOS updates trait caches lazily: a detached subview still reads light,
+    and a subview still reads dark just after a reset.
+  - A controller's traitCollection ignores its root view's own override on
+    iOS; OpenUIKit reads it through the view.
+  - Changing the override delivers no trait-change callbacks.
 - On the iOS triple, `AttributedString(NSAttributedString)` is Foundation's
   initializer. The resulting runs carry only attributes whose scopes
   Foundation knows, so OpenUIKit's font and colour keys are dropped.
