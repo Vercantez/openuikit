@@ -27,9 +27,29 @@ public enum UIEditMenuArrowDirection: Int, Sendable {
     case right = 4
 }
 
+/// The opaque identifier of a configuration made with `identifier: nil`.
+/// MEASURED `configuration`: distinct per configuration, UUID-form
+/// description, not a `UUID` and not equal to its description string. The
+/// value is a process-wide serial spelled as a version-4-shaped UUID, not a
+/// random one: the render/layout path reads no random source
+/// (FoundationCoexistenceTests.testRenderPathReadsNoWallClockLocaleOrRandomSource),
+/// and uniqueness — the measured property — does not need entropy.
 private struct _UIEditMenuIdentifier: Hashable, CustomStringConvertible {
-    private let value = UUID()
-    var description: String { value.uuidString }
+    @MainActor private static var nextSerial: UInt64 = 0
+    private let serial: UInt64
+
+    @MainActor init() {
+        _UIEditMenuIdentifier.nextSerial &+= 1
+        serial = _UIEditMenuIdentifier.nextSerial
+    }
+
+    var description: String {
+        let digits = Array("0123456789ABCDEF")
+        var tail = ""
+        var v = serial
+        for _ in 0..<12 { tail.insert(digits[Int(v & 0xF)], at: tail.startIndex); v >>= 4 }
+        return "00000000-0000-4000-8000-" + tail
+    }
 }
 
 @preconcurrency @MainActor
