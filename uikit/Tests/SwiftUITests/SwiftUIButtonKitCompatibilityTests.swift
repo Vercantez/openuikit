@@ -262,7 +262,7 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         let bars = descendants(including: root).compactMap { $0 as? UIProgressView }
         XCTAssertEqual(bars.count, 3)
         XCTAssertEqual(bars[0].progress, 0.5, accuracy: 0.000_001)
-        XCTAssertEqual(bars[0].progressTintColor, .red)
+        XCTAssertEqual(bars[0].progressTintColor, .systemRed)
         XCTAssertEqual(bars[0].frame.width, 180, accuracy: 0.001)
         XCTAssertEqual(bars[0].frame.height, 4, accuracy: 0.001)
         XCTAssertEqual(bars[0].accessibilityValue, "50%")
@@ -448,9 +448,11 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
                     .first { bitmap.pixels[$0 + 3] == 255 }
             )
             let sample = Array(bitmap.pixels[pixel..<(pixel + 4)])
-            // Red brightened by 0.2 becomes (1,.2,.2); zero saturation
-            // evaluates Rec. 709 luminance and produces a concrete 94 gray.
-            XCTAssertEqual(sample, [94, 94, 94, 255])
+            // Color.red is systemRed (1,.2196,.2353) on iOS 26.1
+            // (nnwswiftuiprobe). Brightened by 0.2 it becomes
+            // (1,.4196,.4353); zero saturation evaluates Rec. 709 luminance
+            // .5441 and produces a concrete 139 gray.
+            XCTAssertEqual(sample, [139, 139, 139, 255])
             samples.append(sample)
         }
         XCTAssertEqual(samples[0], samples[1])

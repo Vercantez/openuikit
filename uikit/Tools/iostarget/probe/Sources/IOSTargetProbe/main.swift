@@ -43,9 +43,17 @@ func userNotificationsVisibleThroughUIKit() -> String {
     return "\(String(reflecting: UNUserNotificationCenter.self)) \(options.rawValue) \(presentation.rawValue)"
 }
 
+// Apple's UIKit exports CoreText too (NSAdaptiveImageGlyph.h imports
+// CTRunDelegate.h): typecheck against iPhoneSimulator26.1 with only UIKit
+// imported accepts this (NetNewsWire NSAttributedString+Extensions.swift:358).
+func coreTextVisibleThroughUIKit() -> [Int] {
+    [kVerticalPositionType, kSuperiorsSelector, kInferiorsSelector]
+}
+
 @MainActor func runProbe() {
     _ = stringDrawingCompiles()
     _ = userNotificationsVisibleThroughUIKit()
+    _ = coreTextVisibleThroughUIKit()
     print("# iostarget-probe os=iOS environment=\(environment) UIView=\(String(reflecting: UIView.self)) runtime-name=\(NSStringFromClass(UIView.self)) textstorage=\(NSStringFromClass(NSTextStorage.self)) font-key=\(NSAttributedString.Key.font.rawValue)")
     _ = ProbeViewController()
     print("## superclasses")

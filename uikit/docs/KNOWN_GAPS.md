@@ -2910,3 +2910,32 @@ NetNewsWire batch D (Tools/oracle2/nnwmiscprobe, springsettleprobe):
   `previous` is not delivered.
 - `UIContentSizeCategory` raw values are OpenUIKit spellings ("large"). iOS
   uses "UICTContentSizeCategoryL".
+
+NetNewsWire SwiftUI rows (Tools/oracle2/nnwswiftuiprobe). These views compile
+and run, but some are only partly implemented:
+- `VerticalAlignment.firstTextBaseline` / `.lastTextBaseline` are separate
+  values but are laid out as `.center`. OpenUIKit does not compute text
+  baselines. Measured on iOS: HStack(image, footnote, title) puts all three
+  baselines at y ≈ 513.7.
+- `.baselineOffset(_:)` has no layout effect.
+- `.textSelection(_:)` is accepted, but there is no selection UI.
+- `.help(_:)` is not surfaced.
+- `ScrollView(_:showsIndicators:)` records its axes, but the scroll host is
+  vertical only.
+- `Button(role:action:)` without a label draws "xmark" for `.close`, as
+  measured. Glyphs for the other roles were not measured, so they draw
+  nothing. In an alert, `.close` and `.confirm` map to UIAlertAction
+  `.default`, which was not measured.
+- The `.navigationSubtitle` value lands on `navigationItem.subtitle`. iOS
+  draws it at 12 pt secondaryLabel under a 15-pt title; OpenUIKit's
+  navigation bar does not draw subtitles.
+- `LabeledContent` puts the label leading and the value trailing in
+  secondary colour. Only its full-width, one-line frame was measured.
+- `ShareLink` presents UIActivityViewController. Items are strings or URLs
+  only.
+- `onChange(of:initial:_:)` does not deliver the `initial: true` call.
+- `Text(_:tableName:bundle:comment:)` shows the key (the development
+  language). No bundle lookup is done.
+- On the iOS triple, `AttributedString(NSAttributedString)` is Foundation's
+  initializer. The resulting runs carry only attributes whose scopes
+  Foundation knows, so OpenUIKit's font and colour keys are dropped.

@@ -91,6 +91,20 @@ public struct _OpenFont: Hashable, Sendable {
         weight(.bold)
     }
 
+    /// SwiftUI's `Font.system(_:design:weight:)`. With neither a design nor a
+    /// weight it is the text style itself; otherwise the style's size with
+    /// the given design and weight (headline's default weight is semibold).
+    /// MEASURED iPhone 16 / iOS 26.1 (nnwswiftuiprobe): "Hg" in
+    /// `.system(.body, design: .monospaced)` is 21.33 x 20.33 pt against
+    /// 22.33 x 20.33 in `.body`.
+    public static func system(_ style: TextStyle, design: Design? = nil,
+                              weight: Weight? = nil) -> _OpenFont {
+        guard design != nil || weight != nil else { return _OpenFont(style) }
+        let base = _OpenFont(style).resolve(weight: weight)
+        return _OpenFont(storage: .uiFont(pointSize: base.pointSize, weight: base.weight,
+                                          design: design ?? .default))
+    }
+
     /// Returns the same semantic text style or concrete font descriptor with
     /// a different weight. Unlike the view-level `fontWeight`, this value
     /// transformation composes before the font reaches the render
@@ -241,10 +255,23 @@ public struct _OpenColor: Hashable, @unchecked Sendable {
     public static let clear = _OpenColor(uiColor: .clear)
     public static let black = _OpenColor(uiColor: .black)
     public static let white = _OpenColor(uiColor: .white)
-    public static let red = _OpenColor(uiColor: .red)
-    public static let green = _OpenColor(uiColor: .green)
-    public static let blue = _OpenColor(uiColor: .blue)
-    public static let gray = _OpenColor(uiColor: .gray)
+    // MEASURED iPhone 16 / iOS 26.1 (Tools/oracle2/nnwswiftuiprobe): every
+    // SwiftUI named colour is the matching UIKit system colour, light and dark
+    // (UIColor(Color.teal) == UIColor.systemTeal: (0,195,208) / (0,210,224)),
+    // not UIColor.red/.green/.blue/.gray (those are pure primaries / 50% gray).
+    public static let red = _OpenColor(uiColor: .systemRed)
+    public static let orange = _OpenColor(uiColor: .systemOrange)
+    public static let yellow = _OpenColor(uiColor: .systemYellow)
+    public static let green = _OpenColor(uiColor: .systemGreen)
+    public static let mint = _OpenColor(uiColor: .systemMint)
+    public static let teal = _OpenColor(uiColor: .systemTeal)
+    public static let cyan = _OpenColor(uiColor: .systemCyan)
+    public static let blue = _OpenColor(uiColor: .systemBlue)
+    public static let indigo = _OpenColor(uiColor: .systemIndigo)
+    public static let purple = _OpenColor(uiColor: .systemPurple)
+    public static let pink = _OpenColor(uiColor: .systemPink)
+    public static let brown = _OpenColor(uiColor: .systemBrown)
+    public static let gray = _OpenColor(uiColor: .systemGray)
     public static let primary = _OpenColor(uiColor: .label)
     public static let secondary = _OpenColor(uiColor: .secondaryLabel)
     public static let background = _OpenColor(uiColor: .systemBackground)
@@ -340,7 +367,72 @@ public extension _OpenShapeStyle where Self == _OpenColor {
     static var green: _OpenColor { .green }
     static var blue: _OpenColor { .blue }
     static var gray: _OpenColor { .gray }
-    static var orange: _OpenColor { _OpenColor(uiColor: UIColor.orange) }
+    static var orange: _OpenColor { .orange }
+    static var yellow: _OpenColor { .yellow }
+    static var mint: _OpenColor { .mint }
+    static var teal: _OpenColor { .teal }
+    static var cyan: _OpenColor { .cyan }
+    static var indigo: _OpenColor { .indigo }
+    static var purple: _OpenColor { .purple }
+    static var pink: _OpenColor { .pink }
+    static var brown: _OpenColor { .brown }
+}
+
+/// SwiftUI's `AnyShapeStyle`: a type-erased shape style.
+public struct _OpenAnyShapeStyle: _OpenShapeStyle {
+    nonisolated(unsafe) let base: any _OpenShapeStyle
+
+    nonisolated public init<S: _OpenShapeStyle>(_ style: S) {
+        base = style
+    }
+
+    public func _openResolvedForegroundColor() -> _OpenColor {
+        base._openResolvedForegroundColor()
+    }
+}
+
+/// SwiftUI's `.link` shape style. MEASURED iPhone 16 / iOS 26.1
+/// (nnwswiftuiprobe, `Rectangle().fill(.link)`): (0,122,255) light and
+/// (9,132,255) dark, i.e. UIColor.link.
+public struct _OpenLinkShapeStyle: _OpenShapeStyle, Sendable {
+    nonisolated public init() {}
+    public func _openResolvedForegroundColor() -> _OpenColor { _OpenColor(uiColor: .link) }
+}
+
+public extension _OpenShapeStyle where Self == _OpenLinkShapeStyle {
+    static var link: _OpenLinkShapeStyle { _OpenLinkShapeStyle() }
+}
+
+public typealias AnyShapeStyle = _OpenAnyShapeStyle
+public typealias LinkShapeStyle = _OpenLinkShapeStyle
+
+extension UIColor {
+    /// SwiftUI's `UIColor(_ color: Color)`. MEASURED (nnwswiftuiprobe): the
+    /// result is the colour's dynamic UIKit colour (UIColor(Color.purple)
+    /// resolves to systemPurple in light and dark).
+    public convenience init(_ color: _OpenColor) {
+        let storage = color.storage
+        self.init(dynamicProvider: { traits in
+            _OpenColor._uiColor(storage).resolvedColor(with: traits)
+        })
+    }
+}
+
+extension _OpenColor {
+    static func _uiColor(_ storage: Storage) -> UIColor {
+        switch storage {
+        case .resolved(let color):
+            return color
+        case .named(let name, let bundle):
+            return UIColor(named: name, in: bundle, compatibleWith: nil) ?? .clear
+        case .opacity(let nested, let opacity):
+            let base = _uiColor(nested)
+            return UIColor(dynamicProvider: { traits in
+                let resolved = base.resolvedColor(with: traits)
+                return resolved.withAlphaComponent(resolved.cgColor.alpha * opacity)
+            })
+        }
+    }
 }
 
 public struct _OpenHierarchicalShapeStyle: _OpenShapeStyle, Sendable {
@@ -487,7 +579,7 @@ public struct _OpenHorizontalAlignment: Equatable, Sendable {
 }
 
 public struct _OpenVerticalAlignment: Equatable, Sendable {
-    enum Value: Equatable, Sendable { case top, center, bottom }
+    enum Value: Equatable, Sendable { case top, center, bottom, firstTextBaseline, lastTextBaseline }
     let value: Value
 
     private init(_ value: Value) { self.value = value }
@@ -495,6 +587,11 @@ public struct _OpenVerticalAlignment: Equatable, Sendable {
     public static let top = _OpenVerticalAlignment(.top)
     public static let center = _OpenVerticalAlignment(.center)
     public static let bottom = _OpenVerticalAlignment(.bottom)
+    /// Distinct alignments (MEASURED nnwswiftuiprobe: neither equals
+    /// `.center` nor each other). OpenUIKit does not compute text baselines
+    /// yet and lays these out as `.center` (KNOWN_GAPS).
+    public static let firstTextBaseline = _OpenVerticalAlignment(.firstTextBaseline)
+    public static let lastTextBaseline = _OpenVerticalAlignment(.lastTextBaseline)
 }
 
 public struct _OpenAlignment: Equatable, Sendable {
@@ -567,6 +664,12 @@ public enum _OpenContentMode: Sendable {
 public enum _OpenButtonRole: Sendable {
     case destructive
     case cancel
+    /// iOS 26. MEASURED (nnwswiftuiprobe): distinct from `.cancel`; a
+    /// label-less `Button(role: .close)` in the toolbar shows the "xmark"
+    /// symbol.
+    case close
+    /// iOS 26.
+    case confirm
 }
 
 /// The two layout axes.  SwiftUI models the single-axis spelling separately
@@ -622,6 +725,44 @@ public enum _OpenTextTruncationMode: UInt8, Hashable, Sendable {
     case middle
     case tail
 }
+
+public extension _OpenText {
+    /// SwiftUI's `Text(_:tableName:bundle:comment:)`. Like `Text(_ key:)`, the
+    /// development-language key is displayed; the comment is for translators.
+    nonisolated init(_ key: LocalizedStringKey, tableName: String? = nil,
+                     bundle: Bundle? = nil, comment: StaticString? = nil) {
+        _ = tableName
+        _ = bundle
+        _ = comment
+        self.init(key)
+    }
+}
+
+/// SwiftUI's text-selectability styles. MEASURED (nnwswiftuiprobe):
+/// `allowsSelection` is true for `.enabled` and false for `.disabled`.
+public protocol _OpenTextSelectability {
+    static var allowsSelection: Bool { get }
+}
+
+public struct _OpenEnabledTextSelectability: _OpenTextSelectability, Sendable {
+    public static let allowsSelection = true
+}
+
+public struct _OpenDisabledTextSelectability: _OpenTextSelectability, Sendable {
+    public static let allowsSelection = false
+}
+
+public extension _OpenTextSelectability where Self == _OpenEnabledTextSelectability {
+    static var enabled: _OpenEnabledTextSelectability { _OpenEnabledTextSelectability() }
+}
+
+public extension _OpenTextSelectability where Self == _OpenDisabledTextSelectability {
+    static var disabled: _OpenDisabledTextSelectability { _OpenDisabledTextSelectability() }
+}
+
+public typealias TextSelectability = _OpenTextSelectability
+public typealias EnabledTextSelectability = _OpenEnabledTextSelectability
+public typealias DisabledTextSelectability = _OpenDisabledTextSelectability
 
 public extension _OpenText {
     /// SwiftUI's nested spelling `Text.TruncationMode` (ios-oss Library
