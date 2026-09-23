@@ -53,8 +53,6 @@
 
 // MARK: - Measured metrics
 
-/// Every constant here comes from `Tools/oracle2/alertprobe` dumps; the
-/// fixture family `alert_*` locks them in against real-iOS goldens.
 // MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
 // Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
 // Each is @_exported here too: a plain scoped import that precedes the
@@ -65,6 +63,8 @@
 @_exported import typealias Foundation.TimeInterval
 #endif
 
+/// Every constant here comes from `Tools/oracle2/alertprobe` dumps; the
+/// fixture family `alert_*` locks them in against real-iOS goldens.
 public enum UIAlertMetrics {
     /// Card width. Constant across every probed configuration on a 393 pt
     /// window.

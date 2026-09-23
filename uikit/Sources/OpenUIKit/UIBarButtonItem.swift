@@ -57,13 +57,6 @@
 // text-backed system items, custom titles and synthesized template images,
 // all of which are exact.
 
-/// A button (or a space) in a `UINavigationBar` / `UIToolbar`.
-///
-/// SDK EVIDENCE (iOS 26.1, UIKit.framework/Headers/UIBarButtonItem.h:69):
-/// `@interface UIBarButtonItem : UIBarItem <NSCoding>`. `title`, `image`,
-/// `isEnabled`, `imageInsets`, `tag`, `accessibilityIdentifier` and the
-/// title-text-attribute pair therefore live on `UIBarItem` (UIBarItem.swift),
-/// not here. `NSCoding` is not adopted — see UIBarItem.swift.
 // MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
 // Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
 // Each is @_exported here too: a plain scoped import that precedes the
@@ -75,6 +68,13 @@
 @_exported import struct ObjectiveC.Selector
 #endif
 
+/// A button (or a space) in a `UINavigationBar` / `UIToolbar`.
+///
+/// SDK EVIDENCE (iOS 26.1, UIKit.framework/Headers/UIBarButtonItem.h:69):
+/// `@interface UIBarButtonItem : UIBarItem <NSCoding>`. `title`, `image`,
+/// `isEnabled`, `imageInsets`, `tag`, `accessibilityIdentifier` and the
+/// title-text-attribute pair therefore live on `UIBarItem` (UIBarItem.swift),
+/// not here. `NSCoding` is not adopted — see UIBarItem.swift.
 @preconcurrency @MainActor
 public class UIBarButtonItem: UIBarItem {
     /// UIKit's bar-button styles. iOS 26 renamed `.done` to `.prominent`
