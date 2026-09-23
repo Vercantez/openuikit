@@ -1875,6 +1875,58 @@ compile_app_module() {
         -emit-object -o "$outfile" \
         "$@"
 }
+# ---- Objective-C Foundation + Objective-C / C app targets (full/objcfoundation)
+# The Objective-C view of the one Foundation above: <Foundation/Foundation.h>
+# declares the facade's classes by their runtime names, FoundationObjCBridge
+# gives them Objective-C selectors and adds the classes the facade lacks, and
+# src/OFFoundation.m holds what Swift cannot declare. Built into
+# $OUT/objcfoundation only (never APPINC / APPMODS_CINC), so no Swift module
+# compiled above or below sees it unless it asks: render_full and the Focus
+# graph are unchanged. Executables with Objective-C link
+# OBJC_FOUNDATION_LINK_OBJECTS; compile their sources with the helpers below.
+OBJC_FOUNDATION=$OUT/objcfoundation
+OBJC_FOUNDATION_INCLUDE=$W/full/objcfoundation/include
+echo "== Objective-C Foundation (FoundationObjCBridge + OFFoundation.m)"
+rm -rf "$OBJC_FOUNDATION"
+mkdir -p "$OBJC_FOUNDATION/clang-modules"
+"${SWIFTC[@]}" -D OPENUIKIT_GUEST -parse-as-library "${FEMODULES[@]}" "${APPMODS_CINC[@]}" \
+    -I "$OUT" -I "$APPINC" -I "$APPMODS" "${APP_AVAILABILITY_FLAGS[@]}" \
+    -module-name FoundationObjCBridge \
+    -emit-module -emit-module-path "$OBJC_FOUNDATION/FoundationObjCBridge.swiftmodule" \
+    -emit-object -o "$OBJC_FOUNDATION/foundation_objc_bridge.o" \
+    "$W"/full/objcfoundation/bridge/*.swift
+# Objective-C as Xcode compiles it by default: ARC, modules, the guest's
+# Foundation headers and SQLite3 module; Apple's Objective-C runtime ABI.
+OBJC_CFLAGS=(-fobjc-arc -fmodules -fmodules-cache-path="$OBJC_FOUNDATION/clang-modules"
+    -fobjc-runtime=macosx-15.0 -I "$OBJC_FOUNDATION_INCLUDE" -I "$SQLITE_INCLUDE"
+    -Wno-nullability-completeness)
+"${CC[@]}" "${OBJC_CFLAGS[@]}" -c "$W/full/objcfoundation/src/OFFoundation.m" \
+    -o "$OBJC_FOUNDATION/foundation_objc.o"
+OBJC_FOUNDATION_LINK_OBJECTS=("$OBJC_FOUNDATION/foundation_objc_bridge.o" "$OBJC_FOUNDATION/foundation_objc.o")
+# Every class the headers bind must exist under the runtime name they give it.
+python3 -B "$W/full/objcfoundation/check_runtime_names.py" "$OBJC_FOUNDATION_INCLUDE" \
+    "$OUT/foundation_guest.o" "$OBJC_FOUNDATION/foundation_objc_bridge.o"
+# compile_app_objc <out.o> <source.m> [clang flags...]: one Objective-C TU.
+compile_app_objc() {
+    local out=$1 source=$2; shift 2
+    "${CC[@]}" "${OBJC_CFLAGS[@]}" "$@" -c "$source" -o "$out"
+}
+# compile_app_c <out.o> <source.c> [clang flags...]: one C TU.
+compile_app_c() {
+    local out=$1 source=$2; shift 2
+    "${CC[@]}" -I "$SQLITE_INCLUDE" "$@" -c "$source" -o "$out"
+}
+# Flags for a Swift module that imports Objective-C modules (their headers
+# import <Foundation/Foundation.h>): add them to the swiftc line together with
+# the importing module's own -Xcc -fmodule-map-file.
+# The implicit import makes FoundationObjCBridge's classes (NSDate, NSSet, ...)
+# resolvable when a Clang header names them, as the SDK's Foundation always
+# is; without it swift-frontend 6.2.4 crashes lowering such a call (measured).
+OBJC_SWIFT_FLAGS=(-Xfrontend -import-module -Xfrontend FoundationObjCBridge -I "$OBJC_FOUNDATION"
+    -Xcc -fmodule-map-file="$OBJC_FOUNDATION_INCLUDE/Foundation/module.modulemap"
+    -Xcc -I"$OBJC_FOUNDATION_INCLUDE"
+    -Xcc -fmodule-map-file="$SQLITE_INCLUDE/module.modulemap" -Xcc -I"$SQLITE_INCLUDE")
+
 compile_app_module Glean "$OUT/glean.o" \
     "$UIKIT"/Sources/RealAppProbe/FocusModules/Glean/*.swift
 compile_app_module Intents "$OUT/intents_stub.o" \
