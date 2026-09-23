@@ -100,6 +100,10 @@ public final class UIPointerInteraction: UIInteraction {
         self.delegate = delegate
     }
 
+    /// NetNewsWire MainFeedCollectionViewFolderCell.swift:60 `UIPointerInteraction()`.
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): no delegate, enabled.
+    public convenience init() { self.init(delegate: nil) }
+
     public func willMove(to view: UIView?) {}
 
     public func didMove(to view: UIView?) {

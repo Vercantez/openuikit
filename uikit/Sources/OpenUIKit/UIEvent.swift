@@ -38,6 +38,9 @@ import Foundation
 
 #if canImport(Foundation)
 import class Foundation.NSObject
+#if !os(Linux)
+import class Foundation.UndoManager
+#endif
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #else
@@ -86,6 +89,17 @@ public class UIEvent: NSObject {
 
 @preconcurrency @MainActor
 open class UIWindow: UIView {
+#if canImport(Foundation) && !os(Linux)
+    private final var _windowUndoManager: UndoManager?
+    /// Each window owns one undo manager, created on first use (MEASURED
+    /// iOS 26.1: NSUndoManager, identical on every read).
+    open override var undoManager: UndoManager? {
+        if let m = _windowUndoManager { return m }
+        let m = UndoManager()
+        _windowUndoManager = m
+        return m
+    }
+#endif
     /// A window is the size-class root for its view hierarchy. Hosts may set
     /// either axis explicitly in `UITraitCollection.current`; only an
     /// unspecified axis is derived from this window's bounds.
@@ -183,13 +197,33 @@ open class UIWindow: UIView {
         didSet {
             guard rootViewController !== oldValue else { return }
             oldValue?.viewIfLoaded?.removeFromSuperview()
-            guard let vc = rootViewController else { return }
-            vc.loadViewIfNeeded()
-            let v = vc.view!
-            v.frame = bounds
-            addSubview(v)
-            setNeedsLayout()
+            _rootViewInstallPending = false
+            guard rootViewController != nil else { return }
+            // A hidden window does not load its root controller's view yet:
+            // MEASURED Tools/oracle2/scenelaunchprobe (iOS 26.1), the
+            // storyboard root assigned to the scene's hidden window gets
+            // viewDidLoad only after scene(_:willConnectTo:), inside
+            // makeKeyAndVisible. Visible windows install at once, as before.
+            if isHidden {
+                _rootViewInstallPending = true
+                return
+            }
+            _installRootView()
         }
+    }
+
+    final var _rootViewInstallPending = false
+    /// Set on the scene-manifest launch's window: UIKit's explicit key rule.
+    final var _keyOnlyWhenMadeKey = false
+
+    final func _installRootView() {
+        _rootViewInstallPending = false
+        guard let vc = rootViewController else { return }
+        vc.loadViewIfNeeded()
+        let v = vc.view!
+        v.frame = bounds
+        addSubview(v)
+        setNeedsLayout()
     }
 
     public override init(frame: CGRect) {
@@ -216,6 +250,7 @@ open class UIWindow: UIView {
 
     public func makeKeyAndVisible() {
         isHidden = false
+        if _rootViewInstallPending { _installRootView() }
         makeKey()
     }
 
@@ -369,7 +404,7 @@ open class UIWindow: UIView {
         UITextInputState._stepCaretBlink(to: timestamp)
         // Scheduled `Timer`s fire off the same clock — there is no run loop,
         // so this tick IS the run-loop turn (Sources/OpenUIKit/Timer.swift).
-        Timer._step(to: timestamp)
+        _HostClockTimer._step(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)

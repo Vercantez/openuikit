@@ -410,6 +410,9 @@ open class UICollectionViewCompositionalLayoutConfiguration {
     public var scrollDirection: UICollectionViewScrollDirection = .vertical
     public var interSectionSpacing: CGFloat = 0
     public var boundarySupplementaryItems: [NSCollectionLayoutBoundarySupplementaryItem] = []
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): `.safeArea` for a fresh configuration
+    /// (the reference the port's compositional layout already uses).
+    public var contentInsetsReference: UIContentInsetsReference = .safeArea
 
     public init() {}
 }
@@ -937,4 +940,14 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         sections[indexPath.section] = cache
         return true
     }
+}
+
+/// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): automatic 0, none 1, safeArea 2,
+/// layoutMargins 3, readableContent 4.
+public enum UIContentInsetsReference: Int, Sendable {
+    case automatic = 0
+    case none = 1
+    case safeArea = 2
+    case layoutMargins = 3
+    case readableContent = 4
 }

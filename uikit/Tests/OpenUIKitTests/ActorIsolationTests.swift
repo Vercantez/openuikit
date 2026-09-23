@@ -146,7 +146,9 @@ final class ActorIsolationTests: XCTestCase {
 
         let observer = Observer()
 
-        let timer = Timer(timeInterval: 1, target: observer,
+        // OpenUIKit's host-clock timer (Foundation's Timer is what apps see
+        // wherever Foundation exists; timer-unify.md).
+        let timer = _HostClockTimer(timeInterval: 1, target: observer,
                           selector: Selector.named("timerFired:"),
                           userInfo: nil, repeats: false)
         timer.fire()

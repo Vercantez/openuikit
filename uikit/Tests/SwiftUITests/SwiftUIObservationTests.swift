@@ -578,11 +578,11 @@ private func makeNonisolatedObservedObject(
 #endif
 final class SwiftUIObservationTests: XCTestCase {
     func testFoundationHiddenSchedulerDefersToOneHostClockTurn() {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         var events: [String] = []
@@ -593,21 +593,21 @@ final class SwiftUIObservationTests: XCTestCase {
         _OpenInvalidationScheduler.enqueue { events.append("second") }
 
         XCTAssertEqual(events, [])
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         XCTAssertEqual(events, ["first", "second"])
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         XCTAssertEqual(events, ["first", "second", "nested"])
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
     }
 
     func testHostClockSchedulerCoalescesObservedObjectAndRendersLatestValue() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let model = ObservationModel(0)
@@ -622,24 +622,24 @@ final class SwiftUIObservationTests: XCTestCase {
         XCTAssertEqual(controller._openGraphRenderCount, 1)
         XCTAssertEqual(controller._openGraphInvalidationCount, 0)
         XCTAssertEqual(texts(in: host), ["value=0", "again=0"])
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
 
         XCTAssertEqual(controller._openGraphRenderCount, 2)
         XCTAssertEqual(controller._openGraphInvalidationCount, 1)
         XCTAssertEqual(controller._openGraphObservationCount, 1)
         XCTAssertEqual(texts(in: host), ["value=2", "again=2"])
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
     }
 
     func testHostClockPendingWorkSurvivesRootReplacementWithoutRetainingController() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let oldModel = ObservationModel(0)
@@ -656,34 +656,34 @@ final class SwiftUIObservationTests: XCTestCase {
         newModel.value = 11
         oldModel.value = 2
 
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(controller?._openGraphInvalidationCount, 1)
         XCTAssertEqual(texts(in: host), ["value=11", "again=11"])
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
 
         newModel.value = 12
         let weakController = WeakReference(controller)
         controller = nil
         XCTAssertNil(weakController.value)
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
 
         newModel.value = 13
         XCTAssertFalse(
-            OpenUIKit.Timer._hasScheduledTimers,
+            OpenUIKit._HostClockTimer._hasScheduledTimers,
             "a model outliving its controller must not enqueue dead-graph work"
         )
     }
 
     func testHostClockRetiredRootActionCannotConsumeNewGenerationPublication() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let oldModel = ObservationModel(0)
@@ -699,14 +699,14 @@ final class SwiftUIObservationTests: XCTestCase {
         // turn it replaces the root (retiring the old action) and publishes
         // from the replacement graph. That publication owns a new timer which
         // is not eligible until the following outer host turn.
-        OpenUIKit.Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
+        OpenUIKit._HostClockTimer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
             timer.invalidate()
             controller.rootView = ObservationFixture(model: newModel)
             newModel.value = 11
         }
         oldModel.value = 1
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(
             controller._openGraphInvalidationCount,
@@ -714,22 +714,22 @@ final class SwiftUIObservationTests: XCTestCase {
             "a retired old-root callback must not consume the new graph's work token"
         )
         XCTAssertEqual(controller._openGraphRenderCount, 2)
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(controller._openGraphInvalidationCount, 1)
         XCTAssertEqual(controller._openGraphRenderCount, 3)
         XCTAssertEqual(texts(in: host), ["value=11", "again=11"])
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
     }
 
     func testHostClockMultipleGraphsCoalesceIndependentlyAtEqualDeadline() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let firstModel = ObservationModel(0)
@@ -744,22 +744,22 @@ final class SwiftUIObservationTests: XCTestCase {
         secondModel.value = 101
         secondModel.value = 102
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         firstHost.layoutIfNeeded()
         secondHost.layoutIfNeeded()
         XCTAssertEqual(first._openGraphInvalidationCount, 1)
         XCTAssertEqual(second._openGraphInvalidationCount, 1)
         XCTAssertEqual(texts(in: firstHost), ["value=2", "again=2"])
         XCTAssertEqual(texts(in: secondHost), ["value=102", "again=102"])
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
     }
 
     func testHostClockEqualDeadlineOrderingAndNestedTurnBoundaryAreDeterministic() {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         var events: [Int] = []
@@ -772,44 +772,44 @@ final class SwiftUIObservationTests: XCTestCase {
             }
         }
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         XCTAssertEqual(events, Array(0..<64))
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         XCTAssertEqual(events, Array(0...64))
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
     }
 
     func testHostClockSchedulerActionIsNotDuplicatedByReentrantHostStep() {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         var deliveries = 0
         _OpenInvalidationScheduler.enqueue {
             deliveries += 1
             if deliveries == 1 {
-                OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+                OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
             }
         }
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         XCTAssertEqual(deliveries, 1, "one queued action must not re-enter itself")
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
     }
 
     func testNativeTaskSchedulerActionIsNotDuplicatedByHostStep() async {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = false
-        defer { OpenUIKit.Timer._reset() }
+        defer { OpenUIKit._HostClockTimer._reset() }
 
         var deliveries = 0
         _OpenInvalidationScheduler.enqueue {
             deliveries += 1
-            OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+            OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         }
 
         await Task.yield()
@@ -818,11 +818,11 @@ final class SwiftUIObservationTests: XCTestCase {
     }
 
     func testHostClockGraphKeepsPublicationDuringReentrantEvaluationForNextTurn() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let model = ObservationModel(0)
@@ -832,7 +832,7 @@ final class SwiftUIObservationTests: XCTestCase {
                 guard reenterDuringNextBody else { return }
                 reenterDuringNextBody = false
                 model.value = 2
-                OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+                OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
             }
         )
         let host = try XCTUnwrap(controller.view)
@@ -840,15 +840,15 @@ final class SwiftUIObservationTests: XCTestCase {
 
         reenterDuringNextBody = true
         model.value = 1
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
 
         XCTAssertEqual(
             controller._openGraphInvalidationCount,
             1,
             "a publication during evaluation belongs to the next host turn"
         )
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(controller._openGraphInvalidationCount, 2)
         XCTAssertEqual(texts(in: host), ["reentrant=2"])
@@ -1449,11 +1449,11 @@ final class SwiftUIObservationTests: XCTestCase {
 
     @available(macOS 14.0, *)
     func testObservableEnvironmentReadsInvalidateCoalesceAndResubscribe() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let service = EnvironmentObservationService(1)
@@ -1469,10 +1469,10 @@ final class SwiftUIObservationTests: XCTestCase {
 
         service.value = 2
         service.value = 3
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
         XCTAssertEqual(controller._openGraphInvalidationCount, 0)
 
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(texts(in: host), ["environmentObservation=3"])
         XCTAssertEqual(controller._openGraphRenderCount, 2)
@@ -1481,8 +1481,8 @@ final class SwiftUIObservationTests: XCTestCase {
         // withObservationTracking is one-shot. The rebuilt graph must install
         // a fresh access list so a second mutation still reaches the host.
         service.value = 4
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(texts(in: host), ["environmentObservation=4"])
         XCTAssertEqual(controller._openGraphRenderCount, 3)
@@ -1491,11 +1491,11 @@ final class SwiftUIObservationTests: XCTestCase {
 
     @available(macOS 14.0, *)
     func testRetiredObservableEnvironmentCannotInvalidateReplacementTree() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let retired = EnvironmentObservationService(1)
@@ -1513,12 +1513,12 @@ final class SwiftUIObservationTests: XCTestCase {
         XCTAssertEqual(controller._openGraphRenderCount, 2)
 
         retired.value = 2
-        XCTAssertFalse(OpenUIKit.Timer._hasScheduledTimers)
+        XCTAssertFalse(OpenUIKit._HostClockTimer._hasScheduledTimers)
         XCTAssertEqual(controller._openGraphInvalidationCount, 0)
 
         current.value = 11
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
         XCTAssertEqual(texts(in: host), ["environmentObservation=11"])
         XCTAssertEqual(controller._openGraphRenderCount, 3)

@@ -21,7 +21,7 @@ final class DatePickerTests: XCTestCase {
         OpenUIKitRuntime.renderBackend = savedBackend
         OpenUIKitRuntime.compositor = savedCompositor
         OpenUIKitRuntime.resourceRoot = savedResourceRoot
-        Timer._reset()
+        _HostClockTimer._reset()
         super.tearDown()
     }
 
@@ -112,9 +112,9 @@ final class DatePickerTests: XCTestCase {
     }
 
     func testDefaultDateUsesOnlyTheExplicitHostClock() {
-        Timer._reset()
-        defer { Timer._reset() }
-        Timer._step(to: 3_661.75)
+        _HostClockTimer._reset()
+        defer { _HostClockTimer._reset() }
+        _HostClockTimer._step(to: 3_661.75)
 
         let picker = UIDatePicker()
 
@@ -130,9 +130,9 @@ final class DatePickerTests: XCTestCase {
     }
 
     func testExtremeFiniteHostClockIsExactButNeverEntersCalendar() {
-        Timer._reset()
-        defer { Timer._reset() }
-        Timer._step(to: .greatestFiniteMagnitude)
+        _HostClockTimer._reset()
+        defer { _HostClockTimer._reset() }
+        _HostClockTimer._step(to: .greatestFiniteMagnitude)
         let picker = UIDatePicker(frame: CGRect(x: 0, y: 0,
                                                 width: 320, height: 320))
         XCTAssertEqual(picker.date.timeIntervalSinceReferenceDate,
@@ -234,8 +234,8 @@ final class DatePickerTests: XCTestCase {
     }
 
     func testCountdownModeTransitionMatrixAndDateSetterSplit() {
-        Timer._reset()
-        defer { Timer._reset() }
+        _HostClockTimer._reset()
+        defer { _HostClockTimer._reset() }
         for value: TimeInterval in [0, 59, 60, 61, 3_661, 86_399,
                                     .nan, .infinity, -.infinity] {
             let picker = UIDatePicker()
@@ -258,9 +258,9 @@ final class DatePickerTests: XCTestCase {
         }
 
         let base = Date(timeIntervalSinceReferenceDate: 800_000_000)
-        Timer._step(to: 800_010_123)
+        _HostClockTimer._step(to: 800_010_123)
         let hostDay = utcCalendar().startOfDay(for:
-            Date(timeIntervalSinceReferenceDate: Timer.currentTime))
+            Date(timeIntervalSinceReferenceDate: _HostClockTimer.currentTime))
 
         let transition = UIDatePicker()
         transition.calendar = utcCalendar()
@@ -314,12 +314,12 @@ final class DatePickerTests: XCTestCase {
         XCTAssertEqual(range.date.timeIntervalSinceReferenceDate,
                        800_007_200)
 
-        Timer._reset()
+        _HostClockTimer._reset()
         let unsupportedHost = UIDatePicker()
         unsupportedHost.calendar = utcCalendar()
         unsupportedHost.roundsToMinuteInterval = false
         unsupportedHost.date = base
-        Timer._step(to: .greatestFiniteMagnitude)
+        _HostClockTimer._step(to: .greatestFiniteMagnitude)
         unsupportedHost.datePickerMode = .countDownTimer
         XCTAssertEqual(unsupportedHost.date, base)
     }

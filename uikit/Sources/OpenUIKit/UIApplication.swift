@@ -43,12 +43,25 @@ import class Foundation.NSPredicate
 import struct Foundation.NSZone
 import struct Foundation.URL
 import class Foundation.Bundle
+import class Foundation.NSError
+#if !os(Linux)
+import class Foundation.UndoManager
+#endif
+import struct Foundation.Data
+import var Foundation.NSCocoaErrorDomain
+import var Foundation.NSLocalizedDescriptionKey
 
 #if canImport(Darwin)
 import class Foundation.NSUserActivity
 #else
 import class Foundation.NSObject
 #endif
+#endif
+
+// Same guard as UIPasteboard.swift: the Foundation-hidden guest sysroot answers
+// canImport(Dispatch) but cannot build the SDK's Dispatch interface.
+#if canImport(Foundation) && canImport(Dispatch)
+import Dispatch
 #endif
 
 #if canImport(ObjectiveC)
@@ -326,6 +339,15 @@ public protocol UIApplicationDelegate: AnyObject {
     func application(_ application: UIApplication,
                      performActionFor shortcutItem: UIApplicationShortcutItem,
                      completionHandler: @escaping (Bool) -> Void)
+#if canImport(Foundation)
+    /// Remote-notification registration outcome. MEASURED
+    /// Tools/oracle2/scenelaunchprobe (iOS 26.1, unsigned simulator app):
+    /// `registerForRemoteNotifications()` ends in the FAILURE callback.
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: any Error)
+#endif
 }
 
 extension UIApplicationDelegate {
@@ -378,6 +400,108 @@ extension UIApplicationDelegate {
         _ = shortcutItem
         completionHandler(false)
     }
+#if canImport(Foundation)
+    public func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {}
+    public func application(_ application: UIApplication,
+                            didFailToRegisterForRemoteNotificationsWithError error: any Error) {}
+#endif
+}
+
+// MARK: - Background tasks, background fetch, remote notifications
+
+/// UIKit's background-task token. MEASURED iOS 26.1
+/// (Tools/oracle2/scenelaunchprobe): `.invalid` is 0; tokens are distinct.
+public struct UIBackgroundTaskIdentifier: RawRepresentable, Hashable, Sendable {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+    public static let invalid = UIBackgroundTaskIdentifier(rawValue: 0)
+}
+
+/// MEASURED iOS 26.1: newData 0, noData 1, failed 2 (NSUInteger enum).
+public enum UIBackgroundFetchResult: UInt, Sendable {
+    case newData = 0
+    case noData = 1
+    case failed = 2
+}
+
+/// Token bookkeeping for `beginBackgroundTask`. UIKit declares these entry
+/// points nonisolated; the counter is lock-protected.
+private final class _BackgroundTasks: @unchecked Sendable {
+    static let shared = _BackgroundTasks()
+#if canImport(Foundation) && canImport(Dispatch)
+    private let lock = DispatchQueue(label: "openuikit.backgroundtasks")
+    private func locked<T>(_ body: () -> T) -> T { lock.sync(execute: body) }
+#else
+    private func locked<T>(_ body: () -> T) -> T { body() }
+#endif
+    // UIKit takes identifier 1 for its own launch task before the app runs
+    // (MEASURED: the app's first token is 2); the exact numbers are not API.
+    private var next = 2
+    private var live: Set<Int> = []
+    func begin() -> UIBackgroundTaskIdentifier {
+        locked {
+            let id = next
+            next += 1
+            live.insert(id)
+            return UIBackgroundTaskIdentifier(rawValue: id)
+        }
+    }
+    func end(_ id: UIBackgroundTaskIdentifier) {
+        _ = locked { live.remove(id.rawValue) }
+    }
+}
+
+extension UIApplication {
+    /// The port never runs down a background budget: a foreground app reads
+    /// `.greatestFiniteMagnitude` (MEASURED iOS 26.1), and the host never
+    /// suspends it, so an expiration handler is never called.
+    nonisolated public func beginBackgroundTask(
+        expirationHandler handler: (@MainActor @Sendable () -> Void)? = nil
+    ) -> UIBackgroundTaskIdentifier {
+        _ = handler
+        return _BackgroundTasks.shared.begin()
+    }
+
+    nonisolated public func beginBackgroundTask(
+        withName taskName: String?,
+        expirationHandler handler: (@MainActor @Sendable () -> Void)? = nil
+    ) -> UIBackgroundTaskIdentifier {
+        _ = (taskName, handler)
+        return _BackgroundTasks.shared.begin()
+    }
+
+    /// Ending an unknown, already-ended or `.invalid` token is harmless
+    /// (MEASURED iOS 26.1).
+    nonisolated public func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {
+        _BackgroundTasks.shared.end(identifier)
+    }
+
+    nonisolated public var backgroundTimeRemaining: Double { .greatestFiniteMagnitude }
+
+    /// Always false: the port has no push service, so registration never
+    /// succeeds (MEASURED iOS 26.1 unsigned app: false before and after).
+    public var isRegisteredForRemoteNotifications: Bool { false }
+
+    /// Fail-closed registration. MEASURED iOS 26.1 (unsigned simulator app,
+    /// no aps-environment entitlement): the call returns, then the delegate
+    /// receives `didFailToRegisterForRemoteNotificationsWithError`
+    /// NSCocoaErrorDomain 3000 "no valid “aps-environment” entitlement string
+    /// found for application" on the main queue. No token is ever produced.
+    public func registerForRemoteNotifications() {
+#if canImport(Foundation) && canImport(Dispatch)
+        let error = NSError(domain: NSCocoaErrorDomain, code: 3000, userInfo: [
+            NSLocalizedDescriptionKey: "no valid \u{201C}aps-environment\u{201D} entitlement string found for application",
+        ])
+        DispatchQueue.main.async { [self] in
+            MainActor.assumeIsolated {
+                delegate?.application(self, didFailToRegisterForRemoteNotificationsWithError: error)
+            }
+        }
+#endif
+    }
+
+    public func unregisterForRemoteNotifications() {}
 }
 
 // MARK: - UIApplication
@@ -402,7 +526,9 @@ open class UIApplication: UIResponder {
 
     /// UIKit starts an app in `.inactive` and moves it to `.active` once it
     /// is on screen and taking input.
-    public private(set) var applicationState: State = .inactive
+    /// Settable in-module: the host lifecycle and the `@main` entry
+    /// (UIApplicationMainEntry.swift) drive it.
+    public internal(set) var applicationState: State = .inactive
 
     /// Home-screen quick actions. MEASURED ValuesProbe2, iPhone SE 3rd gen /
     /// iOS 26.1: the default is an empty array (not nil); assigning `nil`
@@ -455,7 +581,11 @@ open class UIApplication: UIResponder {
     /// to. Set by `UIWindow.makeKey()` / `makeKeyAndVisible()`; defaults to
     /// the first window created.
     public var keyWindow: UIWindow? {
-        _keyWindow ?? windows.first
+        // A window the scene-manifest launch created is key only once it was
+        // made key (MEASURED Tools/oracle2/scenelaunchprobe: not key in
+        // scene(_:willConnectTo:)). Every other window keeps the host
+        // first-window convenience.
+        return _keyWindow ?? windows.first { !$0._keyOnlyWhenMadeKey }
     }
 
     func _register(window: UIWindow) {
@@ -584,6 +714,11 @@ open class UIApplication: UIResponder {
     /// itself a responder — the usual `class AppDelegate: UIResponder,
     /// UIApplicationDelegate` shape, where UIKit forwards to it.
     open override var next: UIResponder? { delegate as? UIResponder }
+#if canImport(Foundation) && !os(Linux)
+    /// MEASURED iOS 26.1: the application object has no undo manager (nil);
+    /// windows do.
+    open override var undoManager: UndoManager? { nil }
+#endif
 
     override var _firstResponderWindow: UIWindow? { keyWindow }
 
@@ -623,6 +758,37 @@ open class UIApplication: UIResponder {
         }
         return false
     }
+
+#if canImport(ObjectiveC)
+    /// UIKit's `sendAction(_:to:from:for:)` with a real selector (NetNewsWire
+    /// RSCore UIResponder+RSCore.swift:27). MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/sendactionprobe):
+    ///   * an explicit target receives the action (with `sender`) -> true;
+    ///   * a nil target starts at the key window's first responder, else at
+    ///     `sender` when it is a responder, and walks the responder chain to
+    ///     the first object that implements the selector -> true;
+    ///   * with neither (no first responder, no responder sender) nothing is
+    ///     delivered -> false: there is NO key-window fallback here (the
+    ///     closure overload above keeps its own documented fallback);
+    ///   * nobody implementing it -> false.
+    /// An explicit target that does not implement the selector raises, as in
+    /// UIKit (unrecognized selector).
+    @discardableResult
+    open func sendAction(_ action: Selector, to target: Any?, from sender: Any?,
+                         for event: UIEvent?) -> Bool {
+        if let target = target as? NSObject {
+            _ = target.perform(action, with: sender, with: event)
+            return true
+        }
+        let start: UIResponder? = keyWindow?.firstResponder ?? (sender as? UIResponder)
+        guard let start else { return false }
+        for responder in start._responderChain where responder.responds(to: action) {
+            _ = responder.perform(action, with: sender, with: event)
+            return true
+        }
+        return false
+    }
+#endif
 
     // MARK: Opening URLs
 
@@ -669,13 +835,16 @@ open class UIApplication: UIResponder {
     /// frame is up. Returns the delegate's `didFinishLaunching` verdict.
     @discardableResult
     public func _hostLaunch(delegate: UIApplicationDelegate,
-                            launchOptions: [LaunchOptionsKey: Any]? = nil) -> Bool {
+                            launchOptions: [LaunchOptionsKey: Any]? = nil,
+                            launchState: State = .inactive) -> Bool {
         _retainedDelegate = delegate
         self.delegate = delegate
         _usesSceneLifecycle = false
         _retainedSceneDelegates.removeAll()
         isTerminating = false
-        applicationState = .inactive
+        // A scene-manifest app launches in `.background` (MEASURED
+        // Tools/oracle2/scenelaunchprobe: 2 in willFinish / didFinish).
+        applicationState = launchState
         _ = delegate.application(self, willFinishLaunchingWithOptions: launchOptions)
         let ok = delegate.application(self, didFinishLaunchingWithOptions: launchOptions)
         _post(UIApplication.didFinishLaunchingNotification)
@@ -795,6 +964,11 @@ public final class UISceneSession {
     public internal(set) weak var scene: UIScene?
     public internal(set) var configuration: UISceneConfiguration
     public var userInfo: [String: Any]?
+#if canImport(Foundation)
+    /// No state restoration in the port: nil, as on a first launch
+    /// (MEASURED Tools/oracle2/scenelaunchprobe).
+    public var stateRestorationActivity: NSUserActivity?
+#endif
 
     public init(persistentIdentifier: String = "default",
                 role: Role = .windowApplication) {
@@ -861,9 +1035,16 @@ extension UISceneConfiguration: NSCopying {}
 @preconcurrency @MainActor
 public final class UISceneConnectionOptions: NSObject {
 #if canImport(Foundation)
-    public internal(set) var URLContexts: Set<UIOpenURLContext> = []
+    /// UIKit's Swift spelling of `URLContexts` (UISceneOptions.h). Empty on
+    /// an ordinary launch (MEASURED Tools/oracle2/scenelaunchprobe).
+    public internal(set) var urlContexts: Set<UIOpenURLContext> = []
+    @available(*, deprecated, renamed: "urlContexts")
+    public var URLContexts: Set<UIOpenURLContext> { urlContexts }
     public internal(set) var userActivities: Set<NSUserActivity> = []
 #endif
+    /// Backing for `notificationResponse` (UIKitUserNotifications.swift,
+    /// the only file that imports UserNotifications).
+    var _notificationResponse: AnyObject?
     public internal(set) var sourceApplication: String?
     public internal(set) var handoffUserActivityType: String?
     public internal(set) var shortcutItem: UIApplicationShortcutItem?
