@@ -90,6 +90,71 @@ enum LayoutEngine {
         for s in v.subviews { collectConstraints(s, into: &out) }
     }
 
+    /// Weight of a BROKEN required constraint: above every optional
+    /// priority (the largest is 999), below required.
+    static let brokenStrength: Double = 1_000_000
+
+    /// Breadth-first rank of every layout item under `root`: depth first,
+    /// then subview order; a view's layout guides come after its subviews
+    /// (custom guides in add order, then the safe-area and margins guides
+    /// when they exist). See the unsatisfiable-constraint note in `solve`.
+    static func itemRanks(root: UIView) -> [ObjectIdentifier: Int] {
+        var ranks: [ObjectIdentifier: Int] = [:]
+        var queue: [UIView] = [root]
+        var head = 0
+        var next = 0
+        ranks[ObjectIdentifier(root)] = next; next += 1
+        while head < queue.count {
+            let v = queue[head]; head += 1
+            for s in v.subviews {
+                ranks[ObjectIdentifier(s)] = next; next += 1
+                queue.append(s)
+            }
+            for g in v.layoutGuides {
+                ranks[ObjectIdentifier(g)] = next; next += 1
+            }
+            for g in [v._safeAreaGuide, v._layoutMarginsGuide, v._readableGuide] {
+                if let g { ranks[ObjectIdentifier(g)] = next; next += 1 }
+            }
+        }
+        return ranks
+    }
+
+    /// The constraint UIKit breaks among a mutually exclusive set: the one
+    /// with the greatest `breakKey` (see `solve`).
+    static func breakVictim(among set: [NSLayoutConstraint], root: UIView) -> NSLayoutConstraint {
+        let ranks = itemRanks(root: root)
+        func rank(_ item: AnyObject?) -> Int {
+            guard let item else { return -1 }
+            return ranks[ObjectIdentifier(item)] ?? Int.max / 2
+        }
+        func key(_ c: NSLayoutConstraint) -> [Double] {
+            let r1 = rank(c.firstItem), r2 = c.secondItem == nil ? r1 : rank(c.secondItem)
+            let firstIsLatest = r1 >= r2
+            let hi = Swift.max(r1, r2), lo = Swift.min(r1, r2)
+            let relation: Double = c.relation == .lessThanOrEqual ? 2
+                : c.relation == .greaterThanOrEqual ? 1 : 0
+            let attribute = firstIsLatest || c.secondItem == nil
+                ? c.firstAttribute.rawValue : c.secondAttribute.rawValue
+            // latest = earlier * m + k: the constant as written when the
+            // first item is the latest, else solved for the second item.
+            let m = Double(c.multiplier)
+            let k: Double = firstIsLatest || m == 0
+                ? Double(c.constant) : -Double(c.constant) / m
+            return [Double(hi), Double(lo), relation, Double(attribute), k]
+        }
+        var best = set[0]
+        var bestKey = key(best)
+        for c in set.dropFirst() {
+            let k = key(c)
+            if k.lexicographicallyPrecedes(bestKey) { continue }
+            if k == bestKey { continue }
+            best = c
+            bestKey = k
+        }
+        return best
+    }
+
     // MARK: - Per-view solver variables
 
     /// Solver variables for one layout ITEM — a `UIView` or a
@@ -362,6 +427,77 @@ enum LayoutEngine {
                   intrinsicViews.map { "\(type(of: $0.view!))#\(($0.view as? UILabel)?.text ?? "")" }.joined(separator: ", "))
         }
 
+        var appRows: [ObjectIdentifier: NSLayoutConstraint] = [:]
+        var appOrder: [ObjectIdentifier: Int] = [:]
+        for (i, c) in constraints.enumerated() { appOrder[ObjectIdentifier(c)] = i }
+        var appCassowary: [ObjectIdentifier: Cassowary.Constraint] = [:]
+        // UNSATISFIABLE REQUIRED CONSTRAINTS: which one UIKit breaks.
+        //
+        // MEASURED 2026-09-23 with Tools/oracle2/breakprobe on the iOS 26.1
+        // simulator (golden/layout_break_ios.json, 764 scenarios; Focus's own
+        // URL bar via scripts/focus_edit_probe_sim.sh,
+        // golden/focus_edit_ios/): the choice does NOT depend on the order
+        // constraints are created or activated, nor on whether the engine
+        // existed when they were activated. It depends on WHAT they
+        // constrain. Among the mutually exclusive set, UIKit breaks the
+        // constraint that is "latest" by this key, compared in order:
+        //   1. its latest item — items ranked breadth-first from the root
+        //      (depth, then subview order; a view's layout guides after its
+        //      subviews): the deeper view's constraint goes first
+        //      (V1sib: the later sibling's width, V2nest: the child's);
+        //   2. its other item, ranked the same way (a size constant on the
+        //      view itself beats a relation to an ancestor: F2tri breaks
+        //      `width == 50`, not an edge);
+        //   3. inequality before equality, `<=` before `>=` (F4ineq, V4);
+        //   4. the attribute on its latest item, UIKit's raw order
+        //      (centerX over trailing over leading, bottom over top: F3,
+        //      Focus #411/#374);
+        //   5. the larger constant, written as latest = earlier + k
+        //      (F1width, V4 lead*, Focus #439).
+        // Internal rows (frame-based anchors, intrinsic sizes) are never
+        // broken. A broken constraint is not dropped: it stays in the solve
+        // just above every optional priority (`brokenStrength`) and STAYS
+        // broken while it is active (F7hist: removing its opponent lets it
+        // pull again; re-adding the opponent does not re-break it). The model
+        // reproduces the measured choice in every scenario but the
+        // frame-based-container orientation pair V4tie.flip2 (see
+        // Tests/OpenUIKitTests/LayoutBreakTests.swift).
+        func addRequiredApp(_ c: NSLayoutConstraint, _ cc: Cassowary.Constraint) {
+            var pending = [(c, cc)]
+            var attempts = 0
+            while let (k, kc) = pending.popLast() {
+                attempts += 1
+                if attempts > 64 { markBroken(k, kc); continue }
+                do {
+                    try solver.addConstraint(kc)
+                    appRows[ObjectIdentifier(kc)] = k
+                    appCassowary[ObjectIdentifier(k)] = kc
+                } catch {
+                    let conflict = solver.lastConflict.compactMap { appRows[ObjectIdentifier($0)] }
+                        .filter { !$0._brokenInEngine }
+                        .sorted { (appOrder[ObjectIdentifier($0)] ?? 0) < (appOrder[ObjectIdentifier($1)] ?? 0) }
+                    let victim = breakVictim(among: conflict + [k], root: root)
+                    if victim === k {
+                        markBroken(k, kc)
+                    } else if let vc = appCassowary[ObjectIdentifier(victim)] {
+                        try? solver.removeConstraint(vc)
+                        appRows[ObjectIdentifier(vc)] = nil
+                        appCassowary[ObjectIdentifier(victim)] = nil
+                        markBroken(victim, vc)
+                        pending.append((k, kc))
+                    } else {
+                        markBroken(k, kc)
+                    }
+                }
+            }
+        }
+        func markBroken(_ c: NSLayoutConstraint, _ original: Cassowary.Constraint) {
+            if fitting == nil { c._brokenInEngine = true }
+            if LayoutEngine.trace { print("LayoutEngine: breaking \(c)") }
+            try? solver.addConstraint(Cassowary.Constraint(original.expression, original.relation,
+                                                           strength: brokenStrength))
+        }
+
         // Scene/user constraints.
         for c in constraints {
             guard let first = c.firstItem,
@@ -404,12 +540,18 @@ enum LayoutEngine {
                 }
             }
             let p = c.priority.rawValue
-            let strength = p >= 1000 ? Cassowary.requiredStrength : Double(p)
-            // UIKit "breaks a constraint" on unsatisfiable required systems;
-            // dropping the late-comer approximates that.
-            try? solver.addConstraint(Cassowary.Constraint(expr, rel,
-                                                           strength: strength))
+            let required = p >= 1000 && !c._brokenInEngine
+            let strength = required ? Cassowary.requiredStrength
+                : (p >= 1000 ? brokenStrength : Double(p))
+            let cc = Cassowary.Constraint(expr, rel, strength: strength)
+            if required {
+                addRequiredApp(c, cc)
+            } else {
+                try? solver.addConstraint(cc)
+            }
         }
+
+
 
         // Wrapping labels: second pass (see the intrinsic note above).
         for vv in intrinsicViews {
