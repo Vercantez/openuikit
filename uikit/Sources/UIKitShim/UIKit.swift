@@ -44,7 +44,11 @@
 // Library KSRAnalytics.swift:1573). OpenUIKit has no UserNotifications port;
 // on the Apple host the SDK's module is re-exported (it loads Foundation and
 // Combine only, no AppKit). Not on the guest route, which has no AppKit.
-#if canImport(AppKit) && canImport(UserNotifications)
+// On the iOS triple (curated iPhoneSimulator SDK, which keeps Apple's
+// UserNotifications) the same holds: Apple's UIKit headers import
+// UNNotificationResponse.h and export it (NetNewsWire AppDelegate.swift:24,
+// :93; Tools/iostarget/probe `userNotificationsVisibleThroughUIKit`).
+#if (canImport(AppKit) || os(iOS)) && canImport(UserNotifications)
 @_exported import UserNotifications
 #endif
 
