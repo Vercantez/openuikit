@@ -6,7 +6,7 @@
 # uikit/scripts/linux_guest_realapp_verify.sh (run); see README.md.
 
 build_extra_probe_GuestBundleModuleProbe() {
-    local src="$UIKIT/Tools/oracle2/guestbundlemoduleprobe" gen="$OUT/guestbundlemoduleprobe"
+    local src="$UIKIT/Tools/oracle2/guestbundlemoduleprobe" gen="$OUT/swiftpm-accessor-GuestBundleModuleProbe.d"
     mkdir -p "$gen"
     python3 "$W/full/xcodeplan/swiftpm_resource_accessor.py" \
         GuestProbe_GuestBundleModuleProbe "$gen/resource_bundle_accessor.swift"
