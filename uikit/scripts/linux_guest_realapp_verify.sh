@@ -65,3 +65,6 @@ print('rendered 15 screens; existing screens byte-identical 14/14 (including Led
 print('realapp_focus_browser_light: real AppDelegate URL bar + home, 375x667 @2x (iPhone SE 3rd gen golden geometry)')
 PY
 echo 'REAL-APP SCREEN VERIFIED ON LINUX'
+# The same real app, run interactively: host_full replays touches and typing
+# through the guest host window (full/sdlhost) and asserts the app's response.
+bash "$UIKIT/scripts/linux_guest_host_verify.sh" "$WORK/host"
