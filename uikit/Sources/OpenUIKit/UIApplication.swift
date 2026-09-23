@@ -407,6 +407,16 @@ open class UIApplication: UIResponder {
     /// Home-screen quick actions. MEASURED ValuesProbe2, iPhone SE 3rd gen /
     /// iOS 26.1: the default is an empty array (not nil); assigning `nil`
     /// reads back as `[]`.
+    /// Deprecated in iOS 13 (RxCocoa UIApplication+Rx binds it). MEASURED
+    /// Tools/oracle2/textviewinputprobe (iPhone 16 / iOS 26.1): reads false
+    /// initially and after `= true`, also after a run-loop turn — the setter
+    /// is a no-op on iOS 26.1.
+    @available(iOS, deprecated: 13.0, message: "Provide a custom network activity UI in your app if desired.")
+    public final var isNetworkActivityIndicatorVisible: Bool {
+        get { false }
+        set {}
+    }
+
     private var _shortcutItems: [UIApplicationShortcutItem] = []
     public var shortcutItems: [UIApplicationShortcutItem]? {
         get { _shortcutItems }

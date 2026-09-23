@@ -383,7 +383,13 @@ extension UIWindow {
     public func sendText(_ text: String, timestamp: TimeInterval = 0) {
         guard !text.isEmpty, let fr = firstResponder as? UIKeyInput else { return }
         UITextInputState.noteActivity(at: timestamp)
-        fr.insertText(text)
+        // UITextView's own `insertText` does not consult its delegate
+        // (MEASURED textviewinputprobe); the keyboard path does.
+        if let tv = fr as? UITextView {
+            tv._keyboardInsertText(text)
+        } else {
+            fr.insertText(text)
+        }
     }
 
     /// Feed one editing key (backspace / arrows / return) to the first
