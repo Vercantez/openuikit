@@ -102,6 +102,24 @@ port type stays there.
   CALayer is a real KVC container (`opaque`, arbitrary keys, `filters.<name>.<key>`
   resolved by the filter's `name`; the port's filter tokens became key-value objects).
 
+### Phase 4: re-exported, not re-declared
+
+Every unified name was first a `public typealias X = Apple.X`. A client that
+imports Foundation/CoreGraphics/QuartzCore and UIKit then sees the name twice, and
+Swift parses `[String: CGSize]()`, `[CGFloat](repeating:count:)`, `[CALayer]()`,
+`[String: CGColor]()`, `[CGAffineTransform](…)` as collection LITERALS of metatypes
+("cannot call value of non-function type '[AnyHashable : CGSize.Type]'";
+NetNewsWire SingleLineUILabelSizer.swift:16, found by netnewswire-launch for the
+geometry names; measured for every unified name). All of them are now scoped
+`@_exported import`s of the one declaration: `struct Foundation.CGFloat`,
+`struct CoreFoundation.CGPoint/CGSize/CGRect` (`CoreFoundation.CGFloat` does not
+resolve for importers — measured), `CoreGraphics.CGVector/CGAffineTransform/
+CGColor/CGColorSpace/CGImageAlphaInfo/CGLineCap/CGLineJoin`, the eleven QuartzCore
+types, and `UniformTypeIdentifiers.UTType`. Linux re-exports `Foundation.CGFloat/
+CGPoint/CGSize/CGRect`; the guest (no Foundation) keeps the portable structs.
+`CGUnifyTests.testCollectionSugarOverUnifiedNamesIsAType` did not compile before.
+Pixels 193/193 byte-identical to main c0dca164; Linux build green.
+
 ## Tests (each fails before, passes after)
 
 * `Tests/CGUnifyTests` replays `Tools/oracle2/cgunifyprobe` (the same Swift the iOS

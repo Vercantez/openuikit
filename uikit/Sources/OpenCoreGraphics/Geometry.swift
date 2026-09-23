@@ -21,20 +21,31 @@
 
 #if canImport(Foundation)
 import Foundation
+// Re-exported, not re-declared: a `public typealias CGSize = Foundation.CGSize`
+// makes a client that also imports Foundation/CoreGraphics see the name twice,
+// and Swift then parses `[String: CGSize]()` / `[CGFloat](repeating:count:)` as a
+// collection LITERAL of metatypes ("cannot call value of non-function type
+// '[AnyHashable : CGSize.Type]'", NetNewsWire SingleLineUILabelSizer.swift:16,
+// reported by netnewswire-launch). A scoped `@_exported import` names the one
+// declaration (cg-unify; CGUnifyTests.testCollectionSugarOverUnifiedNamesIsAType).
 #if canImport(CoreGraphics)
 import CoreGraphics
+@_exported import struct Foundation.CGFloat
+@_exported import struct CoreFoundation.CGPoint
+@_exported import struct CoreFoundation.CGSize
+@_exported import struct CoreFoundation.CGRect
+#else
+@_exported import struct Foundation.CGFloat
+@_exported import struct Foundation.CGPoint
+@_exported import struct Foundation.CGSize
+@_exported import struct Foundation.CGRect
 #endif
 
-public typealias CGFloat = Foundation.CGFloat
-public typealias CGPoint = Foundation.CGPoint
-public typealias CGSize = Foundation.CGSize
-public typealias CGRect = Foundation.CGRect
-
 // MEASURED: Darwin's Foundation vends CGVector (it comes from CoreGraphics),
-// Linux corelibs-Foundation does NOT. Alias where it exists so there is no
-// duplicate name to collide with; declare it where it does not.
+// Linux corelibs-Foundation does NOT. Re-export it where it exists so there
+// is no duplicate name to collide with; declare it where it does not.
 #if canImport(CoreGraphics)
-public typealias CGVector = Foundation.CGVector
+@_exported import struct CoreGraphics.CGVector
 #else
 public struct CGVector: Equatable, Sendable {
     public var dx: CGFloat
@@ -159,7 +170,7 @@ public struct CGRect: Equatable, Hashable, Sendable {
 // cg-unify: with Apple's CoreGraphics present the transform IS CoreGraphics'
 // struct, and `CGPoint/CGRect.applying(_:)`, `concatenating`, `inverted` ...
 // are the CoreGraphics overlay's, exactly as UIKit apps see them.
-public typealias CGAffineTransform = CoreGraphics.CGAffineTransform
+@_exported import struct CoreGraphics.CGAffineTransform
 #else
 
 // `applying(_:)` takes OpenCoreGraphics' CGAffineTransform. On Darwin the

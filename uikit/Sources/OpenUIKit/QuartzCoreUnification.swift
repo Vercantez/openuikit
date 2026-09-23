@@ -43,17 +43,19 @@ import class Foundation.NSNumber
 import class Foundation.NSNull
 #endif
 
-public typealias CALayer = QuartzCore.CALayer
-public typealias CAGradientLayer = QuartzCore.CAGradientLayer
-public typealias CALayerDelegate = QuartzCore.CALayerDelegate
-public typealias CACornerMask = QuartzCore.CACornerMask
-public typealias CALayerCornerCurve = QuartzCore.CALayerCornerCurve
-public typealias CAMediaTimingFillMode = QuartzCore.CAMediaTimingFillMode
-public typealias CAAnimation = QuartzCore.CAAnimation
-public typealias CAPropertyAnimation = QuartzCore.CAPropertyAnimation
-public typealias CABasicAnimation = QuartzCore.CABasicAnimation
-public typealias CATransaction = QuartzCore.CATransaction
-public typealias CATransform3D = QuartzCore.CATransform3D
+// Re-exported, not re-declared (see OpenCoreGraphics/Geometry.swift on
+// collection sugar: a typealias made `[CALayer]()` a literal of metatypes).
+@_exported import class QuartzCore.CALayer
+@_exported import class QuartzCore.CAGradientLayer
+@_exported import protocol QuartzCore.CALayerDelegate
+@_exported import struct QuartzCore.CACornerMask
+@_exported import struct QuartzCore.CALayerCornerCurve
+@_exported import struct QuartzCore.CAMediaTimingFillMode
+@_exported import class QuartzCore.CAAnimation
+@_exported import class QuartzCore.CAPropertyAnimation
+@_exported import class QuartzCore.CABasicAnimation
+@_exported import class QuartzCore.CATransaction
+@_exported import struct QuartzCore.CATransform3D
 
 extension CACornerMask {
     public static let _allKnown: CACornerMask = [
