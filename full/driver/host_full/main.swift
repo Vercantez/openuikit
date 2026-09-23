@@ -216,7 +216,8 @@ func launchHostApp(_ app: String, assets: String) -> HostScene {
     window.layoutIfNeeded()
     hostRetained.append(window)
     hostRetained.append(root)
-    print("HOST_FULL_LAUNCHED app=\(app) root=\(type(of: root)) "
+    // stderr: unbuffered, so a launcher watching a pipe sees it at once.
+    hostWarn("HOST_FULL_LAUNCHED app=\(app) root=\(type(of: root)) "
           + "window=\(fmt3(Double(size.width)))x\(fmt3(Double(size.height))) scale=\(fmt3(Double(scale)))")
     return HostScene(name: "\(app)_host", sizePt: size, scale: scale,
                      window: window, container: root.view, sceneAnimationDeadline: 0)
