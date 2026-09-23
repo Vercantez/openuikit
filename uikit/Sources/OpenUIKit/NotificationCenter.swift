@@ -190,13 +190,22 @@ extension Notification: _ObjectiveCBridgeable {
 
 #else
 
-/// Foundation-hidden argument-compatibility shim. It schedules nothing: the
-/// portable core has no run loop and every notification is delivered inline.
+/// Foundation-hidden argument-compatibility shim. It schedules nothing
+/// itself: every notification is delivered inline. On the Mach-O guest the
+/// app-facing Foundation adds operation scheduling in a side table
+/// (full/foundation/Operation.swift). Default names are iOS 26.1's
+/// (measured, uikit/Tools/oracle2/guestoperationprobe): "NSOperationQueue
+/// Main Queue" and "NSOperationQueue 0x<address>".
 public final class OperationQueue {
-    public static let main = OperationQueue(name: "main")
+    public static let main = OperationQueue(name: "NSOperationQueue Main Queue")
     public static var current: OperationQueue? { main }
     public var name: String?
-    public init(name: String? = nil) { self.name = name }
+    public init(name: String? = nil) {
+        self.name = name
+        if name == nil {
+            self.name = "NSOperationQueue \(UnsafeRawPointer(Unmanaged.passUnretained(self).toOpaque()))"
+        }
+    }
 }
 
 #endif

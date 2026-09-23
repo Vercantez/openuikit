@@ -1,0 +1,19 @@
+guestoperationprobe v1
+op.new ready=true executing=false finished=false cancelled=false async=false concurrent=false priority=0 qos=-1 name=nil blocks=1
+op.start.direct direct+M finished=true executing=false
+op.cancelled.beforeStart ready=true finished=false
+op.cancelled.started completion finished=true cancelled=true
+queue.new max=-1 suspended=false count=0 namePrefix=true mainName=NSOperationQueue Main Queue default=-1
+op.dependency aReady=false deps=1
+queue.serial.dependency b+,c+,a+ count=0 aReady=true allFinished=true
+queue.suspended count=3 ran=0
+queue.priority high+,normal+,low+
+blockop.blocks 3
+blockop.ran b1,b2,b3
+queue.barrier x,barrier,y
+op.async async-work,after finished=true afterFinished=true
+queue.cancelAll.suspended count=2 cancelled=true
+queue.cancelAll.resumed ran=none count=0 finished=true
+queue.thread main=false underlying=nil mainUnderlying=set mainMax=1
+queue.underlying specific=custom
+guestoperationprobe done

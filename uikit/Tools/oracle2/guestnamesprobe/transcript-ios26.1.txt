@@ -1,0 +1,33 @@
+guestnamesprobe v1
+nsuuid.parse E621E1F8-C36C-495A-93FC-0C247A3E6E5F
+nsuuid.invalid true
+nsuuid.fresh 36 true true false
+nsuuid.bridge E621E1F8-C36C-495A-93FC-0C247A3E6E5F E621E1F8-C36C-495A-93FC-0C247A3E6E5F
+nsuuid.hash.equal true
+nsuuid.bytes e6,21,e1,f8
+nsuuid.fromBytes E621E1F8-C36C-495A-93FC-0C247A3E6E5F
+decimal.string 1.1 2.205 1.1
+decimal.add 3.305
+decimal.sub -1.105
+decimal.mul 2.4255
+decimal.div 0.33333333333333333333333333333333333333
+decimal.double 2.205 2 -7
+decimal.nan NaN true
+decimal.constants 0 1
+decimal.compare -1 1 0
+decimal.int 42 2.5
+decimal.mantissa -123.45
+decimal.decimal 3.14 9.99
+decimal.power 2.25 1500
+decimal.round 2.35 2.34 -2.35
+decimal.locale 1.5
+nscharset.trim [Hello, World!]
+nscharset.split Hello|World
+nscharset.digits 2
+nscharset.custom true false true
+nscharset.mutable true false
+nscharset.upper true false
+nscharset.url a%20b/c?d a%20b%23c
+nsexception GuestProbeException because v
+nsexception.names NSInvalidArgumentException NSInternalInconsistencyException NSRangeException NSGenericException
+guestnamesprobe done

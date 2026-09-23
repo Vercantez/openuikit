@@ -10,6 +10,8 @@ full/foundation/NSPredicateCollections.swift
 full/foundation/CharacterSet.swift
 full/foundation/NSLock.swift
 full/foundation/Thread.swift
+full/foundation/Operation.swift
+full/foundation/FoundationObjCNames.swift
 full/foundation/NotificationCenter+Combine.swift
 full/foundation/Progress.swift
 full/foundation/NSCache.swift

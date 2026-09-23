@@ -1,3 +1,5 @@
+import ObjectiveC
+
 /// A value-semantic set of Unicode scalar values.
 ///
 /// This is the first portable `Foundation.CharacterSet` surface. It deliberately
@@ -6,6 +8,9 @@
 /// set algebra can be added without changing this representation.
 public struct CharacterSet: Hashable, Sendable {
     fileprivate var scalarValues: Set<UInt32>
+    /// `inverted` without enumerating 1.1M scalars: membership is
+    /// `scalarValues.contains(v) != isInverted`.
+    fileprivate var isInverted = false
 
     /// Creates an empty character set.
     public init() {
@@ -23,23 +28,57 @@ public struct CharacterSet: Hashable, Sendable {
 
     /// Returns whether `member` belongs to the set.
     public func contains(_ member: Unicode.Scalar) -> Bool {
-        scalarValues.contains(member.value)
+        scalarValues.contains(member.value) != isInverted
     }
 
     /// Inserts every scalar from `other` into this set.
     public mutating func formUnion(_ other: CharacterSet) {
-        scalarValues.formUnion(other.scalarValues)
+        self = union(other)
     }
 
     /// Returns a set containing the scalars from both operands.
     public func union(_ other: CharacterSet) -> CharacterSet {
-        CharacterSet(scalarValues: scalarValues.union(other.scalarValues))
+        switch (isInverted, other.isInverted) {
+        case (false, false):
+            return CharacterSet(scalarValues: scalarValues.union(other.scalarValues))
+        case (true, true):
+            var result = CharacterSet(scalarValues: scalarValues.intersection(other.scalarValues))
+            result.isInverted = true
+            return result
+        case (true, false):
+            var result = CharacterSet(scalarValues: scalarValues.subtracting(other.scalarValues))
+            result.isInverted = true
+            return result
+        case (false, true):
+            var result = CharacterSet(scalarValues: other.scalarValues.subtracting(scalarValues))
+            result.isInverted = true
+            return result
+        }
+    }
+
+    /// The complement of this set over all Unicode scalars.
+    public var inverted: CharacterSet {
+        var result = self
+        result.isInverted.toggle()
+        return result
+    }
+
+    /// Mutating complement.
+    public mutating func invert() {
+        isInverted.toggle()
+    }
+
+    /// Inserts every Unicode scalar present in `aString`.
+    public mutating func insert(charactersIn aString: String) {
+        for scalar in aString.unicodeScalars {
+            if isInverted { scalarValues.remove(scalar.value) } else { scalarValues.insert(scalar.value) }
+        }
     }
 
     /// Removes every Unicode scalar present in `aString`.
     public mutating func remove(charactersIn aString: String) {
         for scalar in aString.unicodeScalars {
-            scalarValues.remove(scalar.value)
+            if isInverted { scalarValues.insert(scalar.value) } else { scalarValues.remove(scalar.value) }
         }
     }
 
@@ -153,49 +192,91 @@ public struct CharacterSet: Hashable, Sendable {
     public static let urlFragmentAllowed = urlQueryAllowed
 }
 
-/// Mutable reference-semantic counterpart of `CharacterSet`.
+/// Reference-semantic counterpart of `CharacterSet` (NSCharacterSet). Its
+/// class properties (`NSCharacterSet.whitespacesAndNewlines`, ...) are the
+/// CharacterSet values, as in Apple's Swift overlay
+/// (full/foundation/FoundationObjCNames.swift).
 ///
 /// The bridge conformance on `CharacterSet` makes unchanged source such as
 /// `mutable as CharacterSet` take a value snapshot, matching the Foundation
 /// API boundary without making the value type itself reference-semantic.
-public final class NSMutableCharacterSet: @unchecked Sendable {
+open class NSCharacterSet: NSObject, @unchecked Sendable {
     fileprivate var value: CharacterSet
 
-    public init() {
+    public override init() {
         value = CharacterSet()
+        super.init()
     }
 
     public init(charactersIn aString: String) {
         value = CharacterSet(charactersIn: aString)
+        super.init()
     }
 
-    public func formUnion(with other: CharacterSet) {
+    open func characterIsMember(_ aCharacter: unichar) -> Bool {
+        guard let scalar = Unicode.Scalar(UInt32(aCharacter)) else { return false }
+        return value.contains(scalar)
+    }
+
+    open func longCharacterIsMember(_ theLongChar: UInt32) -> Bool {
+        guard let scalar = Unicode.Scalar(theLongChar) else { return false }
+        return value.contains(scalar)
+    }
+
+    open var inverted: CharacterSet { value.inverted }
+
+    open override func isEqual(_ object: Any?) -> Bool {
+        (object as? NSCharacterSet)?.value == value
+    }
+
+    open override var hash: Int { value.hashValue }
+}
+
+/// Mutable reference-semantic counterpart of `CharacterSet`.
+open class NSMutableCharacterSet: NSCharacterSet, @unchecked Sendable {
+    public override init() {
+        super.init()
+    }
+
+    public override init(charactersIn aString: String) {
+        super.init(charactersIn: aString)
+    }
+
+    open func formUnion(with other: CharacterSet) {
         value.formUnion(other)
     }
 
-    public func removeCharacters(in aString: String) {
+    open func addCharacters(in aString: String) {
+        value.insert(charactersIn: aString)
+    }
+
+    open func removeCharacters(in aString: String) {
         value.remove(charactersIn: aString)
+    }
+
+    open func invert() {
+        value.invert()
     }
 }
 
 extension CharacterSet: _ObjectiveCBridgeable {
-    public typealias _ObjectiveCType = NSMutableCharacterSet
+    public typealias _ObjectiveCType = NSCharacterSet
 
-    public func _bridgeToObjectiveC() -> NSMutableCharacterSet {
-        let result = NSMutableCharacterSet()
+    public func _bridgeToObjectiveC() -> NSCharacterSet {
+        let result = NSCharacterSet()
         result.value = self
         return result
     }
 
     public static func _forceBridgeFromObjectiveC(
-        _ source: NSMutableCharacterSet,
+        _ source: NSCharacterSet,
         result: inout CharacterSet?
     ) {
         result = source.value
     }
 
     public static func _conditionallyBridgeFromObjectiveC(
-        _ source: NSMutableCharacterSet,
+        _ source: NSCharacterSet,
         result: inout CharacterSet?
     ) -> Bool {
         result = source.value
@@ -203,7 +284,7 @@ extension CharacterSet: _ObjectiveCBridgeable {
     }
 
     public static func _unconditionallyBridgeFromObjectiveC(
-        _ source: NSMutableCharacterSet?
+        _ source: NSCharacterSet?
     ) -> CharacterSet {
         source?.value ?? CharacterSet()
     }
