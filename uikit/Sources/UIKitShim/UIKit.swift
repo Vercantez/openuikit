@@ -359,7 +359,10 @@ public typealias NSNotification = OpenUIKit.NSNotification
 #endif
 public typealias NotificationCenter = OpenUIKit.NotificationCenter
 public typealias OperationQueue = OpenUIKit.OperationQueue
-public typealias Timer = OpenUIKit.Timer
+// `Timer` is not re-declared here: OpenUIKit re-exports Foundation's class
+// wherever Foundation exists, and a second declaration of the name breaks
+// collection sugar (`[Timer]()`, timer-unify.md). The Foundation-hidden guest
+// gets OpenUIKit's host-clock `Timer` through the re-export of OpenUIKit.
 
 // Foundation/AppKit also ships an NSDiffableDataSourceSnapshot declaration.
 // UIKit applications must resolve the snapshot paired with this shim's
