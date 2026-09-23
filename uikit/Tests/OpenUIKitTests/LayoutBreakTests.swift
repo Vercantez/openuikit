@@ -27,6 +27,11 @@ final class LayoutBreakTests: XCTestCase {
         let create: [String]
         let steps: [String]
         let constraints: [String: [Spec]]
+        let intrinsic: [String: [Double]]?
+    }
+    final class IntrinsicView: UIView {
+        var size = CGSize.zero
+        override var intrinsicContentSize: CGSize { size }
     }
     enum Spec: Decodable {
         case s(String), n(Double), null
@@ -65,7 +70,16 @@ final class LayoutBreakTests: XCTestCase {
         let c = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         var views: [String: UIView] = ["c": c]
         for name in s.viewCreate ?? s.views {
-            let v = UIView()
+            let v: UIView
+            if let spec = s.intrinsic?[name] {
+                let k = IntrinsicView()
+                k.size = CGSize(width: spec[0], height: spec[1])
+                k.setContentHuggingPriority(UILayoutPriority(Float(spec[2])), for: .horizontal)
+                k.setContentCompressionResistancePriority(UILayoutPriority(Float(spec[3])), for: .horizontal)
+                v = k
+            } else {
+                v = UIView()
+            }
             v.translatesAutoresizingMaskIntoConstraints = false
             views[name] = v
         }

@@ -20,7 +20,7 @@ Z = {  # vertical prelude, never in conflict
     'zu1': C('u', 'top', '==', 'v', 'top', 0), 'zu2': C('u', 'height', '==', None, None, 10),
 }
 
-def scen(name, views, cons, order, mode='live', extra=(), create=None, viewCreate=None, viewAdd=None):
+def scen(name, views, cons, order, mode='live', extra=(), create=None, viewCreate=None, viewAdd=None, intrinsic=None):
     z = [t for t in Z if t[1] in views]
     allc = {t: Z[t] for t in z}
     allc.update(cons)
@@ -30,6 +30,9 @@ def scen(name, views, cons, order, mode='live', extra=(), create=None, viewCreat
             'create': z + list(create or sorted(cons)),
             # View object creation order and addSubview order (default: views).
             'viewCreate': list(viewCreate or views), 'viewAdd': list(viewAdd or views),
+            # view -> [intrinsic w, h, hugging H, compression H] (a view whose
+            # intrinsicContentSize is fixed; horizontal priorities set).
+            'intrinsic': intrinsic or {},
             'steps': ['+' + t for t in z] + ['+' + t for t in order] + list(extra)}
 
 out = []
@@ -145,6 +148,27 @@ perms('V5rlw', ['v'], {'a': C('v', 'trailing', '==', 'c', 'trailing', 0),
 perms('V5rlcx2', ['v'], {'a': C('v', 'trailing', '==', 'c', 'trailing', -10),
                          'b': C('v', 'leading', '==', 'c', 'leading', 30),
                          'c': C('v', 'centerX', '==', 'c', 'centerX', 5)})
+
+# I: required content-size (intrinsic) constraints against a required
+# width, and whether UIKit ever breaks (or logs) a content-size constraint.
+for hug, comp in [(1000, 1000), (1000, 750), (250, 1000), (999, 999), (1000, 999)]:
+    for w, rel in [(36, '=='), (10, '=='), (36, '>='), (10, '<=')]:
+        cons = {'a': C('v', 'width', rel, None, None, w), 'x': C('v', 'leading', '==', 'c', 'leading', 0)}
+        for mode in ('live', 'bulk'):
+            out.append(scen(f'I1intr.{mode}.h{hug}c{comp}.{rel}{w}', ['v'], cons, 'xa', mode,
+                            intrinsic={'v': [24, 20, hug, comp]}))
+# I2: required hugging vs an edge pair that wants a different width.
+for hug in (1000, 999):
+    cons = {'a': C('v', 'leading', '==', 'c', 'leading', 0), 'b': C('v', 'trailing', '==', 'c', 'leading', 36)}
+    for mode in ('live', 'bulk'):
+        out.append(scen(f'I2intr.{mode}.h{hug}', ['v'], cons, 'ab', mode, intrinsic={'v': [24, 20, hug, 750]}))
+# I3: required content-size vs an OPTIONAL app width at 999 / 998.
+for p in (999, 998, 500):
+    for hug, comp in [(1000, 750), (250, 1000)]:
+        for w in (36, 10):
+            cons = {'a': C('v', 'width', '==', None, None, w, 1, p), 'x': C('v', 'leading', '==', 'c', 'leading', 0)}
+            out.append(scen(f'I3intr.live.p{p}.h{hug}c{comp}.{w}', ['v'], cons, 'xa', 'live',
+                            intrinsic={'v': [24, 20, hug, comp]}))
 
 here = pathlib.Path(__file__).parent
 (here / 'scenarios.json').write_text(json.dumps({'scenarios': out}, indent=1, sort_keys=True) + '\n')

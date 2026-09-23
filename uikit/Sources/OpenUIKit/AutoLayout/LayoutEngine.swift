@@ -671,8 +671,13 @@ enum LayoutEngine {
                                      _ dim: Cassowary.Variable, _ value: Double,
                                      hugging: UILayoutPriority,
                                      compression: UILayoutPriority) -> [Cassowary.Constraint] {
+        // A content-size constraint at "required" priority is not required:
+        // MEASURED 2026-09-23 (breakprobe I1-I3, iOS 26.1) it beats every
+        // optional app constraint (999, 998, 500) and silently loses to a
+        // required one — UIKit never logs or reports breaking it. So it sits
+        // just above 999 and below required (and below broken constraints).
         func strength(_ p: UILayoutPriority) -> Double {
-            p.rawValue >= 1000 ? Cassowary.requiredStrength : Double(p.rawValue)
+            p.rawValue >= 1000 ? 1000 : Double(p.rawValue)
         }
         // width <= intrinsic @ hugging; width >= intrinsic @ compression.
         let hug = Cassowary.Constraint(

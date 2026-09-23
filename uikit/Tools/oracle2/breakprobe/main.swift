@@ -53,13 +53,30 @@ func attribute(_ s: String?) -> NSLayoutConstraint.Attribute {
     }
 }
 
+/// A view with a fixed intrinsicContentSize (the content-size constraints
+/// UIKit derives from it are what the I* scenarios test).
+final class IntrinsicView: UIView {
+    var size = CGSize.zero
+    override var intrinsicContentSize: CGSize { size }
+}
+
 func r3(_ v: CGFloat) -> Double { (Double(v) * 1000).rounded() / 1000 }
 
 func run(_ s: [String: Any], root: UIView) -> [String: Any] {
     let c = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
     var views: [String: UIView] = ["c": c]
+    let intrinsic = (s["intrinsic"] as? [String: [NSNumber]]) ?? [:]
     for name in (s["viewCreate"] as? [String]) ?? (s["views"] as! [String]) {
-        let v = UIView()
+        let v: UIView
+        if let spec = intrinsic[name] {
+            let k = IntrinsicView()
+            k.size = CGSize(width: spec[0].doubleValue, height: spec[1].doubleValue)
+            k.setContentHuggingPriority(UILayoutPriority(spec[2].floatValue), for: .horizontal)
+            k.setContentCompressionResistancePriority(UILayoutPriority(spec[3].floatValue), for: .horizontal)
+            v = k
+        } else {
+            v = UIView()
+        }
         v.translatesAutoresizingMaskIntoConstraints = false
         views[name] = v
     }

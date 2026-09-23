@@ -331,9 +331,19 @@ if ResourceIO.readFile(hostFallbackFontDir + "/DejaVuSans.ttf") != nil {
 // HOST_FULL_BREAK_LOG=1: UIKit's "Will attempt to recover by breaking
 // constraint" log, from the engine's own break decisions.
 if hostEnv("HOST_FULL_BREAK_LOG") == "1" {
+    func item(_ o: AnyObject?) -> String {
+        guard let o else { return "nil" }
+        let id = (o as? UIView)?.accessibilityIdentifier.map { "#" + $0 } ?? ""
+        return "\(type(of: o))\(id)@\(UInt(bitPattern: ObjectIdentifier(o).hashValue) & 0xffffff)"
+    }
+    func describe(_ c: NSLayoutConstraint) -> String {
+        let rel = c.relation == .equal ? "==" : c.relation == .lessThanOrEqual ? "<=" : ">="
+        return "\(item(c.firstItem)).\(c.firstAttribute.rawValue) \(rel) \(item(c.secondItem)).\(c.secondAttribute.rawValue)"
+            + " *\(c.multiplier) +\(c.constant) @\(c.priority.rawValue)"
+    }
     OpenUIKitRuntime.constraintBreakObserver = { broken, set in
-        hostWarn("HOST_FULL_BREAK \(broken)")
-        for c in set { hostWarn("    exclusive \(c)") }
+        hostWarn("HOST_FULL_BREAK \(describe(broken))")
+        for c in set { hostWarn("    exclusive \(describe(c))") }
     }
 }
 
