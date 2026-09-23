@@ -56,7 +56,11 @@ import class Foundation.NSObject
 #endif
 #endif
 
+// Same guard as UIPasteboard.swift: the Foundation-hidden guest sysroot answers
+// canImport(Dispatch) but cannot build the SDK's Dispatch interface.
+#if canImport(Foundation) && canImport(Dispatch)
 import Dispatch
+#endif
 
 #if canImport(ObjectiveC)
 // UIScene inherits NSObject's Hashable conformance through UIResponder. The
@@ -423,13 +427,18 @@ public enum UIBackgroundFetchResult: UInt, Sendable {
 /// points nonisolated; the counter is lock-protected.
 private final class _BackgroundTasks: @unchecked Sendable {
     static let shared = _BackgroundTasks()
+#if canImport(Foundation) && canImport(Dispatch)
     private let lock = DispatchQueue(label: "openuikit.backgroundtasks")
+    private func locked<T>(_ body: () -> T) -> T { lock.sync(execute: body) }
+#else
+    private func locked<T>(_ body: () -> T) -> T { body() }
+#endif
     // UIKit takes identifier 1 for its own launch task before the app runs
     // (MEASURED: the app's first token is 2); the exact numbers are not API.
     private var next = 2
     private var live: Set<Int> = []
     func begin() -> UIBackgroundTaskIdentifier {
-        lock.sync {
+        locked {
             let id = next
             next += 1
             live.insert(id)
@@ -437,7 +446,7 @@ private final class _BackgroundTasks: @unchecked Sendable {
         }
     }
     func end(_ id: UIBackgroundTaskIdentifier) {
-        _ = lock.sync { live.remove(id.rawValue) }
+        _ = locked { live.remove(id.rawValue) }
     }
 }
 
@@ -478,7 +487,7 @@ extension UIApplication {
     /// NSCocoaErrorDomain 3000 "no valid “aps-environment” entitlement string
     /// found for application" on the main queue. No token is ever produced.
     public func registerForRemoteNotifications() {
-#if canImport(Foundation)
+#if canImport(Foundation) && canImport(Dispatch)
         let error = NSError(domain: NSCocoaErrorDomain, code: 3000, userInfo: [
             NSLocalizedDescriptionKey: "no valid \u{201C}aps-environment\u{201D} entitlement string found for application",
         ])
