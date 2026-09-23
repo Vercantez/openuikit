@@ -490,7 +490,14 @@ if vendor_is_inrepo "$W" uikit "$UIKIT"; then
     EXPECTED_UIKIT_TREE=$(git -C "$W" rev-parse --verify HEAD:uikit)
 fi
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
-assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+# Same rule for an agent branch that edits machorun/ (guest-objc-foundation:
+# the libSystem names SQLite links): attest the committed in-repo tree; a dirty
+# machorun/ is still refused, and an external MACHORUN keeps the pin.
+EXPECTED_MACHORUN_TREE=$EXPECTED_INREPO_MACHORUN_TREE
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    EXPECTED_MACHORUN_TREE=$(git -C "$W" rev-parse --verify HEAD:machorun)
+fi
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_MACHORUN_TREE" machorun
 SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}
 SWIFT_CORE_RUNTIME_EXPECTED_SHA256=${SWIFT_CORE_RUNTIME_EXPECTED_SHA256:-}
 # REFUSE WITHOUT THE MOUNT, rather than silently building half a root.
@@ -909,6 +916,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'
+    printf 'local\tdarwin/usr/lib/libsqlite3.dylib\t-\tbuilt from the pinned SQLite 3.51.0 amalgamation by full/sqlite/build_sqlite_guest.sh\n'
 } > "$ROOTDIR/.manifest"
 
 # Reduced form for hosts that cannot finish quartz / OpenUIKit / UIHelpers
@@ -974,6 +982,16 @@ QZN=$(llvm-nm-18 --extern-only --defined-only "$ROOTDIR/darwin/usr/lib/libquartz
 echo "   -> libquartz.dylib ($QZN QZ exports)"
 # A .tbd is not needed: link the guest directly against the dylib we just built.
 QUARTZLIB=$ROOTDIR/darwin/usr/lib/libquartz.dylib
+
+# ---- libsqlite3, SQLite 3.51.0's amalgamation (full/sqlite) ----------------
+# /usr/lib/libsqlite3.dylib as on iOS, with the simulator's measured compile
+# options. Only executables that link it (-lsqlite3) load it; render_full and
+# the Focus guest do not.
+echo "== libsqlite3 (SQLite 3.51.0 amalgamation, pinned)"
+env W="$W" SYS="$SYS" OUT="$OUT" TARGET="$TARGET" ARCH="$ARCH" ROOTDIR="$ROOTDIR" \
+    MINOS="$MINOS" LINK_PLATFORM="$LINK_PLATFORM" LINK_SDK_VERSION="$LINK_SDK_VERSION" \
+    bash "$W/full/sqlite/build_sqlite_guest.sh"
+SQLITE_INCLUDE=$OUT/sqlite/include
 
 # ---- C targets: compiled from ~/uikit's own sources ------------------------
 echo "== C targets (CPortableIO, CSTBTrueType)"

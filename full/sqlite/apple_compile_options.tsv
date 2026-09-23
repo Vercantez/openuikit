@@ -1,0 +1,81 @@
+# Every sqlite3_compileoption_get() row of the iOS 26.1 simulator's libsqlite3
+# (uikit/Tools/oracle2/guestsqliteoptions/transcript-ios26.1.txt), in its order.
+# define: build_sqlite_guest.sh passes -DSQLITE_<row> (a valueless row whose
+#         measured pragma default is 0 is defined as 0).
+# derived: sqlite3.c computes it; the guest's row must still equal Apple's.
+# omit:   not reproduced; the reason says why. The guest checker requires the
+#         guest's rows to be exactly the define + derived rows.
+ATOMIC_INTRINSICS=1	derived	sqlite3.c sets it for clang's __atomic builtins
+BUG_COMPATIBLE_20160819	define	-
+CCCRYPT256	omit	Apple's closed encryption codec (SEE over CommonCrypto)
+CODEC=see-cccrypt	omit	Apple's closed encryption codec
+COMPILER=clang-17.0.0	omit	names the toolchain, not a behaviour; the guest reports its own COMPILER row (checked for presence only)
+DEFAULT_AUTOVACUUM	define0	PRAGMA auto_vacuum measured 0
+DEFAULT_CACHE_SIZE=128	define	-
+DEFAULT_CKPTFULLFSYNC	define	-
+DEFAULT_FILE_FORMAT=4	define	-
+DEFAULT_JOURNAL_SIZE_LIMIT=32768	define	-
+DEFAULT_LOOKASIDE=1200,40	define	-
+DEFAULT_MEMSTATUS=0	define	-
+DEFAULT_MMAP_SIZE=0	define	-
+DEFAULT_PAGE_SIZE=4096	define	-
+DEFAULT_PCACHE_INITSZ=20	define	-
+DEFAULT_RECURSIVE_TRIGGERS	define0	PRAGMA recursive_triggers measured 0
+DEFAULT_SECTOR_SIZE=4096	define	-
+DEFAULT_SYNCHRONOUS=2	define	-
+DEFAULT_WAL_AUTOCHECKPOINT=1000	define	-
+DEFAULT_WAL_SYNCHRONOUS=1	define	-
+DEFAULT_WORKER_THREADS=0	define	-
+DIRECT_OVERFLOW_READ	define	-
+DQS=3	define	-
+ENABLE_API_ARMOR	define	-
+ENABLE_BYTECODE_VTAB	define	-
+ENABLE_COLUMN_METADATA	define	-
+ENABLE_DBSTAT_VTAB	define	-
+ENABLE_FTS3	define	-
+ENABLE_FTS3_PARENTHESIS	define	-
+ENABLE_FTS3_TOKENIZER	define	-
+ENABLE_FTS4	define	-
+ENABLE_FTS5	define	-
+ENABLE_LOCKING_STYLE=1	omit	Darwin file-system locking styles chosen by statfs f_fstypename; the guest's files are Linux files behind machorun, so POSIX advisory locks (the Linux default) are used
+ENABLE_LOCKING_STYLE=0	guest	os_unix.c turns locking styles on for __APPLE__ unless told otherwise, so the guest states =0 and sqlite3_compileoption_get reports it
+ENABLE_MATH_FUNCTIONS	define	-
+ENABLE_NORMALIZE	define	-
+ENABLE_PREUPDATE_HOOK	define	-
+ENABLE_RTREE	define	-
+ENABLE_SESSION	define	-
+ENABLE_SETLK_TIMEOUT	omit	blocking F_SETLKW with a timeout through machorun's fcntl is unmeasured
+ENABLE_SNAPSHOT	define	-
+ENABLE_SQLLOG	omit	needs a platform sqlite3_init_sqllog(), which Apple does not publish
+ENABLE_STMT_SCANSTATUS	define	-
+ENABLE_UNKNOWN_SQL_FUNCTION	define	-
+ENABLE_UPDATE_DELETE_LIMIT	omit	the amalgamation's pre-generated parser cannot enable it (sqlite.org: canonical sources only)
+HAS_CODEC_RESTRICTED	omit	Apple's closed encryption codec
+HAVE_ISNAN	define	-
+MALLOC_SOFT_LIMIT=1024	define	-
+MAX_ATTACHED=10	define	-
+MAX_COLUMN=2000	define	-
+MAX_COMPOUND_SELECT=500	define	-
+MAX_DEFAULT_PAGE_SIZE=8192	define	-
+MAX_EXPR_DEPTH=1000	define	-
+MAX_FUNCTION_ARG=127	define	-
+MAX_LENGTH=2147483645	define	-
+MAX_LIKE_PATTERN_LENGTH=50000	define	-
+MAX_MMAP_SIZE=20971520	define	-
+MAX_PAGE_COUNT=1073741823	define	-
+MAX_PAGE_SIZE=65536	define	-
+MAX_SQL_LENGTH=1000000000	define	-
+MAX_TRIGGER_DEPTH=1000	define	-
+MAX_VARIABLE_NUMBER=500000	define	-
+MAX_VDBE_OP=250000000	define	-
+MAX_WORKER_THREADS=8	define	-
+MUTEX_UNFAIR	omit	Apple's patch to use os_unfair_lock; upstream uses pthread mutexes
+MUTEX_PTHREADS	guest	upstream's mutex implementation, reported by sqlite3.c when MUTEX_UNFAIR (Apple-only) is absent
+OMIT_AUTORESET	define	-
+OMIT_LOAD_EXTENSION	define	-
+STMTJRNL_SPILL=131072	define	-
+SUBSTR_COMPATIBILITY	define	-
+SYSTEM_MALLOC	define	-
+TEMP_STORE=1	define	-
+THREADSAFE=2	define	-
+USE_URI	define	-
