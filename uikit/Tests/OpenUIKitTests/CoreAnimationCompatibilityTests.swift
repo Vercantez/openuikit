@@ -9,6 +9,16 @@ private typealias PortableBasicAnimation = OpenUIKit.CABasicAnimation
 private typealias PortableTransaction = OpenUIKit._OUKTransaction
 private typealias PortableCGColor = OpenUIKit.CGColor
 
+/// Runs `body` in an autorelease pool where one exists (QuartzCore returns
+/// autoreleased layers on Apple toolchains); plain call on corelibs.
+private func _drainAutoreleasePool(_ body: () -> Void) {
+#if canImport(ObjectiveC)
+    autoreleasepool(invoking: body)
+#else
+    body()
+#endif
+}
+
 #if !os(Linux)
 @MainActor
 #endif
@@ -587,7 +597,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
 
         var completionCalls = 0
         weak var releasedLayer: PortableLayer?
-        autoreleasepool {
+        _drainAutoreleasePool {
             var layer: PortableLayer? = PortableLayer()
             releasedLayer = layer
             PortableTransaction.begin()
