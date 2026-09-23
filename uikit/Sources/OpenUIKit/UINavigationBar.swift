@@ -601,8 +601,19 @@ public final class UINavigationBar: UIView, _UIBarItemContainer, UIBarPositionin
 
     private func configureBar() {
         if let proxy = Self._appearanceProxy {
-            _standardAppearance = proxy._standardAppearance
-            _standardAppearanceIsExplicit = proxy._standardAppearanceIsExplicit
+            // A proxy forwards what the app SET on it (UIKit records the
+            // proxy's setter invocations and replays them on new bars). Its
+            // own synthesized standard appearance is not something the app
+            // set: it is the cut-dependent default of whenever the proxy was
+            // first read (opaque on Catalyst, default background on iOS), so
+            // copying it froze that cut into every later bar — an iOS inline
+            // bar made after a Catalyst-cut read of the proxy came out opaque
+            // (IOSNavigationBarTransitionTests after
+            // ApplicationShellCompatibilityTests).
+            if proxy._standardAppearanceIsExplicit {
+                _standardAppearance = proxy._standardAppearance
+                _standardAppearanceIsExplicit = true
+            }
             scrollEdgeAppearance = proxy.scrollEdgeAppearance
             compactAppearance = proxy.compactAppearance
             _legacyBackgroundImages = proxy._legacyBackgroundImages
