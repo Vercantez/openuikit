@@ -2956,6 +2956,9 @@ and run, but some are only partly implemented:
   checked against that probe's reading (64.33 for "Edit").
 - The body/medium/large symbol configuration of bar items applies to system
   symbols only; the accessibility sizes keep the unconfigured image.
+- Plain-cell list separators are drawn for insetGrouped lists only
+  (listseparatorprobe). Plain and grouped lists, and a separator
+  `visualEffect`, were not measured.
 - `UIViewController.overrideUserInterfaceStyle` resolves through the
   controller, its view subtree and its children. It is not modelled in
   three ways (Tools/oracle2/vcstyleprobe):
