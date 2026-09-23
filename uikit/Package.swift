@@ -1033,6 +1033,10 @@ let simplenoteTargets: [Target] = [
     .testTarget(name: "CGUnifyTests",
                 dependencies: ["OpenUIKitCGUnifyFixtures", "UIKit", "OpenUIKit"],
                 path: "Tests/CGUnifyTests"),
+    // Timer / RunLoop unification (docs/agent_reports/timer-unify.md): a file
+    // importing UIKit and Foundation names one Timer, Foundation's.
+    .testTarget(name: "TimerUnifyTests", dependencies: ["UIKit", "OpenUIKit"],
+                path: "Tests/TimerUnifyTests"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

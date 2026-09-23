@@ -1805,7 +1805,7 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // One scene's scheduled Timers must never leak into the next scene's
     // capture (Sources/OpenUIKit/Timer.swift): the host clock is the only
     // thing that fires them, and it rewinds per scene.
-    Timer._reset()
+    _HostClockTimer._reset()
     let scale = num(scene["scale"]) ?? 2
     // The screen IS the scene: the iOS cut rounds label heights, table
     // metrics and layout origins to the DEVICE pixel (1/3 pt on the iPhone
