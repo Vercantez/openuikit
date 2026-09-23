@@ -162,3 +162,13 @@ public final class UIFont: NSObject, @unchecked Sendable {
         return hasher.finalize()
     }
 }
+
+// MEASURED iPhone 16 / iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): systemFontSize 14,
+// smallSystemFontSize 12, labelFontSize 17, buttonFontSize 18. NetNewsWire
+// NSAttributedString+Extensions.swift:142 / WebViewController.swift:212.
+extension UIFont {
+    public static var systemFontSize: CGFloat { 14 }
+    public static var smallSystemFontSize: CGFloat { 12 }
+    public static var labelFontSize: CGFloat { 17 }
+    public static var buttonFontSize: CGFloat { 18 }
+}

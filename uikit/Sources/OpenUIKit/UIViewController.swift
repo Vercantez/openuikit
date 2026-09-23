@@ -361,6 +361,20 @@ open class UIViewController: UIResponder, UIContentContainer {
         didSet { navigationController?._toolbarItemsDidChange(self) }
     }
 
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): `toolbarItems` reads back the items.
+    /// The toolbar change is not animated in the port (OPEN).
+    public final func setToolbarItems(_ toolbarItems: [UIBarButtonItem]?, animated: Bool) {
+        _ = animated
+        self.toolbarItems = toolbarItems
+    }
+
+    /// MEASURED iOS 26.1: false. Stored; the port's presentation does not
+    /// consult it yet (OPEN).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic var definesPresentationContext = false
+
     // MARK: Modal presentation (M10 — see UIPresentation.swift)
 
     /// Style used the next time this controller is PRESENTED.
@@ -436,6 +450,35 @@ open class UIViewController: UIResponder, UIContentContainer {
     @objc
 #endif
     open dynamic var preferredStatusBarStyle: UIStatusBarStyle { .default }
+
+    /// MEASURED iOS 26.1: false for a plain and a split view controller.
+    /// The host owns the status bar; the port reports the preference.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var prefersStatusBarHidden: Bool { false }
+
+    /// MEASURED iOS 26.1: `.fade` by default.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var preferredStatusBarUpdateAnimation: UIStatusBarAnimation { .fade }
+
+    /// The port draws no status bar, so there is nothing to re-query; the
+    /// call is accepted (NetNewsWire SceneCoordinator.swift:1465).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func setNeedsStatusBarAppearanceUpdate() {}
+
+    /// Called when the root view's safe-area insets change (MEASURED iOS
+    /// 26.1: once at launch with the window's [59, 0, 34, 0], between
+    /// viewWillAppear and sceneWillEnterForeground). Dispatched from
+    /// UIView's safe-area propagation (UILayoutGuide.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func viewSafeAreaInsetsDidChange() {}
 
     /// The controller this one is currently presenting.
     public internal(set) final var presentedViewController: UIViewController?

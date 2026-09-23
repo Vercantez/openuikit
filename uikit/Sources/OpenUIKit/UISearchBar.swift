@@ -400,6 +400,12 @@ open class UISearchTextField: UITextField {
 
 @preconcurrency @MainActor
 open class UISearchBar: UIView {
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): nil, nil, `.sentences` (2). Stored;
+    /// the bar tint and scope-bar image are not drawn yet (OPEN).
+    public var barTintColor: UIColor?
+    public var scopeBarBackgroundImage: UIImage?
+    public var autocapitalizationType: UITextAutocapitalizationType = .sentences
+
     /// Measured: 44 pt tall whatever the frame says.
     public static let standardHeight: CGFloat = 44
     /// Measured: the field is inset 8 pt on each side and 36 pt tall on
