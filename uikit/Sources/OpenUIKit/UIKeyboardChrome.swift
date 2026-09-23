@@ -389,7 +389,10 @@ final class _UIKeyboardPanel: UIView {
         applyFill(traitCollection)
     }
 
+    private var appliedFillStyle: UIUserInterfaceStyle?
+
     func applyFill(_ t: UITraitCollection) {
+        appliedFillStyle = t.userInterfaceStyle
         if t.userInterfaceStyle == .dark {
             backgroundColor = UIColor(white: _UIKeyboardChrome.darkTint,
                                        alpha: _UIKeyboardChrome.darkMixAlpha)
@@ -471,7 +474,13 @@ final class _UIKeyboardPanel: UIView {
         if abs(builtWidth - width) < 0.25, builtSignature == state.signature,
            !subviews.isEmpty {
             self.state = state
-            applyFill(traitCollection)
+            // Re-applying unchanged colors would bump every key's content
+            // version (setNeedsDisplay) on each capture, which makes a live
+            // host's unchanged frame look changed. Only re-apply on a new
+            // appearance; rebuilds below always apply.
+            if appliedFillStyle != traitCollection.userInterfaceStyle {
+                applyFill(traitCollection)
+            }
             applyLetterCase(state.shifted)
             return
         }
@@ -520,7 +529,8 @@ final class _UIKeyboardPanel: UIView {
         for sub in subviews {
             guard let key = sub as? _UIKeyboardKey, key.kind == .letter,
                   let t = key.label?.text, t.count == 1 else { continue }
-            key.label?.text = _UIKeyboardPanel.folded(t, up: shifted)
+            let folded = _UIKeyboardPanel.folded(t, up: shifted)
+            if folded != t { key.label?.text = folded }
         }
     }
 
