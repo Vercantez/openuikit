@@ -28,12 +28,33 @@ vendor_tree_of() {
     fi
 }
 
+# Flags for the dirty-tree status check only (not for rev-parse/ls-files):
+# under Docker Desktop's virtiofs, a host git worktree bind-mounted into the
+# Linux guest at the same path gets a different st_dev/st_ino/uid/gid on every
+# container invocation (mtime/ctime are preserved exactly; only identity-ish
+# fields churn). Plain `git status` opportunistically refreshes-and-writes the
+# index as part of computing that status, and on that code path git treats an
+# inode/dev/owner-only mismatch as enough to report the path dirty without
+# waiting on a content compare -- `git diff`/`git diff-index` on the same tree
+# always fall back to a real content compare and see no change. Two independent
+# workarounds close it: --no-optional-locks stops status from taking the
+# opportunistic index-lock/refresh-and-write path at all (also required so
+# this check never blocks on or corrupts .git/index.lock under a slow/shared
+# mount), and core.checkStat=minimal makes the stat comparison itself ignore
+# dev/ino/uid/gid and key off mtime+size, which virtiofs preserves faithfully.
+# core.trustctime=false is belt-and-suspenders in case ctime ever does drift.
+# A real content or mode change still has a different mtime/size and is still
+# reported (scripts/test_vendor_tree.sh covers this).
+_vendor_status_flags=(--no-optional-locks -c core.checkStat=minimal -c core.trustctime=false)
+
 vendor_status_of() {
     local repo_root=$1 vendor_name=$2 vendor_path=$3
     if vendor_is_inrepo "$repo_root" "$vendor_name" "$vendor_path"; then
-        git -C "$repo_root" status --porcelain=v1 --untracked-files=all -- "$vendor_name"
+        git "${_vendor_status_flags[@]}" -C "$repo_root" \
+            status --porcelain=v1 --untracked-files=all -- "$vendor_name"
     else
-        git -C "$vendor_path" status --porcelain=v1 --untracked-files=all
+        git "${_vendor_status_flags[@]}" -C "$vendor_path" \
+            status --porcelain=v1 --untracked-files=all
     fi
 }
 
@@ -56,7 +77,7 @@ assert_vendor_tree() {
             || die "$label: cannot read in-repo tree HEAD:$vendor_name"
         [ "$actual" = "$expected_tree" ] \
             || die "$label in-repo tree $actual, expected $expected_tree (git rev-parse HEAD:$vendor_name)"
-        status=$(git -C "$repo_root" status --porcelain=v1 --untracked-files=all -- "$vendor_name") \
+        status=$(vendor_status_of "$repo_root" "$vendor_name" "$vendor_path") \
             || die "$label: cannot inspect in-repo $vendor_name/ status"
         [ -z "$status" ] || die "$label subtree is dirty: $status"
         return 0
@@ -67,7 +88,7 @@ assert_vendor_tree() {
         || die "$label: cannot read checkout tree"
     [ "$actual" = "$expected_tree" ] \
         || die "$label checkout tree $actual, expected $expected_tree"
-    status=$(git -C "$vendor_path" status --porcelain=v1 --untracked-files=all) \
+    status=$(vendor_status_of "$repo_root" "$vendor_name" "$vendor_path") \
         || die "$label: cannot inspect checkout status"
     [ -z "$status" ] || die "$label checkout is not clean: $status"
 }
