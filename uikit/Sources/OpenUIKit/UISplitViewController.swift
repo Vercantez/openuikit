@@ -315,7 +315,7 @@ open class UISplitViewController: UIViewController {
         }
         _forEachShownContainer { $0.beginAppearanceTransition(true, animated: animated) }
     }
-    public override func viewDidAppear(_ animated: Bool) {
+    open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         _appeared = true
         _forEachShownContainer { $0.endAppearanceTransition() }

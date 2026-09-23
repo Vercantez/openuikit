@@ -66,7 +66,7 @@ open class UISlider: UIControl {
 
     public var minimumValue: Float = 0 { didSet { clampValue() } }
     public var maximumValue: Float = 1 { didSet { clampValue() } }
-    public var value: Float = 0 {
+    open var value: Float = 0 {
         didSet {
             clampValue()
             if value != oldValue { setNeedsDisplay() }

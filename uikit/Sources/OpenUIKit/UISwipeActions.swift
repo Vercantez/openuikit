@@ -14,8 +14,14 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
 @preconcurrency @MainActor
-open class UIContextualAction {
+open class UIContextualAction: NSObject {
     public enum Style: Int, Sendable {
         case normal = 0
         case destructive
@@ -43,6 +49,7 @@ open class UIContextualAction {
         case .normal:
             backgroundColor = .systemGray
         }
+        super.init()
     }
 
     public static func contextualAction(style: Style, title: String?,

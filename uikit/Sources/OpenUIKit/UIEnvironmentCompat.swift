@@ -70,6 +70,16 @@ public enum UIStatusBarStyle: Int, Sendable {
     case darkContent = 3
 }
 
+/// MEASURED iOS 26.1 (Tools/oracle2/scenelaunchprobe): none 0, fade 1, slide 2.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
+public enum UIStatusBarAnimation: Int, Sendable {
+    case none = 0
+    case fade = 1
+    case slide = 2
+}
+
 @preconcurrency @MainActor
 private enum UIInterfaceOrientationEnvironment {
     static var hostOrientation: UIInterfaceOrientation?
