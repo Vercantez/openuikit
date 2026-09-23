@@ -6,7 +6,9 @@ import XCTest
 /// Tools/oracle2/textviewinputprobe/transcript-ios26.1.txt — the SAME
 /// scenario functions (TextViewTextInputScenario.swift, RxRowsScenario.swift)
 /// ran there against Apple's UIKit.
+#if !os(Linux)
 @MainActor
+#endif
 final class TextViewTextInputTests: XCTestCase {
     private var savedCut = OpenUIKitRuntime.systemFontCut
     private var savedBounds = CGRect.zero

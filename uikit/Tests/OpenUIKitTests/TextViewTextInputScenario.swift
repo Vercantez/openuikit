@@ -97,19 +97,27 @@ enum OUKTextViewInputScenario {
         let tv = UITextView(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         tv.font = UIFont.systemFont(ofSize: 17)
         rec.textView = tv
+#if OUK_ORACLE
         let nc = NotificationCenter.default
+#else
+        // Linux corelibs Foundation also ships NotificationCenter.default
+        // (TextKitTests.swift; MEASURED CHECK_ONLY Linux build: "ambiguous use
+        // of 'default'").
+        let nc = OpenUIKit.NotificationCenter.default
+#endif
         // Block observers (synchronous, queue nil): selector observers need
         // Objective-C interop, which the Linux build does not have.
-        let tokens = [
+        var tokens: [Any] = []
+        for (name, line) in [
             (UITextView.textDidChangeNotification, "note TextDidChange"),
             (UITextView.textDidBeginEditingNotification, "note TextDidBeginEditing"),
             (UITextView.textDidEndEditingNotification, "note TextDidEndEditing"),
-        ].map { name, line in
-            nc.addObserver(forName: name, object: tv, queue: nil) { _ in
+        ] {
+            tokens.append(nc.addObserver(forName: name, object: tv, queue: nil) { _ in
                 MainActor.assumeIsolated { rec.events.append(line) }
-            }
+            })
         }
-        defer { tokens.forEach(nc.removeObserver) }
+        defer { for token in tokens { nc.removeObserver(token) } }
 
         func step(_ name: String, _ body: () -> String?) {
             rec.events = []
