@@ -130,6 +130,8 @@ open class CALayer: NSObject {
     /// first layout pass runs through it); `init(owner:)` sets that.
     private final var _needsLayout = false
     private final var _isLayingOut = false
+    /// Read-only view of the layer's layout dirtiness (live hosts).
+    final var _hostLayerNeedsLayout: Bool { _needsLayout }
     /// Core Animation records live in `CoreAnimation.swift`. They are kept on
     /// the portable layer rather than the transient QZLayer built for one
     /// frame, so rebuilding the renderer tree does not restart animations.
@@ -1441,6 +1443,16 @@ open class UIView: UIResponder, CALayerDelegate {
         // Layout entire subtree (top-down), like a simplified layout pass.
         _layoutSubtree()
     }
+    /// Live hosts: whether a `layoutIfNeeded()` on this subtree could do
+    /// anything — some view or its layer is marked for layout, or has
+    /// pending constraint updates. When false (and nothing visual changed)
+    /// a live host skips the pass; renders always lay out first.
+    public final var _hostSubtreeNeedsLayout: Bool {
+        if needsLayout || _needsUpdateConstraints || layer._hostLayerNeedsLayout { return true }
+        for s in subviews where s._hostSubtreeNeedsLayout { return true }
+        return false
+    }
+
     final func _layoutSubtree() {
         if needsLayout {
             // Clear before callbacks so setNeedsLayout() from inside an

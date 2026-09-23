@@ -316,7 +316,9 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
             needsRender = false
             lastRenderTime = now
             if let fingerprint = hooks.frameFingerprint {
-                scene.window.layoutIfNeeded()
+                // The constraint solve is the costliest part of a pass; an
+                // unchanged screen needs none (renders still lay out first).
+                if scene.window._hostSubtreeNeedsLayout { scene.window.layoutIfNeeded() }
                 let f = fingerprint(scene.window, scene.scale)
                 if renderedFrames > 0, f == lastPresentedFingerprint {
                     hooks.frameObserver?(false, true)
