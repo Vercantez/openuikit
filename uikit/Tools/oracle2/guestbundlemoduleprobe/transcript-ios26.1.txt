@@ -1,0 +1,10 @@
+guestbundlemoduleprobe v1
+bundle.module name=GuestProbe_GuestBundleModuleProbe.bundle stable=true
+bundle.module identifier=guestprobe.GuestBundleModuleProbe.resources
+bundle.module inMainResources=true
+resource hello.txt=hello from the package bundle
+resource missing=nil
+localized refresh=Refresh all
+localized redirect=Feed redirect (en)
+localized missing=Not translated
+guestbundlemoduleprobe done
