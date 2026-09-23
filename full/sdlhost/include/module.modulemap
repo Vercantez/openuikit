@@ -1,0 +1,4 @@
+module COpenSDLHost {
+    header "OpenSDLHostABI.h"
+    export *
+}

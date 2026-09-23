@@ -1145,6 +1145,29 @@ echo "== OpenUIKit (${#UIKIT_SRCS[@]} files verbatim, incl. AutoLayout/ + Founda
     -o "$OUT/openuikit.o" \
     "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
 
+# host_full renders every frame, so it links OPTIMIZED copies of the two
+# rendering modules: the same sources and flags plus -O, objects only (the
+# -Onone .swiftmodules above stay the interface every client compiles
+# against; the optimisation level does not change a public symbol or a type
+# layout). render_full and the probes keep the -Onone objects, so their bytes
+# and pixels are untouched. MEASURED 2026-09-22, Focus at 375x667@2x under
+# machorun: 490-2030 ms per frame with the -Onone objects.
+HOST_OPT_PID=
+if [ -f /usr/include/SDL2/SDL.h ]; then
+    echo "== OpenCoreGraphics + OpenUIKit -O objects for host_full (background)"
+    mkdir -p "$OUT/host-opt"
+    rm -f "$OUT/host-opt/opencoregraphics.o" "$OUT/host-opt/openuikit.o"
+    (
+        "${SWIFTC[@]}" -O "${CINC[@]}" -module-name OpenCoreGraphics \
+            -emit-object -o "$OUT/host-opt/opencoregraphics.o" \
+            "$UIKIT"/Sources/OpenCoreGraphics/*.swift
+        "${SWIFTC[@]}" -O "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" -module-name OpenUIKit \
+            -emit-object -o "$OUT/host-opt/openuikit.o" \
+            "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
+    ) > "$OUT/host-opt/compile.log" 2>&1 &
+    HOST_OPT_PID=$!
+fi
+
 # Keep this focused probe honest even though the combined renderer below must
 # see APPINC for RealAppProbe. A separate typecheck before APPINC exists proves
 # UIHelpersTest itself needs only the Foundation-umbrella-invisible OpenUIKit
@@ -1422,6 +1445,32 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
     -o "$ROOTDIR/darwin/usr/lib/libOpenRelativeTime.dylib" \
     "$OUT/open-relative-time-bridge.o"
 
+# host_full (the interactive guest host) reaches its SDL window through the
+# same kind of boundary: OpenSDLHostBridge.c's `_glibc_openui_sdl_host_v1_*`
+# labels resolve against libOpenSDLHost.so (full/sdlhost). Built only where
+# the SDL2 development files exist (the openuikit-guest-env image has them);
+# linux_guest_realapp_verify.sh requires host_full wherever SDL2 is present.
+if [ -f /usr/include/SDL2/SDL.h ]; then
+    BUILD_HOST_FULL=1
+else
+    BUILD_HOST_FULL=0
+    echo "build_full: host_full skipped -- no /usr/include/SDL2/SDL.h on this builder"
+fi
+if [ "$BUILD_HOST_FULL" = 1 ]; then
+    echo "== Mach-O bridge for the guest host window (libOpenSDLHost.dylib)"
+    mkdir -p "$APPMODS/include/COpenSDLHost"
+    cp -a "$W/full/sdlhost/include/." "$APPMODS/include/COpenSDLHost/"
+    clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+        -fvisibility=hidden -Wall -Wextra -Werror \
+        -I "$APPMODS/include/COpenSDLHost" \
+        -c "$W/full/sdlhost/OpenSDLHostBridge.c" \
+        -o "$OUT/open-sdl-host-bridge.o"
+    "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+        -install_name /usr/lib/libOpenSDLHost.dylib \
+        -o "$ROOTDIR/darwin/usr/lib/libOpenSDLHost.dylib" \
+        "$OUT/open-sdl-host-bridge.o"
+fi
+
 # The Darwin OpenDispatchBridge imports _glibc_openui_dispatch_host_v1_create_queue
 # (attempt 10, c8faae90: GUEST_REALAPP_SCREENS=3 then undefined symbol). The
 # staged scratch/mrroot_full/host copy is older and lacks that export. Rebuild
@@ -1453,6 +1502,12 @@ for host_helper in libOpenFoundationInternationalizationHost.so \
         || die "staged host helper missing: $ROOTDIR/host/$host_helper"
     cp "$ROOTDIR/host/$host_helper" "$HOST_BRIDGE_DIR/$host_helper"
 done
+# The window helper is host_full's alone (render_full never loads it), so it
+# is built straight into the app-path host dir rather than staged via BASE.
+if [ "$BUILD_HOST_FULL" = 1 ]; then
+    echo "== build Linux SDL host helper (libOpenSDLHost.so, host_full only)"
+    bash "$W/full/sdlhost/build_host_helper.sh" --repo "$W" --host-dir "$HOST_BRIDGE_DIR"
+fi
 
 echo "== compile the project Dispatch module before the Foundation umbrella"
 "${SWIFTC[@]}" -parse-as-library "${APPMODS_CINC[@]}" \
@@ -1975,6 +2030,33 @@ build_final_executable() {
                 "$W/full/focus-ios/BrowserInkProbe.swift" \
                 "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift"
             link_app_executable "$OUT/BrowserInkProbe" "$OUT/BrowserInkProbe.o" "$OUT/realappprobe.o" ;;
+        host_full)
+            # Same module graph and flags as render_full; the openhost loop
+            # (HostLoop.swift) is compiled verbatim beside RealApp.swift's
+            # variant table, plus the COpenSDLHost window ABI.
+            "${SWIFTC[@]}" "${FEMODULES[@]}" \
+                "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
+                -Xcc -fmodule-map-file="$APPMODS/include/COpenSDLHost/module.modulemap" \
+                -Xcc -I"$APPMODS/include/COpenSDLHost" \
+                -I "$OUT" -I "$APPINC" -I "$APPMODS" -module-name host_full \
+                -emit-object -o "$OUT/host_full.o" \
+                "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
+                "$UIKIT/Sources/openhost/HostLoop.swift" \
+                "$W/full/driver/host_full/main.swift"
+            # This job runs in its own subshell, so swapping in the -O
+            # rendering objects here cannot reach the other executables.
+            local -a host_common=()
+            local obj
+            for obj in "${COMMON_LINK_OBJECTS[@]}"; do
+                case "$obj" in
+                    "$OUT/openuikit.o") host_common+=("$OUT/host-opt/openuikit.o") ;;
+                    "$OUT/opencoregraphics.o") host_common+=("$OUT/host-opt/opencoregraphics.o") ;;
+                    *) host_common+=("$obj") ;;
+                esac
+            done
+            COMMON_LINK_OBJECTS=("${host_common[@]}")
+            link_app_executable "$OUT/host_full" "$OUT/host_full.o" "$OUT/realappprobe.o" \
+                "$ROOTDIR/darwin/usr/lib/libOpenSDLHost.dylib" ;;
         indexpath_identity_probe)
             "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
                 -L"$ROOTDIR/darwin/usr/lib" \
@@ -1997,6 +2079,12 @@ build_final_executable() {
 FINAL_EXECUTABLES=(render_full GuestBoundaryTests LaunchProbe FuziProbe
     BrowserInkProbe indexpath_identity_probe)
 [ "$LINK_PLATFORM" = ios-simulator ] && FINAL_EXECUTABLES+=(IOSTargetGuestProbe)
+rm -f "$OUT/host_full" "$OUT/host_full.o"
+if [ "$BUILD_HOST_FULL" = 1 ]; then
+    [ -n "$HOST_OPT_PID" ] && wait "$HOST_OPT_PID" \
+        || { tail -40 "$OUT/host-opt/compile.log" >&2; die "host_full -O rendering objects failed"; }
+    FINAL_EXECUTABLES+=(host_full)
+fi
 run_jobs build_final_executable "${FINAL_EXECUTABLES[@]}"
 
 # Match SwiftPM's executable bundle metadata and stage Focus startup assets.
@@ -2121,4 +2209,8 @@ FOCUS_SUBJECT_AFTER=$(python3 "$W/full/focus-ios/guest_subject.py" "$W" "$UIKIT"
     || die "Focus guest source/resource inputs changed during the build"
 printf '%s\n' "$FOCUS_SUBJECT_AFTER" > "$OUT/focus-guest-subject.sha256"
 sha256sum "$OUT/render_full" | awk '{print $1}' > "$OUT/focus-guest-executable.sha256"
+rm -f "$OUT/host_full.sha256"
+if [ "$BUILD_HOST_FULL" = 1 ]; then
+    sha256sum "$OUT/host_full" | awk '{print $1}' > "$OUT/host_full.sha256"
+fi
 echo 'FOCUS_GUEST_BUILT modules=SnapKit,WebKit,DesignSystem,Licenses,UIHelpers,UIComponents,Widget,AppShortcuts,Onboarding,Blockzilla'

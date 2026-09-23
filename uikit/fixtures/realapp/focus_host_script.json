@@ -1,0 +1,23 @@
+{
+  "_comment": "host_full --script replay of Firefox Focus (full/driver/host_full/main.swift, openhost's script format, points in the 375x667 window). Launch focuses the URL bar; cancel; tap the URL bar; type; cancel; open the menu; Settings; Theme; back; Done. Asserted by uikit/scripts/linux_guest_host_verify.sh.",
+  "events": [
+    {"t": 1.0, "kind": "down", "x": 136, "y": 48},
+    {"t": 1.1, "kind": "up", "x": 136, "y": 48},
+    {"t": 2.0, "kind": "down", "x": 160, "y": 48},
+    {"t": 2.1, "kind": "up", "x": 160, "y": 48},
+    {"t": 2.8, "kind": "text", "string": "mozilla"},
+    {"t": 3.6, "kind": "down", "x": 136, "y": 48},
+    {"t": 3.7, "kind": "up", "x": 136, "y": 48},
+    {"t": 4.5, "kind": "down", "x": 343, "y": 48},
+    {"t": 4.6, "kind": "up", "x": 343, "y": 48},
+    {"t": 5.3, "kind": "down", "x": 185, "y": 102},
+    {"t": 5.4, "kind": "up", "x": 185, "y": 102},
+    {"t": 6.3, "kind": "down", "x": 150, "y": 309},
+    {"t": 6.4, "kind": "up", "x": 150, "y": 309},
+    {"t": 7.3, "kind": "down", "x": 30, "y": 62},
+    {"t": 7.4, "kind": "up", "x": 30, "y": 62},
+    {"t": 8.3, "kind": "down", "x": 322, "y": 62},
+    {"t": 8.4, "kind": "up", "x": 322, "y": 62}
+  ],
+  "captures": [0.5, 1.6, 2.6, 3.3, 4.2, 5.0, 6.0, 7.0, 8.0, 9.5]
+}
