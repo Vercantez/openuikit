@@ -1019,6 +1019,25 @@ public enum LayerBridge {
             // 0.3 s, max |Δ| 0.25 pt. Cubic ease-in-out is 11 pt off at n=6.
             let t = local / a.duration
             return CGFloat((1 - _cos(Double.pi * t)) / 2)
+        case .springCoefficients(let stiffness, let dampingCoefficient, let velocity):
+            guard let scratch = QZLayerCreate(),
+                  let anim = QZSpringAnimationCreate("opacity") else { return 1 }
+            defer { QZLayerRelease(scratch) }
+            var from: [QZFloat] = [1]
+            var to: [QZFloat] = [0]
+            QZBasicAnimationSetFromValue(anim, &from, 1)
+            QZBasicAnimationSetToValue(anim, &to, 1)
+            QZAnimationSetDuration(anim, QZFloat(a.duration))
+            QZSpringAnimationSetMass(anim, 1)
+            QZSpringAnimationSetStiffness(anim, QZFloat(stiffness))
+            QZSpringAnimationSetDamping(anim, QZFloat(dampingCoefficient))
+            QZSpringAnimationSetInitialVelocity(anim, QZFloat(-Double(velocity)))
+            QZLayerAddAnimation(scratch, anim, "progress")
+            QZAnimationRelease(anim)
+            guard let pres = QZLayerCopyPresentation(scratch, QZFloat(local))
+            else { return 1 }
+            defer { QZLayerRelease(pres) }
+            return 1 - CGFloat(QZLayerGetOpacity(pres))
         case .spring(let damping, let velocity):
             let z = Swift.min(Swift.max(Double(damping), 1e-6), 1)
             let wn = UIViewSpring.naturalFrequency(dampingRatio: damping,

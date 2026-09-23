@@ -569,7 +569,7 @@ open class UIViewPropertyAnimator: UIViewImplicitlyAnimating {
     private func retimed(_ anim: UIViewAnimation, timing: UIViewAnimation.Timing) -> UIViewAnimation {
         var copy = anim
         switch timing {
-        case .curve, .spring, .cosineEaseInOut:
+        case .curve, .spring, .springCoefficients, .cosineEaseInOut:
             copy = UIViewAnimation(
                 property: anim.property, from: anim.from, to: anim.to,
                 begin: anim.begin, delay: anim.delay, duration: anim.duration,
