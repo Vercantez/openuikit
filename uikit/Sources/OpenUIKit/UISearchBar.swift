@@ -182,8 +182,8 @@ enum _UISearchFieldMetrics {
     /// measured centre reading over eight backdrops.
     static let pillFill = UIColor(.dynamic { t in
         t.userInterfaceStyle == .dark
-            ? CGColor(red: 19 / 255, green: 19 / 255, blue: 19 / 255, alpha: 1)
-            : CGColor(red: 253 / 255, green: 253 / 255, blue: 253 / 255, alpha: 1)
+            ? CanvasColor(red: 19 / 255, green: 19 / 255, blue: 19 / 255, alpha: 1)
+            : CanvasColor(red: 253 / 255, green: 253 / 255, blue: 253 / 255, alpha: 1)
     })
 
     /// Magnifier / placeholder / clear-glyph ink.
@@ -356,7 +356,7 @@ open class UISearchTextField: UITextField {
         let visible = drawsFieldBackground
         layer.cornerRadius = visible ? bounds.height / 2 : 0
         backgroundColor = visible ? _UISearchFieldMetrics.pillFill : nil
-        layer.shadowColor = visible ? CGColor(red: 0, green: 0, blue: 0, alpha: 1) : nil
+        layer._shadowColorValue = visible ? CanvasColor(red: 0, green: 0, blue: 0, alpha: 1) : nil
         layer.shadowOpacity = visible ? _UISearchFieldMetrics.shadowOpacity : 0
         layer.shadowRadius = _UISearchFieldMetrics.shadowRadius
         layer.shadowOffset = _UISearchFieldMetrics.shadowOffset

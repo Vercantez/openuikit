@@ -310,7 +310,7 @@ final class _UIContextMenuShadowView: UIView {
             platterRect, cornerRadius: UIMenuMetrics.cornerRadius).elements
         canvas.save()
         canvas.clip(to: ring)
-        canvas.setShadow(color: CGColor(red: 0, green: 0, blue: 0,
+        canvas.setShadow(color: CanvasColor(red: 0, green: 0, blue: 0,
                                         alpha: UIMenuMetrics.shadowAlpha),
                          offset: CGSize(width: 0, height: UIMenuMetrics.shadowOffsetY),
                          blur: UIMenuMetrics.shadowBlur)
@@ -385,7 +385,7 @@ final class _UIContextMenuGlyphView: UIView {
             p.addLine(to: CGPoint(x: bounds.maxX - bounds.width * 0.15, y: bounds.midY))
             p.addLine(to: CGPoint(x: bounds.minX + bounds.width * 0.15, y: bounds.maxY - 1))
         }
-        canvas.stroke(p, color: strokeColor.resolvedColor(with: traitCollection).cgColor,
+        canvas.stroke(p, color: strokeColor.resolvedColor(with: traitCollection)._canvasColor,
                       lineWidth: 2, cap: .round, join: .round)
     }
 }

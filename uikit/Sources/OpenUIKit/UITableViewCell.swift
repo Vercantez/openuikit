@@ -135,7 +135,7 @@ final class UITableCellAccessoryView: UIView {
     /// Fill a round dot (for round caps/joins on top of the butt-capped
     /// backend stroke).
     private func dot(at p: CGPoint, radius r: CGFloat, in canvas: Canvas,
-                     color: CGColor) {
+                     color: CanvasColor) {
         let k: CGFloat = 0.5522847498307936 * r
         var path = Path()
         path.move(to: CGPoint(x: p.x + r, y: p.y))
@@ -157,7 +157,7 @@ final class UITableCellAccessoryView: UIView {
 
     /// Stroke A→…→Z with round caps (backend strokes butt-cap/round-join).
     private func strokePolyline(_ points: [CGPoint], width: CGFloat,
-                                in canvas: Canvas, color: CGColor) {
+                                in canvas: Canvas, color: CanvasColor) {
         var path = Path()
         path.move(to: points[0])
         for p in points.dropFirst() { path.addLine(to: p) }
@@ -283,7 +283,7 @@ final class UITableViewCellEditControl: UIView {
                            y: bounds.midY - mh / 2,
                            width: mw, height: mh)
         canvas.fill(UITableViewCellEditControl.rectPath(minus),
-                    color: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+                    color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 1))
     }
 
     static func ellipse(in rect: CGRect) -> Path {

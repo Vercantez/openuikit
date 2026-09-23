@@ -4,7 +4,7 @@ import XCTest
 @testable import OpenUIKit
 
 // XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
-private typealias CGColor = OpenUIKit.CGColor
+private typealias CGColor = OpenUIKit.CanvasColor
 
 #if !os(Linux)
 @MainActor
@@ -33,7 +33,7 @@ final class ShadowGradientTests: XCTestCase {
         XCTAssertEqual(v.layer.shadowOpacity, 0)
         XCTAssertEqual(v.layer.shadowRadius, 3)
         XCTAssertEqual(v.layer.shadowOffset, CGSize(width: 0, height: -3))
-        let c = try? XCTUnwrap(v.layer.shadowColor)
+        let c = try? XCTUnwrap(v.layer.shadowColor?.canvasColor)
         XCTAssertEqual(c, CGColor(red: 0, green: 0, blue: 0, alpha: 1))
     }
 

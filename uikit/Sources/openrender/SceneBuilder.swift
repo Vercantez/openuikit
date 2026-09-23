@@ -11,6 +11,15 @@
 // transform LAST), same color parsing, same layout dump keys and rounding.
 
 import OpenUIKit
+// UIKit's delegate / data-source protocols refine NSObjectProtocol where the
+// Objective-C runtime exists (objc-protocols.md), so the scene drivers derive
+// from NSObject there. A scoped import: this file must not import Foundation.
+#if canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+typealias _SceneDriverBase = NSObject
+#else
+class _SceneDriverBase { init() {} }
+#endif
 
 typealias SceneJSON = [String: JSONValue]
 
@@ -317,14 +326,14 @@ func makeImage(_ j: SceneJSON, scale: CGFloat) -> UIImage {
     let pw = Int((sz[0] * scale).rounded())
     let ph = Int((sz[1] * scale).rounded())
     let colorStrings = j["colors"]?.arrayValue?.compactMap { $0.stringValue } ?? ["#FF00FF"]
-    let colors: [CGColor] = colorStrings.map {
+    let colors: [CanvasColor] = colorStrings.map {
         guard let c = parseColor($0) else { fatalError("bad color '\($0)' in image") }
-        return c.cgColor
+        return c.resolvedCGColor(with: .current)
     }
     let kind = j["kind"]?.stringValue ?? "solid"
     let bmp = Bitmap(width: pw, height: ph)
 
-    func bytes(_ c: CGColor) -> (UInt8, UInt8, UInt8, UInt8) {
+    func bytes(_ c: CanvasColor) -> (UInt8, UInt8, UInt8, UInt8) {
         func b(_ v: CGFloat) -> UInt8 { UInt8(max(0, min(255, (v * 255).rounded()))) }
         return (b(c.red), b(c.green), b(c.blue), b(c.alpha))
     }
@@ -363,7 +372,7 @@ func makeImage(_ j: SceneJSON, scale: CGFloat) -> UIImage {
         stops.reserveCapacity(n)
         for i in 0..<n {
             let t = (CGFloat(i) + 0.5) / CGFloat(n)
-            stops.append(bytes(CGColor(red: c0.red + (c1.red - c0.red) * t,
+            stops.append(bytes(CanvasColor(red: c0.red + (c1.red - c0.red) * t,
                                        green: c0.green + (c1.green - c0.green) * t,
                                        blue: c0.blue + (c1.blue - c0.blue) * t,
                                        alpha: c0.alpha + (c1.alpha - c0.alpha) * t)))
@@ -696,7 +705,7 @@ func makeButton(_ j: SceneJSON) -> UIButton {
 /// UITableView holds dataSource/delegate weakly, like real UIKit.
 var sceneTableDrivers: [SceneTableDriver] = []
 
-final class SceneTableDriver: UITableViewDataSource, UITableViewDelegate {
+final class SceneTableDriver: _SceneDriverBase, UITableViewDataSource, UITableViewDelegate {
     struct Row {
         let style: UITableViewCell.CellStyle
         let text: String
@@ -875,7 +884,7 @@ final class SceneCollectionSupplementary: UICollectionReusableView {
     }
 }
 
-final class SceneCollectionDriver: UICollectionViewDataSource,
+final class SceneCollectionDriver: _SceneDriverBase, UICollectionViewDataSource,
                                    UICollectionViewDelegateFlowLayout {
     struct Item {
         let text: String
@@ -1004,7 +1013,7 @@ func makeCollectionView(_ j: SceneJSON) -> UICollectionView {
 
 var sceneListDrivers: [SceneListDriver] = []
 
-final class SceneListDriver: UICollectionViewDataSource, UICollectionViewDelegate {
+final class SceneListDriver: _SceneDriverBase, UICollectionViewDataSource, UICollectionViewDelegate {
     struct Item {
         let text: String
         let secondaryText: String?
@@ -1805,7 +1814,7 @@ func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     // One scene's scheduled Timers must never leak into the next scene's
     // capture (Sources/OpenUIKit/Timer.swift): the host clock is the only
     // thing that fires them, and it rewinds per scene.
-    Timer._reset()
+    _HostClockTimer._reset()
     let scale = num(scene["scale"]) ?? 2
     // The screen IS the scene: the iOS cut rounds label heights, table
     // metrics and layout origins to the DEVICE pixel (1/3 pt on the iPhone

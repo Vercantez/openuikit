@@ -443,56 +443,38 @@ extension UITextView {
 
 // Objective-C passes colors to Core Animation as CoreGraphics `CGColorRef`
 // (`layer.borderColor = color.CGColor`) and reads them back with
-// CGColorGetComponents / CGColorGetAlpha. OpenUIKit's own CGColor is
-// OpenCoreGraphics' value struct, so each crossing converts. The model is
-// kept: a gray color (white, clear, `colorWithWhite:alpha:`) is a 2-component
-// gray CGColor, everything else 4-component sRGB — iOS 26.1,
-// objcsurfaceprobe `## cgcolor` (`whiteColor n=2 [1 1]`, `redColor n=4`).
-func _cgColorRef(_ color: OpenCoreGraphics.CGColor) -> CoreGraphics.CGColor {
-    color.isGrayModel
-        ? CoreGraphics.CGColor(gray: color.red, alpha: color.alpha)
-        : CoreGraphics.CGColor(srgbRed: color.red, green: color.green, blue: color.blue, alpha: color.alpha)
-}
-
-func _openColor(_ color: CoreGraphics.CGColor) -> OpenCoreGraphics.CGColor {
-    let k = color.components ?? []
-    if color.numberOfComponents == 2, k.count == 2 {
-        return OpenCoreGraphics.CGColor(gray: k[0], alpha: k[1])
-    }
-    if color.colorSpace?.model == .rgb, k.count == 4 {
-        return OpenCoreGraphics.CGColor(red: k[0], green: k[1], blue: k[2], alpha: k[3])
-    }
-    // Any other space: CoreGraphics' own conversion to sRGB.
-    if let srgb = CoreGraphics.CGColorSpace(name: CoreGraphics.CGColorSpace.sRGB),
-       let converted = color.converted(to: srgb, intent: .defaultIntent, options: nil),
-       let c = converted.components, c.count == 4 {
-        return OpenCoreGraphics.CGColor(red: c[0], green: c[1], blue: c[2], alpha: c[3])
-    }
-    return OpenCoreGraphics.CGColor(red: 0, green: 0, blue: 0, alpha: color.alpha)
-}
+// CGColorGetComponents / CGColorGetAlpha. Since cg-unify OpenUIKit's Swift
+// `CGColor` IS CoreGraphics' on this toolchain, so the Objective-C twins
+// hand the same object through. The model is kept by `UIColor.cgColor`: a
+// gray color (white, clear, `colorWithWhite:alpha:`) is a 2-component gray
+// CGColor, everything else 4-component sRGB — iOS 26.1, objcsurfaceprobe
+// `## cgcolor` (`whiteColor n=2 [1 1]`, `redColor n=4`).
 
 extension UIColor {
     /// The color resolved in the current trait environment, as UIKit's
     /// `CGColor` property does.
-    @objc(CGColor) public var __objc_CGColor: CoreGraphics.CGColor { _cgColorRef(cgColor) }
+    @objc(CGColor) public var __objc_CGColor: CoreGraphics.CGColor { cgColor }
     @objc(colorWithCGColor:) public class func __objc_color(cgColor: CoreGraphics.CGColor) -> UIColor {
-        let c = _openColor(cgColor)
-        return c.isGrayModel ? UIColor(white: c.red, alpha: c.alpha)
-            : UIColor(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha)
+        UIColor(cgColor: cgColor)
     }
 }
 
+#if !canImport(QuartzCore)
+// Where OpenUIKit's own CALayer is the Core Animation layer. On Apple
+// toolchains CALayer is QuartzCore's, whose colour properties are these
+// selectors already (cg-unify phase 3).
 extension CALayer {
     @objc(borderColor) public var __objc_borderColor: CoreGraphics.CGColor? {
-        get { borderColor.map(_cgColorRef) } set { borderColor = newValue.map(_openColor) }
+        get { borderColor } set { borderColor = newValue }
     }
     @objc(backgroundColor) public var __objc_backgroundColor: CoreGraphics.CGColor? {
-        get { backgroundColor.map(_cgColorRef) } set { backgroundColor = newValue.map(_openColor) }
+        get { backgroundColor } set { backgroundColor = newValue }
     }
     @objc(shadowColor) public var __objc_shadowColor: CoreGraphics.CGColor? {
-        get { shadowColor.map(_cgColorRef) } set { shadowColor = newValue.map(_openColor) }
+        get { shadowColor } set { shadowColor = newValue }
     }
 }
+#endif
 
 // MARK: - UIView.layer, font properties
 
@@ -597,6 +579,24 @@ extension NSLayoutConstraint {
 extension UIImage {
     @objc(imageWithContentsOfFile:) public class func __objc_image(contentsOfFile path: String) -> UIImage? {
         UIImage(contentsOfFile: path)
+    }
+    /// UIImage.h's CGImage surface (cg-unify: `CGImageRef` is CoreGraphics'
+    /// own image; UIImageOrientation is the SDK's NSInteger enum).
+    @objc(CGImage) public var __objc_CGImage: CoreGraphics.CGImage? { cgImage }
+    @objc(imageOrientation) public var __objc_imageOrientation: Int { imageOrientation.rawValue }
+    @objc(imageWithCGImage:) public class func __objc_image(cgImage: CoreGraphics.CGImage) -> UIImage {
+        UIImage(cgImage: cgImage)
+    }
+    @objc(imageWithCGImage:scale:orientation:)
+    public class func __objc_image(cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) -> UIImage {
+        UIImage(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
+    }
+    @objc(initWithCGImage:) public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage) {
+        self.init(cgImage: cgImage)
+    }
+    @objc(initWithCGImage:scale:orientation:)
+    public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) {
+        self.init(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
     }
     @objc(initWithData:) public convenience init?(__objcData data: Data) { self.init(data: [UInt8](data)) }
     @objc(imageWithData:) public class func __objc_image(data: Data) -> UIImage? { UIImage(data: [UInt8](data)) }
@@ -742,6 +742,32 @@ extension UIView {
         animate(withDuration: duration, delay: delay, usingSpringWithDamping: dampingRatio,
                 initialSpringVelocity: velocity, options: AnimationOptions(rawValue: options),
                 animations: animations, completion: completion)
+    }
+}
+// MARK: - Delegates and data sources (@objc protocols; objc-protocols.md)
+
+extension UIScrollView {
+    @objc(delegate) public var __objc_delegate: UIScrollViewDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(zoomScale) public var __objc_zoomScale: CGFloat { get { zoomScale } set { zoomScale = newValue } }
+    @objc(minimumZoomScale) public var __objc_minimumZoomScale: CGFloat {
+        get { minimumZoomScale } set { minimumZoomScale = newValue }
+    }
+    @objc(maximumZoomScale) public var __objc_maximumZoomScale: CGFloat {
+        get { maximumZoomScale } set { maximumZoomScale = newValue }
+    }
+    @objc(setZoomScale:animated:) public func __objc_setZoomScale(_ scale: CGFloat, animated: Bool) {
+        setZoomScale(scale, animated: animated)
+    }
+}
+
+extension UITableView {
+    @objc(dataSource) public var __objc_dataSource: UITableViewDataSource? {
+        get { dataSource } set { dataSource = newValue }
+    }
+    @objc(rectForRowAtIndexPath:) public func __objc_rectForRow(at indexPath: IndexPath) -> CGRect {
+        rectForRow(at: indexPath)
     }
 }
 #endif

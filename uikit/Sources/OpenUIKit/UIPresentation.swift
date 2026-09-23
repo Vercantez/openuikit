@@ -889,7 +889,7 @@ final class _UIPageSheetView: UIView {
         }
         let path = _UIPageSheetView.sheetPath(
             in: bounds, topRadius: top, bottomRadius: bottom)
-        let color = paintedFillColor.resolvedColor(with: traitCollection).cgColor
+        let color = paintedFillColor.resolvedColor(with: traitCollection)._canvasColor
         canvas.fill(path, color: color)
     }
 
@@ -1323,6 +1323,17 @@ extension UIViewController {
             presented.presentedViewController?.dismiss(animated: false)
             vc = presented
         } else if let presenter = presentingViewController {
+            presenter.dismiss(animated: animated, completion: completion)
+            return
+        } else if let presenter = sequence(first: self, next: { $0.parent })
+                    .dropFirst()
+                    .lazy.compactMap({ $0.presentingViewController }).first {
+            // A CHILD of a presented controller (the root of a presented
+            // navigation controller) dismisses that presentation: UIKit
+            // documents presentingViewController for a child as "the view
+            // controller that presented the parent", and Focus's Settings
+            // Done button is `self.dismiss(animated:)` on exactly such a
+            // child (SettingsViewController inside its UINavigationController).
             presenter.dismiss(animated: animated, completion: completion)
             return
         } else {

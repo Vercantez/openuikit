@@ -10,7 +10,7 @@ private typealias PortableColor = OpenUIKit.CGColor
 #if !os(Linux)
 @MainActor
 #endif
-private final class LayerLayoutDelegateProbe: OpenUIKit.CALayerDelegate {
+private final class LayerLayoutDelegateProbe: NSObject, OpenUIKit.CALayerDelegate {
     private(set) var layers: [PortableLayer] = []
 
     func layoutSublayers(of layer: PortableLayer) {
@@ -77,9 +77,24 @@ final class LayerContextCompatibilityTests: XCTestCase {
     }
 
     func testFilterStorageOpacityAndBoundedKeyValueCompatibility() throws {
+#if canImport(CoreGraphics)
+        // QuartzCore's CALayer (cg-unify phase 3) resolves
+        // `filters.<name>.<input>` through the filter's `name`, as with a
+        // CAFilter; the token is a key-value object.
+        final class FilterToken: NSObject {
+            let tokenName: String
+            var inputs: [String: Any] = [:]
+            init(description: String) { tokenName = description }
+            override var description: String { tokenName }
+            @objc var name: String { tokenName }
+            override func setValue(_ value: Any?, forKey key: String) { inputs[key] = value }
+            override func value(forKey key: String) -> Any? { key == "name" ? tokenName : inputs[key] }
+        }
+#else
         struct FilterToken: CustomStringConvertible {
             let description: String
         }
+#endif
 
         let layer = PortableLayer()
         let gaussian = FilterToken(description: "gaussianBlur")
@@ -130,8 +145,14 @@ final class LayerContextCompatibilityTests: XCTestCase {
     }
 
     func testCAFilterRuntimeMetadataAndBoundedInputsFailClosed() throws {
-#if canImport(ObjectiveC)
+#if canImport(ObjectiveC) && !canImport(CoreGraphics)
         XCTAssertEqual(NSStringFromClass(_OpenCAFilter.self), "CAFilter")
+#elseif canImport(ObjectiveC)
+        // QuartzCore owns the runtime name here (cg-unify): no duplicate class.
+        XCTAssertEqual(NSStringFromClass(_OpenCAFilter.self), "OUKCAFilter")
+        XCTAssertFalse(NSClassFromString("CAFilter") === _OpenCAFilter.self)
+#endif
+#if canImport(ObjectiveC)
         XCTAssertTrue(_OpenCAFilter.responds(
             to: NSSelectorFromString("filterWithType:")))
 #endif
@@ -362,12 +383,12 @@ final class LayerContextCompatibilityTests: XCTestCase {
 
         let front = PortableLayer()
         front.frame = root.bounds
-        front.backgroundColor = PortableColor(red: 1, green: 0, blue: 0, alpha: 1)
+        front.backgroundColor = PortableColor(srgbRed: 1, green: 0, blue: 0, alpha: 1)
         root.addSublayer(front)
 
         let back = PortableLayer()
         back.frame = root.bounds
-        back.backgroundColor = PortableColor(red: 0, green: 0, blue: 1, alpha: 1)
+        back.backgroundColor = PortableColor(srgbRed: 0, green: 0, blue: 1, alpha: 1)
         root.insertSublayer(back, at: 0)
 
         XCTAssertEqual(root.sublayers?.count, 2)
@@ -390,16 +411,20 @@ final class LayerContextCompatibilityTests: XCTestCase {
         back.removeFromSuperlayer()
         XCTAssertNil(root.sublayers, "UIKit represents an empty layer list as nil")
 
+#if !canImport(CoreGraphics)
         // A parent cannot be inserted below one of its own descendants.
+        // (OpenUIKit's own layer rejects it; QuartzCore -- the layer on Apple
+        // toolchains, cg-unify phase 3 -- raises CALayerInvalid, as iOS does.)
         root.addSublayer(front)
         front.addSublayer(root)
         XCTAssertNil(root.superlayer)
         XCTAssertNil(front.sublayers)
+#endif
     }
 
     func testBackingLayerVisualStateForwardsToItsView() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        let color = PortableColor(red: 0.2, green: 0.4, blue: 0.6, alpha: 0.8)
+        let color = PortableColor(srgbRed: 0.2, green: 0.4, blue: 0.6, alpha: 0.8)
         view.layer.backgroundColor = color
         XCTAssertEqual(view.backgroundColor?.cgColor, color)
         XCTAssertEqual(view.layer.backgroundColor, color)
@@ -425,8 +450,8 @@ final class LayerContextCompatibilityTests: XCTestCase {
             root.backgroundColor = .white
             let gradient = PortableGradientLayer()
             gradient.frame = root.bounds
-            gradient.colors = [PortableColor(red: 1, green: 0, blue: 0, alpha: 1),
-                               PortableColor(red: 0, green: 0, blue: 1, alpha: 1)]
+            gradient.colors = [PortableColor(srgbRed: 1, green: 0, blue: 0, alpha: 1),
+                               PortableColor(srgbRed: 0, green: 0, blue: 1, alpha: 1)]
             gradient.startPoint = CGPoint(x: 0, y: 0.5)
             gradient.endPoint = CGPoint(x: 1, y: 0.5)
             root.layer.insertSublayer(gradient, at: 0)
@@ -457,9 +482,9 @@ final class LayerContextCompatibilityTests: XCTestCase {
         guard let context = UIGraphicsGetCurrentContext() else {
             return XCTFail("begin must install a current context")
         }
-        XCTAssertEqual(context.scale, 3)
-        context.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 2),
-                     color: PortableColor(red: 1, green: 0, blue: 0, alpha: 1))
+        XCTAssertEqual(abs(context.ctm.a), 3)
+        context.setFillColor(UIColor(red: 1, green: 0, blue: 0, alpha: 1).cgColor)
+        context.fill(CGRect(x: 0, y: 0, width: 4, height: 2))
 
         let first = UIGraphicsGetImageFromCurrentImageContext()
         XCTAssertEqual(first?.scale, 3)
@@ -468,8 +493,8 @@ final class LayerContextCompatibilityTests: XCTestCase {
         XCTAssertEqual(first.map { pixel($0.bitmap, x: 6, y: 3) }, [255, 0, 0, 255])
 
         // Returned images are snapshots, not aliases of the mutable context.
-        context.fill(rect: CGRect(x: 0, y: 0, width: 4, height: 2),
-                     color: PortableColor(red: 0, green: 0, blue: 1, alpha: 1))
+        context.setFillColor(UIColor(red: 0, green: 0, blue: 1, alpha: 1).cgColor)
+        context.fill(CGRect(x: 0, y: 0, width: 4, height: 2))
         XCTAssertEqual(first.map { pixel($0.bitmap, x: 6, y: 3) }, [255, 0, 0, 255])
         XCTAssertEqual(UIGraphicsGetImageFromCurrentImageContext().map {
             pixel($0.bitmap, x: 6, y: 3)
@@ -484,18 +509,18 @@ final class LayerContextCompatibilityTests: XCTestCase {
         CanvasBackendSelection.current = .swift
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 3, height: 3), false, 1)
         let outer = try! XCTUnwrap(UIGraphicsGetCurrentContext())
-        outer.fill(rect: CGRect(x: 0, y: 0, width: 3, height: 3),
-                   color: PortableColor(red: 1, green: 0, blue: 0, alpha: 1))
+        outer.setFillColor(UIColor(red: 1, green: 0, blue: 0, alpha: 1).cgColor)
+        outer.fill(CGRect(x: 0, y: 0, width: 3, height: 3))
 
         UIGraphicsBeginImageContextWithOptions(CGSize(width: 2, height: 2), true, 2)
         let inner = try! XCTUnwrap(UIGraphicsGetCurrentContext())
         XCTAssertFalse(inner === outer)
-        XCTAssertEqual(inner.scale, 2)
+        XCTAssertEqual(abs(inner.ctm.a), 2)
         XCTAssertEqual(UIGraphicsGetImageFromCurrentImageContext().map {
             pixel($0.bitmap, x: 0, y: 0)[3]
         }, 255, "opaque contexts begin with opaque pixels")
-        inner.fill(rect: CGRect(x: 0, y: 0, width: 2, height: 2),
-                   color: PortableColor(red: 0, green: 0, blue: 1, alpha: 1))
+        inner.setFillColor(UIColor(red: 0, green: 0, blue: 1, alpha: 1).cgColor)
+        inner.fill(CGRect(x: 0, y: 0, width: 2, height: 2))
         XCTAssertEqual(UIGraphicsGetImageFromCurrentImageContext().map {
             pixel($0.bitmap, x: 2, y: 2)
         }, [0, 0, 255, 255])

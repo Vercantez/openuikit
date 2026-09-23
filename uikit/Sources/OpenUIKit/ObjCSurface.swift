@@ -19,7 +19,7 @@
 //     only where Foundation provides the C structs;
 //   * String and Array bridge through Foundation, so NSString / NSArray
 //     members exist only where Foundation does.
-// CGColorRef members (UIColor.CGColor, CALayer.borderColor, …) need Apple's
+// CGColorRef members (UIColor.CanvasColor, CALayer.borderColor, …) need Apple's
 // CoreGraphics and live in OpenUIKitObjCBridge.
 //
 // Linux ELF has no Objective-C runtime; this file is empty there.
@@ -117,6 +117,8 @@ extension UIFont {
 }
 
 // MARK: - CALayer (CALayer.h)
+// QuartzCore implements these natively where Apple's frameworks exist.
+#if !canImport(CoreGraphics)
 
 extension CALayer {
     /// `+[CALayer layer]`: `[[self alloc] init]`, so an Objective-C
@@ -194,4 +196,5 @@ extension CALayer {
     @objc(sublayers) public var __objc_sublayers: [CALayer]? { get { sublayers } set { sublayers = newValue } }
 #endif
 }
+#endif
 #endif

@@ -5,7 +5,7 @@ import Foundation
 #if !os(Linux)
 @MainActor
 #endif
-private final class FocusZoomDelegate: UIScrollViewDelegate {
+private final class FocusZoomDelegate: NSObject, UIScrollViewDelegate {
     let zoomView: UIView
     var began = 0
     var changed = 0

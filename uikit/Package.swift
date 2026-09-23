@@ -345,7 +345,13 @@ let coreTargets: [Target] = [
     // (docs/agent_reports/simplenote-objc-core.md). Linux ELF and the
     // Foundation-hidden guest library route compile the same sources without
     // it (no `@objc` there); their behaviour is unchanged.
-    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"],
+    // cg-unify phase 3: on Apple platforms Core Animation is QuartzCore's; a
+    // load-time constructor installs OpenUIKit's CALayer/CATransaction
+    // interposers (Sources/OpenUIKit/QuartzCoreUnification.swift).
+    .target(name: "OpenUIKitQuartzBootstrap", path: "Sources/OpenUIKitQuartzBootstrap"),
+    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz",
+                                              .target(name: "OpenUIKitQuartzBootstrap",
+                                                      condition: .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS]))],
             swiftSettings: [.define("OPENUIKIT_OBJC_SUBCLASSING",
                                     .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]),
     .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
@@ -525,7 +531,13 @@ let frameworkTargets: [Target] = [
     ),
     .target(
         name: "SafariServices",
-        dependencies: ["OpenUIKit", "UIKit"]
+        dependencies: ["OpenUIKit", "UIKit"],
+        // Objective-C exceptions from -initWithURL: (safari-objc.md): Apple
+        // toolchains only. The Mach-O guest compiles this source too, with
+        // objc4 and a Foundation facade that has no NSException (MEASURED
+        // build_full: "cannot find 'NSException' in scope").
+        swiftSettings: [.define("OPENUIKIT_OBJC_EXCEPTIONS",
+                                .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]
     ),
     .target(
         name: "MessageUI",
@@ -949,7 +961,15 @@ let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
     "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge",
-].map { .library(name: $0, targets: [$0]) }
+].map { .library(name: $0, targets: [$0]) } + [
+    // The Clang module `SafariServices` for Objective-C targets
+    // (Sources/SafariServicesObjC/include/module.modulemap). OpenUIKit is in
+    // the product so a consumer depends on it DIRECTLY: SwiftPM orders a
+    // Clang target after only its direct Swift dependencies' generated
+    // headers (MEASURED: "OpenUIKit-Swift.h not found" compiling
+    // NetNewsWireObjC when OpenUIKit came in through SafariServicesObjC).
+    .library(name: "SafariServicesObjC", targets: ["SafariServicesObjC", "OpenUIKit"]),
+]
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
@@ -970,6 +990,22 @@ let openUIKitObjCSubclassingCFlags: CSetting = .unsafeFlags(openUIKitObjCSubclas
 let openUIKitObjCSubclassingSwiftFlags: SwiftSetting =
     .unsafeFlags(openUIKitObjCSubclassingDefines.flatMap { ["-Xcc", $0] })
 let simplenoteTargets: [Target] = [
+    // Objective-C view of SafariServices, module name `SafariServices` with
+    // `export *` (docs/agent_reports/safari-objc.md). Objective-C app targets
+    // depend on this product; Swift targets on the Swift `SafariServices`.
+    .target(name: "SafariServicesObjC", dependencies: ["OpenUIKit"],
+            path: "Sources/SafariServicesObjC", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags]),
+    // NetNewsWire's SFSafariViewController+Extras shape against it; the
+    // scenario is the SAME .m the iOS 26.1 oracle runs
+    // (Tools/oracle2/safariobjcprobe/run.sh).
+    .target(name: "OpenUIKitSafariFixtures", dependencies: ["SafariServicesObjC", "OpenUIKit"],
+            path: "Tools/oracle2/safariobjcprobe/scenario", publicHeadersPath: "include",
+            cSettings: [openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "SafariObjCTests",
+                dependencies: ["OpenUIKitSafariFixtures", "SafariServices", "OpenUIKit"],
+                path: "Tests/SafariObjCTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
     // Route (b) Objective-C declarations that OpenUIKit-Swift.h cannot carry
     // (enums, structs, protocols, typed strings). Pure declarations; values
@@ -1024,6 +1060,30 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // UIKit's delegate / data-source protocols as @objc protocols
+    // (docs/agent_reports/objc-protocols.md): the scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcprotocolprobe/run.sh).
+    .target(name: "OpenUIKitObjCProtocolFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcprotocolprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCProtocolTests",
+                dependencies: ["OpenUIKitObjCProtocolFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCProtocolTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // CoreGraphics / ImageIO type unification (docs/agent_reports/cg-unify.md).
+    // The scenario is the SAME Swift the iOS 26.1 oracle runs
+    // (Tools/oracle2/cgunifyprobe/run.sh); it imports UIKit only, so it also
+    // proves the shim's re-exports. The test compares transcripts.
+    .target(name: "OpenUIKitCGUnifyFixtures", dependencies: ["UIKit", "OpenUIKit"],
+            path: "Tools/oracle2/cgunifyprobe/scenario"),
+    .testTarget(name: "CGUnifyTests",
+                dependencies: ["OpenUIKitCGUnifyFixtures", "UIKit", "OpenUIKit"],
+                path: "Tests/CGUnifyTests"),
+    // Timer / RunLoop unification (docs/agent_reports/timer-unify.md): a file
+    // importing UIKit and Foundation names one Timer, Foundation's.
+    .testTarget(name: "TimerUnifyTests", dependencies: ["UIKit", "OpenUIKit"],
+                path: "Tests/TimerUnifyTests"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

@@ -73,7 +73,7 @@ enum _UIMaterialMix {
         CanvasBackdropFilterConfiguration(
             blurRadius: recipe.radius,
             saturation: recipe.saturation,
-            tintColor: CGColor(red: recipe.overlayGray,
+            tintColor: CanvasColor(red: recipe.overlayGray,
                                green: recipe.overlayGray,
                                blue: recipe.overlayGray,
                                alpha: recipe.overlayAlpha),
@@ -98,7 +98,7 @@ enum _UIMaterialMix {
         return CanvasBackdropFilterConfiguration(
             blurRadius: radius,
             saturation: saturation,
-            tintColor: CGColor(red: gray, green: gray, blue: gray, alpha: alpha),
+            tintColor: CanvasColor(red: gray, green: gray, blue: gray, alpha: alpha),
             intensity: 1,
             clampsSaturation: clampsSaturation)
     }
@@ -193,11 +193,11 @@ enum _UIMaterialMix {
             // MEASURED glass.regular.tintRed: G=B=0, R white 253 / black 223.
             // Same α as `_UIGlassMaterial` (222/255) with T = tint, sat 5.651
             // unclamped. White 253 exact; black 220 vs 223 residual 3.
-            let c = tintColor.cgColor
+            let c = tintColor._canvasColor
             return CanvasBackdropFilterConfiguration(
                 blurRadius: _UIGlassMaterial.blurSigma,
                 saturation: _UIGlassMaterial.saturation,
-                tintColor: CGColor(red: c.red, green: c.green, blue: c.blue,
+                tintColor: CanvasColor(red: c.red, green: c.green, blue: c.blue,
                                    alpha: _UIGlassMaterial.mixAlpha),
                 intensity: 1,
                 clampsSaturation: false)

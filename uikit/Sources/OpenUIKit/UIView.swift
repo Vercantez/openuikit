@@ -15,6 +15,7 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+import class CoreGraphics.CGContext
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -50,6 +51,7 @@ public struct UIRectEdge: OptionSet, Sendable {
 /// Core Animation names corners in the layer's local coordinate system.
 /// UIView backing layers are not geometry-flipped, so minY is the visual top
 /// in OpenUIKit's UIKit-style, top-left coordinate space.
+#if !canImport(CoreGraphics)  // QuartzCore's own CACornerMask otherwise (QuartzCoreUnification.swift)
 public struct CACornerMask: OptionSet, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
@@ -65,11 +67,17 @@ public struct CACornerMask: OptionSet, Sendable {
     ]
 }
 
+#endif
 public enum UIViewContentMode: Sendable {
     case scaleToFill, scaleAspectFit, scaleAspectFill, redraw, center
     case top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight
 }
 
+#if !canImport(CoreGraphics)
+// OpenUIKit's own Core Animation layer, for Linux ELF and the Mach-O guest.
+// Where Apple's frameworks exist CALayer / CAGradientLayer / CALayerDelegate
+// are QuartzCore's, and the port's state for them lives in
+// QuartzCoreUnification.swift (cg-unify phase 3).
 /// Class-only subset of QuartzCore's layer delegate used for layout. Core
 /// Animation makes this callback optional; a default implementation gives
 /// portable Swift delegates the same adopt-only-what-you-use ergonomics.
@@ -118,7 +126,7 @@ open class CALayer: NSObject {
     private final var storedPosition: CGPoint = .zero
     private final var storedAnchorPoint = CGPoint(x: 0.5, y: 0.5)
     private final var storedSublayers: [CALayer] = []
-    private final var storedBackgroundColor: CGColor?
+    private final var storedBackgroundColor = _LayerColor(value: nil)
     private final var storedOpacity: Float = 1
     private final var storedHidden = false
     private final var storedMask: CALayer?
@@ -256,12 +264,45 @@ open class CALayer: NSObject {
         parent._setNeedsLayoutFromMutation()
     }
 
+    /// Core Animation's colour properties speak CoreGraphics' `CGColor`
+    /// (cg-unify); the renderer reads the `_…Value` twins, which hold its
+    /// value colour, so no frame converts.
+    /// MEASURED iOS 26.1 (cgunifyprobe `## layer`): the colour object
+    /// assigned is the one read back (its colour space included), a backing
+    /// layer reports its view's `UIColor.cgColor`, and a new layer's
+    /// border and shadow colours are opaque black in `kCGColorSpaceSRGB`.
     public final var backgroundColor: CGColor? {
+        get {
+            if let owner {
+                return owner.backgroundColor?._cgColorObject(with: owner.traitCollection)
+            }
+            return storedBackgroundColor.cgColor
+        }
+        set {
+            if let owner {
+                owner.backgroundColor = newValue.map { UIColor(cgColor: $0) }
+            } else {
+                storedBackgroundColor.set(newValue)
+            }
+        }
+    }
+    public final var borderColor: CGColor? {
+        get { storedBorderColor.cgColor }
+        set { storedBorderColor.set(newValue) }
+    }
+    public final var shadowColor: CGColor? {
+        get { storedShadowColor.cgColor }
+        set { storedShadowColor.set(newValue) }
+    }
+    private final var storedBorderColor = _LayerColor(object: CanvasColor._layerDefaultBlack)
+    private final var storedShadowColor = _LayerColor(object: CanvasColor._layerDefaultBlack)
+
+    final var _backgroundColorValue: CanvasColor? {
         get {
             if let owner {
                 return owner.backgroundColor?.resolvedCGColor(with: owner.traitCollection)
             }
-            return storedBackgroundColor
+            return storedBackgroundColor.value
         }
         set {
             if let owner {
@@ -269,7 +310,7 @@ open class CALayer: NSObject {
                     UIColor(red: $0.red, green: $0.green, blue: $0.blue, alpha: $0.alpha)
                 }
             } else {
-                storedBackgroundColor = newValue
+                storedBackgroundColor.value = newValue
             }
         }
     }
@@ -316,7 +357,10 @@ open class CALayer: NSObject {
             }
         }
     }
-    public final var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    final var _borderColorValue: CanvasColor? {
+        get { storedBorderColor.value }
+        set { storedBorderColor.value = newValue }
+    }
     public final var masksToBounds: Bool = false
     /// Core Animation's opaque-content optimization hint. It does not alter
     /// composited pixels by itself; renderers may use it to skip alpha work
@@ -356,7 +400,10 @@ open class CALayer: NSObject {
     // Shadow (spec v2) — CALayer defaults: opaque black, opacity 0 (off),
     // offset (0, -3) (up, in iOS's top-left geometry), radius 3.
     // Invisible while masksToBounds is true, like CoreAnimation.
-    public final var shadowColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+    final var _shadowColorValue: CanvasColor? {
+        get { storedShadowColor.value }
+        set { storedShadowColor.value = newValue }
+    }
     public final var shadowOpacity: Float = 0 {
         didSet {
             if shadowOpacity != oldValue {
@@ -440,7 +487,7 @@ open class CALayer: NSObject {
 
     isolated deinit {
         for record in _explicitAnimations {
-            CATransaction._removeAnimation(workID: record.workID)
+            _OUKTransaction._removeAnimation(workID: record.workID)
         }
     }
 
@@ -589,6 +636,17 @@ open class CALayer: NSObject {
     /// Paint the receiver and its descendants into an existing graphics
     /// context. Like Core Animation, the root's own frame/position is not
     /// applied; only its bounds contents and descendant placement are drawn.
+#if canImport(CoreGraphics)
+    /// UIKit's `render(in:)` into a CoreGraphics context: the port's own
+    /// surface when the port made the context, else a surface over the app's
+    /// bitmap context (UIGraphicsCoreGraphics.swift).
+    public final func render(in context: CGContext) {
+        UIGraphicsPushContext(context)
+        UIGraphics.draw { render(in: $0) }
+        UIGraphicsPopContext()
+    }
+#endif
+
     public final func render(in context: Canvas) {
         // iOS 26's legacy render(in:) path was measured to round all four
         // corners regardless of maskedCorners, unlike live compositing.
@@ -602,12 +660,41 @@ open class CALayer: NSObject {
     }
 }
 
+/// One Core Animation colour property: the renderer's value colour plus the
+/// CoreGraphics object an app assigned, so the object (and its colour space)
+/// reads back unchanged. An internal write of the value drops the object.
+struct _LayerColor {
+    var value: CanvasColor? { didSet { object = nil } }
+    private var object: CGColor?
+    init(value: CanvasColor?) { self.value = value }
+    init(object: CGColor) {
+        self.value = CanvasColor(object)
+        self.object = object
+    }
+    var cgColor: CGColor? { object ?? value?.cgColor }
+    mutating func set(_ color: CGColor?) {
+        value = color.map(CanvasColor.init)
+        object = color
+    }
+}
+
 /// Axial Core Animation gradient layer. The render pipelines route these
 /// stops through the same oracle-calibrated Generic-RGB interpolation used by
 /// UIGradientView (or quartz's calibrated QZGradientLayer implementation).
 @preconcurrency @MainActor
 public final class CAGradientLayer: CALayer {
-    public var colors: [CGColor]?
+    /// CoreGraphics colours, as Core Animation takes them (cg-unify). The
+    /// renderer reads `_colorValues`.
+    public var colors: [CGColor]? {
+        get { storedColorObjects ?? _colorValues?.map(\.cgColor) }
+        set {
+            _colorValues = newValue?.map(CanvasColor.init)
+            storedColorObjects = newValue
+        }
+    }
+    private var storedColorObjects: [CGColor]?
+    var _colorValues: [CanvasColor]? { didSet { storedColorObjects = nil } }
+    var _locationValues: [CGFloat]? { locations }
     public var locations: [CGFloat]?
     public var startPoint = CGPoint(x: 0.5, y: 0)
     public var endPoint = CGPoint(x: 0.5, y: 1)
@@ -618,6 +705,7 @@ public final class CAGradientLayer: CALayer {
 #endif
 }
 
+#endif
 /// Internal hierarchy policy for UIKit containers whose public contract does
 /// not permit arbitrary direct children. UIView's public insertion methods
 /// consult it; framework implementation paths can install private children
@@ -839,6 +927,10 @@ open class UIView: UIResponder, CALayerDelegate {
         set { layer.masksToBounds = newValue }
     }
     public final var contentMode: UIViewContentMode = .scaleToFill
+    /// UIKit's backing-store scale for `draw(_:)`. Stored only: OpenUIKit
+    /// draws view content at the destination surface's scale (cg-unify's
+    /// probe sets 1 so the simulator draws at 1x like the port).
+    public final var contentScaleFactor: CGFloat = OpenUIKitRuntime.imageScreenScale
     public final var tag: Int = 0
 
     public struct AutoresizingMask: OptionSet, Sendable {
@@ -1460,7 +1552,7 @@ open class UIView: UIResponder, CALayerDelegate {
                 $0.viewIfLoaded === self ? $0 : nil
             }
             controller?.viewWillLayoutSubviews()
-            layer.layoutIfNeeded()
+            layer.layoutIfNeeded()  // the port's pass on Apple toolchains too (QuartzCoreUnification.swift)
             controller?.viewDidLayoutSubviews()
         }
         for s in subviews { s._layoutSubtree() }
@@ -1761,7 +1853,7 @@ open class UIView: UIResponder, CALayerDelegate {
     @objc(_ouk_drawContentIn:bounds:)
 #endif
     open dynamic func drawContent(in canvas: Canvas, bounds: CGRect) {
-        UIGraphics.pushContext(canvas)
+        UIGraphics.pushContext(canvas, clip: bounds)
         draw(bounds)
         UIGraphics.popContext()
     }

@@ -502,7 +502,7 @@ public func openuikit_viewcontroller_add_child(_ h: UnsafeMutableRawPointer?,
 
 // MARK: - Drawing, for -drawRect:
 
-/// UIKit's `UIGraphicsGetCurrentContext()` reduced to what a C caller can use:
+/// UIKit's `UIGraphics.currentContext` reduced to what a C caller can use:
 /// the drawing verbs act on the context the render pass pushed before calling
 /// `draw(_:)`, so they are only meaningful inside a `-drawRect:` callback.
 /// Outside one they are no-ops (not crashes) — a C ABI has nowhere to throw.
@@ -523,7 +523,7 @@ public func openuikit_gc_set_fill_color(_ r: Double, _ g: Double, _ b: Double, _
 public func openuikit_gc_fill_rect_current(_ x: Double, _ y: Double,
                                            _ w: Double, _ h: Double) {
     oukMain {
-        guard let c = UIGraphicsGetCurrentContext() else { return }
+        guard let c = UIGraphics.currentContext else { return }
         c.fill(rect: CGRect(x: x, y: y, width: w, height: h),
                color: UIGraphicsCurrentFillColor())
     }
@@ -533,9 +533,9 @@ public func openuikit_gc_fill_rect_current(_ x: Double, _ y: Double,
 public func openuikit_gc_fill_rect(_ x: Double, _ y: Double, _ w: Double, _ h: Double,
                                    _ r: Double, _ g: Double, _ b: Double, _ a: Double) {
     oukMain {
-        guard let c = UIGraphicsGetCurrentContext() else { return }
+        guard let c = UIGraphics.currentContext else { return }
         c.fill(rect: CGRect(x: x, y: y, width: w, height: h),
-               color: CGColor(red: r, green: g, blue: b, alpha: a))
+               color: CanvasColor(red: r, green: g, blue: b, alpha: a))
     }
 }
 
@@ -544,9 +544,9 @@ public func openuikit_gc_fill_rounded_rect(_ x: Double, _ y: Double, _ w: Double
                                            _ radius: Double,
                                            _ r: Double, _ g: Double, _ b: Double, _ a: Double) {
     oukMain {
-        guard let c = UIGraphicsGetCurrentContext() else { return }
+        guard let c = UIGraphics.currentContext else { return }
         c.fill(.roundedRect(CGRect(x: x, y: y, width: w, height: h), cornerRadius: radius),
-               color: CGColor(red: r, green: g, blue: b, alpha: a))
+               color: CanvasColor(red: r, green: g, blue: b, alpha: a))
     }
 }
 
@@ -555,9 +555,9 @@ public func openuikit_gc_stroke_rect(_ x: Double, _ y: Double, _ w: Double, _ h:
                                      _ lineWidth: Double,
                                      _ r: Double, _ g: Double, _ b: Double, _ a: Double) {
     oukMain {
-        guard let c = UIGraphicsGetCurrentContext() else { return }
+        guard let c = UIGraphics.currentContext else { return }
         c.stroke(.rect(CGRect(x: x, y: y, width: w, height: h)),
-                 color: CGColor(red: r, green: g, blue: b, alpha: a), lineWidth: lineWidth)
+                 color: CanvasColor(red: r, green: g, blue: b, alpha: a), lineWidth: lineWidth)
     }
 }
 

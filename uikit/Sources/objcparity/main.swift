@@ -48,12 +48,12 @@ final class CardView: UIView {
 
     override func draw(_ rect: CGRect) {
         UIColor(red: 0.20, green: 0.45, blue: 0.85, alpha: 1).setFill()
-        if let c = UIGraphicsGetCurrentContext() {
+        if let c = UIGraphics.currentContext {
             c.fill(rect: CGRect(x: 16, y: 70, width: rect.width - 32, height: 4),
                    color: UIGraphicsCurrentFillColor())
             c.fill(.roundedRect(CGRect(x: 16, y: 86, width: 120, height: 34),
                                 cornerRadius: 8),
-                   color: CGColor(red: 0.20, green: 0.45, blue: 0.85, alpha: 0.30))
+                   color: CanvasColor(red: 0.20, green: 0.45, blue: 0.85, alpha: 0.30))
         }
     }
 }

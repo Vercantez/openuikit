@@ -25,7 +25,7 @@
 // Aliasing rather than `@_exported import Foundation` is deliberate: it puts
 // the names in OpenUIKit's namespace, so the other ~100 source files keep
 // compiling without a per-file Foundation import, and OpenCoreGraphics'
-// `CGAffineTransform` / `CGColor` never have to fight CoreGraphics' for the
+// `CGAffineTransform` / `CanvasColor` never have to fight CoreGraphics' for the
 // name on Darwin (docs/PORTABILITY.md).
 //
 // WHAT IS DELIBERATELY *NOT* ALIASED
@@ -52,10 +52,10 @@
 //     selector form and its object-filter behavior differs. A Foundation-
 //     hidden Objective-C guest keeps the custom value/center and bridges the
 //     value through one NSObject-backed NSNotification carrier.
-//   * `Timer` / `RunLoop` — they run on the SCRIPTED host clock
-//     (`UIWindow.tick(timestamp:)`), not a wall clock. Foundation's run on
-//     `Date`, which would put wall-clock time into the frame loop and end
-//     byte-identical rendering. See Timer.swift.
+//   * `Timer` / `RunLoop` are Foundation's wherever Foundation exists; only
+//     the Foundation-hidden guest names OpenUIKit's host-clock types. OpenUIKit's
+//     own frame-loop work runs on `_HostClockTimer`, the SCRIPTED host clock
+//     (`UIWindow.tick(timestamp:)`), never on a wall clock. See Timer.swift.
 
 #if canImport(Foundation)
 import Foundation

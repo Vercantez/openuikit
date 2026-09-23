@@ -1,7 +1,7 @@
 // UIBezierPath — app-side path construction and drawing.
 // Owner: image/drawing module (app-compat cluster).
 //
-// Backed by OpenCoreGraphics `Path` (`cgPath`), so everything the render
+// Backed by OpenCoreGraphics `Path` (`_path`), so everything the render
 // pipeline already does with paths — analytic-coverage fills, the quartz
 // stroker, clipping — applies unchanged. `fill()` / `stroke()` /
 // `addClip()` draw into the CURRENT graphics context
@@ -28,6 +28,9 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+import enum CoreGraphics.CGLineCap
+import enum CoreGraphics.CGLineJoin
+import class CoreGraphics.CGPath
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -46,14 +49,67 @@ public struct UIRectCorner: OptionSet, Sendable {
     public static let allCorners: UIRectCorner = [.topLeft, .topRight, .bottomLeft, .bottomRight]
 }
 
+#if canImport(CoreGraphics)
+// cg-unify: CoreGraphics' own enums where CoreGraphics exists, as UIKit's
+// `UIBezierPath.lineCapStyle` / `lineJoinStyle` declare them.
+public typealias CGLineCap = CoreGraphics.CGLineCap
+public typealias CGLineJoin = CoreGraphics.CGLineJoin
+#else
 /// CG line cap styles (`CGLineCap`).
 public enum CGLineCap: Sendable { case butt, round, square }
 /// CG line join styles (`CGLineJoin`).
 public enum CGLineJoin: Sendable { case miter, round, bevel }
+#endif
+
+extension CanvasLineCap {
+    /// The renderer's cap for a CoreGraphics cap. CoreGraphics' enum is
+    /// open (a C enum), so an unknown value draws as the default, butt.
+    public init(_ cap: CGLineCap) {
+        switch cap {
+        case .round: self = .round
+        case .square: self = .square
+        default: self = .butt
+        }
+    }
+}
+
+extension CanvasLineJoin {
+    /// The renderer's join for a CoreGraphics join (unknown values: miter,
+    /// the default).
+    public init(_ join: CGLineJoin) {
+        switch join {
+        case .round: self = .round
+        case .bevel: self = .bevel
+        default: self = .miter
+        }
+    }
+}
 
 public class UIBezierPath {
-    /// The underlying OpenCoreGraphics path (UIKit's `cgPath`).
-    public var cgPath: Path
+    /// The renderer's path. UIKit's `cgPath` is CoreGraphics' own `CGPath`
+    /// where CoreGraphics exists (cg-unify) and this `Path` elsewhere.
+    public var _path: Path
+
+#if canImport(CoreGraphics)
+    /// UIKit's `cgPath`: a CoreGraphics path of the same elements.
+    public var cgPath: CGPath {
+        get { _path._cgPath }
+        set { _path = Path(newValue) }
+    }
+    /// UIKit's `init(cgPath:)`.
+    public convenience init(cgPath: CGPath) {
+        self.init(_path: Path(cgPath))
+    }
+#else
+    /// UIKit's `cgPath` (the renderer's `Path`; no CoreGraphics here).
+    public var cgPath: Path {
+        get { _path }
+        set { _path = newValue }
+    }
+    public convenience init(cgPath: Path) {
+        self.init(_path: cgPath)
+    }
+#endif
 
     // Stroking / filling attributes (UIKit defaults).
     public var lineWidth: CGFloat = 1
@@ -67,22 +123,22 @@ public class UIBezierPath {
     /// quarter-circle corners and ellipses.
     static let kappa: CGFloat = 0.5522847498307936
 
-    public init() { cgPath = Path() }
-    public init(cgPath: Path) { self.cgPath = cgPath }
+    public init() { _path = Path() }
+    public init(_path: Path) { self._path = _path }
 
-    public init(rect: CGRect) { cgPath = .rect(rect) }
+    public init(rect: CGRect) { _path = .rect(rect) }
 
     /// Ellipse inscribed in `rect`, built like CGPathAddEllipseInRect:
     /// four kappa cubics starting at the right-middle point, clockwise in
     /// UIKit's top-left geometry.
     public init(ovalIn rect: CGRect) {
-        cgPath = UIBezierPath.oval(in: rect)
+        _path = UIBezierPath.oval(in: rect)
     }
 
     /// Rounded rect with a uniform radius (identical to the layer corner
     /// construction — radius clamps to half the smaller side, like CGPath).
     public init(roundedRect rect: CGRect, cornerRadius: CGFloat) {
-        cgPath = .roundedRect(rect, cornerRadius: cornerRadius)
+        _path = .roundedRect(rect, cornerRadius: cornerRadius)
     }
 
     /// Rounded rect with only `corners` rounded. UIKit takes a CGSize of
@@ -91,7 +147,7 @@ public class UIBezierPath {
     /// corner), each clamped to half the corresponding side.
     public init(roundedRect rect: CGRect, byRoundingCorners corners: UIRectCorner,
                 cornerRadii: CGSize) {
-        cgPath = UIBezierPath.roundedRect(rect, corners: corners, radii: cornerRadii)
+        _path = UIBezierPath.roundedRect(rect, corners: corners, radii: cornerRadii)
     }
 
     // MARK: Construction
@@ -99,7 +155,7 @@ public class UIBezierPath {
     public var currentPoint: CGPoint? {
         var start: CGPoint? = nil
         var cur: CGPoint? = nil
-        for e in cgPath.elements {
+        for e in _path.elements {
             switch e {
             case .move(let p): cur = p; start = p
             case .line(let p): cur = p
@@ -111,22 +167,22 @@ public class UIBezierPath {
         return cur
     }
 
-    public var isEmpty: Bool { cgPath.elements.isEmpty }
+    public var isEmpty: Bool { _path.elements.isEmpty }
 
-    public func move(to point: CGPoint) { cgPath.move(to: point) }
-    public func addLine(to point: CGPoint) { cgPath.addLine(to: point) }
+    public func move(to point: CGPoint) { _path.move(to: point) }
+    public func addLine(to point: CGPoint) { _path.addLine(to: point) }
     public func addQuadCurve(to point: CGPoint, controlPoint: CGPoint) {
-        cgPath.addQuad(to: point, control: controlPoint)
+        _path.addQuad(to: point, control: controlPoint)
     }
     public func addCurve(to point: CGPoint, controlPoint1: CGPoint, controlPoint2: CGPoint) {
-        cgPath.addCurve(to: point, control1: controlPoint1, control2: controlPoint2)
+        _path.addCurve(to: point, control1: controlPoint1, control2: controlPoint2)
     }
-    public func close() { cgPath.close() }
-    public func removeAllPoints() { cgPath = Path() }
+    public func close() { _path.close() }
+    public func removeAllPoints() { _path = Path() }
 
     /// Append another path's elements (UIKit's `append(_:)`).
     public func append(_ path: UIBezierPath) {
-        cgPath.elements.append(contentsOf: path.cgPath.elements)
+        _path.elements.append(contentsOf: path._path.elements)
     }
 
     /// Circular arc, angles in radians measured in UIKit's top-left
@@ -137,9 +193,9 @@ public class UIBezierPath {
         let start = CGPoint(x: center.x + radius * _bpCos(startAngle),
                             y: center.y + radius * _bpSin(startAngle))
         if currentPoint == nil {
-            cgPath.move(to: start)
+            _path.move(to: start)
         } else {
-            cgPath.addLine(to: start)
+            _path.addLine(to: start)
         }
         var sweep = endAngle - startAngle
         if clockwise {
@@ -160,7 +216,7 @@ public class UIBezierPath {
             let p1 = CGPoint(x: center.x + radius * _bpCos(b), y: center.y + radius * _bpSin(b))
             let t0 = CGPoint(x: -radius * _bpSin(a), y: radius * _bpCos(a))
             let t1 = CGPoint(x: -radius * _bpSin(b), y: radius * _bpCos(b))
-            cgPath.addCurve(to: p1,
+            _path.addCurve(to: p1,
                             control1: CGPoint(x: p0.x + k * t0.x, y: p0.y + k * t0.y),
                             control2: CGPoint(x: p1.x - k * t1.x, y: p1.y - k * t1.y))
             a = b
@@ -177,19 +233,19 @@ public class UIBezierPath {
 
     /// Transform every point of the path in place (UIKit's `apply(_:)`).
     public func apply(_ transform: CGAffineTransform) {
-        cgPath = cgPath.applying(transform)
+        _path = _path.applying(transform)
     }
 
     /// A copy with `transform` applied (not UIKit API — the non-mutating
     /// form the drawing code here wants).
     public func applying(_ transform: CGAffineTransform) -> UIBezierPath {
-        let p = UIBezierPath(cgPath: cgPath.applying(transform))
+        let p = UIBezierPath(_path: _path.applying(transform))
         p.copyAttributes(from: self)
         return p
     }
 
     public func copy() -> UIBezierPath {
-        let p = UIBezierPath(cgPath: cgPath)
+        let p = UIBezierPath(_path: _path)
         p.copyAttributes(from: self)
         return p
     }
@@ -245,7 +301,7 @@ public class UIBezierPath {
             if out.isEmpty { out.append(a) }
             out.append(b)
         }
-        if out.isEmpty, case .move(let p)? = cgPath.elements.first { out.append(p) }
+        if out.isEmpty, case .move(let p)? = _path.elements.first { out.append(p) }
         return out
     }
 
@@ -264,7 +320,7 @@ public class UIBezierPath {
             }
             cur = prev
         }
-        for e in cgPath.elements {
+        for e in _path.elements {
             switch e {
             case .move(let p):
                 if closingSubpaths, open, cur != start { segs.append((cur, start)) }
@@ -309,52 +365,50 @@ public class UIBezierPath {
 
     /// Fill with the current context's fill color (`UIColor.setFill()`).
     public func fill() {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.fill(cgPath, color: UIGraphicsCurrentFillColor(), evenOdd: usesEvenOddFillRule)
+        UIGraphics.draw { $0.fill(_path, color: UIGraphicsCurrentFillColor(), evenOdd: usesEvenOddFillRule) }
     }
 
     /// Fill with an explicit color (not UIKit API, but the honest spelling
     /// for code that does not want the implicit color state).
     public func fill(with color: UIColor) {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.fill(cgPath, color: color.resolvedCGColor(with: UITraitCollection.current),
-                 evenOdd: usesEvenOddFillRule)
+        UIGraphics.draw {
+            $0.fill(_path, color: color.resolvedCGColor(with: UITraitCollection.current),
+                    evenOdd: usesEvenOddFillRule)
+        }
     }
 
     /// Stroke with the current context's stroke color (`UIColor.setStroke()`),
     /// honoring `lineWidth` / `lineCapStyle` / `lineJoinStyle`.
     public func stroke() {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.stroke(cgPath, color: UIGraphicsCurrentStrokeColor(), lineWidth: lineWidth,
-                   cap: canvasCap, join: canvasJoin, miterLimit: miterLimit)
+        UIGraphics.draw {
+            $0.stroke(_path, color: UIGraphicsCurrentStrokeColor(), lineWidth: lineWidth,
+                      cap: canvasCap, join: canvasJoin, miterLimit: miterLimit)
+        }
     }
 
     public func stroke(with color: UIColor) {
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        ctx.stroke(cgPath, color: color.resolvedCGColor(with: UITraitCollection.current),
-                   lineWidth: lineWidth, cap: canvasCap, join: canvasJoin,
-                   miterLimit: miterLimit)
+        UIGraphics.draw {
+            $0.stroke(_path, color: color.resolvedCGColor(with: UITraitCollection.current),
+                      lineWidth: lineWidth, cap: canvasCap, join: canvasJoin,
+                      miterLimit: miterLimit)
+        }
     }
 
     /// Intersect the current context's clip with this path.
     public func addClip() {
-        UIGraphicsGetCurrentContext()?.clip(to: cgPath)
+#if canImport(CoreGraphics)
+        // With UIKit's CGContext out, the clip lives in it (an app's
+        // restoreGState() must undo it, as on iOS).
+        if let bridge = UIGraphics.top?.bridge {
+            bridge.addClip(_path)
+            return
+        }
+#endif
+        UIGraphics.currentContext?.clip(to: _path)
     }
 
-    var canvasCap: CanvasLineCap {
-        switch lineCapStyle {
-        case .butt: return .butt
-        case .round: return .round
-        case .square: return .square
-        }
-    }
-    var canvasJoin: CanvasLineJoin {
-        switch lineJoinStyle {
-        case .miter: return .miter
-        case .round: return .round
-        case .bevel: return .bevel
-        }
-    }
+    var canvasCap: CanvasLineCap { CanvasLineCap(lineCapStyle) }
+    var canvasJoin: CanvasLineJoin { CanvasLineJoin(lineJoinStyle) }
 
     // MARK: Shape builders
 

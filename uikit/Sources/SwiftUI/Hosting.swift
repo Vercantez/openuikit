@@ -2,6 +2,9 @@
 import Foundation
 #endif
 import OpenUIKit
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
 
 @MainActor
 private extension Animation {
@@ -268,8 +271,17 @@ func _openDeliverURL(_ url: URL, in root: UIView) -> Bool {
     return delivered
 }
 
+// NSObject-derived wherever the Objective-C runtime exists: on the Apple
+// toolchain UIScrollViewDelegate is UIKit's @objc protocol refining
+// NSObjectProtocol (docs/agent_reports/objc-protocols.md).
+#if canImport(ObjectiveC)
+private typealias _SwiftUIScrollCoordinatorBase = ObjectiveC.NSObject
+#else
+private class _SwiftUIScrollCoordinatorBase { init() {} }
+#endif
+
 @MainActor
-private final class _SwiftUIScrollCoordinator: UIScrollViewDelegate {
+private final class _SwiftUIScrollCoordinator: _SwiftUIScrollCoordinatorBase, UIScrollViewDelegate {
     let storage: _OpenScrollProxyStorage
     let geometryObservers: [_OpenScrollGeometryObserver]
     let visibilityObservers: [_OpenScrollVisibilityObserver]
@@ -287,6 +299,7 @@ private final class _SwiftUIScrollCoordinator: UIScrollViewDelegate {
         self.geometryObservers = geometryObservers
         self.visibilityObservers = visibilityObservers
         self.phaseObservers = phaseObservers
+        super.init()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) { notify(scrollView) }
@@ -2774,7 +2787,7 @@ private enum _ViewRenderer {
             case .stroke(let color, let lineWidth):
                 view.backgroundColor = .clear
                 view.layer.borderWidth = max(0, lineWidth)
-                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection)
+                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection).cgColor
                 view.accessibilityIdentifier = "SwiftUI.RoundedRectangle.stroke"
             }
             surface.addSubview(view)
@@ -2789,7 +2802,7 @@ private enum _ViewRenderer {
             case .stroke(let color, let lineWidth):
                 view.backgroundColor = .clear
                 view.layer.borderWidth = max(0, lineWidth)
-                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection)
+                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection).cgColor
                 view.accessibilityIdentifier = "SwiftUI.Capsule.stroke"
             }
             surface.addSubview(view)
@@ -3798,12 +3811,12 @@ private enum _ViewRenderer {
                 let resolved = color.resolve().resolvedCGColor(
                     with: shadowHost.traitCollection
                 )
-                shadowHost.layer.shadowColor = CGColor(
+                shadowHost.layer.shadowColor = CanvasColor(
                     red: resolved.red,
                     green: resolved.green,
                     blue: resolved.blue,
                     alpha: 1
-                )
+                ).cgColor
                 shadowHost.layer.shadowOpacity = Float(resolved.alpha)
                 shadowHost.layer.shadowRadius = radius
                 shadowHost.layer.shadowOffset = CGSize(width: x, height: y)
@@ -3968,7 +3981,7 @@ private enum _ViewRenderer {
                     glass.backgroundColor = _UIBarMetrics.platterFill
                     glass._usesIOSGlass = true
                     glass.layer.cornerRadius = min(glassRect.width, glassRect.height) / 2
-                    glass.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+                    glass.layer.shadowColor = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
                     glass.layer.shadowOpacity = _UIBarMetrics.shadowOpacity
                     glass.layer.shadowRadius = _UIBarMetrics.shadowRadius
                     glass.layer.shadowOffset = _UIBarMetrics.shadowOffset

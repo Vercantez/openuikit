@@ -155,6 +155,13 @@ public struct CGRect: Equatable, Hashable, Sendable {
 
 // MARK: - The geometry Foundation does not have
 
+#if canImport(CoreGraphics)
+// cg-unify: with Apple's CoreGraphics present the transform IS CoreGraphics'
+// struct, and `CGPoint/CGRect.applying(_:)`, `concatenating`, `inverted` ...
+// are the CoreGraphics overlay's, exactly as UIKit apps see them.
+public typealias CGAffineTransform = CoreGraphics.CGAffineTransform
+#else
+
 // `applying(_:)` takes OpenCoreGraphics' CGAffineTransform. On Darwin the
 // CoreGraphics overlay also declares `applying(_:)` taking *its* transform;
 // the two are distinct types, so these are ordinary overloads, not a conflict.
@@ -179,7 +186,7 @@ extension CGRect {
     }
 }
 
-// MARK: - CGAffineTransform (ours on every platform: Foundation has none)
+// MARK: - CGAffineTransform (ours only where CoreGraphics is absent)
 
 public struct CGAffineTransform: Equatable, Sendable {
     public var a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, tx: CGFloat, ty: CGFloat
@@ -224,6 +231,8 @@ public struct CGAffineTransform: Equatable, Sendable {
                                  tx: -(tx * ia + ty * ic), ty: -(tx * ib + ty * id))
     }
 }
+
+#endif
 
 // Minimal transcendental helpers so we do not need libm here, and -- more to
 // the point -- so both platforms use the SAME series and the Linux render stays

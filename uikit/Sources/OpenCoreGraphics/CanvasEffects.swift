@@ -24,7 +24,7 @@
 
 /// Shadow parameters carried in the Canvas graphics state.
 struct CanvasShadow {
-    var color: CGColor    // straight-alpha sRGB; alpha is the shadow opacity
+    var color: CanvasColor    // straight-alpha sRGB; alpha is the shadow opacity
     var offset: CGSize    // user-space points, +y down
     var blur: CGFloat     // user-space points; sigma = blur/2 (Ã— ctm scale in device px)
 }
@@ -32,7 +32,7 @@ struct CanvasShadow {
 extension Canvas {
     /// Set the layer shadow for subsequent fills. Cleared by `restore()`
     /// (state-stack semantics) or `clearShadow()`.
-    public func setShadow(color: CGColor, offset: CGSize, blur: CGFloat) {
+    public func setShadow(color: CanvasColor, offset: CGSize, blur: CGFloat) {
         state.shadow = CanvasShadow(color: color, offset: offset,
                                     blur: Swift.max(0, blur))
     }
@@ -59,7 +59,7 @@ extension Canvas {
     /// stops in gamma-encoded sRGB, clamping to the end colors outside the
     /// axis span (the whole rect is always covered). `start`/`end` are in
     /// user space. Rect edges are anti-aliased like fills.
-    public func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+    public func drawLinearGradient(colors: [CanvasColor], locations: [CGFloat],
                                    start: CGPoint, end: CGPoint, in rect: CGRect) {
         guard !colors.isEmpty, colors.count == locations.count,
               !rect.isEmpty else { return }

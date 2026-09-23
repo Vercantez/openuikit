@@ -48,7 +48,7 @@ open class UISlider: UIControl {
     static let thumbSize = CGSize(width: 37, height: 24)
     static let intrinsicHeight: CGFloat = 34
     /// Fitted from the golden's shadow profile (see header).
-    static let thumbShadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 0.11)
+    static let thumbShadowColor = CanvasColor(red: 0, green: 0, blue: 0, alpha: 0.11)
     static let thumbShadowOffset = CGSize(width: 0, height: 1)
     static let thumbShadowBlur: CGFloat = 6   // Canvas blur = 2 x CA radius
 

@@ -332,9 +332,9 @@ open class UILabel: UIView {
     /// PaddingLabel) insets the rect and calls super, and the text is laid
     /// out in the rect it receives.
     open override func drawContent(in canvas: Canvas, bounds: CGRect) {
-        UIGraphicsPushContext(canvas)
+        UIGraphics.pushContext(canvas)
         drawText(in: bounds)
-        UIGraphicsPopContext()
+        UIGraphics.popContext()
     }
 
     /// Draws the label's text in `rect` into the current context.
@@ -344,8 +344,7 @@ open class UILabel: UIView {
     @objc(drawTextInRect:)
 #endif
     open dynamic func drawText(in rect: CGRect) {
-        guard let canvas = UIGraphicsGetCurrentContext() else { return }
-        _drawText(in: canvas, bounds: rect)
+        UIGraphics.draw { _drawText(in: $0, bounds: rect) }
     }
 
     final func _drawText(in canvas: Canvas, bounds: CGRect) {
@@ -487,7 +486,7 @@ open class UILabel: UIView {
     }
 
     private func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
-                                font: UIFont, color: CGColor,
+                                font: UIFont, color: CanvasColor,
                                 glyphFont: InstancedGlyphFont?,
                                 extraAdvance: CGFloat = 0) {
         UILabel.drawGlyphLine(line, at: origin, in: canvas, font: font,
@@ -501,7 +500,7 @@ open class UILabel: UIView {
     /// UITextView), so their glyph output is byte-identical to labels.
     nonisolated static func drawGlyphLine(_ line: String, at origin: CGPoint, in canvas: Canvas,
                               font: UIFont, dark: Bool,
-                              color: CGColor, glyphFont: InstancedGlyphFont?,
+                              color: CanvasColor, glyphFont: InstancedGlyphFont?,
                               extraAdvance: CGFloat = 0) {
         let scale = canvas.scale
         // Harvested-ink fast path: exact real-UIKit glyph masks, valid for
@@ -553,7 +552,7 @@ open class UILabel: UIView {
     /// path (per-run fonts, colors and baseline offsets) produces byte-
     /// identical ink to the plain path.
     nonisolated static func drawGlyph(_ ch: Unicode.Scalar, penX: CGFloat, baselineY: CGFloat,
-                          in canvas: Canvas, font: UIFont, dark: Bool, color: CGColor,
+                          in canvas: Canvas, font: UIFont, dark: Bool, color: CanvasColor,
                           glyphFont: InstancedGlyphFont?,
                           inkEligible: Bool, famKey: String, sizeKey: Int,
                           devOX: Int, devBaseY: Int) {

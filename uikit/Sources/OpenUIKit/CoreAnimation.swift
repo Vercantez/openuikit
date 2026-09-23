@@ -5,6 +5,14 @@
 // presentation value and are sampled from OpenUIKitRuntime.animationTime by
 // both renderers. Transactions and completions use that same host clock; no
 // wall clock or hidden dispatch queue participates in deterministic renders.
+//
+// cg-unify phase 3: where Apple's frameworks exist the animation and layer
+// CLASSES are QuartzCore's (QuartzCoreUnification.swift) and this file keeps
+// only the port's model -- records, sampling, `_OUKTransaction` -- which the
+// QuartzCore interposers feed. The portable classes below are for Linux ELF
+// and the Mach-O guest.
+
+#if !canImport(CoreGraphics)
 
 public struct CAMediaTimingFillMode: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
@@ -80,6 +88,7 @@ open class CABasicAnimation: CAPropertyAnimation {
         return result
     }
 }
+#endif
 
 enum _CALayerAnimationValue {
     case scalar(CGFloat)
@@ -265,6 +274,7 @@ struct _CALayerPresentationState {
 /// a fresh `UIView().layer` reads `.continuous`; the port's corner drawing
 /// is circular for both values (the delta is a known gap of that drawing,
 /// recorded in UICornerConfiguration.swift), so the value is stored only.
+#if !canImport(CoreGraphics)
 public struct CALayerCornerCurve: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
@@ -272,8 +282,16 @@ public struct CALayerCornerCurve: RawRepresentable, Hashable, Sendable {
     public static let continuous = CALayerCornerCurve(rawValue: "continuous")
 }
 
+/// Core Animation's transaction API is the port's model where QuartzCore is
+/// absent; with QuartzCore, `+[CATransaction …]` drive the same model
+/// (QuartzCoreUnification.swift).
+public typealias CATransaction = _OUKTransaction
+#endif
+
+/// The port's transaction model: nested frames, implicit-animation duration
+/// and disableActions, and completion blocks on the port's animation clock.
 @preconcurrency @MainActor
-public enum CATransaction {
+public enum _OUKTransaction {
     struct Frame {
         var animationDuration: Double = 0.25
         var disableActions = false
@@ -476,6 +494,7 @@ public enum CATransaction {
     }
 }
 
+#if !canImport(CoreGraphics)
 extension CALayer {
     public func add(_ animation: CAAnimation, forKey key: String?) {
         guard let property = animation as? CAPropertyAnimation,
@@ -483,25 +502,10 @@ extension CALayer {
               let basic = animation as? CABasicAnimation else {
             preconditionFailure("OpenUIKit CALayer.add currently supports CABasicAnimation with a keyPath")
         }
-        guard let endpoints = _resolvedEndpoints(for: basic, keyPath: keyPath) else {
+        guard _resolvedEndpoints(for: basic, keyPath: keyPath) != nil else {
             preconditionFailure("OpenUIKit does not support CABasicAnimation keyPath/value shape: \(keyPath)")
         }
-
-        let copy = animation._copyAnimation()
-        if let key {
-            let replaced = _explicitAnimations.filter { $0.key == key }
-            _explicitAnimations.removeAll { $0.key == key }
-            for record in replaced {
-                CATransaction._removeAnimation(workID: record.workID)
-            }
-        }
-        let duration = _CALayerAnimationRecord._totalDuration(of: copy)
-        let workID = CATransaction._noteAnimation(duration: duration)
-        let record = _CALayerAnimationRecord(
-            key: key, animation: copy, keyPath: keyPath,
-            from: endpoints.0, to: endpoints.1,
-            begin: OpenUIKitRuntime.animationTime, workID: workID)
-        _explicitAnimations.append(record)
+        _recordExplicitAnimation(animation, forKey: key)
     }
 
     public func animation(forKey key: String) -> CAAnimation? {
@@ -510,19 +514,52 @@ extension CALayer {
     }
 
     public func removeAnimation(forKey key: String) {
-        let removed = _explicitAnimations.filter { $0.key == key }
-        _explicitAnimations.removeAll { $0.key == key }
-        for record in removed { CATransaction._removeAnimation(workID: record.workID) }
+        _removeExplicitAnimations(forKey: key)
     }
 
     public func removeAllAnimations() {
-        let removed = _explicitAnimations
-        _explicitAnimations.removeAll()
-        for record in removed { CATransaction._removeAnimation(workID: record.workID) }
+        _removeExplicitAnimations(forKey: nil)
+    }
+}
+#endif
+
+extension CALayer {
+    /// Records `animation` in the port's model (a keyed record replaces the
+    /// previous one with that key). Only basic property animations the port
+    /// samples are recorded; with QuartzCore any other kind still lives in
+    /// QuartzCore's own store, it just does not move the port's rendering.
+    func _recordExplicitAnimation(_ animation: CAAnimation, forKey key: String?) {
+        guard let basic = animation as? CABasicAnimation,
+              let keyPath = basic.keyPath,
+              let endpoints = _resolvedEndpoints(for: basic, keyPath: keyPath)
+        else { return }
+        let copy = animation._copyAnimation()
+        if let key {
+            let replaced = _explicitAnimations.filter { $0.key == key }
+            _explicitAnimations.removeAll { $0.key == key }
+            for record in replaced {
+                _OUKTransaction._removeAnimation(workID: record.workID)
+            }
+        }
+        let duration = _CALayerAnimationRecord._totalDuration(of: copy)
+        let workID = _OUKTransaction._noteAnimation(duration: duration)
+        let record = _CALayerAnimationRecord(
+            key: key, animation: copy, keyPath: keyPath,
+            from: endpoints.0, to: endpoints.1,
+            begin: OpenUIKitRuntime.animationTime, workID: workID)
+        _explicitAnimations.append(record)
+    }
+
+    /// Drops the port's records with `key` (all records for nil).
+    func _removeExplicitAnimations(forKey key: String?) {
+        let removed = _explicitAnimations.filter { key == nil || $0.key == key }
+        guard !removed.isEmpty else { return }
+        _explicitAnimations.removeAll { key == nil || $0.key == key }
+        for record in removed { _OUKTransaction._removeAnimation(workID: record.workID) }
     }
 
     func _recordImplicitAnimation<T>(keyPath: String, from: T, to: T) {
-        guard let duration = CATransaction._implicitAnimationDuration,
+        guard let duration = _OUKTransaction._implicitAnimationDuration,
               duration > 0
         else { return }
         _purgeFinishedAnimations(at: OpenUIKitRuntime.animationTime)
@@ -545,7 +582,7 @@ extension CALayer {
             opacity: opacity, cornerRadius: cornerRadius,
             borderWidth: borderWidth, shadowOpacity: shadowOpacity,
             shadowRadius: shadowRadius, shadowOffset: shadowOffset,
-            locations: (self as? CAGradientLayer)?.locations,
+            locations: (self as? CAGradientLayer)?._locationValues,
             cornerRadii: _cornerRadii)
         _applyExplicitPresentation(to: &result, at: time)
         return result
@@ -593,7 +630,7 @@ extension CALayer {
         case "shadowOpacity": model = .scalar(CGFloat(shadowOpacity))
         case "shadowRadius": model = .scalar(shadowRadius)
         case "shadowOffset": model = .size(shadowOffset)
-        case "locations": model = (self as? CAGradientLayer)?.locations.map {
+        case "locations": model = (self as? CAGradientLayer)?._locationValues.map {
             .vector($0)
         }
         default: model = nil
@@ -699,10 +736,19 @@ extension CALayer {
         return a.count == b.count
     }
 
-    private func _purgeFinishedAnimations(at time: Double) {
+    func _purgeFinishedAnimations(at time: Double) {
+        guard !_explicitAnimations.isEmpty else { return }
         for record in _explicitAnimations where time >= record.end {
-            CATransaction._finishAnimation(workID: record.workID)
+            _OUKTransaction._finishAnimation(workID: record.workID)
         }
+#if canImport(CoreGraphics)
+        // QuartzCore's store drops a removed-on-completion animation when the
+        // port's clock finishes it (there is no render server to do it).
+        for record in _explicitAnimations
+            where time >= record.end && record.animation.isRemovedOnCompletion {
+            if let key = record.key { _removeFromQuartzStore(key: key) }
+        }
+#endif
         _explicitAnimations.removeAll { record in
             time >= record.end && record.animation.isRemovedOnCompletion
         }

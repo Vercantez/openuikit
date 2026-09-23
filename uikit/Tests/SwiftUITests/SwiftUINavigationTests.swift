@@ -278,11 +278,11 @@ final class SwiftUINavigationTests: XCTestCase {
     }
 
     func testSheetOnDismissRunsAfterConcreteDismissalExactlyOnce() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let recorder = ApplicationShellRecorder()
@@ -338,17 +338,24 @@ final class SwiftUINavigationTests: XCTestCase {
         )
         XCTAssertFalse(scroll.isScrollEnabled)
         scroll.contentOffset = CGPoint(x: 0, y: 42)
+#if canImport(ObjectiveC)
+        // UIKit's @objc protocol: optional requirements (objc-protocols.md).
+        scroll.delegate?.scrollViewWillBeginDragging?(scroll)
+        scroll.delegate?.scrollViewWillBeginDecelerating?(scroll)
+        scroll.delegate?.scrollViewDidEndDecelerating?(scroll)
+#else
         scroll.delegate?.scrollViewWillBeginDragging(scroll)
         scroll.delegate?.scrollViewWillBeginDecelerating(scroll)
         scroll.delegate?.scrollViewDidEndDecelerating(scroll)
+#endif
         XCTAssertEqual(recorder.phases.map { $0.0 }, [.idle, .interacting, .decelerating])
         XCTAssertEqual(recorder.phases.map { $0.1 }, [.interacting, .decelerating, .idle])
         XCTAssertEqual(recorder.phases.map { $0.2.y }, [42, 42, 42])
     }
 
     private func flush(_ host: UIView) {
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
     }
 

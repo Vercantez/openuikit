@@ -261,7 +261,7 @@ public enum LayerBridge {
         } else {
             h.combine(false)
         }
-        if lay.borderWidth > 0, let bc = lay.borderColor {
+        if lay.borderWidth > 0, let bc = lay._borderColorValue {
             h.combine(lay.borderWidth)
             combine(&h, bc)
         }
@@ -270,7 +270,7 @@ public enum LayerBridge {
         var extent = b
         var shadowVisible = false
         if lay.shadowOpacity > 0, !lay.masksToBounds, !b.isEmpty,
-           let sc = lay.shadowColor, sc.alpha > 0 {
+           let sc = lay._shadowColorValue, sc.alpha > 0 {
             shadowVisible = true
             h.combine(lay.shadowOpacity)
             h.combine(lay.shadowRadius)
@@ -420,7 +420,7 @@ public enum LayerBridge {
         t.a == 1 && t.b == 0 && t.c == 0 && t.d == 1
     }
 
-    static func combine(_ h: inout Hasher, _ c: CGColor) {
+    static func combine(_ h: inout Hasher, _ c: CanvasColor) {
         h.combine(c.red); h.combine(c.green); h.combine(c.blue); h.combine(c.alpha)
     }
 
@@ -548,7 +548,7 @@ public enum LayerBridge {
             QZLayerSetBackgroundColor(l, QZFloat(c.red), QZFloat(c.green),
                                       QZFloat(c.blue), QZFloat(c.alpha))
         }
-        if backingPresentation.borderWidth > 0, let bc = v.layer.borderColor {
+        if backingPresentation.borderWidth > 0, let bc = v.layer._borderColorValue {
             QZLayerSetBorderWidth(l, QZFloat(backingPresentation.borderWidth))
             QZLayerSetBorderColor(l, QZFloat(bc.red), QZFloat(bc.green),
                                   QZFloat(bc.blue), QZFloat(bc.alpha))
@@ -585,7 +585,7 @@ public enum LayerBridge {
         let lay = v.layer
         if backingPresentation.shadowOpacity > 0,
            !lay.masksToBounds, !b.isEmpty,
-           let sc = lay.shadowColor {
+           let sc = lay._shadowColorValue {
             let op = CGFloat(Swift.min(Swift.max(
                 backingPresentation.shadowOpacity, 0), 1))
             let strength = sc.alpha * op
@@ -660,7 +660,7 @@ public enum LayerBridge {
     static func buildExplicitLayer(_ layer: CALayer,
                                    arena: inout Arena) -> QZLayerRef? {
         let gradient = layer as? CAGradientLayer
-        let gradientColors = gradient?.colors ?? []
+        let gradientColors = gradient?._colorValues ?? []
         guard let raw = gradientColors.count >= 2
                 ? QZGradientLayerCreate() : QZLayerCreate()
         else { return nil }
@@ -679,18 +679,18 @@ public enum LayerBridge {
         QZLayerSetMaskedCorners(qz, UInt32(layer.maskedCorners.rawValue))
         QZLayerSetMasksToBounds(qz, layer.masksToBounds)
 
-        if let color = layer.backgroundColor {
+        if let color = layer._backgroundColorValue {
             QZLayerSetBackgroundColor(qz, QZFloat(color.red), QZFloat(color.green),
                                       QZFloat(color.blue), QZFloat(color.alpha))
         }
-        if presentation.borderWidth > 0, let color = layer.borderColor {
+        if presentation.borderWidth > 0, let color = layer._borderColorValue {
             QZLayerSetBorderWidth(qz, QZFloat(presentation.borderWidth))
             QZLayerSetBorderColor(qz, QZFloat(color.red), QZFloat(color.green),
                                   QZFloat(color.blue), QZFloat(color.alpha))
         }
         if presentation.shadowOpacity > 0,
            !layer.masksToBounds, !bounds.isEmpty,
-           let color = layer.shadowColor {
+           let color = layer._shadowColorValue {
             let opacity = CGFloat(Swift.min(Swift.max(
                 presentation.shadowOpacity, 0), 1))
             let strength = color.alpha * opacity
@@ -893,11 +893,11 @@ public enum LayerBridge {
     }
 
     static func configureGradient(_ l: QZLayerRef, layer: CAGradientLayer,
-                                  colors: [CGColor],
+                                  colors: [CanvasColor],
                                   locations: [CGFloat]? = nil) {
         let n = colors.count
         var locs: [QZFloat]
-        if let requested = locations ?? layer.locations, requested.count == n {
+        if let requested = locations ?? layer._locationValues, requested.count == n {
             locs = requested.map { QZFloat(Swift.min(Swift.max($0, 0), 1)) }
         } else {
             locs = (0..<n).map { QZFloat($0) / QZFloat(n - 1) }
@@ -942,7 +942,7 @@ public enum LayerBridge {
             shadowOpacity: v.layer.shadowOpacity,
             shadowRadius: v.layer.shadowRadius,
             shadowOffset: v.layer.shadowOffset,
-            locations: (v.layer as? CAGradientLayer)?.locations,
+            locations: (v.layer as? CAGradientLayer)?._locationValues,
             cornerRadii: v.layer._cornerRadii)
         // CA removes a completed animation from the layer, so the model
         // wins afterwards. Applying finished records with u=1 pins
@@ -1104,7 +1104,7 @@ public enum LayerBridge {
             case (.cornerRadius, .scalar(let r0), .scalar(let r1)):
                 QZLayerSetCornerRadius(l, QZFloat(lerp(r0, r1, u)))
             case (.backgroundColor, .color(let c0), .color(let c1)):
-                let clear = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+                let clear = CanvasColor(red: 0, green: 0, blue: 0, alpha: 0)
                 let f = c0?.resolvedCGColor(with: traits) ?? clear
                 let g = c1?.resolvedCGColor(with: traits) ?? clear
                 QZLayerSetBackgroundColor(l, QZFloat(lerp(f.red, g.red, u)),

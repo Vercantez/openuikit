@@ -21,11 +21,23 @@
 //     scene never ticks, so its timers never fire — which is why no golden
 //     can be perturbed by adding one.
 //
-// This still SHADOWS Foundation's `Timer` and `RunLoop`, like OpenUIKit's
-// `NSAttributedString`. Notification no longer supplies the analogy:
-// Foundation-visible builds share its value identity, and Apple builds share
-// Foundation's center too. An app that imports both still needs a file-scope
-// `private typealias Timer = OpenUIKit.Timer`.
+// WHO SEES WHICH TIMER (docs/agent_reports/timer-unify.md)
+//   * Wherever Foundation exists (the Apple toolchain, Linux corelibs), apps
+//     see ONLY Foundation's `Timer` and `RunLoop`: `OpenUIKit.Timer` and
+//     `OpenUIKit.RunLoop` are typealiases of Foundation's, so `import UIKit`
+//     plus `import Foundation` names one type (NetNewsWire's
+//     `private var updateTimer: Timer?` was ambiguous before). Those timers
+//     run on Foundation's run loop, not on the host clock.
+//   * The Foundation-hidden Mach-O guest has no Foundation run loop; there
+//     `OpenUIKit.Timer` / `OpenUIKit.RunLoop` are the host-clock types below,
+//     and the guest's app-facing Foundation aliases them (full/appshim).
+//   * OpenUIKit's own host-clock work (SwiftUI's deferred state delivery,
+//     UIDatePicker's clock) uses `_HostClockTimer` directly on every build.
+//
+// MEASURED before the change: the gate's 124 scenes and 15 real-app screens
+// schedule no timer at all (a trace of every `_schedule` / `_fire`), and the
+// conformance apps name no `Timer`; the deterministic renders depend on the
+// host clock, not on app timers.
 //
 // DIVERGENCES from Foundation, all of them consequences of the above:
 //   * `fireDate` is a `TimeInterval` on the host clock, not a `Date`
@@ -46,35 +58,35 @@
 //     absorb.
 //   * There is no threading, so there is no `Timer` on a background queue.
 
-/// The run-loop mode argument of `RunLoop.add(_:forMode:)`. Accepted and
+/// The run-loop mode argument of `_HostClockRunLoop.add(_:forMode:)`. Accepted and
 /// ignored — see the file header.
-public struct RunLoopMode: Hashable, RawRepresentable, Sendable {
+public struct _HostClockRunLoopMode: Hashable, RawRepresentable, Sendable {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
-    public static let `default` = RunLoopMode(rawValue: "kCFRunLoopDefaultMode")
-    public static let common = RunLoopMode(rawValue: "kCFRunLoopCommonModes")
-    public static let tracking = RunLoopMode(rawValue: "UITrackingRunLoopMode")
+    public static let `default` = _HostClockRunLoopMode(rawValue: "kCFRunLoopDefaultMode")
+    public static let common = _HostClockRunLoopMode(rawValue: "kCFRunLoopCommonModes")
+    public static let tracking = _HostClockRunLoopMode(rawValue: "UITrackingRunLoopMode")
 }
 
 /// Present so `RunLoop.main.add(timer, forMode: .common)` compiles. It runs
 /// nothing: the host's loop is the run loop, and `UIWindow.tick(timestamp:)`
 /// is its turn. See the file header.
-public final class RunLoop {
-    public typealias Mode = RunLoopMode
+public final class _HostClockRunLoop {
+    public typealias Mode = _HostClockRunLoopMode
 
-    public static let main = RunLoop()
-    public static var current: RunLoop { main }
+    public static let main = _HostClockRunLoop()
+    public static var current: _HostClockRunLoop { main }
 
     private init() {}
 
     /// Schedules `timer` on the host clock. The mode is ignored.
-    public func add(_ timer: Timer, forMode mode: Mode) {
+    public func add(_ timer: _HostClockTimer, forMode mode: Mode) {
         _ = mode
-        Timer._schedule(timer)
+        _HostClockTimer._schedule(timer)
     }
 }
 
-public final class Timer {
+public final class _HostClockTimer {
     // MARK: The clock
 
     /// The host clock the timer machinery runs on: the most recent timestamp
@@ -83,7 +95,7 @@ public final class Timer {
     public private(set) static var currentTime: TimeInterval = 0
 
     /// Every scheduled, still-valid timer, in no particular order.
-    private static var scheduled: [Timer] = []
+    private static var scheduled: [_HostClockTimer] = []
 
     /// One generation is one outermost host step. A recursive `_step` is
     /// reentrancy inside the current UI turn, not permission to run timers
@@ -102,7 +114,7 @@ public final class Timer {
         scheduled.map(\.fireDate).min()
     }
 
-    private static func isScheduledAndDue(_ timer: Timer, at timestamp: TimeInterval) -> Bool {
+    private static func isScheduledAndDue(_ timer: _HostClockTimer, at timestamp: TimeInterval) -> Bool {
         timer.isValid
             && scheduled.contains(where: { $0 === timer })
             && timer.firstEligibleStepGeneration <= stepGeneration
@@ -167,7 +179,7 @@ public final class Timer {
         currentTime = 0
     }
 
-    static func _schedule(_ timer: Timer) {
+    static func _schedule(_ timer: _HostClockTimer) {
         guard timer.isValid, !scheduled.contains(where: { $0 === timer }) else { return }
         timer.firstEligibleStepGeneration = stepGeneration &+ 1
         scheduled.append(timer)
@@ -189,7 +201,7 @@ public final class Timer {
     /// created from a callback belongs to the next outermost `_step`.
     private var firstEligibleStepGeneration: UInt64 = 0
 
-    private var block: ((Timer) -> Void)?
+    private var block: ((_HostClockTimer) -> Void)?
     /// Retained, like Foundation's (see the header).
     private var target: AnyObject?
     private var selectorName: String?
@@ -199,10 +211,10 @@ public final class Timer {
     /// Foundation's block initializer. NOT scheduled — hand it to
     /// `RunLoop.main.add(_:forMode:)`, or use ``scheduledTimer(withTimeInterval:repeats:block:)``.
     public init(timeInterval interval: TimeInterval, repeats: Bool,
-                block: @escaping (Timer) -> Void) {
+                block: @escaping (_HostClockTimer) -> Void) {
         self.timeInterval = max(interval, 0)
         self.repeats = repeats
-        self.fireDate = Timer.currentTime + max(interval, 0)
+        self.fireDate = _HostClockTimer.currentTime + max(interval, 0)
         self.block = block
     }
 
@@ -214,7 +226,7 @@ public final class Timer {
                 selector: Selector, userInfo: Any?, repeats: Bool) {
         self.timeInterval = max(interval, 0)
         self.repeats = repeats
-        self.fireDate = Timer.currentTime + max(interval, 0)
+        self.fireDate = _HostClockTimer.currentTime + max(interval, 0)
         self.userInfo = userInfo
         self.target = target
         self.selectorName = selector.actionName
@@ -224,8 +236,8 @@ public final class Timer {
     @discardableResult
     public static func scheduledTimer(withTimeInterval interval: TimeInterval,
                                       repeats: Bool,
-                                      block: @escaping (Timer) -> Void) -> Timer {
-        let t = Timer(timeInterval: interval, repeats: repeats, block: block)
+                                      block: @escaping (_HostClockTimer) -> Void) -> _HostClockTimer {
+        let t = _HostClockTimer(timeInterval: interval, repeats: repeats, block: block)
         _schedule(t)
         return t
     }
@@ -236,8 +248,8 @@ public final class Timer {
                                       target: AnyObject,
                                       selector: Selector,
                                       userInfo: Any?,
-                                      repeats: Bool) -> Timer {
-        let t = Timer(timeInterval: interval, target: target, selector: selector,
+                                      repeats: Bool) -> _HostClockTimer {
+        let t = _HostClockTimer(timeInterval: interval, target: target, selector: selector,
                       userInfo: userInfo, repeats: repeats)
         _schedule(t)
         return t
@@ -285,6 +297,24 @@ public final class Timer {
         block = nil
         target = nil
         selectorName = nil
-        Timer.scheduled.removeAll { $0 === self }
+        _HostClockTimer.scheduled.removeAll { $0 === self }
     }
 }
+
+// MARK: - The names apps see
+
+#if canImport(Foundation)
+// Foundation's own `Timer` and `RunLoop` declarations, re-exported rather than
+// re-declared: one declaration, whether an app writes `Timer` after
+// `import UIKit`, `import Foundation`, or both. A second declaration of the
+// name — even a typealias of the same class — stops Swift folding collection
+// sugar such as `[Timer]()` or `[String: Timer]()` into a type (MEASURED:
+// "cannot call value of non-function type '[Timer.Type]'"; TimerUnifyTests).
+@_exported import class Foundation.Timer
+@_exported import class Foundation.RunLoop
+#else
+/// No Foundation run loop (the Foundation-hidden guest): the host clock.
+public typealias Timer = _HostClockTimer
+public typealias RunLoop = _HostClockRunLoop
+public typealias RunLoopMode = _HostClockRunLoopMode
+#endif

@@ -558,7 +558,7 @@ extension UIView {
         case (.color(let a), .color(let b)):
             if u <= 0 { return .color(a) }
             if u >= 1 { return .color(b) }
-            let clear = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
+            let clear = CanvasColor(red: 0, green: 0, blue: 0, alpha: 0)
             let lhs = a?.resolvedCGColor(with: traitCollection) ?? clear
             let rhs = b?.resolvedCGColor(with: traitCollection) ?? clear
             return .color(UIColor(red: lerp(lhs.red, rhs.red),

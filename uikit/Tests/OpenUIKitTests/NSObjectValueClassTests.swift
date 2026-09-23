@@ -325,12 +325,22 @@ final class NSObjectValueClassTests: XCTestCase {
     // real KVC, so a regression here would surface as `undefined key`).
     func testLayerKeyValueCompatibilitySurvivesTheReparent() {
         let layer = CALayer()
+#if canImport(CoreGraphics)
+        // QuartzCore's CALayer (cg-unify phase 3) is a real key-value
+        // container: `opaque` is the property's key, arbitrary keys are kept.
+        layer.setValue(true, forKey: "opaque")
+        XCTAssertEqual(layer.value(forKey: "opaque") as? Bool, true)
+        XCTAssertTrue(layer.isOpaque)
+        layer.setValue(4.5, forKey: "ouk.compatibility")
+        XCTAssertEqual(layer.value(forKey: "ouk.compatibility") as? Double, 4.5)
+#else
         layer.setValue(true, forKey: "isOpaque")
         XCTAssertEqual(layer.value(forKey: "isOpaque") as? Bool, true)
         layer.setValue(4.5, forKeyPath: "filters.gaussianBlur.inputRadius")
         XCTAssertEqual(
             layer.value(forKeyPath: "filters.gaussianBlur.inputRadius") as? Double,
             4.5)
+#endif
     }
 
     // MARK: - NSParagraphStyle value semantics

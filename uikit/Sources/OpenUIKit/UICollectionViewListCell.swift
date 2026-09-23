@@ -699,9 +699,9 @@ final class _UICollectionViewListInsertControl: UIView {
         let arm = CGRect(x: bounds.midX - 5.25, y: bounds.midY - 0.75, width: 10.5, height: 1.5)
         let upright = CGRect(x: bounds.midX - 0.75, y: bounds.midY - 5.25, width: 1.5, height: 10.5)
         canvas.fill(UITableViewCellEditControl.rectPath(arm),
-                    color: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+                    color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 1))
         canvas.fill(UITableViewCellEditControl.rectPath(upright),
-                    color: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+                    color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 1))
     }
 }
 

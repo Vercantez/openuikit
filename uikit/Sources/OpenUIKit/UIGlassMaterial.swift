@@ -172,7 +172,7 @@ enum _UIGlassMaterial {
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
                 saturation: 1,
-                tintColor: CGColor(red: darkBarTintGray, green: darkBarTintGray,
+                tintColor: CanvasColor(red: darkBarTintGray, green: darkBarTintGray,
                                    blue: darkBarTintGray, alpha: darkBarMixAlpha),
                 intensity: 1,
                 clampsSaturation: true)
@@ -181,7 +181,7 @@ enum _UIGlassMaterial {
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
                 saturation: 1,
-                tintColor: CGColor(red: darkTintGray, green: darkTintGray,
+                tintColor: CanvasColor(red: darkTintGray, green: darkTintGray,
                                    blue: darkTintGray, alpha: darkMixAlpha),
                 intensity: 1,
                 clampsSaturation: true)
@@ -189,7 +189,7 @@ enum _UIGlassMaterial {
         return CanvasBackdropFilterConfiguration(
             blurRadius: blurSigma,
             saturation: saturation,
-            tintColor: CGColor(red: tintGray, green: tintGray,
+            tintColor: CanvasColor(red: tintGray, green: tintGray,
                                blue: tintGray, alpha: mixAlpha),
             intensity: 1,
             clampsSaturation: false)
@@ -203,7 +203,7 @@ enum _UIGlassMaterial {
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
                 saturation: 1,
-                tintColor: CGColor(red: padActionSheetTintGray,
+                tintColor: CanvasColor(red: padActionSheetTintGray,
                                    green: padActionSheetTintGray,
                                    blue: padActionSheetTintGray,
                                    alpha: padActionSheetMixAlpha),
@@ -213,7 +213,7 @@ enum _UIGlassMaterial {
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
                 saturation: 1,
-                tintColor: CGColor(red: padContentPopoverTintGray,
+                tintColor: CanvasColor(red: padContentPopoverTintGray,
                                    green: padContentPopoverTintGray,
                                    blue: padContentPopoverTintGray,
                                    alpha: padContentPopoverMixAlpha),
@@ -228,14 +228,14 @@ enum _UIGlassMaterial {
         }
     }
 
-    static var ringColor: CGColor {
-        CGColor(red: 1, green: 1, blue: 1, alpha: ringAlpha)
+    static var ringColor: CanvasColor {
+        CanvasColor(red: 1, green: 1, blue: 1, alpha: ringAlpha)
     }
 
-    static func ringColor(for view: UIView) -> CGColor {
+    static func ringColor(for view: UIView) -> CanvasColor {
         switch view._iosGlassKind {
         case .padActionSheetPopover:
-            return CGColor(red: 1, green: 1, blue: 1, alpha: padActionSheetRingAlpha)
+            return CanvasColor(red: 1, green: 1, blue: 1, alpha: padActionSheetRingAlpha)
         case .padContentPopover, .platter:
             return ringColor
         }

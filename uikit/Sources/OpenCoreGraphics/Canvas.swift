@@ -4,19 +4,15 @@
 // Bodies marked `rasterizer:` are implemented in Rasterizer.swift by the
 // rasterizer module — keep signatures stable.
 
-// M15: a DEFAULT ARGUMENT or an `@inlinable` body may only use members whose
-// defining module THIS FILE imports -- `CGRect.zero` and `CGFloat.pi` do not
-// ride in on OpenCoreGraphics' typealias the way ordinary uses do. These are
-// SCOPED imports on purpose: they satisfy that rule without pulling in
-// CoreGraphics' CGColor / CGAffineTransform, which would collide with
-// OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
-// visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
-// type; spell it `Array<CGFloat>(...)`.
+// cg-unify (docs/agent_reports/cg-unify.md): where Apple's CoreGraphics
+// exists (the macOS host and route (b)'s iOS triple) OpenCoreGraphics' public
+// CoreGraphics names ARE CoreGraphics' own types -- CGColor, CGColorSpace,
+// CGAffineTransform, CGImageAlphaInfo -- so the whole module imports it. The
+// renderer keeps its own value colour, `CanvasColor`, and converts at the
+// CoreGraphics boundary. Without CoreGraphics (Linux ELF, the Mach-O guest)
+// `CGColor` is `CanvasColor` and nothing converts.
 #if canImport(CoreGraphics)
-import struct CoreFoundation.CGFloat
-import struct CoreGraphics.CGPoint
-import struct CoreGraphics.CGRect
-import struct CoreGraphics.CGSize
+import CoreGraphics
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -40,7 +36,7 @@ import class ObjectiveC.NSObject
 /// Straight (non-premultiplied) sRGB color with 0–1 components.
 
 
-public struct CGColor: Equatable, Sendable {
+public struct CanvasColor: Equatable, Sendable {
     public var red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat
     /// True for a colour in a gray colour space (two components). The
     /// renderer only ever reads the RGBA fields; this decides what
@@ -60,7 +56,7 @@ public struct CGColor: Equatable, Sendable {
     /// Equality compares the colour VALUE only. Apple's CGColor equality
     /// also compares colour spaces (gray white != RGB white, measured); the
     /// renderer's colour comparisons predate the model and stay value-based.
-    public static func == (lhs: CGColor, rhs: CGColor) -> Bool {
+    public static func == (lhs: CanvasColor, rhs: CanvasColor) -> Bool {
         lhs.red == rhs.red && lhs.green == rhs.green && lhs.blue == rhs.blue && lhs.alpha == rhs.alpha
     }
     /// 2 for a gray colour (white, alpha), 4 for RGB (r, g, b, a).
@@ -70,14 +66,138 @@ public struct CGColor: Equatable, Sendable {
     public var components: [CGFloat]? {
         isGrayModel ? [red, alpha] : [red, green, blue, alpha]
     }
-    public static let clear = CGColor(red: 0, green: 0, blue: 0, alpha: 0)
-    public static let black = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-    public static let white = CGColor(red: 1, green: 1, blue: 1, alpha: 1)
-    public func withAlpha(_ a: CGFloat) -> CGColor {
-        var c = CGColor(red: red, green: green, blue: blue, alpha: alpha * a)
+    public static let clear = CanvasColor(red: 0, green: 0, blue: 0, alpha: 0)
+    public static let black = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
+    public static let white = CanvasColor(red: 1, green: 1, blue: 1, alpha: 1)
+    public func withAlpha(_ a: CGFloat) -> CanvasColor {
+        var c = CanvasColor(red: red, green: green, blue: blue, alpha: alpha * a)
         c.isGrayModel = isGrayModel
         return c
     }
+}
+
+#if canImport(CoreGraphics)
+/// CoreGraphics' colour. OpenUIKit's public colour API (`UIColor.cgColor`,
+/// CALayer's colour properties) speaks this type; the renderer converts it
+/// to `CanvasColor` at each use.
+public typealias CGColor = CoreGraphics.CGColor
+public typealias CGColorSpace = CoreGraphics.CGColorSpace
+public typealias CGImageAlphaInfo = CoreGraphics.CGImageAlphaInfo
+
+extension CanvasColor {
+    /// The renderer's value for a CoreGraphics colour. The model is kept: a
+    /// 2-component gray colour stays gray (iOS 26.1, objcsurfaceprobe
+    /// `## cgcolor`: white is `n=2 [1 1]`, red `n=4`). RGB components are
+    /// read verbatim; any other space goes through CoreGraphics' own
+    /// conversion to sRGB.
+    public init(_ color: CGColor) {
+        let k = color.components ?? []
+        let model = color.colorSpace?.model
+        if model == .monochrome, k.count == 2 {
+            if Self._isSRGBEncoded(color.colorSpace) {
+                self.init(gray: k[0], alpha: k[1])
+                return
+            }
+            // Generic (gamma 1.8) or linear gray: CoreGraphics' conversion,
+            // kept gray. MEASURED iOS 26.1: `CGColor(gray: 0.5, alpha: 1)`
+            // renders 146, i.e. extended gray 0.5723.
+            if let converted = color.converted(to: _CanvasColorSpaces.extendedGray,
+                                               intent: .defaultIntent, options: nil),
+               let c = converted.components, c.count == 2 {
+                self.init(gray: c[0], alpha: c[1])
+                return
+            }
+        }
+        if model == .rgb, k.count == 4, Self._isSRGBEncoded(color.colorSpace) {
+            self.init(red: k[0], green: k[1], blue: k[2], alpha: k[3])
+            return
+        }
+        if let converted = color.converted(to: _CanvasColorSpaces.extendedSRGB,
+                                           intent: .defaultIntent, options: nil),
+           let c = converted.components, c.count == 4 {
+            self.init(red: c[0], green: c[1], blue: c[2], alpha: c[3])
+            return
+        }
+        self.init(red: 0, green: 0, blue: 0, alpha: color.alpha)
+    }
+
+    /// Spaces whose components the sRGB renderer takes verbatim: sRGB,
+    /// extended sRGB, extended gray, and the device spaces (sRGB-encoded on
+    /// iOS). Anything else is converted by CoreGraphics. MEASURED iOS 26.1
+    /// (a 1x1 CALayer rendered into an sRGB context): generic-RGB
+    /// `CGColor(red: 1, green: 0, blue: 0, alpha: 1)` paints 255,38,0 and
+    /// generic-RGB blue 4,51,255; sRGB, extended sRGB and device-RGB red
+    /// paint 255,0,0.
+    static func _isSRGBEncoded(_ space: CGColorSpace?) -> Bool {
+        guard let space else { return false }
+        guard let name = space.name else { return true }
+        return name == CGColorSpace.sRGB || name == CGColorSpace.extendedSRGB
+            || name == CGColorSpace.extendedGray
+            || (name as String) == "kCGColorSpaceDeviceRGB"
+            || (name as String) == "kCGColorSpaceDeviceGray"
+    }
+
+    /// This colour as UIKit's `UIColor.cgColor` spells it. MEASURED iOS 26.1
+    /// (Tools/oracle2/cgunifyprobe `## color`): a gray colour is
+    /// 2-component `kCGColorSpaceExtendedGray`, every other colour
+    /// 4-component `kCGColorSpaceExtendedSRGB`, extended-range components
+    /// kept (`rgb(1.2,-0.1,0.5,1)` reads back unchanged).
+    public var cgColor: CGColor {
+        if isGrayModel,
+           let color = CGColor(colorSpace: _CanvasColorSpaces.extendedGray,
+                               components: [red, alpha]) {
+            return color
+        }
+        if let color = CGColor(colorSpace: _CanvasColorSpaces.extendedSRGB,
+                               components: [red, green, blue, alpha]) {
+            return color
+        }
+        return CGColor(srgbRed: red, green: green, blue: blue, alpha: alpha)
+    }
+}
+
+enum _CanvasColorSpaces {
+    static let extendedGray = CGColorSpace(name: CGColorSpace.extendedGray)!
+    static let extendedSRGB = CGColorSpace(name: CGColorSpace.extendedSRGB)!
+}
+
+extension CGColor {
+    /// The renderer's value colour (`CanvasColor(self)`).
+    public var canvasColor: CanvasColor { CanvasColor(self) }
+}
+
+extension CanvasColor {
+    /// A new CALayer's border and shadow colour: opaque black in
+    /// `kCGColorSpaceSRGB` (MEASURED iOS 26.1, cgunifyprobe `## layer`).
+    public static var _layerDefaultBlack: CGColor { CGColor(srgbRed: 0, green: 0, blue: 0, alpha: 1) }
+}
+
+extension CGColorSpace {
+    /// Whether a bitmap context in this space is the renderer's 8-bit RGB
+    /// pipeline.
+    var _isWritableRGB: Bool { model == .rgb }
+}
+#else
+public typealias CGColor = CanvasColor
+
+extension CanvasColor {
+    /// Identity where CoreGraphics is absent (`CGColor` is `CanvasColor`).
+    @inlinable public init(_ color: CanvasColor) { self = color }
+    /// Identity where CoreGraphics is absent.
+    public var cgColor: CGColor { self }
+    /// Identity where CoreGraphics is absent.
+    public var canvasColor: CanvasColor { self }
+    /// CoreGraphics' `CGColor(srgbRed:green:blue:alpha:)` spelling (the
+    /// renderer's colours are sRGB).
+    public init(srgbRed red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        self.init(red: red, green: green, blue: blue, alpha: alpha)
+    }
+    /// A new CALayer's border and shadow colour (opaque black).
+    public static var _layerDefaultBlack: CGColor { CanvasColor(red: 0, green: 0, blue: 0, alpha: 1) }
+}
+
+extension CGColorSpace {
+    var _isWritableRGB: Bool { model == .deviceRGB }
 }
 
 /// Color-space identity accepted by bitmap graphics contexts.
@@ -111,6 +231,7 @@ public enum CGImageAlphaInfo: UInt32, Sendable {
     case noneSkipFirst = 6
     case alphaOnly = 7
 }
+#endif
 
 /// RGBA8 bitmap, non-premultiplied sRGB, row-major, 4 bytes/pixel.
 public final class Bitmap {
@@ -275,7 +396,7 @@ public final class Canvas: NSObject {
               !rowWidthOverflow, !bitmapSizeOverflow, !backingSizeOverflow,
               bitsPerComponent == 8,
               bytesPerRow >= minimumBytesPerRow,
-              space.model == .deviceRGB,
+              space._isWritableRGB,
               bitmapInfo == CGImageAlphaInfo.premultipliedLast.rawValue
         else { return nil }
 
@@ -354,6 +475,23 @@ public final class Canvas: NSObject {
         return image
     }
 
+    /// The premultiplied RGBA8 backing the Quartz backend renders into, when
+    /// another bitmap context may share it (cg-unify: UIKit's CGContext).
+    public func _sharedPremultipliedBacking() -> (data: UnsafeMutableRawPointer, bytesPerRow: Int)? {
+        (backend as? QuartzBackend)?._sharedBacking
+    }
+
+    /// Makes pixels drawn into the shared backing by another context visible
+    /// in `bitmap`.
+    public func _syncSharedBackingToBitmap() {
+        (backend as? QuartzBackend)?._syncAllFromBacking()
+    }
+
+    /// Replaces the CTM (as a concatenation, so both backends follow).
+    public func _setCTM(_ t: CGAffineTransform) {
+        concatenate(t.concatenating(ctm.inverted()))
+    }
+
     public func save() { _save(); backend.saveState() }
     public func restore() { _restore(); backend.restoreState() }
     /// Concatenate t onto the CTM (new user space = t applied before current CTM).
@@ -383,12 +521,12 @@ public final class Canvas: NSObject {
     /// edges real UIKit does NOT anti-alias (see docs/ARCHITECTURE.md).
     /// ADDITIVE extension of the frozen contract: `hardEdges` has a default
     /// value, so all previous call sites are unchanged.
-    public func fill(_ path: Path, color: CGColor, evenOdd: Bool = false,
+    public func fill(_ path: Path, color: CanvasColor, evenOdd: Bool = false,
                      hardEdges: Bool = false) {
         backend.fill(path, color: color, evenOdd: evenOdd, hardEdges: hardEdges)
     }
-    public func fill(rect: CGRect, color: CGColor) { fill(.rect(rect), color: color) }
-    public func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) {
+    public func fill(rect: CGRect, color: CanvasColor) { fill(.rect(rect), color: color) }
+    public func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat) {
         backend.stroke(path, color: color, lineWidth: lineWidth)
     }
 
@@ -398,7 +536,7 @@ public final class Canvas: NSObject {
     /// (`UIBezierPath.lineCapStyle` / `lineJoinStyle`) needs the styles;
     /// the quartz backend maps them onto QZ's stroker, the pure-Swift
     /// rasterizer ignores them (documented in docs/KNOWN_GAPS.md).
-    public func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+    public func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat,
                        cap: CanvasLineCap, join: CanvasLineJoin,
                        miterLimit: CGFloat = 10) {
         backend.stroke(path, color: color, lineWidth: lineWidth, cap: cap,
@@ -414,7 +552,7 @@ public final class Canvas: NSObject {
     /// `color`. `origin` is in DEVICE PIXELS (already scaled/positioned by
     /// the text engine); mask is width×height bytes.
     public func drawMask(_ mask: [UInt8], width: Int, height: Int,
-                         atPixelX x: Int, pixelY y: Int, color: CGColor) {
+                         atPixelX x: Int, pixelY y: Int, color: CanvasColor) {
         backend.drawMask(mask, width: width, height: height,
                          atPixelX: x, pixelY: y, color: color)
     }
@@ -447,7 +585,7 @@ struct TransparencyLayer {
 // not on Rasterizer.swift internals) so the rasterizer module can freely
 // rewrite its analytic-AA pipeline without touching this.
 extension Canvas {
-    func _fillHardEdged(_ path: Path, _ color: CGColor, _ evenOdd: Bool) {
+    func _fillHardEdged(_ path: Path, _ color: CanvasColor, _ evenOdd: Bool) {
         guard color.alpha > 0 else { return }
         let dev = path.applying(state.ctm)
 

@@ -535,7 +535,7 @@ final class _UIBarButtonItemView: UIControl {
         isOpaque = false
         platter.isOpaque = false
         platter.layer.cornerRadius = _UIBarMetrics.platterRadius
-        platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        platter.layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
         platter.layer.shadowOpacity = _UIBarMetrics.shadowOpacity
         platter.layer.shadowRadius = _UIBarMetrics.shadowRadius
         platter.layer.shadowOffset = _UIBarMetrics.shadowOffset
@@ -763,7 +763,7 @@ final class _UIBarSharedPlatterView: UIView {
         isOpaque = false
         _usesIOSGlass = true
         layer.cornerRadius = _UIBarMetrics.platterRadius
-        layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
         layer.shadowOpacity = _UIBarMetrics.shadowOpacity
         layer.shadowRadius = _UIBarMetrics.shadowRadius
         layer.shadowOffset = _UIBarMetrics.shadowOffset
