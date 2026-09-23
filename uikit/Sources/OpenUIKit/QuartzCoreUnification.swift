@@ -703,13 +703,11 @@ enum _OUKQuartzBridge {
                 }
             } as @convention(block) (AnyClass, (@convention(block) () -> Void)?) -> Void
         }
-        replace(meta, "completionBlock", as: _ClassVoid.self) { _, _ in
-            { (_: AnyClass) -> (@convention(block) () -> Void)? in
-                MainActor.assumeIsolated {
-                    _OUKTransaction.completionBlock().map { body in { body() } }
-                }
-            } as @convention(block) (AnyClass) -> (@convention(block) () -> Void)?
-        }
+        // `+completionBlock` is not interposed: returning a Swift closure as
+        // a block from here crashed Swift 6.2.1's IRGen (-O) in an unrelated
+        // function's dispatch block (UIApplication.registerForRemoteNotifications,
+        // emitBlockHeader, signal 11). QuartzCore's getter answers nil for
+        // blocks the port holds.
     }
 }
 
