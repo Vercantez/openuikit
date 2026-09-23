@@ -26,6 +26,12 @@ open class NSNumber: NSObject, CustomStringConvertible,
         super.init()
     }
 
+    /// NSDecimalNumber's designated path (FoundationObjCNames.swift).
+    internal init(_guestDecimalNumber value: Decimal) {
+        self.storage = .decimal(value)
+        super.init()
+    }
+
     public convenience required init(booleanLiteral value: Bool) {
         self.init(value: value)
     }

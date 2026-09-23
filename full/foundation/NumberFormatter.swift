@@ -12,7 +12,8 @@ import Foundation
 import FoundationEssentials
 #endif
 
-open class NumberFormatter {
+// Sendable as NSNumberFormatter is (NS_SWIFT_SENDABLE, iOS 26.1 SDK).
+open class NumberFormatter: @unchecked Sendable {
     public enum Style: UInt, Sendable {
         case none = 0
         case decimal = 1

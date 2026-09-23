@@ -9,6 +9,9 @@
 
 import FoundationEssentials
 import ObjectiveC
+#if canImport(Darwin)
+import Darwin
+#endif
 
 public typealias unichar = UInt16
 
@@ -300,4 +303,122 @@ extension String: _ObjectiveCBridgeable {
     ) -> String {
         source?._foundationGuestString ?? ""
     }
+}
+
+// MARK: - numeric values (guest-swift-modules)
+//
+// Measured on the iOS 26.1 simulator by uikit/Tools/oracle2/guestfoundationprobe
+// (nsstring.numbers / nsstring.bool / nsstring.int rows):
+//   - leading white space is skipped, newlines are not ("\t8" is 8, "\n8" is 0;
+//     U+00A0, U+2003 and U+3000 are skipped too);
+//   - digits are any Unicode decimal digits ("٣.٥" is 3.5, "１２" is 12);
+//   - doubleValue: one optional sign, digits, an optional '.' and digits, and an
+//     optional e/E exponent that is dropped when it has no digits ("2e+" is 2);
+//     no hex, "inf" or "nan" words; overflow is ±inf, underflow rounds like
+//     strtod ("1e-400" is 0, "4.9e-324" is 5e-324); nothing parsed is 0;
+//   - floatValue is Float(doubleValue);
+//   - intValue / integerValue / longLongValue read the integer prefix only,
+//     allow white space between the sign and the digits (" - 1" is -1 while
+//     its doubleValue is 0) and saturate (Int32 for intValue, Int64 otherwise);
+//   - boolValue: after white space, an optional sign and any '0's, true when
+//     the next character is Y/y/T/t or an ASCII digit 1-9 ("٣" is false).
+public extension NSString {
+    var doubleValue: Double { _foundationGuestScanDouble(_foundationGuestString) }
+    var floatValue: Float { Float(doubleValue) }
+    var intValue: Int32 { Int32(clamping: longLongValue) }
+    var integerValue: Int { Int(longLongValue) }
+    var longLongValue: Int64 { _foundationGuestScanInteger(_foundationGuestString) }
+    var boolValue: Bool {
+        var scalars = Substring(_foundationGuestString).unicodeScalars
+        _foundationGuestSkipBlanks(&scalars)
+        if let first = scalars.first, first == "+" || first == "-" { scalars.removeFirst() }
+        while scalars.first == "0" { scalars.removeFirst() }
+        guard let first = scalars.first else { return false }
+        switch first {
+        case "Y", "y", "T", "t", "1"..."9": return true
+        default: return false
+        }
+    }
+}
+
+private func _foundationGuestSkipBlanks(_ scalars: inout Substring.UnicodeScalarView) {
+    while let first = scalars.first,
+          first == "\t" || first.properties.generalCategory == .spaceSeparator {
+        scalars.removeFirst()
+    }
+}
+
+private func _foundationGuestDigit(_ scalar: Unicode.Scalar) -> UInt8? {
+    guard scalar.properties.numericType == .decimal,
+          let value = scalar.properties.numericValue, value >= 0, value <= 9 else { return nil }
+    return UInt8(value)
+}
+
+/// Appends the run of decimal digits at the front of `scalars` as ASCII.
+private func _foundationGuestTakeDigits(
+    _ scalars: inout Substring.UnicodeScalarView, into ascii: inout String
+) -> Int {
+    var count = 0
+    while let first = scalars.first, let digit = _foundationGuestDigit(first) {
+        ascii.unicodeScalars.append(Unicode.Scalar(0x30 + digit))
+        scalars.removeFirst()
+        count += 1
+    }
+    return count
+}
+
+private func _foundationGuestScanDouble(_ string: String) -> Double {
+    var scalars = Substring(string).unicodeScalars
+    _foundationGuestSkipBlanks(&scalars)
+    var ascii = ""
+    if let first = scalars.first, first == "+" || first == "-" {
+        ascii.unicodeScalars.append(first)
+        scalars.removeFirst()
+    }
+    var digits = _foundationGuestTakeDigits(&scalars, into: &ascii)
+    if scalars.first == "." {
+        scalars.removeFirst()
+        ascii.append(".")
+        digits += _foundationGuestTakeDigits(&scalars, into: &ascii)
+    }
+    guard digits > 0 else { return 0 }
+    if let first = scalars.first, first == "e" || first == "E" {
+        var rest = scalars
+        rest.removeFirst()
+        var exponent = "e"
+        if let sign = rest.first, sign == "+" || sign == "-" {
+            exponent.unicodeScalars.append(sign)
+            rest.removeFirst()
+        }
+        if _foundationGuestTakeDigits(&rest, into: &exponent) > 0 { ascii += exponent }
+    }
+    return ascii.withCString { strtod($0, nil) }
+}
+
+private func _foundationGuestScanInteger(_ string: String) -> Int64 {
+    var scalars = Substring(string).unicodeScalars
+    _foundationGuestSkipBlanks(&scalars)
+    var negative = false
+    if let first = scalars.first, first == "+" || first == "-" {
+        negative = first == "-"
+        scalars.removeFirst()
+        _foundationGuestSkipBlanks(&scalars)
+    }
+    // Accumulate toward the sign so Int64.min is representable; saturate.
+    var value: Int64 = 0
+    var saturated = false
+    while let first = scalars.first, let digit = _foundationGuestDigit(first) {
+        scalars.removeFirst()
+        if saturated { continue }
+        let (times, o1) = value.multipliedReportingOverflow(by: 10)
+        let (next, o2) = negative ? times.subtractingReportingOverflow(Int64(digit))
+                                  : times.addingReportingOverflow(Int64(digit))
+        if o1 || o2 {
+            value = negative ? .min : .max
+            saturated = true
+        } else {
+            value = next
+        }
+    }
+    return value
 }

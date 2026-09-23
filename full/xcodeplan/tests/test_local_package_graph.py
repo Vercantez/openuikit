@@ -1051,9 +1051,14 @@ class LocalPackageGraphTests(unittest.TestCase):
         core_contract = contract["targets"][0]
         self.assertEqual(core_contract["resource_bundle"], "Core_Utilities_Core.bundle")
         accessor = output / "targets/000000-Core/resource_bundle_accessor.swift"
-        self.assertIn(
-            'appendingPathComponent("Core_Utilities_Core.bundle")',
+        # Xcode 26.1's accessor text, with this target's bundle stem.
+        golden = (
+            Path(__file__).resolve().parent
+            / "fixtures/swiftpm-accessor/ResPkg_ResLib.xcode26.1-iphonesimulator.swift"
+        ).read_text(encoding="utf-8")
+        self.assertEqual(
             accessor.read_text(encoding="utf-8"),
+            golden.replace("ResPkg_ResLib", "Core_Utilities_Core"),
         )
         self.assertIn(os.fspath(accessor), core_contract["sources"])
         local_package_graph.verify_build_contract(graph, self.root, output)

@@ -3215,26 +3215,17 @@ def require_buildable(graph: dict[str, Any]) -> None:
 
 
 def _resource_bundle_accessor(bundle_name: str) -> bytes:
+    """Xcode 26.1's generated accessor (swiftpm_resource_accessor.py, measured)."""
     if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*\.bundle", bundle_name) is None:
         raise PackageGraphError(
             f"package resource bundle has an unsafe name: {bundle_name!r}"
         )
-    return (
-        "import Foundation\n\n"
-        "extension Foundation.Bundle {\n"
-        "    static let module: Bundle = {\n"
-        "        guard let resourceURL = Bundle.main.resourceURL else {\n"
-        "            fatalError(\"main bundle has no resource URL\")\n"
-        "        }\n"
-        "        let bundlePath = resourceURL\n"
-        f'            .appendingPathComponent("{bundle_name}").path\n'
-        "        guard let bundle = Bundle(path: bundlePath) else {\n"
-        f'            fatalError("unable to load SwiftPM resource bundle {bundle_name}")\n'
-        "        }\n"
-        "        return bundle\n"
-        "    }()\n"
-        "}\n"
-    ).encode("utf-8")
+    sys.path.insert(0, os.fspath(Path(__file__).resolve().parent))
+    try:
+        import swiftpm_resource_accessor
+    finally:
+        sys.path.pop(0)
+    return swiftpm_resource_accessor.accessor_source(bundle_name[: -len(".bundle")])
 
 
 def _build_contract(

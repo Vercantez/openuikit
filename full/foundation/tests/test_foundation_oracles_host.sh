@@ -20,6 +20,10 @@ run_family() {
     local extra_src_defines=${6:-}
     local golden_date=${7:-2026-09-05}
     local golden=$TESTS/foundation-$5-apple-$golden_date.txt
+    # The port follows iOS where the iOS 26.1 simulator's answer differs from
+    # macOS 26's (8th argument: that family's iOS golden, measured with the
+    # same oracle under `simctl spawn`). The macOS golden still guards drift.
+    local port_golden=${8:-$golden}
 
     echo "== $name"
     xcrun swiftc "$oracle" -o "$WORK/apple-$name"
@@ -34,7 +38,7 @@ run_family() {
     mkdir -p "$WORK/$module"
     # shellcheck disable=SC2086
     xcrun swiftc -parse-as-library -wmo -D FOUNDATION_GUEST_SERVICES_HOST \
-        $extra_src_defines \
+        ${=extra_src_defines} \
         -module-name "$module" \
         -emit-module -emit-module-path "$WORK/$module/$module.swiftmodule" \
         -emit-object -o "$WORK/$module/$module.o" \
@@ -43,17 +47,18 @@ run_family() {
         "$oracle" "$WORK/$module/$module.o" \
         -o "$WORK/port-$name"
     "$WORK/port-$name" > "$WORK/port-$name.txt"
-    if ! cmp -s "$WORK/port-$name.txt" "$golden"; then
+    if ! cmp -s "$WORK/port-$name.txt" "$port_golden"; then
         echo "PORT MISMATCH $name" >&2
-        diff -u "$golden" "$WORK/port-$name.txt" | head -80 >&2
+        diff -u "$port_golden" "$WORK/port-$name.txt" | head -80 >&2
         fail=1
         return
     fi
-    echo "OK $name rows=$(wc -l < "$golden" | tr -d ' ')"
+    echo "OK $name rows=$(wc -l < "$port_golden" | tr -d ' ')"
 }
 
 run_family DateFormatter DATEFORMATTER_PORT DateFormatterPort \
-    "$SRC/DateFormatter.swift" date-formatter
+    "$SRC/DateFormatter.swift" date-formatter "" 2026-09-05 \
+    "$TESTS/foundation-date-formatter-ios26.1-2026-09-23.txt"
 run_family JSONSerialization JSONSERIALIZATION_PORT JSONSerializationPort \
     "$SRC/JSONSerialization.swift" json-serialization
 run_family NSRegularExpression NSREGULAREXPRESSION_PORT NSRegularExpressionPort \

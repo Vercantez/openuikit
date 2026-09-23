@@ -1343,6 +1343,29 @@ open class NSMutableDictionary: NSDictionary, @unchecked Sendable {
         }
     }
 
+    /// String-keyed assignment, as `NSMutableDictionary.subscript(key: Any)`
+    /// allows on Apple (`Thread.current.threadDictionary["k"] = v`, Signal,
+    /// Telegram). A string key is stored as the string value.
+    @objc
+    open override subscript(key: String) -> Any? {
+        get { object(forKey: key) }
+        set {
+            guard let newValue else {
+                removeObject(forKey: key)
+                return
+            }
+            entries.withLock { entries in
+                if let index = entries.firstIndex(where: {
+                    _foundationDictionaryKeysEqual($0.key, key)
+                }) {
+                    entries[index].value = newValue
+                } else {
+                    entries.append(_FoundationDictionaryEntry(key: key, value: newValue))
+                }
+            }
+        }
+    }
+
     open override func copy(with zone: NSZone? = nil) -> Any {
         _ = zone
         return NSDictionary(entries: entries.withLock { $0 })

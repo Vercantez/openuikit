@@ -1692,8 +1692,8 @@ echo "== compile the ordered app-facing Foundation facade into APPINC"
 # Overwrites the DTS identity shim's swiftmodule. DTS.o is already compiled.
 # Library/UIKit invocations above never had APPINC, so they stay Foundation-hidden.
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 41 ] \
-    || die "Foundation guest source manifest must contain exactly 41 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 44 ] \
+    || die "Foundation guest source manifest must contain exactly 44 lines"
 FOUNDATION_GUEST_SOURCES=()
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
     FOUNDATION_GUEST_SOURCES+=("$W/$relative")
@@ -1939,6 +1939,37 @@ APPMODS_CINC+=("${FOCUS_XML_FLAGS[@]}"
     -Xcc -fmodule-map-file="$UIKIT/Sources/os/include/module.modulemap"
     -Xcc -I"$UIKIT/Sources/os/include")
 
+# ---- guest Apple-name Swift modules (guest-swift-modules) -----------------
+# Apps import these frameworks by Apple's names (NetNewsWire RSCore/RSParser
+# `import CoreGraphics`, Secrets `import Security`; census in
+# uikit/docs/agent_reports/guest-swift-modules.md). Each is the framework
+# fan-out's own source list, compiled with compile_app_module (so with
+# -D OPENUIKIT_GUEST) into APPINC. Placed after the Focus graph: nothing
+# compiled before it can see these names, and no Focus/RealAppProbe source has
+# a canImport() guard on them (grep, 2026-09-23), so render_full is unchanged.
+#   CoreGraphics  re-exports OpenCoreGraphics; CGContext is OpenUIKit's own
+#                 (re-exported, not re-declared: cg-unify phase 4).
+#   Security      the keychain answers errSecMissingEntitlement (-34018), as
+#                 iOS 26.1 answers a process without keychain entitlements;
+#                 SecRandomCopyBytes, SecKey, SecCertificate, SecTrust are the
+#                 fan-out's real implementations.
+# Probe: uikit/Tools/guestprobes/GuestModulesProbe.probe.sh.
+build_guest_apple_name_modules() {
+    local spec dir name relative sources
+    for spec in coregraphics:CoreGraphics security:Security; do
+        dir=${spec%%:*}; name=${spec#*:}
+        sources=()
+        while IFS= read -r relative; do
+            [ -n "$relative" ] || continue
+            sources+=("$W/$relative")
+        done < "$W/full/$dir/${dir}_guest_sources.txt"
+        [ "${#sources[@]}" -gt 0 ] || die "empty guest source list for $name"
+        compile_app_module "$name" "$OUT/guest-apple-$dir.o" "${sources[@]}"
+    done
+}
+echo "== guest Apple-name Swift modules (CoreGraphics, Security)"
+build_guest_apple_name_modules
+
 echo "== RealAppProbe (top-level + Vendored + Vendored/* + Focus/ + Hackers/)"
 # Measured glob that SwiftPM already compiles. The previous guest path
 # only globbed RealAppProbe/*.swift + Vendored/*.swift, so canImport(Onboarding)
@@ -1989,11 +2020,19 @@ echo "== link"
 # /usr/lib/libSystem.real.dylib resolves. The umbrella is linked directly
 # (rather than via -lSystem) because the SDK .tbd does not advertise
 # pthread_main_np, which the APP path needs and the render path does not.
+# FoundationEssentials is linked as $OUT/libFoundationEssentials.dylib (built
+# above from the same FE_OBJECTS), not object-linked: libFoundationInternationalization
+# .dylib loads that dylib, and a second, static FoundationEssentials in the
+# executable meant two copies in one process. FoundationInternationalization's
+# @_dynamicReplacement(for: _localeICUClass()) bound to the dylib's copy while
+# the app called the static one, so every Locale(identifier:) was en_001 and
+# objc4 logged "Class _TtC20FoundationEssentials... is implemented in both"
+# (MEASURED 2026-09-23, docs/agent_reports/guest-swift-modules.md).
 COMMON_LINK_OBJECTS=(
     "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
     "$OUT/swiftcorepatch.o"
-    "${FE_OBJECTS[@]}"
+    "$OUT/libFoundationEssentials.dylib"
     "${PREVIEW_LINK_OBJECTS[@]}"
 )
 # `#available(iOS x, *)` answers for iOS 26.1 in iOS-triple executables

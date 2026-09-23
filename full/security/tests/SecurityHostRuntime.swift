@@ -82,7 +82,7 @@ require(
 require(staticCode == nil, "unsigned code value")
 require(
     (SecCopyErrorMessageString(errSecItemNotFound, nil) as String?)
-        == "The item cannot be found.",
+        == "The specified item could not be found in the keychain.",
     "error message"
 )
 require(SecItemDelete(one as CFDictionary) == errSecSuccess, "delete")
