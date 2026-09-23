@@ -168,7 +168,17 @@ open class CKRecord: NSObject, NSSecureCoding, @unchecked Sendable {
         coder.encode(share, forKey: CKRecord.ArchiveKey.share)
     }
 
-    open func value(forKey key: String) -> Any? {
+#if OPENUIKIT_GUEST
+    /// On the guest, Foundation's `NSObject.value(forKey:)` is a facade
+    /// extension that sends `valueForKey:` (FoundationOpenUIKitValueAliases
+    /// .swift); CKRecord answers that selector instead of redeclaring it.
+    @objc(valueForKey:)
+    open func _ck_valueForKey(_ key: String) -> Any? { _ck_value(forKey: key) }
+#else
+    open func value(forKey key: String) -> Any? { _ck_value(forKey: key) }
+#endif
+
+    private func _ck_value(forKey key: String) -> Any? {
         if key == CKRecord.SystemFieldKey.recordID { return recordID }
         if key == CKRecord.SystemFieldKey.creatorUserRecordID { return creatorUserRecordID }
         if key == CKRecord.SystemFieldKey.lastModifiedUserRecordID { return lastModifiedUserRecordID }

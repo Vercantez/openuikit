@@ -63,6 +63,20 @@ open class NSString: NSObject, NSCopying, CustomStringConvertible,
         self.init(string: value)
     }
 
+    // NSSecureCoding, as NSString has on Apple: `coder.decodeObject(of:
+    // NSString.self, forKey:)` (CloudKit's archives, app code) needs the
+    // conformance. The guest coder is the facade's in-memory keyed transport.
+    public required convenience init?(coder aDecoder: NSCoder) {
+        guard let string = aDecoder.decodeObject(forKey: "NS.string") as? String else { return nil }
+        self.init(string: string)
+    }
+
+    open func encode(with aCoder: NSCoder) {
+        aCoder.encode(_foundationGuestString, forKey: "NS.string")
+    }
+
+    public class var supportsSecureCoding: Bool { true }
+
     public convenience init?(utf8String bytes: UnsafePointer<CChar>?) {
         guard let bytes,
               let value = String(validatingCString: bytes) else {
@@ -422,3 +436,5 @@ private func _foundationGuestScanInteger(_ string: String) -> Int64 {
     }
     return value
 }
+
+extension NSString: NSSecureCoding {}

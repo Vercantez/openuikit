@@ -164,137 +164,13 @@ open class CKShare: CKRecord, @unchecked Sendable {
         return nil
     }
 
-    open class AccessRequester: NSObject, NSSecureCoding, @unchecked Sendable {
-        open private(set) var participantLookupInfo: CKUserIdentity.LookupInfo
-        open private(set) var userIdentity: CKUserIdentity
+    public typealias AccessRequester = CKShareAccessRequester
 
-        public static var supportsSecureCoding: Bool { true }
+    public typealias BlockedIdentity = CKShareBlockedIdentity
 
-        init(userIdentity: CKUserIdentity, lookupInfo: CKUserIdentity.LookupInfo) {
-            self.userIdentity = userIdentity
-            self.participantLookupInfo = lookupInfo
-            super.init()
-        }
+    public typealias Metadata = CKShareMetadata
 
-        public required init?(coder: NSCoder) {
-            _ = coder
-            return nil
-        }
-
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
-    }
-
-    open class BlockedIdentity: NSObject, NSSecureCoding, @unchecked Sendable {
-        open private(set) var userIdentity: CKUserIdentity
-
-        public static var supportsSecureCoding: Bool { true }
-
-        init(userIdentity: CKUserIdentity) {
-            self.userIdentity = userIdentity
-            super.init()
-        }
-
-        public required init?(coder: NSCoder) {
-            _ = coder
-            return nil
-        }
-
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
-    }
-
-    open class Metadata: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        open private(set) var containerIdentifier: String
-        open private(set) var hierarchicalRootRecordID: CKRecord.ID?
-        open private(set) var ownerIdentity: CKUserIdentity
-        open private(set) var participantPermission: CKShare.ParticipantPermission
-        open private(set) var participantRole: CKShare.ParticipantRole
-        open private(set) var participantStatus: CKShare.ParticipantAcceptanceStatus
-        open private(set) var rootRecord: CKRecord?
-        open private(set) var rootRecordID: CKRecord.ID
-        open private(set) var share: CKShare
-
-        public static var supportsSecureCoding: Bool { true }
-
-        public required init?(coder: NSCoder) {
-            _ = coder
-            return nil
-        }
-
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            self
-        }
-    }
-
-    open class Participant: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        public typealias Permission = CKShare.ParticipantPermission
-        public typealias AcceptanceStatus = CKShare.ParticipantAcceptanceStatus
-        public typealias ID = String
-        public typealias Role = CKShare.ParticipantRole
-
-        open private(set) var acceptanceStatus: CKShare.ParticipantAcceptanceStatus
-        open private(set) var dateAddedToShare: Date?
-        open private(set) var isApprovedRequester: Bool
-        open var permission: CKShare.ParticipantPermission
-        open var role: CKShare.ParticipantRole
-        open private(set) var userIdentity: CKUserIdentity
-        open private(set) var participantID: CKShare.Participant.ID
-
-        public static var supportsSecureCoding: Bool { true }
-
-        public required init(
-            userIdentity: CKUserIdentity,
-            role: CKShare.ParticipantRole,
-            permission: CKShare.ParticipantPermission,
-            acceptanceStatus: CKShare.ParticipantAcceptanceStatus
-        ) {
-            self.userIdentity = userIdentity
-            self.role = role
-            self.permission = permission
-            self.acceptanceStatus = acceptanceStatus
-            self.isApprovedRequester = false
-            self.participantID = UUID().uuidString
-            super.init()
-        }
-
-        public required init?(coder: NSCoder) {
-            _ = coder
-            return nil
-        }
-
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            self
-        }
-
-        open class func oneTimeURLParticipant() -> Self {
-            Self.init(
-                userIdentity: CKUserIdentity.unresolved(),
-                role: .unknown,
-                permission: .none,
-                acceptanceStatus: .unknown
-            )
-        }
-
-        static func makeLocalPlaceholderParticipant() -> CKShare.Participant {
-            CKShare.Participant(
-                userIdentity: CKUserIdentity.unresolved(),
-                role: .unknown,
-                permission: .none,
-                acceptanceStatus: .unknown
-            )
-        }
-    }
+    public typealias Participant = CKShareParticipant
 
     func ck_copyShare() -> CKShare {
         let dummy = CKRecord(
@@ -318,5 +194,142 @@ open class CKShare: CKRecord, @unchecked Sendable {
 
     func ck_setShareURL(_ url: URL?) {
         self.url = url
+    }
+}
+
+
+// Apple names this class CKShareAccessRequester; CKShare.AccessRequester is a typealias of it (iOS 26.1 SDK).
+open class CKShareAccessRequester: NSObject, NSSecureCoding, @unchecked Sendable {
+    open private(set) var participantLookupInfo: CKUserIdentity.LookupInfo
+    open private(set) var userIdentity: CKUserIdentity
+
+    public static var supportsSecureCoding: Bool { true }
+
+    init(userIdentity: CKUserIdentity, lookupInfo: CKUserIdentity.LookupInfo) {
+        self.userIdentity = userIdentity
+        self.participantLookupInfo = lookupInfo
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
+    }
+}
+
+// Apple names this class CKShareBlockedIdentity; CKShare.BlockedIdentity is a typealias of it (iOS 26.1 SDK).
+open class CKShareBlockedIdentity: NSObject, NSSecureCoding, @unchecked Sendable {
+    open private(set) var userIdentity: CKUserIdentity
+
+    public static var supportsSecureCoding: Bool { true }
+
+    init(userIdentity: CKUserIdentity) {
+        self.userIdentity = userIdentity
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
+    }
+}
+
+// Apple names this class CKShareMetadata; CKShare.Metadata is a typealias of it (iOS 26.1 SDK).
+open class CKShareMetadata: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    open private(set) var containerIdentifier: String
+    open private(set) var hierarchicalRootRecordID: CKRecord.ID?
+    open private(set) var ownerIdentity: CKUserIdentity
+    open private(set) var participantPermission: CKShare.ParticipantPermission
+    open private(set) var participantRole: CKShare.ParticipantRole
+    open private(set) var participantStatus: CKShare.ParticipantAcceptanceStatus
+    open private(set) var rootRecord: CKRecord?
+    open private(set) var rootRecordID: CKRecord.ID
+    open private(set) var share: CKShare
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        self
+    }
+}
+
+// Apple names this class CKShareParticipant; CKShare.Participant is a typealias of it (iOS 26.1 SDK).
+open class CKShareParticipant: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public typealias Permission = CKShare.ParticipantPermission
+    public typealias AcceptanceStatus = CKShare.ParticipantAcceptanceStatus
+    public typealias ID = String
+    public typealias Role = CKShare.ParticipantRole
+
+    open private(set) var acceptanceStatus: CKShare.ParticipantAcceptanceStatus
+    open private(set) var dateAddedToShare: Date?
+    open private(set) var isApprovedRequester: Bool
+    open var permission: CKShare.ParticipantPermission
+    open var role: CKShare.ParticipantRole
+    open private(set) var userIdentity: CKUserIdentity
+    open private(set) var participantID: CKShare.Participant.ID
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public required init(
+        userIdentity: CKUserIdentity,
+        role: CKShare.ParticipantRole,
+        permission: CKShare.ParticipantPermission,
+        acceptanceStatus: CKShare.ParticipantAcceptanceStatus
+    ) {
+        self.userIdentity = userIdentity
+        self.role = role
+        self.permission = permission
+        self.acceptanceStatus = acceptanceStatus
+        self.isApprovedRequester = false
+        self.participantID = UUID().uuidString
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        self
+    }
+
+    open class func oneTimeURLParticipant() -> Self {
+        Self.init(
+            userIdentity: CKUserIdentity.unresolved(),
+            role: .unknown,
+            permission: .none,
+            acceptanceStatus: .unknown
+        )
+    }
+
+    static func makeLocalPlaceholderParticipant() -> CKShare.Participant {
+        CKShare.Participant(
+            userIdentity: CKUserIdentity.unresolved(),
+            role: .unknown,
+            permission: .none,
+            acceptanceStatus: .unknown
+        )
     }
 }

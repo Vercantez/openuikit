@@ -1941,7 +1941,8 @@ APPMODS_CINC+=("${FOCUS_XML_FLAGS[@]}"
 
 # ---- guest Apple-name Swift modules (guest-swift-modules) -----------------
 # Apps import these frameworks by Apple's names (NetNewsWire RSCore/RSParser
-# `import CoreGraphics`, Secrets `import Security`; census in
+# `import CoreGraphics`, Secrets `import Security`, CloudKitSync `import
+# CloudKit`; census in
 # uikit/docs/agent_reports/guest-swift-modules.md). Each is the framework
 # fan-out's own source list, compiled with compile_app_module (so with
 # -D OPENUIKIT_GUEST) into APPINC. Placed after the Focus graph: nothing
@@ -1953,10 +1954,14 @@ APPMODS_CINC+=("${FOCUS_XML_FLAGS[@]}"
 #                 iOS 26.1 answers a process without keychain entitlements;
 #                 SecRandomCopyBytes, SecKey, SecCertificate, SecTrust are the
 #                 fan-out's real implementations.
-# Probe: uikit/Tools/guestprobes/GuestModulesProbe.probe.sh.
+#   CloudKit      no iCloud account: accountStatus .noAccount (nil error),
+#                 every database call and operation CKError.notAuthenticated
+#                 (9), as iOS 26.1 answers a CloudKit-entitled app with no
+#                 account; the fan-out's simulated store is never served.
+# Probes: uikit/Tools/guestprobes/Guest{Modules,CloudKit}Probe.probe.sh.
 build_guest_apple_name_modules() {
     local spec dir name relative sources
-    for spec in coregraphics:CoreGraphics security:Security; do
+    for spec in coregraphics:CoreGraphics security:Security cloudkit:CloudKit; do
         dir=${spec%%:*}; name=${spec#*:}
         sources=()
         while IFS= read -r relative; do
@@ -1967,7 +1972,7 @@ build_guest_apple_name_modules() {
         compile_app_module "$name" "$OUT/guest-apple-$dir.o" "${sources[@]}"
     done
 }
-echo "== guest Apple-name Swift modules (CoreGraphics, Security)"
+echo "== guest Apple-name Swift modules (CoreGraphics, Security, CloudKit)"
 build_guest_apple_name_modules
 
 echo "== RealAppProbe (top-level + Vendored + Vendored/* + Focus/ + Hackers/)"

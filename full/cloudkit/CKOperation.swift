@@ -211,64 +211,7 @@ open class CKModifyRecordsOperation: CKDatabaseOperation, @unchecked Sendable {
 open class CKQueryOperation: CKDatabaseOperation, @unchecked Sendable {
     public static let maximumResults: Int = CKQueryOperationMaximumResults
 
-    open class Cursor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        public static var supportsSecureCoding: Bool { true }
-
-        var ck_recordType: CKRecord.RecordType = ""
-        var ck_predicate: NSPredicate = NSPredicate(value: true)
-        var ck_zoneID: CKRecordZone.ID?
-        var ck_sortDescriptors: [NSSortDescriptor]?
-        var ck_desiredKeys: [CKRecord.FieldKey]?
-        var ck_offset: Int = 0
-
-        public required init?(coder: NSCoder) {
-            ck_recordType = coder.decodeObject(of: NSString.self, forKey: "ck.cursor.recordType") as String? ?? ""
-            // Linux Foundation NSPredicate is not NSCoding; restore a TRUEPREDICATE.
-            ck_predicate = NSPredicate(value: true)
-            ck_zoneID = coder.decodeObject(of: CKRecordZoneID.self, forKey: "ck.cursor.zoneID")
-            ck_offset = coder.decodeInteger(forKey: "ck.cursor.offset")
-            super.init()
-        }
-
-        public override init() {
-            super.init()
-        }
-
-        static func ck_make(
-            recordType: CKRecord.RecordType,
-            predicate: NSPredicate,
-            zoneID: CKRecordZone.ID?,
-            sortDescriptors: [NSSortDescriptor]?,
-            desiredKeys: [CKRecord.FieldKey]?,
-            offset: Int
-        ) -> CKQueryOperation.Cursor {
-            let cursor = CKQueryOperation.Cursor()
-            cursor.ck_recordType = recordType
-            cursor.ck_predicate = predicate
-            cursor.ck_zoneID = zoneID
-            cursor.ck_sortDescriptors = sortDescriptors
-            cursor.ck_desiredKeys = desiredKeys
-            cursor.ck_offset = offset
-            return cursor
-        }
-
-        open func encode(with coder: NSCoder) {
-            coder.encode(ck_recordType as NSString, forKey: "ck.cursor.recordType")
-            coder.encode(ck_zoneID, forKey: "ck.cursor.zoneID")
-            coder.encode(ck_offset, forKey: "ck.cursor.offset")
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            CKQueryOperation.Cursor.ck_make(
-                recordType: ck_recordType,
-                predicate: ck_predicate,
-                zoneID: ck_zoneID,
-                sortDescriptors: ck_sortDescriptors,
-                desiredKeys: ck_desiredKeys,
-                offset: ck_offset
-            )
-        }
-    }
+    public typealias Cursor = CKQueryCursor
 
     open var cursor: CKQueryOperation.Cursor?
     open var query: CKQuery?
@@ -640,5 +583,66 @@ open class CKModifySubscriptionsOperation: CKDatabaseOperation, @unchecked Senda
         }
         modifySubscriptionsCompletionBlock?(nil, nil, error)
         modifySubscriptionsResultBlock?(.failure(error))
+    }
+}
+
+
+// Apple names this class CKQueryCursor; CKQueryOperation.Cursor is a typealias of it (iOS 26.1 SDK).
+open class CKQueryCursor: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+
+    var ck_recordType: CKRecord.RecordType = ""
+    var ck_predicate: NSPredicate = NSPredicate(value: true)
+    var ck_zoneID: CKRecordZone.ID?
+    var ck_sortDescriptors: [NSSortDescriptor]?
+    var ck_desiredKeys: [CKRecord.FieldKey]?
+    var ck_offset: Int = 0
+
+    public required init?(coder: NSCoder) {
+        ck_recordType = coder.decodeObject(of: NSString.self, forKey: "ck.cursor.recordType") as String? ?? ""
+        // Linux Foundation NSPredicate is not NSCoding; restore a TRUEPREDICATE.
+        ck_predicate = NSPredicate(value: true)
+        ck_zoneID = coder.decodeObject(of: CKRecordZoneID.self, forKey: "ck.cursor.zoneID")
+        ck_offset = coder.decodeInteger(forKey: "ck.cursor.offset")
+        super.init()
+    }
+
+    public override init() {
+        super.init()
+    }
+
+    static func ck_make(
+        recordType: CKRecord.RecordType,
+        predicate: NSPredicate,
+        zoneID: CKRecordZone.ID?,
+        sortDescriptors: [NSSortDescriptor]?,
+        desiredKeys: [CKRecord.FieldKey]?,
+        offset: Int
+    ) -> CKQueryOperation.Cursor {
+        let cursor = CKQueryOperation.Cursor()
+        cursor.ck_recordType = recordType
+        cursor.ck_predicate = predicate
+        cursor.ck_zoneID = zoneID
+        cursor.ck_sortDescriptors = sortDescriptors
+        cursor.ck_desiredKeys = desiredKeys
+        cursor.ck_offset = offset
+        return cursor
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(ck_recordType as NSString, forKey: "ck.cursor.recordType")
+        coder.encode(ck_zoneID, forKey: "ck.cursor.zoneID")
+        coder.encode(ck_offset, forKey: "ck.cursor.offset")
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        CKQueryOperation.Cursor.ck_make(
+            recordType: ck_recordType,
+            predicate: ck_predicate,
+            zoneID: ck_zoneID,
+            sortDescriptors: ck_sortDescriptors,
+            desiredKeys: ck_desiredKeys,
+            offset: ck_offset
+        )
     }
 }

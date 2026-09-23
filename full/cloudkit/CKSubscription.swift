@@ -9,105 +9,7 @@ open class CKSubscription: NSObject, NSCopying, NSSecureCoding, @unchecked Senda
         case database = 3
     }
 
-    open class NotificationInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        open var alertActionLocalizationKey: String?
-        open var alertBody: String?
-        open var alertLaunchImage: String?
-        open var alertLocalizationKey: String?
-        open var category: String?
-        open var collapseIDKey: String?
-        open var shouldBadge: Bool = false
-        open var shouldSendContentAvailable: Bool = false
-        open var shouldSendMutableContent: Bool = false
-        open var soundName: String?
-        open var subtitle: String?
-        open var subtitleLocalizationKey: String?
-        open var title: String?
-        open var titleLocalizationKey: String?
-        open var desiredKeys: [CKRecord.FieldKey]?
-        open var alertLocalizationArgs: [CKRecord.FieldKey]?
-        open var titleLocalizationArgs: [CKRecord.FieldKey]?
-        open var subtitleLocalizationArgs: [CKRecord.FieldKey]?
-
-        public static var supportsSecureCoding: Bool { true }
-
-        public override init() {
-            super.init()
-        }
-
-        public convenience init(
-            alertBody: String? = nil,
-            alertLocalizationKey: String? = nil,
-            alertLocalizationArgs: [CKRecord.FieldKey] = [],
-            title: String? = nil,
-            titleLocalizationKey: String? = nil,
-            titleLocalizationArgs: [CKRecord.FieldKey] = [],
-            subtitle: String? = nil,
-            subtitleLocalizationKey: String? = nil,
-            subtitleLocalizationArgs: [CKRecord.FieldKey] = [],
-            alertActionLocalizationKey: String? = nil,
-            alertLaunchImage: String? = nil,
-            soundName: String? = nil,
-            desiredKeys: [CKRecord.FieldKey]? = nil,
-            shouldBadge: Bool = false,
-            shouldSendContentAvailable: Bool = false,
-            shouldSendMutableContent: Bool = false,
-            category: String? = nil,
-            collapseIDKey: String? = nil
-        ) {
-            self.init()
-            self.alertBody = alertBody
-            self.alertLocalizationKey = alertLocalizationKey
-            self.alertLocalizationArgs = alertLocalizationArgs
-            self.title = title
-            self.titleLocalizationKey = titleLocalizationKey
-            self.titleLocalizationArgs = titleLocalizationArgs
-            self.subtitle = subtitle
-            self.subtitleLocalizationKey = subtitleLocalizationKey
-            self.subtitleLocalizationArgs = subtitleLocalizationArgs
-            self.alertActionLocalizationKey = alertActionLocalizationKey
-            self.alertLaunchImage = alertLaunchImage
-            self.soundName = soundName
-            self.desiredKeys = desiredKeys
-            self.shouldBadge = shouldBadge
-            self.shouldSendContentAvailable = shouldSendContentAvailable
-            self.shouldSendMutableContent = shouldSendMutableContent
-            self.category = category
-            self.collapseIDKey = collapseIDKey
-        }
-
-        public required init?(coder: NSCoder) {
-            _ = coder
-            super.init()
-        }
-
-        open func encode(with coder: NSCoder) {
-            _ = coder
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            let copied = CKSubscription.NotificationInfo()
-            copied.alertActionLocalizationKey = alertActionLocalizationKey
-            copied.alertBody = alertBody
-            copied.alertLaunchImage = alertLaunchImage
-            copied.alertLocalizationKey = alertLocalizationKey
-            copied.category = category
-            copied.collapseIDKey = collapseIDKey
-            copied.shouldBadge = shouldBadge
-            copied.shouldSendContentAvailable = shouldSendContentAvailable
-            copied.shouldSendMutableContent = shouldSendMutableContent
-            copied.soundName = soundName
-            copied.subtitle = subtitle
-            copied.subtitleLocalizationKey = subtitleLocalizationKey
-            copied.title = title
-            copied.titleLocalizationKey = titleLocalizationKey
-            copied.desiredKeys = desiredKeys
-            copied.alertLocalizationArgs = alertLocalizationArgs
-            copied.titleLocalizationArgs = titleLocalizationArgs
-            copied.subtitleLocalizationArgs = subtitleLocalizationArgs
-            return copied
-        }
-    }
+    public typealias NotificationInfo = CKNotificationInfo
 
     open var notificationInfo: CKSubscription.NotificationInfo?
     open private(set) var subscriptionType: CKSubscription.SubscriptionType
@@ -270,5 +172,107 @@ open class CKRecordZoneSubscription: CKSubscription, @unchecked Sendable {
         self.zoneID = .default
         super.init(subscriptionType: .recordZone, subscriptionID: UUID().uuidString)
         _ = aDecoder
+    }
+}
+
+
+// Apple names this class CKNotificationInfo; CKSubscription.NotificationInfo is a typealias of it (iOS 26.1 SDK).
+open class CKNotificationInfo: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    open var alertActionLocalizationKey: String?
+    open var alertBody: String?
+    open var alertLaunchImage: String?
+    open var alertLocalizationKey: String?
+    open var category: String?
+    open var collapseIDKey: String?
+    open var shouldBadge: Bool = false
+    open var shouldSendContentAvailable: Bool = false
+    open var shouldSendMutableContent: Bool = false
+    open var soundName: String?
+    open var subtitle: String?
+    open var subtitleLocalizationKey: String?
+    open var title: String?
+    open var titleLocalizationKey: String?
+    open var desiredKeys: [CKRecord.FieldKey]?
+    open var alertLocalizationArgs: [CKRecord.FieldKey]?
+    open var titleLocalizationArgs: [CKRecord.FieldKey]?
+    open var subtitleLocalizationArgs: [CKRecord.FieldKey]?
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public override init() {
+        super.init()
+    }
+
+    public convenience init(
+        alertBody: String? = nil,
+        alertLocalizationKey: String? = nil,
+        alertLocalizationArgs: [CKRecord.FieldKey] = [],
+        title: String? = nil,
+        titleLocalizationKey: String? = nil,
+        titleLocalizationArgs: [CKRecord.FieldKey] = [],
+        subtitle: String? = nil,
+        subtitleLocalizationKey: String? = nil,
+        subtitleLocalizationArgs: [CKRecord.FieldKey] = [],
+        alertActionLocalizationKey: String? = nil,
+        alertLaunchImage: String? = nil,
+        soundName: String? = nil,
+        desiredKeys: [CKRecord.FieldKey]? = nil,
+        shouldBadge: Bool = false,
+        shouldSendContentAvailable: Bool = false,
+        shouldSendMutableContent: Bool = false,
+        category: String? = nil,
+        collapseIDKey: String? = nil
+    ) {
+        self.init()
+        self.alertBody = alertBody
+        self.alertLocalizationKey = alertLocalizationKey
+        self.alertLocalizationArgs = alertLocalizationArgs
+        self.title = title
+        self.titleLocalizationKey = titleLocalizationKey
+        self.titleLocalizationArgs = titleLocalizationArgs
+        self.subtitle = subtitle
+        self.subtitleLocalizationKey = subtitleLocalizationKey
+        self.subtitleLocalizationArgs = subtitleLocalizationArgs
+        self.alertActionLocalizationKey = alertActionLocalizationKey
+        self.alertLaunchImage = alertLaunchImage
+        self.soundName = soundName
+        self.desiredKeys = desiredKeys
+        self.shouldBadge = shouldBadge
+        self.shouldSendContentAvailable = shouldSendContentAvailable
+        self.shouldSendMutableContent = shouldSendMutableContent
+        self.category = category
+        self.collapseIDKey = collapseIDKey
+    }
+
+    public required init?(coder: NSCoder) {
+        _ = coder
+        super.init()
+    }
+
+    open func encode(with coder: NSCoder) {
+        _ = coder
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        let copied = CKSubscription.NotificationInfo()
+        copied.alertActionLocalizationKey = alertActionLocalizationKey
+        copied.alertBody = alertBody
+        copied.alertLaunchImage = alertLaunchImage
+        copied.alertLocalizationKey = alertLocalizationKey
+        copied.category = category
+        copied.collapseIDKey = collapseIDKey
+        copied.shouldBadge = shouldBadge
+        copied.shouldSendContentAvailable = shouldSendContentAvailable
+        copied.shouldSendMutableContent = shouldSendMutableContent
+        copied.soundName = soundName
+        copied.subtitle = subtitle
+        copied.subtitleLocalizationKey = subtitleLocalizationKey
+        copied.title = title
+        copied.titleLocalizationKey = titleLocalizationKey
+        copied.desiredKeys = desiredKeys
+        copied.alertLocalizationArgs = alertLocalizationArgs
+        copied.titleLocalizationArgs = titleLocalizationArgs
+        copied.subtitleLocalizationArgs = subtitleLocalizationArgs
+        return copied
     }
 }

@@ -8,29 +8,7 @@ open class CKNotification: NSObject, @unchecked Sendable {
         case database = 4
     }
 
-    open class ID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
-        public static var supportsSecureCoding: Bool { true }
-        var ck_payload: String = ""
-
-        public required init?(coder: NSCoder) {
-            ck_payload = coder.decodeObject(of: NSString.self, forKey: "ck.nid") as String? ?? ""
-            super.init()
-        }
-
-        public override init() {
-            super.init()
-        }
-
-        open func encode(with coder: NSCoder) {
-            coder.encode(ck_payload as NSString, forKey: "ck.nid")
-        }
-
-        open func copy(with zone: NSZone? = nil) -> Any {
-            let copied = CKNotification.ID()
-            copied.ck_payload = ck_payload
-            return copied
-        }
-    }
+    public typealias ID = CKNotificationID
 
     open private(set) var alertActionLocalizationKey: String?
     open private(set) var alertBody: String?
@@ -161,5 +139,31 @@ open class CKRecordZoneNotification: CKNotification, @unchecked Sendable {
         self.databaseScope = databaseScope
         self.recordZoneID = recordZoneID
         super.init(type: .recordZone)
+    }
+}
+
+
+// Apple names this class CKNotificationID; CKNotification.ID is a typealias of it (iOS 26.1 SDK).
+open class CKNotificationID: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    var ck_payload: String = ""
+
+    public required init?(coder: NSCoder) {
+        ck_payload = coder.decodeObject(of: NSString.self, forKey: "ck.nid") as String? ?? ""
+        super.init()
+    }
+
+    public override init() {
+        super.init()
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(ck_payload as NSString, forKey: "ck.nid")
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        let copied = CKNotification.ID()
+        copied.ck_payload = ck_payload
+        return copied
     }
 }

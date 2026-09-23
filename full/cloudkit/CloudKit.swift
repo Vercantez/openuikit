@@ -116,6 +116,19 @@ final class CloudKitUncheckedWork: @unchecked Sendable {
     }
 }
 
+#if OPENUIKIT_GUEST
+/// The guest Foundation facade has no NSDate class (guest-objc-foundation's
+/// FoundationObjCBridge owns it); CloudKit's archive helpers store Date.
+typealias NSDate = Date
+
+extension NSCoder {
+    func ck_decodeIfPresent(_ type: Date.Type, forKey key: String) -> Date? {
+        guard containsValue(forKey: key) else { return nil }
+        return decodeObject(forKey: key) as? Date
+    }
+}
+#endif
+
 extension NSCoder {
     /// Linux NSKeyedUnarchiver raises on a missing key; Apple returns nil.
     func ck_decodeIfPresent<T: NSObject & NSCoding>(_ type: T.Type, forKey key: String) -> T? {

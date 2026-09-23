@@ -112,10 +112,19 @@ open class CKDatabase: NSObject, @unchecked Sendable {
     }
 
     func withStore<T>(_ body: (CKSimulatedDatabaseState) throws -> T) throws -> T {
+#if OPENUIKIT_GUEST
+        // The Linux-hosted Mach-O guest (-D OPENUIKIT_GUEST, build_full.sh) has
+        // no iCloud account and never serves the simulated store: every
+        // database call fails the way iOS 26.1 fails it for a CloudKit-entitled
+        // app with no account signed in, CKError.notAuthenticated (9)
+        // (MEASURED, uikit/Tools/oracle2/guestcloudkitprobe).
+        throw CKSimulatedStore.error(.notAuthenticated)
+#else
         guard let container else {
             throw CKSimulatedStore.error(.internalError)
         }
         return try container.simulatedState.withDatabase(databaseScope, body)
+#endif
     }
 
     func resumeCompletion<T>(_ value: T?, _ error: (any Error)?, _ continuation: CheckedContinuation<T, any Error>) {

@@ -1,0 +1,10 @@
+guestcloudkitprobe v1
+cloudkit.identifier iCloud.org.openuikit.guestprobe
+cloudkit.accountStatus 3 nil
+cloudkit.database.scope 2
+cloudkit.record Probe probe-1 x _defaultZone
+cloudkit.save CKErrorDomain 9
+cloudkit.fetch CKErrorDomain 9
+cloudkit.userRecordID nil CKErrorDomain 9
+cloudkit.modify CKErrorDomain 9
+guestcloudkitprobe done
