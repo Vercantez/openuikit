@@ -1,0 +1,197 @@
+# textviewinputprobe — iOS 26.1
+## textview
+fresh: begin=0 end=0 hasText=0 | text="" sel={0,0} selTR=[0,0 empty] marked=nil fr=0
+text=Hello world (detached from responder): end=11 | text="Hello world" sel={11,0} selTR=[11,11 empty] marked=nil fr=0
+  didChangeSelection sel={11,0}
+selectedRange={2,3}: text="Hello world" sel={2,3} selTR=[2,5] marked=nil fr=0
+  didChangeSelection sel={2,3}
+text(in: selectedTextRange): "llo" | text="Hello world" sel={2,3} selTR=[2,5] marked=nil fr=0
+selectedTextRange=[1,4]: text="Hello world" sel={1,3} selTR=[1,4] marked=nil fr=0
+  didChangeSelection sel={1,3}
+selectedTextRange=nil: text="Hello world" sel={0,0} selTR=nil marked=nil fr=0
+  didChangeSelection sel={0,0}
+replace [0,5) Howdy!: text="Howdy! world" sel={6,0} selTR=[6,6 empty] marked=nil fr=0
+  didChangeSelection sel={6,0}
+  didChange text="Howdy! world" sel={6,0}
+  note TextDidChange
+insertText X (not first responder): text="Howdy!X world" sel={7,0} selTR=[7,7 empty] marked=nil fr=0
+  didChangeSelection sel={7,0}
+  didChange text="Howdy!X world" sel={7,0}
+  note TextDidChange
+deleteBackward (not first responder): text="Howdy! world" sel={6,0} selTR=[6,6 empty] marked=nil fr=0
+  didChangeSelection sel={6,0}
+  didChange text="Howdy! world" sel={6,0}
+  note TextDidChange
+becomeFirstResponder: returned=1 | text="Howdy! world" sel={6,0} selTR=[6,6 empty] marked=nil fr=1
+  shouldBegin
+  didBegin sel={6,0}
+  note TextDidBeginEditing
+selectedRange={0,0}: text="Howdy! world" sel={0,0} selTR=[0,0 empty] marked=nil fr=1
+  didChangeSelection sel={0,0}
+selectedRange={0,0} again: text="Howdy! world" sel={0,0} selTR=[0,0 empty] marked=nil fr=1
+insertText abc: text="abcHowdy! world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChangeSelection sel={3,0}
+  didChange text="abcHowdy! world" sel={3,0}
+  note TextDidChange
+deleteBackward: text="abHowdy! world" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+  didChangeSelection sel={2,0}
+  didChange text="abHowdy! world" sel={2,0}
+  note TextDidChange
+selectedRange={0,3}: text="abHowdy! world" sel={0,3} selTR=[0,3] marked=nil fr=1
+  didChangeSelection sel={0,3}
+insertText Z over selection: text="Zowdy! world" sel={1,0} selTR=[1,1 empty] marked=nil fr=1
+  didChangeSelection sel={1,0}
+  didChange text="Zowdy! world" sel={1,0}
+  note TextDidChange
+selectedRange={1,2}: text="Zowdy! world" sel={1,2} selTR=[1,3] marked=nil fr=1
+  didChangeSelection sel={1,2}
+deleteBackward over selection: text="Zdy! world" sel={1,0} selTR=[1,1 empty] marked=nil fr=1
+  didChangeSelection sel={1,0}
+  didChange text="Zdy! world" sel={1,0}
+  note TextDidChange
+replace [0,1) Q (first responder): text="Qdy! world" sel={1,0} selTR=[1,1 empty] marked=nil fr=1
+  didChange text="Qdy! world" sel={1,0}
+  note TextDidChange
+replace [2,2) empty-range insert: text="Qdmny! world" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+  didChangeSelection sel={4,0}
+  didChange text="Qdmny! world" sel={4,0}
+  note TextDidChange
+replace [0,2) with empty: text="mny! world" sel={0,0} selTR=[0,0 empty] marked=nil fr=1
+  didChangeSelection sel={0,0}
+  didChange text="mny! world" sel={0,0}
+  note TextDidChange
+selectedRange={0,0}, replace [3,4) after caret: text="mnyKL world" sel={5,0} selTR=[5,5 empty] marked=nil fr=1
+  didChangeSelection sel={5,0}
+  didChange text="mnyKL world" sel={5,0}
+  note TextDidChange
+selectedRange={1,0}, replace [3,3) empty with empty: text="mnyKL world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChangeSelection sel={3,0}
+  didChange text="mnyKL world" sel={3,0}
+  note TextDidChange
+insertText empty: text="mnyKL world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChange text="mnyKL world" sel={3,0}
+  note TextDidChange
+unmarkText with no marked text: text="mnyKL world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+selectedRange={2,0}: text="mnyKL world" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+  didChangeSelection sel={2,0}
+setMarkedText ka sel{2,0}: text="mnkayKL world" sel={4,0} selTR=[4,4 empty] marked=[2,4] fr=1
+  didChangeSelection sel={4,0}
+  didChange text="mnkayKL world" sel={4,0}
+  note TextDidChange
+text(in: markedTextRange): "ka" | text="mnkayKL world" sel={4,0} selTR=[4,4 empty] marked=[2,4] fr=1
+setMarkedText かな sel{1,0}: text="mn\u{304B}\u{306A}yKL world" sel={3,0} selTR=[3,3 empty] marked=[2,4] fr=1
+  didChangeSelection sel={3,0}
+  didChange text="mn\u{304B}\u{306A}yKL world" sel={3,0}
+  note TextDidChange
+setMarkedText abc sel{0,2}: text="mnabcyKL world" sel={2,2} selTR=[2,4] marked=[2,5] fr=1
+  didChangeSelection sel={2,2}
+  didChange text="mnabcyKL world" sel={2,2}
+  note TextDidChange
+unmarkText: text="mnabcyKL world" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+  didChangeSelection sel={2,0}
+  didChangeSelection sel={2,0}
+  didChange text="mnabcyKL world" sel={2,0}
+  note TextDidChange
+setMarkedText x sel{1,0}: text="mnxabcyKL world" sel={3,0} selTR=[3,3 empty] marked=[2,3] fr=1
+  didChangeSelection sel={3,0}
+  didChange text="mnxabcyKL world" sel={3,0}
+  note TextDidChange
+insertText y (replaces marked): text="mnyabcyKL world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChangeSelection sel={3,0}
+  didChange text="mnyabcyKL world" sel={3,0}
+  note TextDidChange
+setMarkedText mm sel{2,0}: text="mnymmabcyKL world" sel={5,0} selTR=[5,5 empty] marked=[3,5] fr=1
+  didChangeSelection sel={5,0}
+  didChange text="mnymmabcyKL world" sel={5,0}
+  note TextDidChange
+setMarkedText nil: text="mnyabcyKL world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChangeSelection sel={3,0}
+  didChange text="mnyabcyKL world" sel={3,0}
+  note TextDidChange
+  didChangeSelection sel={3,0}
+  didChange text="mnyabcyKL world" sel={3,0}
+  note TextDidChange
+setMarkedText pq sel{2,0}: text="mnypqabcyKL world" sel={5,0} selTR=[5,5 empty] marked=[3,5] fr=1
+  didChangeSelection sel={5,0}
+  didChange text="mnypqabcyKL world" sel={5,0}
+  note TextDidChange
+setMarkedText empty: text="mnyabcyKL world" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChangeSelection sel={3,0}
+  didChange text="mnyabcyKL world" sel={3,0}
+  note TextDidChange
+  didChangeSelection sel={3,0}
+  didChange text="mnyabcyKL world" sel={3,0}
+  note TextDidChange
+setMarkedText rs sel{2,0}: text="mnyrsabcyKL world" sel={5,0} selTR=[5,5 empty] marked=[3,5] fr=1
+  didChangeSelection sel={5,0}
+  didChange text="mnyrsabcyKL world" sel={5,0}
+  note TextDidChange
+selectedRange={0,0} while marked: text="mnyrsabcyKL world" sel={0,0} selTR=[0,0 empty] marked=[3,5] fr=1
+  didChangeSelection sel={0,0}
+unmarkText (cleanup): text="mnyrsabcyKL world" sel={0,0} selTR=[0,0 empty] marked=nil fr=1
+  didChangeSelection sel={0,0}
+  didChangeSelection sel={0,0}
+  didChange text="mnyrsabcyKL world" sel={0,0}
+  note TextDidChange
+text=a😀b (programmatic, first responder): end=4 | text="a\u{D83D}\u{DE00}b" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+  didChangeSelection sel={4,0}
+positions: from0+-1=nil from0+0=0 from0+1=1 from0+2=2 from0+3=3 from0+4=4 from0+5=nil fromEnd-1=3 fromEnd+1=nil offset(end,begin)=-4 | text="a\u{D83D}\u{DE00}b" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+ranges: textRange(3,1)=[1,3] text(in: 3..1)="\u{D83D}\u{DE00}" text(0..2)="a\u{FFFD}" text(2..4)="\u{FFFD}b" text(1..3)="\u{D83D}\u{DE00}" text(0..0)="" | text="a\u{D83D}\u{DE00}b" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+selectedRange={2,0} inside surrogate pair: text="a\u{D83D}\u{DE00}b" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+  didChangeSelection sel={2,0}
+selectedTextRange=[2,2] inside surrogate pair: text="a\u{D83D}\u{DE00}b" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+selectedRange={4,0}: text="a\u{D83D}\u{DE00}b" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+  didChangeSelection sel={4,0}
+deleteBackward: text="a\u{D83D}\u{DE00}" sel={3,0} selTR=[3,3 empty] marked=nil fr=1
+  didChangeSelection sel={3,0}
+  didChange text="a\u{D83D}\u{DE00}" sel={3,0}
+  note TextDidChange
+deleteBackward over emoji: text="a" sel={1,0} selTR=[1,1 empty] marked=nil fr=1
+  didChangeSelection sel={1,0}
+  didChange text="a" sel={1,0}
+  note TextDidChange
+attributedText=Tail: text="Tail" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+  didChangeSelection sel={4,0}
+selectedRange={1,1}: text="Tail" sel={1,1} selTR=[1,2] marked=nil fr=1
+  didChangeSelection sel={1,1}
+text=Tail (same text): text="Tail" sel={4,0} selTR=[4,4 empty] marked=nil fr=1
+  didChangeSelection sel={4,0}
+text=Longer text: text="Longer text" sel={11,0} selTR=[11,11 empty] marked=nil fr=1
+  didChangeSelection sel={11,0}
+text=ab (shorter): text="ab" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+  didChangeSelection sel={2,0}
+text=ab again (selection already at end): text="ab" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+text=xy (same length, selection at end): text="xy" sel={2,0} selTR=[2,2 empty] marked=nil fr=1
+resignFirstResponder: returned=1 | text="xy" sel={2,0} selTR=[2,2 empty] marked=nil fr=0
+  shouldEnd
+  didEnd
+  note TextDidEndEditing
+replace [0,1) after resign: text="cy" sel={1,0} selTR=[1,1 empty] marked=nil fr=0
+  didChangeSelection sel={1,0}
+  didChange text="cy" sel={1,0}
+  note TextDidChange
+geometry: caret0=(4,7,2,22) caretEnd=(42.67,7,2,22) first[0,0)=(5,8,0,20.33) first[1,3)=(17.33,7,13,22) selRects[1,3)=1 | text="Hello" sel={5,0} selTR=[5,5 empty] marked=nil fr=0
+geometry carets: c0=(4,7,2,22) c1=(16.33,7,2,22) c2=(25.33,7,2,22) c3=(29.33,7,2,22) c4=(33.33,7,2,22) c5=(42.67,7,2,22) | text="Hello" sel={5,0} selTR=[5,5 empty] marked=nil fr=0
+geometry two lines: c5=(42.67,7,2,22) c6=(4,27.33,2,22) c11=(48.67,27.33,2,22) first[3,8)=(30.33,7,284.67,21.33) first[6,8)=(5,27.33,24.67,22) selRects[3,8)=2 | text="Hello\u{A}World" sel={11,0} selTR=[11,11 empty] marked=nil fr=0
+geometry 12pt: c0=(4,7,2,16) c2=(16,7,2,16) first[0,0)=(5,8,0,14.33) | text="Hi" sel={2,0} selTR=[2,2 empty] marked=nil fr=0
+## rxrows
+app.isNetworkActivityIndicatorVisible initial=0
+  after =true: 0
+  after =true + runloop: 0
+  after =true,=false: 0
+segmented fresh: n=3 enabled=111 sel=-1 control.isEnabled=1
+segmented setEnabled(false, 1): n=3 enabled=101 sel=-1 control.isEnabled=1
+segmented selectedSegmentIndex=1 (disabled segment): n=3 enabled=101 sel=1 control.isEnabled=1
+segmented sel=0 then setEnabled(false, 0) (selected segment): n=3 enabled=001 sel=-1 control.isEnabled=1
+segmented insert z at 0: n=4 enabled=1101 sel=-1 control.isEnabled=1
+segmented remove at 0: n=3 enabled=101 sel=-2 control.isEnabled=1
+segmented control.isEnabled=false: n=3 enabled=101 sel=-2 control.isEnabled=0
+segmented n=4 sel=2, remove at 0: n=3 enabled=011 sel=1 control.isEnabled=1
+segmented remove at 1 (the selected one): n=2 enabled=01 sel=-2 control.isEnabled=1
+segmented sel=0, remove at 1 (after selection): n=1 enabled=0 sel=0 control.isEnabled=1
+segmented removeAll, insert n: n=1 enabled=1 sel=-1 control.isEnabled=1
+## crashes (one launch each)
+crash setEnabled7: *** Terminating app due to uncaught exception 'NSRangeException', reason: '*** -[__NSArrayM objectAtIndex:]: index 7 beyond bounds [0 .. 2]'
+crash setEnabled-1: *** Terminating app due to uncaught exception 'NSRangeException', reason: '*** -[__NSArrayM objectAtIndex:]: index 18446744073709551615 beyond bounds [0 .. 2]'
+crash isEnabled7: *** Terminating app due to uncaught exception 'NSRangeException', reason: '*** -[__NSArrayM objectAtIndex:]: index 7 beyond bounds [0 .. 2]'
+crash isEnabled-1: *** Terminating app due to uncaught exception 'NSRangeException', reason: '*** -[__NSArrayM objectAtIndex:]: index 18446744073709551615 beyond bounds [0 .. 2]'
