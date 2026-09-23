@@ -669,7 +669,14 @@ open class UISearchBar: UIView {
             return
         }
         let fieldH = _UISearchFieldMetrics.scaledFieldHeight(compatibleWith: traitCollection)
-        let y = (bounds.height - fieldH) / 2
+        // MEASURED Catalyst (file header): the 36 pt field sits at
+        // (H - 44) / 2 — y = 0 in a 44 pt bar, -4 in a 36 pt one — i.e. it is
+        // placed as if it were the standard 44 pt box, not centred on its own
+        // height. The iOS cut's field is the (Dynamic Type scaled) 44 pt box
+        // itself, so centring it is the same rule there. 2f008d44 centred the
+        // field's own height on both cuts, which moved the Catalyst field
+        // 4 pt down (UISearchBarTests.testMeasuredFieldFrame).
+        let y = (bounds.height - (_UISearchFieldMetrics.isIOS ? fieldH : UISearchBar.standardHeight)) / 2
         var right = bounds.width - UISearchBar.fieldSideInset
         if showsCancelButton {
             let b = cancelButton ?? makeCancelButton()
