@@ -314,10 +314,14 @@ static const UILayoutPriority UILayoutPrioritySceneSizeStayPut = 500;
 static const UILayoutPriority UILayoutPriorityDragThatCannotResizeScene = 490;
 static const UILayoutPriority UILayoutPriorityDefaultLow = 250;
 static const UILayoutPriority UILayoutPriorityFittingSizeLevel = 50;
-#if !__swift__
+/* On the iOS triple there is no AppKit copy, and Swift must see these too:
+ * it imports pod headers that declare them in method signatures
+ * (FLKAutoLayout's UIView+FLKAutoLayoutPredicate.h; MEASURED building
+ * Eidolon's Kiosk: "unknown type name 'NSLayoutRelation'"). */
+#if TARGET_OS_IPHONE || !__swift__
 typedef NS_ENUM(NSInteger, NSLayoutRelation) {
     NSLayoutRelationLessThanOrEqual = -1, NSLayoutRelationEqual = 0, NSLayoutRelationGreaterThanOrEqual = 1,
-};
+} NS_SWIFT_NAME(NSLayoutRelationObjC);
 /* The SDK itself declares the margin members only `#if TARGET_OS_IPHONE`
  * (NSLayoutConstraint.h:65). Off iOS the enum keeps exactly AppKit's members,
  * so an Objective-C file that sees AppKit's copy too merges the two instead
@@ -336,7 +340,7 @@ typedef NS_ENUM(NSInteger, NSLayoutAttribute) {
     NSLayoutAttributeCenterXWithinMargins, NSLayoutAttributeCenterYWithinMargins,
 #endif
     NSLayoutAttributeNotAnAttribute = 0
-};
+} NS_SWIFT_NAME(NSLayoutAttributeObjC);
 #if !TARGET_OS_IPHONE
 #define NSLayoutAttributeLeftMargin ((NSLayoutAttribute)13)
 #define NSLayoutAttributeRightMargin ((NSLayoutAttribute)14)
