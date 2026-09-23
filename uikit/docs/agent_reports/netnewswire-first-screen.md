@@ -12,15 +12,14 @@ LINUX).
 | first census this round | 282 |
 | after batch B | 129 |
 | combined with cg-unify phase 1 and objc-protocols | 102 |
-| + SwiftUI rows, Foundation-name re-exports, CoreText, timer-unify, corrected app flags | **3** |
+| + SwiftUI rows, Foundation-name re-exports, CoreText, timer-unify, corrected app flags | 3 |
+| + safari-objc (objc-surface), full bridging-header translation, UIViewController.overrideUserInterfaceStyle | **0** (all 24 chain targets) |
 
 The combined figure means this branch plus origin/main, timer-unify-2,
 objc-protocols-2, cg-unify-phase3, and cg-unify's CG re-export
-(measurement-only here; cg-unify owns it). Every dependency target is clean.
-The 3 app rows, and NetNewsWireObjC's 7, are the Objective-C category
-`SFSafariViewController (Extras)`. It needs a Clang `SafariServices` module
-exporting the port's SFSafariViewController. That work is handed to
-objc-surface and is **open**.
+(measurement-only here; cg-unify owns it), and for the 0 row also
+agent/safari-objc. All 24 targets type-check with 0 errors. Type-checking is
+not linking: the chain spec has no executable app target yet.
 
 ## Increments
 
@@ -32,6 +31,7 @@ objc-surface and is **open**.
 | e26fffec | SwiftUI rows NNW needs: exact iOS system colours (Color.red/green/blue/gray were the pure primaries before), AnyShapeStyle, `.link`, Section builders, LabeledContent, ShareLink, segmented picker, List(data), sheet(item:), navigationSubtitle and others. NSAttributedString and NSRange re-exported instead of re-declared (collection sugar). CoreText visible through UIKit. The ObjectIdentifier-keyed list-config leak behind the order-dependent collection tests |
 | b67ccb46 | headless `@main` runs the CFRunLoop with a host-clock ticker; app flags as Xcode applies them |
 | bc747373 | Feeds golden (stable state) plus live-data masks in the real-app compare |
+| 02ee39c2 | UIViewController.overrideUserInterfaceStyle (vcstyleprobe); app depends on and imports NetNewsWireObjC (bridging header in full) |
 
 Every fix is measured on the iOS 26.1 simulator (oracles under
 Tools/oracle2: nnwmiscprobe, nnwswiftuiprobe, springsettleprobe, scenelaunch,
@@ -51,7 +51,7 @@ A no-network capture needs admin rights, so the masked comparison was chosen.
 
 ## Not reached
 
-- **App link.** The app does not link until the SafariServices ObjC module
-  lands (objc-surface) and the CG re-exports land (cg-unify).
+- **App link.** safari-objc and cg-unify's CG re-exports must merge. Then the
+  spec needs an executable app target with Info.plist and resources.
 - **Port render of the Feeds list.** No masked or unmasked score exists yet.
 - **Guest wiring under machorun.** Not started.
