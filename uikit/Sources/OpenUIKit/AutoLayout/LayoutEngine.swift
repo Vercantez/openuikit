@@ -238,8 +238,17 @@ enum LayoutEngine {
         /// The root's variables, for reading a fitting solve's answer back.
         var rootVars: ViewVars?
 
+        /// Rows that exist only because of the port's own modeling, with no
+        /// counterpart constraint in UIKit's engine: a stack's arranged
+        /// subview entered as a FIXED frame (UIKit's UISV-* constraints are
+        /// relations, not a frame). A conflict against one of these is an
+        /// artifact, not a conflict iOS would see.
+        var artifactRows: Set<ObjectIdentifier> = []
+        var anchoringArtifact = false
         func addRequired(_ expr: Cassowary.Expression, _ rel: Cassowary.Relation) {
-            try? solver.addConstraint(Cassowary.Constraint(expr, rel))
+            let c = Cassowary.Constraint(expr, rel)
+            if anchoringArtifact { artifactRows.insert(ObjectIdentifier(c)) }
+            try? solver.addConstraint(c)
         }
 
         // Anchoring constraints per involved item.
@@ -312,6 +321,8 @@ enum LayoutEngine {
             // tie-break never arose; real UIKit stretches "Download".
             let arrangedByStack = (v.superview as? UIStackView)?
                 .arrangedSubviews.contains(where: { $0 === v }) ?? false
+            anchoringArtifact = arrangedByStack && !v.translatesAutoresizingMaskIntoConstraints && v !== root
+            defer { anchoringArtifact = false }
             if v === root || v.translatesAutoresizingMaskIntoConstraints || arrangedByStack {
                 // Frame-based: required left/top/width/height from the
                 // current frame (relative to the superview's variables when
@@ -473,6 +484,13 @@ enum LayoutEngine {
                     appRows[ObjectIdentifier(kc)] = k
                     appCassowary[ObjectIdentifier(k)] = kc
                 } catch {
+                    // A conflict with a port-only artifact row keeps the
+                    // previous rule (the new constraint breaks): iOS would not
+                    // see that conflict at all, so its choice says nothing.
+                    if solver.lastConflict.contains(where: { artifactRows.contains(ObjectIdentifier($0)) }) {
+                        markBroken(k, kc)
+                        continue
+                    }
                     let conflict = solver.lastConflict.compactMap { appRows[ObjectIdentifier($0)] }
                         .filter { !$0._brokenInEngine }
                         .sorted { (appOrder[ObjectIdentifier($0)] ?? 0) < (appOrder[ObjectIdentifier($1)] ?? 0) }
