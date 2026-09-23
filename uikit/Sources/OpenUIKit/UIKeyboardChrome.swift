@@ -66,8 +66,15 @@ public enum _UIKeyboardChrome {
     /// Number pad has no QuickType. MEASURED kbstateprobe numberpad,
     /// iPhone SE 2x / iOS 26.1: frameEnd [0, 434, 375, 233].
     public static let numberPadOverlap: CGFloat = 233
+    /// `.webSearch` phone keyboard: no QuickType bar. MEASURED Focus URL
+    /// field framebuffer, iPhone SE 2x / iOS 26.1: panel top 434.
+    public static let webSearchOverlap: CGFloat = 233
     /// MEASURED keyboardWillShow duration 0.3833 s = 23/60.
     public static let presentDuration: Double = 23.0 / 60.0
+
+    /// One-shot shift from a tap on the drawn shift key: the next letter is
+    /// uppercase, then it clears (iOS's single tap on shift).
+    static var manualShift = false
     /// UITextEffectsWindow.windowLevel.rawValue.
     static let windowLevel = UIWindow.Level(1)
 
@@ -118,6 +125,80 @@ public enum _UIKeyboardChrome {
         } else if let kb = attached, !kb.isHidden {
             kb.dismissAnimated()
         }
+    }
+
+    // MARK: Taps on the drawn keys
+
+    /// The key a touch went down on (nil: not a keyboard touch).
+    private static var pressedKey: _UIKeyboardKey?
+    private static var trackingTouch = false
+
+    /// Route a host touch that lands on the showing keyboard to its keys,
+    /// the way the iOS keyboard (a separate window above the app) takes it:
+    /// the app never sees it. A key acts on touch UP inside it (iOS commits
+    /// letters on release); a touch in the gaps goes to the nearest key.
+    /// Returns true when the keyboard consumed the touch.
+    static func routeTouch(_ phase: UITouch.Phase, at point: CGPoint,
+                           appWindow: UIWindow, timestamp: Double) -> Bool {
+        if phase == .began {
+            trackingTouch = false
+            pressedKey = nil
+            guard isIOS, let kb = attached, !kb.isHidden,
+                  appWindow.firstResponder is UIKeyInput else { return false }
+            let panelFrame = kb.panel.frame
+            guard panelFrame.contains(point) else { return false }
+            trackingTouch = true
+            pressedKey = key(at: CGPoint(x: point.x - panelFrame.minX,
+                                         y: point.y - panelFrame.minY), in: kb.panel)
+            return true
+        }
+        guard trackingTouch else { return false }
+        if phase == .ended || phase == .cancelled {
+            trackingTouch = false
+            defer { pressedKey = nil }
+            guard phase == .ended, let key = pressedKey, let kb = attached else { return true }
+            let local = CGPoint(x: point.x - kb.panel.frame.minX, y: point.y - kb.panel.frame.minY)
+            guard self.key(at: local, in: kb.panel) === key else { return true }
+            press(key, appWindow: appWindow, timestamp: timestamp)
+        }
+        return true
+    }
+
+    private static func key(at p: CGPoint, in panel: _UIKeyboardPanel) -> _UIKeyboardKey? {
+        var best: _UIKeyboardKey?
+        var bestD = CGFloat.greatestFiniteMagnitude
+        for case let k as _UIKeyboardKey in panel.subviews {
+            let f = k.frame
+            let dx = Swift.max(f.minX - p.x, 0, p.x - f.maxX)
+            let dy = Swift.max(f.minY - p.y, 0, p.y - f.maxY)
+            let d = dx * dx + dy * dy
+            if d < bestD { bestD = d; best = k }
+        }
+        return best
+    }
+
+    private static func press(_ key: _UIKeyboardKey, appWindow: UIWindow, timestamp: Double) {
+        switch key.kind {
+        case .letter:
+            guard let t = key.label?.text, !t.isEmpty else { return }
+            appWindow.sendText(t, timestamp: timestamp)
+            manualShift = false
+        case .space:
+            appWindow.sendText(" ", timestamp: timestamp)
+        case .delete:
+            appWindow.sendKey(.backspace, timestamp: timestamp)
+        case .return, .search, .go, .done:
+            appWindow.sendKey(.return, timestamp: timestamp)
+        case .shiftOff:
+            manualShift = true
+        case .shiftOn:
+            manualShift = false
+        case .digit, .emoji, .mic, .tab, .dismiss:
+            // Not modeled: the 123 / emoji / dictation panels.
+            return
+        }
+        // The key caps follow the new text (autocapitalization, shift).
+        sync(from: appWindow)
     }
 
     /// Composite the keyboard window above `app` when it is showing.
@@ -382,7 +463,8 @@ final class _UIKeyboardPanel: UIView {
                                            returnStyle: state.returnStyle)
         } else {
             buildPhoneAlphabetic(width: width, shifted: state.shifted,
-                                  returnStyle: state.returnStyle)
+                                  returnStyle: state.returnStyle,
+                                  webSearch: state.webSearch)
         }
         applyFill(traitCollection)
     }
@@ -417,9 +499,14 @@ final class _UIKeyboardPanel: UIView {
     }
 
     func buildPhoneAlphabetic(width: CGFloat, shifted: Bool,
-                               returnStyle: _UIKeyboardResolved.ReturnStyle) {
+                               returnStyle: _UIKeyboardResolved.ReturnStyle,
+                               webSearch: Bool = false) {
         let sx = width / 375
-        let y0 = _UIKeyboardChrome.quickTypeHeight
+        // webSearch: no QuickType bar; the panel is 27 pt shorter and its
+        // first row sits 25 pt below the top (same window y as the default).
+        let y0 = webSearch ? _UIKeyboardChrome.quickTypeHeight
+            - (_UIKeyboardChrome.overlap - _UIKeyboardChrome.webSearchOverlap)
+            : _UIKeyboardChrome.quickTypeHeight
         let kh = _UIKeyboardChrome.keyHeight
         let gap = _UIKeyboardChrome.rowGap
         let letters: [[String]] = [
@@ -468,6 +555,16 @@ final class _UIKeyboardPanel: UIView {
         addGlyph(.emoji, x: 54 * sx, y: y4, w: 39.5 * sx, h: kh)
         addGlyph(.mic, x: 99.5 * sx, y: y4, w: 30.5 * sx, h: kh)
         let space = _UIKeyboardKey(kind: .space)
+        if webSearch {
+            space.frame = CGRect(x: 136 * sx, y: y4, width: 130.5 * sx, height: kh)
+            addSubview(space)
+            let period = _UIKeyboardKey(kind: .letter)
+            period.frame = CGRect(x: 272.5 * sx, y: y4, width: 30.5 * sx, height: kh)
+            period.installLabel(".", size: _UIKeyboardChrome.letterFontSize)
+            addSubview(period)
+            addReturn(style: returnStyle, x: 309 * sx, y: y4, w: 57.5 * sx, h: kh)
+            return
+        }
         space.frame = CGRect(x: 136 * sx, y: y4, width: 139.5 * sx, height: kh)
         addSubview(space)
         addReturn(style: returnStyle, x: 281.5 * sx, y: y4, w: 85 * sx, h: kh)

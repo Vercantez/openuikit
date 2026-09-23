@@ -35,6 +35,15 @@ struct _UIKeyboardResolved {
     var overlap: CGFloat = 260
     var isPad: Bool = false
     var isCompactHeight: Bool = false
+    /// `.webSearch` keyboard (phone portrait). MEASURED 2026-09-23, Firefox
+    /// Focus URL field (keyboardType .webSearch, autocorrectionType .no,
+    /// autocapitalization .none), iPhone SE 2x / iOS 26.1 framebuffer
+    /// (golden/focus_edit_ios/focus_edit.typed.framebuffer.png): no
+    /// QuickType bar (panel top y 434, frameEnd height 233; letter rows at
+    /// the same window y as the default keyboard: 459 / 513 / 567 / 621);
+    /// bottom row 123 [8.5, 39.5] · emoji [54, 39.5] · mic [99.5, 30.5] ·
+    /// space [136, 130.5] · "." [272.5, 30.5] · blue go arrow [309, 57.5].
+    var webSearch: Bool = false
     var signature: Int = 0
 
     static func isPadIdiom() -> Bool {
@@ -83,7 +92,9 @@ struct _UIKeyboardResolved {
         }
 
         r.shifted = shouldShift(text: text, cursor: cursor, autocap: autocap)
+            || _UIKeyboardChrome.manualShift
         r.isCompactHeight = isCompactHeightPhone()
+        r.webSearch = keyboard == .webSearch && !r.isPad && !r.isCompactHeight
         if keyboard == .numberPad, !r.isPad {
             r.layout = .numberPad
             r.overlap = _UIKeyboardChrome.numberPadOverlap
@@ -93,11 +104,15 @@ struct _UIKeyboardResolved {
         } else if r.isCompactHeight {
             r.layout = .alphabetic
             r.overlap = _UIKeyboardChrome.compactOverlap
+        } else if r.webSearch {
+            r.layout = .alphabetic
+            r.overlap = _UIKeyboardChrome.webSearchOverlap
         } else {
             r.layout = .alphabetic
             r.overlap = _UIKeyboardChrome.overlap
         }
         if isSearch { ret = .search }
+        if r.webSearch, ret == .default { ret = .go }
         switch ret {
         case .search: r.returnStyle = .search
         case .go: r.returnStyle = .go
@@ -111,6 +126,7 @@ struct _UIKeyboardResolved {
         sig = sig &* 31 &+ (r.searchReturnEnabled ? 1 : 0)
         sig = sig &* 31 &+ (r.isPad ? 1 : 0)
         sig = sig &* 31 &+ (r.isCompactHeight ? 1 : 0)
+        sig = sig &* 31 &+ (r.webSearch ? 1 : 0)
         r.signature = sig
         return r
     }
