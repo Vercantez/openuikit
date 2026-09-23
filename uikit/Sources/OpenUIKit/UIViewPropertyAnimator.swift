@@ -26,12 +26,32 @@
 @_exported import typealias Foundation.TimeInterval
 #endif
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
+#if canImport(Foundation)
+import class Foundation.NSObject
+#else
+import class ObjectiveC.NSObject
+#endif
+
+// Apple toolchain: UIViewAnimating.h / UITimingCurveProvider.h shapes --
+// @objc NSInteger enums and @objc protocols with UIKit's names and the SDK's
+// selectors, because UIViewControllerAnimatedTransitioning's
+// `interruptibleAnimatorForTransition:` returns id<UIViewImplicitlyAnimating>
+// (objc-protocols.md). Portable builds keep the Swift protocols.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UIViewAnimatingPosition: Int, Sendable {
     case end = 0
     case start = 1
     case current = 2
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UIViewAnimatingState: Int, Sendable {
     case inactive = 0
     case active = 1
@@ -39,6 +59,9 @@ public enum UIViewAnimatingState: Int, Sendable {
 }
 
 /// MEASURED animprobe, iPhone SE 2x / iOS 26.1: builtIn=0, cubic=1, spring=2.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UITimingCurveType: Int, Sendable {
     case builtIn = 0
     case cubic = 1
@@ -46,6 +69,48 @@ public enum UITimingCurveType: Int, Sendable {
     case composed = 3
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// UIKit's protocol also refines NSCoding and NSCopying; OpenUIKit's timing
+/// parameters are neither archived nor copied, so only NSObjectProtocol is
+/// refined here.
+@objc(UITimingCurveProvider) @preconcurrency @MainActor
+public protocol UITimingCurveProvider: NSObjectProtocol {
+    var timingCurveType: UITimingCurveType { get }
+    var cubicTimingParameters: UICubicTimingParameters? { get }
+    var springTimingParameters: UISpringTimingParameters? { get }
+}
+
+@objc(UIViewAnimating) @preconcurrency @MainActor
+public protocol UIViewAnimating: NSObjectProtocol {
+    var state: UIViewAnimatingState { get }
+    var isRunning: Bool { @objc(isRunning) get }
+    var isReversed: Bool { @objc(isReversed) get @objc(setReversed:) set }
+    var fractionComplete: CGFloat { get set }
+    @objc(startAnimation)
+    func startAnimation()
+    @objc(startAnimationAfterDelay:)
+    func startAnimation(afterDelay delay: TimeInterval)
+    @objc(pauseAnimation)
+    func pauseAnimation()
+    @objc(stopAnimation:)
+    func stopAnimation(_ withoutFinishing: Bool)
+    @objc(finishAnimationAtPosition:)
+    func finishAnimation(at finalPosition: UIViewAnimatingPosition)
+}
+
+@objc(UIViewImplicitlyAnimating) @preconcurrency @MainActor
+public protocol UIViewImplicitlyAnimating: UIViewAnimating {
+    @objc(addAnimations:delayFactor:)
+    optional func addAnimations(_ animation: @escaping () -> Void, delayFactor: CGFloat)
+    @objc(addAnimations:)
+    optional func addAnimations(_ animation: @escaping () -> Void)
+    @objc(addCompletion:)
+    optional func addCompletion(_ completion: @escaping (UIViewAnimatingPosition) -> Void)
+    @objc(continueAnimationWithTimingParameters:durationFactor:)
+    optional func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?,
+                                    durationFactor: CGFloat)
+}
+#else
 @preconcurrency @MainActor
 public protocol UITimingCurveProvider: AnyObject {
     var timingCurveType: UITimingCurveType { get }
@@ -74,16 +139,20 @@ public protocol UIViewImplicitlyAnimating: UIViewAnimating {
     func continueAnimation(withTimingParameters parameters: UITimingCurveProvider?,
                            durationFactor: CGFloat)
 }
+#endif
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UICubicTimingParameters)
+#endif
 @preconcurrency @MainActor
-public final class UICubicTimingParameters: UITimingCurveProvider {
+public final class UICubicTimingParameters: NSObject, UITimingCurveProvider {
     public let controlPoint1: CGPoint
     public let controlPoint2: CGPoint
     public let animationCurve: UIView.AnimationCurve
 
     /// MEASURED animprobe: default init is CSS ease (0.25, 0.1, 0.25, 1),
     /// `animationCurve.rawValue == 5`.
-    public init() {
+    public override init() {
         controlPoint1 = CGPoint(x: 0.25, y: 0.1)
         controlPoint2 = CGPoint(x: 0.25, y: 1)
         animationCurve = .cssEase
@@ -141,15 +210,18 @@ public final class UICubicTimingParameters: UITimingCurveProvider {
     }
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UISpringTimingParameters)
+#endif
 @preconcurrency @MainActor
-public final class UISpringTimingParameters: UITimingCurveProvider {
+public final class UISpringTimingParameters: NSObject, UITimingCurveProvider {
     public let dampingRatio: CGFloat
     public let initialVelocity: CGVector
     public let mass: CGFloat?
     public let stiffness: CGFloat?
     public let damping: CGFloat?
 
-    public init() {
+    public override init() {
         dampingRatio = 1
         initialVelocity = .zero
         mass = nil
@@ -196,8 +268,11 @@ public final class UISpringTimingParameters: UITimingCurveProvider {
     }
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIViewPropertyAnimator)
+#endif
 @preconcurrency @MainActor
-open class UIViewPropertyAnimator: UIViewImplicitlyAnimating {
+open class UIViewPropertyAnimator: NSObject, UIViewImplicitlyAnimating {
     public let duration: TimeInterval
     public private(set) var delay: TimeInterval = 0
     public private(set) var state: UIViewAnimatingState = .inactive

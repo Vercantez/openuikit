@@ -51,11 +51,11 @@ private final class MinimalSearchBarDelegate: NSObject, UISearchBarDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalTabBarControllerDelegate: UITabBarControllerDelegate {}
+private final class MinimalTabBarControllerDelegate: NSObject, UITabBarControllerDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalNavigationDelegate: UINavigationControllerDelegate {}
+private final class MinimalNavigationDelegate: NSObject, UINavigationControllerDelegate {}
 
 #if !os(Linux)
 @MainActor
@@ -73,7 +73,9 @@ final class DelegateDeclarationTests: XCTestCase {
 #else
         XCTAssertTrue(MinimalTextFieldDelegate().textFieldShouldReturn(UITextField()))
 #endif
-        XCTAssertTrue(MinimalTextViewDelegate().textViewShouldBeginEditing(UITextView()))
+        // Apple toolchain: an optional @objc requirement; the dispatch helper
+        // answers the absent gate (begin YES) on every build.
+        XCTAssertTrue(MinimalTextViewDelegate()._shouldBeginEditing(UITextView()))
 #if canImport(ObjectiveC)
         // Optional @objc requirements; the dispatch helpers give the absent
         // answers (begin YES, simultaneous NO).
@@ -97,7 +99,7 @@ final class DelegateDeclarationTests: XCTestCase {
         XCTAssertTrue(MinimalScrollDelegate().scrollViewShouldScrollToTop(UIScrollView()))
 #endif
         XCTAssertTrue(MinimalTabBarControllerDelegate()
-            .tabBarController(UITabBarController(), shouldSelect: UIViewController()))
+            ._shouldSelect(UITabBarController(), UIViewController()))
         let vc = UIViewController()
         let pc = UIPresentationController(presentedViewController: vc, presenting: nil)
         XCTAssertTrue(MinimalAdaptiveDelegate().presentationControllerShouldDismiss(pc))
@@ -457,7 +459,7 @@ final class ScrollDelegateWiringTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class TabDelegate: UITabBarControllerDelegate {
+private final class TabDelegate: NSObject, UITabBarControllerDelegate {
     var allow = true
     var selected: [String] = []
     func tabBarController(_ tabBarController: UITabBarController,
@@ -480,7 +482,9 @@ final class TabBarControllerDelegateTests: XCTestCase {
         let d = TabDelegate()
         tab.tabBarControllerDelegate = d
         tab.loadViewIfNeeded()
-        XCTAssertEqual(d.selected, ["A"])
+        // MEASURED (objcprotocolprobe2 `## tabbarcontroller`, "all: shown: -"):
+        // nothing is reported when the controller is shown.
+        XCTAssertEqual(d.selected, [])
 
         d.allow = false
         tab.tabBar(tab.tabBar, didSelect: b.tabBarItem!)
@@ -489,7 +493,7 @@ final class TabBarControllerDelegateTests: XCTestCase {
         d.allow = true
         tab.tabBar(tab.tabBar, didSelect: b.tabBarItem!)
         XCTAssertEqual(tab.selectedIndex, 1)
-        XCTAssertEqual(d.selected, ["A", "B"])
+        XCTAssertEqual(d.selected, ["B"])
     }
 }
 

@@ -125,12 +125,105 @@ final class UITextViewCanvasView: UIView {
 ///   - `textViewShouldBeginEditing` / `textViewShouldEndEditing`
 ///   - `textView(_:shouldChangeTextIn:replacementText:)`
 ///   - `textView(_:shouldInteractWith:in:interaction:)` (NSTextAttachment)
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc
+#endif
 public enum UITextItemInteraction: Int, Sendable {
     case invokeDefaultAction = 0
     case presentActions = 1
     case preview = 2
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- @objc, UIKit's
+/// runtime name, refines the @objc UIScrollViewDelegate, SDK selectors from
+/// UITextView.h, all optional (checked against the SDK in
+/// Tests/ObjCProtocols2Tests). Every call site goes through the `_foo`
+/// dispatch helpers below; an absent method answers what the portable
+/// default implementation answers. The SDK's edit-menu, writing-tools,
+/// formatting, multi-range and input-suggestion members are left out:
+/// OpenUIKit never sends them.
+@objc(UITextViewDelegate) @preconcurrency @MainActor
+public protocol UITextViewDelegate: UIScrollViewDelegate {
+    @objc(textViewShouldBeginEditing:)
+    optional func textViewShouldBeginEditing(_ textView: UITextView) -> Bool
+    @objc(textViewShouldEndEditing:)
+    optional func textViewShouldEndEditing(_ textView: UITextView) -> Bool
+    @objc(textViewDidBeginEditing:)
+    optional func textViewDidBeginEditing(_ textView: UITextView)
+    @objc(textViewDidEndEditing:)
+    optional func textViewDidEndEditing(_ textView: UITextView)
+    @objc(textView:shouldChangeTextInRange:replacementText:)
+    optional func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange,
+                           replacementText text: String) -> Bool
+    @objc(textViewDidChange:)
+    optional func textViewDidChange(_ textView: UITextView)
+    @objc(textViewDidChangeSelection:)
+    optional func textViewDidChangeSelection(_ textView: UITextView)
+    @objc(textView:shouldInteractWithTextAttachment:inRange:interaction:)
+    optional func textView(_ textView: UITextView, shouldInteractWith attachment: NSTextAttachment,
+                           in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
+    /// iOS 10–16 link gate (deprecated in 17, still consulted — MEASURED
+    /// wordpressrowsprobe `tap.link.old`).
+    @objc(textView:shouldInteractWithURL:inRange:interaction:)
+    optional func textView(_ textView: UITextView, shouldInteractWith URL: URL,
+                           in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
+    /// iOS 17 text items (MEASURED wordpressrowsprobe; see the portable
+    /// declaration below).
+    @objc(textView:primaryActionForTextItem:defaultAction:)
+    optional func textView(_ textView: UITextView, primaryActionFor textItem: UITextItem,
+                           defaultAction: UIAction) -> UIAction?
+    @objc(textView:menuConfigurationForTextItem:defaultMenu:)
+    optional func textView(_ textView: UITextView, menuConfigurationFor textItem: UITextItem,
+                           defaultMenu: UIMenu) -> UITextItem.MenuConfiguration?
+    @objc(textView:textItemMenuWillDisplayForTextItem:animator:)
+    optional func textView(_ textView: UITextView, textItemMenuWillDisplayFor textItem: UITextItem,
+                           animator: UIContextMenuInteractionAnimating)
+    @objc(textView:textItemMenuWillEndForTextItem:animator:)
+    optional func textView(_ textView: UITextView, textItemMenuWillEndFor textItem: UITextItem,
+                           animator: UIContextMenuInteractionAnimating)
+}
+
+extension UITextViewDelegate {
+    func _shouldBeginEditing(_ v: UITextView) -> Bool { textViewShouldBeginEditing?(v) ?? true }
+    func _shouldEndEditing(_ v: UITextView) -> Bool { textViewShouldEndEditing?(v) ?? true }
+    func _didBeginEditing(_ v: UITextView) { textViewDidBeginEditing?(v) }
+    func _didEndEditing(_ v: UITextView) { textViewDidEndEditing?(v) }
+    func _shouldChangeText(_ v: UITextView, in range: NSRange, replacementText text: String) -> Bool {
+        textView?(v, shouldChangeTextIn: range, replacementText: text) ?? true
+    }
+    func _didChange(_ v: UITextView) { textViewDidChange?(v) }
+    func _didChangeSelection(_ v: UITextView) { textViewDidChangeSelection?(v) }
+    func _shouldInteract(_ v: UITextView, with attachment: NSTextAttachment, in range: NSRange,
+                         interaction: UITextItemInteraction) -> Bool {
+        textView?(v, shouldInteractWith: attachment, in: range, interaction: interaction) ?? true
+    }
+    func _shouldInteract(_ v: UITextView, with url: URL, in range: NSRange,
+                         interaction: UITextItemInteraction) -> Bool {
+        textView?(v, shouldInteractWith: url, in: range, interaction: interaction) ?? true
+    }
+    /// Absent: the iOS 10 gates decide (the portable default's routing).
+    func _primaryAction(_ v: UITextView, for item: UITextItem, defaultAction: UIAction) -> UIAction? {
+        if let answer = textView?(v, primaryActionFor: item, defaultAction: defaultAction) {
+            return answer
+        }
+        guard !responds(to: #selector(textView(_:primaryActionFor:defaultAction:))) else { return nil }
+        return _UITextViewDelegateDefaults.primaryAction(v, item, defaultAction, self)
+    }
+    func _menuConfiguration(_ v: UITextView, for item: UITextItem,
+                            defaultMenu: UIMenu) -> UITextItem.MenuConfiguration? {
+        if let answer = textView?(v, menuConfigurationFor: item, defaultMenu: defaultMenu) { return answer }
+        guard !responds(to: #selector(textView(_:menuConfigurationFor:defaultMenu:))) else { return nil }
+        return UITextItem.MenuConfiguration(menu: defaultMenu)
+    }
+    func _menuWillDisplay(_ v: UITextView, for item: UITextItem, animator: UIContextMenuInteractionAnimating) {
+        textView?(v, textItemMenuWillDisplayFor: item, animator: animator)
+    }
+    func _menuWillEnd(_ v: UITextView, for item: UITextItem, animator: UIContextMenuInteractionAnimating) {
+        textView?(v, textItemMenuWillEndFor: item, animator: animator)
+    }
+}
+#else
 @preconcurrency @MainActor
 public protocol UITextViewDelegate: UIScrollViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool
@@ -190,20 +283,7 @@ public extension UITextViewDelegate {
     /// one implementing this method is never asked the old question.
     func textView(_ textView: UITextView, primaryActionFor textItem: UITextItem,
                   defaultAction: UIAction) -> UIAction? {
-        switch textItem.content {
-        case .link(let url):
-            let ok = textView.textViewDelegate?.textView(
-                textView, shouldInteractWith: url, in: textItem.range,
-                interaction: .invokeDefaultAction) ?? true
-            return ok ? defaultAction : nil
-        case .textAttachment(let att):
-            let ok = textView.textViewDelegate?.textView(
-                textView, shouldInteractWith: att, in: textItem.range,
-                interaction: .invokeDefaultAction) ?? true
-            return ok ? defaultAction : nil
-        case .tag:
-            return defaultAction
-        }
+        _UITextViewDelegateDefaults.primaryAction(textView, textItem, defaultAction, self)
     }
     func textView(_ textView: UITextView, menuConfigurationFor textItem: UITextItem,
                   defaultMenu: UIMenu) -> UITextItem.MenuConfiguration? {
@@ -215,6 +295,67 @@ public extension UITextViewDelegate {
                   animator: UIContextMenuInteractionAnimating) {}
 #endif
 }
+
+extension UITextViewDelegate {
+    func _shouldBeginEditing(_ v: UITextView) -> Bool { textViewShouldBeginEditing(v) }
+    func _shouldEndEditing(_ v: UITextView) -> Bool { textViewShouldEndEditing(v) }
+    func _didBeginEditing(_ v: UITextView) { textViewDidBeginEditing(v) }
+    func _didEndEditing(_ v: UITextView) { textViewDidEndEditing(v) }
+    func _shouldChangeText(_ v: UITextView, in range: NSRange, replacementText text: String) -> Bool {
+        textView(v, shouldChangeTextIn: range, replacementText: text)
+    }
+    func _didChange(_ v: UITextView) { textViewDidChange(v) }
+    func _didChangeSelection(_ v: UITextView) { textViewDidChangeSelection(v) }
+    func _shouldInteract(_ v: UITextView, with attachment: NSTextAttachment, in range: NSRange,
+                         interaction: UITextItemInteraction) -> Bool {
+        textView(v, shouldInteractWith: attachment, in: range, interaction: interaction)
+    }
+#if canImport(Foundation)
+    func _shouldInteract(_ v: UITextView, with url: URL, in range: NSRange,
+                         interaction: UITextItemInteraction) -> Bool {
+        textView(v, shouldInteractWith: url, in: range, interaction: interaction)
+    }
+    func _primaryAction(_ v: UITextView, for item: UITextItem, defaultAction: UIAction) -> UIAction? {
+        textView(v, primaryActionFor: item, defaultAction: defaultAction)
+    }
+    func _menuConfiguration(_ v: UITextView, for item: UITextItem,
+                            defaultMenu: UIMenu) -> UITextItem.MenuConfiguration? {
+        textView(v, menuConfigurationFor: item, defaultMenu: defaultMenu)
+    }
+    func _menuWillDisplay(_ v: UITextView, for item: UITextItem, animator: UIContextMenuInteractionAnimating) {
+        textView(v, textItemMenuWillDisplayFor: item, animator: animator)
+    }
+    func _menuWillEnd(_ v: UITextView, for item: UITextItem, animator: UIContextMenuInteractionAnimating) {
+        textView(v, textItemMenuWillEndFor: item, animator: animator)
+    }
+#endif
+}
+#endif
+
+#if canImport(Foundation)
+/// What a delegate without `primaryActionFor` gets: the iOS 10 gates decide,
+/// so a delegate implementing ONLY `shouldInteractWith URL` (firefox's iOS
+/// 15/16 fallback) is still asked -- the measured old-only behaviour -- while
+/// one implementing `primaryActionFor` is never asked the old question.
+@MainActor
+enum _UITextViewDelegateDefaults {
+    static func primaryAction(_ textView: UITextView, _ textItem: UITextItem, _ defaultAction: UIAction,
+                              _ delegate: UITextViewDelegate) -> UIAction? {
+        switch textItem.content {
+        case .link(let url):
+            let ok = delegate._shouldInteract(textView, with: url, in: textItem.range,
+                                              interaction: .invokeDefaultAction)
+            return ok ? defaultAction : nil
+        case .textAttachment(let att):
+            let ok = delegate._shouldInteract(textView, with: att, in: textItem.range,
+                                              interaction: .invokeDefaultAction)
+            return ok ? defaultAction : nil
+        case .tag:
+            return defaultAction
+        }
+    }
+}
+#endif
 
 // Objective-C runtime name = UIKit's, and header macro SWIFT_CLASS_NAMED:
 // Objective-C app classes may subclass it (vtable-free, see
@@ -584,12 +725,12 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
     /// same double-ask caveat.
     open override var canResignFirstResponder: Bool {
         guard isEditing, let d = textViewDelegate else { return true }
-        return d.textViewShouldEndEditing(self)
+        return d._shouldEndEditing(self)
     }
 
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
-        if !isEditing, let d = textViewDelegate, !d.textViewShouldBeginEditing(self) {
+        if !isEditing, let d = textViewDelegate, !d._shouldBeginEditing(self) {
             return false
         }
         guard super.becomeFirstResponder() else { return false }
@@ -601,7 +742,7 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
             ensureCaretView()
             caretView?.isHidden = false
             setNeedsLayout()
-            textViewDelegate?.textViewDidBeginEditing(self)
+            textViewDelegate?._didBeginEditing(self)
             NotificationCenter.default.post(name: Self.textDidBeginEditingNotification, object: self)
         }
         // Same as UITextField: keyboard sync during super runs before
@@ -613,7 +754,7 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
 
     @discardableResult
     open override func resignFirstResponder() -> Bool {
-        if isEditing, let d = textViewDelegate, !d.textViewShouldEndEditing(self) {
+        if isEditing, let d = textViewDelegate, !d._shouldEndEditing(self) {
             return false
         }
         let r = super.resignFirstResponder()
@@ -621,7 +762,7 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
             isEditing = false
             UITextInputState.unfocus(self)
             caretView?.isHidden = true
-            textViewDelegate?.textViewDidEndEditing(self)
+            textViewDelegate?._didEndEditing(self)
             NotificationCenter.default.post(name: Self.textDidEndEditingNotification, object: self)
         }
         return r
@@ -730,14 +871,14 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
         guard isEditing else { return }
         let target = _markedUTF16Range ?? _selectedUTF16Range
         if let d = textViewDelegate,
-           !d.textView(self, shouldChangeTextIn: target, replacementText: str) { return }
+           !d._shouldChangeText(self, in: target, replacementText: str) { return }
         insertText(str)
     }
 
     final func _keyboardDeleteBackward() {
         guard isEditing, let target = _deleteBackwardRange() else { return }
         if let d = textViewDelegate,
-           !d.textView(self, shouldChangeTextIn: target, replacementText: "") { return }
+           !d._shouldChangeText(self, in: target, replacementText: "") { return }
         _edit(target, with: "", forceSelectionNotify: false)
     }
 
@@ -755,8 +896,8 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
     }
 
     final func _emitEditRound(selection: Bool) {
-        if selection { textViewDelegate?.textViewDidChangeSelection(self) }
-        textViewDelegate?.textViewDidChange(self)
+        if selection { textViewDelegate?._didChangeSelection(self) }
+        textViewDelegate?._didChange(self)
         NotificationCenter.default.post(name: Self.textDidChangeNotification, object: self)
     }
 
@@ -801,7 +942,7 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
         _selectedUTF16Range = clamped
         if isEditing { caretView?.isHidden = false }
         setNeedsLayout()
-        if notify { textViewDelegate?.textViewDidChangeSelection(self) }
+        if notify { textViewDelegate?._didChangeSelection(self) }
         return true
     }
 
@@ -989,7 +1130,7 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
         guard _markedUTF16Range != nil else { return }
         _markedUTF16Range = nil
         _storeSelection(NSRange(location: _selectedUTF16Range.location, length: 0), notify: false)
-        textViewDelegate?.textViewDidChangeSelection(self)
+        textViewDelegate?._didChangeSelection(self)
         _emitEditRound(selection: true)
     }
 
@@ -1015,7 +1156,7 @@ open class UITextView: UIScrollView, UITextInput, UITextKeyHandling, UITextCaret
         setNeedsLayout()
         layoutIfNeeded()
         scrollCaretToVisible()
-        textViewDelegate?.textViewDidChangeSelection(self)
+        textViewDelegate?._didChangeSelection(self)
     }
 
     /// Up/down arrows: nearest boundary in the adjacent line, preserving
@@ -1467,7 +1608,7 @@ extension UITextView {
         let fallback = _defaultAction(for: item)
         let action: UIAction?
         if let d = textViewDelegate {
-            action = d.textView(self, primaryActionFor: item, defaultAction: fallback)
+            action = d._primaryAction(self, for: item, defaultAction: fallback)
         } else {
             action = fallback
         }
@@ -1512,24 +1653,24 @@ extension UITextView {
     func _presentTextItemMenu(for item: UITextItem, afterPrimaryAction: Bool) {
         let hit = _textItemHitRect(for: item) ?? bounds
         if afterPrimaryAction, let d = textViewDelegate {
-            _ = d.textView(self, primaryActionFor: item, defaultAction: _defaultAction(for: item))
+            _ = d._primaryAction(self, for: item, defaultAction: _defaultAction(for: item))
         }
         let defaultMenu = _defaultMenu(for: item)
         let config: UITextItem.MenuConfiguration?
         if let d = textViewDelegate {
-            config = d.textView(self, menuConfigurationFor: item, defaultMenu: defaultMenu)
+            config = d._menuConfiguration(self, for: item, defaultMenu: defaultMenu)
         } else {
             config = UITextItem.MenuConfiguration(menu: defaultMenu)
         }
         guard let config, !config.menu.children.isEmpty else { return }
         let animator = _UITextItemMenuAnimator()
-        textViewDelegate?.textView(self, textItemMenuWillDisplayFor: item, animator: animator)
+        textViewDelegate?._menuWillDisplay(self, for: item, animator: animator)
         let presentation = _UIMenuPresentation.present(config.menu, from: self, sourceRect: hit)
         animator.finish()
         presentation?.onDismiss = { [weak self] in
             guard let self else { return }
             let end = _UITextItemMenuAnimator()
-            self.textViewDelegate?.textView(self, textItemMenuWillEndFor: item, animator: end)
+            self.textViewDelegate?._menuWillEnd(self, for: item, animator: end)
             end.finish()
         }
     }

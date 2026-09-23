@@ -564,7 +564,7 @@ public final class UISheetPresentationController: UIPresentationController {
 /// `transitioningDelegate` can replace it (docs/APP_COMPAT.md "Custom
 /// transitions").
 @preconcurrency @MainActor
-final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
+final class _UIPageSheetAnimator: _UIDelegateObjectBase, UIViewControllerAnimatedTransitioning {
     let presenting: Bool
     init(presenting: Bool) { self.presenting = presenting }
 
@@ -1239,7 +1239,7 @@ extension UIViewController {
         let container = UIPresentationContainerView(frame: root.bounds)
         container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        let pc = vc.transitioningDelegate?.presentationController(
+        let pc = vc.transitioningDelegate?._presentationController(
             forPresented: vc, presenting: self, source: self)
             ?? vc._makeDefaultPresentationController(presenting: self)
         pc.presentingViewController = self
@@ -1258,14 +1258,14 @@ extension UIViewController {
         pc.presentationTransitionWillBegin()
 
         let animator: UIViewControllerAnimatedTransitioning? = animated
-            ? (vc.transitioningDelegate?.animationController(
+            ? (vc.transitioningDelegate?._animationController(
                 forPresented: vc, presenting: self, source: self)
                 ?? vc._makeDefaultPresentAnimator())
             : nil
         let interactive = animator.flatMap {
-            vc.transitioningDelegate?.interactionControllerForPresentation(using: $0)
+            vc.transitioningDelegate?._interactionControllerForPresentation(using: $0)
         }
-        let wantsInteractive = interactive?.wantsInteractiveStart ?? false
+        let wantsInteractive = interactive?._wantsInteractiveStart ?? false
         var coordinator: _UITransitionCoordinator?
         if animated {
             // MEASURED animprobe, iPhone SE 2x / iOS 26.1: pageSheet present
@@ -1354,13 +1354,13 @@ extension UIViewController {
         let presenterReappears = pc.shouldRemovePresentersView
 
         let animator: UIViewControllerAnimatedTransitioning? = animated
-            ? (vc.transitioningDelegate?.animationController(forDismissed: vc)
+            ? (vc.transitioningDelegate?._animationController(forDismissed: vc)
                 ?? vc._makeDefaultDismissAnimator())
             : nil
         let interactive = animator.flatMap {
-            vc.transitioningDelegate?.interactionControllerForDismissal(using: $0)
+            vc.transitioningDelegate?._interactionControllerForDismissal(using: $0)
         }
-        let wantsInteractive = interactive?.wantsInteractiveStart ?? false
+        let wantsInteractive = interactive?._wantsInteractiveStart ?? false
         var coordinator: _UITransitionCoordinator?
         if animated {
             let coord = _UITransitionCoordinator(

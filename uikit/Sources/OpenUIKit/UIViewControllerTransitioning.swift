@@ -30,7 +30,16 @@
 // Each is @_exported here too: a plain scoped import that precedes the
 // re-export in file order hides the name from clients (swiftc).
 #if canImport(Foundation)
+import class Foundation.NSObject
+#else
+import class ObjectiveC.NSObject
+#endif
+#if canImport(Foundation)
 @_exported import typealias Foundation.TimeInterval
+#endif
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+import class Foundation.NSString
 #endif
 
 /// Keys for `UIViewControllerContextTransitioning.viewController(forKey:)`.
@@ -49,6 +58,125 @@ public struct UITransitionContextViewKey: Hashable, Sendable {
     public static let to = UITransitionContextViewKey(rawValue: "UITransitionContextToView")
 }
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+// UIKit's keys are NSString typed strings (UITransitionContextViewControllerKey
+// / UITransitionContextViewKey), so `viewControllerForKey:` / `viewForKey:`
+// can be @objc protocol requirements (UIActivity.ActivityType's pattern).
+extension UITransitionContextViewControllerKey: _ObjectiveCBridgeable {
+    public func _bridgeToObjectiveC() -> NSString { rawValue as NSString }
+    public static func _forceBridgeFromObjectiveC(_ source: NSString,
+                                                  result: inout UITransitionContextViewControllerKey?) {
+        result = UITransitionContextViewControllerKey(rawValue: source as String)
+    }
+    public static func _conditionallyBridgeFromObjectiveC(_ source: NSString,
+                                                          result: inout UITransitionContextViewControllerKey?) -> Bool {
+        result = UITransitionContextViewControllerKey(rawValue: source as String)
+        return true
+    }
+    public static func _unconditionallyBridgeFromObjectiveC(_ source: NSString?) -> UITransitionContextViewControllerKey {
+        UITransitionContextViewControllerKey(rawValue: (source ?? "") as String)
+    }
+}
+
+extension UITransitionContextViewKey: _ObjectiveCBridgeable {
+    public func _bridgeToObjectiveC() -> NSString { rawValue as NSString }
+    public static func _forceBridgeFromObjectiveC(_ source: NSString,
+                                                  result: inout UITransitionContextViewKey?) {
+        result = UITransitionContextViewKey(rawValue: source as String)
+    }
+    public static func _conditionallyBridgeFromObjectiveC(_ source: NSString,
+                                                          result: inout UITransitionContextViewKey?) -> Bool {
+        result = UITransitionContextViewKey(rawValue: source as String)
+        return true
+    }
+    public static func _unconditionallyBridgeFromObjectiveC(_ source: NSString?) -> UITransitionContextViewKey {
+        UITransitionContextViewKey(rawValue: (source ?? "") as String)
+    }
+}
+#endif
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+// Apple toolchain: UIKit's own shapes (objc-protocols.md) -- @objc, UIKit's
+// runtime names, NSObjectProtocol, the iPhoneSimulator26.1 SDK selectors and
+// required/optional split of UIViewControllerTransitioning.h (checked in
+// Tests/ObjCProtocols2Tests). Portable builds keep the Swift protocols with
+// default implementations below. Every OpenUIKit call site goes through the
+// `_foo` dispatch helpers at the end of this file.
+//
+// Left out of the @objc context protocol (OpenUIKit never reads them):
+// `presentationStyle` (UIModalPresentationStyle has OpenUIKit-only cases and
+// no Objective-C raw values) and `targetTransform` (CGAffineTransform is
+// OpenCoreGraphics' Swift struct here).
+
+/// What UIKit hands an animator: the container to animate inside, the two
+/// controllers/views, their start and end frames, and the completion hook.
+@objc(UIViewControllerContextTransitioning) @preconcurrency @MainActor
+public protocol UIViewControllerContextTransitioning: NSObjectProtocol {
+    var containerView: UIView { get }
+    var isAnimated: Bool { @objc(isAnimated) get }
+    var isInteractive: Bool { @objc(isInteractive) get }
+    var transitionWasCancelled: Bool { get }
+    @objc(viewControllerForKey:)
+    func viewController(forKey key: UITransitionContextViewControllerKey) -> UIViewController?
+    @objc(viewForKey:)
+    func view(forKey key: UITransitionContextViewKey) -> UIView?
+    @objc(initialFrameForViewController:)
+    func initialFrame(for vc: UIViewController) -> CGRect
+    @objc(finalFrameForViewController:)
+    func finalFrame(for vc: UIViewController) -> CGRect
+    /// The animator MUST call this when its animation ends.
+    @objc(completeTransition:)
+    func completeTransition(_ didComplete: Bool)
+    @objc(updateInteractiveTransition:)
+    func updateInteractiveTransition(_ percentComplete: CGFloat)
+    @objc(finishInteractiveTransition)
+    func finishInteractiveTransition()
+    @objc(cancelInteractiveTransition)
+    func cancelInteractiveTransition()
+    @objc(pauseInteractiveTransition)
+    func pauseInteractiveTransition()
+}
+
+/// An object that performs one transition's animation.
+@objc(UIViewControllerAnimatedTransitioning) @preconcurrency @MainActor
+public protocol UIViewControllerAnimatedTransitioning: NSObjectProtocol {
+    @objc(transitionDuration:)
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval
+    @objc(animateTransition:)
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning)
+    @objc(animationEnded:)
+    optional func animationEnded(_ transitionCompleted: Bool)
+    @objc(interruptibleAnimatorForTransition:)
+    optional func interruptibleAnimator(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) -> UIViewImplicitlyAnimating
+}
+
+/// An app's hook for a modal presentation: custom animators and/or a custom
+/// `UIPresentationController`.
+@objc(UIViewControllerTransitioningDelegate) @preconcurrency @MainActor
+public protocol UIViewControllerTransitioningDelegate: NSObjectProtocol {
+    @objc(animationControllerForPresentedController:presentingController:sourceController:)
+    optional func animationController(forPresented presented: UIViewController,
+                                      presenting: UIViewController,
+                                      source: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    @objc(animationControllerForDismissedController:)
+    optional func animationController(forDismissed dismissed: UIViewController)
+        -> UIViewControllerAnimatedTransitioning?
+    @objc(presentationControllerForPresentedViewController:presentingViewController:sourceViewController:)
+    optional func presentationController(forPresented presented: UIViewController,
+                                         presenting: UIViewController?,
+                                         source: UIViewController) -> UIPresentationController?
+    @objc(interactionControllerForPresentation:)
+    optional func interactionControllerForPresentation(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning?
+    @objc(interactionControllerForDismissal:)
+    optional func interactionControllerForDismissal(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning?
+}
+#else
 /// What UIKit hands an animator: the container to animate inside, the two
 /// controllers/views, their start and end frames, and the completion hook.
 @preconcurrency @MainActor
@@ -123,6 +251,8 @@ extension UIViewControllerTransitioningDelegate {
     ) -> UIViewControllerInteractiveTransitioning? { nil }
 }
 
+#endif
+
 // MARK: - Concrete context for modal presentations
 
 /// The context OpenUIKit hands modal animators. `containerView` is the
@@ -130,7 +260,7 @@ extension UIViewControllerTransitioningDelegate {
 /// view on a presentation is the presentation controller's `presentedView`
 /// (the sheet platter), which is what the built-in animator moves.
 @preconcurrency @MainActor
-final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
+final class _UIModalTransitionContext: _UIDelegateObjectBase, UIViewControllerContextTransitioning {
     let containerView: UIView
     let isAnimated: Bool
     let presenting: Bool
@@ -194,10 +324,36 @@ final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
         coordinator?.isCancelled = true
         coordinator?.setInteractive(false)
     }
+    func pauseInteractiveTransition() {}
 }
 
 // MARK: - Navigation transitions
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md), SDK selectors from
+/// UINavigationController.h, all optional. The two interface-orientation
+/// members are left out: OpenUIKit never asks them (no rotation), and their
+/// UIInterfaceOrientationMask / UIInterfaceOrientation types are not
+/// Objective-C types here.
+@objc(UINavigationControllerDelegate) @preconcurrency @MainActor
+public protocol UINavigationControllerDelegate: NSObjectProtocol {
+    @objc(navigationController:willShowViewController:animated:)
+    optional func navigationController(_ navigationController: UINavigationController,
+                                       willShow viewController: UIViewController, animated: Bool)
+    @objc(navigationController:didShowViewController:animated:)
+    optional func navigationController(_ navigationController: UINavigationController,
+                                       didShow viewController: UIViewController, animated: Bool)
+    @objc(navigationController:animationControllerForOperation:fromViewController:toViewController:)
+    optional func navigationController(_ navigationController: UINavigationController,
+                                       animationControllerFor operation: UINavigationController.Operation,
+                                       from fromVC: UIViewController,
+                                       to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    @objc(navigationController:interactionControllerForAnimationController:)
+    optional func navigationController(_ navigationController: UINavigationController,
+                                       interactionControllerFor animationController: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning?
+}
+#else
 /// An app's hook for push/pop animations, including an optional
 /// percent-driven interactive controller.
 @preconcurrency @MainActor
@@ -229,11 +385,13 @@ extension UINavigationControllerDelegate {
         -> UIViewControllerInteractiveTransitioning? { nil }
 }
 
+#endif
+
 /// The context for one push or pop. `containerView` is the navigation
 /// controller's clipped content area — the same view the built-in slide moves
 /// its two child views inside.
 @preconcurrency @MainActor
-final class _UINavigationTransitionContext: UIViewControllerContextTransitioning {
+final class _UINavigationTransitionContext: _UIDelegateObjectBase, UIViewControllerContextTransitioning {
     unowned let nav: UINavigationController
     let push: Bool
     let fromVC: UIViewController
@@ -292,6 +450,7 @@ final class _UINavigationTransitionContext: UIViewControllerContextTransitioning
         coordinator?.isCancelled = true
         coordinator?.setInteractive(false)
     }
+    func pauseInteractiveTransition() {}
 }
 
 /// The built-in push/pop: the incoming view slides over the outgoing one,
@@ -307,7 +466,7 @@ final class _UINavigationTransitionContext: UIViewControllerContextTransitioning
 /// custom animator, which has no scrub hook, finishes through
 /// `context.completeTransition(_:)` like UIKit's.
 @preconcurrency @MainActor
-final class _UINavigationSlideAnimator: UIViewControllerAnimatedTransitioning {
+final class _UINavigationSlideAnimator: _UIDelegateObjectBase, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
         UINavigationController.transitionDuration
     }
@@ -586,6 +745,16 @@ final class _UITransitionCoordinator: UIViewControllerTransitionCoordinator {
 
 // MARK: - Interactive transitioning
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIViewControllerInteractiveTransitioning) @preconcurrency @MainActor
+public protocol UIViewControllerInteractiveTransitioning: NSObjectProtocol {
+    @objc(startInteractiveTransition:)
+    func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning)
+    @objc optional var completionSpeed: CGFloat { get }
+    @objc optional var completionCurve: UIView.AnimationCurve { get }
+    @objc optional var wantsInteractiveStart: Bool { get }
+}
+#else
 @preconcurrency @MainActor
 public protocol UIViewControllerInteractiveTransitioning: AnyObject {
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning)
@@ -600,8 +769,13 @@ extension UIViewControllerInteractiveTransitioning {
     public var wantsInteractiveStart: Bool { true }
 }
 
+#endif
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIPercentDrivenInteractiveTransition)
+#endif
 @preconcurrency @MainActor
-open class UIPercentDrivenInteractiveTransition: UIViewControllerInteractiveTransitioning {
+open class UIPercentDrivenInteractiveTransition: NSObject, UIViewControllerInteractiveTransitioning {
     public private(set) var duration: CGFloat = 0
     public private(set) var percentComplete: CGFloat = 0
     public var completionSpeed: CGFloat = 1
@@ -613,13 +787,13 @@ open class UIPercentDrivenInteractiveTransition: UIViewControllerInteractiveTran
     private weak var propertyAnimator: UIViewPropertyAnimator?
     var _animator: UIViewControllerAnimatedTransitioning?
 
-    public init() {}
+    public override init() { super.init() }
 
     open func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         context = transitionContext
         if let animator = _animator {
             duration = CGFloat(animator.transitionDuration(using: transitionContext))
-            if let interruptible = animator.interruptibleAnimator(using: transitionContext)
+            if let interruptible = animator._interruptibleAnimator(using: transitionContext)
                 as? UIViewPropertyAnimator {
                 propertyAnimator = interruptible
                 if interruptible.state == .inactive {
@@ -671,4 +845,118 @@ open class UIPercentDrivenInteractiveTransition: UIViewControllerInteractiveTran
             context?.completeTransition(false)
         }
     }
+}
+
+// MARK: - Dispatch (UIKitProtocolDispatch.swift's pattern)
+//
+// One call site for both builds. On the Apple toolchain an absent optional
+// method yields the old Swift default; on the portable builds these are the
+// plain Swift calls.
+
+extension UIViewControllerAnimatedTransitioning {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    func _interruptibleAnimator(using ctx: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating? {
+        interruptibleAnimator?(using: ctx)
+    }
+    func _animationEnded(_ completed: Bool) { animationEnded?(completed) }
+#else
+    func _interruptibleAnimator(using ctx: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating? {
+        interruptibleAnimator(using: ctx)
+    }
+    func _animationEnded(_ completed: Bool) { animationEnded(completed) }
+#endif
+}
+
+extension UIViewControllerInteractiveTransitioning {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    var _completionSpeed: CGFloat { completionSpeed ?? 1 }
+    var _completionCurve: UIView.AnimationCurve { completionCurve ?? .easeInOut }
+    var _wantsInteractiveStart: Bool { wantsInteractiveStart ?? true }
+#else
+    var _completionSpeed: CGFloat { completionSpeed }
+    var _completionCurve: UIView.AnimationCurve { completionCurve }
+    var _wantsInteractiveStart: Bool { wantsInteractiveStart }
+#endif
+}
+
+extension UIViewControllerTransitioningDelegate {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    func _animationController(forPresented presented: UIViewController, presenting: UIViewController,
+                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animationController?(forPresented: presented, presenting: presenting, source: source)
+    }
+    func _animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animationController?(forDismissed: dismissed)
+    }
+    func _presentationController(forPresented presented: UIViewController, presenting: UIViewController?,
+                                 source: UIViewController) -> UIPresentationController? {
+        presentationController?(forPresented: presented, presenting: presenting, source: source)
+    }
+    func _interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+        interactionControllerForPresentation?(using: animator)
+    }
+    func _interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+        interactionControllerForDismissal?(using: animator)
+    }
+#else
+    func _animationController(forPresented presented: UIViewController, presenting: UIViewController,
+                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animationController(forPresented: presented, presenting: presenting, source: source)
+    }
+    func _animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        animationController(forDismissed: dismissed)
+    }
+    func _presentationController(forPresented presented: UIViewController, presenting: UIViewController?,
+                                 source: UIViewController) -> UIPresentationController? {
+        presentationController(forPresented: presented, presenting: presenting, source: source)
+    }
+    func _interactionControllerForPresentation(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+        interactionControllerForPresentation(using: animator)
+    }
+    func _interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+        interactionControllerForDismissal(using: animator)
+    }
+#endif
+}
+
+extension UINavigationControllerDelegate {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    func _willShow(_ nav: UINavigationController, _ vc: UIViewController, animated: Bool) {
+        navigationController?(nav, willShow: vc, animated: animated)
+    }
+    func _didShow(_ nav: UINavigationController, _ vc: UIViewController, animated: Bool) {
+        navigationController?(nav, didShow: vc, animated: animated)
+    }
+    func _animationController(_ nav: UINavigationController, for operation: UINavigationController.Operation,
+                              from fromVC: UIViewController, to toVC: UIViewController)
+        -> UIViewControllerAnimatedTransitioning? {
+        navigationController?(nav, animationControllerFor: operation, from: fromVC, to: toVC)
+    }
+    func _interactionController(_ nav: UINavigationController,
+                                for animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+        navigationController?(nav, interactionControllerFor: animator)
+    }
+#else
+    func _willShow(_ nav: UINavigationController, _ vc: UIViewController, animated: Bool) {
+        navigationController(nav, willShow: vc, animated: animated)
+    }
+    func _didShow(_ nav: UINavigationController, _ vc: UIViewController, animated: Bool) {
+        navigationController(nav, didShow: vc, animated: animated)
+    }
+    func _animationController(_ nav: UINavigationController, for operation: UINavigationController.Operation,
+                              from fromVC: UIViewController, to toVC: UIViewController)
+        -> UIViewControllerAnimatedTransitioning? {
+        navigationController(nav, animationControllerFor: operation, from: fromVC, to: toVC)
+    }
+    func _interactionController(_ nav: UINavigationController,
+                                for animator: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? {
+        navigationController(nav, interactionControllerFor: animator)
+    }
+#endif
 }

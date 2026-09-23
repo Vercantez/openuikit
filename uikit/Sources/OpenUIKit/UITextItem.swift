@@ -26,8 +26,17 @@
 #if canImport(Foundation)
 import struct Foundation.URL
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#endif
+
+/// NSObjects, as UIKit's (UITextItem.h), with UIKit's runtime names: the
+/// @objc UITextViewDelegate passes and returns them.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITextItem)
+#endif
 @preconcurrency @MainActor
-open class UITextItem {
+open class UITextItem: NSObject {
     public enum Content {
         case link(URL)
         case textAttachment(NSTextAttachment)
@@ -40,6 +49,7 @@ open class UITextItem {
     init(content: Content, range: NSRange) {
         self.content = content
         self.range = range
+        super.init()
     }
 
     /// Identifier of the action the text view hands the delegate as
@@ -52,8 +62,11 @@ open class UITextItem {
 
     /// `UITextItemMenuPreview`. The port presents menus without a preview;
     /// the object is carried for the configuration's sake.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UITextItemMenuPreview)
+#endif
     @preconcurrency @MainActor
-    public final class MenuPreview {
+    public final class MenuPreview: NSObject {
         public let view: UIView?
         private init(view: UIView?) { self.view = view }
         public static let `default` = MenuPreview(view: nil)
@@ -62,8 +75,11 @@ open class UITextItem {
 
     /// `UITextItemMenuConfiguration`. WordPress spells it
     /// `.init(menu: defaultMenu)`.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UITextItemMenuConfiguration)
+#endif
     @preconcurrency @MainActor
-    public final class MenuConfiguration {
+    public final class MenuConfiguration: NSObject {
         public let menu: UIMenu
         public let preview: MenuPreview?
         public init(menu: UIMenu) {
@@ -87,7 +103,7 @@ extension NSAttributedString.Key {
 /// The port's menu platter appears without a transition, so animations run
 /// at once and completions run right after them.
 @preconcurrency @MainActor
-final class _UITextItemMenuAnimator: UIContextMenuInteractionAnimating {
+final class _UITextItemMenuAnimator: _UIDelegateObjectBase, UIContextMenuInteractionAnimating {
     var previewViewController: UIViewController? { nil }
     private var completions: [() -> Void] = []
     func addAnimations(_ animations: @escaping () -> Void) { animations() }

@@ -11,7 +11,7 @@ private typealias CALayer = OpenUIKit.CALayer
 #if !os(Linux)
 @MainActor
 #endif
-private final class TabsDelegate: UITabBarControllerDelegate {
+private final class TabsDelegate: NSObject, UITabBarControllerDelegate {
     var log: [String] = []
     var allow = true
     var allowTab = true

@@ -926,7 +926,7 @@ final class _UIAlertPresentationController: UIPresentationController {
 /// spring. The card carries no animation on its layer or on any ancestor —
 /// see the file header and docs/KNOWN_GAPS.md.
 @preconcurrency @MainActor
-final class _UIAlertAnimator: UIViewControllerAnimatedTransitioning {
+final class _UIAlertAnimator: _UIDelegateObjectBase, UIViewControllerAnimatedTransitioning {
     let presenting: Bool
     init(presenting: Bool) { self.presenting = presenting }
 

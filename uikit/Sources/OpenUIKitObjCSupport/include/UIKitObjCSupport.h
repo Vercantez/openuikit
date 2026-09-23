@@ -50,8 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  * cannot export them. A forward declaration lets an app header be parsed;
  * every member use is a measured wall (class ABI change in OpenUIKit). */
 @class UIColor, UIFont, UIBarButtonItem, UIAlertAction, UIScreen, UIDevice, UIActivity,
-       UIPercentDrivenInteractiveTransition, UIViewPropertyAnimator, UISpringTimingParameters,
-       UIPresentationController, CALayer;
+       CALayer;
 
 #pragma mark - Appearance (UIAppearance.h)
 
@@ -167,9 +166,7 @@ typedef NS_ENUM(NSInteger, UIGestureRecognizerState) {
     UIGestureRecognizerStateEnded, UIGestureRecognizerStateCancelled, UIGestureRecognizerStateFailed,
     UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded,
 } NS_SWIFT_NAME(UIGestureRecognizerStateObjC);
-typedef NS_ENUM(NSInteger, UINavigationControllerOperation) {
-    UINavigationControllerOperationNone, UINavigationControllerOperationPush, UINavigationControllerOperationPop,
-} NS_SWIFT_NAME(UINavigationControllerOperationObjC);
+/* UINavigationControllerOperation: OpenUIKit's own @objc enum (OpenUIKit-Swift.h). */
 typedef NS_ENUM(NSInteger, UITextLayoutDirection) {
     UITextLayoutDirectionRight = 2, UITextLayoutDirectionLeft, UITextLayoutDirectionUp, UITextLayoutDirectionDown,
 } NS_SWIFT_NAME(UITextLayoutDirectionObjC);
@@ -499,21 +496,8 @@ NS_SWIFT_NAME(UIUserActivityRestoringObjC) @protocol UIUserActivityRestoring <NS
  * halves (docs/agent_reports/objc-protocols.md). Repeating them here is a
  * "different definitions in different modules" error.
  *
- * UITextViewDelegate below is still this header's declaration (OpenUIKit's
- * text-view delegate is not an @objc protocol yet) and so cannot refine the
- * generated UIScrollViewDelegate: refining a forward declaration compiles, but
- * Swift does not export the protocol object and the link fails (MEASURED:
- * undefined `__OBJC_PROTOCOL_$_UIScrollViewDelegate` referenced from
- * `__OBJC_$_PROTOCOL_REFS_UITextViewDelegate`). */
-NS_SWIFT_NAME(UITextViewDelegateObjC) @protocol UITextViewDelegate <NSObject>
-@optional
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView;
-- (void)textViewDidBeginEditing:(UITextView *)textView;
-- (void)textViewDidEndEditing:(UITextView *)textView;
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
-- (void)textViewDidChange:(UITextView *)textView;
-- (void)textViewDidChangeSelection:(UITextView *)textView;
-@end
+ * UITextViewDelegate is one of them too (it refines the generated
+ * UIScrollViewDelegate there). */
 
 /* UITextFieldDelegate: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 
@@ -529,36 +513,10 @@ NS_SWIFT_NAME(UIViewControllerTransitionCoordinatorObjC) @protocol UIViewControl
 - (BOOL)animateAlongsideTransition:(void (^ _Nullable)(id<UIViewControllerTransitionCoordinatorContext> context))animation
                         completion:(void (^ _Nullable)(id<UIViewControllerTransitionCoordinatorContext> context))completion;
 @end
-NS_SWIFT_NAME(UIViewControllerContextTransitioningObjC) @protocol UIViewControllerContextTransitioning <NSObject>
-- (nullable UIView *)containerView;
-- (BOOL)isAnimated;
-- (BOOL)isInteractive;
-- (BOOL)transitionWasCancelled;
-- (void)updateInteractiveTransition:(CGFloat)percentComplete;
-- (void)finishInteractiveTransition;
-- (void)cancelInteractiveTransition;
-- (void)completeTransition:(BOOL)didComplete;
-- (nullable UIViewController *)viewControllerForKey:(UITransitionContextViewControllerKey)key;
-- (nullable UIView *)viewForKey:(UITransitionContextViewKey)key;
-@end
-NS_SWIFT_NAME(UIViewControllerAnimatedTransitioningObjC) @protocol UIViewControllerAnimatedTransitioning <NSObject>
-- (NSTimeInterval)transitionDuration:(nullable id<UIViewControllerContextTransitioning>)transitionContext;
-- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
-@end
-NS_SWIFT_NAME(UIViewControllerInteractiveTransitioningObjC) @protocol UIViewControllerInteractiveTransitioning <NSObject>
-- (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
-@end
-NS_SWIFT_NAME(UINavigationControllerDelegateObjC) @protocol UINavigationControllerDelegate <NSObject>
-@optional
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
-- (nullable id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
-                          interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController;
-- (nullable id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
-                                   animationControllerForOperation:(UINavigationControllerOperation)operation
-                                                fromViewController:(UIViewController *)fromVC
-                                                  toViewController:(UIViewController *)toVC;
-@end
+/* UIViewControllerContextTransitioning, UIViewControllerAnimatedTransitioning,
+ * UIViewControllerInteractiveTransitioning, UIViewControllerTransitioningDelegate,
+ * UINavigationControllerDelegate and UITabBarControllerDelegate: OpenUIKit's
+ * own @objc protocols (OpenUIKit-Swift.h). */
 /* UIPickerViewDataSource: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 /* UIPickerViewDelegate: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 

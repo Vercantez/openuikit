@@ -36,8 +36,11 @@ final class ObjCProtocols2Tests: XCTestCase {
     /// sections under OpenUIKit).
     static let converted: [(section: String, protocols: [String])] = [
         ("textfield", ["UITextFieldDelegate"]),
+        ("textview", ["UITextViewDelegate"]),
+        ("navigation", ["UINavigationControllerDelegate"]),
         ("picker", ["UIPickerViewDataSource", "UIPickerViewDelegate"]),
         ("searchbar", ["UISearchBarDelegate"]),
+        ("tabbarcontroller", ["UITabBarControllerDelegate"]),
         ("", ["UISearchControllerDelegate", "UITabBarDelegate", "UIGestureRecognizerDelegate",
               "UITableViewDelegate", "UICollectionViewDelegate"]),
     ]
@@ -91,6 +94,58 @@ final class ObjCProtocols2Tests: XCTestCase {
                 }
                 XCTAssertFalse(ours.isEmpty, name)
                 XCTAssertEqual(ours.subtracting(sdk), [], "\(name): not the SDK's")
+            }
+        }
+    }
+
+    /// The transitioning family is not in the transcript's `## shapes`; its
+    /// shapes are UIViewControllerTransitioning.h / UIViewAnimating.h of the
+    /// iPhoneSimulator26.1 SDK, transcribed (required/optional, selector).
+    /// Members OpenUIKit leaves out are listed in `omitted`.
+    static let headerShapes: [String: (required: Set<String>, optional: Set<String>, omitted: Set<String>)] = [
+        "UIViewControllerContextTransitioning": (
+            ["containerView", "isAnimated", "isInteractive", "transitionWasCancelled",
+             "updateInteractiveTransition:", "finishInteractiveTransition", "cancelInteractiveTransition",
+             "pauseInteractiveTransition", "completeTransition:", "viewControllerForKey:", "viewForKey:",
+             "initialFrameForViewController:", "finalFrameForViewController:"],
+            [], ["presentationStyle", "targetTransform"]),
+        "UIViewControllerAnimatedTransitioning": (
+            ["transitionDuration:", "animateTransition:"],
+            ["interruptibleAnimatorForTransition:", "animationEnded:"], []),
+        "UIViewControllerInteractiveTransitioning": (
+            ["startInteractiveTransition:"],
+            ["completionSpeed", "completionCurve", "wantsInteractiveStart"], []),
+        "UIViewControllerTransitioningDelegate": (
+            [],
+            ["animationControllerForPresentedController:presentingController:sourceController:",
+             "animationControllerForDismissedController:", "interactionControllerForPresentation:",
+             "interactionControllerForDismissal:",
+             "presentationControllerForPresentedViewController:presentingViewController:sourceViewController:"], []),
+        "UIViewAnimating": (
+            ["state", "isRunning", "isReversed", "setReversed:", "fractionComplete", "setFractionComplete:",
+             "startAnimation", "startAnimationAfterDelay:", "pauseAnimation", "stopAnimation:",
+             "finishAnimationAtPosition:"], [], []),
+        "UIViewImplicitlyAnimating": (
+            [], ["addAnimations:delayFactor:", "addAnimations:", "addCompletion:",
+                 "continueAnimationWithTimingParameters:durationFactor:"], []),
+        "UITimingCurveProvider": (
+            ["timingCurveType", "cubicTimingParameters", "springTimingParameters"], [], []),
+        "UIContextMenuInteractionAnimating": (
+            ["previewViewController", "addAnimations:", "addCompletion:"], [], []),
+    ]
+
+    func testTransitioningShapesAreTheSDKHeaders() throws {
+        for (name, shape) in Self.headerShapes {
+            guard let proto = objc_getProtocol(name) else { XCTFail("no protocol \(name)"); continue }
+            for required in [true, false] {
+                var n: UInt32 = 0
+                var ours: Set<String> = []
+                if let list = protocol_copyMethodDescriptionList(proto, required, true, &n) {
+                    for i in 0..<Int(n) { ours.insert(NSStringFromSelector(list[i].name!)) }
+                    free(list)
+                }
+                let sdk = required ? shape.required : shape.optional
+                XCTAssertEqual(ours, sdk.subtracting(shape.omitted), "\(name) \(required ? "required" : "optional")")
             }
         }
     }

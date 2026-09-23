@@ -12,6 +12,9 @@ import protocol Foundation.NSCopying
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #endif
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 // The MENU PLATTER + UIContextMenuInteraction / UIContextMenuConfiguration.
 // Owner: menus module (M13 "menus & actions" cluster).
 //
@@ -788,12 +791,25 @@ open class UITargetedDragPreview: UITargetedPreview {
 /// completions are run IMMEDIATELY rather than alongside a morph — which
 /// keeps the side effects apps put in them (state updates, navigation)
 /// happening, in order, at the right moment.
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's @objc protocol (UIContextMenuInteraction.h; the
+/// @objc UITextViewDelegate's text-item menu callbacks pass one).
+@objc(UIContextMenuInteractionAnimating) @preconcurrency @MainActor
+public protocol UIContextMenuInteractionAnimating: NSObjectProtocol {
+    var previewViewController: UIViewController? { get }
+    @objc(addAnimations:)
+    func addAnimations(_ animations: @escaping () -> Void)
+    @objc(addCompletion:)
+    func addCompletion(_ completion: @escaping () -> Void)
+}
+#else
 @preconcurrency @MainActor
 public protocol UIContextMenuInteractionAnimating: AnyObject {
     var previewViewController: UIViewController? { get }
     func addAnimations(_ animations: @escaping () -> Void)
     func addCompletion(_ completion: @escaping () -> Void)
 }
+#endif
 
 @preconcurrency @MainActor
 public protocol UIContextMenuInteractionCommitAnimating: UIContextMenuInteractionAnimating {
@@ -805,7 +821,7 @@ public enum UIContextMenuInteractionCommitStyle: Int, Sendable { case dismiss = 
 /// The concrete animator handed to the delegate: it runs what it is given,
 /// straight away. See the protocol's note.
 @preconcurrency @MainActor
-final class _UIContextMenuAnimator: UIContextMenuInteractionCommitAnimating {
+final class _UIContextMenuAnimator: _UIDelegateObjectBase, UIContextMenuInteractionCommitAnimating {
     var previewViewController: UIViewController?
     var preferredCommitStyle: UIContextMenuInteractionCommitStyle = .dismiss
     func addAnimations(_ animations: @escaping () -> Void) { animations() }

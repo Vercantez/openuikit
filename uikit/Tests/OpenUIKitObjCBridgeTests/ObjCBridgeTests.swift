@@ -127,7 +127,7 @@ final class ObjCBridgeTests: XCTestCase {
         let c = UIEdgeInsetsObjC(top: 1, left: 2, bottom: 3, right: 4)
         let swift = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)   // OpenUIKit's, unambiguous
         XCTAssertEqual(c.left, swift.left)
-        XCTAssertEqual(NSStringFromProtocol(UITextViewDelegateObjC.self), "UITextViewDelegate")
+        XCTAssertEqual(NSStringFromProtocol(UITextViewDelegate.self), "UITextViewDelegate")
         // The table protocols are OpenUIKit's own @objc protocols now, under
         // UIKit's runtime names (objc-protocols.md).
         XCTAssertEqual(NSStringFromProtocol(UITableViewDelegate.self), "UITableViewDelegate")

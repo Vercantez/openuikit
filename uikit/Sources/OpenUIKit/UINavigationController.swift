@@ -375,10 +375,16 @@ open class UINavigationController: UIViewController {
             // Initial install counts as an appearance (the portable core has
             // no window-attachment notion; UIKit fires these when the nav
             // view joins a window).
+            // MEASURED (objcprotocolprobe2 transcript-ios26.1.txt
+            // `## navigation`, "shown"): the delegate gets willShow(root,
+            // animated NO) once and didShow(root, animated NO) TWICE.
+            delegate?._willShow(self, top, animated: false)
             top.beginAppearanceTransition(true, animated: false)
             installTopView(top)
             top.endAppearanceTransition()
             updateBarState()
+            delegate?._didShow(self, top, animated: false)
+            delegate?._didShow(self, top, animated: false)
         }
         let awaiting = _pushesAwaitingDidMove
         _pushesAwaitingDidMove = []
@@ -898,12 +904,16 @@ open class UINavigationController: UIViewController {
         vc.beginAppearanceTransition(true, animated: animated)
 
         if !animated {
+            // MEASURED (`## navigation` "push unanimated"): willShow and
+            // didShow, animated NO; no animationControllerForOperation.
+            delegate?._willShow(self, vc, animated: false)
             installTopView(vc)
             from.view.removeFromSuperview()
             from.endAppearanceTransition()
             vc.endAppearanceTransition()
             updateBarState()
             vc.didMove(toParent: self)
+            delegate?._didShow(self, vc, animated: false)
             return
         }
 
@@ -951,12 +961,15 @@ open class UINavigationController: UIViewController {
         to.beginAppearanceTransition(true, animated: animated)
 
         if !animated {
+            // MEASURED (`## navigation` "pop unanimated"): as a push.
+            delegate?._willShow(self, to, animated: false)
             installTopView(to)
             from.view.removeFromSuperview()
             from.endAppearanceTransition()
             to.endAppearanceTransition()
             updateBarState()
             detachFromParent(from)
+            delegate?._didShow(self, to, animated: false)
             return from
         }
 
@@ -966,7 +979,11 @@ open class UINavigationController: UIViewController {
 
     // MARK: Animator dispatch (M12 — UIViewControllerTransitioning.swift)
 
-    /// UIKit's push/pop direction, handed to the delegate.
+    /// UIKit's push/pop direction, handed to the delegate. Apple
+    /// toolchain: UIKit's `UINavigationControllerOperation` NSInteger enum.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UINavigationControllerOperation)
+#endif
     public enum Operation: Int, Sendable {
         case none = 0, push = 1, pop = 2
     }
@@ -981,21 +998,20 @@ open class UINavigationController: UIViewController {
     /// `completeTransition(_:)`.
     final func _runTransition(push: Bool, from: UIViewController, to: UIViewController) {
         let op: Operation = push ? .push : .pop
-        let custom = delegate?.navigationController(self, animationControllerFor: op,
-                                                    from: from, to: to)
+        let custom = delegate?._animationController(self, for: op, from: from, to: to)
         let ctx = _UINavigationTransitionContext(nav: self, push: push, from: from,
                                                  to: to, animated: true)
         let coordinator = _transitionCoordinator as? _UITransitionCoordinator
         ctx.coordinator = coordinator
         let interactive = custom.flatMap {
-            delegate?.navigationController(self, interactionControllerFor: $0)
+            delegate?._interactionController(self, for: $0)
         }
-        let wantsInteractive = interactive?.wantsInteractiveStart ?? false
+        let wantsInteractive = interactive?._wantsInteractiveStart ?? false
         if wantsInteractive {
             ctx.isInteractive = true
             coordinator?.isInteractive = true
         }
-        delegate?.navigationController(self, willShow: to, animated: true)
+        delegate?._willShow(self, to, animated: true)
         if let interactive, wantsInteractive {
             if let percent = interactive as? UIPercentDrivenInteractiveTransition {
                 percent._animator = custom
@@ -1078,7 +1094,7 @@ open class UINavigationController: UIViewController {
             detachFromParent(from)
         }
         (_transitionCoordinator as? _UITransitionCoordinator)?.complete(cancelled: false)
-        delegate?.navigationController(self, didShow: to, animated: true)
+        delegate?._didShow(self, to, animated: true)
     }
 
     /// Pops until `viewController` is on top and returns the popped
@@ -1199,7 +1215,7 @@ open class UINavigationController: UIViewController {
             t.frontVC.endAppearanceTransition()
             navigationBar.endTransition(cancelled: true)
             settleBarAfterTransition(on: t.frontVC)
-            delegate?.navigationController(self, didShow: t.frontVC, animated: true)
+            delegate?._didShow(self, t.frontVC, animated: true)
             coordinator?.complete(cancelled: true)
             return
         }
@@ -1211,7 +1227,7 @@ open class UINavigationController: UIViewController {
             navigationBar.endTransition()
             settleBarAfterTransition(on: t.frontVC)
             t.frontVC.didMove(toParent: self)
-            delegate?.navigationController(self, didShow: t.frontVC, animated: true)
+            delegate?._didShow(self, t.frontVC, animated: true)
         } else {
             if t.interactive {
                 // Interactive pop mutates the stack only on completion.
@@ -1223,7 +1239,7 @@ open class UINavigationController: UIViewController {
             navigationBar.endTransition()
             settleBarAfterTransition(on: t.backVC)
             detachFromParent(t.frontVC)
-            delegate?.navigationController(self, didShow: t.backVC, animated: true)
+            delegate?._didShow(self, t.backVC, animated: true)
         }
         coordinator?.complete(cancelled: false)
     }

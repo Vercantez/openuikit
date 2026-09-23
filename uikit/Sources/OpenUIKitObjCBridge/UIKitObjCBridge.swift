@@ -1014,4 +1014,33 @@ extension UIGestureRecognizer {
     }
 }
 
+// MARK: - Controller delegates of the fourth @objc protocol set (objc-protocols-4)
+
+extension UINavigationController {
+    @objc(delegate) public var __objc_navigationDelegate: UINavigationControllerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+extension UITabBarController {
+    @objc(delegate) public var __objc_tabBarControllerDelegate: UITabBarControllerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(viewControllers) public var __objc_viewControllers: [UIViewController]? {
+        get { viewControllers } set { viewControllers = newValue }
+    }
+    @objc(selectedIndex) public var __objc_selectedIndex: Int {
+        get { selectedIndex } set { selectedIndex = newValue }
+    }
+    @objc(selectedViewController) public var __objc_selectedViewController: UIViewController? {
+        get { selectedViewController } set { selectedViewController = newValue }
+    }
+}
+
+extension UIViewController {
+    @objc(transitioningDelegate) public var __objc_transitioningDelegate: UIViewControllerTransitioningDelegate? {
+        get { transitioningDelegate } set { transitioningDelegate = newValue }
+    }
+}
+
 #endif

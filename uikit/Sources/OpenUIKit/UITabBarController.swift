@@ -69,6 +69,9 @@
 #if canImport(Foundation)
 @_exported import class Foundation.NSCoder
 #endif
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 
 /// Content container (same class name real UIKit dumps — compare.py prunes
 /// this subtree on both sides).
@@ -91,6 +94,9 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     }
     public var mode: Mode = .automatic
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
     public init() {
         super.init()
     }
@@ -212,8 +218,8 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     /// report `didSelectTab` — the only callback for programmatic changes.
     private func _selectTab(_ tab: UITab, previous: UITab?) {
         _selectedTab = tab
-        if isViewLoaded { installSelected(reportLegacyDidSelect: false) }
-        delegate?.tabBarController(self, didSelectTab: tab, previousTab: previous)
+        if isViewLoaded { installSelected() }
+        delegate?._didSelectTab(self, tab, previous: previous)
     }
 
     /// Bookkeeping for a tab whose title/image changed (UITab.swift).
@@ -224,9 +230,10 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     // MARK: Delegate (M13)
 
     /// UIKit's controller-level delegate. Legacy mode: `shouldSelect` gates
-    /// a USER tap (UIKit does not consult it for a programmatic
-    /// `selectedIndex =`), `didSelect` fires for both, as UIKit does. Tabs
-    /// mode: the `Tab` pair instead (file header).
+    /// a USER tap and `didSelect` reports it; neither is sent when the
+    /// controller is shown or for a programmatic `selectedIndex =` /
+    /// `selectedViewController =` (MEASURED objcprotocolprobe2,
+    /// `## tabbarcontroller`). Tabs mode: the `Tab` pair instead (file header).
     public weak var delegate: UITabBarControllerDelegate?
     /// Earlier OpenUIKit spelling of `delegate`; kept as an alias.
     public var tabBarControllerDelegate: UITabBarControllerDelegate? {
@@ -366,9 +373,10 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     open override func viewDidLoad() {
         super.viewDidLoad()
         applyTabBarSafeArea()
-        // Tabs mode already reported its selection at `tabs =` (measured:
-        // nothing fires when the view appears).
-        installSelected(reportLegacyDidSelect: !_usesTabs)
+        // Nothing is reported when the view appears: tabs mode reported at
+        // `tabs =`, and the legacy didSelect is for user selections only
+        // (measured, `## tabbarcontroller` "all: shown: -").
+        installSelected()
     }
 
     open override func viewDidLayoutSubviews() {
@@ -379,7 +387,7 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
 
     /// Swap the installed child for the current selectedIndex (appearance
     /// order per file header). No-op when it is already installed.
-    func installSelected(reportLegacyDidSelect: Bool = true) {
+    func installSelected() {
         guard let vcs = _viewControllers, !vcs.isEmpty,
               _selectedIndex < vcs.count else { return }
         let incoming = vcs[_selectedIndex]
@@ -410,9 +418,6 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
         _selectedViewController = incoming
         tabBar.selectedItem = incoming.tabBarItem
         applyTabBarSafeArea()
-        if reportLegacyDidSelect && !_usesTabs {
-            delegate?.tabBarController(self, didSelect: incoming)
-        }
     }
 
     /// Remove the current selection's view (used when children are replaced).
@@ -435,19 +440,67 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
             // (also on a re-tap of the selected tab); the legacy pair is
             // never consulted.
             let tab = _tabs[idx]
-            if let d = delegate, !d.tabBarController(self, shouldSelectTab: tab) { return }
+            if let d = delegate, !d._shouldSelectTab(self, tab) { return }
             _selectedIndex = idx
             _selectTab(tab, previous: _selectedTab)
             return
         }
         if let d = delegate,
-           !d.tabBarController(self, shouldSelect: vcs[idx]) { return }
+           !d._shouldSelect(self, vcs[idx]) { return }
+        let changed = idx != _selectedIndex || selectedViewController !== vcs[idx]
         selectedIndex = idx
+        // MEASURED (objcprotocolprobe2 transcript-ios26.1.txt `## tabbarcontroller`):
+        // the legacy didSelect is not sent when the controller is shown, nor
+        // for a programmatic `selectedIndex` / `selectedViewController`; it
+        // reports a user's selection only.
+        if changed { delegate?._didSelect(self, vcs[idx]) }
     }
 }
 
 // MARK: - UITabBarControllerDelegate (M13)
 
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- @objc, UIKit's
+/// runtime name, NSObjectProtocol, SDK selectors from UITabBarController.h,
+/// all optional (checked against the SDK in Tests/ObjCProtocols2Tests).
+/// The customizing callbacks are declared and never sent: OpenUIKit has no
+/// "More" customizing sheet. Left out (never asked by OpenUIKit): the drop
+/// session, editing, visibility, display-order, displayed-controllers and
+/// interface-orientation members, whose UIDropSession / UITabGroup /
+/// orientation types are not Objective-C types here.
+@objc(UITabBarControllerDelegate) @preconcurrency @MainActor
+public protocol UITabBarControllerDelegate: NSObjectProtocol {
+    @objc(tabBarController:shouldSelectViewController:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   shouldSelect viewController: UIViewController) -> Bool
+    @objc(tabBarController:didSelectViewController:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   didSelect viewController: UIViewController)
+    @objc(tabBarController:shouldSelectTab:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   shouldSelectTab tab: UITab) -> Bool
+    @objc(tabBarController:didSelectTab:previousTab:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   didSelectTab selectedTab: UITab, previousTab: UITab?)
+    @objc(tabBarController:willBeginCustomizingViewControllers:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   willBeginCustomizing viewControllers: [UIViewController])
+    @objc(tabBarController:willEndCustomizingViewControllers:changed:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   willEndCustomizing viewControllers: [UIViewController], changed: Bool)
+    @objc(tabBarController:didEndCustomizingViewControllers:changed:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   didEndCustomizing viewControllers: [UIViewController], changed: Bool)
+    @objc(tabBarController:animationControllerForTransitionFromViewController:toViewController:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   animationControllerForTransitionFrom fromVC: UIViewController,
+                                   to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    @objc(tabBarController:interactionControllerForAnimationController:)
+    optional func tabBarController(_ tabBarController: UITabBarController,
+                                   interactionControllerFor animationController: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning?
+}
+#else
 /// UIKit's protocol with UIKit's names. The two legacy members that mean
 /// anything without an editable "More" tab or custom tab transitions are
 /// wired, plus the iOS 18 `Tab` pair; `animationControllerForTransitionFrom`
@@ -480,6 +533,35 @@ public extension UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController,
                           animationControllerForTransitionFrom fromVC: UIViewController,
                           to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? { nil }
+}
+#endif
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern)
+
+extension UITabBarControllerDelegate {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    func _shouldSelect(_ c: UITabBarController, _ vc: UIViewController) -> Bool {
+        tabBarController?(c, shouldSelect: vc) ?? true
+    }
+    func _didSelect(_ c: UITabBarController, _ vc: UIViewController) { tabBarController?(c, didSelect: vc) }
+    func _shouldSelectTab(_ c: UITabBarController, _ tab: UITab) -> Bool {
+        tabBarController?(c, shouldSelectTab: tab) ?? true
+    }
+    func _didSelectTab(_ c: UITabBarController, _ tab: UITab, previous: UITab?) {
+        tabBarController?(c, didSelectTab: tab, previousTab: previous)
+    }
+#else
+    func _shouldSelect(_ c: UITabBarController, _ vc: UIViewController) -> Bool {
+        tabBarController(c, shouldSelect: vc)
+    }
+    func _didSelect(_ c: UITabBarController, _ vc: UIViewController) { tabBarController(c, didSelect: vc) }
+    func _shouldSelectTab(_ c: UITabBarController, _ tab: UITab) -> Bool {
+        tabBarController(c, shouldSelectTab: tab)
+    }
+    func _didSelectTab(_ c: UITabBarController, _ tab: UITab, previous: UITab?) {
+        tabBarController(c, didSelectTab: tab, previousTab: previous)
+    }
+#endif
 }
 
 extension UITabBarController {
