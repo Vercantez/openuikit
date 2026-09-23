@@ -334,6 +334,48 @@ func stringFormatLocale() {
                       locale: posix, 123, 123.891, 12.5, 12.5, 12.5, 12.5, 12.5, 12.25, 12.25, 3.5,
                       "s", -12, 12, 255, 1.2345678, 0.000123)
     say("string.format.locale.posix", text)
+    for id in ["en_US_POSIX", "en_US", "fr_FR", "de_DE", "ja_JP"] {
+        let row = String(format: "%d|%.2f|%g|%e|%5.1f", locale: Locale(identifier: id),
+                         1234567, 1234567.891, 1234.5, 1234.5, 1234.5)
+        say("string.format.locale.table", id, escaped(row))
+    }
+    say("string.format.locale.negative", String(format: "%d|%.1f", locale: Locale(identifier: "de_DE"),
+                                                -1234567, -1234567.25))
+}
+
+func escaped(_ text: String) -> String {
+    text.unicodeScalars.map { $0.isASCII ? String($0) : "\\u{\(String($0.value, radix: 16))}" }.joined()
+}
+
+/// Real locales (not en_001 for every identifier): separators, and the
+/// date/number formatters that read them.
+func locales() {
+    let date = Date(timeIntervalSince1970: 1_709_227_509.125)   // 2024-02-29 17:25:09 UTC
+    for id in ["en_US_POSIX", "en_US", "de_DE", "ja_JP", "fr_FR"] {
+        let locale = Locale(identifier: id)
+        say("locale", id, "identifier=\(locale.identifier)",
+            "language=\(locale.language.languageCode?.identifier ?? "nil")",
+            "region=\(locale.region?.identifier ?? "nil")",
+            "decimal=\(escaped(locale.decimalSeparator ?? "nil"))",
+            "grouping=\(escaped(locale.groupingSeparator ?? "nil"))")
+        for style in [DateFormatter.Style.short, .medium, .long, .full] {
+            let formatter = DateFormatter()
+            formatter.locale = locale
+            formatter.timeZone = TimeZone(identifier: "GMT")!
+            formatter.dateStyle = style
+            formatter.timeStyle = style == .full ? .none : style
+            say("locale.date", id, style.rawValue, escaped(formatter.string(from: date)))
+        }
+        let pattern = DateFormatter()
+        pattern.locale = locale
+        pattern.timeZone = TimeZone(identifier: "GMT")!
+        pattern.dateFormat = "EEEE d MMMM yyyy HH:mm"
+        say("locale.date.pattern", id, escaped(pattern.string(from: date)))
+        let number = NumberFormatter()
+        number.locale = locale
+        number.numberStyle = .decimal
+        say("locale.number", id, escaped(number.string(from: NSNumber(value: 1234567.891)) ?? "nil"))
+    }
 }
 
 @main
@@ -346,6 +388,7 @@ struct GuestFoundationProbe {
         defaults()
         nsstringNumbers()
         stringFormatLocale()
+        locales()
         print("guestfoundationprobe done")
     }
 }

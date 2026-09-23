@@ -1989,11 +1989,19 @@ echo "== link"
 # /usr/lib/libSystem.real.dylib resolves. The umbrella is linked directly
 # (rather than via -lSystem) because the SDK .tbd does not advertise
 # pthread_main_np, which the APP path needs and the render path does not.
+# FoundationEssentials is linked as $OUT/libFoundationEssentials.dylib (built
+# above from the same FE_OBJECTS), not object-linked: libFoundationInternationalization
+# .dylib loads that dylib, and a second, static FoundationEssentials in the
+# executable meant two copies in one process. FoundationInternationalization's
+# @_dynamicReplacement(for: _localeICUClass()) bound to the dylib's copy while
+# the app called the static one, so every Locale(identifier:) was en_001 and
+# objc4 logged "Class _TtC20FoundationEssentials... is implemented in both"
+# (MEASURED 2026-09-23, docs/agent_reports/guest-swift-modules.md).
 COMMON_LINK_OBJECTS=(
     "$OUT/openuikit.o" "$OUT/opencoregraphics.o"
     "$OUT/cportableio.o" "$OUT/cstbtruetype.o" "$OUT/hostclock.o"
     "$OUT/swiftcorepatch.o"
-    "${FE_OBJECTS[@]}"
+    "$OUT/libFoundationEssentials.dylib"
     "${PREVIEW_LINK_OBJECTS[@]}"
 )
 # `#available(iOS x, *)` answers for iOS 26.1 in iOS-triple executables

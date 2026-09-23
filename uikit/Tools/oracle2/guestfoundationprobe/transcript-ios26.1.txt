@@ -115,4 +115,45 @@ string.format.locale 12.2s
 string.format.locale.nil 2.000
 string.format.locale.args a-7
 string.format.locale.posix 123|123.89|12.500000|12|1.250000E+01|12.5| 12.5|12.2    |   12.25|+3.5|s|-12|12|ff|1.23|1.230000E-04
+string.format.locale.table en_US_POSIX 1234567|1234567.89|1234.5|1.234500E+03|1234.5
+string.format.locale.table en_US 1,234,567|1,234,567.89|1,234.5|1.234500E+03|1,234.5
+string.format.locale.table fr_FR 1\u{202f}234\u{202f}567|1\u{202f}234\u{202f}567,89|1\u{202f}234,5|1,234500E+03|1\u{202f}234,5
+string.format.locale.table de_DE 1.234.567|1.234.567,89|1.234,5|1,234500E+03|1.234,5
+string.format.locale.table ja_JP 1,234,567|1,234,567.89|1,234.5|1.234500E+03|1,234.5
+string.format.locale.negative -1.234.567|-1.234.567,2
+locale en_US_POSIX identifier=en_US_POSIX language=en region=US decimal=. grouping=,
+locale.date en_US_POSIX 1 2/29/24, 5:25\u{202f}PM
+locale.date en_US_POSIX 2 Feb 29, 2024 at 5:25:09\u{202f}PM
+locale.date en_US_POSIX 3 February 29, 2024 at 5:25:09\u{202f}PM GMT
+locale.date en_US_POSIX 4 Thursday, February 29, 2024
+locale.date.pattern en_US_POSIX Thursday 29 February 2024 17:25
+locale.number en_US_POSIX 1234567.891
+locale en_US identifier=en_US language=en region=US decimal=. grouping=,
+locale.date en_US 1 2/29/24, 5:25\u{202f}PM
+locale.date en_US 2 Feb 29, 2024 at 5:25:09\u{202f}PM
+locale.date en_US 3 February 29, 2024 at 5:25:09\u{202f}PM GMT
+locale.date en_US 4 Thursday, February 29, 2024
+locale.date.pattern en_US Thursday 29 February 2024 17:25
+locale.number en_US 1,234,567.891
+locale de_DE identifier=de_DE language=de region=DE decimal=, grouping=.
+locale.date de_DE 1 29.02.24, 17:25
+locale.date de_DE 2 29.02.2024, 17:25:09
+locale.date de_DE 3 29. Februar 2024 um 17:25:09 GMT
+locale.date de_DE 4 Donnerstag, 29. Februar 2024
+locale.date.pattern de_DE Donnerstag 29 Februar 2024 17:25
+locale.number de_DE 1.234.567,891
+locale ja_JP identifier=ja_JP language=ja region=JP decimal=. grouping=,
+locale.date ja_JP 1 2024/02/29 17:25
+locale.date ja_JP 2 2024/02/29 17:25:09
+locale.date ja_JP 3 2024\u{5e74}2\u{6708}29\u{65e5} 17:25:09 GMT
+locale.date ja_JP 4 2024\u{5e74}2\u{6708}29\u{65e5} \u{6728}\u{66dc}\u{65e5}
+locale.date.pattern ja_JP \u{6728}\u{66dc}\u{65e5} 29 2\u{6708} 2024 17:25
+locale.number ja_JP 1,234,567.891
+locale fr_FR identifier=fr_FR language=fr region=FR decimal=, grouping=\u{202f}
+locale.date fr_FR 1 29/02/2024 17:25
+locale.date fr_FR 2 29 f\u{e9}vr. 2024 \u{e0} 17:25:09
+locale.date fr_FR 3 29 f\u{e9}vrier 2024 \u{e0} 17:25:09 UTC
+locale.date fr_FR 4 jeudi 29 f\u{e9}vrier 2024
+locale.date.pattern fr_FR jeudi 29 f\u{e9}vrier 2024 17:25
+locale.number fr_FR 1\u{202f}234\u{202f}567,891
 guestfoundationprobe done

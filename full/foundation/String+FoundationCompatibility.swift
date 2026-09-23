@@ -302,23 +302,14 @@ internal struct _FoundationGuestNumberStyle {
     var decimal: String
     var grouping: String
 
-    /// A bounded, measured table, like NumberFormatter.swift's: the guest's
-    /// Locale answers "." and "," for every identifier, so the separators
-    /// the simulator wrote are recorded per language. en_US_POSIX's number
-    /// pattern has no grouping ("1234567"); fr uses U+202F and ",", de "."
-    /// and ","; everything else is written as en_US ("1,234.5").
+    /// The locale's own separators (ICU data through
+    /// FoundationInternationalization), except that en_US_POSIX's number
+    /// pattern has no grouping although its groupingSeparator is ","
+    /// (measured "1234567"; fr_FR U+202F / ",", de_DE "." / ",").
     init(_ locale: Locale) {
+        decimal = locale.decimalSeparator ?? "."
         let identifier = String(locale.identifier.map { $0 == "-" ? "_" : $0 })
-        let language = identifier.split(separator: "_").first.map(String.init) ?? identifier
-        if identifier.lowercased().contains("posix") {
-            decimal = "."; grouping = ""
-        } else if language == "fr" {
-            decimal = ","; grouping = "\u{202F}"
-        } else if language == "de" {
-            decimal = ","; grouping = "."
-        } else {
-            decimal = "."; grouping = ","
-        }
+        grouping = identifier == "en_US_POSIX" ? "" : (locale.groupingSeparator ?? "")
     }
 
     /// Groups an ASCII rendering ("-1234567.891", "1.23E+04") and localizes
