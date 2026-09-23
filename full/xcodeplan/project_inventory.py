@@ -1315,6 +1315,23 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             base_record["files"] = [dict(item) for item in evaluation.files]
             base_record["includes"] = [dict(item) for item in evaluation.includes]
             base_record["assignment_count"] = evaluation.assignment_count
+            identity = sorted(
+                f"{item['path']}:{item['line']}:{item['key']}"
+                for item in evaluation.conditional
+                if self._product_identity_setting_key(item["key"]) is not None
+            )
+            if identity:
+                raise PlanError(
+                    "cannot determine product identity with conditional build settings: "
+                    + ", ".join(identity)
+                )
+            if evaluation.conditional:
+                base_record["conditional_assignments"] = [
+                    dict(item) for item in evaluation.conditional
+                ]
+                base_record["destination_conditional_keys"] = sorted(
+                    {item["key"] for item in evaluation.conditional}
+                )
 
         # PBX buildSettings is one dictionary layer.  References to the same
         # setting or $(inherited) bind to the value below this layer; references
