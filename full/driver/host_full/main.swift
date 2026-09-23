@@ -328,6 +328,15 @@ if ResourceIO.readFile(hostFallbackFontDir + "/DejaVuSans.ttf") != nil {
     hostWarn("host_full: no fallback face in \(hostFallbackFontDir); unharvested glyphs will be blank")
 }
 
+// HOST_FULL_BREAK_LOG=1: UIKit's "Will attempt to recover by breaking
+// constraint" log, from the engine's own break decisions.
+if hostEnv("HOST_FULL_BREAK_LOG") == "1" {
+    OpenUIKitRuntime.constraintBreakObserver = { broken, set in
+        hostWarn("HOST_FULL_BREAK \(broken)")
+        for c in set { hostWarn("    exclusive \(c)") }
+    }
+}
+
 func reportInkMisses() {
     let missed = GlyphInkTable.missedKeys.sorted()
     print("HOST_FULL_INK_MISSES \(missed.count)" + (missed.isEmpty ? "" : ": " + missed.joined(separator: " ")))

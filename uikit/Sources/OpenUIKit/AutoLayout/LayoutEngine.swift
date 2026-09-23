@@ -477,6 +477,7 @@ enum LayoutEngine {
                         .filter { !$0._brokenInEngine }
                         .sorted { (appOrder[ObjectIdentifier($0)] ?? 0) < (appOrder[ObjectIdentifier($1)] ?? 0) }
                     let victim = breakVictim(among: conflict + [k], root: root)
+                    OpenUIKitRuntime.constraintBreakObserver?(victim, conflict + [k])
                     if victim === k {
                         markBroken(k, kc)
                     } else if let vc = appCassowary[ObjectIdentifier(victim)] {
