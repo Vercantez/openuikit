@@ -559,6 +559,55 @@ NS_SWIFT_NAME(UIPickerViewDelegateObjC) @protocol UIPickerViewDelegate <NSObject
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component;
 @end
 
+#pragma mark - Collection views (eidolon-flowlayout)
+
+/* UICollectionViewLayout.h / UICollectionViewFlowLayout.h /
+ * UICollectionView.h of the iPhoneSimulator26.1 SDK: the enums and the three
+ * protocols Eidolon's ARCollectionViewMasonryLayout 2.0.0 and its app code
+ * use. OpenUIKitObjCBridge wraps an object conforming to them for OpenUIKit's
+ * Swift UICollectionView (UICollectionViewObjCBridge.swift); its `delegate` /
+ * `dataSource` getters hand the original object back. */
+@class UICollectionView, UICollectionViewLayout, UICollectionViewCell, UICollectionReusableView;
+
+typedef NS_ENUM(NSInteger, UICollectionViewScrollDirection) {
+    UICollectionViewScrollDirectionVertical,
+    UICollectionViewScrollDirectionHorizontal
+} NS_SWIFT_NAME(UICollectionViewScrollDirectionObjC);
+
+typedef NS_ENUM(NSUInteger, UICollectionElementCategory) {
+    UICollectionElementCategoryCell,
+    UICollectionElementCategorySupplementaryView,
+    UICollectionElementCategoryDecorationView,
+} NS_SWIFT_NAME(UICollectionElementCategoryObjC);
+
+NS_SWIFT_NAME(UICollectionViewDataSourceObjC) @protocol UICollectionViewDataSource <NSObject>
+@required
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section;
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+@optional
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView;
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath;
+@end
+
+NS_SWIFT_NAME(UICollectionViewDelegateObjC) @protocol UICollectionViewDelegate <UIScrollViewDelegate>
+@optional
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath;
+@end
+
+NS_SWIFT_NAME(UICollectionViewDelegateFlowLayoutObjC) @protocol UICollectionViewDelegateFlowLayout <UICollectionViewDelegate>
+@optional
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
+@end
+
 NS_ASSUME_NONNULL_END
 
 #endif /* OPENUIKIT_OBJC_SUPPORT_H */
