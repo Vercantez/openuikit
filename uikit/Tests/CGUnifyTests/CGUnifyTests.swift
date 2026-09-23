@@ -11,6 +11,7 @@
 #if canImport(CoreGraphics)
 import XCTest
 import CoreGraphics
+import QuartzCore
 import UIKit
 import OpenUIKitCGUnifyFixtures
 
@@ -64,6 +65,34 @@ final class CGUnifyTests: XCTestCase {
             }
             XCTAssertEqual(actual.count, expected.count, "\(backend)")
         }
+    }
+
+    /// Core Animation is QuartzCore's (phase 3): the class names and
+    /// hierarchy, CAShapeLayer's defaults, a backing layer that reads and
+    /// writes its view, the mask's superlayer, and `render(in:)` of a
+    /// standalone layer tree drawn by the port -- all as iOS 26.1 reports.
+    /// Before phase 3 the scenario did not compile (`CAShapeLayer`,
+    /// `CATransform3DIdentity`, `affineTransform()` unknown through
+    /// `import UIKit`; OpenUIKit's CALayer was a different class).
+    @MainActor
+    func testQuartzTranscriptMatchesIOS26_1() throws {
+        let expected = try oracle(sections: ["quartzcore", "quartzcore render"])
+        let actual = cgUnifyQuartzTranscript()
+        XCTAssertFalse(expected.isEmpty)
+        for (index, pair) in zip(expected, actual).enumerated() where pair.0 != pair.1 {
+            XCTFail("line \(index): expected \(pair.0)\n                 got \(pair.1)")
+        }
+        XCTAssertEqual(actual.count, expected.count)
+    }
+
+    /// The port's Core Animation names are QuartzCore's own classes.
+    func testPortCoreAnimationNamesAreQuartzCore() {
+        XCTAssertTrue(OpenUIKit.CALayer.self == QuartzCore.CALayer.self)
+        XCTAssertTrue(OpenUIKit.CAGradientLayer.self == QuartzCore.CAGradientLayer.self)
+        XCTAssertTrue(OpenUIKit.CABasicAnimation.self == QuartzCore.CABasicAnimation.self)
+        XCTAssertTrue(OpenUIKit.CATransaction.self == QuartzCore.CATransaction.self)
+        XCTAssertTrue(OpenUIKit.CATransform3D.self == QuartzCore.CATransform3D.self)
+        XCTAssertTrue(OpenUIKit.CACornerMask.self == QuartzCore.CACornerMask.self)
     }
 
     /// A session whose code never asks for the CGContext keeps the port's

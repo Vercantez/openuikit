@@ -52,6 +52,12 @@
 #if canImport(ImageIO)
 @_exported import ImageIO
 #endif
+// cg-unify phase 3: Apple's `import UIKit` re-exports QuartzCore too
+// (reexports-ios26.1.json: `CADisplayLink`, `CATransform3DIdentity`), and
+// OpenUIKit's Core Animation types are QuartzCore's own there.
+#if canImport(QuartzCore)
+@_exported import QuartzCore
+#endif
 #endif
 // iOS 26.1 (ios-oss-launch3): a file that imports only UIKit can name
 // UserNotifications types (`UNAuthorizationStatus` compiles with

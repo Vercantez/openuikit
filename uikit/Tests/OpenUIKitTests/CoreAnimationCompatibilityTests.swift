@@ -4,7 +4,9 @@ import XCTest
 private typealias PortableLayer = OpenUIKit.CALayer
 private typealias PortableGradientLayer = OpenUIKit.CAGradientLayer
 private typealias PortableBasicAnimation = OpenUIKit.CABasicAnimation
-private typealias PortableTransaction = OpenUIKit.CATransaction
+// The port's transaction model (QuartzCore's CATransaction drives it on Apple
+// toolchains; these tests exercise the model and its test hooks directly).
+private typealias PortableTransaction = OpenUIKit._OUKTransaction
 private typealias PortableCGColor = OpenUIKit.CGColor
 
 #if !os(Linux)
@@ -444,11 +446,16 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         mask.backgroundColor = PortableCGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1)
         gradient.mask = mask
 
+#if !canImport(CoreGraphics)
+        // OpenUIKit's own layer detaches a mask from a sublayer tree; with
+        // QuartzCore (Apple toolchains, cg-unify phase 3) a mask that has a
+        // superlayer is undefined behaviour per CALayer.h, so not asserted.
         let previousParent = PortableLayer()
         previousParent.addSublayer(mask)
         XCTAssertTrue(mask.superlayer === previousParent)
         gradient.mask = mask
         XCTAssertNil(mask.superlayer, "installing a mask removes it from a sublayer tree")
+#endif
 
         let root = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 8))
         root.layer.addSublayer(gradient)
@@ -480,12 +487,21 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
             XCTAssertEqual(alpha(13), 0)
         }
         XCTAssertTrue(gradient.mask === mask)
+#if canImport(CoreGraphics)
+        // QuartzCore (cg-unify phase 3) makes the masked layer the mask's
+        // superlayer; the mask is still not one of its sublayers.
+        XCTAssertTrue(mask.superlayer === gradient)
+        XCTAssertFalse(gradient.sublayers?.contains { $0 === mask } ?? false)
+#else
         XCTAssertNil(mask.superlayer, "a mask is retained but is not a sublayer")
+#endif
 
+#if !canImport(CoreGraphics)
         let newOwner = PortableLayer()
         newOwner.mask = mask
         XCTAssertNil(gradient.mask, "a mask layer has only one owning layer")
         XCTAssertTrue(newOwner.mask === mask)
+#endif
     }
 
     func testReplacementGetsFreshWorkIdentityAcrossTransactions() {
@@ -571,7 +587,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
 
         var completionCalls = 0
         weak var releasedLayer: PortableLayer?
-        do {
+        autoreleasepool {
             var layer: PortableLayer? = PortableLayer()
             releasedLayer = layer
             PortableTransaction.begin()
@@ -584,6 +600,11 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
             PortableTransaction.commit()
             layer = nil
         }
+#if canImport(CoreGraphics)
+        // QuartzCore's implicit transaction retains a mutated layer until it
+        // commits (the run loop would); commit it.
+        CATransaction.flush()
+#endif
         XCTAssertNil(releasedLayer)
         XCTAssertEqual(OpenUIKitRuntime.animationWorkDeadline, -.infinity)
         PortableTransaction.flush()

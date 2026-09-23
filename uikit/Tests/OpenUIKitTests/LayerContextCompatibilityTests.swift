@@ -10,7 +10,7 @@ private typealias PortableColor = OpenUIKit.CGColor
 #if !os(Linux)
 @MainActor
 #endif
-private final class LayerLayoutDelegateProbe: OpenUIKit.CALayerDelegate {
+private final class LayerLayoutDelegateProbe: NSObject, OpenUIKit.CALayerDelegate {
     private(set) var layers: [PortableLayer] = []
 
     func layoutSublayers(of layer: PortableLayer) {
@@ -77,9 +77,24 @@ final class LayerContextCompatibilityTests: XCTestCase {
     }
 
     func testFilterStorageOpacityAndBoundedKeyValueCompatibility() throws {
+#if canImport(CoreGraphics)
+        // QuartzCore's CALayer (cg-unify phase 3) resolves
+        // `filters.<name>.<input>` through the filter's `name`, as with a
+        // CAFilter; the token is a key-value object.
+        final class FilterToken: NSObject {
+            let tokenName: String
+            var inputs: [String: Any] = [:]
+            init(description: String) { tokenName = description }
+            override var description: String { tokenName }
+            @objc var name: String { tokenName }
+            override func setValue(_ value: Any?, forKey key: String) { inputs[key] = value }
+            override func value(forKey key: String) -> Any? { key == "name" ? tokenName : inputs[key] }
+        }
+#else
         struct FilterToken: CustomStringConvertible {
             let description: String
         }
+#endif
 
         let layer = PortableLayer()
         let gaussian = FilterToken(description: "gaussianBlur")
@@ -396,11 +411,15 @@ final class LayerContextCompatibilityTests: XCTestCase {
         back.removeFromSuperlayer()
         XCTAssertNil(root.sublayers, "UIKit represents an empty layer list as nil")
 
+#if !canImport(CoreGraphics)
         // A parent cannot be inserted below one of its own descendants.
+        // (OpenUIKit's own layer rejects it; QuartzCore -- the layer on Apple
+        // toolchains, cg-unify phase 3 -- raises CALayerInvalid, as iOS does.)
         root.addSublayer(front)
         front.addSublayer(root)
         XCTAssertNil(root.superlayer)
         XCTAssertNil(front.sublayers)
+#endif
     }
 
     func testBackingLayerVisualStateForwardsToItsView() {

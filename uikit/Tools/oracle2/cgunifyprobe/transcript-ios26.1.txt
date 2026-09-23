@@ -56,3 +56,19 @@ pixels 128,0,0,128 0,0,0,0
 UIImage(cgImage:) size=(2.0, 1.0) scale=1.0
 UIImage(cgImage:scale:2) size=(1.0, 0.5) scale=2.0
 round trip pixels 128,0,0,128 0,0,0,0
+## quartzcore
+classes CALayer CAGradientLayer:CALayer CAShapeLayer:CALayer
+CATransform3DIsIdentity(CATransform3DIdentity) true
+CATransaction.animationDuration() 0.25
+CAShapeLayer fillColor model=rgb n=4 [0 0 0 1.0] space=SRGB lineWidth 1.0
+CALayer().needsLayout() false
+arbitrary key 2.5
+view.layer.delegate === view true needsLayout true
+view.layer bounds=(0.0, 0.0, 30.0, 40.0) position=(25.0, 40.0) frame=(10.0, 20.0, 30.0, 40.0)
+view -> layer backgroundColor model=rgb n=4 [1.0 0 0 1.0] space=ExtendedSRGB opacity 0.5 hidden true
+layer -> view alpha 0.25 hidden false frame (75.0, 170.0, 50.0, 60.0)
+view.transform -> layer.affineTransform [2.0 0 0 3.0 0 0]
+mask.superlayer === owner true sublayers 0
+## quartzcore render
+row0 255,0,0,255 255,0,0,255 0,0,255,255 0,0,255,255
+row1 255,0,0,255 255,0,0,255 255,0,0,255 255,0,0,255

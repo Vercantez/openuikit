@@ -7,4 +7,5 @@ import UIKit
 MainActor.assumeIsolated {
     for line in cgUnifyTypesTranscript() { print(line) }
     for line in cgUnifyDrawingTranscript() { print(line) }
+    for line in cgUnifyQuartzTranscript() { print(line) }
 }

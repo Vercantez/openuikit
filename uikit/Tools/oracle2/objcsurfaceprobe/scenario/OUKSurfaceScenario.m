@@ -16,6 +16,9 @@
 typedef double CGFloat;
 #else
 @import CoreGraphics;
+/* cg-unify phase 3: on Apple toolchains CALayer is QuartzCore's own (as
+ * <UIKit/UIKit.h> brings it in on iOS). */
+@import QuartzCore;
 #import "UIKitObjCSupport.h"
 #endif
 #import "OpenUIKit-Swift.h"

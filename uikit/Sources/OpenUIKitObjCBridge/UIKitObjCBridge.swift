@@ -459,6 +459,10 @@ extension UIColor {
     }
 }
 
+#if !canImport(QuartzCore)
+// Where OpenUIKit's own CALayer is the Core Animation layer. On Apple
+// toolchains CALayer is QuartzCore's, whose colour properties are these
+// selectors already (cg-unify phase 3).
 extension CALayer {
     @objc(borderColor) public var __objc_borderColor: CoreGraphics.CGColor? {
         get { borderColor } set { borderColor = newValue }
@@ -470,6 +474,7 @@ extension CALayer {
         get { shadowColor } set { shadowColor = newValue }
     }
 }
+#endif
 
 // MARK: - UIView.layer, font properties
 

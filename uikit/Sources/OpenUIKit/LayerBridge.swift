@@ -897,7 +897,7 @@ public enum LayerBridge {
                                   locations: [CGFloat]? = nil) {
         let n = colors.count
         var locs: [QZFloat]
-        if let requested = locations ?? layer.locations, requested.count == n {
+        if let requested = locations ?? layer._locationValues, requested.count == n {
             locs = requested.map { QZFloat(Swift.min(Swift.max($0, 0), 1)) }
         } else {
             locs = (0..<n).map { QZFloat($0) / QZFloat(n - 1) }
@@ -942,7 +942,7 @@ public enum LayerBridge {
             shadowOpacity: v.layer.shadowOpacity,
             shadowRadius: v.layer.shadowRadius,
             shadowOffset: v.layer.shadowOffset,
-            locations: (v.layer as? CAGradientLayer)?.locations,
+            locations: (v.layer as? CAGradientLayer)?._locationValues,
             cornerRadii: v.layer._cornerRadii)
         // CA removes a completed animation from the layer, so the model
         // wins afterwards. Applying finished records with u=1 pins

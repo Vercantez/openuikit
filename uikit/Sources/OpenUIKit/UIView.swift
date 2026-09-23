@@ -51,6 +51,7 @@ public struct UIRectEdge: OptionSet, Sendable {
 /// Core Animation names corners in the layer's local coordinate system.
 /// UIView backing layers are not geometry-flipped, so minY is the visual top
 /// in OpenUIKit's UIKit-style, top-left coordinate space.
+#if !canImport(CoreGraphics)  // QuartzCore's own CACornerMask otherwise (QuartzCoreUnification.swift)
 public struct CACornerMask: OptionSet, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
@@ -66,11 +67,17 @@ public struct CACornerMask: OptionSet, Sendable {
     ]
 }
 
+#endif
 public enum UIViewContentMode: Sendable {
     case scaleToFill, scaleAspectFit, scaleAspectFill, redraw, center
     case top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight
 }
 
+#if !canImport(CoreGraphics)
+// OpenUIKit's own Core Animation layer, for Linux ELF and the Mach-O guest.
+// Where Apple's frameworks exist CALayer / CAGradientLayer / CALayerDelegate
+// are QuartzCore's, and the port's state for them lives in
+// QuartzCoreUnification.swift (cg-unify phase 3).
 /// Class-only subset of QuartzCore's layer delegate used for layout. Core
 /// Animation makes this callback optional; a default implementation gives
 /// portable Swift delegates the same adopt-only-what-you-use ergonomics.
@@ -480,7 +487,7 @@ open class CALayer: NSObject {
 
     isolated deinit {
         for record in _explicitAnimations {
-            CATransaction._removeAnimation(workID: record.workID)
+            _OUKTransaction._removeAnimation(workID: record.workID)
         }
     }
 
@@ -687,6 +694,7 @@ public final class CAGradientLayer: CALayer {
     }
     private var storedColorObjects: [CGColor]?
     var _colorValues: [CanvasColor]? { didSet { storedColorObjects = nil } }
+    var _locationValues: [CGFloat]? { locations }
     public var locations: [CGFloat]?
     public var startPoint = CGPoint(x: 0.5, y: 0)
     public var endPoint = CGPoint(x: 0.5, y: 1)
@@ -697,6 +705,7 @@ public final class CAGradientLayer: CALayer {
 #endif
 }
 
+#endif
 /// Internal hierarchy policy for UIKit containers whose public contract does
 /// not permit arbitrary direct children. UIView's public insertion methods
 /// consult it; framework implementation paths can install private children
@@ -1533,7 +1542,7 @@ open class UIView: UIResponder, CALayerDelegate {
                 $0.viewIfLoaded === self ? $0 : nil
             }
             controller?.viewWillLayoutSubviews()
-            layer.layoutIfNeeded()
+            layer.layoutIfNeeded()  // the port's pass on Apple toolchains too (QuartzCoreUnification.swift)
             controller?.viewDidLayoutSubviews()
         }
         for s in subviews { s._layoutSubtree() }
