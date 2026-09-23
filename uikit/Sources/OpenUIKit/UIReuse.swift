@@ -46,6 +46,11 @@ final class ReuseRegistry<V: ReusableView> {
         factories[identifier] = factory
     }
 
+    /// A nil class/nib registration removes the identifier's factory.
+    func unregister(identifier: String) {
+        factories[identifier] = nil
+    }
+
     /// A pooled view (reset via `prepareForReuse`) if one is waiting, else a
     /// freshly built one if the identifier is registered, else nil (UIKit's
     /// `dequeueReusableCell(withIdentifier:)` returns nil the same way).

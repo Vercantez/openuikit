@@ -458,6 +458,40 @@ open class UICollectionView: UIScrollView {
         }
     }
 
+    /// UIKit's nib registration (and a storyboard collection view's
+    /// prototype cells, `UICollectionViewCellNibDict`): each dequeue
+    /// instantiates the nib and uses its first UICollectionViewCell. A nil nib
+    /// removes the registration, as in UIKit.
+    public func register(_ nib: UINib?, forCellWithReuseIdentifier identifier: String) {
+        guard let nib else { cellRegistry.unregister(identifier: identifier); return }
+        cellRegistry.register(identifier: identifier) { id in
+            let objects = nib.instantiate(withOwner: nil, options: nil)
+            guard let cell = objects.compactMap({ $0 as? UICollectionViewCell }).first else {
+                fatalError("UINib '\(nib.nibName)' registered for cell identifier "
+                           + "'\(id)' contains no UICollectionViewCell")
+            }
+            cell.reuseIdentifier = id
+            return cell
+        }
+    }
+
+    /// Supplementary-view nib registration (a storyboard collection view's
+    /// section header/footer prototypes, `UICollectionViewSupplementaryViewNibDict`).
+    public func register(_ nib: UINib?, forSupplementaryViewOfKind elementKind: String,
+                         withReuseIdentifier identifier: String) {
+        guard let nib else { supplementaryRegistry(elementKind).unregister(identifier: identifier); return }
+        supplementaryRegistry(elementKind).register(identifier: identifier) { id in
+            let objects = nib.instantiate(withOwner: nil, options: nil)
+            guard let view = objects.compactMap({ $0 as? UICollectionReusableView }).first else {
+                fatalError("UINib '\(nib.nibName)' registered for '\(elementKind)' identifier "
+                           + "'\(id)' contains no UICollectionReusableView")
+            }
+            view.reuseIdentifier = id
+            view.elementKind = elementKind
+            return view
+        }
+    }
+
     public func dequeueReusableCell(withReuseIdentifier identifier: String,
                                     for indexPath: IndexPath) -> UICollectionViewCell {
         guard let view = cellRegistry.dequeue(identifier) as? UICollectionViewCell else {

@@ -21,6 +21,32 @@ extension NibDecoder {
     func apply(_ object: NibArchive.Object, to target: AnyObject) {
         if let view = target as? UIView {
             applyView(object, to: view)
+        } else if let flow = target as? UICollectionViewFlowLayout {
+            applyFlowLayout(object, to: flow)
+        }
+    }
+
+    /// A storyboard flow layout's archived sizes (IB's `collectionViewFlowLayout`).
+    func applyFlowLayout(_ object: NibArchive.Object, to flow: UICollectionViewFlowLayout) {
+        for pair in object.values {
+            switch pair.key {
+            case "UIItemSize":
+                if let n = numbers(pair.value, count: 2) { flow.itemSize = CGSize(width: n[0], height: n[1]) }
+            case "UIHeaderReferenceSize":
+                if let n = numbers(pair.value, count: 2) { flow.headerReferenceSize = CGSize(width: n[0], height: n[1]) }
+            case "UIFooterReferenceSize":
+                if let n = numbers(pair.value, count: 2) { flow.footerReferenceSize = CGSize(width: n[0], height: n[1]) }
+            case "UISectionInset":
+                if let n = numbers(pair.value, count: 4) {
+                    flow.sectionInset = UIEdgeInsets(top: n[0], left: n[1], bottom: n[2], right: n[3])
+                }
+            case "UIMinimumLineSpacing":
+                if let v = cgFloat(pair.value) { flow.minimumLineSpacing = v }
+            case "UIMinimumInteritemSpacing":
+                if let v = cgFloat(pair.value) { flow.minimumInteritemSpacing = v }
+            default:
+                UINib.noteUnhandled("UICollectionViewFlowLayout.\(pair.key)")
+            }
         }
     }
 
@@ -372,6 +398,53 @@ extension NibDecoder {
                 return
             case "UITextAlignment", "UIContentSize", "UITextAllowsNumberPadPopover",
                  "UITextHighlightAttributes", "UIDataDetectorTypes":
+                return
+            default: break
+            }
+        }
+        if let collection = view as? UICollectionView {
+            switch pair.key {
+            case "UICollectionLayout":
+                if case .reference(let i) = pair.value, let layout = build(i) as? UICollectionViewLayout {
+                    collection.collectionViewLayout = layout
+                }
+                return
+            case "UICollectionViewCellPrototypeNibExternalObjects",
+                 "UICollectionViewSupplementaryViewPrototypeNibExternalObjects":
+                // Empty for every storyboard prototype measured (NetNewsWire).
+                guard case .reference(let i) = pair.value else { return }
+                for (_, value) in dictionaryPairs(at: i) {
+                    if let table = value as? NibDictionaryBox, !dictionaryPairs(at: table.index).isEmpty {
+                        UINib.noteUnhandled("UICollectionView.prototypeExternalObjects")
+                    }
+                }
+                return
+            case "UICollectionViewPrefetchingEnabled", "UIAllowsUserInitiatedMultipleSelection":
+                // No rendered effect (the port does not prefetch; selection
+                // gestures are host-driven).
+                return
+            case "UICollectionViewCellNibDict":
+                // A storyboard collection view's prototype cells: reuse
+                // identifier -> embedded nib (NetNewsWire Main.storyboard
+                // "FeedCell" / "Folder").
+                guard case .reference(let i) = pair.value else { return }
+                for (key, value) in dictionaryPairs(at: i) {
+                    if let identifier = key as? NibString, let nib = value as? UINib {
+                        collection.register(nib, forCellWithReuseIdentifier: identifier.value)
+                    }
+                }
+                return
+            case "UICollectionViewSupplementaryViewNibDict":
+                // "<kind>/<reuse identifier>" -> embedded nib
+                // ("UICollectionElementKindSectionHeader/Container").
+                guard case .reference(let i) = pair.value else { return }
+                for (key, value) in dictionaryPairs(at: i) {
+                    guard let composite = key as? NibString, let nib = value as? UINib,
+                          let slash = composite.value.firstIndex(of: "/") else { continue }
+                    let kind = String(composite.value[..<slash])
+                    let identifier = String(composite.value[composite.value.index(after: slash)...])
+                    collection.register(nib, forSupplementaryViewOfKind: kind, withReuseIdentifier: identifier)
+                }
                 return
             default: break
             }

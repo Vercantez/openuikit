@@ -43,10 +43,15 @@ open class UICollectionViewController: UIViewController,
     /// `installsStandardGestureForInteractiveMovement` but neither the layout
     /// nor `useLayoutToLayoutNavigationTransitions`, and OpenUIKit has no
     /// archive reader to consult for the two it does carry.
+    ///
+    /// From a storyboard (`UINibCoder`) the controller state is decoded like
+    /// any controller's (`nibName` is the scene's view nib), so `loadView`
+    /// finds the archived collection view. Before, the coder was dropped and
+    /// a storyboard collection controller (NetNewsWire's feed list) built a
+    /// blank programmatic collection with none of its prototype cells.
     public required init?(coder: NSCoder) {
-        _ = coder
         initialLayout = nil
-        super.init()
+        super.init(coder: coder)
     }
 
     open var clearsSelectionOnViewWillAppear = true
@@ -98,7 +103,14 @@ open class UICollectionViewController: UIViewController,
     /// neither wired as data source nor adopted as `collectionView`).
     open override func loadView() {
         // A storyboard collection view controller's view is its view nib.
-        if _loadStoryboardView() { return }
+        // Its root view is the archived UICollectionView itself (UIKit's
+        // collectionViewController scene; NetNewsWire's feed list), which
+        // becomes `collectionView`. Data source and delegate come from the
+        // storyboard's outlet connections, as archived.
+        if _loadStoryboardView() {
+            if let collection = view as? UICollectionView { _collectionView = collection }
+            return
+        }
         // vc.loaded/window: wrapper and collection both [0,0,393,852] on
         // the measured phone; use the host screen bounds, not a phone constant.
         let wrapper = UICollectionViewControllerWrapperView(frame: UIScreen.main.bounds)
@@ -140,9 +152,15 @@ open class UICollectionViewController: UIViewController,
     // respondsSections is false). Swift protocol defaults supply the same
     // collection-view fallback of one section while remaining overridable.
     open func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
+    /// MEASURED Tools/oracle2/cvcdatasourceprobe, iPhone 16 / iOS 26.1:
+    /// UIKit's controller answers this itself with 0 (responds true, direct
+    /// call 0; one section, no cells). A storyboard collection controller is
+    /// its collection's data source until the app installs its own, and the
+    /// view's -setFrame: already prepares the layout (NetNewsWire replaces it
+    /// with a diffable data source in viewDidLoad).
     open func collectionView(_ collectionView: UICollectionView,
                              numberOfItemsInSection section: Int) -> Int {
-        fatalError("UICollectionViewController subclasses must implement collectionView(_:numberOfItemsInSection:)")
+        0
     }
     open func collectionView(_ collectionView: UICollectionView,
                              cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

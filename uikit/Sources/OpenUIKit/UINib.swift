@@ -448,6 +448,14 @@ public enum UINibClassRegistry {
         "UITableViewCell": { UITableViewCell() },
         "UITableViewCellContentView": { UITableViewCellContentView() },
         "UICollectionViewCell": { UICollectionViewCell() },
+        // A storyboard collection view (NetNewsWire's feed list). Built with
+        // a placeholder flow layout; the archived `UICollectionLayout`
+        // replaces it while the view's keys are applied (UINibKeys.swift).
+        "UICollectionView": {
+            UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        },
+        "UICollectionViewFlowLayout": { UICollectionViewFlowLayout() },
+        "UICollectionReusableView": { UICollectionReusableView() },
         // iOS 7-10 top/bottom layout guides, archived as hidden views in
         // storyboards saved before safe areas (all of Eidolon's scenes).
         "_UILayoutGuide": { _UILayoutGuide() },
