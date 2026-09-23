@@ -2141,6 +2141,13 @@ def emit_tree(
             "#ifndef OPENUIKIT_ROUTE_B_UIKIT_H\n"
             "#define OPENUIKIT_ROUTE_B_UIKIT_H\n"
             "#import <Foundation/Foundation.h>\n"
+            "/* Apple's <UIKit/UIKit.h> brings in CoreGraphics and QuartzCore, and\n"
+            " * OpenUIKit's CALayer family IS QuartzCore's on Apple toolchains\n"
+            " * (docs/agent_reports/cg-unify.md). */\n"
+            "#if __has_include(<QuartzCore/QuartzCore.h>)\n"
+            "#import <CoreGraphics/CoreGraphics.h>\n"
+            "#import <QuartzCore/QuartzCore.h>\n"
+            "#endif\n"
             '#import "OpenUIKit-Swift.h"\n'
             '#import "UIKitObjCSupport.h"\n'
             "#if !__swift__\n"

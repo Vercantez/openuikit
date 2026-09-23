@@ -12,7 +12,10 @@ import class ObjectiveC.NSObject
 #endif
 
 // MARK: - Core Animation 3D (SplashViewController.swift:116)
+// QuartzCore's own CATransform3D / CATransform3DMakeScale where Apple's
+// frameworks exist (cg-unify phase 3).
 
+#if !canImport(CoreGraphics)
 public struct CATransform3D: Equatable, Sendable {
     public var m11: CGFloat = 1, m12: CGFloat = 0, m13: CGFloat = 0, m14: CGFloat = 0
     public var m21: CGFloat = 0, m22: CGFloat = 1, m23: CGFloat = 0, m24: CGFloat = 0
@@ -28,6 +31,7 @@ public func CATransform3DMakeScale(_ sx: CGFloat, _ sy: CGFloat, _ sz: CGFloat) 
     t.m33 = sz
     return t
 }
+#endif
 
 // MARK: - Empty progress style
 // NSLayoutConstraint() lives on the class (NSLayoutConstraint.swift) now

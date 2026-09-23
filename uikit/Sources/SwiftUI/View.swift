@@ -1603,7 +1603,7 @@ private final class _SwiftUITrimmedCircleStrokeView: UIView {
                 startAngle: lower * 2 * .pi,
                 endAngle: upper * 2 * .pi,
                 clockwise: true
-            ).cgPath
+            )._path
             canvas.stroke(
                 path,
                 color: color,

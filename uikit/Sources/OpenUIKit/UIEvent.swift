@@ -404,7 +404,7 @@ open class UIWindow: UIView {
         UIView._stepAnimationCompletions(to: timestamp)
         // Explicit Core Animation transactions share the same deterministic
         // host clock and complete after presentation-affecting work settles.
-        CATransaction._stepCompletions(to: timestamp)
+        _OUKTransaction._stepCompletions(to: timestamp)
         // Caret blink of the focused text editor advances on the same host
         // clock (text-input module; additive like the steppers above).
         UITextInputState._stepCaretBlink(to: timestamp)

@@ -475,6 +475,23 @@ public final class Canvas: NSObject {
         return image
     }
 
+    /// The premultiplied RGBA8 backing the Quartz backend renders into, when
+    /// another bitmap context may share it (cg-unify: UIKit's CGContext).
+    public func _sharedPremultipliedBacking() -> (data: UnsafeMutableRawPointer, bytesPerRow: Int)? {
+        (backend as? QuartzBackend)?._sharedBacking
+    }
+
+    /// Makes pixels drawn into the shared backing by another context visible
+    /// in `bitmap`.
+    public func _syncSharedBackingToBitmap() {
+        (backend as? QuartzBackend)?._syncAllFromBacking()
+    }
+
+    /// Replaces the CTM (as a concatenation, so both backends follow).
+    public func _setCTM(_ t: CGAffineTransform) {
+        concatenate(t.concatenating(ctm.inverted()))
+    }
+
     public func save() { _save(); backend.saveState() }
     public func restore() { _restore(); backend.restoreState() }
     /// Concatenate t onto the CTM (new user space = t applied before current CTM).

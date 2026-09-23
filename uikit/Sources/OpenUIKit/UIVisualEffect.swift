@@ -512,7 +512,7 @@ private func _openCAFilterMask(_ bitmap: Bitmap) -> CanvasBackdropFilterMask? {
 /// itself; a second class of that name is undefined behaviour in objc4
 /// ("Class CAFilter is implemented in both …", printed by every Darwin
 /// `swift test`), so the port's class is `OUKCAFilter` there.
-#if canImport(ObjectiveC) && !canImport(QuartzCore)
+#if canImport(ObjectiveC) && !canImport(CoreGraphics)
 @objc(CAFilter)
 #elseif canImport(ObjectiveC)
 @objc(OUKCAFilter)
@@ -654,6 +654,35 @@ extension _OpenCAFilter: CustomStringConvertible {}
 /// Name-bearing compatibility token for the standard backdrop filter. Public
 /// code inspects these values through CALayer.filters and string interpolation;
 /// the renderer resolves the retained semantic radius below.
+#if canImport(CoreGraphics)
+/// With QuartzCore's CALayer (cg-unify phase 3) the token is a key-value
+/// object with a `name`, as a CAFilter is: QuartzCore resolves
+/// `filters.gaussianBlur.inputRadius` by the filter's name and stores the
+/// input on it (MEASURED macOS 26 QuartzCore: set then read 18.25).
+private final class _OpenVisualEffectFilterToken: NSObject {
+    private let filterName: String
+    let blurRadius: CGFloat
+    private var inputs: [String: Any] = [:]
+
+    init(_ description: String, blurRadius: CGFloat = 20) {
+        self.filterName = description
+        self.blurRadius = blurRadius
+        super.init()
+    }
+
+    override var description: String { filterName }
+    @objc var name: String { filterName }
+
+    override func setValue(_ value: Any?, forKey key: String) {
+        guard key != "name" else { return }
+        inputs[key] = value
+    }
+
+    override func value(forKey key: String) -> Any? {
+        key == "name" ? filterName : inputs[key]
+    }
+}
+#else
 private final class _OpenVisualEffectFilterToken: CustomStringConvertible {
     let description: String
     let blurRadius: CGFloat
@@ -663,6 +692,7 @@ private final class _OpenVisualEffectFilterToken: CustomStringConvertible {
         self.blurRadius = blurRadius
     }
 }
+#endif
 
 @available(iOS 8.0, *)
 @available(watchOS, unavailable)

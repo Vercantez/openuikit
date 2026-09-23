@@ -106,6 +106,34 @@ public func cgUnifyTypesTranscript() -> [String] {
     out.append("view.transform=scale2 frame=\(view2.frame) transform=\(cgUnifyDescribe(view2.transform))")
     out.append("identity.isIdentity \(CGAffineTransform.identity.isIdentity)")
 
+    out.append("## path")
+    func elements(_ path: CGPath) -> String {
+        var kinds: [String] = []
+        path.applyWithBlock { element in
+            let e = element.pointee
+            switch e.type {
+            case .moveToPoint: kinds.append("m\(e.points[0])")
+            case .addLineToPoint: kinds.append("l\(e.points[0])")
+            case .addQuadCurveToPoint: kinds.append("q\(e.points[1])")
+            case .addCurveToPoint: kinds.append("c\(e.points[2])")
+            case .closeSubpath: kinds.append("z")
+            @unknown default: kinds.append("?")
+            }
+        }
+        return kinds.joined(separator: " ")
+    }
+    let rectPath = UIBezierPath(rect: CGRect(x: 1, y: 2, width: 3, height: 4))
+    out.append("rect.cgPath \(elements(rectPath.cgPath))")
+    out.append("oval.cgPath \(elements(UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: 4, height: 2)).cgPath))")
+    let ellipse = CGPath(ellipseIn: CGRect(x: 0, y: 0, width: 4, height: 2), transform: nil)
+    let wrapped = UIBezierPath(cgPath: ellipse)
+    out.append("UIBezierPath(cgPath: ellipse).bounds \(wrapped.bounds) same-elements \(elements(wrapped.cgPath) == elements(ellipse))")
+    let line = UIBezierPath()
+    line.move(to: CGPoint(x: 0, y: 0))
+    line.addLine(to: CGPoint(x: 5, y: 5))
+    line.cgPath = CGPath(rect: CGRect(x: 0, y: 0, width: 2, height: 2), transform: nil)
+    out.append("cgPath = rect -> bounds \(line.bounds) elements \(elements(line.cgPath))")
+
     out.append("## bitmap context")
     if let ctx = CGContext(data: nil, width: 2, height: 2, bitsPerComponent: 8, bytesPerRow: 0,
                            space: CGColorSpaceCreateDeviceRGB(),
