@@ -156,6 +156,12 @@ extension UITextView {
 }
 
 extension UITextField {
+    /// `id<UITextFieldDelegate>`: OpenUIKit's own @objc protocol.
+    @objc(delegate) public var __objc_delegate: UITextFieldDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(isEditing) public var __objc_isEditing: Bool { isEditing }
+    @objc(editing) public var __objc_editing: Bool { isEditing }
 }
 
 // MARK: - UIViewController

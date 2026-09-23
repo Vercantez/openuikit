@@ -387,6 +387,8 @@ extension UIWindow {
         // (MEASURED textviewinputprobe); the keyboard path does.
         if let tv = fr as? UITextView {
             tv._keyboardInsertText(text)
+        } else if let tf = fr as? UITextField {
+            tf._keyboardInsertText(text)
         } else {
             fr.insertText(text)
         }

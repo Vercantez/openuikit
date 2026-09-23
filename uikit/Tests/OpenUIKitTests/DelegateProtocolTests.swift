@@ -19,7 +19,7 @@ import XCTest
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalTextFieldDelegate: UITextFieldDelegate {}
+private final class MinimalTextFieldDelegate: NSObject, UITextFieldDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -64,7 +64,15 @@ final class DelegateDeclarationTests: XCTestCase {
     /// Every protocol in the cluster can be conformed to with NO members —
     /// the portable stand-in for ObjC's `@objc optional`.
     func testEmptyConformancesCompileAndAnswerTheDefaults() {
+#if canImport(ObjectiveC)
+        // Apple toolchain: optional @objc requirements; OpenUIKit answers the
+        // absent gate through its dispatch helper (UIKit: return allowed).
+        XCTAssertFalse(MinimalTextFieldDelegate().responds(
+            to: #selector(UITextFieldDelegate.textFieldShouldReturn(_:))))
+        XCTAssertTrue(MinimalTextFieldDelegate()._shouldReturn(UITextField()))
+#else
         XCTAssertTrue(MinimalTextFieldDelegate().textFieldShouldReturn(UITextField()))
+#endif
         XCTAssertTrue(MinimalTextViewDelegate().textViewShouldBeginEditing(UITextView()))
         XCTAssertTrue(MinimalGestureDelegate()
             .gestureRecognizerShouldBegin(UIGestureRecognizer()))
@@ -97,7 +105,7 @@ final class DelegateDeclarationTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class RecordingFieldDelegate: UITextFieldDelegate {
+private final class RecordingFieldDelegate: NSObject, UITextFieldDelegate {
     var log: [String] = []
     var allowBegin = true
     var allowEnd = true
@@ -214,7 +222,7 @@ final class TextFieldDelegateTests: XCTestCase {
         #if !os(Linux)
         @MainActor
         #endif
-        final class NoClear: UITextFieldDelegate {
+        final class NoClear: NSObject, UITextFieldDelegate {
             func textFieldShouldClear(_ textField: UITextField) -> Bool { false }
         }
         let f = UITextField()

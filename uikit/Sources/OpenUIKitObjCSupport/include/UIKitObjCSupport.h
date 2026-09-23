@@ -515,13 +515,7 @@ NS_SWIFT_NAME(UITextViewDelegateObjC) @protocol UITextViewDelegate <NSObject>
 - (void)textViewDidChangeSelection:(UITextView *)textView;
 @end
 
-NS_SWIFT_NAME(UITextFieldDelegateObjC) @protocol UITextFieldDelegate <NSObject>
-@optional
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
-- (BOOL)textFieldShouldReturn:(UITextField *)textField;
-- (void)textFieldDidEndEditing:(UITextField *)textField;
-- (void)textFieldDidBeginEditing:(UITextField *)textField;
-@end
+/* UITextFieldDelegate: OpenUIKit's own @objc protocol (OpenUIKit-Swift.h). */
 
 NS_SWIFT_NAME(UIGestureRecognizerDelegateObjC) @protocol UIGestureRecognizerDelegate <NSObject>
 @optional

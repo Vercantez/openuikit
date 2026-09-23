@@ -791,7 +791,7 @@ open class UISearchBar: UIView {
 
     /// Translates UITextField's delegate into UISearchBar's.
     @MainActor
-    final class Bridge: UITextFieldDelegate {
+    final class Bridge: _UISearchBarBridgeBase, UITextFieldDelegate {
         weak var owner: UISearchBar?
 
         func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -820,3 +820,12 @@ open class UISearchBar: UIView {
     }
     let bridge = Bridge()
 }
+
+// UITextFieldDelegate is an @objc protocol on the Apple toolchain, so its
+// conformers are NSObjects there (objc-protocols.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import class ObjectiveC.NSObject
+typealias _UISearchBarBridgeBase = NSObject
+#else
+class _UISearchBarBridgeBase {}
+#endif

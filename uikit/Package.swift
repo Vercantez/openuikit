@@ -1091,6 +1091,16 @@ let simplenoteTargets: [Target] = [
             dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
             path: "Tools/oracle2/objcprotocolprobe/scenario", publicHeadersPath: "include",
             cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    // Second protocol set (UITextFieldDelegate …): the SAME .m the iOS 26.1
+    // oracle app runs (Tools/oracle2/objcprotocolprobe2/run.sh).
+    .target(name: "OpenUIKitObjCProtocols2Fixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcprotocolprobe2/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCProtocols2Tests",
+                dependencies: ["OpenUIKitObjCProtocols2Fixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCProtocols2Tests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     .testTarget(name: "ObjCProtocolTests",
                 dependencies: ["OpenUIKitObjCProtocolFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCProtocolTests",

@@ -201,7 +201,7 @@ final class TextInputTraitsTests: XCTestCase {
         XCTAssertEqual(field.leftViewRect(forBounds: field.bounds).minY, expectedY)
     }
 
-    private final class ClearDelegate: UITextFieldDelegate {
+    private final class ClearDelegate: NSObject, UITextFieldDelegate {
         var permitsClear = false
         var clearRequests = 0
         func textFieldShouldClear(_ textField: UITextField) -> Bool {
@@ -210,7 +210,7 @@ final class TextInputTraitsTests: XCTestCase {
         }
     }
 
-    private final class ChangeOrderingDelegate: UITextFieldDelegate {
+    private final class ChangeOrderingDelegate: NSObject, UITextFieldDelegate {
         var events: [String] = []
         func textField(_ textField: UITextField,
                        shouldChangeCharactersIn range: NSRange,
@@ -254,15 +254,25 @@ final class TextInputTraitsTests: XCTestCase {
                       "programmatic content assignment does not post or emit")
 
         XCTAssertTrue(field.becomeFirstResponder())
+        // The keyboard path asks the delegate first; UIKeyInput's insertText /
+        // deleteBackward sent directly do not (MEASURED iOS 26.1,
+        // objcprotocolprobe2 "## textfield").
         delegate.events.removeAll()
-        field.insertText("C")
+        window.sendText("C")
         XCTAssertEqual(delegate.events,
                        ["shouldChange", "selection", "editingChanged", "notification"])
 
         delegate.events.removeAll()
-        field.deleteBackward()
+        window.sendKey(.backspace)
         XCTAssertEqual(delegate.events,
                        ["shouldChange", "selection", "editingChanged", "notification"])
+
+        delegate.events.removeAll()
+        field.insertText("C")
+        XCTAssertEqual(delegate.events, ["selection", "editingChanged", "notification"])
+        delegate.events.removeAll()
+        field.deleteBackward()
+        XCTAssertEqual(delegate.events, ["selection", "editingChanged", "notification"])
 
         field.text = "clear"
         delegate.events.removeAll()
@@ -508,7 +518,7 @@ final class TextInputTraitsTests: XCTestCase {
         XCTAssertEqual(offsets(attached), [0, 4], "selection offsets are UTF-16")
     }
 
-    private final class RefusingEndDelegate: UITextFieldDelegate {
+    private final class RefusingEndDelegate: NSObject, UITextFieldDelegate {
         var shouldEnd = 0
         var legacyDidEnd = 0
         var reasonDidEnd = 0
@@ -523,7 +533,7 @@ final class TextInputTraitsTests: XCTestCase {
         }
     }
 
-    private final class AllowingEndDelegate: UITextFieldDelegate {
+    private final class AllowingEndDelegate: NSObject, UITextFieldDelegate {
         var shouldEnd = 0
         var legacyDidEnd = 0
         var reasonDidEnd = 0
@@ -538,7 +548,7 @@ final class TextInputTraitsTests: XCTestCase {
         }
     }
 
-    private final class LegacyEndDelegate: UITextFieldDelegate {
+    private final class LegacyEndDelegate: NSObject, UITextFieldDelegate {
         var shouldEnd = 0
         var legacyDidEnd = 0
         func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
