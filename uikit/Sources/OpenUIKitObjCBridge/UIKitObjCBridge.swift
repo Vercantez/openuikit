@@ -147,8 +147,8 @@ extension UIScrollView {
 // MARK: - UILabel / UITextView / UITextField
 
 extension UILabel {
-    @objc(text) public var __objc_text: String? { get { text } set { text = newValue } }
-    @objc(numberOfLines) public var __objc_numberOfLines: Int { get { numberOfLines } set { numberOfLines = newValue } }
+    // text / numberOfLines are native @objc members of UILabel now
+    // (vtable-free, eidolon-first-screen.md).
 }
 
 extension UITextView {
@@ -308,8 +308,7 @@ extension UIActivityIndicatorView {
 }
 
 extension UIImageView {
-    @objc(initWithImage:) public convenience init(__objcImage image: UIImage?) { self.init(image: image) }
-    @objc(image) public var __objc_image: UIImage? { get { image } set { image = newValue } }
+    // initWithImage: / image are native @objc members of UIImageView now.
 }
 
 extension UIImage {
@@ -426,7 +425,7 @@ extension UIView {
 }
 
 extension UILabel {
-    @objc(textColor) public var __objc_textColor: UIColor? { get { textColor } set { textColor = newValue } }
+    // textColor is a native @objc member of UILabel now.
 }
 
 extension UITextField {
@@ -501,7 +500,7 @@ extension UIView {
 }
 
 extension UILabel {
-    @objc(font) public var __objc_font: UIFont? { get { font } set { font = newValue } }
+    // font is a native @objc member of UILabel now.
 }
 
 extension UITextField {

@@ -70,9 +70,23 @@ enum _UIBitmapAllocation {
     }
 }
 
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
+// UIKit's runtime name: Objective-C classes may subclass it (vtable-free,
+// ObjCSubclassing.swift; eidolon-first-screen.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIImageView)
+#endif
 @preconcurrency @MainActor
 open class UIImageView: UIView {
-    open var image: UIImage? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(image)
+#endif
+    open dynamic var image: UIImage? {
         didSet {
             guard image !== oldValue else { return }
             setNeedsDisplay()
@@ -80,7 +94,10 @@ open class UIImageView: UIView {
         }
     }
 
-    public init(image: UIImage?) {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(initWithImage:)
+#endif
+    public dynamic init(image: UIImage?) {
         super.init(frame: CGRect(origin: .zero, size: image?.size ?? .zero))
         self.image = image
         // UIKit: image views do not receive touches by default.

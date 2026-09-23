@@ -37,12 +37,20 @@ public enum NSLineBreakMode: Sendable {
     case byTruncatingHead, byTruncatingTail, byTruncatingMiddle
 }
 
+// UIKit's runtime name: Objective-C classes may subclass it (vtable-free,
+// ObjCSubclassing.swift; eidolon-first-screen.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UILabel)
+#endif
 @preconcurrency @MainActor
 open class UILabel: UIView {
     /// Plain text. Real UIKit keeps one storage: setting `text` drops any
     /// attributed string, and setting `attributedText` makes `text` report
     /// the attributed string's characters.
-    public var text: String? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(text)
+#endif
+    open dynamic var text: String? {
         get { _text }
         set {
             _text = newValue
@@ -50,47 +58,62 @@ open class UILabel: UIView {
             setNeedsLayout()
         }
     }
-    var _text: String?
+    final var _text: String?
     /// UIKit declares `font` `null_resettable` (Swift `UIFont!`). MEASURED
     /// iPhone 16 / iOS 26.1 (iososswallsprobe `lens.label.font.*`): a fresh
     /// label reads `.SFUI-Regular` 17 and assigning nil reads it again.
-    public var font: UIFont! {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(font)
+#endif
+    open dynamic var font: UIFont! {
         get { _font }
         set { _font = newValue ?? .systemFont(ofSize: 17) }
     }
-    var _font: UIFont = .systemFont(ofSize: 17)
+    final var _font: UIFont = .systemFont(ofSize: 17)
     /// UIKit declares `textColor` `null_resettable` (Swift `UIColor!`).
     /// MEASURED iPhone 16 / iOS 26.1: a fresh label reads `labelColor`, and
     /// assigning nil reads `labelColor` again (ios-oss-launch.md probe).
-    public var textColor: UIColor! {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(textColor)
+#endif
+    open dynamic var textColor: UIColor! {
         get { _textColor }
         set { _textColor = newValue ?? .label }
     }
-    private var _textColor: UIColor = .label
-    public var textAlignment: NSTextAlignment = .natural
+    private final var _textColor: UIColor = .label
+    public final var textAlignment: NSTextAlignment = .natural
     /// `.natural` follows `effectiveUserInterfaceLayoutDirection`.
     /// MEASURED Forms t200.rtl / NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
     /// full-width default-style cell labels and form fields pin their ink
     /// to the leading (right) edge when the frame itself is not tight.
-    var _resolvedTextAlignment: NSTextAlignment {
+    final var _resolvedTextAlignment: NSTextAlignment {
         if textAlignment == .natural {
             return _layoutIsRTL ? .right : .left
         }
         return textAlignment
     }
-    public var numberOfLines: Int = 1
-    public var lineBreakMode: NSLineBreakMode = .byTruncatingTail
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(numberOfLines)
+#endif
+    open dynamic var numberOfLines: Int = 1
+    public final var lineBreakMode: NSLineBreakMode = .byTruncatingTail
     /// Shrink single-line plain text to fit the label's width. UIKit keeps
     /// `font` and intrinsic size unchanged; the smaller font exists only for
     /// layout/drawing, which is also OpenUIKit's model below.
-    public var adjustsFontSizeToFitWidth: Bool = false {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(adjustsFontSizeToFitWidth)
+#endif
+    open dynamic var adjustsFontSizeToFitWidth: Bool = false {
         didSet {
             if adjustsFontSizeToFitWidth != oldValue { setNeedsDisplay() }
         }
     }
     /// Lowest permitted drawing-size ratio when automatic shrinking is on.
     /// Stored verbatim like UIKit; the draw calculation clamps it to 0...1.
-    public var minimumScaleFactor: CGFloat = 0 {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(minimumScaleFactor)
+#endif
+    open dynamic var minimumScaleFactor: CGFloat = 0 {
         didSet {
             if minimumScaleFactor != oldValue { setNeedsDisplay() }
         }
@@ -99,7 +122,10 @@ open class UILabel: UIView {
     /// truncated. The public property is retained independently from font
     /// shrinking; drawing uses at most five percent of the point size per
     /// inter-glyph advance and never changes intrinsic measurement.
-    public var allowsDefaultTighteningForTruncation: Bool = false {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(allowsDefaultTighteningForTruncation)
+#endif
+    open dynamic var allowsDefaultTighteningForTruncation: Bool = false {
         didSet {
             if allowsDefaultTighteningForTruncation != oldValue {
                 setNeedsDisplay()
@@ -112,13 +138,19 @@ open class UILabel: UIView {
     /// category on its own — there is no Settings app — so at the default
     /// `.large` this flag is inert, which is exactly what real UIKit does at
     /// the default category too (UIFontMetrics.swift).
-    public var adjustsFontForContentSizeCategory: Bool = false
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(adjustsFontForContentSizeCategory)
+#endif
+    open dynamic var adjustsFontForContentSizeCategory: Bool = false
 
     /// Attributed content (M12). Setting it replaces `text` (the getter still
     /// reports the plain string, like real UIKit) and — matching measured
     /// UIKit — ADOPTS the paragraph style's alignment and line-break mode
     /// into the label's own properties.
-    public var attributedText: NSAttributedString? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(attributedText)
+#endif
+    open dynamic var attributedText: NSAttributedString? {
         get {
             if let a = _attributed { return a }
             guard let text else { return nil }
@@ -131,9 +163,9 @@ open class UILabel: UIView {
             setNeedsLayout()
         }
     }
-    var _attributed: NSAttributedString?
+    final var _attributed: NSAttributedString?
 
-    func _setTextStorageFromAttributed(_ a: NSAttributedString?) {
+    final func _setTextStorageFromAttributed(_ a: NSAttributedString?) {
         _text = a?.string
         guard let a, a.length > 0,
               let ps = a.attributes(at: 0, effectiveRange: nil)[.paragraphStyle]
@@ -143,7 +175,7 @@ open class UILabel: UIView {
     }
 
     /// Flattened attributed content, or nil when the label holds plain text.
-    var attributedLayoutText: AttributedTextLayout.Text? {
+    final var attributedLayoutText: AttributedTextLayout.Text? {
         guard let a = _attributed, a.length > 0 else { return nil }
         return AttributedTextLayout.flatten(a, defaultFont: _font, defaultColor: _textColor)
     }
@@ -159,7 +191,7 @@ open class UILabel: UIView {
         UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
-    private func configureDefaults() {
+    private final func configureDefaults() {
         isOpaque = false
         // UIKit: labels do not receive touches by default.
         isUserInteractionEnabled = false
@@ -186,13 +218,13 @@ open class UILabel: UIView {
         return (first, lineBoxHeight - first)
     }
 
-    var layoutScale: CGFloat {
+    final var layoutScale: CGFloat {
         let s = traitCollection.displayScale
         return s > 0 ? s : 2
     }
 
     /// Single-line label height (real UIKit rounding; see FontEngine).
-    var lineBoxHeight: CGFloat { FontEngine.labelLineHeight(for: _font) }
+    final var lineBoxHeight: CGFloat { FontEngine.labelLineHeight(for: _font) }
 
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         if let t = attributedLayoutText { return attributedSizeThatFits(t, size) }
@@ -257,7 +289,7 @@ open class UILabel: UIView {
 
     // MARK: - Attributed measurement (M12)
 
-    func attributedSizeThatFits(_ t: AttributedTextLayout.Text, _ size: CGSize) -> CGSize {
+    final func attributedSizeThatFits(_ t: AttributedTextLayout.Text, _ size: CGSize) -> CGSize {
         let scale = layoutScale
         let halfMax: CGFloat = CGFloat.greatestFiniteMagnitude / CGFloat(2)
         let unbounded = !(size.width > 0) || size.width >= halfMax
@@ -272,7 +304,7 @@ open class UILabel: UIView {
     }
 
     /// Line layout used for drawing (bounded by the label's own width).
-    func attributedDrawLines(_ t: AttributedTextLayout.Text,
+    final func attributedDrawLines(_ t: AttributedTextLayout.Text,
                              width: CGFloat) -> [AttributedTextLayout.Line] {
         AttributedTextLayout.wrap(t, maxWidth: width, maxLines: numberOfLines,
                                   scale: layoutScale)
@@ -284,7 +316,7 @@ open class UILabel: UIView {
     /// does not mutate `font`: UIKit's public font, intrinsic size and baseline
     /// metrics continue to describe the requested font after a shrink draw.
     /// Attributed and multiline shrinking remain outside this focused surface.
-    func effectiveDrawingFont(for text: String, width: CGFloat) -> UIFont {
+    final func effectiveDrawingFont(for text: String, width: CGFloat) -> UIFont {
         guard adjustsFontSizeToFitWidth, numberOfLines == 1,
               _attributed == nil, width > 0, _font.pointSize > 0 else {
             return _font
@@ -479,7 +511,7 @@ open class UILabel: UIView {
         }
     }
 
-    private func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
+    private final func drawLineGlyphs(_ line: String, at origin: CGPoint, in canvas: Canvas,
                                 font: UIFont, color: CGColor,
                                 glyphFont: InstancedGlyphFont?,
                                 extraAdvance: CGFloat = 0) {

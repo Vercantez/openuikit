@@ -78,6 +78,17 @@ extension UIColor {
     }
 }
 
+// `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
+// scoped declaration import keeps its geometry out of this file (UIView.swift).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import struct Foundation.Data
+#endif
+
+// UIKit's runtime name: Objective-C classes may subclass it (vtable-free,
+// ObjCSubclassing.swift; eidolon-first-screen.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIButton)
+#endif
 @preconcurrency @MainActor
 open class UIButton: UIControl {
     /// UIKit's raw values (UIButton.h: custom = 0, system = 1; MEASURED
@@ -91,41 +102,47 @@ open class UIButton: UIControl {
     /// in Swift, so re-export the name).
     public typealias State = UIControl.State
 
-    public private(set) var buttonType: ButtonType
+    public private(set) final var buttonType: ButtonType
     private let _titleLabel: UIButtonLabel
     private let _imageView: UIImageView
 
     /// Real UIKit exposes `titleLabel` as optional UILabel.
-    public var titleLabel: UILabel? { _titleLabel }
+    public final var titleLabel: UILabel? { _titleLabel }
 
     /// Real UIKit exposes a persistent image view even before an image has
     /// been assigned. It is optional in the API for Objective-C history, but
     /// a live UIButton owns the same view for its lifetime.
-    public var imageView: UIImageView? { installImageViewIfNeeded(); return _imageView }
+    public final var imageView: UIImageView? { installImageViewIfNeeded(); return _imageView }
 
-    private var titles: [UInt: String] = [:]
-    private var attributedTitles: [UInt: NSAttributedString] = [:]
-    private var titleColors: [UInt: UIColor] = [:]
-    private var images: [UInt: UIImage] = [:]
-    private var backgroundImages: [UInt: UIImage] = [:]
+    private final var titles: [UInt: String] = [:]
+    private final var attributedTitles: [UInt: NSAttributedString] = [:]
+    private final var titleColors: [UInt: UIColor] = [:]
+    private final var images: [UInt: UIImage] = [:]
+    private final var backgroundImages: [UInt: UIImage] = [:]
     /// Created on the first background image, never before, so an image-less
     /// button keeps the subview list the Catalyst goldens record.
-    private var _backgroundImageView: UIImageView?
+    private final var _backgroundImageView: UIImageView?
 
     // MARK: Legacy image adjustment flags (storage-only)
 
     /// iOS 26.1 (Tools/oracle2/iososswallsprobe `lens.button.*`): true on a
     /// `.custom` button, false on a `.system` button. Stored only —
     /// OpenUIKit does not dim images on highlight/disable.
-    open var adjustsImageWhenHighlighted: Bool = true
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(adjustsImageWhenHighlighted)
+#endif
+    open dynamic var adjustsImageWhenHighlighted: Bool = true
     /// Same measurement and defaults as `adjustsImageWhenHighlighted`.
-    open var adjustsImageWhenDisabled: Bool = true
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(adjustsImageWhenDisabled)
+#endif
+    open dynamic var adjustsImageWhenDisabled: Bool = true
 
     // MARK: Background images
 
     /// UIKit's `setBackgroundImage(_:for:)`. The image fills the bounds
     /// behind the title and image.
-    public func setBackgroundImage(_ image: UIImage?, for state: State) {
+    public final func setBackgroundImage(_ image: UIImage?, for state: State) {
         backgroundImages[state.rawValue] = image
         updateBackgroundImageView()
         setNeedsLayout()
@@ -134,13 +151,13 @@ open class UIButton: UIControl {
     /// Exact state, then `.normal` — iOS 26.1 (`lens.button.bg.*`): a
     /// normal-only background image is also what `.highlighted`,
     /// `.disabled` and `.selected` read.
-    public func backgroundImage(for state: State) -> UIImage? {
+    public final func backgroundImage(for state: State) -> UIImage? {
         backgroundImages[state.rawValue] ?? backgroundImages[State.normal.rawValue]
     }
 
-    public var currentBackgroundImage: UIImage? { backgroundImage(for: state) }
+    public final var currentBackgroundImage: UIImage? { backgroundImage(for: state) }
 
-    private func updateBackgroundImageView() {
+    private final func updateBackgroundImageView() {
         let image = currentBackgroundImage
         if image != nil, _backgroundImageView == nil {
             let view = UIImageView()
@@ -158,7 +175,7 @@ open class UIButton: UIControl {
     /// what makes KDS's handler safe: it assigns `self.configuration` from
     /// inside `configurationUpdateHandler` and the oracle never re-enters
     /// (the reentrancy probe logs `depth=1` both times).
-    open var configuration: Configuration? {
+    public final var configuration: Configuration? {
         didSet { applyConfiguration() }
     }
 
@@ -178,14 +195,20 @@ open class UIButton: UIControl {
     /// and it is asynchronous: `setNeedsUpdateConfiguration()` fires nothing
     /// before the next layout pass (the probe's `syncCheck/immediate` row
     /// reads 0).
-    open var configurationUpdateHandler: ((UIButton) -> Void)? {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(configurationUpdateHandler)
+#endif
+    open dynamic var configurationUpdateHandler: ((UIButton) -> Void)? {
         didSet { setNeedsUpdateConfiguration() }
     }
 
-    private var needsConfigurationUpdate = false
+    private final var needsConfigurationUpdate = false
 
     /// Marks the configuration dirty. The handler runs at the next layout.
-    open func setNeedsUpdateConfiguration() {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(setNeedsUpdateConfiguration)
+#endif
+    open dynamic func setNeedsUpdateConfiguration() {
         needsConfigurationUpdate = true
         setNeedsLayout()
     }
@@ -195,9 +218,12 @@ open class UIButton: UIControl {
     /// calling `updateConfiguration()` directly does NOT run the handler (2
     /// calls before, 2 after); the layout-time update runs this method and
     /// then the handler.
-    open func updateConfiguration() {}
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(updateConfiguration)
+#endif
+    open dynamic func updateConfiguration() {}
 
-    private func performConfigurationUpdateIfNeeded() {
+    private final func performConfigurationUpdateIfNeeded() {
         guard needsConfigurationUpdate else { return }
         // Cleared BEFORE the handler runs: the handler assigns `configuration`
         // (KDS's `updateColors`), and clearing afterwards would leave the
@@ -221,16 +247,43 @@ open class UIButton: UIControl {
     /// Legacy layout insets. They are physical left/right values, as on
     /// UIKit; semantic direction changes content order and leading/trailing
     /// alignment, not the meaning of these stored fields.
-    open var contentEdgeInsets: UIEdgeInsets = .zero {
-        didSet { if contentEdgeInsets != oldValue { setNeedsLayout() } }
+    /// Storage; OpenUIKit reads it directly so an Objective-C subclass
+    /// (no Swift vtable) never dispatches through `contentEdgeInsets`.
+    final var _contentEdgeInsets: UIEdgeInsets = .zero {
+        didSet { if _contentEdgeInsets != oldValue { setNeedsLayout() } }
     }
-    open var titleEdgeInsets: UIEdgeInsets = .zero {
-        didSet { if titleEdgeInsets != oldValue { setNeedsLayout() } }
+    /// Overridable from Swift (UIKitSubclassSurfaceTests), not from
+    /// Objective-C (UIEdgeInsets is a Swift struct here): a vtable slot on
+    /// the ObjCSubclassingTests allowlist.
+    open var contentEdgeInsets: UIEdgeInsets {
+        get { _contentEdgeInsets }
+        set { _contentEdgeInsets = newValue }
     }
-    open var imageEdgeInsets: UIEdgeInsets = .zero {
-        didSet { if imageEdgeInsets != oldValue { setNeedsLayout() } }
+    /// Storage; OpenUIKit reads it directly so an Objective-C subclass
+    /// (no Swift vtable) never dispatches through `titleEdgeInsets`.
+    final var _titleEdgeInsets: UIEdgeInsets = .zero {
+        didSet { if _titleEdgeInsets != oldValue { setNeedsLayout() } }
     }
-    private var configurationImagePadding: CGFloat = 0
+    /// Overridable from Swift (UIKitSubclassSurfaceTests), not from
+    /// Objective-C (UIEdgeInsets is a Swift struct here): a vtable slot on
+    /// the ObjCSubclassingTests allowlist.
+    open var titleEdgeInsets: UIEdgeInsets {
+        get { _titleEdgeInsets }
+        set { _titleEdgeInsets = newValue }
+    }
+    /// Storage; OpenUIKit reads it directly so an Objective-C subclass
+    /// (no Swift vtable) never dispatches through `imageEdgeInsets`.
+    final var _imageEdgeInsets: UIEdgeInsets = .zero {
+        didSet { if _imageEdgeInsets != oldValue { setNeedsLayout() } }
+    }
+    /// Overridable from Swift (UIKitSubclassSurfaceTests), not from
+    /// Objective-C (UIEdgeInsets is a Swift struct here): a vtable slot on
+    /// the ObjCSubclassingTests allowlist.
+    open var imageEdgeInsets: UIEdgeInsets {
+        get { _imageEdgeInsets }
+        set { _imageEdgeInsets = newValue }
+    }
+    private final var configurationImagePadding: CGFloat = 0
 
     /// Default disabled title color of a plain .system button (measured
     /// from the oracle; see file header).
@@ -259,7 +312,7 @@ open class UIButton: UIControl {
         UINibCoder.reapplyFrameworkState(self, from: coder)
     }
 
-    private func configureButtonViews() {
+    private final func configureButtonViews() {
         isOpaque = false
         _titleLabel.font = .systemFont(ofSize: 15)
         // Real UIButton titles truncate in the middle (oracle-verified).
@@ -277,7 +330,7 @@ open class UIButton: UIControl {
 
     /// UIKit adds the image view as a subview when an image is first set or
     /// `imageView` is first read; until then the button has one subview.
-    private func installImageViewIfNeeded() {
+    private final func installImageViewIfNeeded() {
         guard _imageView.superview == nil else { return }
         // Real UIKit inserts the image view before the title label, so a
         // button with both reports UIImageView at path *.0 in layout dumps
@@ -334,12 +387,12 @@ open class UIButton: UIControl {
     /// The subtitle label, installed only when a configuration carries a
     /// subtitle — UIKit adds no second label otherwise, and the port's
     /// layout dumps are scored against the oracle's subview list.
-    private var _subtitleLabel: UIButtonLabel?
+    private final var _subtitleLabel: UIButtonLabel?
 
     /// The spinner `showsActivityIndicator` installs, in the leading slot.
-    private var _activityIndicator: UIActivityIndicatorView?
+    private final var _activityIndicator: UIActivityIndicatorView?
 
-    private func installSubtitleLabelIfNeeded() -> UIButtonLabel {
+    private final func installSubtitleLabelIfNeeded() -> UIButtonLabel {
         if let existing = _subtitleLabel { return existing }
         let label = UIButtonLabel()
         // Measured: 13 pt regular (transcript `titles.titleAndSubtitle`).
@@ -349,12 +402,12 @@ open class UIButton: UIControl {
         return label
     }
 
-    private func removeSubtitleLabelIfPresent() {
+    private final func removeSubtitleLabelIfPresent() {
         _subtitleLabel?.removeFromSuperview()
         _subtitleLabel = nil
     }
 
-    private func installActivityIndicatorIfNeeded() -> UIActivityIndicatorView {
+    private final func installActivityIndicatorIfNeeded() -> UIActivityIndicatorView {
         if let existing = _activityIndicator { return existing }
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.hidesWhenStopped = false
@@ -364,7 +417,7 @@ open class UIButton: UIControl {
         return indicator
     }
 
-    private func removeActivityIndicatorIfPresent() {
+    private final func removeActivityIndicatorIfPresent() {
         _activityIndicator?.removeFromSuperview()
         _activityIndicator = nil
     }
@@ -384,18 +437,18 @@ open class UIButton: UIControl {
     /// The menu this button shows. With `showsMenuAsPrimaryAction` true a
     /// tap presents it instead of firing `.touchUpInside` — UIKit's own
     /// rule, and the shape the census's `UIMenu` uses are written in.
-    public var menu: UIMenu?
-    public var showsMenuAsPrimaryAction = false
+    public final var menu: UIMenu?
+    public final var showsMenuAsPrimaryAction = false
 
     /// Whether the button opts into the system pointer treatment. The value
     /// is stateful and matches UIKit's default (`false`); OpenUIKit does not
     /// yet have a host cursor renderer to consume it.
-    public var isPointerInteractionEnabled = false
+    public final var isPointerInteractionEnabled = false
 
     /// UIKit's `performPrimaryAction()` (iOS 17+): presents the menu when
     /// `showsMenuAsPrimaryAction` is set, otherwise sends
     /// `.primaryActionTriggered` + `.touchUpInside`.
-    public func performPrimaryAction() {
+    public final func performPrimaryAction() {
         if showsMenuAsPrimaryAction, let menu {
             _UIMenuPresentation.present(menu, from: self)
             return
@@ -423,13 +476,13 @@ open class UIButton: UIControl {
 
     // MARK: - Title / color state
 
-    public func setTitle(_ title: String?, for state: State) {
+    public final func setTitle(_ title: String?, for state: State) {
         titles[state.rawValue] = title
         updateTitleView()
         setNeedsLayout()
     }
 
-    public func title(for state: State) -> String? {
+    public final func title(for state: State) -> String? {
         titles[state.rawValue] ?? titles[State.normal.rawValue]
     }
 
@@ -439,11 +492,13 @@ open class UIButton: UIControl {
     /// button leaves `configuration.title` nil and still shows — so the
     /// configuration wins when it has a title and the legacy store is the
     /// fallback, not a merge.
-    public var currentTitle: String? {
+    public final var currentTitle: String? {
         if let configured = configuration?.title { return configured }
         return title(for: state)
     }
 
+    /// Allowlisted vtable slot (UIControl.State is a Swift option set):
+    /// overridable from Swift (UIKitSubclassSurfaceTests), not Objective-C.
     open func setAttributedTitle(_ title: NSAttributedString?, for state: State) {
         attributedTitles[state.rawValue] = title
         updateTitleView()
@@ -451,17 +506,26 @@ open class UIButton: UIControl {
     }
 
     open func attributedTitle(for state: State) -> NSAttributedString? {
+        _attributedTitle(for: state)
+    }
+
+    /// Storage lookup OpenUIKit uses internally (see setAttributedTitle).
+    final func _attributedTitle(for state: State) -> NSAttributedString? {
         attributedTitles[state.rawValue]
             ?? attributedTitles[State.normal.rawValue]
     }
 
     open var currentAttributedTitle: NSAttributedString? {
-        attributedTitle(for: state)
+        _currentAttributedTitle
+    }
+
+    final var _currentAttributedTitle: NSAttributedString? {
+        _attributedTitle(for: state)
     }
 
     // MARK: Image state
 
-    public func setImage(_ image: UIImage?, for state: State) {
+    public final func setImage(_ image: UIImage?, for state: State) {
         images[state.rawValue] = image
         updateImageView()
         setNeedsLayout()
@@ -471,22 +535,22 @@ open class UIButton: UIControl {
     /// a button in `[.highlighted, .selected]` does not fall back to the
     /// separately assigned highlighted or selected image (iOS 26 oracle:
     /// Tools/oracle2/uihelpersprobe).
-    public func image(for state: State) -> UIImage? {
+    public final func image(for state: State) -> UIImage? {
         images[state.rawValue] ?? images[State.normal.rawValue]
     }
 
-    public var currentImage: UIImage? { image(for: state) }
+    public final var currentImage: UIImage? { image(for: state) }
 
-    public func setTitleColor(_ color: UIColor?, for state: State) {
+    public final func setTitleColor(_ color: UIColor?, for state: State) {
         titleColors[state.rawValue] = color
         updateTitleView()
     }
 
-    public func titleColor(for state: State) -> UIColor? {
+    public final func titleColor(for state: State) -> UIColor? {
         titleColors[state.rawValue] ?? titleColors[State.normal.rawValue]
     }
 
-    public var currentTitleColor: UIColor {
+    public final var currentTitleColor: UIColor {
         if let configuration {
             return resolvedConfigurationTitleColor(configuration)
         }
@@ -564,7 +628,7 @@ open class UIButton: UIControl {
     /// The `.bordered` row is the one that corrects earlier port behaviour:
     /// the port resolved it to tint, while its OWN golden
     /// (button_configurations_2x) draws black ink in light and white in dark.
-    private func configurationBaseTitleColor(_ configuration: Configuration) -> UIColor {
+    private final func configurationBaseTitleColor(_ configuration: Configuration) -> UIColor {
         switch configuration.style {
         case .filled, .borderedProminent:
             return .white
@@ -576,7 +640,7 @@ open class UIButton: UIControl {
     }
 
     /// The fill a style derives when `background.backgroundColor` is nil.
-    private func configurationStyleFill(_ configuration: Configuration) -> UIColor? {
+    private final func configurationStyleFill(_ configuration: Configuration) -> UIColor? {
         let dark = traitCollection.userInterfaceStyle == .dark
         let base: UIColor = configuration.baseBackgroundColor ?? tintColor
         switch configuration.style {
@@ -600,7 +664,7 @@ open class UIButton: UIControl {
     /// The fill actually drawn, for the button's current state. This is also
     /// what `UIButton.Configuration.updated(for:)` writes into
     /// `background.backgroundColor`.
-    func resolvedConfigurationBackgroundColor(_ configuration: Configuration) -> UIColor? {
+    final func resolvedConfigurationBackgroundColor(_ configuration: Configuration) -> UIColor? {
         // MEASURED: an explicit `background.backgroundColor` is used VERBATIM
         // in every state — no highlight dim, no disabled substitution. A
         // `.filled()` with an explicit red renders that red when normal,
@@ -639,7 +703,7 @@ open class UIButton: UIControl {
     /// `.mini` / `.small`, 17 pt for `.medium` / `.large`; an attributed
     /// title's own font wins over that; and a `titleTextAttributesTransformer`
     /// that returns a font wins over both.
-    private func resolvedConfigurationTitleFont(_ configuration: Configuration) -> UIFont {
+    private final func resolvedConfigurationTitleFont(_ configuration: Configuration) -> UIFont {
         var font = UIFont.systemFont(
             ofSize: Configuration.titleFontSize(for: configuration.buttonSize))
         if let named = configurationAttributedFont(configuration) { font = named }
@@ -652,13 +716,13 @@ open class UIButton: UIControl {
 
     /// The base colour before any state treatment: what the oracle hands a
     /// title transformer, and the starting point of the state rules.
-    private func configurationUntreatedTitleColor(_ configuration: Configuration) -> UIColor {
+    private final func configurationUntreatedTitleColor(_ configuration: Configuration) -> UIColor {
         if let named = configuration.baseForegroundColor { return named }
         if let named = configurationAttributedColor(configuration) { return named }
         return configurationBaseTitleColor(configuration)
     }
 
-    private func resolvedConfigurationTitleColor(_ configuration: Configuration) -> UIColor {
+    private final func resolvedConfigurationTitleColor(_ configuration: Configuration) -> UIColor {
         // A legacy `setTitleColor` still wins outright, as it does without a
         // configuration (the port's established rule; not re-measured here).
         if let named = titleColor(for: state) { return named }
@@ -705,14 +769,14 @@ open class UIButton: UIControl {
         return base
     }
 
-    private func applyConfiguration() {
+    private final func applyConfiguration() {
         guard let configuration else {
             configurationImagePadding = 0
             layer.borderWidth = 0
             layer.borderColor = nil
             layer.cornerRadius = 0
             backgroundColor = nil
-            contentEdgeInsets = .zero
+            _contentEdgeInsets = .zero
             // MEASURED: clearing a configuration returns the button to the
             // legacy path — a titleless button reports intrinsic 30 x 30, the
             // port's own legacy floor for the 15 pt default.
@@ -744,7 +808,7 @@ open class UIButton: UIControl {
             UIButton.isWrapping(configuration.titleLineBreakMode) ? 0 : 1
         _titleLabel.textAlignment = UIButton.textAlignment(for: configuration.titleAlignment)
         configurationImagePadding = configuration.imagePadding
-        contentEdgeInsets = physicalInsets(configuration.contentInsets)
+        _contentEdgeInsets = physicalInsets(configuration.contentInsets)
 
         if configurationSubtitleIsPresent(configuration) {
             let label = installSubtitleLabelIfNeeded()
@@ -768,14 +832,14 @@ open class UIButton: UIControl {
         setNeedsLayout()
     }
 
-    private func configurationSubtitleIsPresent(_ configuration: Configuration) -> Bool {
+    private final func configurationSubtitleIsPresent(_ configuration: Configuration) -> Bool {
         if let subtitle = configuration.subtitle, !subtitle.isEmpty { return true }
         return false
     }
 
     /// `NSDirectionalEdgeInsets` are leading/trailing; the port's legacy
     /// layout stores physical left/right, so resolve once here.
-    private func physicalInsets(_ insets: NSDirectionalEdgeInsets) -> UIEdgeInsets {
+    private final func physicalInsets(_ insets: NSDirectionalEdgeInsets) -> UIEdgeInsets {
         let rtl = effectiveUserInterfaceLayoutDirection == .rightToLeft
         return UIEdgeInsets(top: insets.top,
                             left: rtl ? insets.trailing : insets.leading,
@@ -805,7 +869,7 @@ open class UIButton: UIControl {
         }
     }
 
-    private func updateConfigurationAppearance() {
+    private final func updateConfigurationAppearance() {
         guard let configuration else { return }
         let traits = traitCollection
         backgroundColor = resolvedConfigurationBackgroundColor(configuration)?
@@ -864,7 +928,7 @@ open class UIButton: UIControl {
         }
     }
 
-    private func updateTitleView() {
+    private final func updateTitleView() {
         _titleLabel.textColor = currentTitleColor
         if let configuration {
             _titleLabel.font = resolvedConfigurationTitleFont(configuration)
@@ -881,14 +945,14 @@ open class UIButton: UIControl {
             }
             return
         }
-        if let title = currentAttributedTitle {
+        if let title = _currentAttributedTitle {
             _titleLabel.attributedText = title
         } else {
             _titleLabel.text = currentTitle
         }
     }
 
-    private func updateImageView() {
+    private final func updateImageView() {
         if currentImage != nil { installImageViewIfNeeded() }
         _imageView.image = currentImage
         _imageView.isHidden = currentImage == nil
@@ -937,7 +1001,7 @@ open class UIButton: UIControl {
             ? titleSize.width.rounded(.down) : titleSize.width.rounded(.up)
         let contentWidth = titleWidth + imageSize.width + spacing
         let contentHeight = Swift.max(titleSize.height, imageSize.height)
-        if contentEdgeInsets == .zero {
+        if _contentEdgeInsets == .zero {
             if imageSize.width > 0, titleSize.width > 0, currentImage?._usesTemplateTint == true {
                 // Measured (button_image_title_2x): a template-image+title
                 // system button uses tight content height (no legacy +12).
@@ -973,11 +1037,11 @@ open class UIButton: UIControl {
         // measured relationship. UIKit rounds the four inset components
         // independently, rather than rounding their sums or the final size.
         return CGSize(
-            width: contentWidth + pixelRound(contentEdgeInsets.left)
-                + pixelRound(contentEdgeInsets.right),
+            width: contentWidth + pixelRound(_contentEdgeInsets.left)
+                + pixelRound(_contentEdgeInsets.right),
             height: Swift.max(contentHeight, _titleLabel.lineBoxHeight)
-                + pixelRound(contentEdgeInsets.top)
-                + pixelRound(contentEdgeInsets.bottom))
+                + pixelRound(_contentEdgeInsets.top)
+                + pixelRound(_contentEdgeInsets.bottom))
     }
 
     // MARK: Configuration sizing
@@ -987,7 +1051,7 @@ open class UIButton: UIControl {
     /// subtitle "Subtitle" is 51 pt tall — 7 + 20.33333 + 1 + 15.66667 + 7 —
     /// and the subtitle sits at y 28.33333, i.e. directly under the title
     /// plus the 1 pt default `titlePadding`.
-    private func configurationTitleBlockSize(_ configuration: Configuration) -> CGSize {
+    private final func configurationTitleBlockSize(_ configuration: Configuration) -> CGSize {
         var size = (currentTitle?.isEmpty == false
                         || _titleLabel.attributedText != nil)
             ? _titleLabel.intrinsicContentSize : .zero
@@ -1005,7 +1069,7 @@ open class UIButton: UIControl {
     /// 119.33333 wide = 12 + 20.33333 + 75 + 12, so the spinner is a square
     /// of the title's own line height and `imagePadding` (0 by default) is
     /// what separates it from the title.
-    private func configurationCompanionSize(_ configuration: Configuration) -> CGSize {
+    private final func configurationCompanionSize(_ configuration: Configuration) -> CGSize {
         if configuration.showsActivityIndicator {
             let side = _titleLabel.intrinsicContentSize.height
             return CGSize(width: side, height: side)
@@ -1013,7 +1077,7 @@ open class UIButton: UIControl {
         return currentImage?.size ?? .zero
     }
 
-    private func configurationSizeThatFits(_ configuration: Configuration) -> CGSize {
+    private final func configurationSizeThatFits(_ configuration: Configuration) -> CGSize {
         let title = configurationTitleBlockSize(configuration)
         let companion = configurationCompanionSize(configuration)
         let hasCompanion = companion.width > 0 || companion.height > 0
@@ -1051,7 +1115,7 @@ open class UIButton: UIControl {
         var fitted = sizeThatFits(
             CGSize(width: CGFloat.greatestFiniteMagnitude,
                    height: CGFloat.greatestFiniteMagnitude))
-        if contentEdgeInsets != .zero {
+        if _contentEdgeInsets != .zero {
             // Measured for empty, title-only, image-only, and combined
             // buttons: sizeThatFits keeps an exact zero, while intrinsic
             // sizing reports that axis as unconstrained. Negative nonzero
@@ -1064,19 +1128,31 @@ open class UIButton: UIControl {
 
     // MARK: - Layout
 
-    /// UIKit's legacy overridable rect hooks. `contentEdgeInsets` contracts
+    /// UIKit's legacy overridable rect hooks. `_contentEdgeInsets` contracts
     /// the bounds; title/image insets are applied by the two content hooks.
-    open func backgroundRect(forBounds bounds: CGRect) -> CGRect { bounds }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(backgroundRectForBounds:)
+#endif
+    open dynamic func backgroundRect(forBounds bounds: CGRect) -> CGRect { bounds }
 
-    open func contentRect(forBounds bounds: CGRect) -> CGRect {
-        inset(bounds, by: contentEdgeInsets)
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(contentRectForBounds:)
+#endif
+    open dynamic func contentRect(forBounds bounds: CGRect) -> CGRect {
+        inset(bounds, by: _contentEdgeInsets)
     }
 
-    open func titleRect(forContentRect contentRect: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(titleRectForContentRect:)
+#endif
+    open dynamic func titleRect(forContentRect contentRect: CGRect) -> CGRect {
         layoutRects(in: contentRect).title
     }
 
-    open func imageRect(forContentRect contentRect: CGRect) -> CGRect {
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(imageRectForContentRect:)
+#endif
+    open dynamic func imageRect(forContentRect contentRect: CGRect) -> CGRect {
         layoutRects(in: contentRect).image
     }
 
@@ -1113,10 +1189,10 @@ open class UIButton: UIControl {
     /// (92.33333 + (75 - 23.66667) / 2), at `.trailing` at 143.66667
     /// (92.33333 + 75 - 23.66667), and at `.leading` / `.automatic` at
     /// 92.33333.
-    private func layoutConfigurationSubviews(_ configuration: Configuration) {
+    private final func layoutConfigurationSubviews(_ configuration: Configuration) {
         // A plain inset, not the legacy `inset(_:by:)`: that one collapses
         // crossed edges to their midpoint and then expands the interval to
-        // the pixel grid, which is UIKit's LEGACY `contentEdgeInsets` rule.
+        // the pixel grid, which is UIKit's LEGACY `_contentEdgeInsets` rule.
         // A configuration's `contentInsets` are ordinary directional insets.
         let insets = physicalInsets(configuration.contentInsets)
         let content = CGRect(x: bounds.origin.x + insets.left,
@@ -1229,7 +1305,7 @@ open class UIButton: UIControl {
         }
     }
 
-    private func layoutRects(in content: CGRect) -> (title: CGRect, image: CGRect) {
+    private final func layoutRects(in content: CGRect) -> (title: CGRect, image: CGRect) {
         let scale = _titleLabel.layoutScale
         let intr = _titleLabel.intrinsicContentSize
         let imageSize = currentImage?.size ?? .zero
@@ -1242,7 +1318,7 @@ open class UIButton: UIControl {
         // Overflowing titles (see file header): squeeze case gets the full
         // bounds width; true truncation hugs the truncated middle line.
         if w > availableTitleWidth {
-            if currentAttributedTitle != nil {
+            if _currentAttributedTitle != nil {
                 // AttributedTextLayout handles its own run metrics and
                 // truncation inside the assigned label width.
                 w = availableTitleWidth
@@ -1306,41 +1382,41 @@ open class UIButton: UIControl {
             let base = pixelRound(content.midX - totalWidth / 2)
             if rtl {
                 titleX = pixelRound(base
-                    + (titleEdgeInsets.left - titleEdgeInsets.right) / 2)
+                    + (_titleEdgeInsets.left - _titleEdgeInsets.right) / 2)
                 imageX = pixelRound(base + w
                     + spacing
-                    + (imageEdgeInsets.left - imageEdgeInsets.right) / 2)
+                    + (_imageEdgeInsets.left - _imageEdgeInsets.right) / 2)
             } else {
                 imageX = pixelRound(base
-                    + (imageEdgeInsets.left - imageEdgeInsets.right) / 2)
+                    + (_imageEdgeInsets.left - _imageEdgeInsets.right) / 2)
                 titleX = pixelRound(base + iw
                     + spacing
-                    + (titleEdgeInsets.left - titleEdgeInsets.right) / 2)
+                    + (_titleEdgeInsets.left - _titleEdgeInsets.right) / 2)
             }
         case .left:
             if rtl {
-                titleX = pixelRound(content.minX + titleEdgeInsets.left)
-                imageX = pixelRound(content.minX + w + spacing + imageEdgeInsets.left)
+                titleX = pixelRound(content.minX + _titleEdgeInsets.left)
+                imageX = pixelRound(content.minX + w + spacing + _imageEdgeInsets.left)
             } else {
-                imageX = pixelRound(content.minX + imageEdgeInsets.left)
-                titleX = pixelRound(content.minX + iw + spacing + titleEdgeInsets.left)
+                imageX = pixelRound(content.minX + _imageEdgeInsets.left)
+                titleX = pixelRound(content.minX + iw + spacing + _titleEdgeInsets.left)
             }
         case .right:
             if rtl {
-                imageX = pixelRound(content.maxX - imageEdgeInsets.right - iw)
+                imageX = pixelRound(content.maxX - _imageEdgeInsets.right - iw)
                 titleX = pixelRound(content.maxX - iw
                     - spacing
-                    - titleEdgeInsets.right - w)
+                    - _titleEdgeInsets.right - w)
             } else {
-                titleX = pixelRound(content.maxX - titleEdgeInsets.right - w)
+                titleX = pixelRound(content.maxX - _titleEdgeInsets.right - w)
                 imageX = pixelRound(content.maxX - w
                     - spacing
-                    - imageEdgeInsets.right - iw)
+                    - _imageEdgeInsets.right - iw)
             }
         case .fill:
             if hasImage || hasTitle {
-                let imageArea = itemInsetRect(imageEdgeInsets)
-                let titleArea = itemInsetRect(titleEdgeInsets)
+                let imageArea = itemInsetRect(_imageEdgeInsets)
+                let titleArea = itemInsetRect(_titleEdgeInsets)
                 // The two items share one proportional denominator, but each
                 // numerator uses its own signed available interval. Image
                 // basis is allowed to go negative; title basis floors at
@@ -1389,9 +1465,9 @@ open class UIButton: UIControl {
 
         return (
             title: verticalRect(x: titleX, width: titleWidth, height: h,
-                                insets: titleEdgeInsets, present: hasTitle),
+                                insets: _titleEdgeInsets, present: hasTitle),
             image: verticalRect(x: imageX, width: imageWidth, height: ih,
-                                insets: imageEdgeInsets, present: hasImage)
+                                insets: _imageEdgeInsets, present: hasImage)
         )
     }
 
@@ -1400,7 +1476,7 @@ open class UIButton: UIControl {
     /// midpoint; the resulting interval is then expanded outward to the
     /// pixel grid. Thus a half-pixel midpoint at 3x becomes a one-pixel rect,
     /// while a midpoint already on the grid remains zero-sized.
-    private func insetInterval(minimum: CGFloat, maximum: CGFloat,
+    private final func insetInterval(minimum: CGFloat, maximum: CGFloat,
                                leading: CGFloat, trailing: CGFloat)
         -> (minimum: CGFloat, maximum: CGFloat) {
         var a = minimum + leading
@@ -1415,7 +1491,7 @@ open class UIButton: UIControl {
                 (b * scale).rounded(.up) / scale)
     }
 
-    private func inset(_ rect: CGRect, by insets: UIEdgeInsets) -> CGRect {
+    private final func inset(_ rect: CGRect, by insets: UIEdgeInsets) -> CGRect {
         let x = insetInterval(minimum: rect.minX, maximum: rect.maxX,
                               leading: insets.left, trailing: insets.right)
         let y = insetInterval(minimum: rect.minY, maximum: rect.maxY,
