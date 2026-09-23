@@ -531,7 +531,13 @@ let frameworkTargets: [Target] = [
     ),
     .target(
         name: "SafariServices",
-        dependencies: ["OpenUIKit", "UIKit"]
+        dependencies: ["OpenUIKit", "UIKit"],
+        // Objective-C exceptions from -initWithURL: (safari-objc.md): Apple
+        // toolchains only. The Mach-O guest compiles this source too, with
+        // objc4 and a Foundation facade that has no NSException (MEASURED
+        // build_full: "cannot find 'NSException' in scope").
+        swiftSettings: [.define("OPENUIKIT_OBJC_EXCEPTIONS",
+                                .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]
     ),
     .target(
         name: "MessageUI",
@@ -993,7 +999,7 @@ let simplenoteTargets: [Target] = [
     // NetNewsWire's SFSafariViewController+Extras shape against it; the
     // scenario is the SAME .m the iOS 26.1 oracle runs
     // (Tools/oracle2/safariobjcprobe/run.sh).
-    .target(name: "OpenUIKitSafariFixtures", dependencies: ["SafariServicesObjC"],
+    .target(name: "OpenUIKitSafariFixtures", dependencies: ["SafariServicesObjC", "OpenUIKit"],
             path: "Tools/oracle2/safariobjcprobe/scenario", publicHeadersPath: "include",
             cSettings: [openUIKitObjCSubclassingCFlags]),
     .testTarget(name: "SafariObjCTests",

@@ -251,7 +251,7 @@ open class SFSafariViewController: UIViewController {
     @objc(initWithURL:configuration:)
 #endif
     public init(url: URL, configuration: Configuration) {
-#if canImport(ObjectiveC) && canImport(Foundation)
+#if OPENUIKIT_OBJC_EXCEPTIONS
         // The exception UIKit raises (safariobjcprobe `initWithURL`); an
         // Objective-C caller's @try/@catch receives it. Portable builds have
         // no Objective-C exceptions and accept the URL.
