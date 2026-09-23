@@ -278,6 +278,15 @@ public enum UIRenderer {
     static func renderView(_ v: UIView, into c: Canvas,
                            honorsMaskedCorners: Bool = true) {
         if v.isHidden { return }
+        // Non-finite geometry has no pixels. CoreAnimation refuses a NaN
+        // position outright; here one reaches the renderer when a view's
+        // own rect math degenerates (MEASURED host_full, Firefox Focus:
+        // URLBar's getInsetRect insets a 19.5 pt-tall field by more than
+        // half its height, CGRect.null flows into the text canvas frame, and
+        // the label draw trapped on Int(NaN)). Skip the subtree.
+        let f = v.frame
+        if !(f.origin.x.isFinite && f.origin.y.isFinite
+             && f.size.width.isFinite && f.size.height.isFinite) { return }
         let backingPresentation = LayerBridge.presentationState(
             of: v, at: OpenUIKitRuntime.animationTime)
         let alpha = min(CGFloat(backingPresentation.opacity), 1)
