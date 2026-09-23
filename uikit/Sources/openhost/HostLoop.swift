@@ -330,8 +330,12 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
             let t0 = host.performanceCounter()
             // Layout before draw, like UIKit's commit: views added since the
             // last frame (e.g. a freshly pushed VC's screen) get their
-            // layoutSubviews pass before they are first rendered.
-            scene.window.layoutIfNeeded()
+            // layoutSubviews pass before they are first rendered. With a
+            // fingerprint hook the pass above already ran if anything was
+            // marked; a second constraint solve would change nothing.
+            if hooks.frameFingerprint == nil || scene.window._hostSubtreeNeedsLayout {
+                scene.window.layoutIfNeeded()
+            }
             let bmp = hooks.render(scene.window, scene.scale)
             renderNanos &+= (host.performanceCounter() &- t0)
             host.present(bmp)  // vsync paces the loop
