@@ -304,14 +304,14 @@ public final class _HostClockTimer {
 // MARK: - The names apps see
 
 #if canImport(Foundation)
-import class Foundation.Timer
-import class Foundation.RunLoop
-
-/// Foundation's `Timer`: one type whether an app writes `Timer` after
-/// `import UIKit`, `import Foundation`, or both (see the file header).
-public typealias Timer = Foundation.Timer
-/// Foundation's `RunLoop` (see the file header).
-public typealias RunLoop = Foundation.RunLoop
+// Foundation's own `Timer` and `RunLoop` declarations, re-exported rather than
+// re-declared: one declaration, whether an app writes `Timer` after
+// `import UIKit`, `import Foundation`, or both. A second declaration of the
+// name — even a typealias of the same class — stops Swift folding collection
+// sugar such as `[Timer]()` or `[String: Timer]()` into a type (MEASURED:
+// "cannot call value of non-function type '[Timer.Type]'"; TimerUnifyTests).
+@_exported import class Foundation.Timer
+@_exported import class Foundation.RunLoop
 #else
 /// No Foundation run loop (the Foundation-hidden guest): the host clock.
 public typealias Timer = _HostClockTimer

@@ -36,6 +36,13 @@ final class TimerUnifyTests: XCTestCase {
         XCTAssertTrue(OpenUIKit.Timer.self == Foundation.Timer.self)
         XCTAssertTrue(OpenUIKit.RunLoop.self == Foundation.RunLoop.self)
         XCTAssertTrue(UIKit.Timer.self == Foundation.Timer.self)
+        // Collection sugar still folds into a type with UIKit and Foundation
+        // both visible (a re-declared alias can stop `[X]()` from parsing).
+        var timers = [Timer]()
+        var byName = [String: Timer]()
+        var loops = [RunLoop]()
+        timers.removeAll(); byName.removeAll(); loops.removeAll()
+        XCTAssertTrue(timers.isEmpty && byName.isEmpty && loops.isEmpty)
     }
 
     /// A Foundation timer an app schedules fires on Foundation's run loop.
