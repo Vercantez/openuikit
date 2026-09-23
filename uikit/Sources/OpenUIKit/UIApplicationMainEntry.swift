@@ -282,10 +282,19 @@ extension UIApplication {
     @MainActor
     @discardableResult
     public static func _installHeadlessTicker(interval: CFTimeInterval = 1.0 / 60) -> CFRunLoopTimer {
-        let start = CFAbsoluteTimeGetCurrent()
-        let timer = CFRunLoopTimerCreateWithHandler(nil, start + interval, interval, 0, 0) { _ in
+        // The host clock counts FRAMES: each fire advances it by exactly one
+        // interval. The library reads no wall clock (FoundationCoexistenceTests
+        // .testRenderPathReadsNoWallClockLocaleOrRandomSource; the first
+        // version read CFAbsoluteTimeGetCurrent here), so a headless run
+        // animates the same frames whatever the machine's load; a fire the
+        // run loop drops under load delays the clock instead of skipping it.
+        // The first fire date is 0 (in the past): the run loop fires as soon
+        // as it runs, and CF schedules every later fire `interval` apart.
+        var frames = 0
+        let timer = CFRunLoopTimerCreateWithHandler(nil, 0, interval, 0, 0) { _ in
             MainActor.assumeIsolated {
-                let now = CFAbsoluteTimeGetCurrent() - start
+                frames += 1
+                let now = Double(frames) * interval
                 OpenUIKitRuntime.animationTime = now
                 let app = UIApplication.shared
                 (app.keyWindow ?? app.windows.first)?.tick(timestamp: now)
