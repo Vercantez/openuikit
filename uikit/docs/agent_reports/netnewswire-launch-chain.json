@@ -336,7 +336,8 @@
    ],
    "openuikit": [
     "UIKit",
-    "os"
+    "os",
+    "AuthenticationServices"
    ],
    "swift_settings": [
     ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
