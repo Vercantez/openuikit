@@ -1,6 +1,9 @@
 import Dispatch
 import XCTest
 import os
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
 
 final class OSSignposterTests: XCTestCase {
     // MEASURED Tools/oracle2/signposterprobe/transcript-macos.txt.
@@ -25,6 +28,17 @@ final class OSSignposterTests: XCTestCase {
         s.emitEvent("event")
         XCTAssertEqual(s.withIntervalSignpost("around") { 42 }, 42)
     }
+
+#if canImport(ObjectiveC)
+    /// The test bundle loads Apple's libswiftos too; a port class registered
+    /// under Apple's runtime name (_TtC2os23OSSignpostIntervalState) makes
+    /// objc warn "implemented in both ... spurious casting failures".
+    func testIntervalStateDoesNotTakeAppleRuntimeName() {
+        let name = String(cString: class_getName(OSSignpostIntervalState.self))
+        // class_getName spells Apple's class either way.
+        XCTAssertFalse(["_TtC2os23OSSignpostIntervalState", "os.OSSignpostIntervalState"].contains(name), name)
+    }
+#endif
 
     func testSignpostIDSentinelsMatchApple() {
         XCTAssertEqual(OSSignpostID.exclusive.rawValue, 0xEEEEB0B5B2B2EEEE)

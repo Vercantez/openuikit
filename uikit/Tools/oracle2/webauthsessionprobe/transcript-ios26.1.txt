@@ -1,0 +1,13 @@
+# iPhone 16 simulator, iOS 26.1 (23B86), app launched with simctl launch --console, 2026-09-23
+errorDomain=com.apple.AuthenticationServices.WebAuthenticationSession
+codes canceledLogin=1 presentationContextNotProvided=2 presentationContextInvalid=3
+ASPresentationAnchor is UIWindow: true
+a prefersEphemeral default=false canStart=false
+a callback url=nil domain=com.apple.AuthenticationServices.WebAuthenticationSession code=2 isSessionError=true
+a start()=false
+b canStart=false
+b callback url=nil domain=com.apple.AuthenticationServices.WebAuthenticationSession code=3 isSessionError=true
+b start()=false
+b start() again=false
+b cancel() called
+done
