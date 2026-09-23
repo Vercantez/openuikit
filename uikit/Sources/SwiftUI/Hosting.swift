@@ -758,7 +758,7 @@ private func _openAlertActions(
         switch role {
         case .cancel: style = .cancel
         case .destructive: style = .destructive
-        case .none: style = .default
+        case .close, .confirm, .none: style = .default
         }
         let result = UIAlertAction(title: title, style: style) { _ in
             configuration.setIsPresented(false)
@@ -957,6 +957,7 @@ private final class _SwiftUINavigationNodeController: UIViewController {
 
     private func applyNavigationMetadata() {
         title = configuration.title
+        navigationItem.subtitle = configuration.subtitle
         navigationItem.hidesBackButton = configuration.backButtonHidden
         toolbarHost = _openApplyNavigationChrome(
             to: navigationItem,
@@ -1343,6 +1344,7 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     private var visibleAppearanceIdentities: Set<_OpenAppearanceIdentity> = []
     private var hostIsVisible = false
     private var appliedRootNavigationTitle: String?
+    private var appliedRootNavigationSubtitle: String?
     private var appliedRootBackButtonHidden = false
     private var appliedSwiftUINavigationChrome = false
     private var navigationChromeTitleHost: _SwiftUIHostingView?
@@ -1410,6 +1412,10 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
         if configuration.title != nil || title == appliedRootNavigationTitle {
             title = configuration.title
         }
+        if configuration.subtitle != nil || navigationItem.subtitle == appliedRootNavigationSubtitle {
+            navigationItem.subtitle = configuration.subtitle
+        }
+        appliedRootNavigationSubtitle = configuration.subtitle
         appliedRootNavigationTitle = configuration.title
         if configuration.backButtonHidden
             || navigationItem.hidesBackButton == appliedRootBackButtonHidden {
@@ -1908,6 +1914,7 @@ private struct _RenderEnvironment {
     var usesCircularProgressStyle = false
     var usesLinearProgressStyle = false
     var usesMenuPickerStyle = false
+    var usesSegmentedPickerStyle = false
     var symbolRenderingMode: SymbolRenderingMode?
     var scrollStorage: _OpenScrollProxyStorage?
     var scrollVisibilityObservers: [_OpenScrollVisibilityObserver] = []
@@ -2297,6 +2304,10 @@ private enum _ViewRenderer {
                 height: max(34, font.lineHeight * CGFloat(desired) + 16)
             )
         case .picker(let label, let options, let selection, _):
+            if environment.usesSegmentedPickerStyle {
+                // MEASURED (nnwswiftuiprobe): full proposed width, 31 pt.
+                return CGSize(width: _bounded(proposed).width, height: 31)
+            }
             let labelSize = measure(label, proposed: proposed, environment: environment)
             let selectedSize = options.first(where: { $0.tag == selection }).map {
                 measure($0.content, proposed: proposed, environment: environment)
@@ -2441,6 +2452,10 @@ private enum _ViewRenderer {
             case .menuPickerStyle:
                 var next = environment
                 next.usesMenuPickerStyle = true
+                return measure(content, proposed: proposed, environment: next)
+            case .segmentedPickerStyle:
+                var next = environment
+                next.usesSegmentedPickerStyle = true
                 return measure(content, proposed: proposed, environment: next)
             case .menuIndicator(let visibility):
                 var next = environment
@@ -2589,7 +2604,7 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: next)
             case .accessibilityHidden:
                 return measure(content, proposed: proposed, environment: environment)
-            case .effect, .navigationTitle, .navigationBarHidden,
+            case .effect, .navigationTitle, .navigationSubtitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .navigationDestination, .toolbar, .toolbarItem, .tag,
                  .pageTabViewStyle:
@@ -3252,6 +3267,23 @@ private enum _ViewRenderer {
             }
             surface.addSubview(field)
         case .picker(let label, let options, let selection, let setSelection):
+            if environment.usesSegmentedPickerStyle {
+                let segmented = UISegmentedControl(items: options.map {
+                    _openMenuTitle(in: $0.content) ?? String(describing: $0.tag)
+                })
+                segmented.frame = rect
+                segmented.selectedSegmentIndex = options.firstIndex { $0.tag == selection }
+                    ?? UISegmentedControl.noSegment
+                segmented.isEnabled = environment.isEnabled
+                segmented.accessibilityIdentifier = "SwiftUI.Picker"
+                segmented.addTarget(for: .valueChanged) { sender, _ in
+                    guard let control = sender as? UISegmentedControl,
+                          options.indices.contains(control.selectedSegmentIndex) else { return }
+                    setSelection(options[control.selectedSegmentIndex].tag)
+                }
+                surface.addSubview(segmented)
+                break
+            }
             let control: UIControl
             if environment.usesMenuPickerStyle {
                 let button = UIButton(type: .system)
@@ -3491,6 +3523,10 @@ private enum _ViewRenderer {
             case .menuPickerStyle:
                 var next = environment
                 next.usesMenuPickerStyle = true
+                place(content, in: rect, on: surface, environment: next)
+            case .segmentedPickerStyle:
+                var next = environment
+                next.usesSegmentedPickerStyle = true
                 place(content, in: rect, on: surface, environment: next)
             case .menuIndicator(let visibility):
                 var next = environment
@@ -4194,7 +4230,7 @@ private enum _ViewRenderer {
                 }
                 host.addGestureRecognizer(pan)
             case .effect, .toolbarVisibility, .toolbarBackgroundVisibility,
-                 .navigationTitle, .navigationBarHidden,
+                 .navigationTitle, .navigationSubtitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
                  .navigationDestination, .toolbar, .toolbarItem, .tag,
                  .pageTabViewStyle:
@@ -4685,7 +4721,8 @@ private enum _ViewRenderer {
             let y: CGFloat
             switch alignment.value {
             case .top: y = rect.minY
-            case .center: y = rect.minY + (rect.height - height) / 2
+            case .center, .firstTextBaseline, .lastTextBaseline:
+                y = rect.minY + (rect.height - height) / 2
             case .bottom: y = rect.maxY - height
             }
             place(
@@ -4852,7 +4889,8 @@ private enum _ViewRenderer {
         let y: CGFloat
         switch alignment.vertical.value {
         case .top: y = rect.minY
-        case .center: y = rect.minY + (rect.height - size.height) / 2
+        case .center, .firstTextBaseline, .lastTextBaseline:
+            y = rect.minY + (rect.height - size.height) / 2
         case .bottom: y = rect.maxY - size.height
         }
         return CGRect(origin: CGPoint(x: x, y: y), size: size)

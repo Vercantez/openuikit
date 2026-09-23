@@ -393,6 +393,7 @@ public extension UIButton {
 // MARK: - Bridging an OpenUIKit attributed string into AttributedString
 
 #if canImport(Foundation) || canImport(FoundationEssentials)
+#if !(canImport(ObjectiveC) && canImport(Foundation))
 @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
 public extension AttributedString {
     /// `AttributedString(NSAttributedString(...))`, for OpenUIKit's own
@@ -433,6 +434,7 @@ public extension AttributedString {
         }
     }
 }
+#endif
 
 @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
 extension NSAttributedString {

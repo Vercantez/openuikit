@@ -65,8 +65,8 @@ public struct NSUnderlineStyle: OptionSet, Hashable, Sendable {
 #if canImport(ObjectiveC) && canImport(Foundation)
 import Foundation
 
-public typealias NSAttributedString = Foundation.NSAttributedString
-public typealias NSMutableAttributedString = Foundation.NSMutableAttributedString
+@_exported import class Foundation.NSAttributedString
+@_exported import class Foundation.NSMutableAttributedString
 
 // UIKit's attribute keys (raw values are iOS 26.1's). On the macOS host AppKit
 // already declares every one of these with the same raw value on the same

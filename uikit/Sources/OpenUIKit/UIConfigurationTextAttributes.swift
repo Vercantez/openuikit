@@ -103,6 +103,11 @@ public extension AttributeScopes.OpenUIKitAttributes {
     }
 }
 
+#if canImport(AppKit) || !os(iOS)
+// A macOS host already has AppKit's (disfavoured) scope lookup, and on Linux
+// the portable SwiftUI scope's lookup leaks into UIKit-only files; this one
+// stays preferred there so UIKit-only source keeps one unambiguous candidate.
+// Only the iOS triple mirrors Apple's disfavoured UIKit lookup below.
 @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
 public extension AttributeDynamicLookup {
     subscript<T: AttributedStringKey>(
@@ -111,6 +116,20 @@ public extension AttributeDynamicLookup {
         fatalError("AttributeDynamicLookup values are only used as key paths")
     }
 }
+#else
+// Disfavoured, like UIKit's own UIKitAttributes lookup (iOS 26.1 SDK
+// UIKit.swiftinterface), so `run.font = .system(.body)` picks SwiftUI's Font
+// attribute when SwiftUI is imported (NetNewsWire ErrorLogView.swift:111).
+@available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+public extension AttributeDynamicLookup {
+    @_disfavoredOverload
+    subscript<T: AttributedStringKey>(
+        dynamicMember keyPath: KeyPath<AttributeScopes.OpenUIKitAttributes, T>
+    ) -> T {
+        fatalError("AttributeDynamicLookup values are only used as key paths")
+    }
+}
+#endif
 
 // MARK: - The transformer
 

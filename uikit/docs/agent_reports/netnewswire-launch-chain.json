@@ -569,8 +569,6 @@
     "NetNewsWire/iOS/UIKit Extensions/VibrantTableViewCell.swift"
    ],
    "swift_settings": [
-    ".enableUpcomingFeature(\"NonisolatedNonsendingByDefault\")",
-    ".enableUpcomingFeature(\"InferIsolatedConformances\")",
     ".define(\"DEBUG\")",
     ".define(\"SKIP_APP_GROUP_ACCESS\")"
    ],

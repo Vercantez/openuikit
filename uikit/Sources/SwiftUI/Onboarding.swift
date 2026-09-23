@@ -566,6 +566,18 @@ public struct _OpenButton<Label: _OpenView>: _OpenView {
         self.role = role
     }
 
+    /// iOS 26 label-less role button. MEASURED iPhone 16 / iOS 26.1
+    /// (nnwswiftuiprobe): `.close` in the toolbar draws the "xmark" symbol.
+    /// Other roles' glyphs were not measured and draw no glyph (KNOWN_GAPS).
+    nonisolated public init(
+        role: ButtonRole,
+        action: @escaping @MainActor () -> Void
+    ) where Label == _OpenImage {
+        self.action = action
+        label = _OpenImage(systemName: role == .close ? "xmark" : "")
+        self.role = role
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         _OpenViewNode(
             .button(
@@ -583,9 +595,22 @@ public struct _OpenButton<Label: _OpenView>: _OpenView {
 public struct _OpenScrollView<Content: _OpenView>: _OpenView {
     public typealias Body = Never
     public let content: Content
+    public let axes: Axis.Set
+    public let showsIndicators: Bool
 
     public init(@_OpenViewBuilder content: () -> Content) {
         self.content = content()
+        axes = .vertical
+        showsIndicators = true
+    }
+
+    /// `ScrollView(_:showsIndicators:content:)`. The portable scroll host is
+    /// vertical; horizontal axes are recorded only (KNOWN_GAPS).
+    public init(_ axes: Axis.Set = .vertical, showsIndicators: Bool = true,
+                @_OpenViewBuilder content: () -> Content) {
+        self.content = content()
+        self.axes = axes
+        self.showsIndicators = showsIndicators
     }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
