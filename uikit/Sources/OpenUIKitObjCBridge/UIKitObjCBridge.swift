@@ -457,6 +457,10 @@ extension UIColor {
     }
 }
 
+#if !canImport(QuartzCore)
+// Where OpenUIKit's own CALayer is the Core Animation layer. On Apple
+// toolchains CALayer is QuartzCore's, whose colour properties are these
+// selectors already (cg-unify phase 3).
 extension CALayer {
     @objc(borderColor) public var __objc_borderColor: CoreGraphics.CGColor? {
         get { borderColor } set { borderColor = newValue }
@@ -468,6 +472,7 @@ extension CALayer {
         get { shadowColor } set { shadowColor = newValue }
     }
 }
+#endif
 
 // MARK: - UIView.layer, font properties
 
@@ -572,6 +577,24 @@ extension NSLayoutConstraint {
 extension UIImage {
     @objc(imageWithContentsOfFile:) public class func __objc_image(contentsOfFile path: String) -> UIImage? {
         UIImage(contentsOfFile: path)
+    }
+    /// UIImage.h's CGImage surface (cg-unify: `CGImageRef` is CoreGraphics'
+    /// own image; UIImageOrientation is the SDK's NSInteger enum).
+    @objc(CGImage) public var __objc_CGImage: CoreGraphics.CGImage? { cgImage }
+    @objc(imageOrientation) public var __objc_imageOrientation: Int { imageOrientation.rawValue }
+    @objc(imageWithCGImage:) public class func __objc_image(cgImage: CoreGraphics.CGImage) -> UIImage {
+        UIImage(cgImage: cgImage)
+    }
+    @objc(imageWithCGImage:scale:orientation:)
+    public class func __objc_image(cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) -> UIImage {
+        UIImage(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
+    }
+    @objc(initWithCGImage:) public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage) {
+        self.init(cgImage: cgImage)
+    }
+    @objc(initWithCGImage:scale:orientation:)
+    public convenience init(__objcCGImage cgImage: CoreGraphics.CGImage, scale: CGFloat, orientation: Int) {
+        self.init(cgImage: cgImage, scale: scale, orientation: UIImage.Orientation(rawValue: orientation) ?? .up)
     }
     @objc(initWithData:) public convenience init?(__objcData data: Data) { self.init(data: [UInt8](data)) }
     @objc(imageWithData:) public class func __objc_image(data: Data) -> UIImage? { UIImage(data: [UInt8](data)) }
@@ -911,4 +934,30 @@ extension UIWindow {
     }
 }
 
+// MARK: - Delegates and data sources (@objc protocols; objc-protocols.md)
+
+extension UIScrollView {
+    @objc(delegate) public var __objc_delegate: UIScrollViewDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(zoomScale) public var __objc_zoomScale: CGFloat { get { zoomScale } set { zoomScale = newValue } }
+    @objc(minimumZoomScale) public var __objc_minimumZoomScale: CGFloat {
+        get { minimumZoomScale } set { minimumZoomScale = newValue }
+    }
+    @objc(maximumZoomScale) public var __objc_maximumZoomScale: CGFloat {
+        get { maximumZoomScale } set { maximumZoomScale = newValue }
+    }
+    @objc(setZoomScale:animated:) public func __objc_setZoomScale(_ scale: CGFloat, animated: Bool) {
+        setZoomScale(scale, animated: animated)
+    }
+}
+
+extension UITableView {
+    @objc(dataSource) public var __objc_dataSource: UITableViewDataSource? {
+        get { dataSource } set { dataSource = newValue }
+    }
+    @objc(rectForRowAtIndexPath:) public func __objc_rectForRow(at indexPath: IndexPath) -> CGRect {
+        rectForRow(at: indexPath)
+    }
+}
 #endif

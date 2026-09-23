@@ -43,6 +43,12 @@ SURFACE = re.compile(r"\b(UI[A-Z]\w+|CA[A-Z]\w+|NSLayout\w+|NSTextAlignment\w*|N
 UMBRELLA = """#ifndef OPENUIKIT_ROUTE_B_UIKIT_H
 #define OPENUIKIT_ROUTE_B_UIKIT_H
 #import <Foundation/Foundation.h>
+/* Apple's <UIKit/UIKit.h> imports QuartzCore, and on Apple toolchains
+ * OpenUIKit's Core Animation classes ARE QuartzCore's (cg-unify phase 3). */
+#if __has_include(<QuartzCore/QuartzCore.h>)
+#import <CoreGraphics/CoreGraphics.h>
+#import <QuartzCore/QuartzCore.h>
+#endif
 #import "OpenUIKit-Swift.h"
 #import "UIKitObjCSupport.h"
 #if !__swift__

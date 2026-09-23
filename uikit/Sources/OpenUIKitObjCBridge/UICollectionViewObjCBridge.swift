@@ -219,27 +219,9 @@ extension UICollectionView {
         }
     }
 
-    /// `id<UICollectionViewDelegate>` (the scroll view's delegate, as in
-    /// UIKit). Same wrapping as `dataSource`.
-    @objc(delegate) public var __objc_collectionDelegate: AnyObject? {
-        get {
-            if let adapter = delegate as? _OUKObjCCollectionViewDelegate { return adapter.target }
-            return delegate
-        }
-        set {
-            if let swift = newValue as? UIScrollViewDelegate {
-                objc_setAssociatedObject(self, &delegateAdapterKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                delegate = swift
-            } else if let object = newValue as? NSObject {
-                let adapter = _OUKObjCCollectionViewDelegate(object)
-                objc_setAssociatedObject(self, &delegateAdapterKey, adapter, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                delegate = adapter
-            } else {
-                objc_setAssociatedObject(self, &delegateAdapterKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-                delegate = nil
-            }
-        }
-    }
+    // `-delegate` / `-setDelegate:` are UIScrollView's (UIKitObjCBridge.swift),
+    // typed by the @objc UIScrollViewDelegate that UICollectionViewDelegate
+    // refines (objc-protocols.md).
 
     @objc(collectionViewLayout) public var __objc_collectionViewLayout: UICollectionViewLayout {
         get { collectionViewLayout } set { collectionViewLayout = newValue }

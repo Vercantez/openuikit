@@ -2,6 +2,7 @@
 // (2x) and iPhone 16 (3x) simulators on 2026-09-04 (docs/REAL_APP_TEST.md,
 // "The screen is the scene" and the rounds after it). Each case pins one
 // number the real device produced; the Catalyst gate covers the other cut.
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
@@ -1147,7 +1148,7 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class UntitledGroupedSource: UITableViewDataSource, UITableViewDelegate {
+private final class UntitledGroupedSource: NSObject, UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { 2 }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         section == 0 ? 3 : 2

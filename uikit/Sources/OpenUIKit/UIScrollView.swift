@@ -60,6 +60,7 @@
 // scoped declaration import keeps its geometry out of this file (UIView.swift).
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
+import protocol ObjectiveC.NSObjectProtocol
 #endif
 
 #if canImport(CoreGraphics)
@@ -89,6 +90,38 @@ public struct UIEdgeInsets: Equatable, Sendable {
 
 // MARK: - Delegate
 
+// Apple toolchain (OPENUIKIT_OBJC_SUBCLASSING): UIKit's own shape, an `@objc`
+// protocol with UIKit's runtime name, NSObjectProtocol refinement, SDK
+// selectors and SDK required/optional split, so Swift code writes
+// `delegate?.method?(…)` and an Objective-C class adopts the same protocol
+// (docs/agent_reports/objc-protocols.md). OpenUIKit's own call sites go
+// through UIKitProtocolDispatch.swift. Linux ELF and the Foundation-hidden
+// guest have no `@objc`: the Swift protocol below with default
+// implementations, unchanged.
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIScrollViewDelegate) @preconcurrency @MainActor
+public protocol UIScrollViewDelegate: NSObjectProtocol {
+    @objc optional func scrollViewDidScroll(_ scrollView: UIScrollView)
+    @objc optional func scrollViewDidZoom(_ scrollView: UIScrollView)
+    @objc optional func scrollViewWillBeginDragging(_ scrollView: UIScrollView)
+    @objc optional func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                                  withVelocity velocity: CGPoint,
+                                                  targetContentOffset: UnsafeMutablePointer<CGPoint>)
+    @objc optional func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
+    @objc optional func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView)
+    @objc optional func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
+    @objc optional func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView)
+    @objc(viewForZoomingInScrollView:)
+    optional func viewForZooming(in scrollView: UIScrollView) -> UIView?
+    @objc(scrollViewWillBeginZooming:withView:)
+    optional func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?)
+    @objc(scrollViewDidEndZooming:withView:atScale:)
+    optional func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat)
+    @objc optional func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool
+    @objc optional func scrollViewDidScrollToTop(_ scrollView: UIScrollView)
+    @objc optional func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView)
+}
+#else
 @preconcurrency @MainActor
 public protocol UIScrollViewDelegate: AnyObject {
     func scrollViewDidScroll(_ scrollView: UIScrollView)
@@ -139,6 +172,7 @@ public extension UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?,
                                  atScale scale: CGFloat) {}
 }
+#endif
 
 // MARK: - Closed-form physics (unit-testable, no state)
 
@@ -346,8 +380,8 @@ open class UIScrollView: UIView {
         }
         updateIndicators()
         if settingContentOffset {
-            delegate?.scrollViewDidScroll(self)
-            _scrollObserver?.scrollViewDidScroll(self)
+            delegate?._didScroll(self)
+            _scrollObserver?._didScroll(self)
         }
     }
 
@@ -408,7 +442,7 @@ open class UIScrollView: UIView {
                                // at `to` (Pager t1200 / t3500, iPhone SE 2x).
                                self._removeFinishedAnimations(
                                    at: OpenUIKitRuntime.animationTime)
-                               self.delegate?.scrollViewDidEndScrollingAnimation(self)
+                               self.delegate?._didEndScrollingAnimation(self)
                            })
         } else {
             contentOffset = offset
@@ -695,28 +729,33 @@ open class UIScrollView: UIView {
         let upper = max(minimumZoomScale, maximumZoomScale)
         let target = min(upper, max(lower, scale))
         guard target != _zoomScale else { return }
-        let zoomView = delegate?.viewForZooming(in: self)
+        // iOS 26.1 (objcprotocolprobe "zoom without viewForZooming"): with no
+        // view to zoom, zoomScale stays where it was and nothing is sent.
+        guard let zoomView = delegate?._viewForZooming(self) else { return }
         _zoomScale = target
 
         let apply = {
-            zoomView?.transform = CGAffineTransform(scaleX: target, y: target)
-            self.delegate?.scrollViewDidZoom(self)
+            zoomView.transform = CGAffineTransform(scaleX: target, y: target)
+            // iOS 26.1: contentSize follows the zoomed view (a 100x100 view
+            // at scale 2 gives contentSize {200, 200}).
+            self.contentSize = zoomView.frame.size
+            self.delegate?._didZoom(self)
         }
         guard animated else {
             apply()
             return
         }
 
-        zoomView?.removeAllAnimations()
+        zoomView.removeAllAnimations()
         isZooming = true
-        delegate?.scrollViewWillBeginZooming(self, with: zoomView)
+        delegate?._willBeginZooming(self, with: zoomView)
         UIView.animate(withDuration: 0.25, delay: 0,
                        options: [.beginFromCurrentState, .allowUserInteraction],
                        animations: apply,
                        completion: { [weak self, weak zoomView] _ in
             guard let self else { return }
             self.isZooming = false
-            self.delegate?.scrollViewDidEndZooming(self, with: zoomView,
+            self.delegate?._didEndZooming(self, with: zoomView,
                                                    atScale: self._zoomScale)
         })
     }
@@ -839,7 +878,7 @@ open class UIScrollView: UIView {
                 contentOffset.y = -(newTop + contentInset.top)
             }
         }
-        delegate?.scrollViewDidChangeAdjustedContentInset(self)
+        delegate?._didChangeAdjustedContentInset(self)
         setNeedsLayout()
     }
 
@@ -884,7 +923,7 @@ open class UIScrollView: UIView {
             // offset) — seeding it here with the PRE-recognition offset
             // would fold the slop jump into the release velocity.
             dragSamples = []
-            delegate?.scrollViewWillBeginDragging(self)
+            delegate?._willBeginDragging(self)
             flashIndicators()
             // The recognizing event itself moves the content (UIKit: the
             // slop-adjusted translation applies immediately, not on the
@@ -971,7 +1010,7 @@ open class UIScrollView: UIView {
                                        lo.y), hi.y))
             let natural = target
             withUnsafeMutablePointer(to: &target) {
-                d.scrollViewWillEndDragging(self, withVelocity: CGPoint(x: v.x / 1000,
+                d._willEndDragging(self, velocity: CGPoint(x: v.x / 1000,
                                                                         y: v.y / 1000),
                                             targetContentOffset: $0)
             }
@@ -998,11 +1037,11 @@ open class UIScrollView: UIView {
                                     scrolls: dragsY, bouncesAxis: bouncesY, at: now)
 
         let decelerates = xAnim != nil || yAnim != nil
-        delegate?.scrollViewDidEndDragging(self, willDecelerate: decelerates)
-        _scrollObserver?.scrollViewDidEndDragging(self, willDecelerate: decelerates)
+        delegate?._didEndDragging(self, willDecelerate: decelerates)
+        _scrollObserver?._didEndDragging(self, willDecelerate: decelerates)
         if decelerates {
             isDecelerating = true
-            delegate?.scrollViewWillBeginDecelerating(self)
+            delegate?._willBeginDecelerating(self)
             UIScrollView.registerAnimating(self)
         } else {
             settle()
@@ -1105,8 +1144,8 @@ open class UIScrollView: UIView {
         contentOffset = off
         if xAnim == nil && yAnim == nil {
             isDecelerating = false
-            delegate?.scrollViewDidEndDecelerating(self)
-            _scrollObserver?.scrollViewDidEndDecelerating(self)
+            delegate?._didEndDecelerating(self)
+            _scrollObserver?._didEndDecelerating(self)
             settle()
         }
     }

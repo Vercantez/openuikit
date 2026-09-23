@@ -9,6 +9,7 @@
 //
 // The runtime assertions exist so the file is a real test and not just a
 // build artifact; the interesting failures are the ones the compiler catches.
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
@@ -96,7 +97,7 @@ final class ActorIsolationTests: XCTestCase {
     /// so a `@MainActor` conformer's methods satisfy their requirements
     /// without a `nonisolated` escape hatch.
     func testDelegateProtocolIsIsolated() {
-        final class Delegate: NSObjectLike, UIScrollViewDelegate {
+        final class Delegate: NSObject, UIScrollViewDelegate {
             var offsets: [CGFloat] = []
             func scrollViewDidScroll(_ scrollView: UIScrollView) {
                 offsets.append(scrollView.contentOffset.y)
@@ -146,7 +147,9 @@ final class ActorIsolationTests: XCTestCase {
 
         let observer = Observer()
 
-        let timer = Timer(timeInterval: 1, target: observer,
+        // OpenUIKit's host-clock timer (Foundation's Timer is what apps see
+        // wherever Foundation exists; timer-unify.md).
+        let timer = _HostClockTimer(timeInterval: 1, target: observer,
                           selector: Selector.named("timerFired:"),
                           userInfo: nil, repeats: false)
         timer.fire()
@@ -166,10 +169,3 @@ final class ActorIsolationTests: XCTestCase {
     }
 }
 
-/// A delegate conformer does not require NSObject. This portable empty base
-/// keeps the nested declaration shaped like app source without making that
-/// unrelated test depend on Foundation/ObjectiveC availability.
-#if !os(Linux)
-@MainActor
-#endif
-class NSObjectLike {}

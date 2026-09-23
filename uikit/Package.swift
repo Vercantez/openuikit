@@ -345,7 +345,13 @@ let coreTargets: [Target] = [
     // (docs/agent_reports/simplenote-objc-core.md). Linux ELF and the
     // Foundation-hidden guest library route compile the same sources without
     // it (no `@objc` there); their behaviour is unchanged.
-    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"],
+    // cg-unify phase 3: on Apple platforms Core Animation is QuartzCore's; a
+    // load-time constructor installs OpenUIKit's CALayer/CATransaction
+    // interposers (Sources/OpenUIKit/QuartzCoreUnification.swift).
+    .target(name: "OpenUIKitQuartzBootstrap", path: "Sources/OpenUIKitQuartzBootstrap"),
+    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz",
+                                              .target(name: "OpenUIKitQuartzBootstrap",
+                                                      condition: .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS]))],
             swiftSettings: [.define("OPENUIKIT_OBJC_SUBCLASSING",
                                     .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]),
     .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
@@ -764,6 +770,10 @@ let testTargets: [Target] = [
     .testTarget(name: "NetworkTests", dependencies: ["Network"]),
     .testTarget(name: "AuthenticationServicesTests", dependencies: ["AuthenticationServices"]),
     .testTarget(name: "WidgetKitTests", dependencies: ["WidgetKit"]),
+    // @main + Info.plist scene-manifest launch, against the iOS 26.1
+    // transcript of Tools/oracle2/scenelaunchprobe (module name matters:
+    // the storyboard's LaunchProbe classes are aliased to it).
+    .testTarget(name: "SceneLaunchTests", dependencies: ["OpenUIKit", "UIKit"]),
     // Swift 6 language mode: Sendable conformances the SDK declares
     // (NS_SWIFT_SENDABLE) are compile errors here, not warnings.
     .testTarget(
@@ -1044,6 +1054,17 @@ let simplenoteTargets: [Target] = [
                 dependencies: ["OpenUIKitTextStorageFixtures", "OpenUIKit", "UIKit"],
                 path: "Tests/AttributedStringUnifyTests",
                 swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
+    // UIKit's delegate / data-source protocols as @objc protocols
+    // (docs/agent_reports/objc-protocols.md): the scenario is the SAME .m the
+    // iOS 26.1 oracle runs (Tools/oracle2/objcprotocolprobe/run.sh).
+    .target(name: "OpenUIKitObjCProtocolFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/objcprotocolprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "ObjCProtocolTests",
+                dependencies: ["OpenUIKitObjCProtocolFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/ObjCProtocolTests",
+                swiftSettings: simplenoteSettings + [openUIKitObjCSubclassingSwiftFlags]),
     // CoreGraphics / ImageIO type unification (docs/agent_reports/cg-unify.md).
     // The scenario is the SAME Swift the iOS 26.1 oracle runs
     // (Tools/oracle2/cgunifyprobe/run.sh); it imports UIKit only, so it also
@@ -1053,6 +1074,10 @@ let simplenoteTargets: [Target] = [
     .testTarget(name: "CGUnifyTests",
                 dependencies: ["OpenUIKitCGUnifyFixtures", "UIKit", "OpenUIKit"],
                 path: "Tests/CGUnifyTests"),
+    // Timer / RunLoop unification (docs/agent_reports/timer-unify.md): a file
+    // importing UIKit and Foundation names one Timer, Foundation's.
+    .testTarget(name: "TimerUnifyTests", dependencies: ["UIKit", "OpenUIKit"],
+                path: "Tests/TimerUnifyTests"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

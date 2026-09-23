@@ -4,6 +4,7 @@
 // misspelled `@objc(...)` name fails here instead of at an app's link.
 #if canImport(ObjectiveC)
 import Foundation
+import CoreGraphics
 import ObjectiveC
 import XCTest
 @testable import OpenUIKit
@@ -11,6 +12,31 @@ import XCTest
 import OpenUIKitObjCSupport
 
 final class ObjCBridgeTests: XCTestCase {
+    /// UIImage.h's CGImage selectors (cg-unify; SDWebImage's
+    /// `+imageWithCGImage:scale:orientation:` and `.CGImage`): the
+    /// CoreGraphics image goes in and comes back as the same object.
+    func testUIImageCGImageSelectors() throws {
+        let context = try XCTUnwrap(CGContext(data: nil, width: 2, height: 1, bitsPerComponent: 8,
+                                              bytesPerRow: 0, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                              bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.setFillColor(CGColor(srgbRed: 1, green: 0, blue: 0, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        let cgImage = try XCTUnwrap(context.makeImage())
+        for selector in ["imageWithCGImage:", "imageWithCGImage:scale:orientation:"] {
+            XCTAssertTrue(UIImage.responds(to: NSSelectorFromString(selector)), selector)
+        }
+        let viaSelector = UIImage.perform(NSSelectorFromString("imageWithCGImage:"), with: cgImage)?
+            .takeUnretainedValue() as? UIImage
+        let image = try XCTUnwrap(viaSelector)
+        XCTAssertTrue(image.perform(NSSelectorFromString("CGImage"))?.takeUnretainedValue() === cgImage)
+        XCTAssertEqual(image.size, CGSize(width: 2, height: 1))
+        XCTAssertEqual(Array(image.bitmap.pixels.prefix(4)), [255, 0, 0, 255])
+        let scaled = UIImage.__objc_image(cgImage: cgImage, scale: 2, orientation: 3)
+        XCTAssertEqual(scaled.scale, 2)
+        XCTAssertEqual(scaled.imageOrientation, .right)
+        XCTAssertEqual(scaled.__objc_imageOrientation, 3)
+    }
+
     @MainActor
     func testTableViewCellSelectorsReachTheSwiftMembers() {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "r")
@@ -101,8 +127,11 @@ final class ObjCBridgeTests: XCTestCase {
         let c = UIEdgeInsetsObjC(top: 1, left: 2, bottom: 3, right: 4)
         let swift = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)   // OpenUIKit's, unambiguous
         XCTAssertEqual(c.left, swift.left)
-        XCTAssertEqual(NSStringFromProtocol(UITableViewDelegateObjC.self), "UITableViewDelegate")
-        XCTAssertEqual(NSStringFromProtocol(UITableViewDataSourceObjC.self), "UITableViewDataSource")
+        XCTAssertEqual(NSStringFromProtocol(UITextViewDelegateObjC.self), "UITextViewDelegate")
+        // The table protocols are OpenUIKit's own @objc protocols now, under
+        // UIKit's runtime names (objc-protocols.md).
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDelegate.self), "UITableViewDelegate")
+        XCTAssertEqual(NSStringFromProtocol(UITableViewDataSource.self), "UITableViewDataSource")
     }
 
     /// UIColor is NSObject-derived now (simplenote-objc-core), so the color

@@ -1,0 +1,22 @@
+# objcprotocolprobe — iOS 26.1
+## scroll
+didScrollOnly setContentOffset 50: didScroll=1 offset=50
+didScrollOnly same offset again: didScroll=0
+didScrollOnly contentOffset= 80: didScroll=1
+didScrollOnly calls: scrollViewDidScroll:
+noMethods contentOffset= 120: offset=120
+zoom without viewForZooming: zoomScale=1 contentSize={100, 1000}
+zoom without viewForZooming calls: 
+zoom with viewForZooming: zoomScale=2 contentSize={200, 200} content.frame={200, 200}
+zoom with viewForZooming: didZoom sent=YES
+zoom with viewForZooming (besides didZoom) calls: viewForZoomingInScrollView:
+## table
+required-only source, no delegate: rowHeight=-1
+required-only source, no delegate: sections=1 [0,0] y=0 h=52 [0,1] y=52 h=52 [0,2] y=104 h=52
+required-only source, no delegate calls: tableView:cellForRowAtIndexPath: tableView:numberOfRowsInSection:
+rowHeight 70, delegate without heightForRow: sections=1 [0,0] y=0 h=70 [0,1] y=70 h=70 [0,2] y=140 h=70
+rowHeight 70, delegate without heightForRow calls: tableView:cellForRowAtIndexPath: tableView:numberOfRowsInSection:
+rowHeight 70, heightForRow 60/automatic/50: sections=1 [0,0] y=0 h=60 [0,1] y=60 h=52 [0,2] y=112 h=50
+rowHeight 70, heightForRow 60/automatic/50 calls: tableView:cellForRowAtIndexPath: tableView:heightForRowAtIndexPath: tableView:numberOfRowsInSection: tableView:willDisplayCell:forRowAtIndexPath:
+numberOfSections 2 + titles, plain, rowHeight 44: sections=2 [0,0] y=50 h=44 [0,1] y=94 h=44 [1,0] y=188 h=44 [1,1] y=232 h=44
+numberOfSections 2 + titles, plain calls: numberOfSectionsInTableView: tableView:cellForRowAtIndexPath: tableView:numberOfRowsInSection: tableView:titleForHeaderInSection:

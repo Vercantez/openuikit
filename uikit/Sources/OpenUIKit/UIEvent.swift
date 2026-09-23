@@ -197,13 +197,33 @@ open class UIWindow: UIView {
         didSet {
             guard rootViewController !== oldValue else { return }
             oldValue?.viewIfLoaded?.removeFromSuperview()
-            guard let vc = rootViewController else { return }
-            vc.loadViewIfNeeded()
-            let v = vc.view!
-            v.frame = bounds
-            addSubview(v)
-            setNeedsLayout()
+            _rootViewInstallPending = false
+            guard rootViewController != nil else { return }
+            // A hidden window does not load its root controller's view yet:
+            // MEASURED Tools/oracle2/scenelaunchprobe (iOS 26.1), the
+            // storyboard root assigned to the scene's hidden window gets
+            // viewDidLoad only after scene(_:willConnectTo:), inside
+            // makeKeyAndVisible. Visible windows install at once, as before.
+            if isHidden {
+                _rootViewInstallPending = true
+                return
+            }
+            _installRootView()
         }
+    }
+
+    final var _rootViewInstallPending = false
+    /// Set on the scene-manifest launch's window: UIKit's explicit key rule.
+    final var _keyOnlyWhenMadeKey = false
+
+    final func _installRootView() {
+        _rootViewInstallPending = false
+        guard let vc = rootViewController else { return }
+        vc.loadViewIfNeeded()
+        let v = vc.view!
+        v.frame = bounds
+        addSubview(v)
+        setNeedsLayout()
     }
 
     public override init(frame: CGRect) {
@@ -230,6 +250,7 @@ open class UIWindow: UIView {
 
     public func makeKeyAndVisible() {
         isHidden = false
+        if _rootViewInstallPending { _installRootView() }
         makeKey()
     }
 
@@ -377,13 +398,13 @@ open class UIWindow: UIView {
         UIView._stepAnimationCompletions(to: timestamp)
         // Explicit Core Animation transactions share the same deterministic
         // host clock and complete after presentation-affecting work settles.
-        CATransaction._stepCompletions(to: timestamp)
+        _OUKTransaction._stepCompletions(to: timestamp)
         // Caret blink of the focused text editor advances on the same host
         // clock (text-input module; additive like the steppers above).
         UITextInputState._stepCaretBlink(to: timestamp)
         // Scheduled `Timer`s fire off the same clock — there is no run loop,
         // so this tick IS the run-loop turn (Sources/OpenUIKit/Timer.swift).
-        Timer._step(to: timestamp)
+        _HostClockTimer._step(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)

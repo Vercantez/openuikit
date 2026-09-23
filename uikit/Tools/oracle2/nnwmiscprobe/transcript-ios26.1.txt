@@ -1,0 +1,16 @@
+# NNWMiscProbe, iPhone 16 simulator, iOS 26.1 (23B86), simctl launch --console, 2026-09-23
+FACT slider.trackConfiguration default=nil
+FACT cfg allowsTickValuesOnly=true ticks=6 values=[0.0, 0.2, 0.4, 0.6, 0.8, 1.0] neutralValue=0.0 enabledRange=0.0...1.0
+FACT slider(0...5, 6 ticks, tickOnly) set 0.4 -> value=0.0
+FACT slider(0...5, 6 ticks, tickOnly) set 0.6 -> value=1.0
+FACT slider(0...5, 6 ticks, tickOnly) set 2.49 -> value=2.0
+FACT slider(0...5, 6 ticks, tickOnly) set 2.51 -> value=3.0
+FACT slider(0...5, 6 ticks, tickOnly) set 5.0 -> value=5.0
+FACT cfg3 values=[0.0, 0.5, 1.0]
+FACT animate{} model alpha after call=0.0 presentation=-1.0
+FACT animate{} animation=CASpringAnimation duration=0.7999999999999999 perceptual=0.5 damping=25.132741228718345 stiffness=157.91367041742973 mass=1.0
+FACT scene names didEnterBackground=UISceneDidEnterBackgroundNotification willEnterForeground=UISceneWillEnterForegroundNotification didActivate=UISceneDidActivateNotification willDeactivate=UISceneWillDeactivateNotification willConnect=UISceneWillConnectNotification didDisconnect=UISceneDidDisconnectNotification
+FACT trait action sync after override+layout: ["action env=RootVC prev=UICTContentSizeCategoryL now=UICTContentSizeCategoryXXL", "noArgs"]
+FACT trait action next turn: ["action env=RootVC prev=UICTContentSizeCategoryL now=UICTContentSizeCategoryXXL", "noArgs"]
+FACT animate{} completion after 1s: finished=true
+DONE

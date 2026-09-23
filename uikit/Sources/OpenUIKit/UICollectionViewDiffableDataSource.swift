@@ -7,6 +7,14 @@
 #if canImport(Foundation)
 import struct Foundation.IndexPath
 #endif
+// NSObject-derived, as in UIKit (the SDK declares it `: NSObject`), so it can
+// cross the `@objc` delegate / data-source protocols on the Apple toolchain
+// (objc-protocols.md). Same provider choice as UIColor.swift.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -181,7 +189,7 @@ public struct NSDiffableDataSourceSectionSnapshot<ItemIdentifierType: Hashable> 
 
 @preconcurrency @MainActor
 open class UICollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>:
-    UICollectionViewDataSource
+    NSObject, UICollectionViewDataSource
 where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
     public typealias Snapshot = NSDiffableDataSourceSnapshot<SectionIdentifierType,
                                                             ItemIdentifierType>
@@ -225,6 +233,7 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
     public init(collectionView: UICollectionView, cellProvider: @escaping CellProvider) {
         self.collectionView = collectionView
         self.cellProvider = cellProvider
+        super.init()
         collectionView.dataSource = self
     }
 

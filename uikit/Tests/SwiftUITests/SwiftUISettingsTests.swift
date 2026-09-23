@@ -182,11 +182,11 @@ private struct SettingsNavigationDestinationFixture: View {
 #endif
 final class SwiftUISettingsTests: XCTestCase {
     func testSettingsControlsRoundTripBindingsEffectsAndDisabledState() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let model = SettingsModel()
@@ -288,11 +288,11 @@ final class SwiftUISettingsTests: XCTestCase {
     }
 
     func testPickerPrefersExplicitTagsOverForEachIdentity() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         struct ExplicitTagFixture: View {
@@ -485,11 +485,11 @@ final class SwiftUISettingsTests: XCTestCase {
     }
 
     func testSheetAndNavigationDestinationDriveRealControllerState() throws {
-        OpenUIKit.Timer._reset()
+        OpenUIKit._HostClockTimer._reset()
         _OpenInvalidationScheduler.forceHostClockForTesting = true
         defer {
             _OpenInvalidationScheduler.forceHostClockForTesting = false
-            OpenUIKit.Timer._reset()
+            OpenUIKit._HostClockTimer._reset()
         }
 
         let sheetHost = UIHostingController(rootView: SettingsSheetFixture())
@@ -552,8 +552,8 @@ final class SwiftUISettingsTests: XCTestCase {
     }
 
     private func flush(_ host: UIView) {
-        XCTAssertTrue(OpenUIKit.Timer._hasScheduledTimers)
-        OpenUIKit.Timer._step(to: OpenUIKit.Timer.currentTime)
+        XCTAssertTrue(OpenUIKit._HostClockTimer._hasScheduledTimers)
+        OpenUIKit._HostClockTimer._step(to: OpenUIKit._HostClockTimer.currentTime)
         host.layoutIfNeeded()
     }
 

@@ -20,7 +20,7 @@ import Foundation
 #if !os(Linux)
 @MainActor
 #endif
-private final class FlowSource: UICollectionViewDataSource,
+private final class FlowSource: NSObject, UICollectionViewDataSource,
                                UICollectionViewDelegateFlowLayout {
     var counts: [Int]
     var sizeFor: ((IndexPath) -> CGSize)?
@@ -509,7 +509,7 @@ private final class CountingItemCell: UICollectionViewCell {
 #if !os(Linux)
 @MainActor
 #endif
-private final class BigGridSource: UICollectionViewDataSource {
+private final class BigGridSource: NSObject, UICollectionViewDataSource {
     var items = 10_000
     func numberOfSections(in collectionView: UICollectionView) -> Int { 1 }
     func collectionView(_ cv: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -647,7 +647,7 @@ private final class FooterView: UICollectionReusableView {
 #if !os(Linux)
 @MainActor
 #endif
-private final class RecordingDelegate: UICollectionViewDelegate {
+private final class RecordingDelegate: NSObject, UICollectionViewDelegate {
     var selected: [IndexPath] = []
     var deselected: [IndexPath] = []
     var displayed: [IndexPath] = []
@@ -804,7 +804,7 @@ final class CollectionViewBehaviourTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class CompSource: UICollectionViewDataSource {
+private final class CompSource: NSObject, UICollectionViewDataSource {
     var counts: [Int]
     init(_ counts: [Int]) { self.counts = counts }
     func numberOfSections(in collectionView: UICollectionView) -> Int { counts.count }

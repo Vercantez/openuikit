@@ -11,6 +11,7 @@
 #if canImport(CoreGraphics)
 import XCTest
 import CoreGraphics
+import QuartzCore
 import UIKit
 import OpenUIKitCGUnifyFixtures
 
@@ -35,13 +36,107 @@ final class CGUnifyTests: XCTestCase {
 
     @MainActor
     func testTypesTranscriptMatchesIOS26_1() throws {
-        let expected = try oracle(sections: ["color", "layer", "transform", "bitmap context", "imageio"])
+        let expected = try oracle(sections: ["color", "layer", "transform", "path", "bitmap context", "imageio"])
         let actual = cgUnifyTypesTranscript()
         XCTAssertFalse(expected.isEmpty)
         for (index, pair) in zip(expected, actual).enumerated() where pair.0 != pair.1 {
             XCTFail("line \(index): expected \(pair.0)\n                 got \(pair.1)")
         }
         XCTAssertEqual(actual.count, expected.count)
+    }
+
+    /// UIKit's current context is a CoreGraphics `CGContext` over the port's
+    /// pixels: UIKit calls and CGContext calls interleave in order and share
+    /// the CTM, clip and fill colour; `draw(_:)` gets one through
+    /// `CALayer.render(in:)`; UIImage <-> CGImage round-trips (phase 2).
+    /// Before phase 2 the scenario did not compile (`UIGraphicsGetCurrentContext()`
+    /// returned `Canvas`, UIImage had no `cgImage`).
+    @MainActor
+    func testDrawingTranscriptMatchesIOS26_1() throws {
+        let saved = CanvasBackendSelection.current
+        defer { CanvasBackendSelection.current = saved }
+        for backend in [RenderBackend.quartz, .swift] {
+            CanvasBackendSelection.current = backend
+            let expected = try oracle(sections: ["renderer context", "draw(_:)", "uiimage cgImage"])
+            let actual = cgUnifyDrawingTranscript()
+            XCTAssertFalse(expected.isEmpty)
+            for (index, pair) in zip(expected, actual).enumerated() where pair.0 != pair.1 {
+                XCTFail("\(backend) line \(index): expected \(pair.0)\n                 got \(pair.1)")
+            }
+            XCTAssertEqual(actual.count, expected.count, "\(backend)")
+        }
+    }
+
+    /// Core Animation is QuartzCore's (phase 3): the class names and
+    /// hierarchy, CAShapeLayer's defaults, a backing layer that reads and
+    /// writes its view, the mask's superlayer, and `render(in:)` of a
+    /// standalone layer tree drawn by the port -- all as iOS 26.1 reports.
+    /// Before phase 3 the scenario did not compile (`CAShapeLayer`,
+    /// `CATransform3DIdentity`, `affineTransform()` unknown through
+    /// `import UIKit`; OpenUIKit's CALayer was a different class).
+    @MainActor
+    func testQuartzTranscriptMatchesIOS26_1() throws {
+        let expected = try oracle(sections: ["quartzcore", "quartzcore render"])
+        let actual = cgUnifyQuartzTranscript()
+        XCTAssertFalse(expected.isEmpty)
+        for (index, pair) in zip(expected, actual).enumerated() where pair.0 != pair.1 {
+            XCTFail("line \(index): expected \(pair.0)\n                 got \(pair.1)")
+        }
+        XCTAssertEqual(actual.count, expected.count)
+    }
+
+    /// The port's Core Animation names are QuartzCore's own classes.
+    func testPortCoreAnimationNamesAreQuartzCore() {
+        XCTAssertTrue(OpenUIKit.CALayer.self == QuartzCore.CALayer.self)
+        XCTAssertTrue(OpenUIKit.CAGradientLayer.self == QuartzCore.CAGradientLayer.self)
+        XCTAssertTrue(OpenUIKit.CABasicAnimation.self == QuartzCore.CABasicAnimation.self)
+        XCTAssertTrue(OpenUIKit.CATransaction.self == QuartzCore.CATransaction.self)
+        XCTAssertTrue(OpenUIKit.CATransform3D.self == QuartzCore.CATransform3D.self)
+        XCTAssertTrue(OpenUIKit.CACornerMask.self == QuartzCore.CACornerMask.self)
+    }
+
+    /// A session whose code never asks for the CGContext keeps the port's
+    /// exact pixels, and asking for it without drawing changes none.
+    @MainActor
+    func testUnusedCoreGraphicsContextLeavesPixelsUnchanged() {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 2
+        func draw(_ askForContext: Bool) -> [UInt8] {
+            UIGraphicsImageRenderer(size: CGSize(width: 9, height: 7), format: format).image { _ in
+                if askForContext { _ = UIGraphicsGetCurrentContext() }
+                UIColor(red: 0.3, green: 0.6, blue: 0.9, alpha: 0.7).setFill()
+                UIBezierPath(ovalIn: CGRect(x: 0.5, y: 0.25, width: 7.3, height: 5.9)).fill()
+                UIColor.black.setStroke()
+                UIBezierPath(roundedRect: CGRect(x: 1, y: 1, width: 6, height: 4), cornerRadius: 1.5).stroke()
+            }.bitmap.pixels
+        }
+        XCTAssertEqual(draw(true), draw(false))
+    }
+
+    /// An app-made bitmap context: UIKit drawing and `render(in:)` land in
+    /// the app's own memory, under its CTM.
+    @MainActor
+    func testUIKitDrawsIntoAppBitmapContext() throws {
+        let ctx = try XCTUnwrap(CGContext(data: nil, width: 4, height: 2, bitsPerComponent: 8,
+                                          bytesPerRow: 0, space: CGColorSpace(name: CGColorSpace.sRGB)!,
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        // UIKit coordinates: flip as UIGraphicsImageRenderer does.
+        ctx.translateBy(x: 0, y: 2)
+        ctx.scaleBy(x: 1, y: -1)
+        UIGraphicsPushContext(ctx)
+        UIColor.red.setFill()
+        UIRectFill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        UIGraphicsPopContext()
+        ctx.setFillColor(UIColor.blue.cgColor)
+        ctx.fill(CGRect(x: 1, y: 0, width: 1, height: 1))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        view.backgroundColor = .green
+        ctx.translateBy(x: 2, y: 1)
+        view.layer.render(in: ctx)
+        let image = try XCTUnwrap(ctx.makeImage())
+        let px = cgUnifyPixels(image)
+        XCTAssertEqual(cgUnifyRow(px, width: 4, y: 0), "255,0,0,255 0,0,255,255 0,0,0,0 0,0,0,0")
+        XCTAssertEqual(cgUnifyRow(px, width: 4, y: 1), "0,0,0,0 0,0,0,0 0,255,0,255 0,0,0,0")
     }
 
     /// The port's public names are CoreGraphics' own types, not look-alikes.

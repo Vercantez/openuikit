@@ -366,9 +366,9 @@ open class UILabel: UIView {
     /// PaddingLabel) insets the rect and calls super, and the text is laid
     /// out in the rect it receives.
     open override func drawContent(in canvas: Canvas, bounds: CGRect) {
-        UIGraphicsPushContext(canvas)
+        UIGraphics.pushContext(canvas)
         drawText(in: bounds)
-        UIGraphicsPopContext()
+        UIGraphics.popContext()
     }
 
     /// Draws the label's text in `rect` into the current context.
@@ -378,8 +378,7 @@ open class UILabel: UIView {
     @objc(drawTextInRect:)
 #endif
     open dynamic func drawText(in rect: CGRect) {
-        guard let canvas = UIGraphicsGetCurrentContext() else { return }
-        _drawText(in: canvas, bounds: rect)
+        UIGraphics.draw { _drawText(in: $0, bounds: rect) }
     }
 
     final func _drawText(in canvas: Canvas, bounds: CGRect) {

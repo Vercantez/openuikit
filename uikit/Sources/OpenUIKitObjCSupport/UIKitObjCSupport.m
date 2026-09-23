@@ -19,6 +19,7 @@
 
 const UIEdgeInsets UIEdgeInsetsZero = {0, 0, 0, 0};
 const UIOffset UIOffsetZero = {0, 0};
+const CGFloat UITableViewAutomaticDimension = -1;
 
 const UIFontWeight UIFontWeightUltraLight = -0.8;
 const UIFontWeight UIFontWeightThin = -0.6;

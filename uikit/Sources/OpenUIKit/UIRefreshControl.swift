@@ -146,7 +146,7 @@ open class UIRefreshControl: UIControl {
             // control_refresh) is NOT treated as overscroll — `y < 0.5`
             // would have been true and subtracted 60 (golden frame.y 0).
             let overscrolled = sv.contentOffset.y < -sv.adjustedContentInset.top - 0.5
-            sv._scrollObserver?.scrollViewDidScroll(sv)
+            sv._scrollObserver?._didScroll(sv)
             sv.layoutIfNeeded()
             if overscrolled {
                 // MEASURED Feed t700.landscape, iPhone SE 2x / iOS 26.1,
@@ -175,7 +175,7 @@ open class UIRefreshControl: UIControl {
         if OpenUIKitRuntime.systemFontCut == .iOS, let sv = _scrollView {
             // Shrink the stretched large-title bar (Feed t1800 returns to
             // bar [0, 10, 375, 106], adj 116).
-            sv._scrollObserver?.scrollViewDidScroll(sv)
+            sv._scrollObserver?._didScroll(sv)
         }
         guard _holdsInset, let sv = _scrollView else { return }
         _holdsInset = false

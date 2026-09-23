@@ -2,6 +2,7 @@
 // `UIPopoverPresentationControllerSourceItem`. Every number is a row of
 // Tools/oracle2/wordpressrowsprobe's transcripts (iPhone 16 / iPad A16,
 // iOS 26.1) — see docs/agent_reports/wordpress-textitem-popover.md.
+import Foundation
 import XCTest
 @testable import OpenUIKit
 
@@ -15,7 +16,7 @@ private typealias NSTextAttachment = OpenUIKit.NSTextAttachment
 #if !os(Linux)
 @MainActor
 #endif
-private final class NewOnlyDelegate: UITextViewDelegate {
+private final class NewOnlyDelegate: NSObject, UITextViewDelegate {
     var events: [String] = []
     var items: [UITextItem] = []
     var defaultActions: [UIAction] = []
@@ -55,7 +56,7 @@ private final class NewOnlyDelegate: UITextViewDelegate {
 #if !os(Linux)
 @MainActor
 #endif
-private final class OldOnlyDelegate: UITextViewDelegate {
+private final class OldOnlyDelegate: NSObject, UITextViewDelegate {
     var events: [String] = []
     var ranges: [NSRange] = []
     var interactions: [UITextItemInteraction] = []
@@ -79,7 +80,7 @@ private final class OldOnlyDelegate: UITextViewDelegate {
 #if !os(Linux)
 @MainActor
 #endif
-private final class BothDelegate: UITextViewDelegate {
+private final class BothDelegate: NSObject, UITextViewDelegate {
     var events: [String] = []
     func textView(_ textView: UITextView, primaryActionFor textItem: UITextItem,
                   defaultAction: UIAction) -> UIAction? {
@@ -96,7 +97,7 @@ private final class BothDelegate: UITextViewDelegate {
 #if !os(Linux)
 @MainActor
 #endif
-private final class ConformingOnlyTextDelegate: UITextViewDelegate {}
+private final class ConformingOnlyTextDelegate: NSObject, UITextViewDelegate {}
 
 // MARK: - UITextItem
 
