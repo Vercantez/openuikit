@@ -6,8 +6,10 @@
 // On Objective-C-capable builds, UIResponder and its descendants inherit
 // NSObject and their @objc methods dispatch through that real metadata. On
 // native ELF builds there is no ObjC runtime, so app-defined actions come from
-// a registry the target supplies: `SelectorDispatching`. The same registry is
-// also the fallback for a non-NSObject or non-exposed target on an ObjC build.
+// a registry the target supplies: `SelectorDispatching`. On an ObjC build a
+// non-NSObject Swift class is still asked through the runtime (as
+// objc_msgSend would), and the registry is the fallback for a target whose
+// class does not respond.
 // A tiny framework-owned built-in table runs first for UIKit methods such as
 // `UIView.endEditing(_:)` whose target-action ABI is not literal sender
 // forwarding.
@@ -236,6 +238,29 @@ public enum SelectorDispatch {
                 _ = object.perform(action, with: sender, with: event)
             default:
                 break
+            }
+            return true
+        }
+        // UIKit's objc_msgSend does not require NSObject: any Swift class is
+        // an Objective-C object on Apple platforms, and its @objc methods are
+        // in its class's method list. Firefox Focus's
+        // `UIControlSubscription<…>` (Combine+UIControl.swift) is exactly
+        // that -- a plain generic class passed as `addTarget(self, action:
+        // #selector(eventHandler), for:)` -- and on iOS its handler runs.
+        if action.actionArity <= 2, !(target is NSObject),
+           let cls: AnyClass = object_getClass(target),
+           class_respondsToSelector(cls, action),
+           let imp = class_getMethodImplementation(cls, action) {
+            switch action.actionArity {
+            case 0:
+                typealias Send0 = @convention(c) (AnyObject, Selector) -> Void
+                unsafeBitCast(imp, to: Send0.self)(target, action)
+            case 1:
+                typealias Send1 = @convention(c) (AnyObject, Selector, AnyObject?) -> Void
+                unsafeBitCast(imp, to: Send1.self)(target, action, sender.map { $0 as AnyObject })
+            default:
+                typealias Send2 = @convention(c) (AnyObject, Selector, AnyObject?, AnyObject?) -> Void
+                unsafeBitCast(imp, to: Send2.self)(target, action, sender.map { $0 as AnyObject }, event)
             }
             return true
         }

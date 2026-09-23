@@ -14,6 +14,7 @@ for base, relative in [
     (root, 'full/appshim'), (root, 'full/foundation'),
     (root, 'full/dispatch'), (root, 'full/focus-ios'),
     (root, 'full/driver'), (root, 'full/shims'), (root, 'full/observation'),
+    (root, 'full/sdlhost'),
     (root, 'full/scripts/build_full.sh'), (root, 'full/xcassets/xcassets_tool.py'),
 ]:
     target = base / relative
