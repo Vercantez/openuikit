@@ -32,7 +32,7 @@ xcrun simctl bootstatus "$DEV" -b >/dev/null
 xcrun simctl install "$DEV" "$APP"
 {
   echo "# ToolbarItemsProbe, iPhone 16 simulator, iOS 26.1 (23B86), simctl launch --console, $(date -u +%F)"
-  for v in A B; do
+  for v in A B C; do
     echo "# VARIANT=$v"
     SIMCTL_CHILD_VARIANT=$v timeout 60 xcrun simctl launch --console "$DEV" org.openuikit.toolbaritemsprobe 2>&1 | grep -E "^(FACT|DONE)"
     xcrun simctl terminate "$DEV" org.openuikit.toolbaritemsprobe >/dev/null 2>&1 || true

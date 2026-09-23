@@ -10,7 +10,9 @@ NNWG <target> FAILED errors=<n> first=<first diagnostic>
 NNWG <target> OK|FAILED kind=clang sources=<n> errors=<n>
 ```
 
-Nothing is linked or run yet. The script builds for real, with no
+Once every target builds, the NetNewsWire executable is linked (`NNWG_LINK`)
+and `NetNewsWire.app` is staged with `stage_bundle.py`. Nothing is run yet.
+The script builds for real, with no
 allow-errors. A failing module is compiled a second time with allow-errors,
 so the modules after it are still measured against an interface. It is the
 Swift-guest counterpart of the simulator route's chain census, and it stops

@@ -9,7 +9,7 @@ FACT item3 title=Add image=true hidesSharedBackground=false sharesBackground=tru
 FACT view        UILabel [172.33, 85.67, 48.33, 20.67] hidden=false alpha=1.0 text=Feeds font=17.0
 FACT view               _UIButtonBarButton [337.00, 63.00, 36.00, 36.00] hidden=false alpha=1.0
 FACT view                _UIModernBarButton [339.00, 72.67, 32.00, 17.00] hidden=false alpha=1.0 title=nil image=(21.0, 12.0)
-FACT view                 UIImageView [341.33, 72.67, 27.33, 17.00] hidden=false alpha=1.0 image=(21.0, 12.0) symbol=true intrinsic=(27.333333333333332, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=<UIDynamicCatalogSystemColor: 0x600001711d80; name = systemBlueColor>
+FACT view                 UIImageView [341.33, 72.67, 27.33, 17.00] hidden=false alpha=1.0 image=(21.0, 12.0) symbol=true intrinsic=(27.333333333333332, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=<UIDynamicCatalogSystemColor: 0x600001730080; name = systemBlueColor>
 FACT view FloatingBarContainerView [0.00, 0.00, 393.00, 852.00] hidden=false alpha=1.0
 FACT view  FloatingBarHostingView<FloatingBarContainer> [0.00, 0.00, 393.00, 852.00] hidden=false alpha=1.0
 FACT view   _UIInheritedView [0.00, 766.00, 393.00, 86.00] hidden=false alpha=1.0
@@ -46,7 +46,7 @@ FACT item2 title=Add image=true hidesSharedBackground=false sharesBackground=tru
 FACT view        UILabel [172.33, 85.67, 48.33, 20.67] hidden=false alpha=1.0 text=Feeds font=17.0
 FACT view               _UIButtonBarButton [337.00, 63.00, 36.00, 36.00] hidden=false alpha=1.0
 FACT view                _UIModernBarButton [339.00, 72.67, 32.00, 17.00] hidden=false alpha=1.0 title=nil image=(21.0, 12.0)
-FACT view                 UIImageView [341.33, 72.67, 27.33, 17.00] hidden=false alpha=1.0 image=(21.0, 12.0) symbol=true intrinsic=(27.333333333333332, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=<UIDynamicCatalogSystemColor: 0x60000170a440; name = systemBlueColor>
+FACT view                 UIImageView [341.33, 72.67, 27.33, 17.00] hidden=false alpha=1.0 image=(21.0, 12.0) symbol=true intrinsic=(27.333333333333332, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=<UIDynamicCatalogSystemColor: 0x600001730080; name = systemBlueColor>
 FACT view FloatingBarContainerView [0.00, 0.00, 393.00, 852.00] hidden=false alpha=1.0
 FACT view  FloatingBarHostingView<FloatingBarContainer> [0.00, 0.00, 393.00, 852.00] hidden=false alpha=1.0
 FACT view   _UIInheritedView [0.00, 766.00, 393.00, 86.00] hidden=false alpha=1.0
@@ -60,6 +60,44 @@ FACT view          ButtonWrapper [33.00, 781.00, 54.33, 38.00] hidden=false alph
 FACT view           _UIButtonBarButton [33.00, 781.00, 54.33, 38.00] hidden=false alpha=1.0
 FACT view            _UIModernBarButton [45.00, 784.00, 30.33, 32.33] hidden=false alpha=1.0 title=nil image=(0.0, 0.0)
 FACT view             UIButtonLabel [45.00, 790.00, 30.33, 20.33] hidden=false alpha=1.0 text=Edit font=17.0
+FACT view       UIPlatformGlassInteractionView [317.00, 776.00, 48.00, 48.00] hidden=false alpha=1.0
+FACT view        _UIInheritedView [317.00, 776.00, 48.00, 48.00] hidden=false alpha=1.0
+FACT view         UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>> [322.00, 781.00, 38.00, 38.00] hidden=false alpha=1.0
+FACT view          ButtonWrapper [322.00, 781.00, 38.00, 38.00] hidden=false alpha=1.0
+FACT view           _UIButtonBarButton [322.00, 781.00, 38.00, 38.00] hidden=false alpha=1.0
+FACT view            _UIModernBarButton [324.00, 789.33, 34.00, 22.00] hidden=false alpha=1.0 title=nil image=(18.0, 16.0)
+FACT view             UIImageView [329.33, 789.33, 23.33, 22.00] hidden=false alpha=1.0 image=(18.0, 16.0) symbol=true intrinsic=(23.333333333333332, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=UIExtendedSRGBColorSpace 0 0.533333 1 1
+DONE
+# VARIANT=C
+FACT variant=C toolbar=[0.00, 0.00, 393.00, 852.00] hidden=false inWindow=false superview=nil
+FACT child safeArea=UIEdgeInsets(top: 165.0, left: 0.0, bottom: 86.0, right: 0.0) frame=[0.00, 0.00, 393.00, 852.00]
+FACT item0 title=Settings image=true hidesSharedBackground=false sharesBackground=true
+FACT item1 title=nil image=true hidesSharedBackground=false sharesBackground=true
+FACT item2 title=nil image=false hidesSharedBackground=true sharesBackground=true
+FACT item3 title=Add image=true hidesSharedBackground=false sharesBackground=true
+FACT view        UILabel [172.33, 85.67, 48.33, 20.67] hidden=false alpha=1.0 text=Feeds font=17.0
+FACT view               _UIButtonBarButton [337.00, 63.00, 36.00, 36.00] hidden=false alpha=1.0
+FACT view                _UIModernBarButton [339.00, 72.67, 32.00, 17.00] hidden=false alpha=1.0 title=nil image=(21.0, 12.0)
+FACT view                 UIImageView [341.33, 72.67, 27.33, 17.00] hidden=false alpha=1.0 image=(21.0, 12.0) symbol=true intrinsic=(27.333333333333332, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=<UIDynamicCatalogSystemColor: 0x60000172cd40; name = systemBlueColor>
+FACT view FloatingBarContainerView [0.00, 0.00, 393.00, 852.00] hidden=false alpha=1.0
+FACT view  FloatingBarHostingView<FloatingBarContainer> [0.00, 0.00, 393.00, 852.00] hidden=false alpha=1.0
+FACT view   _UIInheritedView [0.00, 766.00, 393.00, 86.00] hidden=false alpha=1.0
+FACT view    _UIInheritedView [28.00, 776.00, 337.00, 48.00] hidden=false alpha=1.0
+FACT view     _UIInheritedView [28.00, 776.00, 337.00, 48.00] hidden=false alpha=1.0
+FACT view      _UIInheritedView [28.00, 776.00, 0.00, 0.00] hidden=false alpha=1.0
+FACT view       UIPlatformGlassInteractionView [28.00, 776.00, 106.67, 48.00] hidden=false alpha=1.0
+FACT view        _UIInheritedView [28.00, 776.00, 51.67, 48.00] hidden=false alpha=1.0
+FACT view         UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>> [33.00, 781.00, 41.67, 38.00] hidden=false alpha=1.0
+FACT view          ButtonWrapper [33.00, 781.00, 41.67, 38.00] hidden=false alpha=1.0
+FACT view           _UIButtonBarButton [33.00, 781.00, 41.67, 38.00] hidden=false alpha=1.0
+FACT view            _UIModernBarButton [40.00, 786.33, 27.67, 27.67] hidden=false alpha=1.0 title=nil image=(21.333333333333332, 20.333333333333332)
+FACT view             UIImageView [40.00, 786.33, 27.67, 27.67] hidden=false alpha=1.0 image=(21.333333333333332, 20.333333333333332) symbol=true intrinsic=(27.666666666666668, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=UIExtendedSRGBColorSpace 0 0.533333 1 1
+FACT view        _UIInheritedView [83.67, 776.00, 51.00, 48.00] hidden=false alpha=1.0
+FACT view         UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>> [88.67, 781.00, 41.00, 38.00] hidden=false alpha=1.0
+FACT view          ButtonWrapper [88.67, 781.00, 41.00, 38.00] hidden=false alpha=1.0
+FACT view           _UIButtonBarButton [88.67, 781.00, 41.00, 38.00] hidden=false alpha=1.0
+FACT view            _UIModernBarButton [95.67, 788.33, 27.00, 24.00] hidden=false alpha=1.0 title=nil image=(20.666666666666668, 17.333333333333332)
+FACT view             UIImageView [95.67, 788.33, 27.00, 24.00] hidden=false alpha=1.0 image=(20.666666666666668, 17.333333333333332) symbol=true intrinsic=(27.0, 20.333333333333332) preferred=textStyle=UICTFontTextStyleBody, weight=Medium, scale=Large imageConfig=traits=(UserInterfaceIdiom = Phone, DisplayScale = 3, DisplayGamut = P3, HorizontalSizeClass = Compact, VerticalSizeClass = Regular, UserInterfaceStyle = Light, UserInterfaceLayoutDirection = LTR, PreferredContentSizeCategory = L, AccessibilityContrast = Normal) contentMode=1 tint=<UIDynamicCatalogSystemColor: 0x600001739940; name = labelColor>
 FACT view       UIPlatformGlassInteractionView [317.00, 776.00, 48.00, 48.00] hidden=false alpha=1.0
 FACT view        _UIInheritedView [317.00, 776.00, 48.00, 48.00] hidden=false alpha=1.0
 FACT view         UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>> [322.00, 781.00, 38.00, 38.00] hidden=false alpha=1.0

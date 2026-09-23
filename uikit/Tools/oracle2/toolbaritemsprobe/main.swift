@@ -34,6 +34,13 @@ func items(_ variant: String) -> [UIBarButtonItem] {
     // the storyboard's flexible space archives UIHidesSharedBG = true
     flex.hidesSharedBackground = true
     let add = UIBarButtonItem(title: "Add", image: UIImage(systemName: "plus"), target: nil, action: nil)
+    if variant == "C" {
+        // As NetNewsWire's storyboard archives them (UIStyle = 1, bordered)
+        // and as MainFeedCollectionViewController tints the activity button.
+        settings.style = .bordered
+        add.style = .bordered
+        activity.tintColor = .label
+    }
     return [settings, activity, flex, add]
 }
 
