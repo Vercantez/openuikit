@@ -6,6 +6,18 @@
 // reordering and layout-to-layout transitions remain outside this
 // implementation (docs/agent_reports/uicollectionviewcontroller.md).
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+@_exported import struct Foundation.IndexPath
+#endif
+#if canImport(ObjectiveC)
+@_exported import struct ObjectiveC.Selector
+#endif
+
 @preconcurrency @MainActor
 private final class UICollectionViewControllerWrapperView: UIView {
     weak var collectionController: UICollectionViewController?

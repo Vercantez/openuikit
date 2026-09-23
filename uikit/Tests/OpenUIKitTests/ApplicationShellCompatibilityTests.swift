@@ -32,6 +32,9 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
     func testSceneWindowUsesSceneScreenAndWindowLevelsSupportArithmetic() {
         let scene = UIWindowScene()
         let window = UIWindow(windowScene: scene)
+        // A window scene connects on assignment; leave none behind for
+        // later suites (ValueTypeTailTests shortcut delivery).
+        defer { UIApplication.shared._disconnect(scene: scene) }
 
         XCTAssertTrue(window.windowScene === scene)
         XCTAssertEqual(window.frame, scene.screen.bounds)

@@ -13,6 +13,14 @@
 // always returned; Tests/ObjCProtocolTests checks the ones UIKit's behaviour
 // depends on against the iOS 26.1 simulator (Tools/oracle2/objcprotocolprobe).
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import struct Foundation.IndexPath
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint

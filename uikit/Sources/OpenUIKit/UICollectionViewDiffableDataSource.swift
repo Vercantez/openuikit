@@ -5,7 +5,7 @@
 // the live cell when the identifier is unchanged.
 
 #if canImport(Foundation)
-import struct Foundation.IndexPath
+@_exported import struct Foundation.IndexPath
 #endif
 // NSObject-derived, as in UIKit (the SDK declares it `: NSObject`), so it can
 // cross the `@objc` delegate / data-source protocols on the Apple toolchain

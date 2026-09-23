@@ -39,7 +39,10 @@ final class HeadlessRunLoopTests: XCTestCase {
         }
         XCTAssertTrue(foundationTimerFired, "a Foundation Timer on the main run loop fires")
         XCTAssertEqual(completed, [true], "the host clock advanced past the animation's end")
-        XCTAssertGreaterThan(OpenUIKitRuntime.animationTime, 0.05)
+        // The ticker counts frames (no wall clock in the library): the 0.05 s
+        // animation ends exactly on frame 3, 3 / 60 = 0.05, and the loop
+        // stops there. "Greater than" only held while the clock was the wall.
+        XCTAssertGreaterThanOrEqual(OpenUIKitRuntime.animationTime, 0.05)
     }
 
     func testBundledOpenUIKitResourcesAreAdoptedOnlyWhenPresent() throws {

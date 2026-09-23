@@ -11,6 +11,9 @@
 #     total if it added goldens — the script prints the count);
 #   - the real-app screens do not drop below 99.0 / 98.4 / 98.4;
 #   - Linux build in swift:6.2-noble;
+#   - the unit tests RUN (swift test, whole suite, default order) and fail
+#     only where scripts/known_test_failures.txt says so; a listed test that
+#     now passes is refused too (exit 10; docs/agent_reports/test-debt.md);
 #   - the agent touched nothing outside uikit/ and none of the pin files.
 #   - the conformance apps re-rendered against the goldens COMMITTED in the
 #     merged tree (goldens/ios), refused when those goldens are stale or are
@@ -28,6 +31,8 @@
 #     (printed as VERDICT REUSED; FORCE_RECHECK=1 reruns; GATE_VERDICT_TTL_H=24).
 #   - Linux docker build, guest route and test-bundle build start as soon as
 #     the merged tree exists and are joined where the serial gate ran them;
+#     the unit-test run starts the moment the bundle is built and is joined
+#     just before the Linux build (GATE_TEST_TIMEOUT, GATE_TEST_PARALLEL);
 #     conformance replays run GATE_JOBS (4) at a time; recaptures stay serial
 #     on the simulator. GATE_SERIAL=1 restores the one-at-a-time order.
 #   - GATE_WARM=1: persistent build caches (off by default; see the report).
@@ -138,7 +143,7 @@ verdict_key() {
   {
     echo "tree $MERGED_TREE"
     echo "gate $(shasum -a 256 < "$SELF" | cut -c1-64)"
-    for v in ALLOW_DROP ALLOW_STALE_GOLDENS ALLOW_PATHS RECAPTURE_APPS GATE_GOLDENS GATE_WARM; do echo "$v=${!v:-}"; done
+    for v in ALLOW_DROP ALLOW_STALE_GOLDENS ALLOW_PATHS RECAPTURE_APPS GATE_GOLDENS GATE_WARM GATE_TEST_PARALLEL; do echo "$v=${!v:-}"; done
     swift --version 2>&1 | head -1
     docker image inspect -f '{{.Id}}' swift:6.2-noble 2>/dev/null || echo no-linux-image
     docker images --no-trunc --format '{{.Repository}}:{{.Tag}} {{.ID}}' 2>/dev/null | grep '^swift-macho-spike:' | sort
@@ -292,6 +297,29 @@ test_bundle() {
   # would serialize them on SwiftPM's lock); same sources, same pins
   swift build --build-tests --scratch-path "$TESTS_SCRATCH"
 }
+unit_tests() {
+  # The whole suite, RUN (the bundle build above only proves it compiles:
+  # ~10 test classes had gone red on main unseen, docs/agent_reports/
+  # test-debt.md). One process, default order, not --parallel: several of
+  # those failures were state leaked from an earlier suite, which only the
+  # full-order run shows. GATE_TEST_PARALLEL=1 adds --parallel (faster, blind
+  # to order dependence); GATE_TEST_TIMEOUT (1800 s) bounds a hang.
+  while [ ! -f "$S/tests.rc" ]; do sleep 2; done
+  [ "$(cat "$S/tests.rc")" = 0 ] || { echo "   test bundle did not build; unit tests not run"; return 5; }
+  local t0 rc deadline pid
+  t0=$(date +%s); deadline=$(( t0 + ${GATE_TEST_TIMEOUT:-1800} ))
+  swift test --skip-build --scratch-path "$TESTS_SCRATCH" ${GATE_TEST_PARALLEL:+--parallel} > "$S/unittests.out" 2>&1 &
+  pid=$!
+  while kill -0 "$pid" 2>/dev/null; do
+    if [ "$(date +%s)" -ge "$deadline" ]; then
+      echo "   swift test still running after ${GATE_TEST_TIMEOUT:-1800} s: killed"; killtree "$pid"; break
+    fi
+    sleep 2
+  done
+  wait "$pid"; rc=$?
+  echo "   swift test: exit $rc after $(( $(date +%s) - t0 )) s (started at +$(( t0 - GATE_T0 ))s)"
+  python3 scripts/check_unit_tests.py "$S/unittests.out" --rc "$rc" --known scripts/known_test_failures.txt
+}
 TESTS_SCRATCH=$WT/uikit/.build-tests
 LINUX_VOLUMES=""
 SCRATCH_ARGS=""
@@ -328,6 +356,7 @@ if [ -z "${GATE_SERIAL:-}" ]; then
   bg linux linux_build
   bg guest-route guest_route
   bg tests test_bundle
+  bg unittests unit_tests       # starts when the bundle is built
 fi
 
 stage "macOS build + Catalyst gate"
@@ -349,6 +378,10 @@ fi
 stage "test bundle builds (a keep-both on a test file once merged an unbalanced class)"
 if [ -n "${GATE_SERIAL:-}" ]; then test_bundle > $S/tests.log 2>&1 && echo 0 > $S/tests.rc || echo 1 > $S/tests.rc; fi
 [ "$(join_bg tests)" = 0 ] || { grep -E 'error:' $S/tests.log | head -5; echo "TEST BUNDLE RED"; exit 5; }
+if [ -n "${GATE_SERIAL:-}" ]; then
+  stage "unit tests (swift test, full suite in default order)"
+  unit_tests > $S/unittests.log 2>&1 && echo 0 > $S/unittests.rc || echo 1 > $S/unittests.rc
+fi
 stage "real-app screens"
 if [ "$GOLDENS" = committed ]; then
   if [ -d goldens/ios/golden_realapp_ios ]; then
@@ -627,6 +660,9 @@ for d in sorted(glob.glob(S + "/conf-*")):
         print(f"   {name}: {score:.3f} (board {row['score']:.3f})")
 if bad: raise SystemExit("CONFORMANCE DROPPED: " + "; ".join(bad))
 PY
+stage "unit tests (swift test on the merged tree; known failures: scripts/known_test_failures.txt)"
+rc=$(join_bg unittests); cat $S/unittests.log
+[ "$rc" = 0 ] || { echo "UNIT TESTS RED (full output: $S/unittests.out)"; exit 10; }
 stage "Linux build"
 if [ -n "${GATE_SERIAL:-}" ]; then linux_build > $S/linux.log 2>&1 && echo 0 > $S/linux.rc || echo 1 > $S/linux.rc; fi
 rc=$(join_bg linux); tail -8 $S/linux.log

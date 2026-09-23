@@ -13,6 +13,8 @@
 
 #if canImport(Foundation)
 import class Foundation.NSObject
+// Re-exported per file (docs/agent_reports/sugar-unify.md).
+@_exported import typealias Foundation.NSRangePointer
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #endif

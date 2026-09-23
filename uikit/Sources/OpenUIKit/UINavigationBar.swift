@@ -37,6 +37,14 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -601,8 +609,19 @@ public final class UINavigationBar: UIView, _UIBarItemContainer, UIBarPositionin
 
     private func configureBar() {
         if let proxy = Self._appearanceProxy {
-            _standardAppearance = proxy._standardAppearance
-            _standardAppearanceIsExplicit = proxy._standardAppearanceIsExplicit
+            // A proxy forwards what the app SET on it (UIKit records the
+            // proxy's setter invocations and replays them on new bars). Its
+            // own synthesized standard appearance is not something the app
+            // set: it is the cut-dependent default of whenever the proxy was
+            // first read (opaque on Catalyst, default background on iOS), so
+            // copying it froze that cut into every later bar — an iOS inline
+            // bar made after a Catalyst-cut read of the proxy came out opaque
+            // (IOSNavigationBarTransitionTests after
+            // ApplicationShellCompatibilityTests).
+            if proxy._standardAppearanceIsExplicit {
+                _standardAppearance = proxy._standardAppearance
+                _standardAppearanceIsExplicit = true
+            }
             scrollEdgeAppearance = proxy.scrollEdgeAppearance
             compactAppearance = proxy.compactAppearance
             _legacyBackgroundImages = proxy._legacyBackgroundImages

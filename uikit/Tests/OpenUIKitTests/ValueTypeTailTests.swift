@@ -193,6 +193,14 @@ final class ValueTypeTailTests: XCTestCase {
             }
         }
         let app = UIApplication.shared
+        // Delivery goes to a connected window scene, and connectedScenes is
+        // a Set: a scene an earlier suite left connected (assigning
+        // `window.windowScene` connects one) was picked instead of ours
+        // whenever the Set happened to iterate it first — this test failed
+        // in some full runs and passed alone. Run with ours as the only one.
+        let leftovers = app.connectedScenes
+        for s in leftovers { app._disconnect(scene: s) }
+        defer { for s in leftovers { app._connect(scene: s) } }
         let previous = app.delegate
         let appDelegate = AppDelegate()
         app.delegate = appDelegate

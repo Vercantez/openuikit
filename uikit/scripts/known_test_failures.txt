@@ -1,0 +1,6 @@
+# Unit tests the merge gate (agent_merge.sh "unit tests" stage) lets fail.
+# One `Class/testName reason` per line. The gate refuses any failure not
+# listed here AND any listed test that now passes or no longer runs, so this
+# list only shrinks: fix the test, delete its line in the same commit.
+# Inventory and reasoning: docs/agent_reports/test-debt.md.
+UIButtonConfigurationTests/testAttributedTitleFontAndColourWin since attrstring-unify (b1a50a20) NSAttributedString IS Foundation's on Apple toolchains, so AttributedString(NSAttributedString(...)) resolves to Foundation's initializer, whose attribute table (AppKit/UIKit scopes of the real frameworks) drops the port's UIFont/UIColor values; the port's converter (UIButtonConfiguration.swift) is never chosen. Owner: attrstring-unify.
