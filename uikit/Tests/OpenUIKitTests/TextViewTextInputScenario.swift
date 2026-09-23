@@ -37,9 +37,6 @@ final class OUKTextViewInputRecorder: NSObject, UITextViewDelegate {
     }
     func textViewDidChangeSelection(_ textView: UITextView) { events.append("didChangeSelection sel=\(sel(textView))") }
 
-    @objc func noteChange(_ n: Notification) { events.append("note TextDidChange") }
-    @objc func noteBegin(_ n: Notification) { events.append("note TextDidBeginEditing") }
-    @objc func noteEnd(_ n: Notification) { events.append("note TextDidEndEditing") }
 }
 
 @MainActor
@@ -101,13 +98,18 @@ enum OUKTextViewInputScenario {
         tv.font = UIFont.systemFont(ofSize: 17)
         rec.textView = tv
         let nc = NotificationCenter.default
-        nc.addObserver(rec, selector: #selector(OUKTextViewInputRecorder.noteChange(_:)),
-                       name: UITextView.textDidChangeNotification, object: tv)
-        nc.addObserver(rec, selector: #selector(OUKTextViewInputRecorder.noteBegin(_:)),
-                       name: UITextView.textDidBeginEditingNotification, object: tv)
-        nc.addObserver(rec, selector: #selector(OUKTextViewInputRecorder.noteEnd(_:)),
-                       name: UITextView.textDidEndEditingNotification, object: tv)
-        defer { nc.removeObserver(rec) }
+        // Block observers (synchronous, queue nil): selector observers need
+        // Objective-C interop, which the Linux build does not have.
+        let tokens = [
+            (UITextView.textDidChangeNotification, "note TextDidChange"),
+            (UITextView.textDidBeginEditingNotification, "note TextDidBeginEditing"),
+            (UITextView.textDidEndEditingNotification, "note TextDidEndEditing"),
+        ].map { name, line in
+            nc.addObserver(forName: name, object: tv, queue: nil) { _ in
+                MainActor.assumeIsolated { rec.events.append(line) }
+            }
+        }
+        defer { tokens.forEach(nc.removeObserver) }
 
         func step(_ name: String, _ body: () -> String?) {
             rec.events = []
