@@ -1069,7 +1069,7 @@ let package = Package(
     // SwiftPM was already linking these products for macOS 11. Declaring
     // it makes that explicit instead of leaving it to the default.
     // Apple-only: it has no effect on the Linux build.
-    platforms: [.macOS(.v11)],
+    platforms: [.macOS(.v11), .iOS("26.0")],
     products: coreProducts + frameworkProducts + blockzillaProducts + simplenoteProducts + eidolonServiceProducts + eidolonDependencyProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
     targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets + eidolonServiceTargets + eidolonDependencyTargets,

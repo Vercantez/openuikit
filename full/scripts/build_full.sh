@@ -763,6 +763,8 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/mathpatch.o" \
         "$W/full/shims/libsystem_math_compat.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
+    # posix_madvise (iOS-triple ICU), docs/agent_reports/ios-target-route.md.
+    "${CC[@]}" -O1 -c -o "$OUT/posixpatch.o" "$W/full/shims/libsystem_posix_compat.c"
     clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
         -c -o "$OUT/cxxpatch.o" "$W/spike/cxxpatch.cpp"
@@ -772,7 +774,7 @@ done
 
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" \
+        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/posixpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
@@ -785,7 +787,7 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
     ld64.lld-18 -arch "$ARCH" -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
+        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/posixpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
 
     # The umbrella must DEFINE the symbols that are its whole reason to exist.
@@ -793,7 +795,7 @@ done
     # used to be __NSGetMachExecuteHeader; that moved into machorun's libSystem
     # (darwin/src/objcsupport.c). A definition here would beat libSystem.real,
     # so the umbrella must NOT define it.
-    for sym in _nan _remquo; do
+    for sym in _nan _remquo _posix_madvise; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
             | awk -v s="$sym" '$NF==s{f=1} END{exit !f}' || {
             echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
@@ -896,7 +898,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
-    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\n'
+    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo,_posix_madvise\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\tfull/shims/libsystem_posix_compat.c\n'
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'
@@ -1271,6 +1273,36 @@ cp "$W/full/foundation/include/CoreFoundation/CoreFoundation.h" \
     "$APPMODS/include/CoreFoundation/CoreFoundation.h"
 cp "$W/full/foundation/include/CoreFoundation/module.modulemap" \
     "$APPMODS/include/CoreFoundation/module.modulemap"
+# The durable OpenCombine export is a macOS-platform object; LLD refuses it in
+# an iOS-simulator link ("has platform macOS, which is different from target
+# platform iOS Simulator", MEASURED docs/agent_reports/ios-target-route.md).
+# For that platform compile the same attested 103 pinned sources for TARGET,
+# as full/xcodeplan/build_true_ios_platform_frameworks.sh does.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    echo "== pinned OpenCombine from source for $TARGET"
+    OPENCOMBINE_ARTIFACTS=$OUT/opencombine-$LINK_PLATFORM
+    rm -rf "$OPENCOMBINE_ARTIFACTS"
+    mkdir -p "$OPENCOMBINE_ARTIFACTS"
+    perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
+        "$W/full/oracle-opencombine/policy.json" "$OPENCOMBINE_SOURCE" \
+        "$OPENCOMBINE_ARTIFACTS/sources.nul" "$OPENCOMBINE_ARTIFACTS/sources.json"
+    mapfile -d '' -t opencombine_relative_sources < "$OPENCOMBINE_ARTIFACTS/sources.nul"
+    [ "${#opencombine_relative_sources[@]}" -eq 103 ] \
+        || die "OpenCombine source denominator is ${#opencombine_relative_sources[@]}, expected 103"
+    opencombine_sources=()
+    for source in "${opencombine_relative_sources[@]}"; do
+        case "$source" in
+            /*) opencombine_sources+=("$source") ;;
+            *) opencombine_sources+=("$OPENCOMBINE_SOURCE/$source") ;;
+        esac
+    done
+    "${SWIFTC[@]}" -parse-as-library \
+        -Xcc -fmodule-map-file="$APPMODS/include/COpenCombineHelpers/module.modulemap" \
+        -Xcc -I"$APPMODS/include/COpenCombineHelpers" \
+        -module-name OpenCombine \
+        -emit-module -emit-module-path "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
+        -emit-object -o "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "${opencombine_sources[@]}"
+fi
 [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" ] && \
     [ -f "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" ] \
     || die "OpenCombine artifacts missing under $OPENCOMBINE_ARTIFACTS"
@@ -1725,6 +1757,12 @@ for i in "${!OBS_SOURCES[@]}"; do OBS_SOURCES[$i]="$W/${OBS_SOURCES[$i]}"; done
     -L"$SYS/usr/lib" -lSystem -lobjc "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
 cp "$OBS_OUT/Observation.swiftmodule" "$APPINC/"
 
+# -disable-availability-checking folds every `#available` to true (MEASURED:
+# Xcode 26.1 emit-ir, 4 runtime-check references without it, 0 with it). An
+# iOS-triple guest presents iOS 26.1, so its app modules keep the real check
+# (docs/agent_reports/ios-target-route.md); the macOS-triple guest is unchanged.
+APP_AVAILABILITY_FLAGS=(-disable-availability-checking)
+[ "$LINK_PLATFORM" = ios-simulator ] && APP_AVAILABILITY_FLAGS=()
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
     echo "   module $name"
@@ -1735,7 +1773,7 @@ compile_app_module() {
     "${SWIFTC[@]}" -D OPENUIKIT_GUEST -parse-as-library "${FEMODULES[@]}" \
         "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
         -I "$OUT" -I "$APPINC" -I "$APPMODS" \
-        -disable-availability-checking \
+        "${APP_AVAILABILITY_FLAGS[@]}" \
         "${OBSERVATION_PLUGIN_FLAGS[@]}" \
         -module-name "$name" \
         -emit-module -emit-module-path "$APPINC/$name.swiftmodule" \
@@ -1881,6 +1919,13 @@ COMMON_LINK_OBJECTS=(
     "${FE_OBJECTS[@]}"
     "${PREVIEW_LINK_OBJECTS[@]}"
 )
+# `#available(iOS x, *)` answers for iOS 26.1 in iOS-triple executables
+# (full/shims/ios_availability.c); the macOS-triple guest keeps
+# libswiftcompat's always-yes.
+if [ "$LINK_PLATFORM" = ios-simulator ]; then
+    "${CC[@]}" -O1 -c -o "$OUT/iosavailability.o" "$W/full/shims/ios_availability.c"
+    COMMON_LINK_OBJECTS+=("$OUT/iosavailability.o")
+fi
 # Combine/OpenCombine/Dispatch are dylibs (widget/onboarding measured path).
 # Their .o files are inside those dylibs — do not object-link them as well.
 # render_full links the Foundation-visible UIKit object; the IndexPath probe
@@ -1939,11 +1984,20 @@ build_final_executable() {
                 -o "$OUT/indexpath_identity_probe" \
                 "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
                 "${COMMON_LINK_OBJECTS[@]}" ;;
+        # iOS-target guest probe (docs/agent_reports/ios-target-route.md):
+        # the source #errors unless os(iOS); full/iostarget/ios_guest.sh runs
+        # it under machorun and diffs it against the iOS 26.1 simulator.
+        IOSTargetGuestProbe)
+            compile_app_module IOSTargetGuestProbe "$OUT/IOSTargetGuestProbe.o" \
+                "$W/full/iostarget/IOSTargetGuestProbe.swift"
+            link_app_executable "$OUT/IOSTargetGuestProbe" "$OUT/IOSTargetGuestProbe.o" ;;
         *) die "unknown final executable $1" ;;
     esac
 }
-run_jobs build_final_executable render_full GuestBoundaryTests LaunchProbe \
-    FuziProbe BrowserInkProbe indexpath_identity_probe
+FINAL_EXECUTABLES=(render_full GuestBoundaryTests LaunchProbe FuziProbe
+    BrowserInkProbe indexpath_identity_probe)
+[ "$LINK_PLATFORM" = ios-simulator ] && FINAL_EXECUTABLES+=(IOSTargetGuestProbe)
+run_jobs build_final_executable "${FINAL_EXECUTABLES[@]}"
 
 # Match SwiftPM's executable bundle metadata and stage Focus startup assets.
 # The guest Bundle reads a filesystem Info.plist rather than __TEXT metadata.

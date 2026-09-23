@@ -72,10 +72,42 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 
 ROOTS = ("corpus", "checkouts", "openuikit", "generated")
+# Port products whose Apple module the curated iOS SDK keeps
+# (Tools/ingest/ios_target_sdk.py): linked off iOS only, so the iOS triple
+# sees Apple's declarations. Same set as xcodeproj_to_package.py.
+IOS_SDK_SUPPLIED_PRODUCTS = {"MobileCoreServices"}
+
+
+IOS_PLATFORM_FLOOR = '.iOS("26.0")'
+
+
+def platform_entries(spec: dict) -> list[str]:
+    """The spec's platforms (or macOS at macos_deployment), plus the iOS floor.
+
+    OpenUIKit declares `.iOS("26.0")` and SwiftPM refuses a client whose floor
+    is below a dependency's, so an iOS entry below the floor is replaced by it
+    (docs/agent_reports/ios-target-route.md). Every other entry is kept as the
+    spec wrote it.
+    """
+    entries = list(spec.get("platforms") or
+                   [".macOS(" + json.dumps(spec.get("macos_deployment", "13.0")) + ")"])
+    kept = []
+    for e in entries:
+        m = re.match(r'\.iOS\(\s*(?:"([0-9.]+)"|\.v([0-9_]+))\s*\)$', e.strip())
+        if m:
+            version = (m.group(1) or m.group(2).replace("_", ".")).split(".")
+            if int(version[0]) >= 26:
+                kept.append(e)
+            continue
+        kept.append(e)
+    if not any(e.strip().startswith(".iOS(") for e in kept):
+        kept.append(IOS_PLATFORM_FLOOR)
+    return kept
 
 
 def sha256(path: str) -> str:
@@ -103,7 +135,9 @@ def render_target(t: dict, shims: set[str]) -> str:
         else:
             deps.append(json.dumps(d))
     for p in t.get("openuikit", []):
-        deps.append(f'.product(name: {json.dumps(p)}, package: "OpenUIKit")')
+        condition = (", condition: .when(platforms: [.macOS, .linux])"
+                     if p in IOS_SDK_SUPPLIED_PRODUCTS else "")
+        deps.append(f'.product(name: {json.dumps(p)}, package: "OpenUIKit"{condition})')
     lines = [
         "        .target(",
         f"            name: {json.dumps(t['name'])},",
@@ -292,7 +326,7 @@ import PackageDescription
 let package = Package(
     name: {json.dumps(spec['name'])},
     defaultLocalization: {json.dumps(spec.get('default_localization', 'en'))},
-    platforms: [{', '.join(spec.get('platforms') or ['.macOS(' + json.dumps(spec.get('macos_deployment', '13.0')) + ')'])}],
+    platforms: [{", ".join(platform_entries(spec))}],
     products: [
 {products}
     ],

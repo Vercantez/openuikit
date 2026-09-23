@@ -1,0 +1,9 @@
+posix_madvise
+  POSIX_MADV_NORMAL            rc=0 errno=untouched
+  POSIX_MADV_RANDOM            rc=0 errno=untouched
+  POSIX_MADV_SEQUENTIAL        rc=0 errno=untouched
+  POSIX_MADV_WILLNEED          rc=0 errno=untouched
+  POSIX_MADV_DONTNEED          rc=0 errno=untouched
+  invalid advice 99            rc=-1 errno=EINVAL
+  unaligned address            rc=0 errno=untouched
+  data after advice: first page 7, DONTNEED page 7

@@ -380,9 +380,40 @@ PORTED_PRODUCTS = {
     # simplenote-objc-core on Simplenote 9b1bb17 CSSearchable+Helpers.swift),
     # so the product is linked on every platform when the app imports it.
     "MobileCoreServices": "MobileCoreServices",
+    # Presentable first-party frameworks (OpenUIKit Package.swift
+    # frameworkProducts). The iOS SDK's copies import UIKit, so the curated
+    # route-(b) iOS SDK removes them (Tools/ingest/ios_target_sdk.py).
+    "MessageUI": "MessageUI",
+    "LinkPresentation": "LinkPresentation",
+    "PhotosUI": "PhotosUI",
 }
-# Ported products emitted only when the app demands them, on every platform.
+# Ported products emitted only when the app demands them, where the SDK has no
+# module of that name (macOS, Linux). The iOS SDK has the real
+# MobileCoreServices (kUTType*, UTTypeCreatePreferredIdentifierForTag), which
+# the port's product would shadow (MEASURED ios-target-route: Kickstarter
+# KsApi MimeType.swift, 8 errors on the iOS triple with the port's module).
 DEMANDED_ALL_PLATFORM_PRODUCTS = {"MobileCoreServices"}
+# Port products whose Apple module the curated iOS SDK keeps (not UI-coupled):
+# on the iOS triple the app gets Apple's iOS declarations, as on a device.
+# Mirrored by spm_app_chain.IOS_SDK_SUPPLIED_PRODUCTS; test_ios_target checks
+# both against the live SDK scan.
+IOS_SDK_SUPPLIED_PRODUCTS = {"MobileCoreServices"}
+
+# Route (b) iOS target (docs/agent_reports/ios-target-route.md). The app
+# package builds for `arm64-apple-ios26.1-simulator` against the curated SDK
+# of ios_target_sdk.py, which removes Apple's UIKit/SwiftUI and every SDK
+# framework that imports them (MEASURED iPhoneSimulator26.1: 106 of 277
+# modules). A removed framework the port supplies must therefore be linked
+# on iOS as it is on Linux; on macOS the macOS SDK copy stays in charge, as
+# before. WebKit and StoreKit (platform-named) are linked on every platform
+# already. test_ios_target.py checks this set against the live SDK scan.
+IOS_LINKED_PORT_PRODUCTS = {"SafariServices", "PassKit", "IntentsUI", "MessageUI", "LinkPresentation", "PhotosUI"}
+UNCONDITIONAL_PORT_PRODUCTS = {"WebKit", "StoreKit"}
+# Must equal OpenUIKit Package.swift's `.iOS(...)` floor: SwiftPM refuses a
+# dependency whose platform floor is above its client's, and ignores the OS
+# version in --triple (MEASURED: 1,183 availability errors at the implicit
+# iOS 12 floor).
+IOS_PLATFORM_FLOOR = '.iOS("26.0")'
 
 # Simplenote 9b1bb17: these five source dependencies build on Darwin route
 # (b). CoreData/AppKit and @objc still prevent claiming a Linux/guest port.
@@ -444,7 +475,7 @@ OBJC_SUBCLASSING_DEFINES = [
 GENERATED_HEADER_DIRS = [
     f".build/{triple}/{cfg}/OpenUIKit.build/include"
     for cfg in ("debug", "release")
-    for triple in ("arm64-apple-macosx", "x86_64-apple-macosx")
+    for triple in ("arm64-apple-macosx", "x86_64-apple-macosx", "arm64-apple-ios-simulator")
 ]
 # OpenUIKit names these modules differently per platform (Package.swift:155):
 # the literal Apple names on Linux, OpenUIKit* on Darwin. SwiftPM validates a
@@ -1747,7 +1778,7 @@ def emit_package_swift(
         '                .product(name: "os", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Glean", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Intents", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-        '                .product(name: "IntentsUI", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "IntentsUI", package: "OpenUIKit", condition: .when(platforms: [.linux, .iOS]))',
         '                .product(name: "Onboarding", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Licenses", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "DesignSystem", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
@@ -1760,20 +1791,28 @@ def emit_package_swift(
         '                .product(name: "UIComponents", package: "OpenUIKit")',
         '                .product(name: "AppShortcuts", package: "OpenUIKit")',
         '                .product(name: "LocalAuthentication", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-        '                .product(name: "PassKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "PassKit", package: "OpenUIKit", condition: .when(platforms: [.linux, .iOS]))',
         '                .product(name: "Network", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-        '                .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux, .iOS]))',
     ]
     # libkern / StoreKit are emitted through PLATFORM_NAMED_PRODUCTS below
     # (eidolon-launch and simplenote-launch3 both measured that SwiftPM
     # resolves a product name before evaluating its platform condition).
     demanded = {r["name"] for r in manifest["spm"] + manifest["imports"]}
     for name in sorted(DEMANDED_ALL_PLATFORM_PRODUCTS & demanded):
-        products.append(f'                .product(name: "{name}", package: "OpenUIKit")')
+        condition = (', condition: .when(platforms: [.macOS, .linux])'
+                     if name in IOS_SDK_SUPPLIED_PRODUCTS else '')
+        products.append(f'                .product(name: "{name}", package: "OpenUIKit"{condition})')
+    static_ios = {"IntentsUI", "PassKit", "SafariServices"}
+    for name in sorted((IOS_LINKED_PORT_PRODUCTS - static_ios) & demanded):
+        products.append(
+            f'                .product(name: "{name}", package: "OpenUIKit", '
+            'condition: .when(platforms: [.linux, .iOS]))'
+        )
     for name in sorted(DARWIN_SOURCE_PRODUCTS & demanded):
         products.append(
             f'                .product(name: "{name}", package: "OpenUIKit", '
-            'condition: .when(platforms: [.macOS]))'
+            'condition: .when(platforms: [.macOS, .iOS]))'
         )
     resources_block = ""
     if any(manifest["resources"].values()):
@@ -1799,9 +1838,9 @@ def emit_package_swift(
     )
     swift_flags = [
         '"-default-isolation", "MainActor"',
-        '"-disable-availability-checking"',
     ]
     clang_target = ""
+    macos_xcc: list[str] = []
     target_deps = product_deps
     extra_products = ""
     if mixed:
@@ -1817,8 +1856,10 @@ def emit_package_swift(
         for directory in header_dirs:
             xcc += ["-Xcc", f"-ISources/{clang_name}/include/{directory}" if directory else f"-ISources/{clang_name}/include"]
         xcc += ["-Xcc", f"-ISources/{clang_name}/include"]
+        # AppKit exists only on the macOS triple: the renames are a separate,
+        # macOS-conditioned setting (below).
         for name in SWIFT_SIDE_NS_RENAMES:
-            xcc += ["-Xcc", f"-D{name}=OUK_{name}"]
+            macos_xcc += ["-Xcc", f"-D{name}=OUK_{name}"]
         for define in OBJC_SUBCLASSING_DEFINES:
             xcc += ["-Xcc", define]
         bridging = manifest.get("bridging_header")
@@ -1833,11 +1874,11 @@ def emit_package_swift(
         # found in the bridging-header PCH without it).
         target_deps = product_deps + (
             f',\n                .product(name: "{OBJC_SUPPORT_PRODUCT}", package: "OpenUIKit", '
-            'condition: .when(platforms: [.macOS]))'
+            'condition: .when(platforms: [.macOS, .iOS]))'
         )
         objc_products = [
-            f'                .product(name: "{OBJC_SUPPORT_PRODUCT}", package: "OpenUIKit", condition: .when(platforms: [.macOS]))',
-            f'                .product(name: "{OBJC_BRIDGE_PRODUCT}", package: "OpenUIKit", condition: .when(platforms: [.macOS]))',
+            f'                .product(name: "{OBJC_SUPPORT_PRODUCT}", package: "OpenUIKit", condition: .when(platforms: [.macOS, .iOS]))',
+            f'                .product(name: "{OBJC_BRIDGE_PRODUCT}", package: "OpenUIKit", condition: .when(platforms: [.macOS, .iOS]))',
         ]
         # AutomatticTracks' ObjC surface is its own Clang target (pass 2);
         # the app demands the Swift product name.
@@ -1846,7 +1887,7 @@ def emit_package_swift(
             demanded_objc.add("AutomatticTracksModelObjC")
         for name in sorted(OBJC_DARWIN_PRODUCTS & demanded_objc):
             objc_products.append(
-                f'                .product(name: "{name}", package: "OpenUIKit", condition: .when(platforms: [.macOS]))'
+                f'                .product(name: "{name}", package: "OpenUIKit", condition: .when(platforms: [.macOS, .iOS]))'
             )
         search_paths = [
             f'                .headerSearchPath("include/{d}")' if d else '                .headerSearchPath("include")'
@@ -1898,6 +1939,24 @@ def emit_package_swift(
         )
         target_kind = "target"
     swift_flag_lines = ",\n".join(f"                    {flag}" for flag in swift_flags)
+    # -disable-availability-checking folds every `#available` to true
+    # (MEASURED Xcode 26.1 emit-ir: 4 runtime-check references without it, 0
+    # with it). It is needed off iOS, where the app's iOS availability does
+    # not describe the triple; on the iOS triple (floor 26.0) the app must
+    # take the branch an iOS 26.1 device takes.
+    macos_settings = (
+        "\n                .unsafeFlags([\n"
+        '                    "-disable-availability-checking",\n'
+        "                ], .when(platforms: [.macOS, .linux])),"
+    )
+    if macos_xcc:
+        macos_flag_lines = ",\n".join(
+            f'                    "{macos_xcc[i]}", "{macos_xcc[i + 1]}"' for i in range(0, len(macos_xcc), 2)
+        )
+        macos_settings += (
+            "\n                .unsafeFlags([\n" + macos_flag_lines
+            + "\n                ], .when(platforms: [.macOS])),"
+        )
     linux_named = ",\n".join(
         f'    .product(name: "{linux}", package: "OpenUIKit")' for linux, _ in PLATFORM_NAMED_PRODUCTS
     )
@@ -1935,7 +1994,7 @@ let platformModuleAliases: [String] = [{darwin_aliases}]
 
 let package = Package(
     name: {_swift_string(target_name)},
-    platforms: [.macOS(.v11)],
+    platforms: [.macOS(.v11), {IOS_PLATFORM_FLOOR}],
     products: [
         {product_decl}{extra_products},
     ],
@@ -1951,7 +2010,7 @@ let package = Package(
             swiftSettings: [
                 .unsafeFlags([
 {swift_flag_lines},
-                ] + platformModuleAliases),
+                ] + platformModuleAliases),{macos_settings}
             ]
         ),
     ]{language_setting}
