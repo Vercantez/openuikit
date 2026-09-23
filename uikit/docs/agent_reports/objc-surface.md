@@ -190,6 +190,24 @@ raw values, in `OpenUIKitObjCBridge`, plus declarations in `UIKitObjCSupport.h`.
     the probes moved to `run_jobs`. This probe anchors on the
     `run_jobs build_final_executable` line.
 
+## Gate and guest verdicts (branch head `05acba2f`)
+
+* `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/objc-surface`:
+  * `Build of product 'openrender' complete!`, **124/124 scenes pass**.
+  * `GUEST_ROUTE_COMPILE_OK openuikit=168 opencoregraphics=12`,
+    `GUEST_ROUTE_CHECK_OK`.
+  * Test bundle built.
+  * Real-app scores unchanged from main: 99.137 / 98.535 / 98.548 / 99.74 /
+    98.72 / 98.334 / 97.549 / 99.65 …
+  * Conformance matches the committed boards.
+  * Linux `swift:6.2-noble` build OK.
+  * **`checks passed (CHECK_ONLY)`**.
+* `scripts/ops/local_guest_verify.sh <worktree>` (full Mach-O path):
+  * `FOCUS_GUEST_BOUNDARY_OK`
+  * `FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController`
+  * `rendered 15 screens; existing screens byte-identical 14/14 (including Ledger)`
+  * **`REAL-APP SCREEN VERIFIED ON LINUX`**, rc=0
+
 ## What is still open (ranked by the after-census)
 
 1. **Objective-C subclasses of UILabel, UIButton and UIImageView.** These are
