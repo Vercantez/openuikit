@@ -592,21 +592,8 @@ extern const UIWindowLevel UIWindowLevelNormal;
 extern const UIWindowLevel UIWindowLevelAlert;
 extern const UIWindowLevel UIWindowLevelStatusBar;
 
-/* UIWebView.h (iOS 26.1 SDK): the navigation types and the delegate
- * protocol NJKWebViewProgress and DZNWebViewController implement. */
-@class UIWebView;
-typedef NS_ENUM(NSInteger, UIWebViewNavigationType) {
-    UIWebViewNavigationTypeLinkClicked, UIWebViewNavigationTypeFormSubmitted,
-    UIWebViewNavigationTypeBackForward, UIWebViewNavigationTypeReload,
-    UIWebViewNavigationTypeFormResubmitted, UIWebViewNavigationTypeOther,
-} NS_SWIFT_NAME(UIWebViewNavigationTypeObjC);
-NS_SWIFT_NAME(UIWebViewDelegateObjC) @protocol UIWebViewDelegate <NSObject>
-@optional
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
-- (void)webViewDidStartLoad:(UIWebView *)webView;
-- (void)webViewDidFinishLoad:(UIWebView *)webView;
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
-@end
+/* UIWebViewDelegate / UIWebViewNavigationType: OpenUIKit's own @objc
+ * protocol and enum (OpenUIKit-Swift.h). */
 
 /* UILayoutSupport (UIViewController.h), which ORStackView's header names for
  * a view controller's top/bottom layout guide. Declaration only: no OpenUIKit

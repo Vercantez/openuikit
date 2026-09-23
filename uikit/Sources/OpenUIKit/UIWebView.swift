@@ -23,26 +23,25 @@
 #if canImport(Foundation) && canImport(ObjectiveC)
 import Foundation
 
-@preconcurrency @MainActor
-public protocol UIWebViewDelegate: AnyObject {
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest,
-                 navigationType: UIWebView.NavigationType) -> Bool
-    func webViewDidStartLoad(_ webView: UIWebView)
-    func webViewDidFinishLoad(_ webView: UIWebView)
-    func webView(_ webView: UIWebView, didFailLoadWithError error: Error)
-}
-
-public extension UIWebViewDelegate {
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest,
-                 navigationType: UIWebView.NavigationType) -> Bool { true }
-    func webViewDidStartLoad(_ webView: UIWebView) {}
-    func webViewDidFinishLoad(_ webView: UIWebView) {}
-    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {}
+/// UIKit's @objc protocol (objc-protocols.md shape): SDK selectors, all
+/// optional; OpenUIKit calls it through the helpers at the end of this file.
+@objc(UIWebViewDelegate) @preconcurrency @MainActor
+public protocol UIWebViewDelegate: NSObjectProtocol {
+    @objc(webView:shouldStartLoadWithRequest:navigationType:)
+    optional func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest,
+                          navigationType: UIWebView.NavigationType) -> Bool
+    @objc(webViewDidStartLoad:)
+    optional func webViewDidStartLoad(_ webView: UIWebView)
+    @objc(webViewDidFinishLoad:)
+    optional func webViewDidFinishLoad(_ webView: UIWebView)
+    @objc(webView:didFailLoadWithError:)
+    optional func webView(_ webView: UIWebView, didFailLoadWithError error: Error)
 }
 
 @available(iOS, deprecated: 12.0, message: "No longer supported; please adopt WKWebView.")
 @preconcurrency @MainActor
 open class UIWebView: UIView {
+    @objc(UIWebViewNavigationType)
     public enum NavigationType: Int, Sendable {
         case linkClicked = 0, formSubmitted, backForward, reload, formResubmitted, other
     }
@@ -84,14 +83,14 @@ open class UIWebView: UIView {
         _UIWebViewTurn.later { [weak self] in
             guard let self else { return }
             if let delegate = self.delegate,
-               !delegate.webView(self, shouldStartLoadWith: request, navigationType: .other) { return }
+               !(delegate.webView?(self, shouldStartLoadWith: request, navigationType: .other) ?? true) { return }
             self.isLoading = true
-            self.delegate?.webViewDidStartLoad(self)
+            self.delegate?.webViewDidStartLoad?(self)
             _UIWebViewTurn.later { [weak self] in
                 guard let self else { return }
                 self.request = request
                 self.isLoading = false
-                self.delegate?.webViewDidFinishLoad(self)
+                self.delegate?.webViewDidFinishLoad?(self)
             }
         }
     }
