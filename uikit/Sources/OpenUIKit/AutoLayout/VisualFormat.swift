@@ -20,7 +20,7 @@
 //     leading/trailing; left-to-right / right-to-left use left/right.
 // The alignment options (NSLayoutFormatAlignAll…) are not measured and trap.
 
-#if canImport(ObjectiveC)
+#if canImport(ObjectiveC) && canImport(Foundation)
 import class Foundation.NSNumber
 import class Foundation.NSException
 import struct Foundation.NSExceptionName
@@ -96,7 +96,7 @@ private struct _VisualFormatParser {
     /// UIKit raises NSInvalidArgumentException (MEASURED: an unknown view
     /// name); where Objective-C exceptions exist, so does this.
     func fail(_ why: String) -> Never {
-#if canImport(ObjectiveC)
+#if canImport(ObjectiveC) && canImport(Foundation)
         NSException(name: .invalidArgumentException,
                     reason: "Unable to parse constraint format: \(why)\n\(format)", userInfo: nil).raise()
 #endif
@@ -147,7 +147,7 @@ private struct _VisualFormatParser {
         case let v as Float: return CGFloat(v)
         case let v as Int: return CGFloat(v)
         default:
-#if canImport(ObjectiveC)
+#if canImport(ObjectiveC) && canImport(Foundation)
             if let n = raw as? NSNumber { return CGFloat(n.doubleValue) }
 #endif
             fail("Metric '\(name)' is not a number")
