@@ -161,12 +161,28 @@ public extension SFSafariViewControllerDelegate {
     func safariViewControllerWillOpenInBrowser(_ controller: SFSafariViewController) {}
 }
 
+// Objective-C: UIKit's runtime names and SDK selectors, so an app's
+// Objective-C category (NetNewsWire's SFSafariViewController+Extras.m) binds
+// to this class; the Clang module `SafariServices` that declares it lives in
+// Sources/SafariServicesObjC (docs/agent_reports/safari-objc.md).
+#if canImport(ObjectiveC)
+@objc(SFSafariViewController)
+#endif
 open class SFSafariViewController: UIViewController {
 
+#if canImport(ObjectiveC)
+    @objc(SFSafariViewControllerConfiguration)
+#endif
     open class Configuration: NSObject {
+#if canImport(ObjectiveC)
+        @objc
+#endif
         open var entersReaderIfAvailable = false
         /// Apple's default is true. Pocket Casts sets it false
         /// (`SFSafariViewController+Creation.swift`).
+#if canImport(ObjectiveC)
+        @objc
+#endif
         open var barCollapsingEnabled = true
 
         public override init() { super.init() }
@@ -179,15 +195,26 @@ open class SFSafariViewController: UIViewController {
         }
     }
 
+#if canImport(ObjectiveC)
+    @objc(SFSafariViewControllerDismissButtonStyle)
+#endif
     public enum DismissButtonStyle: Int, Sendable {
         case done = 0
         case close = 1
         case cancel = 2
     }
 
+#if canImport(ObjectiveC)
+    @objc
+#endif
     public let configuration: Configuration
     public weak var delegate: SFSafariViewControllerDelegate?
-    open var dismissButtonStyle: DismissButtonStyle = .done {
+    /// iOS 26.1 default: `.close` (safariobjcprobe: dismissButtonStyle 1).
+    /// The painted glyph is `xmark` for every style (`symbolName(for:)`).
+#if canImport(ObjectiveC)
+    @objc
+#endif
+    open var dismissButtonStyle: DismissButtonStyle = .close {
         didSet { dismissPlatter?.symbolName = Self.symbolName(for: dismissButtonStyle) }
     }
 
@@ -198,8 +225,19 @@ open class SFSafariViewController: UIViewController {
     private var trailingCapsule: UIView?
     private var addressLabel: UILabel?
 
+#if canImport(ObjectiveC)
+    @objc(initWithURL:)
+#endif
     public convenience init(url: URL) {
         self.init(url: url, configuration: Configuration())
+    }
+
+    /// iOS 26.1 (safariobjcprobe): only http and https URLs (either case) are
+    /// accepted; every other scheme — file, mailto, feed, about, a custom
+    /// scheme, a schemeless string — raises NSInvalidArgumentException.
+    static func _acceptsURL(_ url: URL) -> Bool {
+        guard let scheme = url.scheme?.lowercased() else { return false }
+        return scheme == "http" || scheme == "https"
     }
 
     /// SafariServices marks `initWithCoder:` NS_UNAVAILABLE; the required
@@ -209,7 +247,20 @@ open class SFSafariViewController: UIViewController {
         fatalError("SFSafariViewController(coder:) is unavailable")
     }
 
+#if canImport(ObjectiveC)
+    @objc(initWithURL:configuration:)
+#endif
     public init(url: URL, configuration: Configuration) {
+#if canImport(ObjectiveC) && canImport(Foundation)
+        // The exception UIKit raises (safariobjcprobe `initWithURL`); an
+        // Objective-C caller's @try/@catch receives it. Portable builds have
+        // no Objective-C exceptions and accept the URL.
+        if !Self._acceptsURL(url) {
+            NSException(name: .invalidArgumentException,
+                        reason: "The specified URL has an unsupported scheme. Only HTTP and HTTPS URLs are supported.",
+                        userInfo: nil).raise()
+        }
+#endif
         initialURL = url
         self.configuration = configuration.copy()
         super.init()

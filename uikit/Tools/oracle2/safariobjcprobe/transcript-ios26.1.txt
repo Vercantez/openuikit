@@ -1,0 +1,18 @@
+# safariobjcprobe — iOS 26.1
+## safari
+superclass UIViewController
+runtime name SFSafariViewController
+initWithURL https://netnewswire.com/ -> ok class=SFSafariViewController
+initWithURL http://example.com/a?b=c -> ok class=SFSafariViewController
+initWithURL HTTPS://EXAMPLE.COM/ -> ok class=SFSafariViewController
+initWithURL file:///tmp/x.html -> raised NSInvalidArgumentException
+initWithURL mailto:someone@example.com -> raised NSInvalidArgumentException
+initWithURL feed://example.com/rss -> raised NSInvalidArgumentException
+initWithURL netnewswire://open -> raised NSInvalidArgumentException
+initWithURL about:blank -> raised NSInvalidArgumentException
+initWithURL example.com -> raised NSInvalidArgumentException
+category https -> object
+category mailto -> nil
+respondsToSelector ouk_safeSafariViewController: YES
+dismissButtonStyle 1
+configuration entersReaderIfAvailable 0 barCollapsingEnabled 1

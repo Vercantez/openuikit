@@ -65,6 +65,30 @@ class SpmAppChainTests(unittest.TestCase):
         # upstream trees untouched
         self.assertEqual(sorted(os.listdir(os.path.join(self.corpus, "App/Sources/App"))), ["A.swift", "Info.plist"])
 
+    def test_objc_target_gets_the_clang_safariservices_module(self):
+        # NetNewsWire's NetNewsWireObjC: an Objective-C target whose
+        # `@import SafariServices;` must reach the Clang module with
+        # `export *` (product SafariServicesObjC); a Swift target keeps the
+        # Swift SafariServices product (docs/agent_reports/safari-objc.md).
+        os.makedirs(os.path.join(self.corpus, "App/ObjC"))
+        open(os.path.join(self.corpus, "App/ObjC/Extras.m"), "w").write("@import SafariServices;\n")
+        spec = json.load(open(self.spec))
+        spec["targets"][1]["openuikit"] = ["UIKit", "SafariServices"]
+        spec["targets"].append({"name": "AppObjC", "root": "corpus", "path": "App/ObjC",
+                                "openuikit": ["SafariServices"]})
+        json.dump(spec, open(self.spec, "w"))
+        p, out = self.run_tool()
+        self.assertEqual(p.returncode, 0, p.stderr)
+        manifest = open(os.path.join(out, "Package.swift")).read()
+        targets = manifest[manifest.index(".target("):]
+        objc = targets[targets.index('name: "AppObjC"'):]
+        self.assertIn('.product(name: "SafariServicesObjC", package: "OpenUIKit")', objc)
+        # ...with the generated-header define pair every Clang consumer gets.
+        self.assertIn("-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA", objc)
+        swift = targets[targets.index('name: "App",'):targets.index('name: "AppObjC"')]
+        self.assertIn('.product(name: "SafariServices", package: "OpenUIKit")', swift)
+        self.assertNotIn("SafariServicesObjC", swift)
+
     def test_copy_writes_provenance_hashes(self):
         p, out = self.run_tool("--copy")
         self.assertEqual(p.returncode, 0, p.stderr)

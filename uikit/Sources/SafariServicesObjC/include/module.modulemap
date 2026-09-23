@@ -1,0 +1,17 @@
+// The Clang module `SafariServices` for Objective-C code (route b), shaped
+// like the SDK's SafariServices.framework module: `@import SafariServices;`
+// brings in Foundation, UIKit (OpenUIKit's Objective-C interfaces) and
+// SFSafariViewController, and re-exports them (`export *`).
+//
+// Why a separate module map: SwiftPM's generated map for the Swift
+// SafariServices target has no `export *`, so an importer saw neither
+// Foundation's macros nor NSException (MEASURED, NetNewsWire's
+// SFSafariViewController+Extras.h: "unknown type name
+// 'NS_ASSUME_NONNULL_BEGIN'"), and two maps defining one module name are a
+// redefinition. Objective-C targets therefore depend on the product
+// `SafariServicesObjC`; Swift targets keep the Swift `SafariServices`
+// (docs/agent_reports/safari-objc.md).
+module SafariServices {
+  header "SafariServicesObjC.h"
+  export *
+}
