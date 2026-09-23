@@ -38,7 +38,7 @@ private final class PresentedBoundsContentProbe: UIView {
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
         sampledBounds.append(bounds)
-        canvas.fill(rect: bounds, color: PortableCGColor(
+        canvas.fill(rect: bounds, color: CanvasColor(
             red: 1, green: 1, blue: 1, alpha: 1))
     }
 }
@@ -336,12 +336,12 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         layer.anchorPoint = CGPoint(x: 0, y: 0)
         layer.frame = root.bounds
         layer.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 1)
+            srgbRed: 1, green: 1, blue: 1, alpha: 1)
         let mask = PortableLayer()
         mask.anchorPoint = CGPoint(x: 0, y: 0)
         mask.frame = root.bounds
         mask.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 0)
+            srgbRed: 1, green: 1, blue: 1, alpha: 0)
         layer.mask = mask
         root.layer.addSublayer(layer)
 
@@ -421,8 +421,8 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         let gradient = PortableGradientLayer()
         gradient.frame = CGRect(x: 0, y: 0, width: 20, height: 8)
         gradient.colors = [
-            PortableCGColor(red: 1, green: 0, blue: 0, alpha: 1),
-            PortableCGColor(red: 1, green: 0, blue: 0, alpha: 1),
+            PortableCGColor(srgbRed: 1, green: 0, blue: 0, alpha: 1),
+            PortableCGColor(srgbRed: 1, green: 0, blue: 0, alpha: 1),
         ]
         gradient.locations = [0, 1]
         gradient.drawsAsynchronously = false
@@ -441,7 +441,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         let mask = PortableLayer()
         mask.anchorPoint = CGPoint(x: 0, y: 0)
         mask.frame = CGRect(x: 0, y: 0, width: 7, height: 8)
-        mask.backgroundColor = PortableCGColor(red: 1, green: 1, blue: 1, alpha: 1)
+        mask.backgroundColor = PortableCGColor(srgbRed: 1, green: 1, blue: 1, alpha: 1)
         gradient.mask = mask
 
         let previousParent = PortableLayer()
@@ -632,8 +632,8 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
 
         let gradient = PortableGradientLayer()
         gradient.colors = [
-            PortableCGColor(red: 1, green: 0, blue: 0, alpha: 1),
-            PortableCGColor(red: 0, green: 0, blue: 1, alpha: 1),
+            PortableCGColor(srgbRed: 1, green: 0, blue: 0, alpha: 1),
+            PortableCGColor(srgbRed: 0, green: 0, blue: 1, alpha: 1),
         ]
         XCTAssertNil(gradient.locations)
         let supplied = PortableBasicAnimation(keyPath: "locations")
@@ -646,7 +646,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
                         "Linux [Double] is distinct from [Foundation.CGFloat]")
 
         gradient.colors!.append(
-            PortableCGColor(red: 0, green: 1, blue: 0, alpha: 1))
+            PortableCGColor(srgbRed: 0, green: 1, blue: 0, alpha: 1))
         let focusShape = PortableBasicAnimation(keyPath: "locations")
         focusShape.fromValue = [0.0, 0.0, 0.0, 0.2, 0.4, 0.6, 0.8]
         focusShape.toValue = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.0]
@@ -740,8 +740,8 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
 
         let vector = PortableGradientLayer()
         vector.colors = [
-            PortableCGColor(red: 1, green: 0, blue: 0, alpha: 1),
-            PortableCGColor(red: 0, green: 0, blue: 1, alpha: 1),
+            PortableCGColor(srgbRed: 1, green: 0, blue: 0, alpha: 1),
+            PortableCGColor(srgbRed: 0, green: 0, blue: 1, alpha: 1),
         ]
         vector.locations = [0.2, 0.4]
         let vectorAnimation = PortableBasicAnimation(keyPath: "locations")
@@ -842,7 +842,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         let child = UIView(frame: CGRect(x: 8, y: 4, width: 8, height: 8))
         child.backgroundColor = .white
         child.layer.borderColor = PortableCGColor(
-            red: 1, green: 0, blue: 0, alpha: 1)
+            srgbRed: 1, green: 0, blue: 0, alpha: 1)
         child.layer.borderWidth = 4
         root.addSubview(child)
 
@@ -881,7 +881,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         let child = UIView(frame: CGRect(x: 4, y: 6, width: 8, height: 4))
         child.backgroundColor = .white
         child.layer.shadowColor = PortableCGColor(
-            red: 0, green: 0, blue: 0, alpha: 1)
+            srgbRed: 0, green: 0, blue: 0, alpha: 1)
         child.layer.shadowOpacity = 1
         child.layer.shadowRadius = 2
         child.layer.shadowOffset = CGSize(width: 4, height: 0)
@@ -982,7 +982,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         mask.anchorPoint = CGPoint(x: 0, y: 0)
         mask.frame = CGRect(x: 0, y: 0, width: 8, height: 8)
         mask.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 1)
+            srgbRed: 1, green: 1, blue: 1, alpha: 1)
         view.layer.mask = mask
 
         let opaque = LayerBridge.render(root, scale: 1)
@@ -990,7 +990,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         XCTAssertEqual(opaque.pixels[(4 * 20 + 12) * 4 + 3], 0)
 
         mask.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 0.5)
+            srgbRed: 1, green: 1, blue: 1, alpha: 0.5)
         _ = LayerBridge.render(root, scale: 1)
         PortableTransaction.begin()
         PortableTransaction.setAnimationDuration(2)
@@ -1014,7 +1014,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         view.backgroundColor = .white
         view.alpha = 0.5
         view.layer.shadowColor = PortableCGColor(
-            red: 0, green: 0, blue: 0, alpha: 1)
+            srgbRed: 0, green: 0, blue: 0, alpha: 1)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 0
         view.layer.shadowOffset = .zero
@@ -1023,7 +1023,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         mask.anchorPoint = .zero
         mask.frame = CGRect(x: 0, y: 0, width: 5, height: 8)
         mask.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 1)
+            srgbRed: 1, green: 1, blue: 1, alpha: 1)
         view.layer.mask = mask
 
         // Measured with QuartzCore CALayer.render(in:): the mask is an
@@ -1042,7 +1042,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         // once (0.75 * 0.5 = 0.375 -> 96), rather than attenuating the
         // overlapping shadow and content as independent draw operations.
         mask.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 0.5)
+            srgbRed: 1, green: 1, blue: 1, alpha: 0.5)
         for bitmap in [
             LayerBridge.render(view, scale: 1),
             UIRenderer.renderPassRender(view, scale: 1),
@@ -1062,7 +1062,7 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         view.backgroundColor = .white
         view.alpha = 0.5
         view.layer.shadowColor = PortableCGColor(
-            red: 0, green: 0, blue: 0, alpha: 1)
+            srgbRed: 0, green: 0, blue: 0, alpha: 1)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 0
         view.layer.shadowOffset = .zero
@@ -1072,12 +1072,12 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
         mask.frame = CGRect(x: 0, y: 0, width: 5, height: 8)
         mask.cornerRadius = 3
         mask.backgroundColor = PortableCGColor(
-            red: 1, green: 1, blue: 1, alpha: 1)
+            srgbRed: 1, green: 1, blue: 1, alpha: 1)
         view.layer.mask = mask
 
         for maskOpacity: CGFloat in [1, 0.5] {
             mask.backgroundColor = PortableCGColor(
-                red: 1, green: 1, blue: 1, alpha: maskOpacity)
+                srgbRed: 1, green: 1, blue: 1, alpha: maskOpacity)
             let bridge = LayerBridge.render(view, scale: 4)
             let expectedPrefix: [UInt8] = maskOpacity == 1
                 ? [0, 0, 59, 190] + [UInt8](repeating: 192, count: 12)

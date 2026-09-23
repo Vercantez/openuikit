@@ -75,7 +75,7 @@ struct _AssetCatalogColor {
         }
     }
 
-    func resolvedColor(for traits: UITraitCollection) -> CGColor? {
+    func resolvedColor(for traits: UITraitCollection) -> CanvasColor? {
         let appearance = BundleAssetLookup.assetAppearance(for: traits)
         guard let variant = _AssetCatalogStore.resolveVariant(
             record, idiom: idiom, appearance: appearance, scale: nil
@@ -363,7 +363,7 @@ private enum _AssetCatalogStore {
         return parsePayload(payload)
     }
 
-    static func color(from variant: JSONValue) -> CGColor? {
+    static func color(from variant: JSONValue) -> CanvasColor? {
         if variant["reference"]?.stringValue != nil { return nil }
         guard let space = variant["color_space"]?.stringValue else { return nil }
         switch space {
@@ -371,20 +371,20 @@ private enum _AssetCatalogStore {
             guard let rgba = components(variant["native"], count: 4) else {
                 return nil
             }
-            return CGColor(red: CGFloat(rgba[0]), green: CGFloat(rgba[1]),
+            return CanvasColor(red: CGFloat(rgba[0]), green: CGFloat(rgba[1]),
                            blue: CGFloat(rgba[2]), alpha: CGFloat(rgba[3]))
         case "display-p3":
             guard let rgba = components(variant["srgb"], count: 4) else {
                 return nil
             }
-            return CGColor(red: CGFloat(rgba[0]), green: CGFloat(rgba[1]),
+            return CanvasColor(red: CGFloat(rgba[0]), green: CGFloat(rgba[1]),
                            blue: CGFloat(rgba[2]), alpha: CGFloat(rgba[3]))
         case "gray-gamma-22":
             guard let values = components(variant["native"], count: 2) else {
                 return nil
             }
             let white = CGFloat(values[0])
-            return CGColor(red: white, green: white, blue: white,
+            return CanvasColor(red: white, green: white, blue: white,
                            alpha: CGFloat(values[1]))
         default:
             return nil

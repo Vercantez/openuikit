@@ -53,7 +53,7 @@ final class RasterizerTests: XCTestCase {
     func testAxisAlignedSubpixelCoverageExact() {
         let c = makeCanvas(width: 40, height: 30)
         // Rect starting at x = 10.25 -> left edge pixel coverage 0.75.
-        c.fill(rect: CGRect(x: 10.25, y: 5, width: 9.75, height: 10), color: CGColor.white)
+        c.fill(rect: CGRect(x: 10.25, y: 5, width: 9.75, height: 10), color: CanvasColor.white)
         XCTAssertEqual(alpha(c, 9, 8), 0, "pixel left of rect must be empty")
         XCTAssertEqual(alpha(c, 10, 8), Int((0.75 * 255).rounded()), "edge pixel must be exactly 0.75 covered")
         XCTAssertEqual(alpha(c, 11, 8), 255, "interior pixel must be fully covered")
@@ -67,13 +67,13 @@ final class RasterizerTests: XCTestCase {
     func testAxisAlignedFractionalBothEdges() {
         let c = makeCanvas(width: 20, height: 20)
         // x from 3.25 to 3.75 entirely inside pixel 3 -> coverage 0.5.
-        c.fill(rect: CGRect(x: 3.25, y: 2, width: 0.5, height: 5), color: CGColor.white)
+        c.fill(rect: CGRect(x: 3.25, y: 2, width: 0.5, height: 5), color: CanvasColor.white)
         XCTAssertEqual(alpha(c, 3, 4), Int((0.5 * 255).rounded()))
         XCTAssertEqual(alpha(c, 2, 4), 0)
         XCTAssertEqual(alpha(c, 4, 4), 0)
         // Fractional vertically as well: y from 10.1 to 10.9 -> 0.8.
         let c2 = makeCanvas(width: 20, height: 20)
-        c2.fill(rect: CGRect(x: 2, y: 10.1, width: 5, height: 0.8), color: CGColor.white)
+        c2.fill(rect: CGRect(x: 2, y: 10.1, width: 5, height: 0.8), color: CanvasColor.white)
         XCTAssertEqual(alpha(c2, 4, 10), Int((0.8 * 255).rounded()))
     }
 
@@ -81,7 +81,7 @@ final class RasterizerTests: XCTestCase {
         // Total painted coverage must equal the rect area exactly.
         let c = makeCanvas(width: 30, height: 30)
         let r = CGRect(x: 3.3, y: 4.7, width: 11.4, height: 7.9)
-        c.fill(rect: r, color: CGColor.white)
+        c.fill(rect: r, color: CanvasColor.white)
         let area = 11.4 * 7.9
         XCTAssertEqual(coverageSum(c), area, accuracy: area * 0.002 + 0.5)
     }
@@ -92,7 +92,7 @@ final class RasterizerTests: XCTestCase {
         let r: CGFloat = 30
         let c = makeCanvas(width: 100, height: 100)
         let square = CGRect(x: 50 - r, y: 50 - r, width: 2 * r, height: 2 * r)
-        c.fill(Path.roundedRect(square, cornerRadius: r), color: CGColor.white)
+        c.fill(Path.roundedRect(square, cornerRadius: r), color: CanvasColor.white)
         let expected = Double.pi * Double(r * r)
         let got = coverageSum(c)
         XCTAssertEqual(got, expected, accuracy: expected * 0.005,
@@ -107,7 +107,7 @@ final class RasterizerTests: XCTestCase {
         // x = 50 +/- 30 must have partial coverage, neighbors saturated/empty.
         let c = makeCanvas(width: 100, height: 100)
         c.fill(Path.roundedRect(CGRect(x: 20, y: 20, width: 60, height: 60), cornerRadius: 30),
-               color: CGColor.white)
+               color: CanvasColor.white)
         // Circle spans x in [20, 80]; y row 50 (pixel covering y 50..51 near center).
         XCTAssertEqual(alpha(c, 19, 50), 0)
         XCTAssertGreaterThan(alpha(c, 21, 50), 250)
@@ -121,7 +121,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 30, height: 30)
         var p = Path.rect(CGRect(x: 2, y: 2, width: 20, height: 20))
         p.elements.append(contentsOf: Path.rect(CGRect(x: 10, y: 10, width: 15, height: 15)).elements)
-        c.fill(p, color: CGColor.white)  // non-zero: overlap winding 2 -> still 1
+        c.fill(p, color: CanvasColor.white)  // non-zero: overlap winding 2 -> still 1
         XCTAssertEqual(alpha(c, 15, 15), 255, "overlap region must not exceed or lose coverage")
         XCTAssertEqual(alpha(c, 5, 5), 255)
         XCTAssertEqual(alpha(c, 23, 23), 255)
@@ -132,7 +132,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 40, height: 40)
         var p = Path.rect(CGRect(x: 5, y: 5, width: 30, height: 30))
         p.elements.append(contentsOf: Path.rect(CGRect(x: 10, y: 10, width: 20, height: 20)).elements)
-        c.fill(p, color: CGColor.white, evenOdd: true)
+        c.fill(p, color: CanvasColor.white, evenOdd: true)
         XCTAssertEqual(alpha(c, 7, 20), 255, "ring must be filled")
         XCTAssertEqual(alpha(c, 20, 20), 0, "hole must be empty")
         XCTAssertEqual(alpha(c, 2, 20), 0, "outside must be empty")
@@ -146,7 +146,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 40, height: 40)
         var p = Path.rect(CGRect(x: 0, y: 0, width: 40, height: 40))
         p.elements.append(contentsOf: Path.rect(CGRect(x: 10.25, y: 10, width: 20, height: 20)).elements)
-        c.fill(p, color: CGColor.white, evenOdd: true)
+        c.fill(p, color: CanvasColor.white, evenOdd: true)
         XCTAssertEqual(alpha(c, 10, 15), Int((0.25 * 255).rounded()),
                        "ring pixel straddling inner edge at x=10.25 covers the left 0.25")
         XCTAssertEqual(alpha(c, 11, 15), 0)
@@ -159,7 +159,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 40, height: 40)
         c.clip(to: CGRect(x: 0, y: 0, width: 20, height: 40))
         c.clip(to: CGRect(x: 0, y: 0, width: 40, height: 15))
-        c.fill(rect: CGRect(x: 0, y: 0, width: 40, height: 40), color: CGColor.white)
+        c.fill(rect: CGRect(x: 0, y: 0, width: 40, height: 40), color: CanvasColor.white)
         XCTAssertEqual(alpha(c, 10, 10), 255, "inside both clips")
         XCTAssertEqual(alpha(c, 25, 10), 0, "outside first clip")
         XCTAssertEqual(alpha(c, 10, 20), 0, "outside second clip")
@@ -171,7 +171,7 @@ final class RasterizerTests: XCTestCase {
         c.save()
         c.clip(to: CGRect(x: 0, y: 0, width: 5, height: 5))
         c.restore()
-        c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20), color: CGColor.white)
+        c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20), color: CanvasColor.white)
         XCTAssertEqual(alpha(c, 15, 15), 255)
     }
 
@@ -182,10 +182,10 @@ final class RasterizerTests: XCTestCase {
         let shape = Path.roundedRect(CGRect(x: 5.3, y: 4.6, width: 28.4, height: 22.9),
                                      cornerRadius: 9)
         let a = makeCanvas(width: 50, height: 40)
-        a.fill(shape, color: CGColor.white)
+        a.fill(shape, color: CanvasColor.white)
         let b = makeCanvas(width: 50, height: 40)
         b.clip(to: shape)
-        b.fill(rect: CGRect(x: -10, y: -10, width: 100, height: 100), color: CGColor.white)
+        b.fill(rect: CGRect(x: -10, y: -10, width: 100, height: 100), color: CanvasColor.white)
         var maxDiff = 0
         for y in 0..<40 {
             for x in 0..<50 {
@@ -198,7 +198,7 @@ final class RasterizerTests: XCTestCase {
     func testClipSubpixelExactness() {
         let c = makeCanvas(width: 20, height: 20)
         c.clip(to: CGRect(x: 10.25, y: 0, width: 9.75, height: 20))
-        c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20), color: CGColor.white)
+        c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20), color: CanvasColor.white)
         XCTAssertEqual(alpha(c, 10, 10), Int((0.75 * 255).rounded()))
         XCTAssertEqual(alpha(c, 9, 10), 0)
         XCTAssertEqual(alpha(c, 11, 10), 255)
@@ -218,7 +218,7 @@ final class RasterizerTests: XCTestCase {
         let d = makeCanvas(width: 20, height: 20)
         d.clip(to: CGRect(x: 0, y: 0, width: 10, height: 20))
         let mask = [UInt8](repeating: 255, count: 16 * 4)
-        d.drawMask(mask, width: 16, height: 4, atPixelX: 0, pixelY: 0, color: CGColor.black)
+        d.drawMask(mask, width: 16, height: 4, atPixelX: 0, pixelY: 0, color: CanvasColor.black)
         XCTAssertEqual(alpha(d, 5, 2), 255)
         XCTAssertEqual(alpha(d, 15, 2), 0, "mask must be clipped")
     }
@@ -230,7 +230,7 @@ final class RasterizerTests: XCTestCase {
         c.beginTransparencyLayer(alpha: 0.5)
         c.beginTransparencyLayer(alpha: 0.5)
         c.fill(rect: CGRect(x: 0, y: 0, width: 10, height: 10),
-               color: CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+               color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
         c.endTransparencyLayer()
         c.endTransparencyLayer()
         // Effective alpha 0.25; color stays pure red (straight alpha).
@@ -244,12 +244,12 @@ final class RasterizerTests: XCTestCase {
         // first (as a group), then fade: result is 0.5 blue over white, NOT
         // 0.5 red + 0.5 blue stacked.
         let c = makeCanvas(width: 10, height: 10)
-        c.fill(rect: CGRect(x: 0, y: 0, width: 10, height: 10), color: CGColor.white)
+        c.fill(rect: CGRect(x: 0, y: 0, width: 10, height: 10), color: CanvasColor.white)
         c.beginTransparencyLayer(alpha: 0.5)
         c.fill(rect: CGRect(x: 0, y: 0, width: 10, height: 10),
-               color: CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+               color: CanvasColor(red: 1, green: 0, blue: 0, alpha: 1))
         c.fill(rect: CGRect(x: 0, y: 0, width: 10, height: 10),
-               color: CGColor(red: 0, green: 0, blue: 1, alpha: 1))
+               color: CanvasColor(red: 0, green: 0, blue: 1, alpha: 1))
         c.endTransparencyLayer()
         let px = rgba(c, 5, 5)
         XCTAssertEqual(px[0], 128, accuracy: 1)  // 0.5*0 + 0.5*255
@@ -263,7 +263,7 @@ final class RasterizerTests: XCTestCase {
         c.clip(to: CGRect(x: 0, y: 0, width: 10, height: 20))
         c.beginTransparencyLayer(alpha: 1)
         c.save()  // deliberately unbalanced inside the layer
-        c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20), color: CGColor.white)
+        c.fill(rect: CGRect(x: 0, y: 0, width: 20, height: 20), color: CanvasColor.white)
         c.endTransparencyLayer()
         XCTAssertEqual(alpha(c, 5, 5), 255)
         XCTAssertEqual(alpha(c, 15, 5), 0, "clip active inside layer")
@@ -344,7 +344,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 10, height: 10)
         let mask: [UInt8] = [0, 128, 255, 64]
         c.drawMask(mask, width: 2, height: 2, atPixelX: 3, pixelY: 4,
-                   color: CGColor(red: 0, green: 0, blue: 1, alpha: 1))
+                   color: CanvasColor(red: 0, green: 0, blue: 1, alpha: 1))
         XCTAssertEqual(alpha(c, 3, 4), 0)
         XCTAssertEqual(alpha(c, 4, 4), 128)
         XCTAssertEqual(alpha(c, 3, 5), 255)
@@ -359,7 +359,7 @@ final class RasterizerTests: XCTestCase {
         var p = Path()
         p.move(to: CGPoint(x: 5, y: 10))
         p.addLine(to: CGPoint(x: 35, y: 10))
-        c.stroke(p, color: CGColor.white, lineWidth: 4)
+        c.stroke(p, color: CanvasColor.white, lineWidth: 4)
         // 4-wide horizontal band centered at y=10: rows 8..11 full.
         XCTAssertEqual(alpha(c, 20, 9), 255)
         XCTAssertEqual(alpha(c, 20, 10), 255)
@@ -378,7 +378,7 @@ final class RasterizerTests: XCTestCase {
         p.move(to: CGPoint(x: 5, y: 30))
         p.addLine(to: CGPoint(x: 30, y: 30))
         p.addLine(to: CGPoint(x: 30, y: 5))
-        c.stroke(p, color: CGColor(red: 1, green: 1, blue: 1, alpha: 0.5), lineWidth: 6)
+        c.stroke(p, color: CanvasColor(red: 1, green: 1, blue: 1, alpha: 0.5), lineWidth: 6)
         let mid = alpha(c, 15, 30)      // straight run
         let joint = alpha(c, 30, 30)    // corner overlap
         XCTAssertEqual(mid, 128, accuracy: 1)
@@ -393,7 +393,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 60, height: 60, scale: 2)
         // 20x20 points at (5.125, 5), radius 4 -> device (10.25, 10, 40, 40).
         c.fill(Path.roundedRect(CGRect(x: 5.125, y: 5, width: 20, height: 20), cornerRadius: 4),
-               color: CGColor.white)
+               color: CanvasColor.white)
         XCTAssertEqual(alpha(c, 10, 30), Int((0.75 * 255).rounded()),
                        "straight edge keeps exact subpixel coverage")
         XCTAssertEqual(alpha(c, 30, 30), 255)
@@ -411,12 +411,12 @@ final class RasterizerTests: XCTestCase {
         for i in 0..<300 {
             let x = CGFloat((i * 37) % 600), y = CGFloat((i * 53) % 400)
             c.fill(Path.roundedRect(CGRect(x: x, y: y, width: 90, height: 70), cornerRadius: 12),
-                   color: CGColor(red: 0.3, green: 0.5, blue: 0.9, alpha: 0.8))
+                   color: CanvasColor(red: 0.3, green: 0.5, blue: 0.9, alpha: 0.8))
         }
         for i in 0..<100 {
             let x = CGFloat((i * 61) % 600), y = CGFloat((i * 41) % 400)
             c.fill(Path.roundedRect(CGRect(x: x, y: y, width: 60, height: 60), cornerRadius: 30),
-                   color: CGColor(red: 0.9, green: 0.4, blue: 0.2, alpha: 0.6))
+                   color: CanvasColor(red: 0.9, green: 0.4, blue: 0.2, alpha: 0.6))
         }
         let elapsed = Date().timeIntervalSince(start)
         XCTAssertLessThan(elapsed, 10.0, "400 large AA fills took \(elapsed)s")
@@ -431,7 +431,7 @@ final class RasterizerTests: XCTestCase {
         c.concatenate(CGAffineTransform(scaleX: 2, y: 2))
         // Rect (0,0,5,5) under translate(5,5), scale(2) at device scale 2:
         // device rect = (10, 10, 20, 20).
-        c.fill(rect: CGRect(x: 0, y: 0, width: 5, height: 5), color: CGColor.white)
+        c.fill(rect: CGRect(x: 0, y: 0, width: 5, height: 5), color: CanvasColor.white)
         c.restore()
         XCTAssertEqual(alpha(c, 9, 15), 0)
         XCTAssertEqual(alpha(c, 10, 15), 255)
@@ -444,7 +444,7 @@ final class RasterizerTests: XCTestCase {
         let c = makeCanvas(width: 100, height: 100)
         c.translate(x: 50, y: 50)
         c.concatenate(CGAffineTransform(rotationAngle: 0.5))
-        c.fill(rect: CGRect(x: -15, y: -15, width: 30, height: 30), color: CGColor.white)
+        c.fill(rect: CGRect(x: -15, y: -15, width: 30, height: 30), color: CanvasColor.white)
         XCTAssertEqual(coverageSum(c), 900, accuracy: 900 * 0.005)
     }
 }

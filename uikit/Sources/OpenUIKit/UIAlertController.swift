@@ -345,7 +345,7 @@ final class _UIAlertShadowView: UIView {
         ring.elements += _reversedRoundedRect(cardRect, cornerRadius: cornerRadius).elements
         canvas.save()
         canvas.clip(to: ring)
-        canvas.setShadow(color: CGColor(red: 0, green: 0, blue: 0,
+        canvas.setShadow(color: CanvasColor(red: 0, green: 0, blue: 0,
                                         alpha: shadowAlpha),
                          offset: CGSize(width: 0, height: shadowOffsetY),
                          blur: shadowBlur)

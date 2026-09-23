@@ -97,7 +97,7 @@ open class UIGlassEffect: UIVisualEffect {
         coder.encode(isInteractive,
                      forKey: "OpenUIKit.UIGlassEffect.interactive")
         if let tintColor {
-            let c = tintColor.cgColor
+            let c = tintColor._canvasColor
             coder.encode(Double(c.red), forKey: "OpenUIKit.UIGlassEffect.tint.r")
             coder.encode(Double(c.green), forKey: "OpenUIKit.UIGlassEffect.tint.g")
             coder.encode(Double(c.blue), forKey: "OpenUIKit.UIGlassEffect.tint.b")

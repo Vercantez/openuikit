@@ -831,7 +831,7 @@ open class UIButton: UIControl {
            stroke !== Configuration._factoryStrokeColor,
            configuration.background.strokeWidth > 0 {
             layer.borderWidth = configuration.background.strokeWidth
-            layer.borderColor = stroke.resolvedCGColor(with: traits)
+            layer._borderColorValue = stroke.resolvedCGColor(with: traits)
         } else {
             layer.borderWidth = 0
             layer.borderColor = nil

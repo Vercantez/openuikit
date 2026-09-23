@@ -5,7 +5,7 @@ import XCTest
 import Foundation
 @testable import OpenCoreGraphics
 
-private typealias CGColor = OpenCoreGraphics.CGColor
+private typealias CanvasColor = OpenCoreGraphics.CanvasColor
 
 #if !os(Linux)
 @MainActor
@@ -21,13 +21,13 @@ final class GoldenDumpTests: XCTestCase {
         // NOTE: golden/corner_radius.png has a transparent background (the
         // oracle does not paint the root background into the layer render),
         // so leave the background transparent for a direct RGBA comparison.
-        func hex(_ r: Int, _ g: Int, _ b: Int) -> CGColor {
-            CGColor(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255, alpha: 1)
+        func hex(_ r: Int, _ g: Int, _ b: Int) -> CanvasColor {
+            CanvasColor(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255, alpha: 1)
         }
         let blue = hex(0x19, 0x71, 0xC2)
         let red = hex(0xE0, 0x31, 0x31)
         let green = hex(0x2F, 0x9E, 0x44)
-        func rr(_ x: Double, _ y: Double, _ w: Double, _ h: Double, _ rad: Double, _ col: CGColor) {
+        func rr(_ x: Double, _ y: Double, _ w: Double, _ h: Double, _ rad: Double, _ col: CanvasColor) {
             c.fill(Path.roundedRect(OpenCoreGraphics.CGRect(x: x, y: y, width: w, height: h),
                                     cornerRadius: rad), color: col)
         }

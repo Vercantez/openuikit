@@ -516,7 +516,7 @@ public final class UITabBar: UIView {
         platter._usesIOSDarkBarGlass = true
         platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
         platter.layer.cornerRadius = UITabBar.platterHeight / 2
-        platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+        platter.layer._shadowColorValue = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1)
         platter.layer.shadowOpacity = UITabBar.shadowOpacity
         platter.layer.shadowRadius = UITabBar.shadowRadius
         platter.layer.shadowOffset = UITabBar.shadowOffset
@@ -835,7 +835,7 @@ public final class UITabBar: UIView {
     static func templateImage(_ image: UIImage, tint: UIColor) -> UIImage {
         let src = image.bitmap
         let out = Bitmap(width: src.width, height: src.height)
-        let c = tint.cgColor
+        let c = tint._canvasColor
         let r = UInt8((max(0, min(1, c.red)) * 255).rounded())
         let g = UInt8((max(0, min(1, c.green)) * 255).rounded())
         let b = UInt8((max(0, min(1, c.blue)) * 255).rounded())

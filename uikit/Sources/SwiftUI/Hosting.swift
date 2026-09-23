@@ -2772,7 +2772,7 @@ private enum _ViewRenderer {
             case .stroke(let color, let lineWidth):
                 view.backgroundColor = .clear
                 view.layer.borderWidth = max(0, lineWidth)
-                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection)
+                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection).cgColor
                 view.accessibilityIdentifier = "SwiftUI.RoundedRectangle.stroke"
             }
             surface.addSubview(view)
@@ -2787,7 +2787,7 @@ private enum _ViewRenderer {
             case .stroke(let color, let lineWidth):
                 view.backgroundColor = .clear
                 view.layer.borderWidth = max(0, lineWidth)
-                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection)
+                view.layer.borderColor = color.resolve().resolvedCGColor(with: view.traitCollection).cgColor
                 view.accessibilityIdentifier = "SwiftUI.Capsule.stroke"
             }
             surface.addSubview(view)
@@ -3775,12 +3775,12 @@ private enum _ViewRenderer {
                 let resolved = color.resolve().resolvedCGColor(
                     with: shadowHost.traitCollection
                 )
-                shadowHost.layer.shadowColor = CGColor(
+                shadowHost.layer.shadowColor = CanvasColor(
                     red: resolved.red,
                     green: resolved.green,
                     blue: resolved.blue,
                     alpha: 1
-                )
+                ).cgColor
                 shadowHost.layer.shadowOpacity = Float(resolved.alpha)
                 shadowHost.layer.shadowRadius = radius
                 shadowHost.layer.shadowOffset = CGSize(width: x, height: y)
@@ -3945,7 +3945,7 @@ private enum _ViewRenderer {
                     glass.backgroundColor = _UIBarMetrics.platterFill
                     glass._usesIOSGlass = true
                     glass.layer.cornerRadius = min(glassRect.width, glassRect.height) / 2
-                    glass.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+                    glass.layer.shadowColor = CanvasColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
                     glass.layer.shadowOpacity = _UIBarMetrics.shadowOpacity
                     glass.layer.shadowRadius = _UIBarMetrics.shadowRadius
                     glass.layer.shadowOffset = _UIBarMetrics.shadowOffset

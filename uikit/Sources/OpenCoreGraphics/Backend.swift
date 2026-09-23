@@ -42,21 +42,21 @@ protocol CanvasBackend: AnyObject {
     func beginMaskedTransparencyLayer(alpha: CGFloat, mask: Path)
     func endTransparencyLayer()
 
-    func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool)
-    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat)
+    func fill(_ path: Path, color: CanvasColor, evenOdd: Bool, hardEdges: Bool)
+    func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat)
     /// Additive: stroke honoring cap/join styles. Default implementation
     /// falls back to the plain stroke (butt caps, round joins), so a
     /// backend that cannot express the styles needs no change.
-    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+    func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat,
                 cap: CanvasLineCap, join: CanvasLineJoin, miterLimit: CGFloat)
     func drawImage(_ image: Bitmap, in rect: CGRect, interpolate: Bool)
     func drawMask(_ mask: [UInt8], width: Int, height: Int,
-                  atPixelX x: Int, pixelY y: Int, color: CGColor)
+                  atPixelX x: Int, pixelY y: Int, color: CanvasColor)
 
     // Additive v2 ops (CanvasEffects.swift). Shadow state lives in
     // Canvas.state.shadow and is honored by `fill`; drawShadowOnly renders
     // the shadow without the casting fill (for group-opacity layers).
-    func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+    func drawLinearGradient(colors: [CanvasColor], locations: [CGFloat],
                             start: CGPoint, end: CGPoint, in rect: CGRect)
     func drawShadowOnly(_ path: Path, evenOdd: Bool, _ shadow: CanvasShadow)
 
@@ -74,7 +74,7 @@ public enum CanvasLineCap: Sendable { case butt, round, square }
 public enum CanvasLineJoin: Sendable { case miter, round, bevel }
 
 extension CanvasBackend {
-    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat,
+    func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat,
                 cap: CanvasLineCap, join: CanvasLineJoin, miterLimit: CGFloat) {
         stroke(path, color: color, lineWidth: lineWidth)
     }
@@ -100,7 +100,7 @@ final class SwiftRasterizerBackend: CanvasBackend {
     }
     func endTransparencyLayer() { canvas._endLayer() }
 
-    func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool) {
+    func fill(_ path: Path, color: CanvasColor, evenOdd: Bool, hardEdges: Bool) {
         // Shadow first: a blurred, offset silhouette of the shape beneath the
         // fill (CG semantics; see CanvasEffects.swift / RasterizerEffects.swift).
         if let sh = canvas.state.shadow, sh.color.alpha > 0 {
@@ -112,17 +112,17 @@ final class SwiftRasterizerBackend: CanvasBackend {
             canvas._fill(path, color, evenOdd)
         }
     }
-    func stroke(_ path: Path, color: CGColor, lineWidth: CGFloat) {
+    func stroke(_ path: Path, color: CanvasColor, lineWidth: CGFloat) {
         canvas._stroke(path, color, lineWidth)
     }
     func drawImage(_ image: Bitmap, in rect: CGRect, interpolate: Bool) {
         canvas._drawImage(image, rect, interpolate)
     }
     func drawMask(_ mask: [UInt8], width: Int, height: Int,
-                  atPixelX x: Int, pixelY y: Int, color: CGColor) {
+                  atPixelX x: Int, pixelY y: Int, color: CanvasColor) {
         canvas._drawMask(mask, width, height, x, y, color)
     }
-    func drawLinearGradient(colors: [CGColor], locations: [CGFloat],
+    func drawLinearGradient(colors: [CanvasColor], locations: [CGFloat],
                             start: CGPoint, end: CGPoint, in rect: CGRect) {
         canvas._drawLinearGradient(colors, locations, start, end, rect)
     }

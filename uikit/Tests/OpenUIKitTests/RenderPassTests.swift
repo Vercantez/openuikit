@@ -296,7 +296,7 @@ final class RenderPassTests: XCTestCase {
             // the layer's own content too.
             canvas.fill(rect: CGRect(x: -10, y: -10,
                                      width: bounds.width + 20, height: bounds.height + 20),
-                        color: CGColor(red: 0, green: 1, blue: 0, alpha: 1))
+                        color: CanvasColor(red: 0, green: 1, blue: 0, alpha: 1))
         }
     }
 
