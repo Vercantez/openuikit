@@ -107,6 +107,17 @@ oracle device.
   * Simplenote Objective-C half: 847 → **841**.
   * eidolon pods: 507 → 507 (they do not depend on these protocols).
 
+## Gate and guest (branch head 2d034673, merged with main bb773f63)
+
+* `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/objc-protocols`: 124/124
+  scenes pass, `GUEST_ROUTE_CHECK_OK`, **`checks passed (CHECK_ONLY)`**.
+* `scripts/ops/local_guest_verify.sh`:
+  * `FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController`
+  * `rendered 15 screens; existing screens byte-identical 14/14`
+  * `REAL-APP SCREEN VERIFIED ON LINUX`
+  * `GUEST HOST INTERACTION VERIFIED ON LINUX`, rc=0
+* `swift test`: 2022 tests; the same 12 failing classes as main.
+
 ## Open (next increments, by corpus demand)
 
 * **UICollectionViewDelegateFlowLayout** is still a Swift protocol refining
