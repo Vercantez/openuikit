@@ -2,6 +2,7 @@
 import Foundation
 #else
 import FoundationEssentials
+import Dispatch
 import COpenURLTransport
 
 #if canImport(ObjectiveC)
@@ -1366,16 +1367,35 @@ open class URLSessionTask: NSObject, @unchecked Sendable {
 
     open var state: State { lock.withLock { storedState } }
 
+    // MEASURED 2026-09-23 iOS 26.1 simulator (uikit/Tools/oracle2/
+    // guestfoundationprobe urlsession.* rows): a task is outstanding for
+    // getTasksWithCompletionHandler / getAllTasks from its first resume() until
+    // it completes, including while suspended; a created, never-resumed task
+    // is not listed; cancel() completes it (URLError.cancelled, -999).
+    // Suspending does not complete a task: its load continues and its result
+    // is held until resume() (the guest has no transfer to pause).
+    private var started = false
+    private var heldFinish: (Data?, URLResponse?, URL?, (any Error)?)?
+
     open func resume() {
-        let shouldStart = lock.withLock { () -> Bool in
-            guard storedState == .suspended else { return false }
+        let action = lock.withLock { () -> (start: Bool, held: (Data?, URLResponse?, URL?, (any Error)?)?)? in
+            guard storedState == .suspended else { return nil }
             storedState = .running
-            return true
+            let start = !started
+            started = true
+            let held = heldFinish
+            heldFinish = nil
+            return (start, held)
         }
-        guard shouldStart else { return }
-        work = Task { [weak self] in
-            guard let self else { return }
-            await self.session?._performTask(self)
+        guard let action else { return }
+        if action.start {
+            session?._taskDidStart(self)
+            work = Task { [weak self] in
+                guard let self else { return }
+                await self.session?._performTask(self)
+            }
+        } else if let held = action.held {
+            finish(data: held.0, response: held.1, file: held.2, error: held.3)
         }
     }
 
@@ -1383,11 +1403,16 @@ open class URLSessionTask: NSObject, @unchecked Sendable {
         lock.withLock {
             if storedState == .running { storedState = .suspended }
         }
-        work?.cancel()
     }
 
     open func cancel() {
-        lock.withLock { storedState = .canceling }
+        let wasLive = lock.withLock { () -> Bool in
+            guard storedState != .completed else { return false }
+            storedState = .canceling
+            heldFinish = nil
+            return true
+        }
+        guard wasLive else { return }
         work?.cancel()
         let cancelled = URLError(.cancelled, url: originalRequest?.url)
         finish(data: nil, response: nil, file: nil, error: cancelled)
@@ -1396,6 +1421,14 @@ open class URLSessionTask: NSObject, @unchecked Sendable {
     fileprivate func finish(
         data: Data?, response: URLResponse?, file: URL?, error: (any Error)?
     ) {
+        let hold = lock.withLock { () -> Bool in
+            if storedState == .completed { return true }
+            guard storedState == .suspended else { return false }
+            heldFinish = (data, response, file, error)
+            return true
+        }
+        guard !hold else { return }
+        session?._taskDidComplete(self)
         // `var`, not `let`: the x86 verify box's toolchain refuses initialising a
         // `let` from inside the `withLock` closure ("cannot assign to value:
         // 'handler' is a 'let' constant", verify82) although Swift 6.2.4 on the
@@ -1462,6 +1495,65 @@ open class URLSession: NSObject, @unchecked Sendable {
     private let taskLock = NSLock()
     private var nextTaskIdentifier = 1
     private var invalidated = false
+    /// Outstanding tasks in start order (see URLSessionTask.resume()).
+    private var liveTasks: [URLSessionTask] = []
+
+    fileprivate func _taskDidStart(_ task: URLSessionTask) {
+        taskLock.withLock {
+            if !liveTasks.contains(where: { $0 === task }) { liveTasks.append(task) }
+        }
+    }
+
+    fileprivate func _taskDidComplete(_ task: URLSessionTask) {
+        taskLock.withLock { liveTasks.removeAll { $0 === task } }
+    }
+
+    /// Delivered asynchronously off the calling thread, as on iOS (measured:
+    /// the handler runs on a non-main thread).
+    open func getTasksWithCompletionHandler(
+        _ completionHandler: @escaping @Sendable (
+            [URLSessionDataTask], [URLSessionUploadTask], [URLSessionDownloadTask]
+        ) -> Void
+    ) {
+        let tasks = taskLock.withLock { liveTasks }
+        var data: [URLSessionDataTask] = []
+        var upload: [URLSessionUploadTask] = []
+        var download: [URLSessionDownloadTask] = []
+        for task in tasks {
+            if let task = task as? URLSessionUploadTask { upload.append(task) }
+            else if let task = task as? URLSessionDataTask { data.append(task) }
+            else if let task = task as? URLSessionDownloadTask { download.append(task) }
+        }
+        let result = (data, upload, download)
+        DispatchQueue.global().async { completionHandler(result.0, result.1, result.2) }
+    }
+
+    open func getAllTasks(
+        completionHandler: @escaping @Sendable ([URLSessionTask]) -> Void
+    ) {
+        let tasks = taskLock.withLock { liveTasks }
+        DispatchQueue.global().async { completionHandler(tasks) }
+    }
+
+    open var tasks: ([URLSessionDataTask], [URLSessionUploadTask], [URLSessionDownloadTask]) {
+        get async {
+            await withCheckedContinuation { continuation in
+                getTasksWithCompletionHandler { data, upload, download in
+                    continuation.resume(returning: (data, upload, download))
+                }
+            }
+        }
+    }
+
+    open var allTasks: [URLSessionTask] {
+        get async {
+            await withCheckedContinuation { continuation in
+                getAllTasks { tasks in
+                    continuation.resume(returning: tasks)
+                }
+            }
+        }
+    }
 
     public init(
         configuration: URLSessionConfiguration,

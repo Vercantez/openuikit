@@ -278,6 +278,74 @@ public extension String {
     init(format: String, _ arguments: Any...) {
         self = _foundationGuestFormat(format, arguments: arguments)
     }
+
+    /// `String(format:locale:_:)`. A nil locale is `init(format:_:)`. With a
+    /// locale, numbers are written the way CFString's locale-aware formatting
+    /// writes them (measured, macOS 26 / iOS 26.1, uikit/Tools/oracle2/
+    /// guestfoundationprobe string.format.* rows): %d %i %u %f %g use the
+    /// locale's grouping (none for en_US_POSIX) and decimal separator; %e and
+    /// %g write an upper-case exponent ("1.234500E+03"); the '0' flag pads
+    /// with spaces; %x %o %c %@ are unchanged.
+    init(format: String, locale: Locale?, _ arguments: Any...) {
+        self = _foundationGuestFormat(format, arguments: arguments,
+                                      locale: locale.map(_FoundationGuestNumberStyle.init))
+    }
+
+    init(format: String, locale: Locale?, arguments: [Any]) {
+        self = _foundationGuestFormat(format, arguments: arguments,
+                                      locale: locale.map(_FoundationGuestNumberStyle.init))
+    }
+}
+
+/// The separators CFString's locale-aware %d/%f/%g formatting writes.
+internal struct _FoundationGuestNumberStyle {
+    var decimal: String
+    var grouping: String
+
+    /// A bounded, measured table, like NumberFormatter.swift's: the guest's
+    /// Locale answers "." and "," for every identifier, so the separators
+    /// the simulator wrote are recorded per language. en_US_POSIX's number
+    /// pattern has no grouping ("1234567"); fr uses U+202F and ",", de "."
+    /// and ","; everything else is written as en_US ("1,234.5").
+    init(_ locale: Locale) {
+        let identifier = String(locale.identifier.map { $0 == "-" ? "_" : $0 })
+        let language = identifier.split(separator: "_").first.map(String.init) ?? identifier
+        if identifier.lowercased().contains("posix") {
+            decimal = "."; grouping = ""
+        } else if language == "fr" {
+            decimal = ","; grouping = "\u{202F}"
+        } else if language == "de" {
+            decimal = ","; grouping = "."
+        } else {
+            decimal = "."; grouping = ","
+        }
+    }
+
+    /// Groups an ASCII rendering ("-1234567.891", "1.23E+04") and localizes
+    /// its decimal point. Exponent forms are not grouped.
+    func localize(_ rendered: String) -> String {
+        var sign = ""
+        var body = Substring(rendered)
+        if let first = body.first, first == "-" || first == "+" {
+            sign = String(first)
+            body = body.dropFirst()
+        }
+        guard body.first?.isASCII == true, body.first?.isNumber == true else { return rendered }
+        let hasExponent = body.contains("E") || body.contains("e")
+        let pointIndex = body.firstIndex(of: ".")
+        var integer = String(body[..<(pointIndex ?? body.endIndex)])
+        let rest = pointIndex.map { String(body[body.index(after: $0)...]) }
+        if !hasExponent, !grouping.isEmpty, integer.count > 3,
+           integer.allSatisfy({ $0.isASCII && $0.isNumber }) {
+            var grouped = ""
+            for (offset, digit) in integer.enumerated() {
+                if offset > 0, (integer.count - offset) % 3 == 0 { grouped += grouping }
+                grouped.append(digit)
+            }
+            integer = grouped
+        }
+        return sign + integer + (rest.map { decimal + $0 } ?? "")
+    }
 }
 
 public extension Substring {
@@ -321,7 +389,9 @@ private func _foundationGuestHex(_ byte: UInt8) -> UInt8? {
     }
 }
 
-internal func _foundationGuestFormat(_ format: String, arguments: [Any]) -> String {
+internal func _foundationGuestFormat(
+    _ format: String, arguments: [Any], locale: _FoundationGuestNumberStyle? = nil
+) -> String {
     let characters = Array(format)
     var result = ""
     var cursor = 0
@@ -401,12 +471,17 @@ internal func _foundationGuestFormat(_ format: String, arguments: [Any]) -> Stri
 
         var rendered = _foundationGuestRenderArgument(
             arguments[argumentIndex],
-            conversion: conversion,
+            conversion: locale != nil && (conversion == "e" || conversion == "g")
+                ? Character(conversion.uppercased()) : conversion,
             precision: precision,
             alternate: flags.contains("#")
         )
+        if let locale, "diufFeEgG".contains(conversion) {
+            rendered = locale.localize(rendered)
+        }
         if let width, rendered.count < width {
-            let paddingCharacter: Character = flags.contains("0") && !flags.contains("-") ? "0" : " "
+            let paddingCharacter: Character =
+                locale == nil && flags.contains("0") && !flags.contains("-") ? "0" : " "
             let padding = String(repeating: String(paddingCharacter), count: width - rendered.count)
             rendered = flags.contains("-") ? rendered + padding : padding + rendered
         }

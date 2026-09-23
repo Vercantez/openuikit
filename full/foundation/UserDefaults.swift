@@ -91,6 +91,13 @@ open class UserDefaults: @unchecked Sendable {
         object(forKey: key)
     }
 
+    /// The KVC setter NSUserDefaults overrides to mean `set(_:forKey:)`;
+    /// nil removes the key (measured, uikit/Tools/oracle2/guestfoundationprobe
+    /// defaults.setValue rows on iOS 26.1).
+    open func setValue(_ value: Any?, forKey key: String) {
+        set(value, forKey: key)
+    }
+
     open func set(_ value: Any?, forKey defaultName: String) {
         guard let value else {
             removeObject(forKey: defaultName)

@@ -11,7 +11,11 @@ import Foundation
 import FoundationEssentials
 #endif
 
-open class DateFormatter {
+// Sendable as NSDateFormatter is (NS_SWIFT_SENDABLE, iOS 26.1 SDK): a
+// configured formatter is shared, e.g. `static let formatter = DateFormatter()`
+// in NetNewsWire RSWeb/HTTPDateInfo.swift. Formatting reads configuration
+// only; there are no caches to race on.
+open class DateFormatter: @unchecked Sendable {
     public enum Style: UInt, Sendable {
         case none = 0
         case short = 1

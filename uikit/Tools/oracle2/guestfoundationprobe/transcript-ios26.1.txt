@@ -1,0 +1,118 @@
+guestfoundationprobe v1
+thread.main isMainThread=true current.isMainThread=true current===main=true main.isMainThread=true stable=true
+thread.main.name Optional("")
+thread.main.qos -1
+thread.main.state executing=true finished=false cancelled=false
+thread.callStackSymbols.nonEmpty true
+thread.callStackReturnAddresses.nonEmpty true
+thread.threadDictionary roundtrip=value sameObject=true
+thread.threadDictionary.removed true
+thread.new executing=false finished=false cancelled=false isMainThread=false name=nil qos=-1 stackSize=524288 priority=0.5
+thread.new.cancel cancelled=true finished=false
+thread.block.beforeStart name=guest-probe-worker stackSize=1048576
+thread.block isMainThread=false current.isMainThread=false current===worker=true current===main=false name=Optional("guest-probe-worker") executing=true finished=false stable=true
+thread.block.dictionary own=1
+thread.block.after finished=true executing=false
+thread.main.dictionary.untouched true
+thread.detach isMainThread=false current===main=false name=Optional("") executing=true
+thread.isMultiThreaded true
+thread.detachSelector arg=payload main=false
+thread.targetSelector arg=obj main=false
+thread.subclass ranMain=true sawSelf=true name=Optional("")
+thread.cancelledThenStarted finished=true cancelled=true bodyRan=false
+thread.dispatchGlobal isMainThread=false current===main=false stable=true name=Optional("") executing=true
+thread.sleep.forTimeInterval atLeast50ms=true under2s=true
+thread.sleep.until atLeast30ms=true under2s=true
+thread.sleep.past returnsImmediately=true
+lock.recursive reentrant=true otherTry=false otherBefore=false name=nil
+lock.condition woken ready=true waitUntilPast=false
+lock.conditionLock wrong=false right=true condition=2 timed=false
+urlsession.getTasks.empty data=0 upload=0 download=0 main=false
+urlsession.getAllTasks.empty count=0 states=[]
+urlsession.getTasks.created data=0 upload=0 download=0 main=false
+urlsession.getAllTasks.created count=0 states=[]
+urlsession.kinds upload.isData=true d1.state=1
+urlsession.getTasks.resumed data=2 upload=1 download=1 main=false
+urlsession.getAllTasks.resumed count=4 states=[0, 0, 0, 0]
+urlsession.getTasks.oneSuspended data=2 upload=1 download=1 main=false
+urlsession.getAllTasks.oneSuspended count=4 states=[0, 0, 0, 1]
+urlsession.cancel.completion code=-999
+urlsession.afterCancel remaining=0
+defaults.setValue string=hello integer=42 bool=true object=hello value=hello
+defaults.setValue.nil removed=true
+nsstring.numbers [3.5] double=3.5 float=3.5 int=3 integer=3 longLong=3 bool=true
+nsstring.numbers [ 12abc] double=12.0 float=12.0 int=12 integer=12 longLong=12 bool=true
+nsstring.numbers [abc] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [1e3] double=1000.0 float=1000.0 int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [  -2.5e-1x] double=-0.25 float=-0.25 int=-2 integer=-2 longLong=-2 bool=true
+nsstring.numbers [0x10] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [+7] double=7.0 float=7.0 int=7 integer=7 longLong=7 bool=true
+nsstring.numbers [.5] double=0.5 float=0.5 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [5.] double=5.0 float=5.0 int=5 integer=5 longLong=5 bool=true
+nsstring.numbers [1,5] double=1.0 float=1.0 int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [\u{9}\u{a} 8] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [inf] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [-infinity] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [nan] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [1e400] double=inf float=inf int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [-1e400] double=-inf float=-inf int=-1 integer=-1 longLong=-1 bool=true
+nsstring.numbers [1e-400] double=0.0 float=0.0 int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [00012.50] double=12.5 float=12.5 int=12 integer=12 longLong=12 bool=true
+nsstring.numbers [\u{663}] double=3.0 float=3.0 int=3 integer=3 longLong=3 bool=false
+nsstring.numbers [1_000] double=1.0 float=1.0 int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [  +] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [-] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [9007199254740993] double=9007199254740992.0 float=9.007199e+15 int=2147483647 integer=9007199254740993 longLong=9007199254740993 bool=true
+nsstring.numbers [\u{9}8] double=8.0 float=8.0 int=8 integer=8 longLong=8 bool=true
+nsstring.numbers [\u{a}8] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [\u{a0}8] double=8.0 float=8.0 int=8 integer=8 longLong=8 bool=true
+nsstring.numbers [\u{2003}8] double=8.0 float=8.0 int=8 integer=8 longLong=8 bool=true
+nsstring.numbers [\u{3000}8] double=8.0 float=8.0 int=8 integer=8 longLong=8 bool=true
+nsstring.numbers [2e] double=2.0 float=2.0 int=2 integer=2 longLong=2 bool=true
+nsstring.numbers [2e+] double=2.0 float=2.0 int=2 integer=2 longLong=2 bool=true
+nsstring.numbers [2E2] double=200.0 float=200.0 int=2 integer=2 longLong=2 bool=true
+nsstring.numbers [-.5] double=-0.5 float=-0.5 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [+-1] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [--1] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [ - 1] double=0.0 float=0.0 int=-1 integer=-1 longLong=-1 bool=false
+nsstring.numbers [1.5e+2.5] double=150.0 float=150.0 int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [\u{663}.\u{665}] double=3.5 float=3.5 int=3 integer=3 longLong=3 bool=false
+nsstring.numbers [\u{ff11}\u{ff12}] double=12.0 float=12.0 int=12 integer=12 longLong=12 bool=false
+nsstring.numbers [0.1e1] double=1.0 float=1.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [1e-2] double=0.01 float=0.01 int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [.] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [e5] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [4.9e-324] double=5e-324 float=0.0 int=4 integer=4 longLong=4 bool=true
+nsstring.numbers [2.5e-324] double=5e-324 float=0.0 int=2 integer=2 longLong=2 bool=true
+nsstring.numbers [1.7976931348623157e308] double=1.7976931348623157e+308 float=inf int=1 integer=1 longLong=1 bool=true
+nsstring.numbers [123456789012345678901234567890] double=1.2345678901234568e+29 float=1.2345679e+29 int=2147483647 integer=9223372036854775807 longLong=9223372036854775807 bool=true
+nsstring.numbers [-0] double=-0.0 float=-0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [0000] double=0.0 float=0.0 int=0 integer=0 longLong=0 bool=false
+nsstring.numbers [3.99999999999999999999] double=4.0 float=4.0 int=3 integer=3 longLong=3 bool=true
+nsstring.numbers [ \u{660}1] double=1.0 float=1.0 int=1 integer=1 longLong=1 bool=false
+nsstring.bool [YES] true
+nsstring.bool [yes] true
+nsstring.bool [Y] true
+nsstring.bool [t] true
+nsstring.bool [true] true
+nsstring.bool [1] true
+nsstring.bool [0] false
+nsstring.bool [no] false
+nsstring.bool [ 2] true
+nsstring.bool [-1] true
+nsstring.bool [+1] true
+nsstring.bool [0.9] false
+nsstring.bool [N] false
+nsstring.int [2147483648] int=2147483647 integer=2147483648 longLong=2147483648
+nsstring.int [-2147483649] int=-2147483648 integer=-2147483649 longLong=-2147483649
+nsstring.int [9223372036854775808] int=2147483647 integer=9223372036854775807 longLong=9223372036854775807
+nsstring.int [-9223372036854775809] int=-2147483648 integer=-9223372036854775808 longLong=-9223372036854775808
+nsstring.int [12.9] int=12 integer=12 longLong=12
+nsstring.int [-12.9] int=-12 integer=-12 longLong=-12
+string.format.locale 3.14s
+string.format.locale 12.2s
+string.format.locale.nil 2.000
+string.format.locale.args a-7
+string.format.locale.posix 123|123.89|12.500000|12|1.250000E+01|12.5| 12.5|12.2    |   12.25|+3.5|s|-12|12|ff|1.23|1.230000E-04
+guestfoundationprobe done

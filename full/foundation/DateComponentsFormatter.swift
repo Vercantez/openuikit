@@ -36,7 +36,8 @@ public struct NSCalendar {
     }
 }
 
-open class DateComponentsFormatter {
+// Sendable as NSDateComponentsFormatter is (NS_SWIFT_SENDABLE, iOS 26.1 SDK).
+open class DateComponentsFormatter: @unchecked Sendable {
     public enum UnitsStyle: Int, Sendable {
         case positional = 0
         case abbreviated = 1
