@@ -50,6 +50,16 @@
 public enum UIActivityIndicatorViewStyle: Int, Sendable {
     // iOS 26.1 raw values (iososswallsprobe lens.activity.style.raws).
     case medium = 100, large = 101
+    // The pre-iOS 13 styles, still in the SDK (deprecated). MEASURED iOS
+    // 26.1 (Tools/oracle2/podsurfaceprobe "## activity"): whiteLarge is
+    // 37x37 and white/gray 20x20; each keeps its raw value, and the colour
+    // getter reads white (whiteLarge, white) or black at alpha 0.45 (gray).
+    @available(iOS, deprecated: 13.0, message: "renamed: large")
+    case whiteLarge = 0
+    @available(iOS, deprecated: 13.0, message: "renamed: medium")
+    case white = 1
+    @available(iOS, deprecated: 13.0, message: "renamed: medium")
+    case gray = 2
 }
 
 @preconcurrency @MainActor
@@ -118,11 +128,19 @@ open class UIActivityIndicatorView: UIView {
     /// nil reads that again. The spokes OpenUIKit paints for the default are
     /// the pixel-measured `defaultColor` below, unchanged.
     public var color: UIColor! {
-        get { _customColor ?? .secondaryLabel }
+        get { _customColor ?? _legacyStyleColor ?? .secondaryLabel }
         set { _customColor = newValue; setNeedsDisplay() }
     }
     private var _customColor: UIColor?
-    var _drawColor: UIColor { _customColor ?? UIActivityIndicatorView.defaultColor }
+    var _drawColor: UIColor { _customColor ?? _legacyStyleColor ?? UIActivityIndicatorView.defaultColor }
+    /// The deprecated styles' colours (MEASURED iOS 26.1, podsurfaceprobe).
+    var _legacyStyleColor: UIColor? {
+        switch style.rawValue {
+        case 0, 1: return UIColor(white: 1, alpha: 1)
+        case 2: return UIColor(white: 0, alpha: 0.45)
+        default: return nil
+        }
+    }
     public var hidesWhenStopped: Bool = true {
         didSet { setNeedsDisplay() }
     }
@@ -155,7 +173,7 @@ open class UIActivityIndicatorView: UIView {
     }
 
     static func metrics(_ style: Style) -> Metrics {
-        style == .large ? largeMetrics : mediumMetrics
+        (style == .large || style.rawValue == 0) ? largeMetrics : mediumMetrics
     }
     var metrics: Metrics { UIActivityIndicatorView.metrics(style) }
 

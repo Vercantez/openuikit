@@ -192,7 +192,9 @@ open class UILabel: UIView {
     }
 
     private final func configureDefaults() {
-        isOpaque = false
+        // MEASURED iOS 26.1 (podsurfaceprobe "## view"): a new UILabel's
+        // `opaque` is YES, as UIView's (Artsy+UILabels' ARLabel reads it).
+        isOpaque = true
         // UIKit: labels do not receive touches by default.
         isUserInteractionEnabled = false
         // UIKit default: label VERTICAL content hugging is 251 (horizontal

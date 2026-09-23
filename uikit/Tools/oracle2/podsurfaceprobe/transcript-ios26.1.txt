@@ -1,0 +1,40 @@
+# podsurfaceprobe — iOS 26.1
+## view
+UIView translatesAutoresizingMaskIntoConstraints=YES
+set NO -> NO
+opaque UIView=YES UILabel=YES UIButton=NO UIImageView=YES
+set opaque YES -> YES
+window before=nil
+window after addSubview identical=YES
+window after removeFromSuperview=nil
+UIViewNoIntrinsicMetric=-1
+## constraint
+priority default=1000
+priority set DefaultHigh -> 750
+priority set 999 -> 999
+## label
+UILabel textAlignment=4 lineBreakMode=4
+set center/wordWrapping -> textAlignment=1 lineBreakMode=0
+set truncatingMiddle -> 5
+NSLineBreakBy WordWrapping=0 CharWrapping=1 Clipping=2 Head=3 Tail=4 Middle=5
+## paragraph
+defaults lineSpacing=0 alignment=4 paragraphSpacing=0 paragraphSpacingBefore=0 firstLineHeadIndent=0 headIndent=0
+set lineSpacing=4 alignment=1 paragraphSpacing=2 paragraphSpacingBefore=3 firstLineHeadIndent=5 headIndent=6
+copy lineSpacing=4 alignment=1 headIndent=6
+## attributes
+NSUnderlineStyleAttributeName=NSUnderline NSStrikethroughStyleAttributeName=NSStrikethrough
+NSUnderlineStyleNone=0 NSUnderlineStyleSingle=1
+## button
+contentEdgeInsets default={0, 0, 0, 0}
+contentEdgeInsets set -> {1, 2, 3, 4}
+## activity
+style 0 -> activityIndicatorViewStyle=0 size={37, 37} animating=NO hidesWhenStopped=YES
+style 0 color rgb=YES {1.000, 1.000, 1.000, 1.000}
+style 1 -> activityIndicatorViewStyle=1 size={20, 20} animating=NO hidesWhenStopped=YES
+style 1 color rgb=YES {1.000, 1.000, 1.000, 1.000}
+style 2 -> activityIndicatorViewStyle=2 size={20, 20} animating=NO hidesWhenStopped=YES
+style 2 color rgb=YES {0.000, 0.000, 0.000, 0.450}
+style 100 -> activityIndicatorViewStyle=100 size={20, 20} animating=NO hidesWhenStopped=YES
+style 100 color rgb=YES {0.235, 0.235, 0.263, 0.600}
+style 101 -> activityIndicatorViewStyle=101 size={37, 37} animating=NO hidesWhenStopped=YES
+style 101 color rgb=YES {0.235, 0.235, 0.263, 0.600}

@@ -743,4 +743,120 @@ extension UIView {
                 animations: animations, completion: completion)
     }
 }
+
+// MARK: - Eidolon's CocoaPods (eidolon-first-screen)
+//
+// Selectors FLKAutoLayout, ORStackView, Artsy+UILabels, Artsy-UIButtons,
+// SDWebImage and NJKWebViewProgress send, as forwarding twins; values checked
+// line for line against the iOS 26.1 simulator by Tests/PodSurfaceTests
+// (Tools/oracle2/podsurfaceprobe/transcript-ios26.1.txt).
+
+private func lineBreakModeRaw(_ mode: NSLineBreakMode) -> Int {
+    switch mode {
+    case .byWordWrapping: return 0
+    case .byCharWrapping: return 1
+    case .byClipping: return 2
+    case .byTruncatingHead: return 3
+    case .byTruncatingTail: return 4
+    case .byTruncatingMiddle: return 5
+    }
+}
+private func podLineBreakMode(_ raw: Int) -> NSLineBreakMode {
+    switch raw {
+    case 1: return .byCharWrapping
+    case 2: return .byClipping
+    case 3: return .byTruncatingHead
+    case 4: return .byTruncatingTail
+    case 5: return .byTruncatingMiddle
+    default: return .byWordWrapping
+    }
+}
+private func podTextAlignment(_ raw: Int) -> NSTextAlignment { NSTextAlignment(rawValue: raw) ?? .natural }
+
+extension UIView {
+    @objc(translatesAutoresizingMaskIntoConstraints) public var __objc_translatesAutoresizingMaskIntoConstraints: Bool {
+        get { translatesAutoresizingMaskIntoConstraints } set { translatesAutoresizingMaskIntoConstraints = newValue }
+    }
+    @objc(isOpaque) public var __objc_isOpaque: Bool { get { isOpaque } set { isOpaque = newValue } }
+    @objc(opaque) public var __objc_opaque: Bool { get { isOpaque } set { isOpaque = newValue } }
+    @objc(window) public var __objc_window: UIWindow? { window }
+}
+
+extension NSLayoutConstraint {
+    @objc(priority) public var __objc_priority: Float {
+        get { priority.rawValue } set { priority = UILayoutPriority(rawValue: newValue) }
+    }
+}
+
+extension UILabel {
+    @objc(textAlignment) public var __objc_textAlignment: Int {
+        get { textAlignment.rawValue } set { textAlignment = podTextAlignment(newValue) }
+    }
+    @objc(lineBreakMode) public var __objc_lineBreakMode: Int {
+        get { lineBreakModeRaw(lineBreakMode) } set { lineBreakMode = podLineBreakMode(newValue) }
+    }
+}
+
+extension NSParagraphStyle {
+    @objc(lineSpacing) public var __objc_lineSpacing: CGFloat { lineSpacing }
+    @objc(alignment) public var __objc_alignment: Int { alignment.rawValue }
+    @objc(paragraphSpacing) public var __objc_paragraphSpacing: CGFloat { paragraphSpacing }
+    @objc(paragraphSpacingBefore) public var __objc_paragraphSpacingBefore: CGFloat { paragraphSpacingBefore }
+    @objc(firstLineHeadIndent) public var __objc_firstLineHeadIndent: CGFloat { firstLineHeadIndent }
+    @objc(headIndent) public var __objc_headIndent: CGFloat { headIndent }
+}
+
+extension NSMutableParagraphStyle {
+    @objc(setLineSpacing:) public func __objc_setLineSpacing(_ v: CGFloat) { lineSpacing = v }
+    @objc(setAlignment:) public func __objc_setAlignment(_ v: Int) { alignment = podTextAlignment(v) }
+    @objc(setParagraphSpacing:) public func __objc_setParagraphSpacing(_ v: CGFloat) { paragraphSpacing = v }
+    @objc(setParagraphSpacingBefore:) public func __objc_setParagraphSpacingBefore(_ v: CGFloat) { paragraphSpacingBefore = v }
+    @objc(setFirstLineHeadIndent:) public func __objc_setFirstLineHeadIndent(_ v: CGFloat) { firstLineHeadIndent = v }
+    @objc(setHeadIndent:) public func __objc_setHeadIndent(_ v: CGFloat) { headIndent = v }
+}
+
+extension UIButton {
+    @objc(contentEdgeInsets) public var __objc_contentEdgeInsets: OpenUIKitObjCSupport.UIEdgeInsetsObjC {
+        get { edgeInsets(contentEdgeInsets) } set { contentEdgeInsets = edgeInsets(newValue) }
+    }
+}
+
+
+extension UIActivityIndicatorView {
+    /// `-initWithActivityIndicatorStyle:` (SDWebImage UIImageView+WebCache),
+    /// including the deprecated 0/1/2 styles.
+    @objc(initWithActivityIndicatorStyle:) public convenience init(__objcStyle raw: Int) {
+        self.init(style: UIActivityIndicatorView.Style(rawValue: raw) ?? .medium)
+    }
+    @objc(activityIndicatorViewStyle) public var __objc_activityIndicatorViewStyle: Int {
+        get { style.rawValue } set { style = UIActivityIndicatorView.Style(rawValue: newValue) ?? .medium }
+    }
+    @objc(color) public var __objc_color: UIColor? { get { color } set { color = newValue } }
+    @objc(hidesWhenStopped) public var __objc_hidesWhenStopped: Bool {
+        get { hidesWhenStopped } set { hidesWhenStopped = newValue }
+    }
+}
+
+
+extension UIButton {
+    /// `+buttonWithType:`. OpenUIKit has custom (0) and system (1); the
+    /// SDK's other system-drawn types (detailDisclosure 2 … close 7) build a
+    /// system button without their glyph.
+    @objc(buttonWithType:) public class func __objc_button(withType raw: Int) -> UIButton {
+        UIButton(type: raw == 0 ? .custom : .system)
+    }
+}
+
+extension UIColor {
+    @objc(getRed:green:blue:alpha:) public func __objc_getRed(
+        _ red: UnsafeMutablePointer<CGFloat>?, green: UnsafeMutablePointer<CGFloat>?,
+        blue: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+        getRed(red, green: green, blue: blue, alpha: alpha)
+    }
+    @objc(getWhite:alpha:) public func __objc_getWhite(
+        _ white: UnsafeMutablePointer<CGFloat>?, alpha: UnsafeMutablePointer<CGFloat>?) -> Bool {
+        getWhite(white, alpha: alpha)
+    }
+}
+
 #endif

@@ -992,6 +992,15 @@ let simplenoteTargets: [Target] = [
                 "-DSWIFT_CLASS(SWIFT_NAME)=SWIFT_RUNTIME_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
                 "-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA",
             ])]),
+    // Eidolon's CocoaPods' UIKit selectors (eidolon-first-screen): the SAME
+    // .m Tools/oracle2/podsurfaceprobe/run.sh runs on the iOS 26.1 simulator.
+    .target(name: "OpenUIKitPodSurfaceFixtures",
+            dependencies: ["OpenUIKit", "OpenUIKitObjCBridge", "OpenUIKitObjCSupport"],
+            path: "Tools/oracle2/podsurfaceprobe/scenario", publicHeadersPath: "include",
+            cSettings: [.define("OUK_OPENUIKIT", to: "1"), openUIKitObjCSubclassingCFlags]),
+    .testTarget(name: "PodSurfaceTests",
+                dependencies: ["OpenUIKitPodSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/PodSurfaceTests"),
     .testTarget(name: "ObjCSurfaceTests",
                 dependencies: ["OpenUIKitObjCSurfaceFixtures", "OpenUIKitObjCBridge", "OpenUIKit"],
                 path: "Tests/ObjCSurfaceTests",

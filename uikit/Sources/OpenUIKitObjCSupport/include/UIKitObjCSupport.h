@@ -199,6 +199,9 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 } NS_SWIFT_NAME(UIButtonTypeObjC);
 typedef NS_ENUM(NSInteger, UIActivityIndicatorViewStyle) {
     UIActivityIndicatorViewStyleMedium = 100, UIActivityIndicatorViewStyleLarge = 101,
+    /* Deprecated in iOS 13, still in the 26.1 SDK (SDWebImage uses Gray). */
+    UIActivityIndicatorViewStyleWhiteLarge = 0, UIActivityIndicatorViewStyleWhite = 1,
+    UIActivityIndicatorViewStyleGray = 2,
 } NS_SWIFT_NAME(UIActivityIndicatorViewStyleObjC);
 /* UIUserInterfaceLayoutDirection: exported by OpenUIKit-Swift.h (an @objc
  * Int enum, raw values 0/1 as in UIApplication.h). */
@@ -227,6 +230,22 @@ typedef NS_ENUM(NSInteger, UIReturnKeyType) {
 typedef NS_ENUM(NSInteger, UITextFieldViewMode) {
     UITextFieldViewModeNever, UITextFieldViewModeWhileEditing, UITextFieldViewModeUnlessEditing, UITextFieldViewModeAlways,
 } NS_SWIFT_NAME(UITextFieldViewModeObjC);
+/* NSParagraphStyle.h / NSAttributedString.h (UIKit, iOS 26.1 SDK values).
+ * Objective-C side only on the macOS host, like NSLayoutRelation below: the
+ * Swift importer there also sees AppKit's copies (MEASURED building
+ * OpenUIKitObjCBridge: "'NSLineBreakMode' has different definitions in
+ * different modules; definition in module 'AppKit.NSParagraphStyle'"). */
+#if TARGET_OS_IPHONE || !__swift__
+typedef NS_ENUM(NSInteger, NSLineBreakMode) {
+    NSLineBreakByWordWrapping = 0, NSLineBreakByCharWrapping, NSLineBreakByClipping,
+    NSLineBreakByTruncatingHead, NSLineBreakByTruncatingTail, NSLineBreakByTruncatingMiddle,
+} NS_SWIFT_NAME(NSLineBreakModeObjC);
+/* NSAttributedString.h (UIKit), iOS 26.1 SDK values. */
+typedef NS_OPTIONS(NSInteger, NSUnderlineStyle) {
+    NSUnderlineStyleNone = 0x00, NSUnderlineStyleSingle = 0x01, NSUnderlineStyleThick = 0x02,
+    NSUnderlineStyleDouble = 0x09,
+} NS_SWIFT_NAME(NSUnderlineStyleObjC);
+#endif
 typedef NS_ENUM(NSInteger, NSTextAlignment) {
     NSTextAlignmentLeft = 0, NSTextAlignmentCenter = 1, NSTextAlignmentRight = 2,
     NSTextAlignmentJustified = 3, NSTextAlignmentNatural = 4,
@@ -403,6 +422,10 @@ extern NSAttributedStringKey const NSForegroundColorAttributeName;
 extern NSAttributedStringKey const NSParagraphStyleAttributeName;
 extern NSAttributedStringKey const NSLinkAttributeName;
 extern NSAttributedStringKey const NSAttachmentAttributeName;
+extern NSAttributedStringKey const NSUnderlineStyleAttributeName;
+extern NSAttributedStringKey const NSStrikethroughStyleAttributeName;
+/* UIView.h: `UIKIT_EXTERN const CGFloat UIViewNoIntrinsicMetric`. */
+extern const CGFloat UIViewNoIntrinsicMetric;
 extern NSNotificationName const UIApplicationDidEnterBackgroundNotification;
 extern NSNotificationName const UIApplicationDidBecomeActiveNotification;
 extern NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification;

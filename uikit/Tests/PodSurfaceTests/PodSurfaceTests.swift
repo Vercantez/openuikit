@@ -1,0 +1,62 @@
+// The UIKit Objective-C selectors Eidolon's CocoaPods send (FLKAutoLayout,
+// ORStackView, Artsy+UILabels, Artsy-UIButtons, SDWebImage,
+// NJKWebViewProgress, XNGMarkdownParser), run through the shared scenario
+// Tools/oracle2/podsurfaceprobe/scenario/OUKPodSurfaceScenario.m and compared
+// line for line with what the same .m printed against Apple's UIKit on the
+// iOS 26.1 simulator (transcript-ios26.1.txt). Before this change the
+// scenario did not compile against OpenUIKit (e.g. "property
+// 'translatesAutoresizingMaskIntoConstraints' not found on object of type
+// 'UIView *'", "use of undeclared identifier 'NSUnderlineStyleAttributeName'").
+#if canImport(ObjectiveC)
+import Foundation
+import XCTest
+@testable import OpenUIKit
+import OpenUIKitObjCBridge
+import OpenUIKitPodSurfaceFixtures
+
+private func oracle() throws -> [String: [String]] {
+    let url = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+        .appendingPathComponent("Tools/oracle2/podsurfaceprobe/transcript-ios26.1.txt")
+    var sections: [String: [String]] = [:]
+    var current: String?
+    for line in try String(contentsOf: url, encoding: .utf8).split(separator: "\n").map(String.init) {
+        if line.hasPrefix("## ") { current = String(line.dropFirst(3)); sections[current!] = []; continue }
+        if let current, !line.isEmpty { sections[current]!.append(line) }
+    }
+    return sections
+}
+
+private final class Lines { var all: [String] = [] }
+
+@MainActor
+final class PodSurfaceTests: XCTestCase {
+    private var savedCut: FontEngine.SystemFontCut = .macOS
+
+    override func setUp() {
+        super.setUp()
+        savedCut = OpenUIKitRuntime.systemFontCut
+        OpenUIKitRuntime.systemFontCut = .iOS
+    }
+
+    override func tearDown() {
+        OpenUIKitRuntime.systemFontCut = savedCut
+        super.tearDown()
+    }
+
+    func testEverySectionMatchesiOS() throws {
+        let expected = try oracle()
+        var compared = 0
+        while let cName = OUKPodSurfaceSection(Int32(compared)) {
+            let section = String(cString: cName)
+            let box = Lines()
+            OUKPodSurfaceRun(cName, { line, context in
+                Unmanaged<Lines>.fromOpaque(context!).takeUnretainedValue().all.append(String(cString: line!))
+            }, Unmanaged.passUnretained(box).toOpaque())
+            XCTAssertEqual(box.all, expected[section] ?? ["<missing section>"], "## \(section)")
+            compared += 1
+        }
+        XCTAssertEqual(compared, expected.count)
+    }
+}
+#endif
