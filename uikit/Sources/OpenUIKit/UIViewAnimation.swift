@@ -592,6 +592,20 @@ extension UIViewAnimation {
     }
 }
 
+extension UIView {
+    /// Diagnostics for live hosts: "Class.property" for every view animation
+    /// in this subtree that is active at `time` (what keeps a frame's
+    /// fingerprint changing, and so keeps a live host rendering).
+    public final func _hostActiveAnimations(at time: Double) -> [String] {
+        var out: [String] = []
+        for a in animations where a.isActive(at: time) {
+            out.append("\(type(of: self)).\(a.property)\(a.repeats ? "(repeats)" : "")")
+        }
+        for s in subviews where !s.isHidden { out += s._hostActiveAnimations(at: time) }
+        return out
+    }
+}
+
 // MARK: - Spring duration fit (UIKit model)
 
 enum UIViewSpring {

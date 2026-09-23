@@ -351,7 +351,19 @@ MainActor.assumeIsolated {
     let selfTest = hostTimerSelfTest ? HostTimerSelfTest(window: scene.window) : nil
     // Frame statistics for HOST_FULL_LIVE_STATS (rendered vs unchanged-skipped).
     var rendered = 0, skipped = 0
-    hooks.frameObserver = { r, s in if r { rendered += 1 }; if s { skipped += 1 } }
+    let profiling = hostEnv("HOST_FULL_PROFILE") == "1"
+    var lastReport = -1.0
+    hooks.frameObserver = { r, s in
+        if r { rendered += 1 }
+        if s { skipped += 1 }
+        let now = OpenUIKitRuntime.animationTime
+        if profiling, r, now - lastReport >= 2 {
+            lastReport = now
+            let active = scene.window._hostActiveAnimations(at: now)
+            hostWarn("HOST_FULL_PROFILE t=\(fmt3(now)) caret=\(UITextInputState._hasActiveCaret) "
+                     + "workDeadline=\(fmt3(OpenUIKitRuntime.animationWorkDeadline)) active=\(active)")
+        }
+    }
     if let selfTest { hooks.didPresent = { _ in selfTest.noteFrame() } }
     runLive(scene, host: surface, hooks: hooks)
     hostWarn("HOST_FULL_LIVE_STATS rendered=\(rendered) unchanged_skipped=\(skipped)")
