@@ -207,7 +207,8 @@ extension UIFont {
                                      compatibleWith traits: UITraitCollection?) -> UIFont {
         let d = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style,
                                                          compatibleWith: traits)
-        var font = UIFont(pointSize: d.pointSize, weight: d.weight, design: .default)
+        var font = UIFont(pointSize: d.pointSize, weight: d.weight, design: .default,
+                          textStyle: style.rawValue)
         // iOS cut, MEASURED probe_textstyle_leading + probe_feed_color_label
         // on the iPhone SE 2x / iOS 26.1, category `.large`:
         // `preferredFont.leading + preferredFont.lineHeight` is the integer
@@ -222,7 +223,7 @@ extension UIFont {
         if OpenUIKitRuntime.systemFontCut == .iOS,
            cat == .large || cat == .unspecified,
            let spacing = iOSTextStyleLineSpacingLarge[style.rawValue] {
-            font.textStyleLeading = spacing - FontEngine.metrics(for: font).lineHeight
+            font = font._withTextStyleLeading(spacing - FontEngine.metrics(for: font).lineHeight)
         }
         return font
     }
@@ -290,9 +291,7 @@ public final class UIFontMetrics {
               let pt = DynamicTypeTable.interpolate(e.scaledFont, at: font.pointSize) else {
             return font
         }
-        var f = font
-        f.pointSize = pt
-        return f
+        return font._withPointSize(pt)
     }
 
     public func scaledFont(for font: UIFont, maximumPointSize: CGFloat) -> UIFont {
@@ -302,9 +301,8 @@ public final class UIFontMetrics {
 
     public func scaledFont(for font: UIFont, maximumPointSize: CGFloat,
                            compatibleWith traits: UITraitCollection?) -> UIFont {
-        var f = scaledFont(for: font, compatibleWith: traits)
-        if f.pointSize > maximumPointSize { f.pointSize = maximumPointSize }
-        return f
+        let f = scaledFont(for: font, compatibleWith: traits)
+        return f.pointSize > maximumPointSize ? f._withPointSize(maximumPointSize) : f
     }
 
     public func scaledValue(for value: CGFloat, maximumPointSize: CGFloat) -> CGFloat {

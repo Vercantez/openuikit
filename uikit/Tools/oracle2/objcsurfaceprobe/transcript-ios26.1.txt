@@ -1,0 +1,101 @@
+# objcsurfaceprobe — iOS 26.1
+## superclasses
+UIFont:NSObject
+CALayer:NSObject
+UIAlertAction:NSObject
+## font
+systemFontOfSize:17 pointSize=17 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
+boldSystemFontOfSize:17 pointSize=17 fontName=.SFUI-Semibold familyName=.AppleSystemUIFont kind=YES
+systemFontOfSize:18 pointSize=18 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
+fontWithSize:34 pointSize=34 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
+sys17~sys17 isEqual=YES sameHash=YES
+sys17~bold17 isEqual=NO sameHash=YES
+sys17~sys18 isEqual=NO sameHash=YES
+sys17~[sys18 fontWithSize:17] isEqual=YES sameHash=YES
+sys17~[sys17 fontWithSize:17] isEqual=YES sameHash=YES
+fontWithName:OUKNoSuchSerif -> nil
++ouk_serifFontWithSize:21 pointSize=21 fontName=.SFUI-Semibold familyName=.AppleSystemUIFont kind=YES
++ouk_missingFontWithSize:21 -> nil
+-ouk_doubledFont(10) pointSize=20 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
+respondsToSelector ouk_serifFontWithSize: YES
+systemFontOfSize:17 weight:Semibold pointSize=17 fontName=.SFUI-Semibold familyName=.AppleSystemUIFont kind=YES
+sys17~weight:Regular isEqual=YES sameHash=YES
+bold17~weight:Bold isEqual=NO sameHash=YES
+bold17~weight:Semibold isEqual=NO sameHash=YES
+UIFontWeight regular=0 medium=0.23 semibold=0.3 bold=0.4 heavy=0.56
+copy isEqual=YES sameHash=YES
+UILabel.font default pointSize=17 fontName=.SFUI-Regular familyName=.AppleSystemUIFont kind=YES
+UILabel.font set isEqual=YES sameHash=YES
+attributes[NSFontAttributeName] isEqual=YES sameHash=YES
+NSAttributedString font identical=YES
+NSAttributedString font isEqual=YES sameHash=YES
+addAttribute range={0, 2} pointSize=18
+font runs=2
+equal fonts coalesce runs=1
+copy isEqual=YES
+equal-font strings isEqual=YES
+## layer
++layer class=CALayer
+defaults bounds={{0, 0}, {0, 0}} position={0, 0} anchorPoint={0.5, 0.5} frame={{0, 0}, {0, 0}}
+defaults cornerRadius=0 borderWidth=0 opacity=1 hidden=NO masksToBounds=NO opaque=NO
+defaults contentsScale=1 shadowOpacity=0 shadowRadius=3 shadowOffset={0, -3}
+defaults sublayers=nil superlayer=nil mask=nil needsLayout=NO
+frame set bounds={{0, 0}, {30, 40}} position={25, 40} frame={{10, 20}, {30, 40}}
+anchorPoint {0,0} position={25, 40} frame={{25, 40}, {30, 40}}
+bounds/position set frame={{5, 6}, {50, 60}}
+set cornerRadius=4 borderWidth=1.5 opacity=0.25 hidden=YES masksToBounds=YES
+sublayers count=2 first=YES superlayer=YES
+after remove sublayers=nil a.superlayer=nil
+## layersubclass
+-- 1 +layer on the subclass
+OUKTraceLayer -init class=OUKTraceLayer
+isKindOfClass CALayer=YES super=CALayer
+-- 2 layout
+needsLayout=NO
+after bounds change needsLayout=YES
+OUKTraceLayer -layoutSublayers #1 bounds={{0, 0}, {20, 10}}
+OUKTraceLayer -layoutSublayers #2 bounds={{0, 0}, {20, 10}}
+-- 3 sublayers
+OUKTraceLayer -init class=OUKTraceLayer
+after addSublayer parent.needsLayout=YES child.needsLayout=NO
+OUKTraceLayer -layoutSublayers #3 bounds={{0, 0}, {20, 10}}
+count parent=3 child=0
+-- 4 +layerClass of an Objective-C UIView subclass
+OUKTraceLayer -init class=OUKTraceLayer
+view.layer class=OUKTraceLayer delegate=YES bounds={{0, 0}, {50, 60}}
+OUKTraceLayer -layoutSublayers #1 bounds={{0, 0}, {50, 60}}
+OUKLayerHostView -layoutSubviews bounds={{0, 0}, {50, 60}}
+OUKTraceLayer -layoutSublayers #2 bounds={{0, 0}, {50, 60}}
+OUKLayerHostView -layoutSubviews bounds={{0, 0}, {50, 60}}
+OUKTraceLayer -layoutSublayers #3 bounds={{0, 0}, {70, 80}}
+OUKLayerHostView -layoutSubviews bounds={{0, 0}, {70, 80}}
+layer count=3
+## cgcolor
+redColor n=4 [1 0 0 1] alpha=1
+whiteColor n=2 [1 1] alpha=1
+clearColor n=2 [0 0] alpha=0
+colorWithRed:0.2 green:0.4 blue:0.6 alpha:0.8 n=4 [0.2 0.4 0.6 0.8] alpha=0.8
+colorWithWhite:0.5 alpha:0.25 n=2 [0.5 0.25] alpha=0.25
+colorWithAlphaComponent:0.5 n=4 [0 0 1 0.5] alpha=0.5
+CGColorEqualToColor(red, red)=YES
+layer defaults borderColor n=4 [0 0 0 1] alpha=1 backgroundColor NULL shadowColor n=4 [0 0 0 1] alpha=1
+layer set borderColor n=4 [1 0 0 1] alpha=1 backgroundColor n=2 [0.5 1] alpha=1 shadowColor n=4 [0 0 1 1] alpha=1
+layer backgroundColor NULL -> NULL
+view.layer.backgroundColor default NULL
+view.backgroundColor=green -> layer n=4 [0 1 0 1] alpha=1
+view.layer.backgroundColor=red -> view.backgroundColor n=4 [1 0 0 1] alpha=1
+## identity
+systemFontOfSize:17 twice identical=YES concrete=UICTFont
+copy identical=YES
+preferredFontForTextStyle:body isEqual systemFontOfSize:17=NO pointSize=17 fontName=.SFUI-Regular
+italicSystemFontOfSize:17 fontName=.SFUI-RegularItalic
+systemFontOfSize:17 weight:-0.7 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght46D333
+systemFontOfSize:17 weight:-0.1 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght1709425
+systemFontOfSize:17 weight:0.1 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght1BFD37A
+systemFontOfSize:17 weight:0.12 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght1C9642C
+systemFontOfSize:17 weight:0.26 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght2204923
+systemFontOfSize:17 weight:0.35 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght284FFF9
+systemFontOfSize:17 weight:0.48 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght30BFFF9
+systemFontOfSize:17 weight:0.6 fontName=.SFUI-Regular_wdth_opsz_GRAD_wght3B95553
+hash sys17=9991910166145525527 sys18=13513601929446942487 bold17=7467111189713229037
+UIView.layer class=CALayer CAShapeLayer:CALayer CAGradientLayer:CALayer

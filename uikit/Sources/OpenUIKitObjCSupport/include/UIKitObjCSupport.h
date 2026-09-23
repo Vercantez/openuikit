@@ -42,6 +42,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class UIWindow;
 @class UIView, UIViewController, UINavigationController, UITableView, UITableViewCell,
        UIScrollView, UITextView, UITextField, UIGestureRecognizer, UIPickerView,
        UIApplication, UIApplicationShortcutItem, UITraitCollection;
@@ -251,6 +252,133 @@ typedef OUKTextStorageEditActions NSTextStorageEditActions NS_SWIFT_NAME(NSTextS
 #define NSTextStorageDelegate OUKTextStorageDelegate
 #endif
 
+/* UIGeometry.h: the inline helpers, verbatim in behaviour. */
+static inline BOOL UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsets insets1, UIEdgeInsets insets2) {
+    return insets1.left == insets2.left && insets1.top == insets2.top && insets1.right == insets2.right && insets1.bottom == insets2.bottom;
+}
+static inline CGRect UIEdgeInsetsInsetRect(CGRect rect, UIEdgeInsets insets) {
+    rect.origin.x += insets.left;
+    rect.origin.y += insets.top;
+    rect.size.width -= (insets.left + insets.right);
+    rect.size.height -= (insets.top + insets.bottom);
+    return rect;
+}
+typedef struct NS_SWIFT_NAME(UIOffsetObjC) UIOffset { CGFloat horizontal, vertical; } UIOffset;
+static inline UIOffset UIOffsetMake(CGFloat horizontal, CGFloat vertical) {
+    UIOffset offset = {horizontal, vertical}; return offset;
+}
+static inline BOOL UIOffsetEqualToOffset(UIOffset offset1, UIOffset offset2) {
+    return offset1.horizontal == offset2.horizontal && offset1.vertical == offset2.vertical;
+}
+extern const UIOffset UIOffsetZero;
+
+#pragma mark - Auto Layout (NSLayoutConstraint.h)
+
+/* iOS 26.1 SDK NSLayoutConstraint.h: priorities are `static const` in the
+ * header itself; the two enums carry the iOS (TARGET_OS_IPHONE) members and
+ * equal OpenUIKit's NSLayoutConstraint.Attribute / Relation raw values
+ * (AutoLayout/NSLayoutConstraint.swift).
+ *
+ * The enums are Objective-C-side only (`!__swift__`): on the macOS triple
+ * AppKit declares NSLayoutAttribute without the iOS margin members, and a
+ * Swift importer that sees both modules rejects the pair (MEASURED building
+ * OpenUIKitObjCBridge: "'NSLayoutAttributeLeftMargin' from module
+ * 'OpenUIKitObjCSupport' is not present in definition of 'enum
+ * NSLayoutAttribute' in module 'AppKit.NSLayoutConstraint'"). Swift code uses
+ * OpenUIKit's NSLayoutConstraint.Attribute. An Objective-C file that also
+ * imports AppKit is the macOS-triple leakage ios-target owns. */
+typedef float UILayoutPriority NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UILayoutPriorityObjC);
+static const UILayoutPriority UILayoutPriorityRequired = 1000;
+static const UILayoutPriority UILayoutPriorityDefaultHigh = 750;
+static const UILayoutPriority UILayoutPriorityDragThatCanResizeScene = 510;
+static const UILayoutPriority UILayoutPrioritySceneSizeStayPut = 500;
+static const UILayoutPriority UILayoutPriorityDragThatCannotResizeScene = 490;
+static const UILayoutPriority UILayoutPriorityDefaultLow = 250;
+static const UILayoutPriority UILayoutPriorityFittingSizeLevel = 50;
+#if !__swift__
+typedef NS_ENUM(NSInteger, NSLayoutRelation) {
+    NSLayoutRelationLessThanOrEqual = -1, NSLayoutRelationEqual = 0, NSLayoutRelationGreaterThanOrEqual = 1,
+};
+/* The SDK itself declares the margin members only `#if TARGET_OS_IPHONE`
+ * (NSLayoutConstraint.h:65). Off iOS the enum keeps exactly AppKit's members,
+ * so an Objective-C file that sees AppKit's copy too merges the two instead
+ * of failing (MEASURED Simplenote census: "'NSLayoutAttribute' has different
+ * definitions in different modules … enum with 22 elements"), and the
+ * margins are constant expressions with their iOS values. */
+typedef NS_ENUM(NSInteger, NSLayoutAttribute) {
+    NSLayoutAttributeLeft = 1, NSLayoutAttributeRight, NSLayoutAttributeTop, NSLayoutAttributeBottom,
+    NSLayoutAttributeLeading, NSLayoutAttributeTrailing, NSLayoutAttributeWidth, NSLayoutAttributeHeight,
+    NSLayoutAttributeCenterX, NSLayoutAttributeCenterY, NSLayoutAttributeLastBaseline,
+    NSLayoutAttributeBaseline = NSLayoutAttributeLastBaseline,
+    NSLayoutAttributeFirstBaseline,
+#if TARGET_OS_IPHONE
+    NSLayoutAttributeLeftMargin, NSLayoutAttributeRightMargin, NSLayoutAttributeTopMargin,
+    NSLayoutAttributeBottomMargin, NSLayoutAttributeLeadingMargin, NSLayoutAttributeTrailingMargin,
+    NSLayoutAttributeCenterXWithinMargins, NSLayoutAttributeCenterYWithinMargins,
+#endif
+    NSLayoutAttributeNotAnAttribute = 0
+};
+#if !TARGET_OS_IPHONE
+#define NSLayoutAttributeLeftMargin ((NSLayoutAttribute)13)
+#define NSLayoutAttributeRightMargin ((NSLayoutAttribute)14)
+#define NSLayoutAttributeTopMargin ((NSLayoutAttribute)15)
+#define NSLayoutAttributeBottomMargin ((NSLayoutAttribute)16)
+#define NSLayoutAttributeLeadingMargin ((NSLayoutAttribute)17)
+#define NSLayoutAttributeTrailingMargin ((NSLayoutAttribute)18)
+#define NSLayoutAttributeCenterXWithinMargins ((NSLayoutAttribute)19)
+#define NSLayoutAttributeCenterYWithinMargins ((NSLayoutAttribute)20)
+#endif
+#endif
+
+#pragma mark - Images and views (UIImage.h, UIView.h, UIBlurEffect.h, UIApplication.h)
+
+typedef NS_ENUM(NSInteger, UIImageOrientation) {
+    UIImageOrientationUp, UIImageOrientationDown, UIImageOrientationLeft, UIImageOrientationRight,
+    UIImageOrientationUpMirrored, UIImageOrientationDownMirrored, UIImageOrientationLeftMirrored,
+    UIImageOrientationRightMirrored,
+} NS_SWIFT_NAME(UIImageOrientationObjC);
+typedef NS_ENUM(NSInteger, UIImageRenderingMode) {
+    UIImageRenderingModeAutomatic, UIImageRenderingModeAlwaysOriginal, UIImageRenderingModeAlwaysTemplate,
+} NS_SWIFT_NAME(UIImageRenderingModeObjC);
+typedef NS_ENUM(NSInteger, UIViewContentMode) {
+    UIViewContentModeScaleToFill, UIViewContentModeScaleAspectFit, UIViewContentModeScaleAspectFill,
+    UIViewContentModeRedraw, UIViewContentModeCenter, UIViewContentModeTop, UIViewContentModeBottom,
+    UIViewContentModeLeft, UIViewContentModeRight, UIViewContentModeTopLeft, UIViewContentModeTopRight,
+    UIViewContentModeBottomLeft, UIViewContentModeBottomRight,
+} NS_SWIFT_NAME(UIViewContentModeObjC);
+/* UIBlurEffect.h; 3 is a private UIKit value (UIVisualEffect.swift). */
+typedef NS_ENUM(NSInteger, UIBlurEffectStyle) {
+    UIBlurEffectStyleExtraLight, UIBlurEffectStyleLight, UIBlurEffectStyleDark,
+    UIBlurEffectStyleRegular = 4, UIBlurEffectStyleProminent = 5,
+    UIBlurEffectStyleSystemUltraThinMaterial, UIBlurEffectStyleSystemThinMaterial,
+    UIBlurEffectStyleSystemMaterial, UIBlurEffectStyleSystemThickMaterial,
+    UIBlurEffectStyleSystemChromeMaterial,
+    UIBlurEffectStyleSystemUltraThinMaterialLight, UIBlurEffectStyleSystemThinMaterialLight,
+    UIBlurEffectStyleSystemMaterialLight, UIBlurEffectStyleSystemThickMaterialLight,
+    UIBlurEffectStyleSystemChromeMaterialLight,
+    UIBlurEffectStyleSystemUltraThinMaterialDark, UIBlurEffectStyleSystemThinMaterialDark,
+    UIBlurEffectStyleSystemMaterialDark, UIBlurEffectStyleSystemThickMaterialDark,
+    UIBlurEffectStyleSystemChromeMaterialDark,
+} NS_SWIFT_NAME(UIBlurEffectStyleObjC);
+
+#pragma mark - Font weights (UIFontDescriptor.h)
+
+/* `typedef CGFloat UIFontWeight NS_TYPED_EXTENSIBLE_ENUM` (UIFontDescriptor.h).
+ * Values: iOS 26.1, objcsurfaceprobe `## font` (regular 0, medium 0.23,
+ * semibold 0.3, bold 0.4, heavy 0.56) and fontdesc.weight.raws
+ * (UIFontDescriptor.swift: ultraLight -0.8, thin -0.6, light -0.4,
+ * black 0.62). */
+typedef CGFloat UIFontWeight NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(UIFontWeightObjC);
+extern const UIFontWeight UIFontWeightUltraLight;
+extern const UIFontWeight UIFontWeightThin;
+extern const UIFontWeight UIFontWeightLight;
+extern const UIFontWeight UIFontWeightRegular;
+extern const UIFontWeight UIFontWeightMedium;
+extern const UIFontWeight UIFontWeightSemibold;
+extern const UIFontWeight UIFontWeightBold;
+extern const UIFontWeight UIFontWeightHeavy;
+extern const UIFontWeight UIFontWeightBlack;
+
 #pragma mark - Typed strings, keys and notification names
 
 typedef NSString * UIApplicationLaunchOptionsKey NS_TYPED_ENUM NS_SWIFT_NAME(UIApplicationLaunchOptionsKeyObjC);
@@ -276,6 +404,8 @@ extern NSAttributedStringKey const NSParagraphStyleAttributeName;
 extern NSAttributedStringKey const NSLinkAttributeName;
 extern NSAttributedStringKey const NSAttachmentAttributeName;
 extern NSNotificationName const UIApplicationDidEnterBackgroundNotification;
+extern NSNotificationName const UIApplicationDidBecomeActiveNotification;
+extern NSNotificationName const UIApplicationDidReceiveMemoryWarningNotification;
 extern NSNotificationName const UIApplicationWillEnterForegroundNotification;
 extern NSNotificationName const UIContentSizeCategoryDidChangeNotification;
 extern NSNotificationName const UIKeyboardWillShowNotification;
@@ -283,9 +413,25 @@ extern NSNotificationName const NSTextStorageWillProcessEditingNotification;
 extern NSNotificationName const NSTextStorageDidProcessEditingNotification;
 extern NSNotificationName const UIKeyboardWillChangeFrameNotification;
 extern NSNotificationName const UITextViewTextDidEndEditingNotification;
+extern NSString * const UICollectionElementKindSectionHeader;
+extern NSString * const UICollectionElementKindSectionFooter;
 extern NSString * const UIKeyboardFrameEndUserInfoKey;
 extern NSString * const UIKeyInputUpArrow;
 extern NSString * const UIKeyInputDownArrow;
+
+#pragma mark - NSIndexPath (UITableView / UICollectionViewAdditions)
+
+/* Declarations only: OpenUIKitObjCBridge implements them, except that on
+ * macOS AppKit's NSIndexPath (NSCollectionViewAdditions) already provides
+ * `section`, `item` and `+indexPathForItem:inSection:` (identical meaning:
+ * index positions 0 and 1). */
+#if !__swift__
+@interface NSIndexPath (OpenUIKitCollectionAdditions)
++ (instancetype)indexPathForItem:(NSInteger)item inSection:(NSInteger)section;
+@property (nonatomic, readonly) NSInteger item;
+@property (nonatomic, readonly) NSInteger section;
+@end
+#endif
 
 #pragma mark - Protocols
 
@@ -302,6 +448,7 @@ NS_SWIFT_NAME(UIApplicationDelegateObjC) @protocol UIApplicationDelegate <NSObje
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL succeeded))completionHandler;
 - (BOOL)application:(UIApplication *)application shouldSaveSecureApplicationState:(NSCoder *)coder;
 - (BOOL)application:(UIApplication *)application shouldRestoreSecureApplicationState:(NSCoder *)coder;
+@property (nullable, nonatomic, strong) UIWindow *window;
 @end
 
 NS_SWIFT_NAME(UIUserActivityRestoringObjC) @protocol UIUserActivityRestoring <NSObject>

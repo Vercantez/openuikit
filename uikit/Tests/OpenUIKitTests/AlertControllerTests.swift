@@ -164,7 +164,11 @@ final class UIAlertLayoutTests: XCTestCase {
         // and centres it; with both, 17 semibold + 15 regular, left aligned.
         let (solo, _) = card("Title only", nil, [("OK", .default)])
         let soloLabel = solo.view.subviews.compactMap { $0 as? UILabel }.first!
-        XCTAssertEqual(soloLabel.font, UIAlertMetrics.soloFont)
+        // The label's font is the body text style at 17 pt; UIFont equality
+        // tells a text-style font from the plain system font (iOS 26.1,
+        // objcsurfaceprobe `## identity`), so the measured face is compared.
+        XCTAssertEqual(soloLabel.font.pointSize, UIAlertMetrics.soloFont.pointSize)
+        XCTAssertEqual(soloLabel.font.fontName, UIAlertMetrics.soloFont.fontName)
         XCTAssertEqual(soloLabel.textAlignment, .center)
 
         let (both, _) = card("T", "M", [("OK", .default)])
@@ -173,7 +177,8 @@ final class UIAlertLayoutTests: XCTestCase {
         XCTAssertEqual(labels[0].font, UIAlertMetrics.titleFont)
         XCTAssertEqual(labels[0].textAlignment, .left)
         XCTAssertEqual(labels[0].textColor, UIColor.label)
-        XCTAssertEqual(labels[1].font, UIAlertMetrics.messageFont)
+        XCTAssertEqual(labels[1].font.pointSize, UIAlertMetrics.messageFont.pointSize)
+        XCTAssertEqual(labels[1].font.fontName, UIAlertMetrics.messageFont.fontName)
         XCTAssertEqual(labels[1].textColor, UIColor.secondaryLabel)
         XCTAssertEqual(labels[0].frame.minX, UIAlertMetrics.textInsetX, accuracy: 1e-9)
         XCTAssertEqual(labels[0].frame.width,

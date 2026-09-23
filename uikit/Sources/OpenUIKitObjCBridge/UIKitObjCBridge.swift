@@ -26,8 +26,10 @@
 // (viewDidLoad, layoutSubviews, …) are therefore forwarded for CALLERS only.
 
 #if canImport(ObjectiveC)
+import CoreGraphics
 import Foundation
 import ObjectiveC
+import OpenCoreGraphics
 import OpenUIKit
 import OpenUIKitObjCSupport
 
@@ -275,13 +277,20 @@ extension UITableViewCell {
 }
 
 /// UIKit's `NSIndexPath (UITableView)` category: `row` and `section` are
-/// index positions 1 and 0 (UITableView.h).
+/// index positions 1 and 0 (UITableView.h). On macOS AppKit's
+/// `NSIndexPath (NSCollectionViewAdditions)` already implements `section`
+/// (and `item`, `+indexPathForItem:inSection:`); a twin would replace it
+/// (MEASURED ObjCSurfaceTests.testNoTwinShadowsANativeSelector), so those
+/// three are declared in UIKitObjCSupport.h and implemented here only where
+/// AppKit is absent.
 extension NSIndexPath {
     @objc(row) public var __objc_row: Int { index(atPosition: 1) }
-    @objc(section) public var __objc_section: Int { index(atPosition: 0) }
     @objc(indexPathForRow:inSection:) public class func __objc_indexPath(forRow row: Int, inSection section: Int) -> NSIndexPath {
         NSIndexPath(indexes: [section, row], length: 2)
     }
+#if !canImport(AppKit)
+    @objc(section) public var __objc_section: Int { index(atPosition: 0) }
+#endif
 }
 
 // MARK: - UISwitch / UIActivityIndicatorView / UIImageView / UIImage
@@ -428,5 +437,311 @@ extension UITextView {
     // UIKit declares the property nullable; OpenUIKit's is not, so nil
     // restores OpenUIKit's own initial value (UITextView.swift).
     @objc(textColor) public var __objc_textColor: UIColor? { get { textColor } set { textColor = newValue ?? .label } }
+}
+
+// MARK: - CGColorRef (UIColor.CGColor, CALayer's color properties)
+
+// Objective-C passes colors to Core Animation as CoreGraphics `CGColorRef`
+// (`layer.borderColor = color.CGColor`) and reads them back with
+// CGColorGetComponents / CGColorGetAlpha. OpenUIKit's own CGColor is
+// OpenCoreGraphics' value struct, so each crossing converts. The model is
+// kept: a gray color (white, clear, `colorWithWhite:alpha:`) is a 2-component
+// gray CGColor, everything else 4-component sRGB — iOS 26.1,
+// objcsurfaceprobe `## cgcolor` (`whiteColor n=2 [1 1]`, `redColor n=4`).
+func _cgColorRef(_ color: OpenCoreGraphics.CGColor) -> CoreGraphics.CGColor {
+    color.isGrayModel
+        ? CoreGraphics.CGColor(gray: color.red, alpha: color.alpha)
+        : CoreGraphics.CGColor(srgbRed: color.red, green: color.green, blue: color.blue, alpha: color.alpha)
+}
+
+func _openColor(_ color: CoreGraphics.CGColor) -> OpenCoreGraphics.CGColor {
+    let k = color.components ?? []
+    if color.numberOfComponents == 2, k.count == 2 {
+        return OpenCoreGraphics.CGColor(gray: k[0], alpha: k[1])
+    }
+    if color.colorSpace?.model == .rgb, k.count == 4 {
+        return OpenCoreGraphics.CGColor(red: k[0], green: k[1], blue: k[2], alpha: k[3])
+    }
+    // Any other space: CoreGraphics' own conversion to sRGB.
+    if let srgb = CoreGraphics.CGColorSpace(name: CoreGraphics.CGColorSpace.sRGB),
+       let converted = color.converted(to: srgb, intent: .defaultIntent, options: nil),
+       let c = converted.components, c.count == 4 {
+        return OpenCoreGraphics.CGColor(red: c[0], green: c[1], blue: c[2], alpha: c[3])
+    }
+    return OpenCoreGraphics.CGColor(red: 0, green: 0, blue: 0, alpha: color.alpha)
+}
+
+extension UIColor {
+    /// The color resolved in the current trait environment, as UIKit's
+    /// `CGColor` property does.
+    @objc(CGColor) public var __objc_CGColor: CoreGraphics.CGColor { _cgColorRef(cgColor) }
+    @objc(colorWithCGColor:) public class func __objc_color(cgColor: CoreGraphics.CGColor) -> UIColor {
+        let c = _openColor(cgColor)
+        return c.isGrayModel ? UIColor(white: c.red, alpha: c.alpha)
+            : UIColor(red: c.red, green: c.green, blue: c.blue, alpha: c.alpha)
+    }
+}
+
+extension CALayer {
+    @objc(borderColor) public var __objc_borderColor: CoreGraphics.CGColor? {
+        get { borderColor.map(_cgColorRef) } set { borderColor = newValue.map(_openColor) }
+    }
+    @objc(backgroundColor) public var __objc_backgroundColor: CoreGraphics.CGColor? {
+        get { backgroundColor.map(_cgColorRef) } set { backgroundColor = newValue.map(_openColor) }
+    }
+    @objc(shadowColor) public var __objc_shadowColor: CoreGraphics.CGColor? {
+        get { shadowColor.map(_cgColorRef) } set { shadowColor = newValue.map(_openColor) }
+    }
+}
+
+// MARK: - UIView.layer, font properties
+
+extension UIView {
+    @objc(layer) public var __objc_layer: CALayer { layer }
+}
+
+extension UILabel {
+    @objc(font) public var __objc_font: UIFont? { get { font } set { font = newValue } }
+}
+
+extension UITextField {
+    @objc(font) public var __objc_font: UIFont? { get { font } set { font = newValue } }
+}
+
+extension UITextView {
+    @objc(font) public var __objc_font: UIFont? { get { font } set { font = newValue } }
+}
+// MARK: - UIVisualEffectView / UIBlurEffect, UIView.transform / contentMode / animations
+
+// The eidolon pod census ranked these next (docs/agent_reports/objc-surface.md).
+// Raw values are the iOS 26.1 SDK's; each body is one OpenUIKit call.
+
+extension UIVisualEffectView {
+    @objc(initWithEffect:) public convenience init(__objcEffect effect: UIVisualEffect?) { self.init(effect: effect) }
+    @objc(contentView) public var __objc_contentView: UIView { contentView }
+    @objc(effect) public var __objc_effect: UIVisualEffect? { get { effect } set { effect = newValue } }
+}
+
+extension UIBlurEffect {
+    /// `+effectWithStyle:`; a raw value UIKit does not define fails closed
+    /// to the inert `UIBlurEffect()`.
+    @objc(effectWithStyle:) public class func __objc_effect(style: Int) -> UIBlurEffect {
+        Style(rawValue: style).map { UIBlurEffect(style: $0) } ?? UIBlurEffect()
+    }
+}
+
+/// UIViewContentMode's SDK order (UIView.h) is OpenUIKit's case order.
+private let contentModes: [UIViewContentMode] = [
+    .scaleToFill, .scaleAspectFit, .scaleAspectFill, .redraw, .center, .top, .bottom,
+    .left, .right, .topLeft, .topRight, .bottomLeft, .bottomRight,
+]
+
+extension UIView {
+    /// OpenUIKit's CGAffineTransform is OpenCoreGraphics' struct; Objective-C
+    /// passes CoreGraphics' C struct with the same six fields.
+    @objc(transform) public var __objc_transform: CoreGraphics.CGAffineTransform {
+        get {
+            let t = transform
+            return CoreGraphics.CGAffineTransform(a: t.a, b: t.b, c: t.c, d: t.d, tx: t.tx, ty: t.ty)
+        }
+        set {
+            transform = OpenCoreGraphics.CGAffineTransform(a: newValue.a, b: newValue.b, c: newValue.c,
+                                                           d: newValue.d, tx: newValue.tx, ty: newValue.ty)
+        }
+    }
+    @objc(contentMode) public var __objc_contentMode: Int {
+        get { contentModes.firstIndex(of: contentMode) ?? 0 }
+        set { contentMode = contentModes.indices.contains(newValue) ? contentModes[newValue] : .scaleToFill }
+    }
+    @objc(addConstraint:) public func __objc_addConstraint(_ constraint: NSLayoutConstraint) { addConstraint(constraint) }
+    @objc(animateWithDuration:animations:)
+    public class func __objc_animate(withDuration duration: TimeInterval, animations: @escaping () -> Void) {
+        animate(withDuration: duration, animations: animations)
+    }
+    @objc(animateWithDuration:animations:completion:)
+    public class func __objc_animate(withDuration duration: TimeInterval, animations: @escaping () -> Void,
+                                     completion: ((Bool) -> Void)?) {
+        animate(withDuration: duration, animations: animations, completion: completion)
+    }
+    @objc(animateWithDuration:delay:options:animations:completion:)
+    public class func __objc_animate(withDuration duration: TimeInterval, delay: TimeInterval, options: UInt,
+                                     animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+        animate(withDuration: duration, delay: delay, options: AnimationOptions(rawValue: options),
+                animations: animations, completion: completion)
+    }
+}
+
+// MARK: - Auto Layout
+
+extension NSLayoutConstraint {
+    /// `+constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:`.
+    /// NSLayoutAttribute / NSLayoutRelation raw values equal OpenUIKit's
+    /// (the support header's enums); an undefined raw value fails closed to
+    /// `.notAnAttribute` / `.equal`.
+    @objc(constraintWithItem:attribute:relatedBy:toItem:attribute:multiplier:constant:)
+    public class func __objc_constraint(item view1: AnyObject, attribute attr1: Int, relatedBy relation: Int,
+                                        toItem view2: AnyObject?, attribute attr2: Int,
+                                        multiplier: CGFloat, constant: CGFloat) -> NSLayoutConstraint {
+        NSLayoutConstraint(item: view1, attribute: Attribute(rawValue: attr1) ?? .notAnAttribute,
+                           relatedBy: Relation(rawValue: relation) ?? .equal,
+                           toItem: view2, attribute: Attribute(rawValue: attr2) ?? .notAnAttribute,
+                           multiplier: multiplier, constant: constant)
+    }
+    @objc(constant) public var __objc_constant: CGFloat { get { constant } set { constant = newValue } }
+    @objc(isActive) public var __objc_isActive: Bool { get { isActive } set { isActive = newValue } }
+    @objc(setActive:) public func __objc_setActive(_ active: Bool) { isActive = active }
+}
+
+// MARK: - UIImage / UIImageView
+
+extension UIImage {
+    @objc(imageWithContentsOfFile:) public class func __objc_image(contentsOfFile path: String) -> UIImage? {
+        UIImage(contentsOfFile: path)
+    }
+    @objc(initWithData:) public convenience init?(__objcData data: Data) { self.init(data: [UInt8](data)) }
+    @objc(imageWithData:) public class func __objc_image(data: Data) -> UIImage? { UIImage(data: [UInt8](data)) }
+    /// UIImageRenderingMode's SDK values: Automatic 0, AlwaysOriginal 1,
+    /// AlwaysTemplate 2 (UIImage.h).
+    @objc(imageWithRenderingMode:) public func __objc_withRenderingMode(_ mode: Int) -> UIImage {
+        withRenderingMode(mode == 2 ? .alwaysTemplate : mode == 1 ? .alwaysOriginal : .automatic)
+    }
+    @objc(renderingMode) public var __objc_renderingMode: Int {
+        switch renderingMode {
+        case .automatic: return 0
+        case .alwaysOriginal: return 1
+        case .alwaysTemplate: return 2
+        }
+    }
+}
+
+// MARK: - UIButton / UIControl
+
+extension UIControl {
+    @objc(state) public var __objc_state: UInt { state.rawValue }
+}
+
+extension UIButton {
+    @objc(titleLabel) public var __objc_titleLabel: UILabel? { titleLabel }
+    @objc(imageView) public var __objc_imageView: UIImageView? { imageView }
+    @objc(setTitle:forState:) public func __objc_setTitle(_ title: String?, forState state: UInt) {
+        setTitle(title, for: State(rawValue: state))
+    }
+    @objc(setTitleColor:forState:) public func __objc_setTitleColor(_ color: UIColor?, forState state: UInt) {
+        setTitleColor(color, for: State(rawValue: state))
+    }
+    @objc(setImage:forState:) public func __objc_setImage(_ image: UIImage?, forState state: UInt) {
+        setImage(image, for: State(rawValue: state))
+    }
+    @objc(setBackgroundImage:forState:) public func __objc_setBackgroundImage(_ image: UIImage?, forState state: UInt) {
+        setBackgroundImage(image, for: State(rawValue: state))
+    }
+}
+
+// MARK: - UIApplication / UIScreen / UIColor
+
+extension UIApplication {
+    @objc(canOpenURL:) public func __objc_canOpenURL(_ url: URL) -> Bool { canOpenURL(url) }
+    /// Deprecated since iOS 10 (UIApplication.h); OpenUIKit's
+    /// `open(_:options:completionHandler:)` with no completion.
+    @objc(openURL:) public func __objc_openURL(_ url: URL) -> Bool {
+        let can = canOpenURL(url)
+        open(url, options: [:], completionHandler: nil)
+        return can
+    }
+}
+
+extension UIScreen {
+    @objc(mainScreen) public class var __objc_mainScreen: UIScreen { UIScreen.main }
+    @objc(bounds) public var __objc_bounds: CGRect { bounds }
+    @objc(scale) public var __objc_scale: CGFloat { scale }
+}
+
+extension UIColor {
+    @objc(colorWithHue:saturation:brightness:alpha:)
+    public class func __objc_color(hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) -> UIColor {
+        UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: alpha)
+    }
+}
+// MARK: - Alerts, bar button items, collection index paths (Simplenote / eidolon census)
+
+extension UIAlertAction {
+    /// UIAlertActionStyle raw values equal OpenUIKit's (alertprobe); an
+    /// undefined one fails closed to `.default`.
+    @objc(actionWithTitle:style:handler:)
+    public class func __objc_action(title: String?, style: Int, handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+        UIAlertAction(title: title, style: Style(rawValue: style) ?? .default, handler: handler)
+    }
+    @objc(title) public var __objc_title: String? { title }
+    @objc(style) public var __objc_style: Int { style.rawValue }
+    @objc(isEnabled) public var __objc_isEnabled: Bool { isEnabled }
+    @objc(setEnabled:) public func __objc_setEnabled(_ enabled: Bool) { isEnabled = enabled }
+}
+
+extension UIAlertController {
+    /// UIAlertControllerStyle: ActionSheet 0, Alert 1 (UIAlertController.h).
+    @objc(alertControllerWithTitle:message:preferredStyle:)
+    public class func __objc_alertController(title: String?, message: String?, preferredStyle: Int) -> UIAlertController {
+        UIAlertController(title: title, message: message, preferredStyle: preferredStyle == 1 ? .alert : .actionSheet)
+    }
+    @objc(addAction:) public func __objc_addAction(_ action: UIAlertAction) { addAction(action) }
+    @objc(actions) public var __objc_actions: [UIAlertAction] { actions }
+    @objc(message) public var __objc_message: String? { get { message } set { message = newValue } }
+}
+
+/// UIBarButtonSystemItem's SDK values: OpenUIKit's case order up to
+/// UIBarButtonSystemItemRedo (22); PageCurl (23) has no OpenUIKit item;
+/// Close is 24 (UIBarButtonItem.h).
+private func barSystemItem(_ raw: Int) -> UIBarButtonItem.SystemItem? {
+    if raw == 24 { return .close }
+    guard raw >= 0, raw <= 22 else { return nil }
+    return UIBarButtonItem.SystemItem.allCases[raw]
+}
+
+extension UIBarButtonItem {
+    /// UIBarButtonItemStyle: Plain 0, Done/Prominent 2 map to OpenUIKit's
+    /// styles; the deprecated Bordered (1) and undefined values fail closed
+    /// to `.plain`.
+    @objc(initWithTitle:style:target:action:)
+    public convenience init(__objcTitle title: String?, style: Int, target: AnyObject?, action: Selector?) {
+        self.init(title: title, style: Style(rawValue: style) ?? .plain, target: target, action: action)
+    }
+    @objc(initWithImage:style:target:action:)
+    public convenience init(__objcImage image: UIImage?, style: Int, target: AnyObject?, action: Selector?) {
+        self.init(image: image, style: Style(rawValue: style) ?? .plain, target: target, action: action)
+    }
+    /// PageCurl has no OpenUIKit item: it fails closed to an untitled
+    /// plain item with the same target and action.
+    @objc(initWithBarButtonSystemItem:target:action:)
+    public convenience init(__objcSystemItem systemItem: Int, target: AnyObject?, action: Selector?) {
+        if let item = barSystemItem(systemItem) {
+            self.init(barButtonSystemItem: item, target: target, action: action)
+        } else {
+            self.init(title: nil, style: .plain, target: target, action: action)
+        }
+    }
+}
+
+/// UIKit's `NSIndexPath (UICollectionViewAdditions)`: `item` is index
+/// position 1, as `row` is (UICollectionView.h). AppKit implements the same
+/// category on macOS (see `row` above).
+#if !canImport(AppKit)
+extension NSIndexPath {
+    @objc(item) public var __objc_item: Int { index(atPosition: 1) }
+    @objc(indexPathForItem:inSection:) public class func __objc_indexPath(forItem item: Int, inSection section: Int) -> NSIndexPath {
+        NSIndexPath(indexes: [section, item], length: 2)
+    }
+}
+#endif
+
+extension UIView {
+    @objc(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)
+    public class func __objc_animate(withDuration duration: TimeInterval, delay: TimeInterval,
+                                     usingSpringWithDamping dampingRatio: CGFloat,
+                                     initialSpringVelocity velocity: CGFloat, options: UInt,
+                                     animations: @escaping () -> Void, completion: ((Bool) -> Void)?) {
+        animate(withDuration: duration, delay: delay, usingSpringWithDamping: dampingRatio,
+                initialSpringVelocity: velocity, options: AnimationOptions(rawValue: options),
+                animations: animations, completion: completion)
+    }
 }
 #endif

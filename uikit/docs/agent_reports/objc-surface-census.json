@@ -1,0 +1,803 @@
+{
+ "date": "2026-09-22",
+ "method": {
+  "eidolon": "uikit/Tools/ingest/objc_pod_census.py over the 15 pods at the pins in fixtures/realapp/eidolon/objc_pods.json (sources fetched to scratch, not vendored); before = main dd173c84 built from a clean export, after = agent/objc-surface merged with it.",
+  "simplenote": "per-TU clang -fsyntax-only of the generated SimplenoteObjC target (simplenote-objc-core objc_census.py, parameterized by the uikit tree and passing CPortableIO like the pod census); Simplenote-Swift.h is the Foundation-only placeholder. Same ingested package for both runs.",
+  "triple": "arm64-apple-macosx (route (b) as built today); the iOS-triple census was not run."
+ },
+ "eidolon_pods": {
+  "before_main_dd173c84": {
+   "total_errors": 898,
+   "classes": {
+    "macos-leakage": 137,
+    "openuikit-objc-surface": 331,
+    "pod-internal-or-cascade": 430
+   },
+   "clean_tus": 7,
+   "tus": 50,
+   "by_pod": {
+    "ARCollectionViewMasonryLayout": {
+     "errors": 83,
+     "clean": 0,
+     "tus": 2,
+     "classes": {
+      "openuikit-objc-surface": 23,
+      "pod-internal-or-cascade": 60
+     }
+    },
+    "ARTiledImageView": {
+     "errors": 7,
+     "clean": 0,
+     "tus": 5,
+     "classes": {
+      "openuikit-objc-surface": 4,
+      "pod-internal-or-cascade": 3
+     }
+    },
+    "Artsy-OSSUIFonts": {
+     "errors": 39,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "macos-leakage": 4,
+      "openuikit-objc-surface": 12,
+      "pod-internal-or-cascade": 23
+     }
+    },
+    "Artsy-UIButtons": {
+     "errors": 123,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "openuikit-objc-surface": 49,
+      "pod-internal-or-cascade": 74
+     }
+    },
+    "Artsy-UIColors": {
+     "errors": 1,
+     "clean": 1,
+     "tus": 2,
+     "classes": {
+      "pod-internal-or-cascade": 1
+     }
+    },
+    "Artsy-UILabels": {
+     "errors": 53,
+     "clean": 1,
+     "tus": 3,
+     "classes": {
+      "openuikit-objc-surface": 15,
+      "pod-internal-or-cascade": 38
+     }
+    },
+    "DZNWebViewController": {
+     "errors": 22,
+     "clean": 0,
+     "tus": 2,
+     "classes": {
+      "openuikit-objc-surface": 14,
+      "pod-internal-or-cascade": 8
+     }
+    },
+    "ECPhoneNumberFormatter": {
+     "errors": 0,
+     "clean": 1,
+     "tus": 1,
+     "classes": {}
+    },
+    "FLKAutoLayout": {
+     "errors": 63,
+     "clean": 0,
+     "tus": 3,
+     "classes": {
+      "openuikit-objc-surface": 37,
+      "pod-internal-or-cascade": 26
+     }
+    },
+    "ORStackView": {
+     "errors": 6,
+     "clean": 0,
+     "tus": 5,
+     "classes": {
+      "openuikit-objc-surface": 6
+     }
+    },
+    "SDWebImage": {
+     "errors": 204,
+     "clean": 2,
+     "tus": 16,
+     "classes": {
+      "macos-leakage": 118,
+      "openuikit-objc-surface": 51,
+      "pod-internal-or-cascade": 35
+     }
+    },
+    "SVProgressHUD": {
+     "errors": 263,
+     "clean": 0,
+     "tus": 4,
+     "classes": {
+      "macos-leakage": 2,
+      "openuikit-objc-surface": 110,
+      "pod-internal-or-cascade": 151
+     }
+    },
+    "UIImageViewAligned": {
+     "errors": 14,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "openuikit-objc-surface": 10,
+      "pod-internal-or-cascade": 4
+     }
+    },
+    "UIView-BooleanAnimations": {
+     "errors": 5,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "pod-internal-or-cascade": 5
+     }
+    },
+    "XNGMarkdownParser": {
+     "errors": 15,
+     "clean": 2,
+     "tus": 3,
+     "classes": {
+      "macos-leakage": 13,
+      "pod-internal-or-cascade": 2
+     }
+    }
+   },
+   "surface_by_symbol_top30": [
+    [
+     "CALayer",
+     36
+    ],
+    [
+     "UIVisualEffectView",
+     23
+    ],
+    [
+     "UIFont",
+     20
+    ],
+    [
+     "UIColor",
+     16
+    ],
+    [
+     "UIImage",
+     13
+    ],
+    [
+     "UIApplication",
+     11
+    ],
+    [
+     "UIView",
+     9
+    ],
+    [
+     "UICollectionViewLayoutAttributes",
+     8
+    ],
+    [
+     "CABasicAnimation",
+     8
+    ],
+    [
+     "UIButton",
+     8
+    ],
+    [
+     "UIImageView",
+     7
+    ],
+    [
+     "CAShapeLayer",
+     6
+    ],
+    [
+     "NSLayoutRelation",
+     6
+    ],
+    [
+     "UILayoutPriority",
+     6
+    ],
+    [
+     "NSLayoutRelationEqual",
+     5
+    ],
+    [
+     "UIImageOrientationUp",
+     5
+    ],
+    [
+     "UICollectionViewDelegateFlowLayout",
+     4
+    ],
+    [
+     "UICollectionElementKindSectionHeader",
+     4
+    ],
+    [
+     "NSLayoutAttributeCenterX",
+     4
+    ],
+    [
+     "NSLayoutAttributeCenterY",
+     4
+    ],
+    [
+     "UIImageOrientation",
+     4
+    ],
+    [
+     "UIBezierPath",
+     4
+    ],
+    [
+     "UIInterpolatingMotionEffect",
+     4
+    ],
+    [
+     "UILabel",
+     4
+    ],
+    [
+     "UICollectionElementKindSectionFooter",
+     3
+    ],
+    [
+     "UIActivity",
+     3
+    ],
+    [
+     "UILayoutSupport",
+     3
+    ],
+    [
+     "UIActivityIndicatorView",
+     3
+    ],
+    [
+     "UIWindow",
+     3
+    ],
+    [
+     "UICollectionViewFlowLayout",
+     2
+    ]
+   ]
+  },
+  "after": {
+   "total_errors": 507,
+   "classes": {
+    "macos-leakage": 137,
+    "openuikit-objc-surface": 127,
+    "pod-internal-or-cascade": 243
+   },
+   "clean_tus": 12,
+   "tus": 50,
+   "by_pod": {
+    "ARCollectionViewMasonryLayout": {
+     "errors": 70,
+     "clean": 0,
+     "tus": 2,
+     "classes": {
+      "openuikit-objc-surface": 14,
+      "pod-internal-or-cascade": 56
+     }
+    },
+    "ARTiledImageView": {
+     "errors": 5,
+     "clean": 1,
+     "tus": 5,
+     "classes": {
+      "openuikit-objc-surface": 4,
+      "pod-internal-or-cascade": 1
+     }
+    },
+    "Artsy-OSSUIFonts": {
+     "errors": 12,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "macos-leakage": 4,
+      "openuikit-objc-surface": 5,
+      "pod-internal-or-cascade": 3
+     }
+    },
+    "Artsy-UIButtons": {
+     "errors": 33,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "openuikit-objc-surface": 9,
+      "pod-internal-or-cascade": 24
+     }
+    },
+    "Artsy-UIColors": {
+     "errors": 0,
+     "clean": 2,
+     "tus": 2,
+     "classes": {}
+    },
+    "Artsy-UILabels": {
+     "errors": 26,
+     "clean": 1,
+     "tus": 3,
+     "classes": {
+      "openuikit-objc-surface": 3,
+      "pod-internal-or-cascade": 23
+     }
+    },
+    "DZNWebViewController": {
+     "errors": 14,
+     "clean": 0,
+     "tus": 2,
+     "classes": {
+      "openuikit-objc-surface": 6,
+      "pod-internal-or-cascade": 8
+     }
+    },
+    "ECPhoneNumberFormatter": {
+     "errors": 0,
+     "clean": 1,
+     "tus": 1,
+     "classes": {}
+    },
+    "FLKAutoLayout": {
+     "errors": 2,
+     "clean": 2,
+     "tus": 3,
+     "classes": {
+      "openuikit-objc-surface": 2
+     }
+    },
+    "ORStackView": {
+     "errors": 6,
+     "clean": 0,
+     "tus": 5,
+     "classes": {
+      "openuikit-objc-surface": 6
+     }
+    },
+    "SDWebImage": {
+     "errors": 141,
+     "clean": 2,
+     "tus": 16,
+     "classes": {
+      "macos-leakage": 118,
+      "openuikit-objc-surface": 16,
+      "pod-internal-or-cascade": 7
+     }
+    },
+    "SVProgressHUD": {
+     "errors": 178,
+     "clean": 0,
+     "tus": 4,
+     "classes": {
+      "macos-leakage": 2,
+      "openuikit-objc-surface": 58,
+      "pod-internal-or-cascade": 118
+     }
+    },
+    "UIImageViewAligned": {
+     "errors": 5,
+     "clean": 0,
+     "tus": 1,
+     "classes": {
+      "openuikit-objc-surface": 4,
+      "pod-internal-or-cascade": 1
+     }
+    },
+    "UIView-BooleanAnimations": {
+     "errors": 0,
+     "clean": 1,
+     "tus": 1,
+     "classes": {}
+    },
+    "XNGMarkdownParser": {
+     "errors": 15,
+     "clean": 2,
+     "tus": 3,
+     "classes": {
+      "macos-leakage": 13,
+      "pod-internal-or-cascade": 2
+     }
+    }
+   },
+   "surface_by_symbol_top30": [
+    [
+     "UICollectionViewLayoutAttributes",
+     8
+    ],
+    [
+     "CABasicAnimation",
+     8
+    ],
+    [
+     "UIImage",
+     7
+    ],
+    [
+     "CALayer",
+     6
+    ],
+    [
+     "CAShapeLayer",
+     6
+    ],
+    [
+     "UICollectionViewDelegateFlowLayout",
+     4
+    ],
+    [
+     "UIImageView",
+     4
+    ],
+    [
+     "UILabel",
+     4
+    ],
+    [
+     "UIView",
+     4
+    ],
+    [
+     "UIActivityIndicatorView",
+     4
+    ],
+    [
+     "UIBezierPath",
+     4
+    ],
+    [
+     "UIInterpolatingMotionEffect",
+     4
+    ],
+    [
+     "UIVisualEffectView",
+     4
+    ],
+    [
+     "UIActivity",
+     3
+    ],
+    [
+     "UILayoutSupport",
+     3
+    ],
+    [
+     "UIApplication",
+     3
+    ],
+    [
+     "UIWindow",
+     3
+    ],
+    [
+     "UICollectionViewFlowLayout",
+     2
+    ],
+    [
+     "NSUnderlineStyleAttributeName",
+     2
+    ],
+    [
+     "UIBackgroundTaskInvalid",
+     2
+    ],
+    [
+     "UIWindowLevel",
+     2
+    ],
+    [
+     "CAMediaTimingFunction",
+     2
+    ],
+    [
+     "CAAnimationGroup",
+     2
+    ],
+    [
+     "UIWindowLevelNormal",
+     2
+    ],
+    [
+     "UIMotionEffectGroup",
+     2
+    ],
+    [
+     "UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis",
+     2
+    ],
+    [
+     "UIAccessibilityPostNotification",
+     2
+    ],
+    [
+     "UIAccessibilityScreenChangedNotification",
+     2
+    ],
+    [
+     "UIAccessibilityAnnouncementNotification",
+     2
+    ],
+    [
+     "UIImageJPEGRepresentation",
+     1
+    ]
+   ]
+  }
+ },
+ "simplenote_objc": {
+  "before_main_dd173c84": {
+   "files": 61,
+   "clean": 26,
+   "errors_total": 922,
+   "errors_by_kind": {
+    "unknown_type": 237,
+    "other": 169,
+    "missing_selector": 516
+   },
+   "uikit_named_messages_top30": [
+    [
+     "use of undeclared identifier 'UIKitConstants'",
+     13
+    ],
+    [
+     "receiver type 'UIViewPropertyAnimator' for instance message is a forward declaration",
+     9
+    ],
+    [
+     "property 'transform' not found on object of type 'UIView *'",
+     8
+    ],
+    [
+     "use of undeclared identifier 'NSJSONSerialization'",
+     6
+    ],
+    [
+     "property 'font' not found on object of type 'UILabel *'",
+     6
+    ],
+    [
+     "receiver 'UIAlertAction' for class message is a forward declaration",
+     5
+    ],
+    [
+     "no visible @interface for 'UIAlertController' declares the selector 'addAction:'",
+     5
+    ],
+    [
+     "cannot find interface declaration for 'NSString'",
+     4
+    ],
+    [
+     "use of undeclared identifier 'NSMutableArray'",
+     4
+    ],
+    [
+     "no visible @interface for 'UIBarButtonItem' declares the selector 'initWithTitle:style:target:action:'",
+     4
+    ],
+    [
+     "receiver 'UIFont' for class message is a forward declaration",
+     4
+    ],
+    [
+     "receiver type 'UIPercentDrivenInteractiveTransition' for instance message is a forward declaration",
+     4
+    ],
+    [
+     "property 'isAccessibilityElement' not found on object of type 'UIBarButtonItem *'",
+     4
+    ],
+    [
+     "property 'accessibilityLabel' not found on object of type 'UIBarButtonItem *'",
+     4
+    ],
+    [
+     "property 'accessibilityHint' not found on object of type 'UIBarButtonItem *'",
+     4
+    ],
+    [
+     "incompatible pointer to integer conversion passing 'id' to parameter of type 'NSUInteger' (aka 'unsigned long') [-Wint-conversion]",
+     4
+    ],
+    [
+     "use of undeclared identifier 'NSString'",
+     3
+    ],
+    [
+     "receiver 'UIDevice' for class message is a forward declaration",
+     3
+    ],
+    [
+     "no visible @interface for 'UIBarButtonItem' declares the selector 'initWithBarButtonSystemItem:target:action:'",
+     3
+    ],
+    [
+     "no visible @interface for 'UITableView' declares the selector 'deselectSelectedRowAnimated:'",
+     3
+    ],
+    [
+     "no visible @interface for 'UIBarButtonItem' declares the selector 'initWithImage:style:target:action:'",
+     3
+    ],
+    [
+     "property 'dragging' not found on object of type 'UITableView *'",
+     3
+    ],
+    [
+     "property 'byEncodingAsTagHash' not found on object of type 'NSString *'",
+     3
+    ],
+    [
+     "receiver 'UIViewPropertyAnimator' for class message is a forward declaration",
+     3
+    ],
+    [
+     "property 'fractionComplete' cannot be found in forward class object 'UIViewPropertyAnimator'",
+     3
+    ],
+    [
+     "property 'layer' not found on object of type 'UILabel *'",
+     3
+    ],
+    [
+     "cannot find interface declaration for 'NSArray'",
+     2
+    ],
+    [
+     "cannot find interface declaration for 'NSDictionary'",
+     2
+    ],
+    [
+     "cannot find interface declaration for 'NSData'",
+     2
+    ],
+    [
+     "use of undeclared identifier 'NSError'",
+     2
+    ]
+   ]
+  },
+  "after": {
+   "files": 61,
+   "clean": 27,
+   "errors_total": 847,
+   "errors_by_kind": {
+    "unknown_type": 237,
+    "other": 156,
+    "missing_selector": 454
+   },
+   "uikit_named_messages_top30": [
+    [
+     "use of undeclared identifier 'UIKitConstants'",
+     13
+    ],
+    [
+     "receiver type 'UIViewPropertyAnimator' for instance message is a forward declaration",
+     9
+    ],
+    [
+     "use of undeclared identifier 'NSJSONSerialization'",
+     6
+    ],
+    [
+     "cannot find interface declaration for 'NSString'",
+     4
+    ],
+    [
+     "use of undeclared identifier 'NSMutableArray'",
+     4
+    ],
+    [
+     "receiver type 'UIPercentDrivenInteractiveTransition' for instance message is a forward declaration",
+     4
+    ],
+    [
+     "property 'isAccessibilityElement' not found on object of type 'UIBarButtonItem *'",
+     4
+    ],
+    [
+     "property 'accessibilityLabel' not found on object of type 'UIBarButtonItem *'",
+     4
+    ],
+    [
+     "property 'accessibilityHint' not found on object of type 'UIBarButtonItem *'",
+     4
+    ],
+    [
+     "incompatible pointer to integer conversion passing 'id' to parameter of type 'NSUInteger' (aka 'unsigned long') [-Wint-conversion]",
+     4
+    ],
+    [
+     "use of undeclared identifier 'NSString'",
+     3
+    ],
+    [
+     "receiver 'UIDevice' for class message is a forward declaration",
+     3
+    ],
+    [
+     "no visible @interface for 'UITableView' declares the selector 'deselectSelectedRowAnimated:'",
+     3
+    ],
+    [
+     "property 'dragging' not found on object of type 'UITableView *'",
+     3
+    ],
+    [
+     "property 'byEncodingAsTagHash' not found on object of type 'NSString *'",
+     3
+    ],
+    [
+     "receiver 'UIViewPropertyAnimator' for class message is a forward declaration",
+     3
+    ],
+    [
+     "property 'fractionComplete' cannot be found in forward class object 'UIViewPropertyAnimator'",
+     3
+    ],
+    [
+     "cannot find interface declaration for 'NSArray'",
+     2
+    ],
+    [
+     "cannot find interface declaration for 'NSDictionary'",
+     2
+    ],
+    [
+     "cannot find interface declaration for 'NSData'",
+     2
+    ],
+    [
+     "use of undeclared identifier 'NSError'",
+     2
+    ],
+    [
+     "use of undeclared identifier 'NSData'",
+     2
+    ],
+    [
+     "'CALayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     2
+    ],
+    [
+     "'NSLayoutConstraint' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method 'init' with return type 'instancetype _Nonnull' (aka 'id')",
+     2
+    ],
+    [
+     "'CAGradientLayer' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     2
+    ],
+    [
+     "'NSAdaptiveImageGlyph' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     2
+    ],
+    [
+     "'NSTextContainer' has different definitions in different modules; first difference is definition in module 'AppKit.NSTextContainer' found 1 referenced protocol",
+     2
+    ],
+    [
+     "'NSLayoutManager' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     2
+    ],
+    [
+     "'NSMutableParagraphStyle' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found method",
+     2
+    ],
+    [
+     "'NSTextAttachment' has different definitions in different modules; first difference is definition in module 'OpenUIKit' found 0 referenced protocols",
+     2
+    ]
+   ]
+  }
+ }
+}

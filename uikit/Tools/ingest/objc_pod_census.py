@@ -76,6 +76,11 @@ def main(pods_dir, spec_path, out_path):
             '__attribute__((objc_subclassing_restricted)) SWIFT_CLASS_EXTRA',
             '-DSWIFT_CLASS_NAMED(SWIFT_NAME)=SWIFT_COMPILE_NAME(SWIFT_NAME) SWIFT_CLASS_EXTRA',
             '-fmodule-map-file=' + os.path.join(BUILD, 'OpenUIKitObjCSupport.build', 'module.modulemap'),
+            # UIKitObjCSupport.h includes cportableio.h (attrstring-unify's
+            # NSTextStorage edit mask); without these every TU stops at
+            # "'cportableio.h' file not found" (MEASURED objc-surface.md).
+            '-fmodule-map-file=' + os.path.join(BUILD, 'CPortableIO.build', 'module.modulemap'),
+            '-I', os.path.join(UIKIT, 'Sources', 'CPortableIO', 'include'),
             '-include', 'UIKit/UIKit.h', '-I', shim,
             '-I', os.path.join(BUILD, 'OpenUIKit.build', 'include'),
             '-I', os.path.join(UIKIT, 'Sources', 'OpenUIKitObjCSupport', 'include'),

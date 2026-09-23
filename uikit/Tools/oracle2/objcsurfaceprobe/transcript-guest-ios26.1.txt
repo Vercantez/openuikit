@@ -1,0 +1,37 @@
+## superclasses
+UIFont:NSObject
+CALayer:NSObject
+## font
+systemFontOfSize:17 pointSize=17 kind=YES
+boldSystemFontOfSize:17 pointSize=17 kind=YES
+systemFontOfSize:18 pointSize=18 kind=YES
+fontWithSize:34 pointSize=34 kind=YES
+sys17~sys17 isEqual=YES sameHash=YES
+sys17~bold17 isEqual=NO sameHash=YES
+sys17~sys18 isEqual=NO sameHash=YES
+sys17~[sys18 fontWithSize:17] isEqual=YES sameHash=YES
+sys17~[sys17 fontWithSize:17] isEqual=YES sameHash=YES
++ouk_serifFontWithSize:21 pointSize=21 kind=YES
+-ouk_doubledFont(10) pointSize=20 kind=YES
+respondsToSelector ouk_serifFontWithSize: YES
+## layer
++layer class=CALayer
+defaults cornerRadius=0 borderWidth=0 opacity=1 hidden=NO masksToBounds=NO opaque=NO
+defaults contentsScale=1 shadowOpacity=0 shadowRadius=3
+defaults superlayer=nil mask=nil needsLayout=NO
+set cornerRadius=4 borderWidth=1.5 opacity=0.25 hidden=YES masksToBounds=YES
+superlayer a=YES b=YES
+after remove a.superlayer=nil
+## layersubclass
+-- 1 +layer on the subclass
+OUKTraceLayer -init class=OUKTraceLayer
+isKindOfClass CALayer=YES super=CALayer
+-- 2 layout
+needsLayout=NO
+OUKTraceLayer -layoutSublayers #1
+-- 3 sublayers
+OUKTraceLayer -init class=OUKTraceLayer
+after addSublayer parent.needsLayout=YES child.needsLayout=NO
+OUKTraceLayer -layoutSublayers #2
+count parent=2 child=0
+## end
