@@ -149,6 +149,8 @@ Pixels 193/193 byte-identical to main c0dca164; Linux build green.
 | `scripts/ops/local_guest_verify.sh` (747ef006) | `FOCUS_REAL_APPDELEGATE_LAUNCHED`, `rendered 15 screens; existing screens byte-identical 14/14`, **`REAL-APP SCREEN VERIFIED ON LINUX`**, `GUEST HOST INTERACTION VERIFIED ON LINUX` |
 | `full/iostarget/ios_guest.sh` (747ef006) | `IOS_TARGET_PROBE_MATCHES_IOS_26_1 lines=14`, `REAL-APP SCREEN VERIFIED ON LINUX`, **`IOS_TARGET_GUEST_VERIFIED target=arm64-apple-ios26.0-simulator`** (run right after local_guest_verify: run alone after host git activity it stops at "OpenUIKit subtree is dirty" listing the 5 tracked symlinks — the container's view of the host index; the coordinator owns that) |
 | Linux `swift:6.2-noble` (openrender, ConformanceApps, OpenUIKitTests) | green after the test fix |
+| final gate: `CHECK_ONLY=1 agent_merge.sh agent/cg-unify-phase3` (1b8aa78d) | `124/124 scenes pass`, `GUEST_ROUTE_CHECK_OK`, Linux build, **`checks passed (CHECK_ONLY)`** |
+| phase 4 gate: `CHECK_ONLY=1 agent_merge.sh agent/cg-unify-phase4` (286370f0) | `124/124 scenes pass`, `GUEST_ROUTE_CHECK_OK`, Linux build, **`checks passed (CHECK_ONLY)`**; `local_guest_verify.sh` on 286370f0: 14/14 byte-identical, `REAL-APP SCREEN VERIFIED ON LINUX`. `ios_guest.sh` on 286370f0 stopped before compiling at the container's "subtree is dirty" check (symlinks; then `machorun/tests/bin/.../libdup_link.dylib`); phase 4 changes no guest-compiled code (all under `canImport(CoreGraphics)` or the Foundation branch the guest does not take), and ios_guest passed on 747ef006 |
 | render time, gate scenes (main binary vs phase 3, alternating) | 25.2 s / 20.2 s, 19.4 s / 15.8 s: no slowdown from the interposers |
 
 ## What stays on the port's own types, and why
