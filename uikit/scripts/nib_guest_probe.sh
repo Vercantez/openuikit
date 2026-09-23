@@ -43,7 +43,7 @@ s += '''
   export MACHORUN_ROOT="$ROOTDIR" LD_LIBRARY_PATH="$OUT/host"
   export LD_PRELOAD="$OUT/host/libOpenDispatchHost.so:$OUT/host/libOpenFoundationInternationalizationHost.so:$OUT/host/libOpenURLTransportHost.so:$OUT/host/libOpenRelativeTimeHost.so"
   export OPENUIKIT_RESOURCE_ROOT="$UIKIT/Sources/OpenUIKit/Resources"
-  "$ROOTDIR/machorun" "$OUT/NibGuestProbe" "$UIKIT/fixtures/nibruntime" 2>&1 | grep -v '^objc\\[' | tail -20
+  "$ROOTDIR/machorun" "$OUT/NibGuestProbe" "$UIKIT/fixtures/nibruntime" "$OPENUIKIT_RESOURCE_ROOT" 2>&1 | grep -v '^objc\\[' | tail -20
 ) || echo "NIB_GUEST_PROBE_EXIT_NONZERO"
 '''
 open(p, 'w').write(s)
