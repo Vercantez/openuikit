@@ -620,6 +620,10 @@ want file_attrs          && build file_attrs          "$CHAINED_TARGET" file_att
 # against 32; plus F_FULLFSYNC. SQLite's unix VFS locks every database so.
 want fcntl_locks         && build fcntl_locks         "$CHAINED_TARGET" fcntl_locks         fcntl_locks.c --
 
+# dispatch_once_block. The block form of dispatch_once (Objective-C singletons:
+# FMDB, NetNewsWire): once per token, nested tokens.
+want dispatch_once_block && build dispatch_once_block "$CHAINED_TARGET" dispatch_once_block dispatch_once_block.c --
+
 # pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
 # the signature word IS the type -- a constant nothing at any call site names,
 # because the guest's compiler laid it down. CoreFoundation's CFLockInit is the
