@@ -38,6 +38,9 @@ import Foundation
 
 #if canImport(Foundation)
 import class Foundation.NSObject
+#if !os(Linux)
+import class Foundation.UndoManager
+#endif
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #else
@@ -86,6 +89,17 @@ public class UIEvent: NSObject {
 
 @preconcurrency @MainActor
 open class UIWindow: UIView {
+#if canImport(Foundation) && !os(Linux)
+    private final var _windowUndoManager: UndoManager?
+    /// Each window owns one undo manager, created on first use (MEASURED
+    /// iOS 26.1: NSUndoManager, identical on every read).
+    open override var undoManager: UndoManager? {
+        if let m = _windowUndoManager { return m }
+        let m = UndoManager()
+        _windowUndoManager = m
+        return m
+    }
+#endif
     /// A window is the size-class root for its view hierarchy. Hosts may set
     /// either axis explicitly in `UITraitCollection.current`; only an
     /// unspecified axis is derived from this window's bounds.

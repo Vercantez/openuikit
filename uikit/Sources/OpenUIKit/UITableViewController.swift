@@ -194,6 +194,43 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
 #endif
     open dynamic func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {}
 
+    // NetNewsWire's settings / inspector / themes controllers override these.
+    // Declared with UIKit's not-implemented answers; routing highlight,
+    // context menus and indentation through them is OPEN in the port.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:shouldHighlightRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
+                                shouldHighlightRowAt indexPath: IndexPath) -> Bool { true }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:indentationLevelForRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
+                                indentationLevelForRowAt indexPath: IndexPath) -> Int { 0 }
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:contextMenuConfigurationForRowAtIndexPath:point:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
+                                contextMenuConfigurationForRowAt indexPath: IndexPath,
+                                point: CGPoint) -> UIContextMenuConfiguration? { nil }
+
+    /// The swipe hooks the portable table view already asks its delegate for
+    /// (UITableViewDelegate); declared here so a subclass can `override`.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:leadingSwipeActionsConfigurationForRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
+                                leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration? { nil }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(tableView:trailingSwipeActionsConfigurationForRowAtIndexPath:)
+#endif
+    open dynamic func tableView(_ tableView: UITableView,
+                                trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration? { nil }
+
     // MARK: UIScrollViewDelegate (override in subclasses)
 
 #if OPENUIKIT_OBJC_SUBCLASSING

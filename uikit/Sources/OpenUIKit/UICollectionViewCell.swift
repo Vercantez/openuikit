@@ -130,7 +130,7 @@ open class UICollectionViewCell: UICollectionReusableView {
         didSet {
             if isSelected != oldValue {
                 updateSelectionOverlay()
-                (self as? UICollectionViewListCell)?.setNeedsUpdateConfiguration()
+                setNeedsUpdateConfiguration()
             }
         }
     }
@@ -138,9 +138,111 @@ open class UICollectionViewCell: UICollectionReusableView {
         didSet {
             if isHighlighted != oldValue {
                 updateSelectionOverlay()
-                (self as? UICollectionViewListCell)?.setNeedsUpdateConfiguration()
+                setNeedsUpdateConfiguration()
             }
         }
+    }
+
+    // MARK: Configurations (iOS 14)
+    //
+    // UIKit declares these on UICollectionViewCell, not only on the list cell
+    // (NetNewsWire's MainFeedCollectionViewCell / MainTimelineCell /
+    // TimelineCustomizerCell subclass UICollectionViewCell and override
+    // updateConfiguration(using:)). MEASURED Tools/oracle2/cellconfigprobe
+    // (iPhone 16 / iOS 26.1):
+    //   * a plain cell has no background or content configuration (nil), and
+    //     both `automaticallyUpdates…` flags are true;
+    //   * updateConfiguration(using:) runs once when the displayed cell is
+    //     laid out (after cellForItemAt, in a window), still with a nil
+    //     background configuration;
+    //   * setNeedsUpdateConfiguration() and a state change (isSelected) do not
+    //     call it synchronously; the next layout pass calls it once, with the
+    //     new state (coalesced).
+    // UICollectionViewListCell overrides the members with its list defaults.
+
+    /// Pending configuration pass (consumed in layoutSubviews).
+    final var _needsConfigurationUpdate = true
+    private var _plainContentConfiguration: (any UIContentConfiguration)?
+    private var _plainInstalledContentView: (UIView & UIContentView)?
+    private var _plainBackgroundConfiguration: UIBackgroundConfiguration?
+    private var _plainBackgroundHost: _UIBackgroundConfigurationView?
+
+    public var automaticallyUpdatesContentConfiguration = true
+    public var automaticallyUpdatesBackgroundConfiguration = true
+    public var configurationUpdateHandler: ((UICollectionViewCell, UICellConfigurationState) -> Void)?
+
+    open var contentConfiguration: (any UIContentConfiguration)? {
+        get { _plainContentConfiguration }
+        set {
+            _plainContentConfiguration = newValue
+            _installPlainContent()
+            setNeedsLayout()
+        }
+    }
+
+    open var backgroundConfiguration: UIBackgroundConfiguration? {
+        get { _plainBackgroundConfiguration }
+        set {
+            _plainBackgroundConfiguration = newValue
+            _applyPlainBackground()
+        }
+    }
+
+    open var configurationState: UICellConfigurationState {
+        var state = UICellConfigurationState(traitCollection: traitCollection)
+        state.isSelected = isSelected
+        state.isHighlighted = isHighlighted
+        return state
+    }
+
+    open func setNeedsUpdateConfiguration() {
+        _needsConfigurationUpdate = true
+        setNeedsLayout()
+    }
+
+    open func updateConfiguration(using state: UICellConfigurationState) {
+        if automaticallyUpdatesContentConfiguration, let current = _plainContentConfiguration {
+            _plainContentConfiguration = current.updated(for: state)
+            _installPlainContent()
+        }
+        if automaticallyUpdatesBackgroundConfiguration, let current = _plainBackgroundConfiguration {
+            _plainBackgroundConfiguration = current.updated(for: state)
+            _applyPlainBackground()
+        }
+        configurationUpdateHandler?(self, state)
+    }
+
+    /// Runs the pending configuration pass (MEASURED: once per layout).
+    final func _updateConfigurationIfNeeded() {
+        guard _needsConfigurationUpdate else { return }
+        _needsConfigurationUpdate = false
+        updateConfiguration(using: configurationState)
+    }
+
+    private func _installPlainContent() {
+        _plainInstalledContentView?.removeFromSuperview()
+        _plainInstalledContentView = nil
+        guard let configuration = _plainContentConfiguration else { return }
+        let view = configuration.makeContentView()
+        view.configuration = configuration
+        contentView.addSubview(view)
+        _plainInstalledContentView = view
+    }
+
+    private func _applyPlainBackground() {
+        guard let configuration = _plainBackgroundConfiguration else {
+            _plainBackgroundHost?.removeFromSuperview()
+            _plainBackgroundHost = nil
+            return
+        }
+        let host = _plainBackgroundHost ?? {
+            let v = _UIBackgroundConfigurationView()
+            insertSubview(v, at: 0)
+            return v
+        }()
+        _plainBackgroundHost = host
+        host.configuration = configuration
+        setNeedsLayout()
     }
 
     /// The collection view currently displaying this cell (set while bound).
@@ -172,10 +274,13 @@ open class UICollectionViewCell: UICollectionReusableView {
     }
 
     open override func layoutSubviews() {
+        _updateConfigurationIfNeeded()
         super.layoutSubviews()
         backgroundView?.frame = bounds
         selectedBackgroundView?.frame = bounds
         contentView.frame = bounds
+        _plainBackgroundHost?.frame = bounds
+        _plainInstalledContentView?.frame = contentView.bounds
     }
 
     // MARK: Touch handling (tap -> highlight -> select)

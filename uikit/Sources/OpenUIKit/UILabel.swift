@@ -44,6 +44,13 @@ public enum NSLineBreakMode: Sendable {
 #endif
 @preconcurrency @MainActor
 open class UILabel: UIView {
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): enabled, not highlighted, no
+    /// highlighted colour. Stored and reported; drawing the disabled dim
+    /// and the highlighted colour is OPEN (not measured yet).
+    public final var isEnabled = true
+    public final var isHighlighted = false
+    public final var highlightedTextColor: UIColor?
+
     /// Plain text. Real UIKit keeps one storage: setting `text` drops any
     /// attributed string, and setting `attributedText` makes `text` report
     /// the attributed string's characters.

@@ -50,6 +50,8 @@ public protocol UICollectionViewDataSource: AnyObject {
     func collectionView(_ collectionView: UICollectionView,
                         viewForSupplementaryElementOfKind kind: String,
                         at indexPath: IndexPath) -> UICollectionReusableView
+    func collectionView(_ collectionView: UICollectionView,
+                        canMoveItemAt indexPath: IndexPath) -> Bool
 }
 
 public extension UICollectionViewDataSource {
@@ -62,6 +64,8 @@ public extension UICollectionViewDataSource {
                         at indexPath: IndexPath) -> UICollectionReusableView {
         UICollectionReusableView()
     }
+    func collectionView(_ collectionView: UICollectionView,
+                        canMoveItemAt indexPath: IndexPath) -> Bool { false }
 }
 
 @preconcurrency @MainActor
@@ -78,6 +82,21 @@ public protocol UICollectionViewDelegate: UIScrollViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath)
+    func collectionView(_ collectionView: UICollectionView,
+                        canPerformPrimaryActionForItemAt indexPath: IndexPath) -> Bool
+    func collectionView(_ collectionView: UICollectionView,
+                        performPrimaryActionForItemAt indexPath: IndexPath)
+    func collectionView(_ collectionView: UICollectionView,
+                        shouldShowMenuForItemAt indexPath: IndexPath) -> Bool
+    func collectionView(_ collectionView: UICollectionView,
+                        canPerformAction action: Selector,
+                        forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool
+    func collectionView(_ collectionView: UICollectionView,
+                        performAction action: Selector,
+                        forItemAt indexPath: IndexPath, withSender sender: Any?)
+    func collectionView(_ collectionView: UICollectionView,
+                        contextMenuConfigurationForItemAt indexPath: IndexPath,
+                        point: CGPoint) -> UIContextMenuConfiguration?
 }
 
 public extension UICollectionViewDelegate {
@@ -93,6 +112,27 @@ public extension UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {}
+    // NetNewsWire's MainFeedCollectionViewController / MainTimelineDataSource
+    // override these. They are declared with UIKit's not-implemented answers
+    // (no primary action, no legacy edit menu, no context menu, not movable).
+    // OPEN: the portable collection view does not yet route taps to the
+    // primary action, long presses to the context menu, or drags to moves;
+    // UIKit's input-driven semantics for those were not measured here.
+    func collectionView(_ collectionView: UICollectionView,
+                        canPerformPrimaryActionForItemAt indexPath: IndexPath) -> Bool { false }
+    func collectionView(_ collectionView: UICollectionView,
+                        performPrimaryActionForItemAt indexPath: IndexPath) {}
+    func collectionView(_ collectionView: UICollectionView,
+                        shouldShowMenuForItemAt indexPath: IndexPath) -> Bool { false }
+    func collectionView(_ collectionView: UICollectionView,
+                        canPerformAction action: Selector,
+                        forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool { false }
+    func collectionView(_ collectionView: UICollectionView,
+                        performAction action: Selector,
+                        forItemAt indexPath: IndexPath, withSender sender: Any?) {}
+    func collectionView(_ collectionView: UICollectionView,
+                        contextMenuConfigurationForItemAt indexPath: IndexPath,
+                        point: CGPoint) -> UIContextMenuConfiguration? { nil }
 }
 
 /// Per-section overrides for the flow layout.
@@ -187,6 +227,14 @@ open class UICollectionView: UIScrollView {
     }
 
     // MARK: Configuration
+
+    /// NetNewsWire MainFeedCollectionViewController.swift:312 replaces the
+    /// layout without animation: the same as assigning `collectionViewLayout`.
+    /// The animated transition (and the completion variant) is OPEN.
+    public func setCollectionViewLayout(_ layout: UICollectionViewLayout, animated: Bool) {
+        _ = animated
+        collectionViewLayout = layout
+    }
 
     public var collectionViewLayout: UICollectionViewLayout {
         didSet {
@@ -810,6 +858,12 @@ open class UICollectionView: UIScrollView {
             addSubview(view)
             view.apply(a)
             view.setNeedsLayout()
+            // MEASURED Tools/oracle2/cellconfigprobe (iOS 26.1): each cell is
+            // configured as it is prepared -- cellForItemAt 0, update 0,
+            // cellForItemAt 1, update 1 -- in the window, before sizing.
+            if window != nil, let cell = view as? UICollectionViewCell {
+                cell._updateConfigurationIfNeeded()
+            }
             if let cell = view as? UICollectionViewCell {
                 collectionDelegate?.collectionView(self, willDisplay: cell,
                                                    forItemAt: a.indexPath)

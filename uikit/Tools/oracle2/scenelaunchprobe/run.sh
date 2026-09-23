@@ -15,8 +15,10 @@ xcrun ibtool --compile "$APP/Main.storyboardc" "$HERE/Main.storyboard" \
   --target-device iphone --minimum-deployment-target 26.0
 cp "$HERE/Info.plist" "$APP/Info.plist"
 codesign -s - "$APP" 2>/dev/null || true
+source "${HERE:h}/sim_lock.zsh"
+sim_lock_acquire
 DEV=$(xcrun simctl create "iPhone 16-scenelaunchprobe" "iPhone 16" com.apple.CoreSimulator.SimRuntime.iOS-26-1)
-trap 'xcrun simctl shutdown "$DEV" >/dev/null 2>&1; xcrun simctl delete "$DEV" >/dev/null 2>&1' EXIT
+trap 'xcrun simctl shutdown "$DEV" >/dev/null 2>&1; xcrun simctl delete "$DEV" >/dev/null 2>&1; sim_lock_release' EXIT
 xcrun simctl boot "$DEV"
 xcrun simctl bootstatus "$DEV" -b >/dev/null
 xcrun simctl install "$DEV" "$APP"

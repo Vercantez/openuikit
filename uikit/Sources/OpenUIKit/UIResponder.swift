@@ -50,6 +50,9 @@
 // Swift classes and breaking `@objc` parameter representability.
 #if canImport(Foundation)
 import class Foundation.NSObject
+#if !os(Linux)
+import class Foundation.UndoManager
+#endif
 #if canImport(Darwin)
 import class Foundation.NSUserActivity
 #endif
@@ -223,7 +226,11 @@ open class UIResponder: NSObject {
 #endif
     open dynamic var canResignFirstResponder: Bool { true }
 
-    public final var isFirstResponder: Bool {
+    /// Overridable, as in UIKit (NetNewsWire ArticleSearchBar overrides it).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var isFirstResponder: Bool {
         _firstResponderWindow?.firstResponder === self
     }
 
@@ -270,6 +277,14 @@ open class UIResponder: NSObject {
     @objc
 #endif
     open dynamic func selectAll(_ sender: Any?) {}
+
+    /// UIResponderStandardEditActions `delete:` (NetNewsWire
+    /// MainFeedCollectionViewController overrides it). Ordinary responders
+    /// ignore it.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic func delete(_ sender: Any?) {}
 
     // MARK: Touch entry points
 
@@ -383,6 +398,47 @@ open class UIResponder: NSObject {
     open dynamic var accessibilityValue: String? {
         get { _accessibility.value }
         set { _accessibility.value = newValue }
+    }
+#endif
+
+    /// The undo manager for this responder: the next responder's, so a
+    /// view or view controller in a window gets the window's (MEASURED
+    /// Tools/oracle2/scenelaunchprobe, iOS 26.1: vc.undoManager ===
+    /// window.undoManager; a detached controller and the application: nil).
+    /// Not on Linux: swift-corelibs-foundation has no UndoManager.
+#if canImport(Foundation) && !os(Linux)
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var undoManager: UndoManager? { next?.undoManager }
+#endif
+
+    /// Overridable accessibility attributes (NetNewsWire's cells and
+    /// buttons override them). Same storage as the NSObject protocol
+    /// defaults, same `@objc` rule as `accessibilityValue` above.
+#if canImport(ObjectiveC) && canImport(Foundation)
+    @objc open dynamic var accessibilityLabel: String? {
+        get { _accessibility.label }
+        set { _accessibility.label = newValue }
+    }
+    @objc open dynamic var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
+        get { _accessibility.customActions }
+        set { _accessibility.customActions = newValue }
+    }
+#else
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var accessibilityLabel: String? {
+        get { _accessibility.label }
+        set { _accessibility.label = newValue }
+    }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
+        get { _accessibility.customActions }
+        set { _accessibility.customActions = newValue }
     }
 #endif
 
