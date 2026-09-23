@@ -345,7 +345,13 @@ let coreTargets: [Target] = [
     // (docs/agent_reports/simplenote-objc-core.md). Linux ELF and the
     // Foundation-hidden guest library route compile the same sources without
     // it (no `@objc` there); their behaviour is unchanged.
-    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"],
+    // cg-unify phase 3: on Apple platforms Core Animation is QuartzCore's; a
+    // load-time constructor installs OpenUIKit's CALayer/CATransaction
+    // interposers (Sources/OpenUIKit/QuartzCoreUnification.swift).
+    .target(name: "OpenUIKitQuartzBootstrap", path: "Sources/OpenUIKitQuartzBootstrap"),
+    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz",
+                                              .target(name: "OpenUIKitQuartzBootstrap",
+                                                      condition: .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS]))],
             swiftSettings: [.define("OPENUIKIT_OBJC_SUBCLASSING",
                                     .when(platforms: [.macOS, .iOS, .macCatalyst, .tvOS, .visionOS, .watchOS]))]),
     .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),

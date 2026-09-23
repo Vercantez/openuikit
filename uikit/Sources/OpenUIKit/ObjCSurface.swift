@@ -117,6 +117,8 @@ extension UIFont {
 }
 
 // MARK: - CALayer (CALayer.h)
+// QuartzCore implements these natively where Apple's frameworks exist.
+#if !canImport(CoreGraphics)
 
 extension CALayer {
     /// `+[CALayer layer]`: `[[self alloc] init]`, so an Objective-C
@@ -194,4 +196,5 @@ extension CALayer {
     @objc(sublayers) public var __objc_sublayers: [CALayer]? { get { sublayers } set { sublayers = newValue } }
 #endif
 }
+#endif
 #endif

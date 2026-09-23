@@ -575,7 +575,7 @@ public enum UIRenderer {
         guard !bounds.isEmpty, let colors = layer._colorValues, colors.count >= 2 else { return }
         let n = colors.count
         let locations: [CGFloat]
-        if let requested = presentedLocations ?? layer.locations,
+        if let requested = presentedLocations ?? layer._locationValues,
            requested.count == n {
             locations = requested.map { Swift.min(Swift.max($0, 0), 1) }
         } else {

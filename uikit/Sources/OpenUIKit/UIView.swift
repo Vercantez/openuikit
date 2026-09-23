@@ -15,6 +15,7 @@ import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
 import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
+import class CoreGraphics.CGContext
 #elseif canImport(Foundation)
 import Foundation
 #endif
@@ -50,6 +51,7 @@ public struct UIRectEdge: OptionSet, Sendable {
 /// Core Animation names corners in the layer's local coordinate system.
 /// UIView backing layers are not geometry-flipped, so minY is the visual top
 /// in OpenUIKit's UIKit-style, top-left coordinate space.
+#if !canImport(CoreGraphics)  // QuartzCore's own CACornerMask otherwise (QuartzCoreUnification.swift)
 public struct CACornerMask: OptionSet, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
@@ -65,11 +67,17 @@ public struct CACornerMask: OptionSet, Sendable {
     ]
 }
 
+#endif
 public enum UIViewContentMode: Sendable {
     case scaleToFill, scaleAspectFit, scaleAspectFill, redraw, center
     case top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight
 }
 
+#if !canImport(CoreGraphics)
+// OpenUIKit's own Core Animation layer, for Linux ELF and the Mach-O guest.
+// Where Apple's frameworks exist CALayer / CAGradientLayer / CALayerDelegate
+// are QuartzCore's, and the port's state for them lives in
+// QuartzCoreUnification.swift (cg-unify phase 3).
 /// Class-only subset of QuartzCore's layer delegate used for layout. Core
 /// Animation makes this callback optional; a default implementation gives
 /// portable Swift delegates the same adopt-only-what-you-use ergonomics.
@@ -479,7 +487,7 @@ open class CALayer: NSObject {
 
     isolated deinit {
         for record in _explicitAnimations {
-            CATransaction._removeAnimation(workID: record.workID)
+            _OUKTransaction._removeAnimation(workID: record.workID)
         }
     }
 
@@ -628,6 +636,17 @@ open class CALayer: NSObject {
     /// Paint the receiver and its descendants into an existing graphics
     /// context. Like Core Animation, the root's own frame/position is not
     /// applied; only its bounds contents and descendant placement are drawn.
+#if canImport(CoreGraphics)
+    /// UIKit's `render(in:)` into a CoreGraphics context: the port's own
+    /// surface when the port made the context, else a surface over the app's
+    /// bitmap context (UIGraphicsCoreGraphics.swift).
+    public final func render(in context: CGContext) {
+        UIGraphicsPushContext(context)
+        UIGraphics.draw { render(in: $0) }
+        UIGraphicsPopContext()
+    }
+#endif
+
     public final func render(in context: Canvas) {
         // iOS 26's legacy render(in:) path was measured to round all four
         // corners regardless of maskedCorners, unlike live compositing.
@@ -675,6 +694,7 @@ public final class CAGradientLayer: CALayer {
     }
     private var storedColorObjects: [CGColor]?
     var _colorValues: [CanvasColor]? { didSet { storedColorObjects = nil } }
+    var _locationValues: [CGFloat]? { locations }
     public var locations: [CGFloat]?
     public var startPoint = CGPoint(x: 0.5, y: 0)
     public var endPoint = CGPoint(x: 0.5, y: 1)
@@ -685,6 +705,7 @@ public final class CAGradientLayer: CALayer {
 #endif
 }
 
+#endif
 /// Internal hierarchy policy for UIKit containers whose public contract does
 /// not permit arbitrary direct children. UIView's public insertion methods
 /// consult it; framework implementation paths can install private children
@@ -906,6 +927,10 @@ open class UIView: UIResponder, CALayerDelegate {
         set { layer.masksToBounds = newValue }
     }
     public final var contentMode: UIViewContentMode = .scaleToFill
+    /// UIKit's backing-store scale for `draw(_:)`. Stored only: OpenUIKit
+    /// draws view content at the destination surface's scale (cg-unify's
+    /// probe sets 1 so the simulator draws at 1x like the port).
+    public final var contentScaleFactor: CGFloat = OpenUIKitRuntime.imageScreenScale
     public final var tag: Int = 0
 
     public struct AutoresizingMask: OptionSet, Sendable {
@@ -1521,7 +1546,7 @@ open class UIView: UIResponder, CALayerDelegate {
                 $0.viewIfLoaded === self ? $0 : nil
             }
             controller?.viewWillLayoutSubviews()
-            layer.layoutIfNeeded()
+            layer.layoutIfNeeded()  // the port's pass on Apple toolchains too (QuartzCoreUnification.swift)
             controller?.viewDidLayoutSubviews()
         }
         for s in subviews { s._layoutSubtree() }
@@ -1822,7 +1847,7 @@ open class UIView: UIResponder, CALayerDelegate {
     @objc(_ouk_drawContentIn:bounds:)
 #endif
     open dynamic func drawContent(in canvas: Canvas, bounds: CGRect) {
-        UIGraphics.pushContext(canvas)
+        UIGraphics.pushContext(canvas, clip: bounds)
         draw(bounds)
         UIGraphics.popContext()
     }

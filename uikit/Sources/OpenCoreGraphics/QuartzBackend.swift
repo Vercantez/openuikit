@@ -107,6 +107,20 @@ final class QuartzBackend: CanvasBackend {
 
     deinit { QZContextRelease(ctx) }
 
+    /// The premultiplied RGBA8 backing Quartz draws into, shareable with an
+    /// Apple CGBitmapContext of the same layout (cg-unify). Not inside a
+    /// transparency layer, where Quartz redirects drawing to a group buffer.
+    var _sharedBacking: (data: UnsafeMutableRawPointer, bytesPerRow: Int)? {
+        guard layerDepth == 0, let data = QZBitmapContextGetData(ctx) else { return nil }
+        return (data, bytesPerRow)
+    }
+
+    /// Re-derives the whole straight-alpha Bitmap from the backing, after
+    /// something other than this backend drew into it.
+    func _syncAllFromBacking() {
+        if layerDepth == 0 { syncAll() }
+    }
+
     // MARK: State
 
     func saveState() { QZContextSaveGState(ctx) }
