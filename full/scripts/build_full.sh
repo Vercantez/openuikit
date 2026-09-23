@@ -1043,6 +1043,29 @@ echo "== OpenUIKit (${#UIKIT_SRCS[@]} files verbatim, incl. AutoLayout/ + Founda
     -o "$OUT/openuikit.o" \
     "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
 
+# host_full renders every frame, so it links OPTIMIZED copies of the two
+# rendering modules: the same sources and flags plus -O, objects only (the
+# -Onone .swiftmodules above stay the interface every client compiles
+# against; the optimisation level does not change a public symbol or a type
+# layout). render_full and the probes keep the -Onone objects, so their bytes
+# and pixels are untouched. MEASURED 2026-09-22, Focus at 375x667@2x under
+# machorun: 490-2030 ms per frame with the -Onone objects.
+HOST_OPT_PID=
+if [ -f /usr/include/SDL2/SDL.h ]; then
+    echo "== OpenCoreGraphics + OpenUIKit -O objects for host_full (background)"
+    mkdir -p "$OUT/host-opt"
+    rm -f "$OUT/host-opt/opencoregraphics.o" "$OUT/host-opt/openuikit.o"
+    (
+        "${SWIFTC[@]}" -O "${CINC[@]}" -module-name OpenCoreGraphics \
+            -emit-object -o "$OUT/host-opt/opencoregraphics.o" \
+            "$UIKIT"/Sources/OpenCoreGraphics/*.swift
+        "${SWIFTC[@]}" -O "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" -module-name OpenUIKit \
+            -emit-object -o "$OUT/host-opt/openuikit.o" \
+            "${UIKIT_SRCS[@]}" "$W/full/shims/FoundationNames.swift"
+    ) > "$OUT/host-opt/compile.log" 2>&1 &
+    HOST_OPT_PID=$!
+fi
+
 # Keep this focused probe honest even though the combined renderer below must
 # see APPINC for RealAppProbe. A separate typecheck before APPINC exists proves
 # UIHelpersTest itself needs only the Foundation-umbrella-invisible OpenUIKit
@@ -1875,6 +1898,18 @@ build_final_executable() {
                 "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
                 "$UIKIT/Sources/openhost/HostLoop.swift" \
                 "$W/full/driver/host_full/main.swift"
+            # This job runs in its own subshell, so swapping in the -O
+            # rendering objects here cannot reach the other executables.
+            local -a host_common=()
+            local obj
+            for obj in "${COMMON_LINK_OBJECTS[@]}"; do
+                case "$obj" in
+                    "$OUT/openuikit.o") host_common+=("$OUT/host-opt/openuikit.o") ;;
+                    "$OUT/opencoregraphics.o") host_common+=("$OUT/host-opt/opencoregraphics.o") ;;
+                    *) host_common+=("$obj") ;;
+                esac
+            done
+            COMMON_LINK_OBJECTS=("${host_common[@]}")
             link_app_executable "$OUT/host_full" "$OUT/host_full.o" "$OUT/realappprobe.o" \
                 "$ROOTDIR/darwin/usr/lib/libOpenSDLHost.dylib" ;;
         indexpath_identity_probe)
@@ -1892,7 +1927,11 @@ build_final_executable() {
 FINAL_EXECUTABLES=(render_full GuestBoundaryTests LaunchProbe
     FuziProbe BrowserInkProbe indexpath_identity_probe)
 rm -f "$OUT/host_full" "$OUT/host_full.o"
-if [ "$BUILD_HOST_FULL" = 1 ]; then FINAL_EXECUTABLES+=(host_full); fi
+if [ "$BUILD_HOST_FULL" = 1 ]; then
+    [ -n "$HOST_OPT_PID" ] && wait "$HOST_OPT_PID" \
+        || { tail -40 "$OUT/host-opt/compile.log" >&2; die "host_full -O rendering objects failed"; }
+    FINAL_EXECUTABLES+=(host_full)
+fi
 run_jobs build_final_executable "${FINAL_EXECUTABLES[@]}"
 
 # Match SwiftPM's executable bundle metadata and stage Focus startup assets.
