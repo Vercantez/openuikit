@@ -18,7 +18,9 @@
 // `loadRequest(_:)` records the request but never starts a load — no
 // delegate callback claims a page arrived.
 
-#if canImport(Foundation)
+// Apple toolchains only: URLRequest lives in FoundationNetworking on Linux,
+// which OpenUIKit does not link; the Foundation-hidden guest has no URLRequest.
+#if canImport(Foundation) && canImport(ObjectiveC)
 import Foundation
 
 @preconcurrency @MainActor
