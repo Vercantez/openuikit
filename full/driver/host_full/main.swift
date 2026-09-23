@@ -12,7 +12,9 @@
 //   full/sdlhost/OpenSDLHostBridge.c        Darwin side of the window ABI
 //   full/sdlhost/OpenSDLHost.c              Linux side: SDL window, events,
 //                                           texture upload, main-queue drain
-//   uikit/Sources/openrender/RealApp.swift  the variant table + geometry
+//   uikit/Sources/openhost/RealAppHost.swift the launch (RealApp.swift's
+//                                           window setup, kept alive), the
+//                                           replay state and the loop hooks
 //
 //   host_full [--app focus] [--assets DIR]
 //             [--script events.json --record outdir]
@@ -151,148 +153,13 @@ final class GuestSDLSurface: HostSurface {
     func quit() { openui_sdl_host_v1_close(handle) }
 }
 
-// MARK: - Launch (RealApp.swift's realapp window setup, kept alive)
+// MARK: - Apps
 
-/// The apps host_full can run: the RealApp.swift variant whose geometry and
-/// root factory it uses.
+/// The apps host_full can run: the RealAppScreen row whose geometry and root
+/// factory it uses (uikit/Sources/openhost/RealAppHost.swift launches it).
 let hostApps: [String: String] = [
     "focus": "realapp_focus_browser_light",
 ]
-
-var hostRetained: [AnyObject] = []
-
-/// runRealApp's setup, step for step, minus the render: traits, assets and
-/// nibs, the screen, a window at the variant's geometry with its safe area,
-/// the real root (for Focus: FocusBrowserLaunch.makeRoot(), i.e. the real
-/// AppDelegate through UIApplicationMain), appearance, layout.
-@MainActor
-func launchHostApp(_ app: String, assets: String) -> HostScene {
-    guard let variantName = hostApps[app] else {
-        let names = hostApps.keys.sorted().joined(separator: ", ")
-        hostWarn("host_full: unknown app \"\(app)\" (available: \(names))")
-        hostExit(2)
-    }
-    guard let variant = realAppVariants.first(where: { $0.name == variantName }) else {
-        hostWarn("host_full: this build has no \(variantName) variant (Blockzilla not compiled in?)")
-        hostExit(2)
-    }
-    RealAppScreen.installFocusBundleResourcesIfNeeded()
-    didSeedFocusBundleResources = true
-    let size = variant.windowSize
-    let scale = variant.idiom == .pad ? variant.nativeScale : realAppScale
-    Timer._reset()
-    GlyphInkTable.windowCompositing = false
-    OpenUIKitRuntime.systemFontCut = .iOS
-    UIDevice.current.userInterfaceIdiom = variant.idiom
-    OpenUIKitRuntime.assetCatalogIdiom = variant.idiom
-    UITraitCollection.current = UITraitCollection(
-        userInterfaceStyle: variant.style,
-        displayScale: scale,
-        preferredContentSizeCategory: variant.contentSizeCategory,
-        userInterfaceIdiom: variant.idiom)
-    RealAppScreen.configureAssets(directory: assets)
-    var nibs = RealAppScreen.defaultNibsDirectory
-    if assets.hasSuffix("/assets") {
-        nibs = String(assets.dropLast(7)) + "/nibs"
-    }
-    RealAppScreen.configureNibs(directory: nibs)
-    OpenUIKitRuntime.imageScreenScale = scale
-    UIScreen.main._hostConfigure(bounds: CGRect(origin: .zero, size: size), scale: scale)
-
-    let window = UIWindow(frame: CGRect(origin: .zero, size: size))
-    window.backgroundColor = .black
-    window._setSafeAreaInsets(variant.safeAreaInsets)
-    window.overrideUserInterfaceStyle = variant.style
-    let root = variant.makeRoot()
-    window.rootViewController = root
-    window.makeKeyAndVisible()
-    if variant.presentsSheet {
-        (root as? BackdropViewController)?.presentPickerNow()
-    } else {
-        root.beginAppearanceTransition(true, animated: false)
-        root.endAppearanceTransition()
-    }
-    window.setNeedsLayout()
-    window.layoutIfNeeded()
-    hostRetained.append(window)
-    hostRetained.append(root)
-    // stderr: unbuffered, so a launcher watching a pipe sees it at once.
-    hostWarn("HOST_FULL_LAUNCHED app=\(app) root=\(type(of: root)) "
-          + "window=\(fmt3(Double(size.width)))x\(fmt3(Double(size.height))) scale=\(fmt3(Double(scale)))")
-    return HostScene(name: "\(app)_host", sizePt: size, scale: scale,
-                     window: window, container: root.view, sceneAnimationDeadline: 0)
-}
-
-// MARK: - Per-capture state (what the replay check asserts on)
-
-@MainActor
-func collectState(_ v: UIView, path: String, into fields: inout [JSONValue],
-                  labels: inout [JSONValue], visible: Bool) {
-    let shown = visible && !v.isHidden && v.alpha > 0.01
-    if let tf = v as? UITextField {
-        let r = tf.convert(tf.bounds, to: nil)
-        fields.append(.object([
-            "path": .string(path),
-            "frameInWindow": .array([r.origin.x, r.origin.y, r.width, r.height]
-                .map { .number((Double($0) * 1000).rounded() / 1000) }),
-            "class": .string(String(describing: type(of: tf))),
-            "text": .string(tf.text ?? ""),
-            "placeholder": .string(tf.placeholder ?? ""),
-            "isEditing": .bool(tf.isEditing),
-            "isFirstResponder": .bool(tf.isFirstResponder),
-            "visible": .bool(shown),
-        ]))
-    }
-    if shown, let l = v as? UILabel, let t = l.text, !t.isEmpty {
-        labels.append(.string(t))
-    }
-    if shown, let b = v as? UIButton, let t = b.currentTitle, !t.isEmpty {
-        labels.append(.string(t))
-    }
-    if shown, let b = v as? UIButton, b.showsMenuAsPrimaryAction, let menu = b.menu {
-        // What a tap on this button would present: its menu's rows.
-        func rows(_ m: UIMenu) -> [String] {
-            m.children.flatMap { child -> [String] in
-                if let sub = child as? UIMenu { return rows(sub) }
-                return [child.title]
-            }
-        }
-        labels.append(.string("menuButton:" + rows(menu).joined(separator: "|")))
-    }
-    if shown, String(describing: type(of: v)) == "_UIContextMenuView" {
-        labels.append(.string("contextMenuView"))
-    }
-    for (i, sub) in v.subviews.enumerated() {
-        collectState(sub, path: path.isEmpty ? "\(i)" : "\(path).\(i)",
-                     into: &fields, labels: &labels, visible: shown)
-    }
-}
-
-@MainActor
-func hostState(_ scene: HostScene, t: Double) -> JSONValue {
-    var fields: [JSONValue] = []
-    var labels: [JSONValue] = []
-    collectState(scene.window, path: "", into: &fields, labels: &labels, visible: true)
-    var presented: [JSONValue] = []
-    var vc = scene.window.rootViewController?.presentedViewController
-    while let p = vc {
-        presented.append(.string(String(describing: type(of: p))))
-        if let nav = p as? UINavigationController, let top = nav.topViewController {
-            presented.append(.string("top=" + String(describing: type(of: top))))
-        }
-        vc = p.presentedViewController
-    }
-    let responder = scene.window.firstResponder
-    return .object([
-        "t": .number(t),
-        "firstResponder": responder.map { .string(String(describing: type(of: $0))) } ?? .null,
-        "keyboardUp": .bool(responder is UIKeyInput),
-        "keyboardOverlap": .number(Double(_UIKeyboardChrome.currentOverlap)),
-        "textFields": .array(fields),
-        "presented": .array(presented),
-        "labels": .array(labels),
-    ])
-}
 
 // MARK: - main
 
@@ -374,23 +241,21 @@ guard (hostScriptPath == nil) == (hostRecordDir == nil) else {
 }
 
 MainActor.assumeIsolated {
-    let scene = launchHostApp(hostAppName, assets: hostAssets)
-    var hooks = HostLoopHooks()
-    // The software keyboard lives in its own window (UIKeyboardChrome.swift);
-    // composite it the way the conformance captures do, so "keyboard up" is
-    // on screen and not only in the responder chain.
-    hooks.render = { window, scale in
-        _UIKeyboardChrome.renderCapture(appWindow: window, scale: scale)
+    guard let row = hostApps[hostAppName] else {
+        hostWarn("host_full: unknown app \"\(hostAppName)\" (available: \(hostApps.keys.sorted().joined(separator: ", ")))")
+        hostExit(2)
     }
+    guard let scene = launchRealAppHost(row: row, assets: hostAssets, phoneScale: realAppScale,
+                                        sceneName: "\(hostAppName)_host") else {
+        hostWarn("host_full: this build has no \(row) row (Blockzilla not compiled in?)")
+        hostExit(2)
+    }
+    // stderr: unbuffered, so a launcher watching a pipe sees it at once.
+    hostWarn("HOST_FULL_LAUNCHED app=\(hostAppName) root=\(type(of: scene.window.rootViewController!)) "
+             + "window=\(fmt3(Double(scene.sizePt.width)))x\(fmt3(Double(scene.sizePt.height))) scale=\(fmt3(Double(scene.scale)))")
     // One run-loop turn also runs what the app queued on the main queue
     // (Focus activates its URL field from DispatchQueue.main.async).
-    hooks.beginTurn = { _ = openui_sdl_host_v1_drain_main_queue() }
-    // Escape is a key for the app, not a quit shortcut.
-    hooks.escapeQuits = false
-    // Main-queue blocks and Timers can change the screen with no input.
-    hooks.idleRedrawInterval = 0.5
-    // Replays turn the run loop at 60 Hz between steps, like a device.
-    hooks.scriptStepHz = 60
+    var hooks = realAppHostHooks(drainMainQueue: { _ = openui_sdl_host_v1_drain_main_queue() })
 
     if let scriptPath = hostScriptPath, let recordDir = hostRecordDir {
         guard let bytes = ResourceIO.readFile(scriptPath),
@@ -401,7 +266,7 @@ MainActor.assumeIsolated {
         let (events, captures) = parseScript(script)
         hooks.didCapture = { file, t in
             let stem = file.hasSuffix(".png") ? String(file.dropLast(4)) : file
-            try hostWrite(Array(hostJSONText(hostState(scene, t: t)).utf8),
+            try hostWrite(Array(hostJSONText(realAppHostState(scene, t: t)).utf8),
                           "\(recordDir)/\(stem).state.json")
             if hostEnv("HOST_FULL_LAYOUT_DUMP") == "1" {
                 var views: [JSONValue] = []

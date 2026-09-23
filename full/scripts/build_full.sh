@@ -2041,7 +2041,7 @@ build_final_executable() {
                 -I "$OUT" -I "$APPINC" -I "$APPMODS" -module-name host_full \
                 -emit-object -o "$OUT/host_full.o" \
                 "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift" \
-                "$UIKIT/Sources/openhost/HostLoop.swift" \
+                "$UIKIT/Sources/openhost/HostLoop.swift" "$UIKIT/Sources/openhost/RealAppHost.swift" \
                 "$W/full/driver/host_full/main.swift"
             # This job runs in its own subshell, so swapping in the -O
             # rendering objects here cannot reach the other executables.
