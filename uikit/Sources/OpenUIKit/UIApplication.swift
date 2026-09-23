@@ -526,7 +526,9 @@ open class UIApplication: UIResponder {
 
     /// UIKit starts an app in `.inactive` and moves it to `.active` once it
     /// is on screen and taking input.
-    public private(set) var applicationState: State = .inactive
+    /// Settable in-module: the host lifecycle and the `@main` entry
+    /// (UIApplicationMainEntry.swift) drive it.
+    public internal(set) var applicationState: State = .inactive
 
     /// Home-screen quick actions. MEASURED ValuesProbe2, iPhone SE 3rd gen /
     /// iOS 26.1: the default is an empty array (not nil); assigning `nil`
@@ -579,7 +581,11 @@ open class UIApplication: UIResponder {
     /// to. Set by `UIWindow.makeKey()` / `makeKeyAndVisible()`; defaults to
     /// the first window created.
     public var keyWindow: UIWindow? {
-        _keyWindow ?? windows.first
+        // A window the scene-manifest launch created is key only once it was
+        // made key (MEASURED Tools/oracle2/scenelaunchprobe: not key in
+        // scene(_:willConnectTo:)). Every other window keeps the host
+        // first-window convenience.
+        return _keyWindow ?? windows.first { !$0._keyOnlyWhenMadeKey }
     }
 
     func _register(window: UIWindow) {
@@ -753,6 +759,37 @@ open class UIApplication: UIResponder {
         return false
     }
 
+#if canImport(ObjectiveC)
+    /// UIKit's `sendAction(_:to:from:for:)` with a real selector (NetNewsWire
+    /// RSCore UIResponder+RSCore.swift:27). MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/sendactionprobe):
+    ///   * an explicit target receives the action (with `sender`) -> true;
+    ///   * a nil target starts at the key window's first responder, else at
+    ///     `sender` when it is a responder, and walks the responder chain to
+    ///     the first object that implements the selector -> true;
+    ///   * with neither (no first responder, no responder sender) nothing is
+    ///     delivered -> false: there is NO key-window fallback here (the
+    ///     closure overload above keeps its own documented fallback);
+    ///   * nobody implementing it -> false.
+    /// An explicit target that does not implement the selector raises, as in
+    /// UIKit (unrecognized selector).
+    @discardableResult
+    open func sendAction(_ action: Selector, to target: Any?, from sender: Any?,
+                         for event: UIEvent?) -> Bool {
+        if let target = target as? NSObject {
+            _ = target.perform(action, with: sender, with: event)
+            return true
+        }
+        let start: UIResponder? = keyWindow?.firstResponder ?? (sender as? UIResponder)
+        guard let start else { return false }
+        for responder in start._responderChain where responder.responds(to: action) {
+            _ = responder.perform(action, with: sender, with: event)
+            return true
+        }
+        return false
+    }
+#endif
+
     // MARK: Opening URLs
 
     /// HOST HOOK: OpenUIKit cannot open a URL — there is no OS to hand it
@@ -798,13 +835,16 @@ open class UIApplication: UIResponder {
     /// frame is up. Returns the delegate's `didFinishLaunching` verdict.
     @discardableResult
     public func _hostLaunch(delegate: UIApplicationDelegate,
-                            launchOptions: [LaunchOptionsKey: Any]? = nil) -> Bool {
+                            launchOptions: [LaunchOptionsKey: Any]? = nil,
+                            launchState: State = .inactive) -> Bool {
         _retainedDelegate = delegate
         self.delegate = delegate
         _usesSceneLifecycle = false
         _retainedSceneDelegates.removeAll()
         isTerminating = false
-        applicationState = .inactive
+        // A scene-manifest app launches in `.background` (MEASURED
+        // Tools/oracle2/scenelaunchprobe: 2 in willFinish / didFinish).
+        applicationState = launchState
         _ = delegate.application(self, willFinishLaunchingWithOptions: launchOptions)
         let ok = delegate.application(self, didFinishLaunchingWithOptions: launchOptions)
         _post(UIApplication.didFinishLaunchingNotification)

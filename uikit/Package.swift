@@ -756,6 +756,10 @@ let testTargets: [Target] = [
     .testTarget(name: "NetworkTests", dependencies: ["Network"]),
     .testTarget(name: "AuthenticationServicesTests", dependencies: ["AuthenticationServices"]),
     .testTarget(name: "WidgetKitTests", dependencies: ["WidgetKit"]),
+    // @main + Info.plist scene-manifest launch, against the iOS 26.1
+    // transcript of Tools/oracle2/scenelaunchprobe (module name matters:
+    // the storyboard's LaunchProbe classes are aliased to it).
+    .testTarget(name: "SceneLaunchTests", dependencies: ["OpenUIKit", "UIKit"]),
     // Swift 6 language mode: Sendable conformances the SDK declares
     // (NS_SWIFT_SENDABLE) are compile errors here, not warnings.
     .testTarget(

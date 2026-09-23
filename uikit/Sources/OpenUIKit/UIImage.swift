@@ -31,6 +31,7 @@ import Foundation
 // ordinary Darwin build. Keep that dependency conditional: the cold guest
 // builds OpenUIKit before the app-facing Foundation facade exists.
 #if canImport(Foundation)
+import struct Foundation.Data
 import class Foundation.NSError
 import class Foundation.NSObject
 #endif
@@ -429,13 +430,24 @@ public final class UIImage: NSObject {
 
     // MARK: Encoding
 
+#if canImport(Foundation)
     /// PNG representation of the backing store (straight alpha, RGBA8).
-    public func pngData() -> [UInt8]? { ImageCodec.encodePNG(bitmap) }
+    /// `Data?`, as UIKit declares it (UIImage.h UIImagePNGRepresentation;
+    /// NetNewsWire RSImage.swift:105 returns it from a `-> Data?` func).
+    public func pngData() -> Data? { ImageCodec.encodePNG(bitmap).map { Data($0) } }
 
     /// JPEG representation. `compressionQuality` is UIKit's 0...1.
+    public func jpegData(compressionQuality: CGFloat) -> Data? {
+        ImageCodec.encodeJPEG(bitmap, quality: compressionQuality).map { Data($0) }
+    }
+#else
+    /// Foundation-hidden guest: the same bytes, without Foundation.Data.
+    public func pngData() -> [UInt8]? { ImageCodec.encodePNG(bitmap) }
+
     public func jpegData(compressionQuality: CGFloat) -> [UInt8]? {
         ImageCodec.encodeJPEG(bitmap, quality: compressionQuality)
     }
+#endif
 
     // MARK: CG-compatible resampling
     //
