@@ -361,6 +361,20 @@ open class UIViewController: UIResponder, UIContentContainer {
         didSet { navigationController?._toolbarItemsDidChange(self) }
     }
 
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): `toolbarItems` reads back the items.
+    /// The toolbar change is not animated in the port (OPEN).
+    public final func setToolbarItems(_ toolbarItems: [UIBarButtonItem]?, animated: Bool) {
+        _ = animated
+        self.toolbarItems = toolbarItems
+    }
+
+    /// MEASURED iOS 26.1: false. Stored; the port's presentation does not
+    /// consult it yet (OPEN).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic var definesPresentationContext = false
+
     // MARK: Modal presentation (M10 — see UIPresentation.swift)
 
     /// Style used the next time this controller is PRESENTED.

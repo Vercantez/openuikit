@@ -59,12 +59,13 @@ open class UIContextualAction: NSObject {
 }
 
 @preconcurrency @MainActor
-open class UISwipeActionsConfiguration {
+open class UISwipeActionsConfiguration: NSObject {
     public let actions: [UIContextualAction]
     public var performsFirstActionWithFullSwipe: Bool = true
 
     public init(actions: [UIContextualAction]) {
         self.actions = actions
+        super.init()
     }
 }
 

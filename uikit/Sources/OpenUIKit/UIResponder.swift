@@ -50,7 +50,9 @@
 // Swift classes and breaking `@objc` parameter representability.
 #if canImport(Foundation)
 import class Foundation.NSObject
+#if !os(Linux)
 import class Foundation.UndoManager
+#endif
 #if canImport(Darwin)
 import class Foundation.NSUserActivity
 #endif
@@ -403,7 +405,8 @@ open class UIResponder: NSObject {
     /// view or view controller in a window gets the window's (MEASURED
     /// Tools/oracle2/scenelaunchprobe, iOS 26.1: vc.undoManager ===
     /// window.undoManager; a detached controller and the application: nil).
-#if canImport(Foundation)
+    /// Not on Linux: swift-corelibs-foundation has no UndoManager.
+#if canImport(Foundation) && !os(Linux)
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc
 #endif

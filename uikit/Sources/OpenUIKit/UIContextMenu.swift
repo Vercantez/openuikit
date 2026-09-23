@@ -1,3 +1,9 @@
+#if canImport(Foundation)
+import class Foundation.NSObject
+import protocol Foundation.NSCopying
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 // The MENU PLATTER + UIContextMenuInteraction / UIContextMenuConfiguration.
 // Owner: menus module (M13 "menus & actions" cluster).
 //
@@ -659,7 +665,7 @@ extension UIView {
 // MARK: - UIContextMenuConfiguration
 
 @preconcurrency @MainActor
-public final class UIContextMenuConfiguration {
+public final class UIContextMenuConfiguration: NSObject {
     public let identifier: AnyHashable?
     public let previewProvider: (() -> UIViewController?)?
     public let actionProvider: (([UIMenuElement]) -> UIMenu?)?
@@ -670,7 +676,22 @@ public final class UIContextMenuConfiguration {
         self.identifier = identifier
         self.previewProvider = previewProvider
         self.actionProvider = actionProvider
+        super.init()
     }
+
+#if canImport(Foundation)
+    /// UIKit's spelling: the identifier is any `NSCopying` object
+    /// (NetNewsWire MainFeedCollectionViewController.swift:1060 passes
+    /// `accountID as NSCopying`). Disfavoured so `identifier: nil` still
+    /// picks the primary initializer.
+    @_disfavoredOverload
+    public convenience init(identifier: (any NSCopying)?,
+                            previewProvider: (() -> UIViewController?)? = nil,
+                            actionProvider: (([UIMenuElement]) -> UIMenu?)? = nil) {
+        self.init(identifier: identifier.map { AnyHashable($0 as! NSObject) },
+                  previewProvider: previewProvider, actionProvider: actionProvider)
+    }
+#endif
 
     /// The menu this configuration produces, or nil.
     public func resolvedMenu() -> UIMenu? { actionProvider?([]) }

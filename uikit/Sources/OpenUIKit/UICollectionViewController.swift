@@ -180,6 +180,30 @@ open class UICollectionViewController: UIViewController,
                              didEndDisplaying cell: UICollectionViewCell,
                              forItemAt indexPath: IndexPath) {}
 
+    // NetNewsWire's MainFeedCollectionViewController / MainTimelineDataSource
+    // override these. They are declared with UIKit's not-implemented answers
+    // (no primary action, no legacy edit menu, no context menu, not movable).
+    // OPEN: the portable collection view does not yet route taps to the
+    // primary action, long presses to the context menu, or drags to moves;
+    // UIKit's input-driven semantics for those were not measured here.
+    open func collectionView(_ collectionView: UICollectionView,
+                             canPerformPrimaryActionForItemAt indexPath: IndexPath) -> Bool { false }
+    open func collectionView(_ collectionView: UICollectionView,
+                             performPrimaryActionForItemAt indexPath: IndexPath) {}
+    open func collectionView(_ collectionView: UICollectionView,
+                             shouldShowMenuForItemAt indexPath: IndexPath) -> Bool { false }
+    open func collectionView(_ collectionView: UICollectionView,
+                             canPerformAction action: Selector,
+                             forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool { false }
+    open func collectionView(_ collectionView: UICollectionView,
+                             performAction action: Selector,
+                             forItemAt indexPath: IndexPath, withSender sender: Any?) {}
+    open func collectionView(_ collectionView: UICollectionView,
+                             contextMenuConfigurationForItemAt indexPath: IndexPath,
+                             point: CGPoint) -> UIContextMenuConfiguration? { nil }
+    open func collectionView(_ collectionView: UICollectionView,
+                             canMoveItemAt indexPath: IndexPath) -> Bool { false }
+
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {}
     open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {}
     open func scrollViewWillEndDragging(_ scrollView: UIScrollView,

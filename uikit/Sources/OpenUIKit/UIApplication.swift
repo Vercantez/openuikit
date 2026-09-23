@@ -44,7 +44,9 @@ import struct Foundation.NSZone
 import struct Foundation.URL
 import class Foundation.Bundle
 import class Foundation.NSError
+#if !os(Linux)
 import class Foundation.UndoManager
+#endif
 import struct Foundation.Data
 import var Foundation.NSCocoaErrorDomain
 import var Foundation.NSLocalizedDescriptionKey
@@ -706,7 +708,7 @@ open class UIApplication: UIResponder {
     /// itself a responder — the usual `class AppDelegate: UIResponder,
     /// UIApplicationDelegate` shape, where UIKit forwards to it.
     open override var next: UIResponder? { delegate as? UIResponder }
-#if canImport(Foundation)
+#if canImport(Foundation) && !os(Linux)
     /// MEASURED iOS 26.1: the application object has no undo manager (nil);
     /// windows do.
     open override var undoManager: UndoManager? { nil }

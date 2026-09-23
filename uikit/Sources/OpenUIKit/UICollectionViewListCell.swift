@@ -257,10 +257,6 @@ open class UICollectionViewListCell: UICollectionViewCell {
     private var installedContentView: (UIView & UIContentView)?
     private var _contentConfiguration: (any UIContentConfiguration)?
     private var _backgroundConfiguration: UIBackgroundConfiguration?
-    public var automaticallyUpdatesContentConfiguration = true
-    public var automaticallyUpdatesBackgroundConfiguration = true
-    public var configurationUpdateHandler: ((UICollectionViewCell, UICellConfigurationState) -> Void)?
-    private var needsConfigurationUpdate = true
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -297,7 +293,7 @@ open class UICollectionViewListCell: UICollectionViewCell {
         return .listCell()
     }
 
-    open var contentConfiguration: (any UIContentConfiguration)? {
+    open override var contentConfiguration: (any UIContentConfiguration)? {
         get { _contentConfiguration }
         set {
             _contentConfiguration = newValue
@@ -306,7 +302,7 @@ open class UICollectionViewListCell: UICollectionViewCell {
         }
     }
 
-    open var backgroundConfiguration: UIBackgroundConfiguration? {
+    open override var backgroundConfiguration: UIBackgroundConfiguration? {
         get { _backgroundConfiguration }
         set {
             _backgroundConfiguration = newValue
@@ -314,7 +310,7 @@ open class UICollectionViewListCell: UICollectionViewCell {
         }
     }
 
-    open var configurationState: UICellConfigurationState {
+    open override var configurationState: UICellConfigurationState {
         var state = UICellConfigurationState(traitCollection: traitCollection)
         state.isSelected = isSelected
         state.isHighlighted = isHighlighted
@@ -325,12 +321,9 @@ open class UICollectionViewListCell: UICollectionViewCell {
         return state
     }
 
-    open func setNeedsUpdateConfiguration() {
-        needsConfigurationUpdate = true
-        setNeedsLayout()
-    }
-
-    open func updateConfiguration(using state: UICellConfigurationState) {
+    /// The list cell's own pass: list defaults (a background configuration
+    /// even when none was set, MEASURED `UICollectionViewListCell()` "set").
+    open override func updateConfiguration(using state: UICellConfigurationState) {
         if automaticallyUpdatesContentConfiguration, let current = _contentConfiguration {
             _contentConfiguration = current.updated(for: state)
             installContent()
@@ -341,7 +334,7 @@ open class UICollectionViewListCell: UICollectionViewCell {
             applyBackground()
         }
         configurationUpdateHandler?(self, state)
-        needsConfigurationUpdate = false
+        _needsConfigurationUpdate = false
     }
 
     private func installContent() {
@@ -470,9 +463,9 @@ open class UICollectionViewListCell: UICollectionViewCell {
     }
 
     open override func layoutSubviews() {
-        if needsConfigurationUpdate {
-            updateConfiguration(using: configurationState)
-        }
+        // Before the base pass, as before: the list background/content must
+        // be in place when the base cell lays out its subviews.
+        _updateConfigurationIfNeeded()
         super.layoutSubviews()
         let rtl = _layoutIsRTL
         let indent = CGFloat(max(0, indentationLevel)) * indentationWidth

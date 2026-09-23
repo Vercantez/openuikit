@@ -69,6 +69,7 @@ final class LaunchPathMembersTests: XCTestCase {
         XCTAssertEqual(split.preferredStatusBarUpdateAnimation, .fade)
     }
 
+#if !os(Linux) // swift-corelibs-foundation has no UndoManager
     func testUndoManagerComesFromTheWindow() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 393, height: 852))
         let vc = UIViewController()
@@ -81,6 +82,7 @@ final class LaunchPathMembersTests: XCTestCase {
         XCTAssertNil(UIViewController().undoManager)
         XCTAssertNil(UIApplication.shared.undoManager)
     }
+#endif
 
     func testNavigationItemSubtitleFlexibleSpaceAndMenu() {
         let item = UINavigationItem(title: "t")
@@ -168,7 +170,9 @@ final class LaunchPathMembersTests: XCTestCase {
         _ = (later, typed)
         let options = UIScene.ConnectionOptions()
         XCTAssertTrue(options.urlContexts.isEmpty)
+#if (canImport(AppKit) || os(iOS)) && canImport(UserNotifications)
         XCTAssertNil(options.notificationResponse)
+#endif
         XCTAssertNil(UISceneSession().stateRestorationActivity)
     }
 }
