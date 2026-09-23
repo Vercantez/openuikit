@@ -1062,9 +1062,13 @@ let eidolonDependencyTargets: [Target] = [
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "RxCocoaRuntime", path: "Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime",
             publicHeadersPath: "include", cSettings: [.unsafeFlags(["-fobjc-arc"])]),
-    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit"],
+    // The upstream iOS/ sources are `#if os(iOS)`: on the iOS triple (route
+    // b) they compile against OpenUIKit's `UIKit` and are the branch Eidolon
+    // uses (UIButton.rx.tap); on macOS they compile out.
+    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit",
+                                            .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/RxSwift/RxCocoa",
-            exclude: ["Runtime", "iOS", "RxCocoa.h"],
+            exclude: ["Runtime", "RxCocoa.h"],
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Result", path: "Sources/EidolonDependencies/Result/Result",
             exclude: ["Result.h"], swiftSettings: eidolonDependencySwiftSettings),
@@ -1074,7 +1078,9 @@ let eidolonDependencyTargets: [Target] = [
             exclude: ["SwiftyJSON.h"], swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "Reachability", path: "Sources/EidolonDependencies/Reachability/Reachability",
             swiftSettings: eidolonDependencySwiftSettings),
-    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift"],
+    // Moya's iOS branch imports UIKit.UIImage (route b, iOS triple).
+    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift",
+                                         .target(name: "UIKit", condition: .when(platforms: [.iOS]))],
             path: "Sources/EidolonDependencies/Moya/Sources",
             swiftSettings: eidolonDependencySwiftSettings + [.define("COCOAPODS")]),
     .target(name: "Action", dependencies: ["RxSwift", "RxCocoa"],
