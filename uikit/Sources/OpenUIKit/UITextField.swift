@@ -1066,7 +1066,19 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         case .roundedRect, .bezel, .line:
             return CGSize(width: base + 28, height: 34)
         case .none:
-            return CGSize(width: base, height: FontEngine.metrics(for: _font).lineHeight + 1.5)
+            // A subclass that insets `textRect(forBounds:)` vertically grows
+            // its intrinsic height by the inset. MEASURED 2026-09-23 on
+            // Firefox Focus's URLTextField (getInsetRect: dy 10), iPhone SE
+            // 2x / iOS 26.1 (golden/focus_edit_ios/focus_edit.typed.json):
+            // 39.5 tall under a centerY-only constraint = the 19.5 line +
+            // 2 x 10. The base `.none` rect is the bounds, so a field that
+            // does not override the hook is unchanged.
+            let probe = CGRect(x: 0, y: 0, width: 1000, height: 1000)
+            let text = textRect(forBounds: probe)
+            var extra = probe.height - text.height
+            if !extra.isFinite || extra < 0 || extra > 500 { extra = 0 }
+            return CGSize(width: base,
+                          height: FontEngine.metrics(for: _font).lineHeight + 1.5 + extra)
         }
     }
 
