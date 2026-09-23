@@ -690,6 +690,14 @@ let testTargets: [Target] = [
         path: "Tests/NibRuntimeTests",
         swiftSettings: [.unsafeFlags(["-swift-version", "5"])]
     ),
+    // Compiled in Swift 4 mode, like Eidolon: the Swift 4 UIKit spellings
+    // (Sources/OpenUIKit/Swift4Names.swift) must resolve.
+    .testTarget(
+        name: "Swift4NamesTests",
+        dependencies: ["OpenUIKit"],
+        path: "Tests/Swift4NamesTests",
+        swiftSettings: [.unsafeFlags(["-swift-version", "4"])]
+    ),
     .testTarget(
         name: "OpenUIKitCTests",
         dependencies: openUIKitCTestDeps,
