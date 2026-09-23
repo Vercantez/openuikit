@@ -19,6 +19,14 @@
 //     (off: x=2, on: x=63-2-37=24; y=2). Golden thumb outline matches a
 //     circular corner radius of 12 (height/2) within ~0.1px; no visible
 //     shadow survives in the golden capture.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 @preconcurrency @MainActor
 open class UISwitch: UIControl {
     /// Frame size real UIKit forces on every UISwitch (Catalyst iOS 26.1).

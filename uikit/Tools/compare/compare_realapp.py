@@ -123,10 +123,16 @@ def main() -> int:
     ap.add_argument("--scale", type=int, default=2)
     ap.add_argument("--golden-straight-alpha", action="store_true",
                     help="goldens use straight alpha (Focus Xcode oracle / simscene)")
+    ap.add_argument("--variant", action="append", default=None,
+                    help="compare only these variants (repeatable); a name not in the "
+                         "built-in table is compared with anchor UIView")
     args = ap.parse_args()
+    variants = VARIANTS
+    if args.variant:
+        variants = {v: VARIANTS.get(v, "UIView") for v in args.variant}
     if args.diff:
         os.makedirs(args.diff, exist_ok=True)
-    for name, anchor in VARIANTS.items():
+    for name, anchor in variants.items():
         gpng = os.path.join(args.golden, name + ".png")
         opng = os.path.join(args.out, name + ".png")
         glay = os.path.join(args.golden, name + ".layout.json")
@@ -140,8 +146,13 @@ def main() -> int:
         if isinstance(scr, dict) and scr.get("scale"):
             scale = scr["scale"]
         diff_path = os.path.join(args.diff, name + ".diff.png") if args.diff else None
-        res = compare.compare_pixels(gpng, opng, diff_path, golden_premultiplied=not args.golden_straight_alpha, scale=scale)
-        print(f"{name}: pixels {res}")
+        # <name>.masks.json beside the golden: live-data regions (see
+        # compare.mask_array); each entry {"rect": [x,y,w,h] pt, "reason"}.
+        mpath = os.path.join(args.golden, name + ".masks.json")
+        masks = json.load(open(mpath))["masks"] if os.path.exists(mpath) else None
+        res = compare.compare_pixels(gpng, opng, diff_path, golden_premultiplied=not args.golden_straight_alpha,
+                                     scale=scale, masks=masks)
+        print(f"{name}: pixels {res}" + (f" ({len(masks)} masks)" if masks else ""))
         if os.path.exists(glay) and os.path.exists(olay):
             o = json.load(open(olay))
             problems = compare.compare_layout(g, o)

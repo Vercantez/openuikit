@@ -26,6 +26,15 @@
 /// private and prunes the subtree on both sides).
 // `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
 // scoped declaration import keeps its geometry out of this file (UIView.swift).
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.Bundle
+@_exported import class Foundation.NSCoder
+#endif
+
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
 #endif
@@ -750,9 +759,26 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// screen completes any process-wide unspecified size axes so view-load
     /// code observes the same portable environment as a detached UIView.
     public final var traitCollection: UITraitCollection {
-        viewIfLoaded?.traitCollection
+        let base = viewIfLoaded?.traitCollection
             ?? parent?.traitCollection
             ?? UIScreen.main._currentTraitsResolvingSizeClasses
+        let style = overrideUserInterfaceStyle
+        guard style != .unspecified, base.userInterfaceStyle != style else { return base }
+        return base._with { $0.userInterfaceStyle = style }
+    }
+
+    /// UIKit's controller-level style override. MEASURED iPhone 16 / iOS 26.1
+    /// (Tools/oracle2/vcstyleprobe): defaults to `.unspecified`; setting it
+    /// (even before the view loads) makes the controller's traitCollection,
+    /// its root view's, the root view's subviews' and child controllers'
+    /// resolve to that style, while `view.overrideUserInterfaceStyle` itself
+    /// stays `.unspecified`. NetNewsWire sets it on SFSafariViewController
+    /// before presenting (WebViewController.swift:940).
+    public final var overrideUserInterfaceStyle: UIUserInterfaceStyle = .unspecified {
+        didSet {
+            guard oldValue != overrideUserInterfaceStyle else { return }
+            viewIfLoaded?.setNeedsLayout()
+        }
     }
 
     /// Which edges a full-screen child extends under. Stored; OpenUIKit's

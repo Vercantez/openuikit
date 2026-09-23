@@ -100,6 +100,66 @@ struct HostLoopHooks {
     /// step to step. host_full sets 60 so a chain of main-queue blocks and
     /// Timers an app starts at launch has run before the next scripted touch.
     var scriptStepHz: Double? = nil
+    /// Live loop: a fingerprint of everything the next frame would draw
+    /// (`_UIKeyboardChrome._hostFrameFingerprint`). When set, a frame whose
+    /// fingerprint equals the last presented one is not rendered or
+    /// presented (same inputs, same pixels), and `idleRedrawInterval`
+    /// becomes a cheap change check rather than a render.
+    var frameFingerprint: (@MainActor (UIWindow, CGFloat) -> UInt64)? = nil
+    /// Live loop: called once per turn after the frame decision with
+    /// (rendered, skippedAsUnchanged) — host statistics.
+    var frameObserver: (@MainActor (Bool, Bool) -> Void)? = nil
+    /// Live loop: stop after this many seconds (self-tests); nil runs until
+    /// the window is closed.
+    var liveSeconds: Double? = nil
+    /// Live loop: called with every presented bitmap (self-tests).
+    var didPresent: (@MainActor (Bitmap) -> Void)? = nil
+}
+
+// MARK: - Live self-test: a Timer-driven label reaches the window
+
+/// Adds a label to `window` that a repeating 0.5 s `Timer` rewrites
+/// ("tick 1", "tick 2", …) — scheduled with the Timer an app gets
+/// (`Timer.scheduledTimer(withTimeInterval:repeats:block:)`): Foundation's
+/// wherever Foundation exists (the live loop turns its run loop), the
+/// host-clock timer in the Foundation-hidden guest (the live loop ticks it).
+/// Returns a checker for the loop's `didPresent` hook: it records the label
+/// text each presented frame showed; `presentedTicks()` lists them.
+@MainActor
+final class HostTimerSelfTest {
+    let label = UILabel()
+    var ticks = 0
+    private(set) var presentedTexts: [String] = []
+    private var timer: Timer?
+
+    init(window: UIWindow) {
+        label.text = "tick 0"
+        label.font = .systemFont(ofSize: 17)
+        label.textColor = .red
+        label.backgroundColor = .white
+        label.frame = CGRect(x: 8, y: window.bounds.height - 60, width: 120, height: 24)
+        window.addSubview(label)
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.ticks += 1
+                self.label.text = "tick \(self.ticks)"
+            }
+        }
+    }
+
+    func noteFrame() {
+        let t = label.text ?? ""
+        if presentedTexts.last != t { presentedTexts.append(t) }
+    }
+
+    /// "HOST_TIMER_SELFTEST ok" when at least two timer updates reached
+    /// presented frames.
+    var verdict: String {
+        let shown = presentedTexts.filter { $0 != "tick 0" }
+        return (shown.count >= 2 ? "HOST_TIMER_SELFTEST ok" : "HOST_TIMER_SELFTEST FAILED")
+            + " ticks=\(ticks) presented=\(presentedTexts.joined(separator: ","))"
+    }
 }
 
 // MARK: - Key commands (M13)
@@ -172,6 +232,7 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
     // Idle frames render nothing and sleep.
     var needsRender = true // first frame renders unconditionally
     var lastRenderTime = 0.0
+    var lastPresentedFingerprint: UInt64 = 0
 
     func animationsActive(at now: Double) -> Bool {
         mouseDown
@@ -189,6 +250,8 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
 
     while running {
         hooks.beginTurn()
+        if let limit = hooks.liveSeconds,
+           Double(host.ticks() &- startTicks) / 1000.0 >= limit { break }
         var now = Double(host.ticks() &- startTicks) / 1000.0
         while let ev = host.pollEvent() {
             now = Double(host.ticks() &- startTicks) / 1000.0
@@ -252,15 +315,33 @@ func runLive(_ scene: HostScene, host: HostSurface, hooks: HostLoopHooks = HostL
         if needsRender || animationsActive(at: now) {
             needsRender = false
             lastRenderTime = now
+            if let fingerprint = hooks.frameFingerprint {
+                // The constraint solve is the costliest part of a pass; an
+                // unchanged screen needs none (renders still lay out first).
+                if scene.window._hostSubtreeNeedsLayout { scene.window.layoutIfNeeded() }
+                let f = fingerprint(scene.window, scene.scale)
+                if renderedFrames > 0, f == lastPresentedFingerprint {
+                    hooks.frameObserver?(false, true)
+                    host.delay(milliseconds: 4)
+                    continue
+                }
+                lastPresentedFingerprint = f
+            }
             let t0 = host.performanceCounter()
             // Layout before draw, like UIKit's commit: views added since the
             // last frame (e.g. a freshly pushed VC's screen) get their
-            // layoutSubviews pass before they are first rendered.
-            scene.window.layoutIfNeeded()
+            // layoutSubviews pass before they are first rendered. With a
+            // fingerprint hook the pass above already ran if anything was
+            // marked; a second constraint solve would change nothing.
+            if hooks.frameFingerprint == nil || scene.window._hostSubtreeNeedsLayout {
+                scene.window.layoutIfNeeded()
+            }
             let bmp = hooks.render(scene.window, scene.scale)
             renderNanos &+= (host.performanceCounter() &- t0)
             host.present(bmp)  // vsync paces the loop
+            hooks.didPresent?(bmp)
             renderedFrames += 1
+            hooks.frameObserver?(true, false)
             if !becameActive {
                 becameActive = true
                 UIApplication.shared._hostDidBecomeActive()

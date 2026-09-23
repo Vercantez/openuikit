@@ -220,5 +220,25 @@ def structural_tests(tmp):
     assert res["blob"] < 1.0, res["blob"]       # one device pixel at 2x
     assert res["blob"] <= STRUCT_MAX_BLOB
 
+    # Masks: a live-data region (an unread count) masked out of the grade.
+    # The masked score ignores it, the unmasked score still reports it, and
+    # the structural gate no longer fires on the masked patch.
+    ours = golden.copy()
+    ours[100:124, 100:124] = [0, 0, 0, 255]
+    masks = [{"rect": [50, 50, 12, 12], "reason": "unread count (live data)"}]
+    res, err = compare_pixels(png(tmp, "gm.png", golden), png(tmp, "om.png", ours),
+                              None, golden_premultiplied=False, scale=2, masks=masks)
+    assert err is None, err
+    assert res["score"] == 100.0, res
+    assert res["unmasked_score"] < 100.0, res
+    assert res["blob"] == 0.0, res
+    assert abs(res["masked_fraction"] - 100.0 * 576 / (big * big)) < 1e-3, res
+    # A mask elsewhere leaves the real difference graded.
+    res, err = compare_pixels(png(tmp, "gm2.png", golden), png(tmp, "om2.png", ours),
+                              None, golden_premultiplied=False, scale=2,
+                              masks=[{"rect": [0, 0, 10, 10], "reason": "elsewhere"}])
+    assert err is None, err
+    assert res["score"] < 100.0 and res["blob"] == 144.0, res
+
 
 main()

@@ -11,6 +11,12 @@ import XCTest
 final class KeyboardChromeTests: XCTestCase {
 
     var savedCut = OpenUIKitRuntime.systemFontCut
+    /// The app window of the current test. UIApplication holds windows
+    /// weakly (UIKit does too), so `let (_, tf) = makeWindow()` let the
+    /// window die before `becomeFirstResponder()`: the field had no window,
+    /// focus failed, and the stale landscape keyboard window of the previous
+    /// test was what `keyboardWindow()` found. The test owns it instead.
+    var window: UIWindow?
 
     override func setUp() {
         super.setUp()
@@ -18,6 +24,7 @@ final class KeyboardChromeTests: XCTestCase {
     }
 
     override func tearDown() {
+        window = nil
         OpenUIKitRuntime.systemFontCut = savedCut
         super.tearDown()
     }
@@ -28,6 +35,7 @@ final class KeyboardChromeTests: XCTestCase {
         let tf = UITextField(frame: CGRect(x: 16, y: 80, width: 343, height: 34))
         w.addSubview(tf)
         w.layoutIfNeeded()
+        window = w
         return (w, tf)
     }
 

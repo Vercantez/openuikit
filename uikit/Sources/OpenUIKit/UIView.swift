@@ -10,6 +10,14 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -1436,7 +1444,13 @@ open class UIView: UIResponder, CALayerDelegate {
         // detached view completes just those axes from UIScreen's bounds
         // rather than exposing placeholders to initializers/viewDidLoad.
         let t = superview?.traitCollection ?? UIScreen.main._currentTraitsResolvingSizeClasses
-        let style = overrideUserInterfaceStyle
+        // A controller's own override applies to its root view (and so its
+        // subtree) unless the view overrides the style itself.
+        var style = overrideUserInterfaceStyle
+        if style == .unspecified, let controller = _managingViewController,
+           controller.viewIfLoaded === self {
+            style = controller.overrideUserInterfaceStyle
+        }
         let category = traitOverrides.preferredContentSizeCategory
         if style == .unspecified && category == .unspecified { return t }
         return t._with { t in
@@ -1540,6 +1554,16 @@ open class UIView: UIResponder, CALayerDelegate {
         // Layout entire subtree (top-down), like a simplified layout pass.
         _layoutSubtree()
     }
+    /// Live hosts: whether a `layoutIfNeeded()` on this subtree could do
+    /// anything — some view or its layer is marked for layout, or has
+    /// pending constraint updates. When false (and nothing visual changed)
+    /// a live host skips the pass; renders always lay out first.
+    public final var _hostSubtreeNeedsLayout: Bool {
+        if needsLayout || _needsUpdateConstraints || layer.needsLayout() { return true }
+        for s in subviews where s._hostSubtreeNeedsLayout { return true }
+        return false
+    }
+
     final func _layoutSubtree() {
         if needsLayout {
             // Clear before callbacks so setNeedsLayout() from inside an

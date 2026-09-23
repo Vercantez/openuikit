@@ -2,6 +2,14 @@
 // remote UI. Cancel / `_hostCancel()` call `fontPickerViewControllerDidCancel`.
 // `_hostPick(descriptor:)` is the only successful-pick path.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint

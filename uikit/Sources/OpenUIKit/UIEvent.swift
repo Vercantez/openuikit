@@ -27,6 +27,15 @@
 // OpenCoreGraphics' own. One knock-on, measured: in a file where the name is
 // visible twice, `[CGFloat](repeating:count:)` array sugar stops parsing as a
 // type; spell it `Array<CGFloat>(...)`.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+@_exported import typealias Foundation.TimeInterval
+#endif
+
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat
 import struct CoreGraphics.CGPoint
@@ -268,6 +277,12 @@ open class UIWindow: UIView {
     @discardableResult
     public func sendTouch(_ phase: UITouch.Phase, at point: CGPoint,
                           timestamp: TimeInterval, touchID: Int = 0) -> UITouch? {
+        // The software keyboard is a window above this one (iOS: a remote
+        // keyboard window): touches on its keys never reach the app.
+        if touchID == 0,
+           _UIKeyboardChrome.routeTouch(phase, at: point, appWindow: self, timestamp: timestamp) {
+            return nil
+        }
         let touch: UITouch
         switch phase {
         case .began:

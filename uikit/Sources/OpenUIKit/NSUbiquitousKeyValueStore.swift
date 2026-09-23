@@ -14,6 +14,14 @@
 // not exist as a module (verify66 @ 302e119b: "no such module 'Foundation'" on
 // both authorities). The class needs UserDefaults + NotificationCenter, so it
 // exists only where Foundation does: Darwin and Linux corelibs.
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import struct Foundation.Notification
+#endif
+
 #if canImport(Foundation)
 import Foundation
 

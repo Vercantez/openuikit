@@ -47,6 +47,17 @@
 // type; spell it `Array<CGFloat>(...)`.
 // `@objc` members (OPENUIKIT_OBJC_SUBCLASSING) need Foundation in scope; a
 // scoped declaration import keeps its geometry out of this file (UIView.swift).
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+// Each is @_exported here too: a plain scoped import that precedes the
+// re-export in file order hides the name from clients (swiftc).
+#if canImport(Foundation)
+@_exported import class Foundation.NSCoder
+#endif
+#if canImport(Foundation) && canImport(ObjectiveC)
+@_exported import class Foundation.NotificationCenter
+#endif
+
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
 import protocol ObjectiveC.NSObjectProtocol
@@ -66,7 +77,7 @@ import Foundation
 // defining module must be visible where the public static notification name
 // is emitted, including on Darwin where the scoped CoreGraphics branch above
 // deliberately avoids an umbrella Foundation import.
-import struct Foundation.Notification
+@_exported import struct Foundation.Notification
 #endif
 
 
@@ -1105,7 +1116,19 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         case .roundedRect, .bezel, .line:
             return CGSize(width: base + 28, height: 34)
         case .none:
-            return CGSize(width: base, height: FontEngine.metrics(for: _font).lineHeight + 1.5)
+            // A subclass that insets `textRect(forBounds:)` vertically grows
+            // its intrinsic height by the inset. MEASURED 2026-09-23 on
+            // Firefox Focus's URLTextField (getInsetRect: dy 10), iPhone SE
+            // 2x / iOS 26.1 (golden/focus_edit_ios/focus_edit.typed.json):
+            // 39.5 tall under a centerY-only constraint = the 19.5 line +
+            // 2 x 10. The base `.none` rect is the bounds, so a field that
+            // does not override the hook is unchanged.
+            let probe = CGRect(x: 0, y: 0, width: 1000, height: 1000)
+            let text = textRect(forBounds: probe)
+            var extra = probe.height - text.height
+            if !extra.isFinite || extra < 0 || extra > 500 { extra = 0 }
+            return CGSize(width: base,
+                          height: FontEngine.metrics(for: _font).lineHeight + 1.5 + extra)
         }
     }
 

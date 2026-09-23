@@ -30,11 +30,18 @@
 // argument count, exactly as in ObjC. Actions accept 0, 1 (sender) or 2
 // (sender, event) parameters, UIKit's convention.
 
+// MARK: sugar-unify scoped imports (docs/agent_reports/sugar-unify.md):
+// Foundation / ObjectiveC names OpenUIKit re-exports rather than re-declares.
+
 #if canImport(ObjectiveC)
 import ObjectiveC
 
 /// The platform's real Objective-C selector. `#selector(...)` produces one.
-public typealias Selector = ObjectiveC.Selector
+// Re-exported, not re-declared: a public typealias next to the original stops
+// `[X]()` collection sugar in client files that import Foundation too
+// (docs/agent_reports/sugar-unify.md). OpenUIKit's other files import the
+// name themselves (imports are per file; the MARK block at their top).
+@_exported import struct ObjectiveC.Selector
 
 extension Selector {
     /// The Objective-C selector name ("buttonTapped", "valueChanged:").

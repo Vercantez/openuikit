@@ -179,6 +179,20 @@ public enum Cassowary {
 
         public var constraintCount: Int { tags.count }
 
+        /// After `addConstraint` throws `unsatisfiableConstraint`: the
+        /// already-added constraints whose markers the failed row was
+        /// expressed in (the mutually exclusive set, less the new one).
+        public private(set) var lastConflict: [Constraint] = []
+
+        private func constraints(markedIn row: Row) -> [Constraint] {
+            var out: [Constraint] = []
+            for (c, tag) in tags where row.cells[tag.marker] != nil
+                || (tag.other.kind != .invalid && row.cells[tag.other] != nil) {
+                out.append(c)
+            }
+            return out
+        }
+
         public func hasConstraint(_ c: Constraint) -> Bool { tags[c] != nil }
 
         func makeSymbol(_ kind: Symbol.Kind) -> Symbol {
@@ -210,6 +224,7 @@ public enum Cassowary {
 
             if subject.kind == .invalid && allDummies(row) {
                 if !Cassowary.nearZero(row.constant) {
+                    lastConflict = constraints(markedIn: row)
                     throw SolverError.unsatisfiableConstraint
                 }
                 subject = tag.marker
@@ -217,6 +232,7 @@ public enum Cassowary {
 
             if subject.kind == .invalid {
                 if !(try addWithArtificialVariable(row)) {
+                    lastConflict = constraints(markedIn: lastArtificialObjective ?? Row())
                     throw SolverError.unsatisfiableConstraint
                 }
             } else {
@@ -371,6 +387,7 @@ public enum Cassowary {
             artificial = Row(copying: row)
             try optimize(artificial!)
             let success = Cassowary.nearZero(artificial!.constant)
+            lastArtificialObjective = success ? nil : Row(copying: artificial!)
             artificial = nil
 
             if let artRow = rows.removeValue(forKey: art) {
@@ -394,6 +411,9 @@ public enum Cassowary {
         /// In-flight artificial objective (addWithArtificialVariable); kept
         /// as a member so pivot substitutions reach it.
         private var artificial: Row?
+        /// The artificial objective of the last failed addition: its cells
+        /// are the markers of the constraints the new one contradicts.
+        private var lastArtificialObjective: Row?
 
         private func substituteOut(_ symbol: Symbol, _ row: Row) {
             for (_, r) in rows { r.substitute(symbol, row) }
