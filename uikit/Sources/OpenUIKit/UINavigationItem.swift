@@ -63,6 +63,13 @@ public class UINavigationItem: NSObject {
     /// (UIKit's `backButtonTitle`).
     public var backButtonTitle: String?
 
+    /// iOS 26 subtitle under the title (UINavigationItem.h). Stored and
+    /// reported; nil by default (MEASURED iOS 26.1). Rendering it in the
+    /// bar is OPEN: the bar does not draw a subtitle yet.
+    public var subtitle: String?
+    /// Takes precedence over `subtitle` in UIKit; stored, not drawn (OPEN).
+    public var subtitleView: UIView?
+
     public var largeTitleDisplayMode: LargeTitleDisplayMode = .automatic {
         didSet {
             if largeTitleDisplayMode != oldValue { _bar?._navigationItemChanged(self) }

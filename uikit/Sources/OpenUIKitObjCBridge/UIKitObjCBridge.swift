@@ -75,14 +75,14 @@ private func edgeInsets(_ insets: OpenUIKitObjCSupport.UIEdgeInsetsObjC) -> Open
 
 // MARK: - UIResponder
 
-extension UIResponder {
-    @objc(isFirstResponder) public var __objc_isFirstResponder: Bool { isFirstResponder }
-}
+// `isFirstResponder` is an `@objc open dynamic` member of UIResponder itself
+// (overridable, as in UIKit), so it already answers the ObjC selector.
 
 // MARK: - UIView
 
 extension UIView {
-    @objc(frame) public var __objc_frame: CGRect { get { frame } set { frame = newValue } }
+    // `frame` is an `@objc open dynamic` member of UIView itself (overridable,
+    // as in UIKit); a twin here would re-enter it forever.
     @objc(center) public var __objc_center: CGPoint { get { center } set { center = newValue } }
     @objc(alpha) public var __objc_alpha: CGFloat { get { alpha } set { alpha = newValue } }
     @objc(isHidden) public var __objc_hidden: Bool { get { isHidden } set { isHidden = newValue } }

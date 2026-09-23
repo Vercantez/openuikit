@@ -446,13 +446,46 @@ open class UIScrollView: UIView {
     /// window's drawHierarchy does not include it); 260 pt is the overlap
     /// onto this 667 pt window. t200 (unfocused) reads bottom 0.
     public final var adjustedContentInset: UIEdgeInsets {
-        UIEdgeInsets(
-            top: contentInset.top + safeAreaInsets.top,
-            left: contentInset.left + safeAreaInsets.left,
-            bottom: contentInset.bottom + safeAreaInsets.bottom + iOSKeyboardAvoidanceBottom,
-            right: contentInset.right + safeAreaInsets.right
+        // `.never`: the safe area is not folded in (NetNewsWire
+        // ImageViewController.swift:55). The other behaviours keep the
+        // measured automatic rule above.
+        let sa = contentInsetAdjustmentBehavior == .never ? .zero : safeAreaInsets
+        return UIEdgeInsets(
+            top: contentInset.top + sa.top,
+            left: contentInset.left + sa.left,
+            bottom: contentInset.bottom + sa.bottom + iOSKeyboardAvoidanceBottom,
+            right: contentInset.right + sa.right
         )
     }
+
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe/transcript-ios26.1.txt): `.automatic` by default; raw values
+    /// automatic 0, scrollableAxes 1, never 2, always 3.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic var contentInsetAdjustmentBehavior: ContentInsetAdjustmentBehavior = .automatic {
+        didSet { if contentInsetAdjustmentBehavior != oldValue { setNeedsLayout() } }
+    }
+
+    /// MEASURED iOS 26.1: true. The port's zoom does not bounce (OPEN).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic var bouncesZoom = true
+
+    /// Zooms so `rect` (content coordinates) fits the bounds: the scale is
+    /// UIKit's fit ratio, clamped to the zoom range. Scrolling the rect
+    /// into view after the scale change is OPEN (not measured).
+#if canImport(Foundation)
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    public dynamic func zoom(to rect: CGRect, animated: Bool) {
+        guard rect.width > 0, rect.height > 0 else { return }
+        let scale = min(bounds.width / rect.width, bounds.height / rect.height)
+        setZoomScale(scale, animated: animated)
+    }
+#endif
 
     /// iPhone SE (3rd gen) default keyboard + suggestion bar, measured as
     /// the delta in `adjustedContentInset.bottom` (Forms t1200 vs t200).
@@ -1494,4 +1527,17 @@ func _scrollExp(_ x: Double) -> Double {
     }
     for _ in 0..<k { sum *= sum }
     return neg ? 1 / sum : sum
+}
+
+extension UIScrollView {
+    /// MEASURED iOS 26.1: automatic 0, scrollableAxes 1, never 2, always 3.
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UIScrollViewContentInsetAdjustmentBehavior)
+#endif
+    public enum ContentInsetAdjustmentBehavior: Int, Sendable {
+        case automatic = 0
+        case scrollableAxes = 1
+        case never = 2
+        case always = 3
+    }
 }

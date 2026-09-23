@@ -806,7 +806,11 @@ open class UIView: UIResponder, CALayerDelegate {
     /// model free of compositor types.
     final var _layerCacheState: AnyObject?
 
-    public final var frame: CGRect {
+    /// Overridable, as in UIKit (NetNewsWire ImageScrollView overrides it).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc
+#endif
+    open dynamic var frame: CGRect {
         get {
             if transform.isIdentity {
                 return CGRect(x: center.x - bounds.width / 2, y: center.y - bounds.height / 2,

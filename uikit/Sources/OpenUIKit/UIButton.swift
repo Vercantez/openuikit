@@ -396,8 +396,8 @@ open class UIButton: UIControl {
     /// `showsMenuAsPrimaryAction` is set, otherwise sends
     /// `.primaryActionTriggered` + `.touchUpInside`.
     public func performPrimaryAction() {
-        if showsMenuAsPrimaryAction, let menu {
-            _UIMenuPresentation.present(menu, from: self)
+        if showsMenuAsPrimaryAction, menu != nil {
+            _presentPrimaryMenu()
             return
         }
         sendActions(for: [.primaryActionTriggered, .touchUpInside])
@@ -407,7 +407,7 @@ open class UIButton: UIControl {
     /// `.touchUpInside` is sent — so this replaces UIControl's tap handling
     /// rather than adding to it.
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard showsMenuAsPrimaryAction, let menu, isTracking,
+        guard showsMenuAsPrimaryAction, menu != nil, isTracking,
               let touch = touches.first,
               point(inside: touch.location(in: self), with: event)
         else {
@@ -418,6 +418,17 @@ open class UIButton: UIControl {
         isTracking = false
         isHighlighted = false
         isTouchInside = false
+        _presentPrimaryMenu()
+    }
+
+    /// UIKit sends `.menuActionTriggered` "prior to the menu being
+    /// presented" (UIControl.Event docs, iOS 14+), and presents the menu the
+    /// button holds AFTER those actions ran: apps build the menu lazily in
+    /// that handler (Firefox Focus's BrowserViewController.presentContextMenu
+    /// replaces `sender.menu` there, starting from `UIMenu(children: [])`).
+    func _presentPrimaryMenu() {
+        sendActions(for: .menuActionTriggered)
+        guard let menu else { return }
         _UIMenuPresentation.present(menu, from: self)
     }
 

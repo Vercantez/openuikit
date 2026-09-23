@@ -12,8 +12,27 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
     private var itemsBySection: [SectionIdentifierType: [ItemIdentifierType]] = [:]
     private var reloadedSectionSet: Set<SectionIdentifierType> = []
     private var reloadedItemSet: Set<ItemIdentifierType> = []
+    private var reconfiguredItemList: [ItemIdentifierType] = []
 
     public init() {}
+
+    /// MEASURED iOS 26.1 (Tools/oracle2/cellconfigprobe): after
+    /// `reconfigureItems([1])`, reconfigured is [1] and reloaded is [].
+    public var reloadedItemIdentifiers: [ItemIdentifierType] {
+        itemIdentifiers.filter { reloadedItemSet.contains($0) }
+    }
+    public var reconfiguredItemIdentifiers: [ItemIdentifierType] { reconfiguredItemList }
+
+    /// Re-run the cell provider for these items. UIKit reuses the displayed
+    /// cell instance; the port reloads the collection (same provider calls,
+    /// the cell instance may differ). Recorded divergence.
+    public mutating func reconfigureItems(_ identifiers: [ItemIdentifierType]) {
+        requireDistinct(identifiers, kind: "item")
+        for identifier in identifiers {
+            requireItem(identifier)
+            if !reconfiguredItemList.contains(identifier) { reconfiguredItemList.append(identifier) }
+        }
+    }
 
     public var numberOfItems: Int { itemIdentifiers.count }
     public var numberOfSections: Int { sections.count }
@@ -147,7 +166,7 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
     }
 
     var hasReloadedIdentifiers: Bool {
-        !reloadedSectionSet.isEmpty || !reloadedItemSet.isEmpty
+        !reloadedSectionSet.isEmpty || !reloadedItemSet.isEmpty || !reconfiguredItemList.isEmpty
     }
 
     func itemIdentifier(at indexPath: IndexPath) -> ItemIdentifierType? {
@@ -162,6 +181,7 @@ where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable {
         var copy = self
         copy.reloadedSectionSet.removeAll()
         copy.reloadedItemSet.removeAll()
+        copy.reconfiguredItemList.removeAll()
         return copy
     }
 

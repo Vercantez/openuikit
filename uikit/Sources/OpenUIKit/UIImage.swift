@@ -44,6 +44,14 @@ import ObjectiveC
 /// silhouette tinted with the destination's tint color.
 
 
+/// iPhoneSimulator26.1.sdk UIImage.h:76 declares `NS_SWIFT_SENDABLE
+/// @interface UIImage`: images are immutable once built. The port keeps that
+/// contract (its stored metadata is written only inside initializers, and its
+/// bitmap is never drawn into after construction), so the conformance is
+/// unchecked exactly as Apple's is. NetNewsWire Images
+/// SingleFaviconDownloader.swift:102 depends on it.
+extension UIImage: @unchecked Sendable {}
+
 public enum UIImageRenderingMode: Sendable {
     case automatic, alwaysOriginal, alwaysTemplate
 }

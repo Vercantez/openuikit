@@ -32,6 +32,14 @@ grep -F 'FOCUS_REAL_APPDELEGATE_LAUNCHED root=BrowserViewController' "$WORK/laun
     > "$WORK/fuzi.txt" 2> "$WORK/fuzi.log"
 cmp "$SUPPORT/full/focus-ios/fuzi-default-plugins.expected.txt" "$WORK/fuzi.txt"
 echo 'Fuzi: all 64 default-plugin reference lines match the native parser'
+# Extra guest probes (Tools/guestprobes/README.md): each prints its verdict.
+for probe_file in "$UIKIT"/Tools/guestprobes/*.probe.sh; do
+    probe=$(basename "$probe_file" .probe.sh)
+    [ -x "$BUILD/$probe" ] || { echo "extra guest probe $probe was not built" >&2; exit 1; }
+    # shellcheck source=/dev/null
+    . "$probe_file"
+    "run_extra_probe_$probe" || { echo "extra guest probe $probe FAILED" >&2; exit 1; }
+done
 printf '==> machorun real AppDelegate launch (15 screens, harvested iOS 2x ink)\n'
 "$ROOT/machorun" "$BUILD/render_full" realapp "$WORK/linux_out" "$UIKIT/fixtures/realapp/assets" > "$WORK/guest.log" 2>&1 || {
     tail -60 "$WORK/guest.log"; exit 1;
@@ -65,3 +73,6 @@ print('rendered 15 screens; existing screens byte-identical 14/14 (including Led
 print('realapp_focus_browser_light: real AppDelegate URL bar + home, 375x667 @2x (iPhone SE 3rd gen golden geometry)')
 PY
 echo 'REAL-APP SCREEN VERIFIED ON LINUX'
+# The same real app, run interactively: host_full replays touches and typing
+# through the guest host window (full/sdlhost) and asserts the app's response.
+bash "$UIKIT/scripts/linux_guest_host_verify.sh" "$WORK/host"
