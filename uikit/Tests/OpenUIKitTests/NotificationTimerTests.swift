@@ -9,7 +9,10 @@ import XCTest
 @testable import OpenUIKit
 
 private typealias NotificationCenter = OpenUIKit.NotificationCenter
-private typealias Timer = OpenUIKit.Timer
+// The host-clock timer these tests pin (Timer.swift): apps see Foundation's
+// Timer wherever Foundation exists; OpenUIKit's scripted clock is _HostClockTimer.
+private typealias Timer = OpenUIKit._HostClockTimer
+private typealias RunLoop = OpenUIKit._HostClockRunLoop
 
 private let testName = Notification.Name("OpenUIKitTestNotification")
 private let otherName = Notification.Name("OpenUIKitOtherNotification")

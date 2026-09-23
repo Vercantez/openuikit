@@ -113,8 +113,9 @@ final class FoundationCoexistenceTests: XCTestCase {
         .deletingLastPathComponent()   // repo root
 
     /// Symbols that would put non-determinism into the render or layout path.
-    /// `Timer`'s own clock is `UIWindow.tick(timestamp:)`, which is why
-    /// OpenUIKit keeps its own Timer instead of Foundation's (Timer.swift).
+    /// OpenUIKit's own timers run on `_HostClockTimer`, whose clock is
+    /// `UIWindow.tick(timestamp:)` (Timer.swift); apps' Foundation timers are
+    /// not part of the render path.
     private static let banned = [
         "NSDate", "DateFormatter",
         "gettimeofday", "clock_gettime", "mach_absolute_time",

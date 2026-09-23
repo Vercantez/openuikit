@@ -52,7 +52,7 @@ enum _OpenInvalidationScheduler {
         }
 #endif
         let pending = _OpenPendingInvalidation(action)
-        OpenUIKit.Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
+        OpenUIKit._HostClockTimer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
             // Timer._step snapshots work before invoking it. Remove this timer
             // from the live schedule before arbitrary graph code can re-enter
             // the host clock and encounter that snapshot member again.

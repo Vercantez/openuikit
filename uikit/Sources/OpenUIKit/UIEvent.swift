@@ -369,7 +369,7 @@ open class UIWindow: UIView {
         UITextInputState._stepCaretBlink(to: timestamp)
         // Scheduled `Timer`s fire off the same clock — there is no run loop,
         // so this tick IS the run-loop turn (Sources/OpenUIKit/Timer.swift).
-        Timer._step(to: timestamp)
+        _HostClockTimer._step(to: timestamp)
         flushDelayedContentTouches(at: timestamp)
         guard !activeTouches.isEmpty else { return }
         let event = UIEvent(timestamp: timestamp)
