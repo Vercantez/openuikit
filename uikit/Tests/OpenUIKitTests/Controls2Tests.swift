@@ -343,7 +343,7 @@ final class UISearchBarTests: XCTestCase {
         #if !os(Linux)
         @MainActor
         #endif
-        final class D: UISearchBarDelegate {
+        final class D: NSObject, UISearchBarDelegate {
             var seen: [String] = []
             func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
                 seen.append(searchText)

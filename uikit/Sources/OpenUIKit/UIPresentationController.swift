@@ -23,8 +23,18 @@
 // is `unowned` to avoid a cycle. The presentation controller never outlives
 // the controller it presents.
 
+// UIKit's is an NSObject (UIPresentationController.h), and the @objc
+// UIViewControllerTransitioningDelegate returns one (objc-protocols.md).
+#if canImport(Foundation)
+import class Foundation.NSObject
+#else
+import class ObjectiveC.NSObject
+#endif
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UIPresentationController)
+#endif
 @preconcurrency @MainActor
-open class UIPresentationController {
+open class UIPresentationController: NSObject {
     /// The controller being presented. See the LIFETIME NOTE above.
     public unowned let presentedViewController: UIViewController
     /// The presenter. nil until the presentation actually starts (a
@@ -43,6 +53,7 @@ open class UIPresentationController {
                 presenting presentingViewController: UIViewController?) {
         self.presentedViewController = presentedViewController
         self.presentingViewController = presentingViewController
+        super.init()
     }
 
     /// The view the animator moves. Default: the presented controller's own

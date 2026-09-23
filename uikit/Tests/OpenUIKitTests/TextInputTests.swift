@@ -454,7 +454,7 @@ final class TextFieldEditingTests: XCTestCase {
 @MainActor
 #endif
 final class TextFieldSelectionTests: XCTestCase {
-    final class Delegate: UITextFieldDelegate {
+    final class Delegate: NSObject, UITextFieldDelegate {
         var changes: [NSRange] = []
         var selectionChanges = 0
 

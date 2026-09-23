@@ -60,6 +60,7 @@
 
 #if OPENUIKIT_OBJC_SUBCLASSING
 import struct Foundation.Data
+import protocol ObjectiveC.NSObjectProtocol
 #endif
 
 #if canImport(CoreGraphics)
@@ -107,6 +108,36 @@ extension UITextField {
 ///   - `textFieldShouldReturn`       — the return key's handler; UIKit does
 ///     NOT resign on its own, and neither do we (an app returning true
 ///     usually calls `resignFirstResponder()` itself)
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- an `@objc`
+/// protocol, UIKit's runtime name, NSObjectProtocol, SDK selectors, every
+/// member optional. OpenUIKit calls it through UIKitProtocolDispatch.swift.
+/// MEASURED iOS 26.1 (Tools/oracle2/objcprotocolprobe2 "## textfield").
+@objc(UITextFieldDelegate) @preconcurrency @MainActor
+public protocol UITextFieldDelegate: NSObjectProtocol {
+    @objc(textFieldShouldBeginEditing:)
+    optional func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
+    @objc(textFieldDidBeginEditing:)
+    optional func textFieldDidBeginEditing(_ textField: UITextField)
+    @objc(textFieldShouldEndEditing:)
+    optional func textFieldShouldEndEditing(_ textField: UITextField) -> Bool
+    @objc(textFieldDidEndEditing:)
+    optional func textFieldDidEndEditing(_ textField: UITextField)
+    @objc(textFieldDidEndEditing:reason:)
+    optional func textFieldDidEndEditing(_ textField: UITextField,
+                                         reason: UITextField.DidEndEditingReason)
+    @objc(textFieldDidChangeSelection:)
+    optional func textFieldDidChangeSelection(_ textField: UITextField)
+    @objc(textField:shouldChangeCharactersInRange:replacementString:)
+    optional func textField(_ textField: UITextField,
+                            shouldChangeCharactersIn range: NSRange,
+                            replacementString string: String) -> Bool
+    @objc(textFieldShouldClear:)
+    optional func textFieldShouldClear(_ textField: UITextField) -> Bool
+    @objc(textFieldShouldReturn:)
+    optional func textFieldShouldReturn(_ textField: UITextField) -> Bool
+}
+#else
 @preconcurrency @MainActor
 public protocol UITextFieldDelegate: AnyObject {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
@@ -143,6 +174,7 @@ public extension UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool { true }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool { true }
 }
+#endif
 
 /// Real UIKit's placeholder-label class name (private in compare.py's
 /// layout diff, like the oracle's).
@@ -300,8 +332,11 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                 // focused. MEASURED kbstateprobe has_text: caret at end
                 // (sel 11/11) and lowercase keys; t2100 goldens show
                 // QuickType for the typed string.
+                // MEASURED iOS 26.1 (objcprotocolprobe2 "## textfield"):
+                // assigning `text` while editing reports the moved caret
+                // (textFieldDidChangeSelection:), and nothing else.
                 storeSelection(NSRange(location: documentUTF16Length, length: 0),
-                           notifyDelegate: false)
+                           notifyDelegate: true)
                 if let w = window { _UIKeyboardChrome.sync(from: w) }
             }
             refreshContent()
@@ -477,7 +512,12 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// UIKit's reason codes for `textFieldDidEndEditing(_:reason:)`.
     /// `.cancelled` exists for the iPad keyboard's cancel affordance, which
     /// has no equivalent here — every end is `.committed`.
-    public enum DidEndEditingReason: Sendable { case committed, cancelled }
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UITextFieldDidEndEditingReason)
+    public enum DidEndEditingReason: Int, Sendable { case committed = 0, cancelled = 1 }
+#else
+    public enum DidEndEditingReason: Int, Sendable { case committed = 0, cancelled = 1 }
+#endif
 
     public weak final var delegate: UITextFieldDelegate?
 
@@ -700,7 +740,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             caretView?.isHidden = true
         }
         setNeedsLayout()
-        if notifyDelegate { delegate?.textFieldDidChangeSelection(self) }
+        if notifyDelegate { delegate?._didChangeSelection(self) }
     }
 
     private final func normalizeTextStateAfterContentAssignment() {
@@ -771,8 +811,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     private final func mutate(_ range: NSRange, replacement: String,
                         consultDelegate: Bool, emitEditingChanged: Bool) -> Bool {
         if consultDelegate, let delegate,
-           !delegate.textField(self, shouldChangeCharactersIn: range,
-                               replacementString: replacement) { return false }
+           !delegate._shouldChangeCharacters(self, range, replacement) { return false }
 
         _text = replacingUTF16(range, with: replacement)
         _hasText = true
@@ -784,7 +823,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         refreshContent()
         revealCaret()
         revealSelectionEnd()
-        delegate?.textFieldDidChangeSelection(self)
+        delegate?._didChangeSelection(self)
         if emitEditingChanged {
             sendActions(for: .editingChanged)
             NotificationCenter.default.post(name: Self.textDidChangeNotification,
@@ -914,7 +953,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         refreshContent()
         revealCaret()
         revealSelectionEnd()
-        delegate?.textFieldDidChangeSelection(self)
+        delegate?._didChangeSelection(self)
     }
 
 #if OPENUIKIT_OBJC_SUBCLASSING
@@ -1171,14 +1210,14 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// be pure either way.)
     open override var canResignFirstResponder: Bool {
         guard isEditing, let d = delegate else { return true }
-        return d.textFieldShouldEndEditing(self)
+        return d._shouldEndEditing(self)
     }
 
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
         // UIKit asks the delegate BEFORE taking focus, and a false answer
         // fails the whole call (M13).
-        if !isEditing, let d = delegate, !d.textFieldShouldBeginEditing(self) {
+        if !isEditing, let d = delegate, !d._shouldBeginEditing(self) {
             return false
         }
         guard super.becomeFirstResponder() else { return false }
@@ -1191,7 +1230,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             revealCaret()
             setNeedsLayout()
             sendActions(for: .editingDidBegin)
-            delegate?.textFieldDidBeginEditing(self)
+            delegate?._didBeginEditing(self)
         }
         // MEASURED kbstateprobe has_text, iPhone SE 2x: focusing a
         // field that already has text leaves selStart=selEnd=11 and a
@@ -1205,7 +1244,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     open override func resignFirstResponder() -> Bool {
         // UIKit: a delegate that refuses to end editing keeps the field
         // focused, and resignFirstResponder returns false.
-        if isEditing, let d = delegate, !d.textFieldShouldEndEditing(self) {
+        if isEditing, let d = delegate, !d._shouldEndEditing(self) {
             return false
         }
         let r = super.resignFirstResponder()
@@ -1216,7 +1255,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             caretView?.isHidden = true
             setNeedsLayout()
             sendActions(for: .editingDidEnd)
-            delegate?.textFieldDidEndEditing(self, reason: .committed)
+            delegate?._didEndEditing(self, reason: .committed)
         }
         return r
     }
@@ -1250,17 +1289,33 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     @objc
 #endif
     open dynamic func insertText(_ text: String) {
+        _insertText(text, consultDelegate: false)
+    }
+
+    /// MEASURED iOS 26.1 (objcprotocolprobe2 "## textfield"): UIKeyInput's
+    /// `insertText` / `deleteBackward` sent to the field directly do not ask
+    /// `textField:shouldChangeCharactersInRange:replacementString:` (a NO
+    /// answer does not stop them); the keyboard path does
+    /// (`UIWindow.sendText` / `sendKey`). Inserting a lone newline changes
+    /// nothing and sends no delegate message.
+    final func _insertText(_ text: String, consultDelegate: Bool) {
         guard isEditing else { return }
+        if !text.isEmpty, text.allSatisfy({ $0 == "\n" || $0 == "\r" || $0 == "\r\n" }) { return }
         let target = markedUTF16Range ?? selectedUTF16Range
             ?? NSRange(location: unselectedCaretOffset, length: 0)
-        _ = mutate(target, replacement: text, consultDelegate: true,
+        _ = mutate(target, replacement: text, consultDelegate: consultDelegate,
                    emitEditingChanged: true)
     }
+    final func _keyboardInsertText(_ text: String) { _insertText(text, consultDelegate: true) }
 
 #if OPENUIKIT_OBJC_SUBCLASSING
     @objc
 #endif
     open dynamic func deleteBackward() {
+        _deleteBackward(consultDelegate: false)
+    }
+
+    final func _deleteBackward(consultDelegate: Bool) {
         guard isEditing else { return }
         let selection = selectedUTF16Range
             ?? NSRange(location: unselectedCaretOffset, length: 0)
@@ -1277,7 +1332,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                 ? selection.location : next
             target = NSRange(location: previous, length: end - previous)
         }
-        _ = mutate(target, replacement: "", consultDelegate: true,
+        _ = mutate(target, replacement: "", consultDelegate: consultDelegate,
                    emitEditingChanged: true)
     }
 
@@ -1286,7 +1341,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     /// its own clear affordance gets the delegate gate UIKit gives it.
     @discardableResult
     public final func _clear() -> Bool {
-        if let d = delegate, !d.textFieldShouldClear(self) { return false }
+        if let d = delegate, !d._shouldClear(self) { return false }
         // Real clear-button interaction leaves a non-nil empty string.
         text = ""
         storeSelection(NSRange(location: 0, length: 0), notifyDelegate: false)
@@ -1300,7 +1355,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         guard isEditing else { return }
         switch key {
         case .backspace:
-            deleteBackward()
+            _deleteBackward(consultDelegate: true)
         case .left:
             let range = selectedUTF16Range
                 ?? NSRange(location: unselectedCaretOffset, length: 0)
@@ -1327,7 +1382,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             // UIKit order: the delegate sees the return key first, and a
             // delegate that answers false suppresses the field's own
             // response (the action + the resign).
-            if let d = delegate, !d.textFieldShouldReturn(self) { return }
+            if let d = delegate, !d._shouldReturn(self) { return }
             sendActions(for: .primaryActionTriggered)
             resignFirstResponder()
         }
@@ -1458,3 +1513,41 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
                              y: metrics.y - tr.minY, width: 2, height: metrics.height)
     }
 }
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern; kept here
+// for this file's Foundation imports)
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// MEASURED iOS 26.1 (objcprotocolprobe2 "## textfield"): absent gates allow;
+/// a delegate with `textFieldDidEndEditing:reason:` gets that one (reason 0,
+/// committed), one with only `textFieldDidEndEditing:` gets the legacy call.
+extension UITextFieldDelegate {
+    func _shouldBeginEditing(_ f: UITextField) -> Bool { textFieldShouldBeginEditing?(f) ?? true }
+    func _didBeginEditing(_ f: UITextField) { textFieldDidBeginEditing?(f) }
+    func _shouldEndEditing(_ f: UITextField) -> Bool { textFieldShouldEndEditing?(f) ?? true }
+    func _didEndEditing(_ f: UITextField, reason: UITextField.DidEndEditingReason) {
+        if textFieldDidEndEditing?(f, reason: reason) == nil { textFieldDidEndEditing?(f) }
+    }
+    func _didChangeSelection(_ f: UITextField) { textFieldDidChangeSelection?(f) }
+    func _shouldChangeCharacters(_ f: UITextField, _ range: NSRange, _ string: String) -> Bool {
+        textField?(f, shouldChangeCharactersIn: range, replacementString: string) ?? true
+    }
+    func _shouldClear(_ f: UITextField) -> Bool { textFieldShouldClear?(f) ?? true }
+    func _shouldReturn(_ f: UITextField) -> Bool { textFieldShouldReturn?(f) ?? true }
+}
+#else
+extension UITextFieldDelegate {
+    func _shouldBeginEditing(_ f: UITextField) -> Bool { textFieldShouldBeginEditing(f) }
+    func _didBeginEditing(_ f: UITextField) { textFieldDidBeginEditing(f) }
+    func _shouldEndEditing(_ f: UITextField) -> Bool { textFieldShouldEndEditing(f) }
+    func _didEndEditing(_ f: UITextField, reason: UITextField.DidEndEditingReason) {
+        textFieldDidEndEditing(f, reason: reason)
+    }
+    func _didChangeSelection(_ f: UITextField) { textFieldDidChangeSelection(f) }
+    func _shouldChangeCharacters(_ f: UITextField, _ range: NSRange, _ string: String) -> Bool {
+        textField(f, shouldChangeCharactersIn: range, replacementString: string)
+    }
+    func _shouldClear(_ f: UITextField) -> Bool { textFieldShouldClear(f) }
+    func _shouldReturn(_ f: UITextField) -> Bool { textFieldShouldReturn(f) }
+}
+#endif

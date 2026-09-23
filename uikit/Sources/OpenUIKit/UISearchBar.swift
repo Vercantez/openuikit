@@ -1,3 +1,6 @@
+#if OPENUIKIT_OBJC_SUBCLASSING
+import protocol ObjectiveC.NSObjectProtocol
+#endif
 // UISearchBar. Owner: controls module (app-compat cluster "controls2"),
 // with the delegate contract from the "menus / delegate protocols" cluster.
 //
@@ -126,6 +129,38 @@ import Foundation
 
 /// UIKit's protocol, member for member. Everything is defaulted, so a
 /// conformance implements only what it uses.
+#if OPENUIKIT_OBJC_SUBCLASSING
+/// Apple toolchain: UIKit's own shape (objc-protocols.md) -- `@objc`,
+/// UIKit's runtime name, NSObjectProtocol, SDK selectors and required /
+/// optional split (checked against the SDK in Tests/ObjCProtocols2Tests).
+/// Portable builds keep the Swift protocol with default implementations.
+@objc(UISearchBarDelegate) @preconcurrency @MainActor
+public protocol UISearchBarDelegate: NSObjectProtocol {
+    @objc(searchBar:textDidChange:)
+    optional func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
+    @objc(searchBar:shouldChangeTextInRange:replacementText:)
+    optional func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange,
+                            replacementText text: String) -> Bool
+    @objc(searchBarShouldBeginEditing:)
+    optional func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool
+    @objc(searchBarTextDidBeginEditing:)
+    optional func searchBarTextDidBeginEditing(_ searchBar: UISearchBar)
+    @objc(searchBarShouldEndEditing:)
+    optional func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool
+    @objc(searchBarTextDidEndEditing:)
+    optional func searchBarTextDidEndEditing(_ searchBar: UISearchBar)
+    @objc(searchBarSearchButtonClicked:)
+    optional func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
+    @objc(searchBarCancelButtonClicked:)
+    optional func searchBarCancelButtonClicked(_ searchBar: UISearchBar)
+    @objc(searchBarBookmarkButtonClicked:)
+    optional func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar)
+    @objc(searchBarResultsListButtonClicked:)
+    optional func searchBarResultsListButtonClicked(_ searchBar: UISearchBar)
+    @objc(searchBar:selectedScopeButtonIndexDidChange:)
+    optional func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int)
+}
+#else
 @preconcurrency @MainActor
 public protocol UISearchBarDelegate: AnyObject {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
@@ -157,6 +192,7 @@ extension UISearchBarDelegate {
     public func searchBar(_ searchBar: UISearchBar,
                           selectedScopeButtonIndexDidChange selectedScope: Int) {}
 }
+#endif
 
 public enum UISearchBarStyle: Int, Sendable {
     case `default` = 0
@@ -546,7 +582,7 @@ open class UISearchBar: UIView {
     public var selectedScopeButtonIndex: Int = 0 {
         didSet {
             guard selectedScopeButtonIndex != oldValue else { return }
-            delegate?.searchBar(self, selectedScopeButtonIndexDidChange: selectedScopeButtonIndex)
+            delegate?._selectedScopeDidChange(self, selectedScopeButtonIndex)
         }
     }
     /// Pre-iOS-name for `selectedScopeButtonIndex`.
@@ -784,29 +820,29 @@ open class UISearchBar: UIView {
     /// Called by the field when its text changes (the field routes editing
     /// through the M8 text-input path; the search bar only forwards).
     func _textDidChange() {
-        delegate?.searchBar(self, textDidChange: searchTextField.text ?? "")
+        delegate?._textDidChange(self, searchTextField.text ?? "")
         setNeedsLayout()
     }
 
-    func _shouldBeginEditing() -> Bool { delegate?.searchBarShouldBeginEditing(self) ?? true }
-    func _didBeginEditing() { delegate?.searchBarTextDidBeginEditing(self) }
-    func _shouldEndEditing() -> Bool { delegate?.searchBarShouldEndEditing(self) ?? true }
-    func _didEndEditing() { delegate?.searchBarTextDidEndEditing(self) }
-    func _searchButtonClicked() { delegate?.searchBarSearchButtonClicked(self) }
+    func _shouldBeginEditing() -> Bool { delegate?._shouldBegin(self) ?? true }
+    func _didBeginEditing() { delegate?._didBegin(self) }
+    func _shouldEndEditing() -> Bool { delegate?._shouldEnd(self) ?? true }
+    func _didEndEditing() { delegate?._didEnd(self) }
+    func _searchButtonClicked() { delegate?._searchClicked(self) }
 
     /// The bar's own "the user tapped Cancel" entry point — also what the
     /// cancel button, when one is shown, is wired to. UIKit's callback order:
     /// the text clears, the change is reported, then the cancel click.
     public func _cancel() {
         text = ""
-        delegate?.searchBar(self, textDidChange: "")
-        delegate?.searchBarCancelButtonClicked(self)
+        delegate?._textDidChange(self, "")
+        delegate?._cancelClicked(self)
         resignFirstResponder()
     }
 
     /// Translates UITextField's delegate into UISearchBar's.
     @MainActor
-    final class Bridge: UITextFieldDelegate {
+    final class Bridge: _UIDelegateObjectBase, UITextFieldDelegate {
         weak var owner: UISearchBar?
 
         func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -824,8 +860,7 @@ open class UISearchBar: UIView {
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange,
                        replacementString string: String) -> Bool {
             guard let o = owner else { return true }
-            return o.delegate?.searchBar(o, shouldChangeTextIn: range,
-                                         replacementText: string) ?? true
+            return o.delegate?._shouldChangeText(o, range, string) ?? true
         }
         /// The keyboard's return key IS the search button.
         func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -835,3 +870,44 @@ open class UISearchBar: UIView {
     }
     let bridge = Bridge()
 }
+
+// UIKit's delegate protocols are @objc protocols on the Apple toolchain, so
+// OpenUIKit's own internal conformers are NSObjects there (objc-protocols.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+import class ObjectiveC.NSObject
+typealias _UIDelegateObjectBase = NSObject
+#else
+class _UIDelegateObjectBase {}
+#endif
+
+// MARK: - Delegate dispatch (UIKitProtocolDispatch.swift's pattern)
+
+#if OPENUIKIT_OBJC_SUBCLASSING
+extension UISearchBarDelegate {
+    func _textDidChange(_ b: UISearchBar, _ t: String) { searchBar?(b, textDidChange: t) }
+    func _shouldChangeText(_ b: UISearchBar, _ r: NSRange, _ t: String) -> Bool {
+        searchBar?(b, shouldChangeTextIn: r, replacementText: t) ?? true
+    }
+    func _shouldBegin(_ b: UISearchBar) -> Bool { searchBarShouldBeginEditing?(b) ?? true }
+    func _didBegin(_ b: UISearchBar) { searchBarTextDidBeginEditing?(b) }
+    func _shouldEnd(_ b: UISearchBar) -> Bool { searchBarShouldEndEditing?(b) ?? true }
+    func _didEnd(_ b: UISearchBar) { searchBarTextDidEndEditing?(b) }
+    func _searchClicked(_ b: UISearchBar) { searchBarSearchButtonClicked?(b) }
+    func _cancelClicked(_ b: UISearchBar) { searchBarCancelButtonClicked?(b) }
+    func _selectedScopeDidChange(_ b: UISearchBar, _ i: Int) { searchBar?(b, selectedScopeButtonIndexDidChange: i) }
+}
+#else
+extension UISearchBarDelegate {
+    func _textDidChange(_ b: UISearchBar, _ t: String) { searchBar(b, textDidChange: t) }
+    func _shouldChangeText(_ b: UISearchBar, _ r: NSRange, _ t: String) -> Bool {
+        searchBar(b, shouldChangeTextIn: r, replacementText: t)
+    }
+    func _shouldBegin(_ b: UISearchBar) -> Bool { searchBarShouldBeginEditing(b) }
+    func _didBegin(_ b: UISearchBar) { searchBarTextDidBeginEditing(b) }
+    func _shouldEnd(_ b: UISearchBar) -> Bool { searchBarShouldEndEditing(b) }
+    func _didEnd(_ b: UISearchBar) { searchBarTextDidEndEditing(b) }
+    func _searchClicked(_ b: UISearchBar) { searchBarSearchButtonClicked(b) }
+    func _cancelClicked(_ b: UISearchBar) { searchBarCancelButtonClicked(b) }
+    func _selectedScopeDidChange(_ b: UISearchBar, _ i: Int) { searchBar(b, selectedScopeButtonIndexDidChange: i) }
+}
+#endif

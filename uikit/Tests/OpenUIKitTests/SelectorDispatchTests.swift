@@ -178,7 +178,7 @@ final class SelectorDispatchDeliveryTests: XCTestCase {
     }
 
     func testRefusedEndEditingIsStillResolvedWithoutReportingAMiss() {
-        final class RefusingDelegate: UITextFieldDelegate {
+        final class RefusingDelegate: NSObject, UITextFieldDelegate {
             var shouldEndCalls = 0
             func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
                 shouldEndCalls += 1

@@ -156,6 +156,12 @@ extension UITextView {
 }
 
 extension UITextField {
+    /// `id<UITextFieldDelegate>`: OpenUIKit's own @objc protocol.
+    @objc(delegate) public var __objc_delegate: UITextFieldDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(isEditing) public var __objc_isEditing: Bool { isEditing }
+    @objc(editing) public var __objc_editing: Bool { isEditing }
 }
 
 // MARK: - UIViewController
@@ -960,4 +966,81 @@ extension UITableView {
         rectForRow(at: indexPath)
     }
 }
+
+// MARK: - Delegates of the second @objc protocol set (objc-protocols-3)
+
+extension UIPickerView {
+    @objc(dataSource) public var __objc_dataSource: UIPickerViewDataSource? {
+        get { dataSource } set { dataSource = newValue }
+    }
+    @objc(delegate) public var __objc_delegate: UIPickerViewDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(numberOfComponents) public var __objc_numberOfComponents: Int { numberOfComponents }
+    @objc(numberOfRowsInComponent:) public func __objc_numberOfRows(inComponent c: Int) -> Int {
+        numberOfRows(inComponent: c)
+    }
+    @objc(selectedRowInComponent:) public func __objc_selectedRow(inComponent c: Int) -> Int {
+        selectedRow(inComponent: c)
+    }
+    @objc(selectRow:inComponent:animated:) public func __objc_selectRow(_ r: Int, inComponent c: Int, animated: Bool) {
+        selectRow(r, inComponent: c, animated: animated)
+    }
+    @objc(reloadAllComponents) public func __objc_reloadAllComponents() { reloadAllComponents() }
+}
+
+extension UISearchBar {
+    @objc(delegate) public var __objc_delegate: UISearchBarDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(text) public var __objc_text: String? { get { text } set { text = newValue } }
+}
+
+extension UITabBar {
+    @objc(delegate) public var __objc_delegate: UITabBarDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+extension UISearchController {
+    @objc(delegate) public var __objc_delegate: UISearchControllerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+extension UIGestureRecognizer {
+    @objc(delegate) public var __objc_gestureDelegate: UIGestureRecognizerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+// MARK: - Controller delegates of the fourth @objc protocol set (objc-protocols-4)
+
+extension UINavigationController {
+    @objc(delegate) public var __objc_navigationDelegate: UINavigationControllerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+}
+
+extension UITabBarController {
+    @objc(delegate) public var __objc_tabBarControllerDelegate: UITabBarControllerDelegate? {
+        get { delegate } set { delegate = newValue }
+    }
+    @objc(viewControllers) public var __objc_viewControllers: [UIViewController]? {
+        get { viewControllers } set { viewControllers = newValue }
+    }
+    @objc(selectedIndex) public var __objc_selectedIndex: Int {
+        get { selectedIndex } set { selectedIndex = newValue }
+    }
+    @objc(selectedViewController) public var __objc_selectedViewController: UIViewController? {
+        get { selectedViewController } set { selectedViewController = newValue }
+    }
+}
+
+extension UIViewController {
+    @objc(transitioningDelegate) public var __objc_transitioningDelegate: UIViewControllerTransitioningDelegate? {
+        get { transitioningDelegate } set { transitioningDelegate = newValue }
+    }
+}
+
 #endif

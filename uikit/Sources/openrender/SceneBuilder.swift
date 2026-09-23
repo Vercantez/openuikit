@@ -581,12 +581,13 @@ func makeScrollView(_ j: SceneJSON) -> UIScrollView {
 /// Data source + delegate for a scene's `UIPickerView` (spec v5.3), mirroring
 /// the oracle's `ScenePickerSource`. Retained in `retainedPickerSources`
 /// because UIPickerView holds both weakly.
-final class ScenePickerSource: UIPickerViewDataSource, UIPickerViewDelegate {
+final class ScenePickerSource: _SceneDriverBase, UIPickerViewDataSource, UIPickerViewDelegate {
     let titles: [String]
     let rowHeight: CGFloat
     init(titles: [String], rowHeight: CGFloat) {
         self.titles = titles
         self.rowHeight = rowHeight
+        super.init()
     }
     func numberOfComponents(in pickerView: UIPickerView) -> Int { 1 }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {

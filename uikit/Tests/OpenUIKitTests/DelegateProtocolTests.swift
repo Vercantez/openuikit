@@ -19,7 +19,7 @@ import XCTest
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalTextFieldDelegate: UITextFieldDelegate {}
+private final class MinimalTextFieldDelegate: NSObject, UITextFieldDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -27,7 +27,7 @@ private final class MinimalTextViewDelegate: NSObject, UITextViewDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalGestureDelegate: UIGestureRecognizerDelegate {}
+private final class MinimalGestureDelegate: NSObject, UIGestureRecognizerDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
@@ -47,15 +47,15 @@ private final class MinimalPopoverDelegate: UIPopoverPresentationControllerDeleg
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalSearchBarDelegate: UISearchBarDelegate {}
+private final class MinimalSearchBarDelegate: NSObject, UISearchBarDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalTabBarControllerDelegate: UITabBarControllerDelegate {}
+private final class MinimalTabBarControllerDelegate: NSObject, UITabBarControllerDelegate {}
 #if !os(Linux)
 @MainActor
 #endif
-private final class MinimalNavigationDelegate: UINavigationControllerDelegate {}
+private final class MinimalNavigationDelegate: NSObject, UINavigationControllerDelegate {}
 
 #if !os(Linux)
 @MainActor
@@ -64,13 +64,32 @@ final class DelegateDeclarationTests: XCTestCase {
     /// Every protocol in the cluster can be conformed to with NO members —
     /// the portable stand-in for ObjC's `@objc optional`.
     func testEmptyConformancesCompileAndAnswerTheDefaults() {
+#if canImport(ObjectiveC)
+        // Apple toolchain: optional @objc requirements; OpenUIKit answers the
+        // absent gate through its dispatch helper (UIKit: return allowed).
+        XCTAssertFalse(MinimalTextFieldDelegate().responds(
+            to: #selector(UITextFieldDelegate.textFieldShouldReturn(_:))))
+        XCTAssertTrue(MinimalTextFieldDelegate()._shouldReturn(UITextField()))
+#else
         XCTAssertTrue(MinimalTextFieldDelegate().textFieldShouldReturn(UITextField()))
-        XCTAssertTrue(MinimalTextViewDelegate().textViewShouldBeginEditing(UITextView()))
+#endif
+        // Apple toolchain: an optional @objc requirement; the dispatch helper
+        // answers the absent gate (begin YES) on every build.
+        XCTAssertTrue(MinimalTextViewDelegate()._shouldBeginEditing(UITextView()))
+#if canImport(ObjectiveC)
+        // Optional @objc requirements; the dispatch helpers give the absent
+        // answers (begin YES, simultaneous NO).
+        XCTAssertTrue(MinimalGestureDelegate()._shouldBegin(UIGestureRecognizer()))
+        XCTAssertFalse(MinimalGestureDelegate()._simultaneous(UIGestureRecognizer(), UIGestureRecognizer()))
+        XCTAssertTrue(MinimalSearchBarDelegate()._shouldBegin(UISearchBar()))
+#else
         XCTAssertTrue(MinimalGestureDelegate()
             .gestureRecognizerShouldBegin(UIGestureRecognizer()))
         XCTAssertFalse(MinimalGestureDelegate()
             .gestureRecognizer(UIGestureRecognizer(),
                                shouldRecognizeSimultaneouslyWith: UIGestureRecognizer()))
+        XCTAssertTrue(MinimalSearchBarDelegate().searchBarShouldBeginEditing(UISearchBar()))
+#endif
 #if canImport(ObjectiveC)
         // Apple toolchain: UIKit's @objc protocol, where the method is an
         // unimplemented `optional` requirement (objc-protocols.md).
@@ -79,9 +98,8 @@ final class DelegateDeclarationTests: XCTestCase {
 #else
         XCTAssertTrue(MinimalScrollDelegate().scrollViewShouldScrollToTop(UIScrollView()))
 #endif
-        XCTAssertTrue(MinimalSearchBarDelegate().searchBarShouldBeginEditing(UISearchBar()))
         XCTAssertTrue(MinimalTabBarControllerDelegate()
-            .tabBarController(UITabBarController(), shouldSelect: UIViewController()))
+            ._shouldSelect(UITabBarController(), UIViewController()))
         let vc = UIViewController()
         let pc = UIPresentationController(presentedViewController: vc, presenting: nil)
         XCTAssertTrue(MinimalAdaptiveDelegate().presentationControllerShouldDismiss(pc))
@@ -97,7 +115,7 @@ final class DelegateDeclarationTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class RecordingFieldDelegate: UITextFieldDelegate {
+private final class RecordingFieldDelegate: NSObject, UITextFieldDelegate {
     var log: [String] = []
     var allowBegin = true
     var allowEnd = true
@@ -228,7 +246,7 @@ final class TextFieldDelegateTests: XCTestCase {
         #if !os(Linux)
         @MainActor
         #endif
-        final class NoClear: UITextFieldDelegate {
+        final class NoClear: NSObject, UITextFieldDelegate {
             func textFieldShouldClear(_ textField: UITextField) -> Bool { false }
         }
         let f = UITextField()
@@ -284,7 +302,7 @@ final class TextViewDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class GestureDelegate: UIGestureRecognizerDelegate {
+private final class GestureDelegate: NSObject, UIGestureRecognizerDelegate {
     var allowBegin = true
     var allowSimultaneous = false
     var refuseTouches = false
@@ -441,7 +459,7 @@ final class ScrollDelegateWiringTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class TabDelegate: UITabBarControllerDelegate {
+private final class TabDelegate: NSObject, UITabBarControllerDelegate {
     var allow = true
     var selected: [String] = []
     func tabBarController(_ tabBarController: UITabBarController,
@@ -464,7 +482,9 @@ final class TabBarControllerDelegateTests: XCTestCase {
         let d = TabDelegate()
         tab.tabBarControllerDelegate = d
         tab.loadViewIfNeeded()
-        XCTAssertEqual(d.selected, ["A"])
+        // MEASURED (objcprotocolprobe2 `## tabbarcontroller`, "all: shown: -"):
+        // nothing is reported when the controller is shown.
+        XCTAssertEqual(d.selected, [])
 
         d.allow = false
         tab.tabBar(tab.tabBar, didSelect: b.tabBarItem!)
@@ -473,7 +493,7 @@ final class TabBarControllerDelegateTests: XCTestCase {
         d.allow = true
         tab.tabBar(tab.tabBar, didSelect: b.tabBarItem!)
         XCTAssertEqual(tab.selectedIndex, 1)
-        XCTAssertEqual(d.selected, ["A", "B"])
+        XCTAssertEqual(d.selected, ["B"])
     }
 }
 
@@ -622,7 +642,7 @@ final class AdaptivePresentationDelegateTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class SearchDelegate: UISearchBarDelegate {
+private final class SearchDelegate: NSObject, UISearchBarDelegate {
     var texts: [String] = []
     var searches = 0
     var cancels = 0

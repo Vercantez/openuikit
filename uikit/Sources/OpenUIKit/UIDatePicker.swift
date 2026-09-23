@@ -249,11 +249,12 @@ open class UIDatePicker: UIControl {
     /// or delegate; exposing that conformance changes downstream overload and
     /// generic resolution even if apps never call the methods directly.
     @MainActor
-    private final class WheelAdapter: UIPickerViewDataSource, UIPickerViewDelegate {
+    private final class WheelAdapter: _UIDelegateObjectBase, UIPickerViewDataSource, UIPickerViewDelegate {
         weak var owner: UIDatePicker?
 
         init(owner: UIDatePicker) {
             self.owner = owner
+            super.init()
         }
 
         func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -1151,7 +1152,7 @@ open class UIDatePicker: UIControl {
     /// belongs to UIPickerView, not UIDatePicker.
     func selectWheelRow(_ row: Int, component: Int) {
         guard row >= 0, row < wheelNumberOfRows(in: component) else { return }
-        wheelPicker.selectRow(row, inComponent: component, animated: false)
+        wheelPicker._userSelectRow(row, inComponent: component)
     }
 
     // MARK: Wheel tap interaction
@@ -1175,7 +1176,6 @@ open class UIDatePicker: UIControl {
                                        componentPosition)))
         let direction = point.y < bounds.midY ? -1 : 1
         let selected = wheelPicker.selectedRow(inComponent: component)
-        wheelPicker.selectRow(selected + direction, inComponent: component,
-                              animated: false)
+        wheelPicker._userSelectRow(selected + direction, inComponent: component)
     }
 }

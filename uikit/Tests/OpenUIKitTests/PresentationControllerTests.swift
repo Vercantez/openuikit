@@ -49,7 +49,7 @@ private final class RecordingPresentationController: UIPresentationController {
 #if !os(Linux)
 @MainActor
 #endif
-private final class FadeAnimator: UIViewControllerAnimatedTransitioning {
+private final class FadeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     let presenting: Bool
     let trace: Trace
     let duration: TimeInterval
@@ -90,7 +90,7 @@ private final class FadeAnimator: UIViewControllerAnimatedTransitioning {
 #if !os(Linux)
 @MainActor
 #endif
-private final class CustomTransitioningDelegate: UIViewControllerTransitioningDelegate {
+private final class CustomTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     let trace: Trace
     var presentation: RecordingPresentationController?
     let presentAnimator: FadeAnimator
@@ -281,7 +281,7 @@ final class PresentationControllerTests: XCTestCase {
 #if !os(Linux)
 @MainActor
 #endif
-private final class FakeContext: UIViewControllerContextTransitioning {
+private final class FakeContext: NSObject, UIViewControllerContextTransitioning {
     let containerView: UIView
     let fromVC: UIViewController
     let toVC: UIViewController
@@ -313,13 +313,14 @@ private final class FakeContext: UIViewControllerContextTransitioning {
     func updateInteractiveTransition(_ percentComplete: CGFloat) {}
     func finishInteractiveTransition() {}
     func cancelInteractiveTransition() {}
+    func pauseInteractiveTransition() {}
 }
 
 /// A slide animator written the way an app would write one.
 #if !os(Linux)
 @MainActor
 #endif
-private final class SlideInAnimator: UIViewControllerAnimatedTransitioning {
+private final class SlideInAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval { 0.3 }
     func animateTransition(using ctx: UIViewControllerContextTransitioning) {
         guard let toVC = ctx.viewController(forKey: .to),
@@ -383,7 +384,7 @@ final class CustomAnimatorContractTests: XCTestCase {
         #if !os(Linux)
         @MainActor
         #endif
-        final class NavDelegate: UINavigationControllerDelegate {
+        final class NavDelegate: NSObject, UINavigationControllerDelegate {
             let trace = Trace()
             var animator: FadeAnimator?
             var supply = true

@@ -44,8 +44,19 @@ public enum UITabPlacement: Int, Sendable, Hashable {
     case sidebarOnly = 6
 }
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#else
+import class ObjectiveC.NSObject
+#endif
+
+/// An NSObject, as UIKit's (UITab.h; the @objc UITabBarControllerDelegate
+/// passes it).
+#if OPENUIKIT_OBJC_SUBCLASSING
+@objc(UITab)
+#endif
 @preconcurrency @MainActor
-open class UITab {
+open class UITab: NSObject {
     public let identifier: String
     /// Forwarded to the bar item (measured tab → item, never item → tab).
     open var title: String {
@@ -87,6 +98,7 @@ open class UITab {
         self.image = image
         self.identifier = identifier
         self.provider = viewControllerProvider
+        super.init()
     }
 
     /// Lazily created by the provider, exactly once, and retained.

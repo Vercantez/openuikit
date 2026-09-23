@@ -314,7 +314,7 @@ open class UIWindow: UIView {
                 // recognizer then never observes it (UIKit's
                 // gestureRecognizer(_:shouldReceive:)).
                 recs.append(contentsOf: cur._gestureRecognizers.filter {
-                    $0.delegate?.gestureRecognizer($0, shouldReceive: t) ?? true
+                    $0.delegate?._shouldReceive($0, t) ?? true
                 })
                 v = cur.superview
             }

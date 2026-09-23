@@ -262,6 +262,12 @@ extension UIView {
     /// Raw values are Darwin's `UIViewAnimationCurve`. The type is still
     /// used by transition-coordinator contexts even though modern animation
     /// calls express the same curves through `AnimationOptions`.
+    /// Apple toolchain: UIKit's `UIViewAnimationCurve`, an Objective-C
+    /// NSInteger enum (UIViewControllerInteractiveTransitioning's
+    /// `completionCurve` is an @objc requirement; objc-protocols.md).
+#if OPENUIKIT_OBJC_SUBCLASSING
+    @objc(UIViewAnimationCurve)
+#endif
     public enum AnimationCurve: Int, Sendable {
         case easeInOut = 0
         case easeIn = 1
