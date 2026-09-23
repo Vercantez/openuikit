@@ -1975,7 +1975,6 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
             "INSTALL_PATH",
             "OBJROOT",
             "PACKAGE_TYPE",
-            "PRODUCT_MODULE_NAME",
             "SHALLOW_BUNDLE",
             "SHALLOW_BUNDLE_PLATFORM",
             "SHALLOW_BUNDLE_TRIPLE",
@@ -2006,6 +2005,34 @@ class ProjectInventoryFixtureTests(unittest.TestCase):
                             project_inventory.build_project_inventory(
                                 project, **arguments
                             )
+
+    def test_explicit_product_module_name_renames_only_the_module(self) -> None:
+        # Xcode 26.1, measured on MiniApp: PRODUCT_MODULE_NAME = NetNewsWire
+        # leaves PRODUCT_NAME/EXECUTABLE_NAME/WRAPPER_NAME target-derived.
+        for owner in ("project", "target"):
+            with self.subTest(owner=owner), tempfile.TemporaryDirectory() as directory:
+                _, project = self.copied_modern_fixture(directory)
+                self.add_selected_build_setting(
+                    project, owner, "PRODUCT_MODULE_NAME", "NetNewsWire"
+                )
+                inventory = project_inventory.build_project_inventory(
+                    project, scheme_name="ModernApp"
+                )
+                settings = inventory["configuration"][owner]["build_settings"]
+                self.assertEqual(settings["PRODUCT_MODULE_NAME"], "NetNewsWire")
+                self.assertEqual(inventory["target"]["product_name"], "ModernApp")
+        for value in ('"Hijacked/Output"', '"Has-Dash"', '"9Digit"'):
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as directory:
+                _, project = self.copied_modern_fixture(directory)
+                self.add_selected_build_setting(
+                    project, "target", "PRODUCT_MODULE_NAME", value
+                )
+                with self.assertRaisesRegex(
+                    project_inventory.PlanError, "literal ASCII module identifier"
+                ):
+                    project_inventory.build_project_inventory(
+                        project, scheme_name="ModernApp"
+                    )
 
     def test_base_configuration_identity_settings_are_evaluated_and_validated(self) -> None:
         modes = (
@@ -3552,6 +3579,60 @@ class ProjectInventoryPathSafetyTests(unittest.TestCase):
                     project,
                     scheme_name="Focus",
                 )
+
+    def test_copy_phase_embeds_package_products_by_name(self) -> None:
+        # NetNewsWire's "Embed Frameworks" copy phase lists dynamic Swift
+        # package products (RSDatabase, Account, ...) next to file references.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "mini"
+            shutil.copytree(MINI_FIXTURE, root)
+            project = root / "Blockzilla.xcodeproj"
+            pbxproj = project / "project.pbxproj"
+            contents = pbxproj.read_text(encoding="utf-8")
+            object_marker = (
+                "\t\t200000000000000000000005 = {isa = PBXBuildFile; "
+                "fileRef = 100000000000000000000005; };"
+            )
+            phase_marker = "\t\t\tfiles = (200000000000000000000006, );"
+            self.assertIn(object_marker, contents)
+            self.assertIn(phase_marker, contents)
+            contents = contents.replace(
+                object_marker,
+                "\t\t200000000000000000000007 = {isa = PBXBuildFile; "
+                "productRef = 600000000000000000000001; "
+                "settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };\n" + object_marker,
+                1,
+            ).replace(
+                phase_marker,
+                "\t\t\tfiles = (200000000000000000000006, 200000000000000000000007, );",
+                1,
+            )
+            pbxproj.write_text(contents, encoding="utf-8")
+
+            inventory = project_inventory.build_project_inventory(
+                project, scheme_name="Focus"
+            )
+
+            [phase] = [
+                item
+                for item in inventory["build_phases"]
+                if item["phase_id"] == "300000000000000000000008"
+            ]
+            self.assertEqual(
+                [item["build_file_id"] for item in phase["files"]],
+                ["200000000000000000000006"],
+            )
+            self.assertEqual(
+                phase["package_products"],
+                [
+                    {
+                        "build_file_id": "200000000000000000000007",
+                        "product_ref_id": "600000000000000000000001",
+                        "name": "LocalKit",
+                        "settings": {"ATTRIBUTES": ["CodeSignOnCopy"]},
+                    }
+                ],
+            )
 
     def test_framework_phase_rejects_distinct_build_files_for_one_product(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

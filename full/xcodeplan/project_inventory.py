@@ -294,6 +294,8 @@ _PRODUCT_IDENTITY_SETTING_PREFIXES = (
     "SHALLOW_BUNDLE_",
 )
 
+_MODULE_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
 _UNMODELED_PRODUCT_PATH_SETTINGS = frozenset(
     {
         "BUILD_DIR",
@@ -315,7 +317,6 @@ _UNMODELED_PRODUCT_PATH_SETTINGS = frozenset(
         "LLVM_TARGET_TRIPLE_SUFFIX",
         "OBJROOT",
         "PACKAGE_TYPE",
-        "PRODUCT_MODULE_NAME",
         "SHALLOW_BUNDLE",
         "SHALLOW_BUNDLE_PLATFORM",
         "SHALLOW_BUNDLE_TRIPLE",
@@ -2163,9 +2164,43 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
             elif kind == "frameworks":
                 record["items"] = self._framework_items(phase_id, phase)
             elif kind == "copy_files":
+                # Xcode embeds dynamic Swift package products through copy
+                # phases (NetNewsWire's "Embed Frameworks": RSDatabase,
+                # Account, ...). They are recorded by product; file
+                # references keep the explicit-file path and shape.
+                copy_phase = dict(phase)
+                file_ids: list[Any] = []
+                package_products: list[dict[str, Any]] = []
+                for raw_id in xcodeplan.require_list(
+                    phase.get("files", []), f"phase {phase_id}.files"
+                ):
+                    build_file_id = xcodeplan.require_string(
+                        raw_id, f"phase {phase_id} build file"
+                    )
+                    build_file, reference = self._build_file(build_file_id)
+                    if reference["kind"] != "productRef":
+                        file_ids.append(raw_id)
+                        continue
+                    product = self.object(
+                        reference["id"], "XCSwiftPackageProductDependency"
+                    )
+                    item: dict[str, Any] = {
+                        "build_file_id": build_file_id,
+                        "product_ref_id": reference["id"],
+                        "name": xcodeplan.require_string(
+                            product.get("productName"),
+                            f"product {reference['id']}.productName",
+                        ),
+                    }
+                    if "settings" in build_file:
+                        item["settings"] = build_file["settings"]
+                    package_products.append(item)
+                copy_phase["files"] = file_ids
                 record["files"] = self._explicit_phase_files(
-                    phase_id, phase, allow_external=True, phase_kind=kind
+                    phase_id, copy_phase, allow_external=True, phase_kind=kind
                 )
+                if package_products:
+                    record["package_products"] = package_products
                 record["destination_subfolder_spec"] = xcodeplan.require_string(
                     phase.get("dstSubfolderSpec", "0"), f"copy phase {phase_id}.dstSubfolderSpec"
                 )
@@ -2385,6 +2420,20 @@ class InventoryPlanner(xcodeplan.ProjectPlanner):
                     raise PlanError(
                         f"{owner} build setting {key} must be the canonical literal "
                         f"{expected!r}, got {actual!r}"
+                    )
+            if "PRODUCT_MODULE_NAME" in settings:
+                # Xcode 26.1 (xcodebuild -showBuildSettings, measured): an
+                # explicit PRODUCT_MODULE_NAME renames only the module;
+                # PRODUCT_NAME, EXECUTABLE_NAME and WRAPPER_NAME keep their
+                # target-derived values. Only a literal identifier is accepted.
+                module_name = xcodeplan.require_string(
+                    settings.get("PRODUCT_MODULE_NAME"),
+                    f"{owner} build setting PRODUCT_MODULE_NAME",
+                )
+                if _MODULE_IDENTIFIER.fullmatch(module_name) is None:
+                    raise PlanError(
+                        f"{owner} build setting PRODUCT_MODULE_NAME must be a literal "
+                        f"ASCII module identifier, got {module_name!r}"
                     )
             if "PRODUCT_BUNDLE_IDENTIFIER" in settings:
                 self._validate_bundle_identifier(
